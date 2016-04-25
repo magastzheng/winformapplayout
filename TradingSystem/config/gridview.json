@@ -1,0 +1,1236 @@
+﻿[{
+	"grid": "cmdtrading",
+	"columns":[{
+		"name": "tc_selection",
+		"text": "选中",
+		"width": 60,
+		"columntype": 1,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		}, {
+		"name": "tc_commandno",
+		"text": "指令序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_monitorunit",
+		"text": "监控单元",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}, {
+		"name": "tc_commandtype",
+		"text": "指令类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_executetype",
+		"text": "执行类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_commandnum",
+		"text": "指令份数",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_targetnum",
+		"text": "目标份数",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_baisprice",
+		"text": "基差|价差",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_longmorethan",
+		"text": "多头委比",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_bearmorethan",
+		"text": "空头委比",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_longratio",
+		"text": "多头成比",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_bearratio",
+		"text": "空头成比",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_commandamount",
+		"text": "指令数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_entrustedamount",
+		"text": "已委托数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_dealamount",
+		"text": "已成数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_commandmoney",
+		"text": "指令金额",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_exposure",
+		"text": "裸敞口",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_startdate",
+		"text": "开始日期",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_enddate",
+		"text": "结束日期",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_starttime",
+		"text": "开始时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_endtime",
+		"text": "结束时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_dispatchtime",
+		"text": "分发时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_executeperson",
+		"text": "下达人",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_dispatchperson",
+		"text": "分发人",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_instanceid",
+		"text": "实例号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_instanceno",
+		"text": "实例编号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tc_last",
+		"text": "",
+		"width": 5,
+		"columntype": -1,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},
+{
+	"grid": "dealflow",
+	"columns": [
+	{
+		"name": "df_commandno",
+		"text": "指令序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "df_securitycode",
+		"text": "证券代码",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "df_securityname",
+		"text": "证券名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "df_fundno",
+		"text": "基金序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "df_fundname",
+		"text": "基金名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "df_portfoliocode",
+		"text": "组合代码",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "df_portfolioname",
+		"text": "组合名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "df_pricetype",
+		"text": "价格类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "df_entrustprice",
+		"text": "委托价格",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "df_entrustdirection",
+		"text": "委托方向",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "df_dealprice",
+		"text": "成交价格",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "df_dealamount",
+		"text": "成交数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "df_dealmoney",
+		"text": "成交金额",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "df_dealtime",
+		"text": "成交时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "df_stockholdercode",
+		"text": "股东代码",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "df_declareno",
+		"text": "申报序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "df_declareseat",
+		"text": "申报席位",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "df_entrustbatchno",
+		"text": "申报批号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "df_instanceid",
+		"text": "实例号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "df_instanceno",
+		"text": "实例编号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "df_entrustno",
+		"text": "委托序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "df_dealno",
+		"text": "成交序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "df_last",
+		"text": "",
+		"width": 5,
+		"columntype": -1,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},{
+	"grid": "cmdsecurity",
+	"columns": [
+	{
+		"name": "cs_selection",
+		"text": "选择",
+		"width": 80,
+		"columntype": 1,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "cs_secucode",
+		"text": "证券代码",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cs_secuname",
+		"text": "证券名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cs_commandno",
+		"text": "指令序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cs_fundcode",
+		"text": "基金代码",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cs_portfolioname",
+		"text": "组合名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cs_commandprice",
+		"text": "指令价格",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cs_commandamount",
+		"text": "指令数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cs_entrustdirection",
+		"text": "委托方向",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cs_entrustedamount",
+		"text": "已委托数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cs_pricetype",
+		"text": "价格类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cs_entrustprice",
+		"text": "委托价格",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "cs_thisentrustamout",
+		"text": "本次委托数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "cs_dealamount",
+		"text": "已成交数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cs_targetamount",
+		"text": "目标数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cs_waitamount",
+		"text": "待补足数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cs_suspensionflag",
+		"text": "停牌标志",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cs_targetcopies",
+		"text": "目标份数",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cs_commandcopies",
+		"text": "指令份数",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cs_limitupprice",
+		"text": "涨停价",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cs_limitdownprice",
+		"text": "跌停价",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cs_limitupdown",
+		"text": "涨跌停",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cs_last",
+		"text": "",
+		"width": 5,
+		"columntype": -1,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},{
+	"grid": "buysell",
+	"columns": [
+	{
+		"name": "bs_selection",
+		"text": "选择",
+		"width": 30,
+		"columntype": 1,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "bs_commandno",
+		"text": "指令序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "bs_add",
+		"text": "增加",
+		"width": 40,
+		"columntype": 2,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1,
+		"defaultvalue": "img/plus.png"
+		},{
+		"name": "bs_copies",
+		"text": "份数",
+		"width": 40,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "bs_minus",
+		"text": "减少",
+		"width": 40,
+		"columntype": 2,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1,
+		"defaultvalue": "img/minus.png"
+		},{
+		"name": "bs_last",
+		"text": "",
+		"width": 5,
+		"columntype": -1,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},{
+	"grid": "entrustflow",
+	"columns": [
+	{
+		"name": "ef_commandno",
+		"text": "指令序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_selection",
+		"text": "选择",
+		"width": 80,
+		"columntype": 1,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "ef_market",
+		"text": "交易市场",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_securitycode",
+		"text": "证券代码",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_securityname",
+		"text": "证券名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_entrustdirection",
+		"text": "委托方向",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_pricetype",
+		"text": "价格类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_entrustprice",
+		"text": "委托价格",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_entrustamount",
+		"text": "委托数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_entruststatus",
+		"text": "委托状态",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_dealamount",
+		"text": "成交数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_dealmoney",
+		"text": "成交金额",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_fundname",
+		"text": "基金名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_portfolioname",
+		"text": "组合名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_investmenttype",
+		"text": "投资类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_pricebias",
+		"text": "价格偏离度(%)",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_dealtimes",
+		"text": "成交次数",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_effectdate",
+		"text": "有效日期",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_entrusteddate",
+		"text": "委托下达日期",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_firstdealdate",
+		"text": "首次成交日期",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_shareholdercode",
+		"text": "股东代码",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_declareseat",
+		"text": "申报席位",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_withdrawroot",
+		"text": "撤单原因",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_turnoverratio",
+		"text": "成交比例",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_entrustedtime",
+		"text": "委托时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_withdrawamount",
+		"text": "已撤数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_instanceid",
+		"text": "实例号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_instanceno",
+		"text": "实例编号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_entrustno",
+		"text": "委托序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_entrustbatchno",
+		"text": "委托批号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_declareno",
+		"text": "申报序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_errorno",
+		"text": "错误号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_errorinfo",
+		"text": "错误信息",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "ef_last",
+		"text": "",
+		"width": 5,
+		"columntype": -1,
+		"valuetype": 0,
+		"visible": 1
+		}
+	]
+},{
+	"grid": "entrustcanceladd",
+	"columns": [
+	{
+		"name": "eca_selection",
+		"text": "选择",
+		"width": 60,
+		"columntype": 1,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "eca_commandno",
+		"text": "指令序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_entrustno",
+		"text": "委托序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_exchange",
+		"text": "交易所",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_securitycode",
+		"text": "证券代码",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_securityname",
+		"text": "证券名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_entrustdirection",
+		"text": "委托方向",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_commandprice",
+		"text": "指令价格",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_pricesetting",
+		"text": "价格设置",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_pricetype",
+		"text": "价格类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_entrustprice",
+		"text": "委托价格",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_entrustamount",
+		"text": "委托数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_declareprice",
+		"text": "申报价格",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_restamount",
+		"text": "剩余数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_declareamount",
+		"text": "申报数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_dealamount",
+		"text": "成交数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_originpricetype",
+		"text": "原价格类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_turnoverratio",
+		"text": "成交比例",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_fundname",
+		"text": "基金名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_portfolioname",
+		"text": "组合名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_investmenttype",
+		"text": "投资类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_lastprice",
+		"text": "最新价",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_pricebias",
+		"text": "价格偏差",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_releasedate",
+		"text": "下达日期",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_firstdeal",
+		"text": "首次成交",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_dealmoney",
+		"text": "成交金额",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_entrusttime",
+		"text": "委托时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_dealtimes",
+		"text": "成交次数",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_cancelamount",
+		"text": "已撤数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_orderno",
+		"text": "序列号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_declareno",
+		"text": "申报序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_entrustbatchno",
+		"text": "申报批号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_limitupprice",
+		"text": "涨停价",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_limitdownprice",
+		"text": "跌停价",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "eca_last",
+		"text": "",
+		"width": 5,
+		"columntype": -1,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},{
+	"grid": "",
+	"columns": [
+	{
+		"name": "tc_last",
+		"text": "",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1
+		},{
+		"name": "",
+		"text": "",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1
+		}
+	]
+}
+]

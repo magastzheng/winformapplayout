@@ -1,0 +1,15 @@
+﻿{
+	"system":{
+		"authorizationid": "xxx",
+		"opstation": "localhost",
+		"logfile": "globallog.log"
+	},
+	"server":{
+		"ip": "10.10.10.19",
+		"port": "5123"
+	},
+	"user":{
+		
+	},
+	"operators":["A1234", "10099"]
+}

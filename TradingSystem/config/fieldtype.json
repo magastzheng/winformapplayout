@@ -1,0 +1,102 @@
+﻿[
+	{
+		"name": "C1",
+		"type": "S",
+		"width": "1",
+		"scale": "4"
+	},
+	{
+		"name": "C3",
+		"type": "S",
+		"width": "3",
+		"scale": "4"
+	},
+	{
+		"name": "C8",
+		"type": "S",
+		"width": "8",
+		"scale": "4"
+	},
+	{
+		"name": "C10",
+		"type": "S",
+		"width": "10",
+		"scale": "4"
+	},
+	{
+		"name": "C16",
+		"type": "S",
+		"width": "16",
+		"scale": "4"
+	},
+	{
+		"name": "C20",
+		"type": "S",
+		"width": "20",
+		"scale": "4"
+	},
+	{
+		"name": "C32",
+		"type": "S",
+		"width": "32",
+		"scale": "4"
+	},
+	{
+		"name": "C64",
+		"type": "S",
+		"width": "64",
+		"scale": "4"
+	},
+	{
+		"name": "C128",
+		"type": "S",
+		"width": "128",
+		"scale": "4"
+	},
+	{
+		"name": "C255",
+		"type": "S",
+		"width": "255",
+		"scale": "4"
+	},{
+		"name": "C256",
+		"type": "S",
+		"width": "256",
+		"scale": "4"
+	},
+	{
+		"name": "C512",
+		"type": "S",
+		"width": "512",
+		"scale": "4"
+	},
+	{
+		"name": "N6",
+		"type": "S",
+		"width": "6",
+		"scale": "4"
+	},{
+		"name": "N8",
+		"type": "I",
+		"width": "8",
+		"scale": "4"
+	},
+	{
+		"name": "N11.4",
+		"type": "F",
+		"width": "11",
+		"scale": "4"
+	},
+	{
+		"name": "N16.2",
+		"type": "F",
+		"width": "16",
+		"scale": "2"
+	},
+	{
+		"name": "N9.6",
+		"type": "F",
+		"width": "9",
+		"scale": "6"
+	}
+]
