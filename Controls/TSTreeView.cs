@@ -9,6 +9,7 @@ using System.Windows.Forms;
 
 namespace Controls
 {
+
     public class TSTreeView: TreeView
     {
         private Font _nodeFont;
@@ -18,6 +19,8 @@ namespace Controls
         private Image _nodeCollapseImage;
         private Size _nodeImageSize;
         private int _nodeOffset;
+
+        public event TreeViewItemClick LeafItemClick;
 
         public Font NodeFont
         {
@@ -67,7 +70,7 @@ namespace Controls
             this.ShowPlusMinus = false;
             this.ShowLines = false;
             this.CheckBoxes = false;
-            this.ItemHeight = 24;
+            this.ItemHeight = 30;
 
             _backgroundBrush = new SolidBrush(Color.FromArgb(90, Color.FromArgb(205, 226, 252)));
             _backgroundPen = new Pen(Color.FromArgb(130, 249, 252), 1);
@@ -75,7 +78,7 @@ namespace Controls
 
             _nodeExpandedImage = null;
             _nodeCollapseImage = null;
-            _nodeImageSize = new Size(18, 18);
+            _nodeImageSize = new Size(18, 30);
 
             _nodeOffset = 5;
 
@@ -85,7 +88,7 @@ namespace Controls
             this.MouseDown += new MouseEventHandler(TreeView_MouseDown);
             //this.MouseDoubleClick += new MouseEventHandler(TreeView_MouseDoubleClick);
             this.MouseClick += new MouseEventHandler(TreeView_MouseClick);
-
+            
         }
 
         private void TreeView_MouseClick(object sender, MouseEventArgs e)
@@ -103,6 +106,14 @@ namespace Controls
                     else
                     {
                         node.Expand();
+                    }
+                }
+                else
+                { 
+                    //Click the leaf will trigger the other event handle
+                    if (LeafItemClick != null)
+                    {
+                        LeafItemClick(sender, new TreeViewItemArgs(e, node));
                     }
                 }
             }

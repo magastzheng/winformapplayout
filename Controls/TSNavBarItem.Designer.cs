@@ -51,12 +51,13 @@
             this._tsTreeView.NodeCollapseImage = null;
             this._tsTreeView.NodeExpandedImage = null;
             this._tsTreeView.NodeFont = new System.Drawing.Font("Microsoft YaHei", 12F);
-            this._tsTreeView.NodeImageSize = new System.Drawing.Size(18, 18);
+            this._tsTreeView.NodeImageSize = new System.Drawing.Size(18, 25);
             this._tsTreeView.NodeOffset = 5;
             this._tsTreeView.ShowLines = false;
             this._tsTreeView.ShowPlusMinus = false;
             this._tsTreeView.Size = new System.Drawing.Size(211, 113);
             this._tsTreeView.TabIndex = 1;
+            this._tsTreeView.LeafItemClick += new TreeViewItemClick(TreeView_ItemClick);
             // 
             // TSNavBarItem
             // 

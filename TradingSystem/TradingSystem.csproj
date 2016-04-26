@@ -73,11 +73,23 @@
     <Compile Include="View\LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\StockTemplateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\StockTemplateForm.Designer.cs">
+      <DependentUpon>StockTemplateForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\TradingCommandForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\TradingCommandForm.Designer.cs">
       <DependentUpon>TradingCommandForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\TradingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\TradingForm.Designer.cs">
+      <DependentUpon>TradingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="View\WarnForm.cs">
       <SubType>Form</SubType>
@@ -182,6 +194,10 @@
     <ProjectReference Include="..\Controls\Controls.csproj">
       <Project>{b3b6fd6a-3638-4263-93e2-44677bf5f0c8}</Project>
       <Name>Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Forms\Forms.csproj">
+      <Project>{35c45d58-fd61-446b-b6a8-9f3ef8529016}</Project>
+      <Name>Forms</Name>
     </ProjectReference>
     <ProjectReference Include="..\Model\Model.csproj">
       <Project>{9afc3370-02ab-444b-9c43-411e49f49b16}</Project>

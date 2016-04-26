@@ -28,159 +28,92 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.panelTopContainer = new System.Windows.Forms.Panel();
-            this.panelBottomContainer = new System.Windows.Forms.Panel();
-            this.splitContainerMain = new System.Windows.Forms.SplitContainer();
-            this.panelMainCaption = new System.Windows.Forms.Panel();
-            this.panelMain = new System.Windows.Forms.Panel();
-            this.menuStripMain = new System.Windows.Forms.MenuStrip();
-            this.systemMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.tbOpen = new System.Windows.Forms.ToolStripButton();
-            this.tbSave = new System.Windows.Forms.ToolStripButton();
-            this.tbRefresh = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this._toolStrip = new System.Windows.Forms.ToolStrip();
+            this._tbOpen = new System.Windows.Forms.ToolStripButton();
+            this._tbSave = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this._tbRefresh = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this._menuStripMain = new System.Windows.Forms.MenuStrip();
+            this._systemMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._viewMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._toolMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._helpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.panelBottomContainer = new System.Windows.Forms.Panel();
+            this._splitContainerMain = new System.Windows.Forms.SplitContainer();
+            this._navBarContainer = new Controls.TSNavBarContainer();
+            this._panelMain = new System.Windows.Forms.Panel();
+            this._panelMainCaption = new System.Windows.Forms.Panel();
+            this._imageList = new System.Windows.Forms.ImageList(this.components);
             this.panelTopContainer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
-            this.splitContainerMain.Panel2.SuspendLayout();
-            this.splitContainerMain.SuspendLayout();
-            this.menuStripMain.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
+            this._toolStrip.SuspendLayout();
+            this._menuStripMain.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._splitContainerMain)).BeginInit();
+            this._splitContainerMain.Panel1.SuspendLayout();
+            this._splitContainerMain.Panel2.SuspendLayout();
+            this._splitContainerMain.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelTopContainer
             // 
             this.panelTopContainer.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panelTopContainer.Controls.Add(this.toolStrip1);
-            this.panelTopContainer.Controls.Add(this.menuStripMain);
+            this.panelTopContainer.Controls.Add(this._toolStrip);
+            this.panelTopContainer.Controls.Add(this._menuStripMain);
             this.panelTopContainer.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelTopContainer.Location = new System.Drawing.Point(0, 0);
             this.panelTopContainer.Name = "panelTopContainer";
-            this.panelTopContainer.Size = new System.Drawing.Size(897, 50);
+            this.panelTopContainer.Size = new System.Drawing.Size(1212, 50);
             this.panelTopContainer.TabIndex = 0;
             // 
-            // panelBottomContainer
+            // _toolStrip
             // 
-            this.panelBottomContainer.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panelBottomContainer.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelBottomContainer.Location = new System.Drawing.Point(0, 508);
-            this.panelBottomContainer.Name = "panelBottomContainer";
-            this.panelBottomContainer.Size = new System.Drawing.Size(897, 35);
-            this.panelBottomContainer.TabIndex = 1;
-            // 
-            // splitContainerMain
-            // 
-            this.splitContainerMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerMain.Location = new System.Drawing.Point(0, 50);
-            this.splitContainerMain.Name = "splitContainerMain";
-            // 
-            // splitContainerMain.Panel2
-            // 
-            this.splitContainerMain.Panel2.Controls.Add(this.panelMain);
-            this.splitContainerMain.Panel2.Controls.Add(this.panelMainCaption);
-            this.splitContainerMain.Size = new System.Drawing.Size(897, 458);
-            this.splitContainerMain.SplitterDistance = 180;
-            this.splitContainerMain.TabIndex = 2;
-            // 
-            // panelMainCaption
-            // 
-            this.panelMainCaption.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelMainCaption.Location = new System.Drawing.Point(0, 0);
-            this.panelMainCaption.Name = "panelMainCaption";
-            this.panelMainCaption.Size = new System.Drawing.Size(713, 10);
-            this.panelMainCaption.TabIndex = 0;
-            // 
-            // panelMain
-            // 
-            this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelMain.Location = new System.Drawing.Point(0, 10);
-            this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(713, 448);
-            this.panelMain.TabIndex = 1;
-            // 
-            // menuStripMain
-            // 
-            this.menuStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.systemMenuItem,
-            this.viewMenuItem,
-            this.toolMenuItem,
-            this.helpMenuItem});
-            this.menuStripMain.Location = new System.Drawing.Point(0, 0);
-            this.menuStripMain.Name = "menuStripMain";
-            this.menuStripMain.Size = new System.Drawing.Size(893, 25);
-            this.menuStripMain.TabIndex = 0;
-            this.menuStripMain.Text = "menuStrip1";
-            // 
-            // systemMenuItem
-            // 
-            this.systemMenuItem.Name = "systemMenuItem";
-            this.systemMenuItem.Size = new System.Drawing.Size(44, 21);
-            this.systemMenuItem.Text = "系统";
-            // 
-            // viewMenuItem
-            // 
-            this.viewMenuItem.Name = "viewMenuItem";
-            this.viewMenuItem.Size = new System.Drawing.Size(44, 21);
-            this.viewMenuItem.Text = "视图";
-            // 
-            // toolMenuItem
-            // 
-            this.toolMenuItem.Name = "toolMenuItem";
-            this.toolMenuItem.Size = new System.Drawing.Size(44, 21);
-            this.toolMenuItem.Text = "工具";
-            // 
-            // helpMenuItem
-            // 
-            this.helpMenuItem.Name = "helpMenuItem";
-            this.helpMenuItem.Size = new System.Drawing.Size(44, 21);
-            this.helpMenuItem.Text = "帮助";
-            // 
-            // toolStrip1
-            // 
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tbOpen,
-            this.tbSave,
+            this._toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._tbOpen,
+            this._tbSave,
             this.toolStripSeparator2,
-            this.tbRefresh,
+            this._tbRefresh,
             this.toolStripButton1,
             this.toolStripSeparator3,
             this.toolStripSeparator1});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 25);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(893, 25);
-            this.toolStrip1.TabIndex = 1;
-            this.toolStrip1.Text = "toolStrip1";
+            this._toolStrip.Location = new System.Drawing.Point(0, 25);
+            this._toolStrip.Name = "_toolStrip";
+            this._toolStrip.Size = new System.Drawing.Size(1208, 25);
+            this._toolStrip.TabIndex = 1;
+            this._toolStrip.Text = "_toolStrip";
             // 
-            // tbOpen
+            // _tbOpen
             // 
-            this.tbOpen.Image = global::TradingSystem.Properties.Resources.open;
-            this.tbOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tbOpen.Name = "tbOpen";
-            this.tbOpen.Size = new System.Drawing.Size(52, 22);
-            this.tbOpen.Text = "打开";
+            this._tbOpen.Image = global::TradingSystem.Properties.Resources.open;
+            this._tbOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._tbOpen.Name = "_tbOpen";
+            this._tbOpen.Size = new System.Drawing.Size(52, 22);
+            this._tbOpen.Text = "打开";
             // 
-            // tbSave
+            // _tbSave
             // 
-            this.tbSave.Image = global::TradingSystem.Properties.Resources.save;
-            this.tbSave.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tbSave.Name = "tbSave";
-            this.tbSave.Size = new System.Drawing.Size(52, 22);
-            this.tbSave.Text = "保存";
+            this._tbSave.Image = global::TradingSystem.Properties.Resources.save;
+            this._tbSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._tbSave.Name = "_tbSave";
+            this._tbSave.Size = new System.Drawing.Size(52, 22);
+            this._tbSave.Text = "保存";
             // 
-            // tbRefresh
+            // toolStripSeparator2
             // 
-            this.tbRefresh.Image = global::TradingSystem.Properties.Resources.refresh;
-            this.tbRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tbRefresh.Name = "tbRefresh";
-            this.tbRefresh.Size = new System.Drawing.Size(52, 22);
-            this.tbRefresh.Text = "刷新";
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // _tbRefresh
+            // 
+            this._tbRefresh.Image = global::TradingSystem.Properties.Resources.refresh;
+            this._tbRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._tbRefresh.Name = "_tbRefresh";
+            this._tbRefresh.Size = new System.Drawing.Size(52, 22);
+            this._tbRefresh.Text = "刷新";
             // 
             // toolStripButton1
             // 
@@ -191,41 +124,140 @@
             this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton1.Text = "toolStripButton1";
             // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
-            // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // _menuStripMain
+            // 
+            this._menuStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._systemMenuItem,
+            this._viewMenuItem,
+            this._toolMenuItem,
+            this._helpMenuItem});
+            this._menuStripMain.Location = new System.Drawing.Point(0, 0);
+            this._menuStripMain.Name = "_menuStripMain";
+            this._menuStripMain.Size = new System.Drawing.Size(1208, 25);
+            this._menuStripMain.TabIndex = 0;
+            this._menuStripMain.Text = "menuStrip1";
+            // 
+            // _systemMenuItem
+            // 
+            this._systemMenuItem.Name = "_systemMenuItem";
+            this._systemMenuItem.Size = new System.Drawing.Size(44, 21);
+            this._systemMenuItem.Text = "系统";
+            // 
+            // _viewMenuItem
+            // 
+            this._viewMenuItem.Name = "_viewMenuItem";
+            this._viewMenuItem.Size = new System.Drawing.Size(44, 21);
+            this._viewMenuItem.Text = "视图";
+            // 
+            // _toolMenuItem
+            // 
+            this._toolMenuItem.Name = "_toolMenuItem";
+            this._toolMenuItem.Size = new System.Drawing.Size(44, 21);
+            this._toolMenuItem.Text = "工具";
+            // 
+            // _helpMenuItem
+            // 
+            this._helpMenuItem.Name = "_helpMenuItem";
+            this._helpMenuItem.Size = new System.Drawing.Size(44, 21);
+            this._helpMenuItem.Text = "帮助";
+            // 
+            // panelBottomContainer
+            // 
+            this.panelBottomContainer.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panelBottomContainer.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panelBottomContainer.Location = new System.Drawing.Point(0, 597);
+            this.panelBottomContainer.Name = "panelBottomContainer";
+            this.panelBottomContainer.Size = new System.Drawing.Size(1212, 35);
+            this.panelBottomContainer.TabIndex = 1;
+            // 
+            // _splitContainerMain
+            // 
+            this._splitContainerMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._splitContainerMain.Location = new System.Drawing.Point(0, 50);
+            this._splitContainerMain.Name = "_splitContainerMain";
+            // 
+            // _splitContainerMain.Panel1
+            // 
+            this._splitContainerMain.Panel1.Controls.Add(this._navBarContainer);
+            // 
+            // _splitContainerMain.Panel2
+            // 
+            this._splitContainerMain.Panel2.Controls.Add(this._panelMain);
+            this._splitContainerMain.Panel2.Controls.Add(this._panelMainCaption);
+            this._splitContainerMain.Size = new System.Drawing.Size(1212, 547);
+            this._splitContainerMain.SplitterDistance = 169;
+            this._splitContainerMain.TabIndex = 2;
+            // 
+            // _navBarContainer
+            // 
+            this._navBarContainer.AutoScroll = true;
+            this._navBarContainer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this._navBarContainer.BarMargin = 5;
+            this._navBarContainer.BarSpace = 1;
+            this._navBarContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._navBarContainer.Location = new System.Drawing.Point(0, 0);
+            this._navBarContainer.Name = "_navBarContainer";
+            this._navBarContainer.SelectedIndex = -1;
+            this._navBarContainer.Size = new System.Drawing.Size(169, 547);
+            this._navBarContainer.TabIndex = 0;
+            this._navBarContainer.LeafItemClick += new Controls.TreeViewItemClick(TreeView_ItemClick);
+            // 
+            // _panelMain
+            // 
+            this._panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._panelMain.Location = new System.Drawing.Point(0, 10);
+            this._panelMain.Name = "_panelMain";
+            this._panelMain.Size = new System.Drawing.Size(1039, 537);
+            this._panelMain.TabIndex = 1;
+            // 
+            // _panelMainCaption
+            // 
+            this._panelMainCaption.Dock = System.Windows.Forms.DockStyle.Top;
+            this._panelMainCaption.Location = new System.Drawing.Point(0, 0);
+            this._panelMainCaption.Name = "_panelMainCaption";
+            this._panelMainCaption.Size = new System.Drawing.Size(1039, 10);
+            this._panelMainCaption.TabIndex = 0;
+            // 
+            // _imageList
+            // 
+            this._imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("_imageList.ImageStream")));
+            this._imageList.TransparentColor = System.Drawing.Color.Transparent;
+            this._imageList.Images.SetKeyName(0, "right.png");
+            this._imageList.Images.SetKeyName(1, "down.png");
+            this._imageList.Images.SetKeyName(2, "item.png");
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(897, 543);
-            this.Controls.Add(this.splitContainerMain);
+            this.ClientSize = new System.Drawing.Size(1212, 632);
+            this.Controls.Add(this._splitContainerMain);
             this.Controls.Add(this.panelBottomContainer);
             this.Controls.Add(this.panelTopContainer);
-            this.MainMenuStrip = this.menuStripMain;
+            this.MainMenuStrip = this._menuStripMain;
             this.Name = "MainForm";
             this.Text = "交易系统";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.panelTopContainer.ResumeLayout(false);
             this.panelTopContainer.PerformLayout();
-            this.splitContainerMain.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).EndInit();
-            this.splitContainerMain.ResumeLayout(false);
-            this.menuStripMain.ResumeLayout(false);
-            this.menuStripMain.PerformLayout();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
+            this._toolStrip.ResumeLayout(false);
+            this._toolStrip.PerformLayout();
+            this._menuStripMain.ResumeLayout(false);
+            this._menuStripMain.PerformLayout();
+            this._splitContainerMain.Panel1.ResumeLayout(false);
+            this._splitContainerMain.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this._splitContainerMain)).EndInit();
+            this._splitContainerMain.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -234,22 +266,24 @@
 
         private System.Windows.Forms.Panel panelTopContainer;
         private System.Windows.Forms.Panel panelBottomContainer;
-        private System.Windows.Forms.SplitContainer splitContainerMain;
-        private System.Windows.Forms.Panel panelMain;
-        private System.Windows.Forms.Panel panelMainCaption;
-        private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton tbOpen;
-        private System.Windows.Forms.MenuStrip menuStripMain;
-        private System.Windows.Forms.ToolStripMenuItem systemMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem viewMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem helpMenuItem;
-        private System.Windows.Forms.ToolStripButton tbSave;
-        private System.Windows.Forms.ToolStripButton tbRefresh;
+        private System.Windows.Forms.SplitContainer _splitContainerMain;
+        private System.Windows.Forms.Panel _panelMain;
+        private System.Windows.Forms.Panel _panelMainCaption;
+        private System.Windows.Forms.ToolStrip _toolStrip;
+        private System.Windows.Forms.ToolStripButton _tbOpen;
+        private System.Windows.Forms.MenuStrip _menuStripMain;
+        private System.Windows.Forms.ToolStripMenuItem _systemMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem _viewMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem _toolMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem _helpMenuItem;
+        private System.Windows.Forms.ToolStripButton _tbSave;
+        private System.Windows.Forms.ToolStripButton _tbRefresh;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private Controls.TSNavBarContainer _navBarContainer;
+        private System.Windows.Forms.ImageList _imageList;
     }
 }
 

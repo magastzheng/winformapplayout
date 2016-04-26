@@ -41,5 +41,10 @@ namespace ControlsTest
             }
 
         }
+
+        private void TreeView_ItemClick(object sender, global::Controls.TreeViewItemArgs e)
+        {
+            Console.WriteLine(e.TreeNodeEvent);
+        }
     }
 }

@@ -46,6 +46,7 @@
             this.tsNavBarContainer1.SelectedIndex = -1;
             this.tsNavBarContainer1.Size = new System.Drawing.Size(180, 331);
             this.tsNavBarContainer1.TabIndex = 0;
+            this.tsNavBarContainer1.LeafItemClick += new Controls.TreeViewItemClick(TreeView_ItemClick);
             // 
             // imageList1
             // 

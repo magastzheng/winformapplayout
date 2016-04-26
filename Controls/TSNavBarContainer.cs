@@ -12,6 +12,8 @@ namespace Controls
 {
     public partial class TSNavBarContainer : UserControl
     {
+        public event TreeViewItemClick LeafItemClick;
+
         private TSNavBarItems _navBarItems;
 
         public TSNavBarItems Bars
@@ -238,5 +240,15 @@ namespace Controls
                 bar.IsSelected = false;
             }
         }
+
+        #region event handler
+        public void TreeView_ItemClick(object sender, TreeViewItemArgs e)
+        {
+            if (LeafItemClick != null)
+            {
+                LeafItemClick(sender, e);
+            }
+        }
+        #endregion
     }
 }

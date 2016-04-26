@@ -54,7 +54,8 @@ namespace TradingSystem.View
             //if (retCode == (int)ConnectionCode.Success)
             //{
                 var gridConfig = ConfigManager.Instance.GetGridConfig();
-                TradingSystem.View.TradingCommandForm mainForm = new TradingSystem.View.TradingCommandForm(gridConfig);
+                //TradingSystem.View.TradingCommandForm mainForm = new TradingSystem.View.TradingCommandForm(gridConfig);
+                MainForm mainForm = new MainForm();
                 MainController mainController = new MainController(mainForm, _loginController.T2SDKWrap);
                 Program._s_mainfrmController = mainController;
 
