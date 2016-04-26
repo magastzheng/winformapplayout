@@ -158,6 +158,9 @@
     <None Include="Resources\refresh.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="config\navbar.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="img\down.png" />
     <Content Include="img\minus.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

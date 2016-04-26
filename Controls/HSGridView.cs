@@ -37,10 +37,14 @@ namespace Controls
             get { return _updateRelatedDataGrid; }
         }
 
-        public HSGridView(HSGrid hsGrid)
+        public HSGridView()
         {
-            InitializeComponent();
+            InitializeComponent();   
+        }
 
+        public HSGridView(HSGrid hsGrid):
+            this()
+        {
             this._hsGrid = hsGrid;
             this._columns = hsGrid.Columns;
             for (int i = 0, count = _columns.Count; i < count; i++)

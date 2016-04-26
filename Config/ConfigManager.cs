@@ -16,6 +16,7 @@ namespace Config
         private TerminalConfig _terminalConfig;
         private GridConfig _gridConfig;
         private LabelConfig _labelConfig;
+        private NavbarConfig _navBarConfig;
 
         private ConfigManager()
         {
@@ -35,6 +36,7 @@ namespace Config
             _terminalConfig = new TerminalConfig(_systemConfig);
             _gridConfig = new GridConfig();
             _labelConfig = new LabelConfig();
+            _navBarConfig = new NavbarConfig();
 
             //_buySellConfig.Init();
             //_functionConfig.Init();
@@ -72,6 +74,11 @@ namespace Config
         public LabelConfig GetLabelConfig()
         {
             return _instance._labelConfig;
+        }
+
+        public NavbarConfig GetNavbarConfig()
+        {
+            return _instance._navBarConfig;
         }
     }
 }

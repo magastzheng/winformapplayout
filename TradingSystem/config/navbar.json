@@ -1,0 +1,70 @@
+﻿[
+    {
+        "id": "trading",
+        "title": "交易管理",
+        "parentid": "",
+        "isexpansed": false,
+        "children":[
+            {
+                "id": "open",
+                "title": "期现开仓",
+                "parentid": "trading",
+                "isexpansed": false,
+                "children": []
+            },{
+                "id": "close",
+                "title": "期现平仓",
+                "parentid": "trading",
+                "isexpansed": false,
+                "children": []
+            },{
+                "id": "commandmanager",
+                "title": "指令管理",
+                "parentid": "trading",
+                "isexpansed": false,
+                "children": []
+            }
+        ]
+    },
+    {
+        "id": "templatemanager",
+        "title": "现货模板管理",
+        "parentid": "",
+        "isexpansed": false,
+        "children": [
+           {
+                "id": "currenttemplate",
+                "title": "现货模板",
+                "parentid": "templatemanager",
+                "isexpansed": false,
+                "children": []
+            },
+            {
+                "id": "historytemplate",
+                "title": "历史模板",
+                "parentid": "templatemanager",
+                "isexpansed": false,
+                "children": []
+            } 
+        ]
+    },
+    {
+        "id": "holding",
+        "title": "持仓管理",
+        "parentid": "",
+        "isexpansed": false,
+        "children": [{
+                "id": "instancemanager",
+                "title": "实例管理",
+                "parentid": "holding",
+                "isexpansed": false,
+                "children": []
+            },{
+                "id": "holdingtransfer",
+                "title": "持仓划转",
+                "parentid": "holding",
+                "isexpansed": false,
+                "children": []
+            }]
+     }
+]
