@@ -30,13 +30,21 @@ namespace Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.SuspendLayout();
+            // 
+            // BaseForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.BlueViolet;
+            this.ClientSize = new System.Drawing.Size(1125, 570);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.TopLevel = false;
-            this.BackColor = Color.BlueViolet;
             this.Dock = DockStyle.Fill;
+            this.Name = "BaseForm";
             this.Text = "BaseForm";
+            this.ResumeLayout(false);
+
         }
 
         #endregion

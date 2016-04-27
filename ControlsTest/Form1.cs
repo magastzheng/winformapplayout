@@ -27,7 +27,7 @@ namespace ControlsTest
                 {
                     foreach (var node in nodes)
                     {
-                        Controls.TSNavBarItem tsNavBarItem = tsNavBarContainer1.AddBar();
+                        Controls.TSNavBarItem tsNavBarItem = tsNavBarContainer.AddBar();
                         tsNavBarItem.Title = node.Title;
                         tsNavBarItem.AddTreeNode(node.Children);
                         tsNavBarItem.TreeView.NodeCollapseImage = imageList1.Images[0];

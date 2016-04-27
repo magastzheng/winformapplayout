@@ -116,6 +116,9 @@
     <EmbeddedResource Include="View\LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\StockTemplateForm.resx">
+      <DependentUpon>StockTemplateForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\TradingCommandForm.resx">
       <DependentUpon>TradingCommandForm.cs</DependentUpon>
     </EmbeddedResource>

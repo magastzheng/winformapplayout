@@ -36,6 +36,7 @@ namespace TradingSystem.View
                 {
                     Controls.TSNavBarItem tsNavBarItem = _navBarContainer.AddBar();
                     tsNavBarItem.Title = node.Title;
+                    //tsNavBarItem.Dock = DockStyle.Top;
                     tsNavBarItem.AddTreeNode(node.Children);
                     tsNavBarItem.TreeView.NodeCollapseImage = _imageList.Images[0];
                     tsNavBarItem.TreeView.NodeExpandedImage = _imageList.Images[1];
@@ -81,6 +82,7 @@ namespace TradingSystem.View
                         {
                             form = new StockTemplateForm();
                             form.BackColor = Color.DarkGray;
+                            //form.Dock = DockStyle.Fill;
                             _childFormMap[key] = form;
                         }
                         else

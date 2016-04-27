@@ -69,6 +69,12 @@ namespace Controls
             this.BackColor = Color.FromArgb(112, 140, 225);
             this._navBarItems = new TSNavBarItems(this);
             this.AutoScroll = true;
+            this.SizeChanged += new EventHandler(TSNavBarContainer_SizeChanged);
+        }
+
+        private void TSNavBarContainer_SizeChanged(object sender, EventArgs e)
+        {
+            SetLayout();
         }
 
         private int ValidTop
@@ -124,27 +130,17 @@ namespace Controls
 
         public void SetLayout()
         {
-            //for (int i = 0; i < this._navBarItems.Count; i++)
-            //{
-            //    if (i == 0)
-            //    {
-            //        this._navBarItems[i].Top = 10;
-            //    }
-            //    else
-            //    {
-            //        this._navBarItems[i].Top = this._navBarItems[i - 1].Bottom + this._barSpace;
-            //        this._navBarItems[i].BarIndex = i;
-            //    }
-            //}
-            //SetExpandHeight();
-
             //set the collapse bar height
+            //set the bar width to fill the container
             for (int i = 0, count = this._navBarItems.Count; i < count; i++)
             {
                 if (this._navBarItems[i].BarState == TSNavBarItemState.Collapse)
                 {
                     this._navBarItems[i].SetHeight();
                 }
+
+                this._navBarItems[i].Left = this.Left + this.Margin.Left;
+                this._navBarItems[i].Width = this.Width - this.Margin.Left - this.Margin.Right;
             }
 
             //set the bar top
@@ -181,14 +177,7 @@ namespace Controls
                 }
 
                 SetSelectedBarHeight();
-
-                //if (_selectedIndex > 0 && _selectedIndex < this._navBarItems.Count - 1)
-                //{
-                //    this._navBarItems[_selectedIndex].Height = this._navBarItems[_selectedIndex + 1].Top - this._navBarItems[_selectedIndex - 1].Bottom - 2 * this._barSpace;
-                //}
             }
-
-
         }
 
         public void SetLayout(TSNavBarItem item)

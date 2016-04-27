@@ -210,7 +210,7 @@
             this._navBarContainer.SelectedIndex = -1;
             this._navBarContainer.Size = new System.Drawing.Size(169, 547);
             this._navBarContainer.TabIndex = 0;
-            this._navBarContainer.LeafItemClick += new Controls.TreeViewItemClick(TreeView_ItemClick);
+            this._navBarContainer.LeafItemClick += new Controls.TreeViewItemClick(this.TreeView_ItemClick);
             // 
             // _panelMain
             // 
