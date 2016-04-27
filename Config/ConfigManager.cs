@@ -17,6 +17,7 @@ namespace Config
         private GridConfig _gridConfig;
         private LabelConfig _labelConfig;
         private NavbarConfig _navBarConfig;
+        private ImportConfig _importConfig;
 
         private ConfigManager()
         {
@@ -37,6 +38,7 @@ namespace Config
             _gridConfig = new GridConfig();
             _labelConfig = new LabelConfig();
             _navBarConfig = new NavbarConfig();
+            _importConfig = new ImportConfig();
 
             //_buySellConfig.Init();
             //_functionConfig.Init();
@@ -79,6 +81,11 @@ namespace Config
         public NavbarConfig GetNavbarConfig()
         {
             return _instance._navBarConfig;
+        }
+
+        public ImportConfig GetImportConfig()
+        {
+            return _instance._importConfig;
         }
     }
 }

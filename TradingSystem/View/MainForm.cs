@@ -13,6 +13,7 @@ namespace TradingSystem.View
 {
     public partial class MainForm : Form
     {
+        private GridConfig _gridConfig;
         private Dictionary<string, Forms.BaseForm> _childFormMap = new Dictionary<string, Forms.BaseForm>();
 
         public MainForm()
@@ -23,7 +24,7 @@ namespace TradingSystem.View
         public MainForm(GridConfig gridConfig)
             :this()
         {
-            
+            _gridConfig = gridConfig;
         }
 
         #region event handler
@@ -80,7 +81,7 @@ namespace TradingSystem.View
                     {
                         if (!_childFormMap.ContainsKey(key))
                         {
-                            form = new StockTemplateForm();
+                            form = new StockTemplateForm(_gridConfig);
                             form.BackColor = Color.DarkGray;
                             //form.Dock = DockStyle.Fill;
                             _childFormMap[key] = form;

@@ -16,7 +16,7 @@ namespace Controls
         Add = 1,
         Remove = 2,
     }
-    public delegate void UpdateRelatedDataGrid(UpdateDirection direction, DataRow dataRow);
+    public delegate void UpdateRelatedDataGrid(UpdateDirection direction, RawDataRow dataRow);
 
     [System.ComponentModel.DesignerCategory("code"),
     Designer(typeof(System.Windows.Forms.Design.ControlDesigner)),
@@ -61,14 +61,14 @@ namespace Controls
             this.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_CellContentClick);
         }
 
-        public void FillData(DataSet dataSet, Dictionary<string, string> colDataMap)
+        public void FillData(RawDataSet dataSet, Dictionary<string, string> colDataMap)
         {
             if (dataSet == null || dataSet.Rows == null || colDataMap == null)
                 return;
 
             for(int r = 0, count = dataSet.Rows.Count; r < count; r++)
             {
-                DataRow dataRow = dataSet.Rows[r];
+                RawDataRow dataRow = dataSet.Rows[r];
 
                 int rowIndex = this.Rows.Add();
                 DataGridViewRow row = this.Rows[rowIndex];
@@ -282,7 +282,7 @@ namespace Controls
                 if (_updateRelatedDataGrid != null)
                 {
                     int cbColIndex = GetCheckBoxColumnIndex();
-                    DataRow dataRow = GetDataRow(row, 1);
+                    RawDataRow dataRow = GetDataRow(row, 1);
                     _updateRelatedDataGrid(UpdateDirection.Add, dataRow);
                 }
             }
@@ -294,7 +294,7 @@ namespace Controls
                 if (_updateRelatedDataGrid != null)
                 {
                     int cbColIndex = GetCheckBoxColumnIndex();
-                    DataRow dataRow = GetDataRow(row, 0);
+                    RawDataRow dataRow = GetDataRow(row, 0);
                     _updateRelatedDataGrid(UpdateDirection.Remove, dataRow);
                 }
             }
@@ -316,9 +316,9 @@ namespace Controls
             return index;
         }
 
-        private DataRow GetDataRow(DataGridViewRow row, int defSelection)
+        private RawDataRow GetDataRow(DataGridViewRow row, int defSelection)
         {
-            DataRow dataRow = new DataRow();
+            RawDataRow dataRow = new RawDataRow();
             dataRow.Columns = new Dictionary<string, DataValue>();
             for(int i = 0, count = this._columns.Count; i < count; i++)
             {
@@ -342,10 +342,10 @@ namespace Controls
             return dataRow;
         }
 
-        private DataSet GetSelectionRows()
+        private RawDataSet GetSelectionRows()
         {
-            DataSet dataSet = new DataSet();
-            dataSet.Rows = new List<DataRow>();
+            RawDataSet dataSet = new RawDataSet();
+            dataSet.Rows = new List<RawDataRow>();
 
             int cbColIndex = GetCheckBoxColumnIndex();
             if (cbColIndex < 0)
@@ -358,7 +358,7 @@ namespace Controls
                 if (!isChecked)
                     continue;
 
-                DataRow dataRow = GetDataRow(row, 1);
+                RawDataRow dataRow = GetDataRow(row, 1);
                 dataSet.Rows.Add(dataRow);
             }
 

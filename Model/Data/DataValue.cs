@@ -42,14 +42,16 @@ namespace Model.Data
         }
     }
 
-    public class DataRow
+    //The raw data from UFX - t2sdk row
+    public class RawDataRow
     {
         public Dictionary<string, DataValue> Columns { get; set; }
     }
 
-    public class DataSet
+    //The raw data from UFX - t2sdk set
+    public class RawDataSet
     {
         public FunctionCode FunctionCode { get; set; }
-        public List<DataRow> Rows { get; set; }
+        public List<RawDataRow> Rows { get; set; }
     }
 }

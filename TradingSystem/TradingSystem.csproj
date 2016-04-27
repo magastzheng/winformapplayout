@@ -125,6 +125,7 @@
     <EmbeddedResource Include="View\WarnForm.resx">
       <DependentUpon>WarnForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="config\import.json" />
     <None Include="config\fieldtype.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

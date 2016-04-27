@@ -48,6 +48,7 @@
     <Compile Include="config\FunctionItem.cs" />
     <Compile Include="config\Label.cs" />
     <Compile Include="ConnectionCode.cs" />
+    <Compile Include="Data\DataTable.cs" />
     <Compile Include="Data\DataValue.cs" />
     <Compile Include="Data\DataValueType.cs" />
     <Compile Include="EntrustParam.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="UIEntrustItem.cs" />
     <Compile Include="UITradingCommandItem.cs" />
     <Compile Include="UI\HSGridColumn.cs" />
+    <Compile Include="UI\ImportSheet.cs" />
     <Compile Include="UI\TSNavNodeData.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

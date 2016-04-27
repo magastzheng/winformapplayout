@@ -592,12 +592,12 @@ namespace TradingSystem.View
 
         #region 委托流水
 
-        private Model.Data.DataSet GenerateEntrustFlowData(out Dictionary<string, string> colDataMap)
+        private Model.Data.RawDataSet GenerateEntrustFlowData(out Dictionary<string, string> colDataMap)
         {
-            Model.Data.DataSet dataSet = new Model.Data.DataSet 
+            Model.Data.RawDataSet dataSet = new Model.Data.RawDataSet 
             {
                 FunctionCode = FunctionCode.QueryEntrustInstance,
-                Rows = new List<Model.Data.DataRow>()
+                Rows = new List<Model.Data.RawDataRow>()
             };
 
             const string CHAR = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -605,7 +605,7 @@ namespace TradingSystem.View
             colDataMap = new Dictionary<string, string>();
             for (int i = 0; i < 10; i++)
             {
-                Model.Data.DataRow dataRow = new Model.Data.DataRow();
+                Model.Data.RawDataRow dataRow = new Model.Data.RawDataRow();
                 dataRow.Columns = new Dictionary<string, Model.Data.DataValue>();
 
                 foreach (HSGridColumn column in this.dataGridViewEntrustFlow.GridColumns)
@@ -655,7 +655,7 @@ namespace TradingSystem.View
             return dataSet;
         }
 
-        private void FillEntrustFlow(Model.Data.DataSet dataSet, Dictionary<string, string> colDataMap)
+        private void FillEntrustFlow(Model.Data.RawDataSet dataSet, Dictionary<string, string> colDataMap)
         {
             this.dataGridViewEntrustFlow.FillData(dataSet, colDataMap);
         }
@@ -889,7 +889,7 @@ namespace TradingSystem.View
 
         #region
 
-        public void DataGridViewCmdTrading_Select(UpdateDirection direction, Model.Data.DataRow dataRow)
+        public void DataGridViewCmdTrading_Select(UpdateDirection direction, Model.Data.RawDataRow dataRow)
         {
             string colKey = "instance_no";
             if (dataRow == null || dataRow.Columns == null || dataRow.Columns.ContainsKey(colKey))
@@ -898,9 +898,9 @@ namespace TradingSystem.View
             if (direction == UpdateDirection.Add)
             {
                 Dictionary<string, string> colDataMap = new Dictionary<string, string>();
-                Model.Data.DataSet eDataSet = new Model.Data.DataSet();
-                eDataSet.Rows = new List<Model.Data.DataRow>();
-                Model.Data.DataRow eRow = new Model.Data.DataRow();
+                Model.Data.RawDataSet eDataSet = new Model.Data.RawDataSet();
+                eDataSet.Rows = new List<Model.Data.RawDataRow>();
+                Model.Data.RawDataRow eRow = new Model.Data.RawDataRow();
                 eRow.Columns = new Dictionary<string, Model.Data.DataValue>();
 
                 foreach (var column in this.dataGridViewBuySell.GridColumns)

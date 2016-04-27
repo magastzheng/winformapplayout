@@ -11,9 +11,9 @@ namespace BLL
     
     public class DataParser
     {
-        private List<DataSet> _dataSets = new List<DataSet>();
+        private List<RawDataSet> _dataSets = new List<RawDataSet>();
 
-        public List<DataSet> DataSets
+        public List<RawDataSet> DataSets
         {
             get { return _dataSets; }
         }
@@ -22,8 +22,8 @@ namespace BLL
         {
             for (int i = 0; i < lpUnPack.GetDatasetCount(); i++)
             {
-                DataSet dataSet = new DataSet();
-                dataSet.Rows = new List<DataRow>();
+                RawDataSet dataSet = new RawDataSet();
+                dataSet.Rows = new List<RawDataRow>();
                 //设置当前结果集
                 lpUnPack.SetCurrentDatasetByIndex(i);
 
@@ -37,7 +37,7 @@ namespace BLL
                 //打印所有记录
                 for (int k = 0; k < lpUnPack.GetRowCount(); k++)
                 {
-                    DataRow row = new DataRow();
+                    RawDataRow row = new RawDataRow();
                     row.Columns = new Dictionary<string,DataValue>();
 
                     //打印每条记录
