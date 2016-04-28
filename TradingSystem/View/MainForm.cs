@@ -1,4 +1,5 @@
 ﻿using Config;
+using Forms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -54,18 +55,17 @@ namespace TradingSystem.View
 
             Forms.BaseForm form = null;
             string key = e.TreeNodeEvent.Name;
+            Type formType = null;
+            bool hasGrid = false;
             switch (e.TreeNodeEvent.Name)
             {
                 case "open":
                     {
                         if (!_childFormMap.ContainsKey(key))
                         {
-                            form = new TradingForm();
-                            //form.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-                            //form.TopLevel = false;
-                            //form.BackColor = Color.BlueViolet;
-                            //form.Dock = DockStyle.Fill;
-                            _childFormMap[key] = form;
+                            //form = new TradingForm();
+                            //_childFormMap[key] = form;
+                            formType = typeof(TradingForm);
                         }
                         else
                         {
@@ -81,10 +81,12 @@ namespace TradingSystem.View
                     {
                         if (!_childFormMap.ContainsKey(key))
                         {
-                            form = new StockTemplateForm(_gridConfig);
-                            form.BackColor = Color.DarkGray;
+                            //form = new StockTemplateForm(_gridConfig);
+                            //form.BackColor = Color.DarkGray;
                             //form.Dock = DockStyle.Fill;
-                            _childFormMap[key] = form;
+                            //_childFormMap[key] = form;
+                            formType = typeof(StockTemplateForm);
+                            hasGrid = true;
                         }
                         else
                         {
@@ -98,12 +100,31 @@ namespace TradingSystem.View
                     break;
             }
 
+            if (formType != null && form == null)
+            {
+                if (hasGrid)
+                {
+                    form = FormManager.LoadForm(this, formType, new object[] { _gridConfig }, "");
+                }
+                else
+                {
+                    form = FormManager.LoadForm(this, formType, "");
+                }
+                _childFormMap[key] = form;
+            }
+
             if (form != null)
             {
                 //_panelMain.Controls.Clear();
                 //_panelMain.Controls.Add(form);
                 //_splitContainerMain.Panel2.Controls.Clear();
                 //_splitContainerMain.Panel2.Controls.Add(form);
+                ILoadFormActived formActived = form as ILoadFormActived;
+                if (formActived != null)
+                {
+                    formActived.OnLoadFormActived("");
+                }
+
                 form.MdiParent = this;
                 form.Parent = _panelMain;
                 form.Dock = DockStyle.Fill;

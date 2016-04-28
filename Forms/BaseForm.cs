@@ -10,11 +10,24 @@ using System.Windows.Forms;
 
 namespace Forms
 {
-    public partial class BaseForm : Form
+    public partial class BaseForm : Form, ILoadFormActived
     {
+        public delegate void FormActiveHandler(string json);
+
+        public event FormActiveHandler LoadFormActived;
+
         public BaseForm()
         {
             InitializeComponent();
+        }
+
+        public virtual void OnLoadFormActived(string json)
+        {
+            if (LoadFormActived != null)
+            {
+                LoadFormActived(json);
+            }
+
         }
     }
 }

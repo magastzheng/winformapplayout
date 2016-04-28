@@ -317,6 +317,7 @@ namespace TradingSystem.View
             this.Controls.Add(this.lblTemplateNo);
             this.Controls.Add(this.panelTop);
             this.Name = "TemplateDialog";
+            this.Load += new EventHandler(Form_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();

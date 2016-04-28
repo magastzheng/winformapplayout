@@ -44,6 +44,11 @@ namespace TradingSystem.View
             LoadData();
         }
 
+        private void Form_LoadActived(string json)
+        {
+            
+        }
+
         private void LoadData()
         { 
             //Load data from database
