@@ -933,7 +933,7 @@ namespace TradingSystem.View
             else if (direction == UpdateDirection.Remove)
             {
                 var targetValue = dataRow.Columns["tc_commandno"];
-                this.dataGridViewBuySell.DeleteData("bs_commandno", targetValue);
+                this.dataGridViewBuySell.DeleteRow("bs_commandno", targetValue);
             }
         }
 

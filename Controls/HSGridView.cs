@@ -173,7 +173,7 @@ namespace Controls
             }
         }
 
-        public void DeleteData(string targetColName, DataValue targetColValue)
+        public void DeleteRow(string targetColName, DataValue targetColValue)
         {
             int index = _columnNameIndex[targetColName];
             var column = _columns[index];
