@@ -50,5 +50,26 @@ namespace TradingSystem.View
 
             //Fill data into gridview
         }
+
+        #region button click
+
+        private void Button_Add_Click(object sender, System.EventArgs e)
+        {
+            TemplateDialog dialog = new TemplateDialog();
+            dialog.Owner = this;
+            dialog.StartPosition = FormStartPosition.CenterParent;
+            //
+            dialog.ShowDialog();
+            if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+
+            }
+            else
+            {
+                dialog.Close();
+            }
+        }
+
+        #endregion
     }
 }

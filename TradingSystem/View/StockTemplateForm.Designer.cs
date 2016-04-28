@@ -65,7 +65,7 @@
             this.panelChildTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelChildTop.Location = new System.Drawing.Point(0, 0);
             this.panelChildTop.Name = "panelChildTop";
-            this.panelChildTop.Size = new System.Drawing.Size(959, 38);
+            this.panelChildTop.Size = new System.Drawing.Size(1094, 38);
             this.panelChildTop.TabIndex = 0;
             // 
             // toolStripChildTop
@@ -78,7 +78,7 @@
             this.tsbDelete});
             this.toolStripChildTop.Location = new System.Drawing.Point(0, 0);
             this.toolStripChildTop.Name = "toolStripChildTop";
-            this.toolStripChildTop.Size = new System.Drawing.Size(959, 38);
+            this.toolStripChildTop.Size = new System.Drawing.Size(1094, 38);
             this.toolStripChildTop.TabIndex = 0;
             this.toolStripChildTop.Text = "toolStrip1";
             // 
@@ -89,6 +89,7 @@
             this.tsbAdd.Name = "tsbAdd";
             this.tsbAdd.Size = new System.Drawing.Size(52, 35);
             this.tsbAdd.Text = "添加";
+            this.tsbAdd.Click += new System.EventHandler(this.Button_Add_Click);
             // 
             // tsbModify
             // 
@@ -118,9 +119,9 @@
             // 
             this.panelChildBottom.Controls.Add(this.toolStripChildBottom);
             this.panelChildBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelChildBottom.Location = new System.Drawing.Point(0, 362);
+            this.panelChildBottom.Location = new System.Drawing.Point(0, 327);
             this.panelChildBottom.Name = "panelChildBottom";
-            this.panelChildBottom.Size = new System.Drawing.Size(959, 35);
+            this.panelChildBottom.Size = new System.Drawing.Size(1094, 35);
             this.panelChildBottom.TabIndex = 1;
             // 
             // toolStripChildBottom
@@ -142,7 +143,7 @@
             this.tsbExport});
             this.toolStripChildBottom.Location = new System.Drawing.Point(0, 0);
             this.toolStripChildBottom.Name = "toolStripChildBottom";
-            this.toolStripChildBottom.Size = new System.Drawing.Size(959, 35);
+            this.toolStripChildBottom.Size = new System.Drawing.Size(1094, 35);
             this.toolStripChildBottom.TabIndex = 0;
             this.toolStripChildBottom.Text = "toolStrip1";
             // 
@@ -249,14 +250,14 @@
             // splitContainerChild.Panel2
             // 
             this.splitContainerChild.Panel2.BackColor = System.Drawing.Color.LightGray;
-            this.splitContainerChild.Size = new System.Drawing.Size(959, 324);
-            this.splitContainerChild.SplitterDistance = 169;
+            this.splitContainerChild.Size = new System.Drawing.Size(1094, 289);
+            this.splitContainerChild.SplitterDistance = 150;
             this.splitContainerChild.TabIndex = 2;
             // 
             // StockTemplateForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.ClientSize = new System.Drawing.Size(959, 397);
+            this.ClientSize = new System.Drawing.Size(1094, 362);
             this.Controls.Add(this.splitContainerChild);
             this.Controls.Add(this.panelChildBottom);
             this.Controls.Add(this.panelChildTop);

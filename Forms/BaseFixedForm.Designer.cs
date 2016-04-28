@@ -1,13 +1,11 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
-namespace Forms
+﻿namespace Forms
 {
-    partial class BaseForm
+    partial class BaseFixedForm
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        protected System.ComponentModel.IContainer components = null;
+        ///private System.ComponentModel.IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -32,17 +30,14 @@ namespace Forms
         {
             this.SuspendLayout();
             // 
-            // BaseForm
+            // BaseFixedForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.BlueViolet;
-            this.ClientSize = new System.Drawing.Size(1125, 570);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            //this.TopLevel = false;
-            //this.Dock = DockStyle.Fill;
-            this.Name = "BaseForm";
-            this.Text = "BaseForm";
+            this.ClientSize = new System.Drawing.Size(341, 391);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "BaseFixedForm";
             this.ResumeLayout(false);
 
         }

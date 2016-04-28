@@ -100,8 +100,14 @@ namespace TradingSystem.View
 
             if (form != null)
             {
-                _panelMain.Controls.Clear();
-                _panelMain.Controls.Add(form);
+                //_panelMain.Controls.Clear();
+                //_panelMain.Controls.Add(form);
+                //_splitContainerMain.Panel2.Controls.Clear();
+                //_splitContainerMain.Panel2.Controls.Add(form);
+                form.MdiParent = this;
+                form.Parent = _panelMain;
+                form.Dock = DockStyle.Fill;
+                form.BringToFront();
                 form.Show();
             }
         }
