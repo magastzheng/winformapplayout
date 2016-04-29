@@ -20,5 +20,10 @@ namespace TradingSystem.View
             //
             //this.tbTemplateNo.Text
         }
+
+        public override void OnLoadFormActived(string json)
+        { 
+            
+        }
     }
 }

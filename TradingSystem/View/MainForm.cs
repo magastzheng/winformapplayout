@@ -1,5 +1,6 @@
 ﻿using Config;
 using Forms;
+using Model.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Util;
 
 namespace TradingSystem.View
 {
@@ -57,6 +59,7 @@ namespace TradingSystem.View
             string key = e.TreeNodeEvent.Name;
             Type formType = null;
             bool hasGrid = false;
+            string json = string.Empty;
             switch (e.TreeNodeEvent.Name)
             {
                 case "open":
@@ -87,6 +90,18 @@ namespace TradingSystem.View
                             //_childFormMap[key] = form;
                             formType = typeof(StockTemplateForm);
                             hasGrid = true;
+                            StockTemplate item = new StockTemplate 
+                            {
+                                TemplateNo = 12,
+                                TemplateName = "Test",
+                                FutureCopies = 1,
+                                MarketCapOpt = 100f,
+                                Benchmark = "000016",
+                                WeightType = 1,
+                                ReplaceType = 0
+                            };
+
+                            json = JsonUtil.SerializeObject(item);
                         }
                         else
                         {
@@ -104,11 +119,11 @@ namespace TradingSystem.View
             {
                 if (hasGrid)
                 {
-                    form = FormManager.LoadForm(this, formType, new object[] { _gridConfig }, "");
+                    form = FormManager.LoadForm(this, formType, new object[] { _gridConfig }, json);
                 }
                 else
                 {
-                    form = FormManager.LoadForm(this, formType, "");
+                    form = FormManager.LoadForm(this, formType, json);
                 }
                 _childFormMap[key] = form;
             }

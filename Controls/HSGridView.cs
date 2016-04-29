@@ -132,6 +132,60 @@ namespace Controls
             }
         }
 
+        public void FillData(DataTable dataTable)
+        {
+            foreach (DataRow dataRow in dataTable.Rows)
+            {
+                FillRow(dataRow, dataTable.ColumnIndex);
+            }
+        }
+
+        public void FillRow(DataRow dataRow, Dictionary<string, int> colIndexMap)
+        {
+            int rowIndex = this.Rows.Add();
+            DataGridViewRow row = this.Rows[rowIndex];
+            bool isSelected = false;
+
+            foreach (HSGridColumn col in _columns)
+            {
+                int index = -1;
+                if(colIndexMap.ContainsKey(col.Name))
+                {
+                    index = colIndexMap[col.Name];
+                }
+                if(index < 0 || index >= dataRow.Columns.Count)
+                    continue;
+
+                DataValue dataValue = dataRow.Columns[index];
+
+                switch (col.ColumnType)
+                {
+                    case HSGridColumnType.CheckBox:
+                        {
+                            int targetValue = dataValue.GetInt();
+                            isSelected = targetValue > 0 ? true : false;
+                            row.Cells[col.Name].Value = isSelected;
+                        }
+                        break;
+                    case HSGridColumnType.Text:
+                        {
+                            FillDataCell(ref row, col, dataValue);
+                        }
+                        break;
+                    case HSGridColumnType.Image:
+                        {
+                            string imgPath = dataValue.GetStr();
+                            Image plusImg = Image.FromFile(imgPath);
+                            Bitmap plusBt = new Bitmap(plusImg, new Size(20, 20));
+                            row.Cells[col.Name].Value = plusBt;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
         public void SelectAll(bool isSelected)
         {
             foreach (DataGridViewRow row in this.Rows)

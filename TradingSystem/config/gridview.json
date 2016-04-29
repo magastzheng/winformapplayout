@@ -1,4 +1,29 @@
-﻿[{
+﻿/*
+列属性说明
+columntype: 
+-1 - None
+0 - Text
+1 - CheckBox
+2 - Image
+
+valuetype: now only use 0, 1, 3
+0 - Int
+1 - Float
+2 - Char
+3 - String
+4 - Binary
+5 - Unknown 
+
+visible:
+1 - column is visible
+0 - column is hidden
+
+readonly: 
+1 - readonly
+0 - can be edited
+*/
+
+[{
 	"grid": "cmdtrading",
 	"columns":[{
 		"name": "tc_selection",
@@ -1245,7 +1270,7 @@
 		"text": "权重类别",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 3,
+		"valuetype": 0,
 		"visible": 1,
 		"readonly": 1
 		},{
@@ -1333,7 +1358,7 @@
 		"text": "替代类型",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 3,
+		"valuetype": 0,
 		"visible": 1,
 		"readonly": 1
 		},{
@@ -1348,7 +1373,7 @@
 		"name": "st_last",
 		"text": "",
 		"width": 5,
-		"columntype": 0,
+		"columntype": -1,
 		"valuetype": 0,
 		"visible": 1,
 		"readonly": 1
@@ -1356,8 +1381,15 @@
 	]
 },{
 	"grid": "templatestock",
-	"columns": [
-	{
+	"columns": [{
+		"name": "ts_selection",
+		"text": "选中",
+		"width": 60,
+		"columntype": 1,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
 		"name": "ts_secucode",
 		"text": "证券代码",
 		"width": 80,
@@ -1417,7 +1449,7 @@
 		"name": "ts_last",
 		"text": "",
 		"width": 5,
-		"columntype": 0,
+		"columntype": -1,
 		"valuetype": 0,
 		"visible": 1,
 		"readonly": 1
