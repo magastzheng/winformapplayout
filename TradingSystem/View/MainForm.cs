@@ -90,6 +90,7 @@ namespace TradingSystem.View
                             //_childFormMap[key] = form;
                             formType = typeof(StockTemplateForm);
                             hasGrid = true;
+                            List<StockTemplate> items = new List<StockTemplate>();
                             StockTemplate item = new StockTemplate 
                             {
                                 TemplateNo = 12,
@@ -101,7 +102,19 @@ namespace TradingSystem.View
                                 ReplaceType = 0
                             };
 
-                            json = JsonUtil.SerializeObject(item);
+                            StockTemplate item2 = new StockTemplate
+                            {
+                                TemplateNo = 13,
+                                TemplateName = "Test2",
+                                FutureCopies = 1,
+                                MarketCapOpt = 100f,
+                                Benchmark = "000016",
+                                WeightType = 1,
+                                ReplaceType = 0
+                            };
+                            items.Add(item);
+                            items.Add(item2);
+                            json = JsonUtil.SerializeObject(items);
                         }
                         else
                         {

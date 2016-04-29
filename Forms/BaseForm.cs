@@ -24,7 +24,7 @@ namespace Forms
         public virtual void OnLoadFormActived(string json)
         {
             if (LoadFormActived != null)
-            {
+            { 
                 LoadFormActived(json);
             }
 

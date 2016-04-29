@@ -98,6 +98,7 @@
             this.tsbModify.Name = "tsbModify";
             this.tsbModify.Size = new System.Drawing.Size(52, 35);
             this.tsbModify.Text = "修改";
+            this.tsbModify.Click += new System.EventHandler(this.Button_Modify_Click);
             // 
             // tsbCopy
             // 

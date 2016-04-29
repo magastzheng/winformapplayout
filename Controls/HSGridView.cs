@@ -27,6 +27,7 @@ namespace Controls
         private HSGrid _hsGrid = null;
         private Dictionary<string, int> _columnNameIndex = new Dictionary<string, int>();
         private List<HSGridColumn> _columns = null;
+        private DataTable _dataTable;
         public List<HSGridColumn> GridColumns { get { return _columns; } }
         
         //选中父表中行之后，子表需要添加相应行
@@ -134,13 +135,14 @@ namespace Controls
 
         public void FillData(DataTable dataTable)
         {
-            foreach (DataRow dataRow in dataTable.Rows)
+            _dataTable = dataTable;
+            foreach (DataRow dataRow in _dataTable.Rows)
             {
                 FillRow(dataRow, dataTable.ColumnIndex);
             }
         }
 
-        public void FillRow(DataRow dataRow, Dictionary<string, int> colIndexMap)
+        private void FillRow(DataRow dataRow, Dictionary<string, int> colIndexMap)
         {
             int rowIndex = this.Rows.Add();
             DataGridViewRow row = this.Rows[rowIndex];
@@ -263,6 +265,13 @@ namespace Controls
                     this.Rows.RemoveAt(i);
                 }
             }
+        }
+
+        public DataRow GetSelectedRow(out Dictionary<string, int> colIndexMap)
+        {
+            int index = this.CurrentRow.Index;
+            colIndexMap = _dataTable.ColumnIndex;
+            return _dataTable.Rows[index];
         }
 
         private void AddColumns()
