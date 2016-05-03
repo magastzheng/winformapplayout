@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="config\Benchmark.cs" />
     <Compile Include="config\ComboOption.cs" />
     <Compile Include="config\BuySellOption.cs" />
     <Compile Include="config\FunctionItem.cs" />

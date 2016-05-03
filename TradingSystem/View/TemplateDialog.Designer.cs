@@ -114,6 +114,8 @@ namespace TradingSystem.View
             this.tbTemplateNo.Name = "tbTemplateNo";
             this.tbTemplateNo.Size = new System.Drawing.Size(190, 21);
             this.tbTemplateNo.TabIndex = 5;
+            this.tbTemplateNo.Enabled = false;
+            this.tbTemplateNo.Text = "[新建]";
             // 
             // tbTemplateName
             // 
@@ -279,6 +281,7 @@ namespace TradingSystem.View
             this.btnConfirm.Text = "确定";
             this.btnConfirm.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnConfirm.UseVisualStyleBackColor = true;
+            this.btnConfirm.Click += new System.EventHandler(this.Button_Confirm_Click);
             // 
             // btnCancel
             // 
@@ -288,6 +291,7 @@ namespace TradingSystem.View
             this.btnCancel.TabIndex = 25;
             this.btnCancel.Text = "取消";
             this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.Button_Cancel_Click);
             // 
             // TemplateDialog
             // 
@@ -317,8 +321,8 @@ namespace TradingSystem.View
             this.Controls.Add(this.lblTemplateNo);
             this.Controls.Add(this.panelTop);
             this.Name = "TemplateDialog";
-            this.Load += new EventHandler(Form_Load);
-            this.LoadFormActived += new FormActiveHandler(Form_LoadActived);
+            this.LoadFormActived += new Forms.BaseForm.FormActiveHandler(this.Form_LoadActived);
+            this.Load += new System.EventHandler(this.Form_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();

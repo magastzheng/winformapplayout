@@ -432,5 +432,31 @@
 				"name": "成交申报"
 			}
 		]
+	},{
+		"name": "weighttype",
+		"selected": "2",
+		"items":[
+			{
+				"id": "1",
+				"order": "1",
+				"name": "数量权重"
+			},{
+				"id": "2",
+				"order": "2",
+				"name": "比例权重"
+			}]
+	},{
+		"name": "replacetype",
+		"selected": "0",
+		"items":[
+			{
+				"id": "0",
+				"order": "1",
+				"name": "个股替代"
+			},{
+				"id": "1",
+				"order": "2",
+				"name": "模板替代"
+			}]
 	}
 ]

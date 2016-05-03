@@ -1,4 +1,5 @@
 ﻿using Config;
+using DBAccess;
 using Forms;
 using Model.UI;
 using System;
@@ -18,6 +19,7 @@ namespace TradingSystem.View
     {
         private GridConfig _gridConfig;
         private Dictionary<string, Forms.BaseForm> _childFormMap = new Dictionary<string, Forms.BaseForm>();
+
 
         public MainForm()
         {
@@ -90,30 +92,32 @@ namespace TradingSystem.View
                             //_childFormMap[key] = form;
                             formType = typeof(StockTemplateForm);
                             hasGrid = true;
-                            List<StockTemplate> items = new List<StockTemplate>();
-                            StockTemplate item = new StockTemplate 
-                            {
-                                TemplateNo = 12,
-                                TemplateName = "Test",
-                                FutureCopies = 1,
-                                MarketCapOpt = 100f,
-                                Benchmark = "000016",
-                                WeightType = 1,
-                                ReplaceType = 0
-                            };
+                            //List<StockTemplate> items = new List<StockTemplate>();
+                            //StockTemplate item = new StockTemplate 
+                            //{
+                            //    TemplateNo = 12,
+                            //    TemplateName = "Test",
+                            //    FutureCopies = 1,
+                            //    MarketCapOpt = 100f,
+                            //    Benchmark = "000016",
+                            //    WeightType = 1,
+                            //    ReplaceType = 0
+                            //};
 
-                            StockTemplate item2 = new StockTemplate
-                            {
-                                TemplateNo = 13,
-                                TemplateName = "Test2",
-                                FutureCopies = 1,
-                                MarketCapOpt = 100f,
-                                Benchmark = "000016",
-                                WeightType = 1,
-                                ReplaceType = 0
-                            };
-                            items.Add(item);
-                            items.Add(item2);
+                            //StockTemplate item2 = new StockTemplate
+                            //{
+                            //    TemplateNo = 13,
+                            //    TemplateName = "Test2",
+                            //    FutureCopies = 1,
+                            //    MarketCapOpt = 100f,
+                            //    Benchmark = "000016",
+                            //    WeightType = 1,
+                            //    ReplaceType = 0
+                            //};
+                            //items.Add(item);
+                            //items.Add(item2);
+                            StockTemplateDAO _dbdao = new StockTemplateDAO();
+                            var items = _dbdao.GetTemplate(-1);
                             json = JsonUtil.SerializeObject(items);
                         }
                         else

@@ -1,5 +1,6 @@
 ﻿using Config;
 using Controls;
+using DBAccess;
 using Model.Data;
 using Model.UI;
 using System;
@@ -20,6 +21,7 @@ namespace TradingSystem.View
         private const string GridStock = "templatestock";
         HSGridView _tempGridView;
         HSGridView _stockGridView;
+        StockTemplateDAO _dbdao = new StockTemplateDAO();
 
         public StockTemplateForm()
             :base()
@@ -312,18 +314,39 @@ namespace TradingSystem.View
             //string json = JsonUtil.SerializeObject(stockTemplate);
 
             TemplateDialog dialog = new TemplateDialog();
+            dialog.SaveFormData += new FormDataSaveHandler(Dialog_SaveData);
             dialog.Owner = this;
             dialog.StartPosition = FormStartPosition.CenterParent;
             //dialog.OnLoadFormActived(json);
             dialog.ShowDialog();
-
+            
             if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
             {
-
+                dialog.Dispose();
             }
             else
             {
-                dialog.Close();
+                dialog.Dispose();
+            }
+        }
+
+        private StockTemplate SaveTemplateToDB(StockTemplate stockTemplate)
+        {
+
+            int newid = _dbdao.CreateTemplate(stockTemplate.TemplateName, stockTemplate.WeightType, stockTemplate.FutureCopies, stockTemplate.MarketCapOpt, stockTemplate.Benchmark, 11111);
+            stockTemplate.TemplateNo = newid;
+
+            return stockTemplate;
+        }
+
+        private void Dialog_SaveData(object sender, object data)
+        {
+            if (data is StockTemplate)
+            {
+                StockTemplate stockTemplate = data as StockTemplate;
+                stockTemplate = SaveTemplateToDB(stockTemplate);
+
+                //TODO: add into the view
             }
         }
 

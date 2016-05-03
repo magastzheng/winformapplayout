@@ -213,6 +213,10 @@
       <Project>{b3b6fd6a-3638-4263-93e2-44677bf5f0c8}</Project>
       <Name>Controls</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DBAccess\DBAccess.csproj">
+      <Project>{3cf9d5b6-128c-48d9-8a03-38d81c5845c0}</Project>
+      <Name>DBAccess</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Forms\Forms.csproj">
       <Project>{35c45d58-fd61-446b-b6a8-9f3ef8529016}</Project>
       <Name>Forms</Name>
