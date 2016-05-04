@@ -121,16 +121,16 @@ namespace DBAccess
 
         public DbDataReader ExecuteReader(DbCommand cmd)
         {
-            cmd.Connection.Open();
+            Open(cmd);
             DbDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
             return reader;
         }
 
         public int ExecuteNonQuery(DbCommand cmd)
         {
-            cmd.Connection.Open();
+            Open(cmd);
             int ret = cmd.ExecuteNonQuery();
-            cmd.Connection.Close();
+            Close(cmd.Connection);
 
             return ret;
         }

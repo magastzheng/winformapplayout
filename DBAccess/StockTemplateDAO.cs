@@ -8,37 +8,72 @@ using System.Threading.Tasks;
 
 namespace DBAccess
 {
-    public class StockTemplateDAO
+    public class StockTemplateDAO : BaseDAO
     {
         private const string SP_CreateTemplate = "procInsertTemplate";
         private const string SP_ModifyTemplate = "procUpdateTemplate";
         private const string SP_DeleteTemplate = "procDeleteTemplate";
         private const string SP_GetTemplate = "procSelectTemplate";
 
-        private DbHelper _dbHelper;
         public StockTemplateDAO()
-        {
-            _dbHelper = new DbHelper();
+            : base()
+        { 
+        
         }
 
         public StockTemplateDAO(DbHelper dbHelper)
-        {
-            _dbHelper = dbHelper;
+            : base(dbHelper)
+        { 
+        
         }
 
-        public int CreateTemplate(string templateName, int weightType, int futuresCopies, double marketCapOpt, string benchmarkId, int userId)
+        public int CreateTemplate(string templateName, int weightType, int replaceType, int futuresCopies, double marketCapOpt, string benchmarkId, int userId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_CreateTemplate);
             _dbHelper.AddInParameter(dbCommand, "@TemplateName", System.Data.DbType.String, templateName);
             //_dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, status);
             _dbHelper.AddInParameter(dbCommand, "@WeightType", System.Data.DbType.Int32, weightType);
+            _dbHelper.AddInParameter(dbCommand, "@ReplaceType", System.Data.DbType.Int32, replaceType);
             _dbHelper.AddInParameter(dbCommand, "@FuturesCopies", System.Data.DbType.Int32, futuresCopies);
             _dbHelper.AddInParameter(dbCommand, "@MarketCapOpt", System.Data.DbType.Decimal, marketCapOpt);
             _dbHelper.AddInParameter(dbCommand, "@BenchmarkId", System.Data.DbType.String, benchmarkId);
             _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, DateTime.Now);
             _dbHelper.AddInParameter(dbCommand, "@CreatedUserId", System.Data.DbType.Int32, userId);
 
-            int templateId = _dbHelper.ExecuteNonQuery(dbCommand);
+            _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
+
+            int ret = _dbHelper.ExecuteNonQuery(dbCommand);
+            int templateId = -1;
+            if (ret > 0)
+            {
+                templateId = (int)dbCommand.Parameters["@return"].Value;
+            }
+
+            return templateId;
+        }
+
+        public int UpdateTemplate(int templateNo, string templateName, int weightType, int replaceType, int futuresCopies, double marketCapOpt, string benchmarkId, int userId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyTemplate);
+            _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, templateNo);
+            _dbHelper.AddInParameter(dbCommand, "@TemplateName", System.Data.DbType.String, templateName);
+            _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, 1);
+            _dbHelper.AddInParameter(dbCommand, "@WeightType", System.Data.DbType.Int32, weightType);
+            _dbHelper.AddInParameter(dbCommand, "@ReplaceType", System.Data.DbType.Int32, replaceType);
+            _dbHelper.AddInParameter(dbCommand, "@FuturesCopies", System.Data.DbType.Int32, futuresCopies);
+            _dbHelper.AddInParameter(dbCommand, "@MarketCapOpt", System.Data.DbType.Decimal, marketCapOpt);
+            _dbHelper.AddInParameter(dbCommand, "@BenchmarkId", System.Data.DbType.String, benchmarkId);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+            _dbHelper.AddInParameter(dbCommand, "@CreatedUserId", System.Data.DbType.Int32, userId);
+
+            _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
+
+            int ret = _dbHelper.ExecuteNonQuery(dbCommand);
+            int templateId = -1;
+            if(ret > 0)
+            {
+                templateId = (int)dbCommand.Parameters["@return"].Value;
+            }
             return templateId;
         }
 

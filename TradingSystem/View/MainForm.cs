@@ -154,6 +154,7 @@ namespace TradingSystem.View
                 ILoadFormActived formActived = form as ILoadFormActived;
                 if (formActived != null)
                 {
+                    //TODO: add the step to load data and refresh the child form
                     formActived.OnLoadFormActived("");
                 }
 

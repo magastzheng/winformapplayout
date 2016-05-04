@@ -15,5 +15,7 @@ namespace Model.UI
         public string Benchmark { get; set; }
         public int WeightType { get; set; }
         public int ReplaceType { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
     }
 }

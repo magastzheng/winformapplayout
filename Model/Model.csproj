@@ -69,6 +69,7 @@
     <Compile Include="UI\HSGridColumn.cs" />
     <Compile Include="UI\ImportSheet.cs" />
     <Compile Include="UI\StockTemplate.cs" />
+    <Compile Include="UI\TemplateStock.cs" />
     <Compile Include="UI\TSNavNodeData.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -156,6 +156,7 @@
             this.tsbImport.Name = "tsbImport";
             this.tsbImport.Size = new System.Drawing.Size(65, 32);
             this.tsbImport.Text = "Excel导入";
+            this.tsbImport.Click += new System.EventHandler(this.ToolStripButton_Import_Click);
             // 
             // toolStripSeparator1
             // 
@@ -263,8 +264,8 @@
             this.Controls.Add(this.panelChildBottom);
             this.Controls.Add(this.panelChildTop);
             this.Name = "StockTemplateForm";
+            this.LoadFormActived += new Forms.BaseForm.FormActiveHandler(this.Form_LoadActived);
             this.Load += new System.EventHandler(this.Form_Load);
-            this.LoadFormActived += new FormActiveHandler(Form_LoadActived);
             this.panelChildTop.ResumeLayout(false);
             this.panelChildTop.PerformLayout();
             this.toolStripChildTop.ResumeLayout(false);

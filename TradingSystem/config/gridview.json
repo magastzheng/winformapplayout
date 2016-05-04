@@ -1307,7 +1307,7 @@ readonly:
 		"readonly": 1
 		},{
 		"name": "st_addedtime",
-		"text": "添加日期",
+		"text": "添加时间",
 		"width": 80,
 		"columntype": 0,
 		"valuetype": 3,

@@ -657,7 +657,7 @@ namespace TradingSystem.View
 
         private void FillEntrustFlow(Model.Data.RawDataSet dataSet, Dictionary<string, string> colDataMap)
         {
-            this.dataGridViewEntrustFlow.FillData(dataSet, colDataMap);
+            //this.dataGridViewEntrustFlow.FillData(dataSet, colDataMap);
         }
         #endregion
 
@@ -928,7 +928,7 @@ namespace TradingSystem.View
                 }
 
                 eDataSet.Rows.Add(eRow);
-                this.dataGridViewBuySell.FillData(eDataSet, colDataMap);
+                //this.dataGridViewBuySell.FillData(eDataSet, colDataMap);
             }
             else if (direction == UpdateDirection.Remove)
             {

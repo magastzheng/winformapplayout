@@ -18,6 +18,9 @@ namespace Controls
     }
     public delegate void UpdateRelatedDataGrid(UpdateDirection direction, RawDataRow dataRow);
 
+    /// <summary>
+    /// HSGridView必须使用DataTable填充
+    /// </summary>
     [System.ComponentModel.DesignerCategory("code"),
     Designer(typeof(System.Windows.Forms.Design.ControlDesigner)),
     ComplexBindingProperties(),
@@ -62,100 +65,175 @@ namespace Controls
             this.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_CellContentClick);
         }
 
-        public void FillData(RawDataSet dataSet, Dictionary<string, string> colDataMap)
-        {
-            if (dataSet == null || dataSet.Rows == null || colDataMap == null)
-                return;
+        //public void FillData(RawDataSet dataSet, Dictionary<string, string> colDataMap)
+        //{
+        //    if (dataSet == null || dataSet.Rows == null || colDataMap == null)
+        //        return;
 
-            for(int r = 0, count = dataSet.Rows.Count; r < count; r++)
-            {
-                RawDataRow dataRow = dataSet.Rows[r];
+        //    for(int r = 0, count = dataSet.Rows.Count; r < count; r++)
+        //    {
+        //        RawDataRow dataRow = dataSet.Rows[r];
 
-                int rowIndex = this.Rows.Add();
-                DataGridViewRow row = this.Rows[rowIndex];
-                bool isSelected = false;
-                foreach(HSGridColumn col in _columns)
-                {
+        //        int rowIndex = this.Rows.Add();
+        //        DataGridViewRow row = this.Rows[rowIndex];
+        //        bool isSelected = false;
+        //        foreach(HSGridColumn col in _columns)
+        //        {
 
-                    //switch(col.ValueType)
-                    //{
-                    //    case DataValueType.Int:
-                    //        break;
-                    //    case DataValueType.Float:
-                    //        break;
-                    //    case DataValueType.String:
-                    //        break;
-                    //    default:
-                    //        break;
-                    //}
+        //            //switch(col.ValueType)
+        //            //{
+        //            //    case DataValueType.Int:
+        //            //        break;
+        //            //    case DataValueType.Float:
+        //            //        break;
+        //            //    case DataValueType.String:
+        //            //        break;
+        //            //    default:
+        //            //        break;
+        //            //}
 
-                    switch (col.ColumnType)
-                    {
-                        case HSGridColumnType.CheckBox:
-                            {
-                                if (colDataMap.ContainsKey(col.Name) && dataRow.Columns.ContainsKey(colDataMap[col.Name]))
-                                {
-                                    string dataKey = colDataMap[col.Name];
-                                    int targetValue = dataRow.Columns[dataKey].GetInt();
-                                    isSelected = targetValue > 0 ? true : false;
-                                    row.Cells[col.Name].Value = isSelected;
-                                    //FillDataCell(ref row, col, dataRow.Columns[dataKey]);
-                                }
-                            }
-                            break;
-                        case HSGridColumnType.Text:
-                            {
-                                if (colDataMap.ContainsKey(col.Name) && dataRow.Columns.ContainsKey(colDataMap[col.Name]))
-                                {
-                                    string dataKey = colDataMap[col.Name];
-                                    FillDataCell(ref row, col, dataRow.Columns[dataKey]);
-                                }
-                            }
-                            break;
-                        case HSGridColumnType.Image:
-                            {
-                                if (colDataMap.ContainsKey(col.Name) && dataRow.Columns.ContainsKey(colDataMap[col.Name]))
-                                {
-                                    string dataKey = colDataMap[col.Name];
-                                    string imgPath = dataRow.Columns[dataKey].GetStr();
-                                    Image plusImg = Image.FromFile(imgPath);
-                                    Bitmap plusBt = new Bitmap(plusImg, new Size(20, 20));
-                                    row.Cells[col.Name].Value = plusBt;
-                                }
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                }
+        //            switch (col.ColumnType)
+        //            {
+        //                case HSGridColumnType.CheckBox:
+        //                    {
+        //                        if (colDataMap.ContainsKey(col.Name) && dataRow.Columns.ContainsKey(colDataMap[col.Name]))
+        //                        {
+        //                            string dataKey = colDataMap[col.Name];
+        //                            int targetValue = dataRow.Columns[dataKey].GetInt();
+        //                            isSelected = targetValue > 0 ? true : false;
+        //                            row.Cells[col.Name].Value = isSelected;
+        //                            //FillDataCell(ref row, col, dataRow.Columns[dataKey]);
+        //                        }
+        //                    }
+        //                    break;
+        //                case HSGridColumnType.Text:
+        //                    {
+        //                        if (colDataMap.ContainsKey(col.Name) && dataRow.Columns.ContainsKey(colDataMap[col.Name]))
+        //                        {
+        //                            string dataKey = colDataMap[col.Name];
+        //                            FillDataCell(ref row, col, dataRow.Columns[dataKey]);
+        //                        }
+        //                    }
+        //                    break;
+        //                case HSGridColumnType.Image:
+        //                    {
+        //                        if (colDataMap.ContainsKey(col.Name) && dataRow.Columns.ContainsKey(colDataMap[col.Name]))
+        //                        {
+        //                            string dataKey = colDataMap[col.Name];
+        //                            string imgPath = dataRow.Columns[dataKey].GetStr();
+        //                            Image plusImg = Image.FromFile(imgPath);
+        //                            Bitmap plusBt = new Bitmap(plusImg, new Size(20, 20));
+        //                            row.Cells[col.Name].Value = plusBt;
+        //                        }
+        //                    }
+        //                    break;
+        //                default:
+        //                    break;
+        //            }
+        //        }
 
-                SetSelectionRowBackground(rowIndex, isSelected);
-            }
-        }
+        //        SetSelectionRowBackground(rowIndex, isSelected);
+        //    }
+        //}
+
+        #region fill data public interface
 
         public void FillData(DataTable dataTable)
         {
             _dataTable = dataTable;
-            foreach (DataRow dataRow in _dataTable.Rows)
+            SetData(_dataTable);
+        }
+
+        public void FillRow(DataRow dataRow, Dictionary<string, int> colIndexMap)
+        {
+            //Update the _dataTable
+            AddDataRow(dataRow, colIndexMap);
+
+            SetRow(dataRow, _dataTable.ColumnIndex);
+        }
+
+        public void UpdateRow(int rowIndex, DataRow dataRow)
+        {
+            if (!UpdateDataRow(rowIndex, dataRow))
+                return;
+
+            DataGridViewRow row = this.Rows[rowIndex];
+            SetRow(row, dataRow, _dataTable.ColumnIndex);
+        }
+
+        #endregion
+
+
+        #region change the data in DataTable
+
+        private void AddDataRow(DataRow dataRow, Dictionary<string, int> colIndexMap)
+        { 
+            if (_dataTable == null)
             {
-                FillRow(dataRow, dataTable.ColumnIndex);
+                _dataTable = new DataTable 
+                {
+                    Rows = new List<DataRow>(),
+                    ColumnIndex =  new Dictionary<string,int>()
+                };
+            }
+
+            if (_dataTable.ColumnIndex.Count == 0)
+            {
+                _dataTable.ColumnIndex = colIndexMap;
+            }
+
+            _dataTable.Rows.Add(dataRow);
+        }
+
+        private bool UpdateDataRow(int rowIndex, DataRow dataRow)
+        {
+            if (rowIndex < 0 || rowIndex >= _dataTable.Rows.Count)
+                return false;
+
+            _dataTable.Rows[rowIndex] = dataRow;
+            return true;
+        }
+
+        private bool DeleteDataRow(int rowIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= _dataTable.Rows.Count)
+            {
+                return false;
+            }
+
+            _dataTable.Rows.RemoveAt(rowIndex);
+            return true;
+        }
+        #endregion
+
+        #region fill data internal method
+        private void SetData(DataTable dataTable)
+        {
+            foreach (DataRow dataRow in dataTable.Rows)
+            {
+                SetRow(dataRow, dataTable.ColumnIndex);
             }
         }
 
-        private void FillRow(DataRow dataRow, Dictionary<string, int> colIndexMap)
+        private void SetRow(DataRow dataRow, Dictionary<string, int> colIndexMap)
         {
             int rowIndex = this.Rows.Add();
             DataGridViewRow row = this.Rows[rowIndex];
+            SetRow(row, dataRow, colIndexMap);
+        }
+
+        private void SetRow(DataGridViewRow row, DataRow dataRow, Dictionary<string, int> colIndexMap)
+        {
             bool isSelected = false;
 
             foreach (HSGridColumn col in _columns)
             {
                 int index = -1;
-                if(colIndexMap.ContainsKey(col.Name))
+                if (colIndexMap.ContainsKey(col.Name))
                 {
                     index = colIndexMap[col.Name];
                 }
-                if(index < 0 || index >= dataRow.Columns.Count)
+                if (index < 0 || index >= dataRow.Columns.Count)
                     continue;
 
                 DataValue dataValue = dataRow.Columns[index];
@@ -171,7 +249,7 @@ namespace Controls
                         break;
                     case HSGridColumnType.Text:
                         {
-                            FillDataCell(ref row, col, dataValue);
+                            SetDataCell(ref row, col, dataValue);
                         }
                         break;
                     case HSGridColumnType.Image:
@@ -201,7 +279,7 @@ namespace Controls
             }
         }
 
-        private void FillDataCell(ref DataGridViewRow row, HSGridColumn column, DataValue dataValue)
+        private void SetDataCell(ref DataGridViewRow row, HSGridColumn column, DataValue dataValue)
         {
             switch (column.ValueType)
             {
@@ -262,6 +340,7 @@ namespace Controls
 
                 if (needDelete)
                 {
+                    DeleteDataRow(i);
                     this.Rows.RemoveAt(i);
                 }
             }
@@ -315,6 +394,8 @@ namespace Controls
 
             this.Columns.AddRange(gridColumns);
         }
+
+        #endregion
 
         private void DataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {

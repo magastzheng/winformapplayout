@@ -84,6 +84,15 @@ namespace TradingSystem.View
         private StockTemplate GetData()
         {
             StockTemplate stockTemplate = new StockTemplate();
+            if (!string.IsNullOrEmpty(this.tbTemplateNo.Text))
+            {
+                int tempNo = -1;
+                if (int.TryParse(this.tbTemplateNo.Text, out tempNo))
+                {
+                    stockTemplate.TemplateNo = tempNo;
+                }
+            }
+
             stockTemplate.TemplateName = this.tbTemplateName.Text;
 
             int temp = 0;
@@ -152,6 +161,7 @@ namespace TradingSystem.View
             return true;
         }
 
+        #region Button click event handler
         private void Button_Confirm_Click(object sender, EventArgs e)
         {
             StockTemplate stockTemplate = GetData();
@@ -171,5 +181,7 @@ namespace TradingSystem.View
             this.Close();
             this.Dispose();
         }
+
+        #endregion
     }
 }
