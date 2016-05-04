@@ -39,6 +39,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Util", "Util\Util.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UtilTest", "UtilTest\UtilTest.csproj", "{CC143059-3915-426E-992E-3825ED84F701}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL", "SQL", "{98AB816C-2942-440F-817E-4DA66EA2BFE4}"
+	ProjectSection(SolutionItems) = preProject
+		SQL\stocktemplate.sql = SQL\stocktemplate.sql
+		SQL\stocktemplate_test.sql = SQL\stocktemplate_test.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
