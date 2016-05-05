@@ -171,6 +171,7 @@
             this.tsbAddStock.Name = "tsbAddStock";
             this.tsbAddStock.Size = new System.Drawing.Size(36, 32);
             this.tsbAddStock.Text = "添加";
+            this.tsbAddStock.Click += new System.EventHandler(ToolStripButton_AddStock_Click);
             // 
             // toolStripSeparator2
             // 
@@ -185,6 +186,7 @@
             this.tsbModifyStock.Name = "tsbModifyStock";
             this.tsbModifyStock.Size = new System.Drawing.Size(36, 32);
             this.tsbModifyStock.Text = "修改";
+            this.tsbModifyStock.Click += new System.EventHandler(ToolStripButton_ModifyStock_Click);
             // 
             // toolStripSeparator3
             // 
@@ -199,6 +201,7 @@
             this.tsbDeleteStock.Name = "tsbDeleteStock";
             this.tsbDeleteStock.Size = new System.Drawing.Size(36, 32);
             this.tsbDeleteStock.Text = "删除";
+            this.tsbDeleteStock.Click += new System.EventHandler(ToolStripButton_DeleteStock_Click);
             // 
             // toolStripSeparator4
             // 
@@ -227,6 +230,7 @@
             this.tsbSave.Name = "tsbSave";
             this.tsbSave.Size = new System.Drawing.Size(36, 32);
             this.tsbSave.Text = "保存";
+            this.tsbSave.Click += new System.EventHandler(ToolStripButton_Save_Click);
             // 
             // toolStripSeparator6
             // 

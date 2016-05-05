@@ -16,7 +16,9 @@ namespace Controls
         Add = 1,
         Remove = 2,
     }
+
     public delegate void UpdateRelatedDataGrid(UpdateDirection direction, RawDataRow dataRow);
+    public delegate void ClickRowHandler(object sender, DataRow dataRow, Dictionary<string, int> ColumnIndex);
 
     /// <summary>
     /// HSGridView必须使用DataTable填充
@@ -32,6 +34,7 @@ namespace Controls
         private List<HSGridColumn> _columns = null;
         private DataTable _dataTable;
         public List<HSGridColumn> GridColumns { get { return _columns; } }
+        public DataTable DataTable { get { return _dataTable; } }
         
         //选中父表中行之后，子表需要添加相应行
         private UpdateRelatedDataGrid _updateRelatedDataGrid;
@@ -40,6 +43,9 @@ namespace Controls
             set { _updateRelatedDataGrid = value; }
             get { return _updateRelatedDataGrid; }
         }
+
+        //event handler
+        public event ClickRowHandler ClickRow;
 
         public HSGridView()
         {
@@ -170,8 +176,87 @@ namespace Controls
 
             Rows.Clear();
         }
+
         #endregion
 
+        #region
+
+        public void DeleteRow(string targetColName, DataValue targetColValue)
+        {
+            int index = _columnNameIndex[targetColName];
+            var column = _columns[index];
+            if (column == null)
+                return;
+
+            for (int i = this.Rows.Count - 1; i >= 0; i--)
+            {
+                string curValue = Rows[i].Cells[targetColName].Value.ToString();
+                bool needDelete = false;
+                switch (column.ValueType)
+                {
+                    case DataValueType.Int:
+                        {
+                            int targetValue = targetColValue.GetInt();
+                            int temp = int.Parse(curValue);
+                            needDelete = targetValue == temp ? true : false;
+                        }
+                        break;
+                    case DataValueType.Char:
+                    case DataValueType.String:
+                        {
+                            string targetValue = targetColValue.GetStr();
+                            needDelete = targetValue == curValue ? true : false;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                if (needDelete)
+                {
+                    DeleteDataRow(i);
+                    this.Rows.RemoveAt(i);
+                }
+            }
+        }
+
+        public DataRow GetSelectedRow(out Dictionary<string, int> colIndexMap)
+        {
+            int index = this.CurrentRow.Index;
+            colIndexMap = _dataTable.ColumnIndex;
+            return _dataTable.Rows[index];
+        }
+
+        public DataTable GetSeletedRows()
+        {
+            DataTable dataTable = new Model.Data.DataTable 
+            {
+                ColumnIndex = _dataTable.ColumnIndex,
+                Rows =  new List<DataRow>()
+            };
+
+            int cbColIndex = GetCheckBoxColumnIndex();
+            if (cbColIndex < 0)
+                return dataTable;
+
+            int validColCount = this._columns.Count - 1;
+            for(int rowIndex = 0, rowSize = Rows.Count; rowIndex < rowSize; rowIndex++)
+            {
+                DataGridViewRow row = Rows[rowIndex];
+                bool isChecked = (bool)row.Cells[cbColIndex].EditedFormattedValue;
+                if (!isChecked)
+                    continue;
+
+                if (rowIndex >= 0 && rowIndex < _dataTable.Rows.Count)
+                {
+                    dataTable.Rows.Add(_dataTable.Rows[rowIndex]);
+                }
+            }
+
+            return dataTable;
+        }
+
+        #endregion
 
         #region change the data in DataTable
 
@@ -213,6 +298,7 @@ namespace Controls
             _dataTable.Rows.RemoveAt(rowIndex);
             return true;
         }
+        
         #endregion
 
         #region fill data internal method
@@ -316,52 +402,6 @@ namespace Controls
             }
         }
 
-        public void DeleteRow(string targetColName, DataValue targetColValue)
-        {
-            int index = _columnNameIndex[targetColName];
-            var column = _columns[index];
-            if(column ==  null)
-                return;
-
-            for (int i = this.Rows.Count - 1; i >= 0; i--)
-            {
-                string curValue = Rows[i].Cells[targetColName].Value.ToString();
-                bool needDelete = false;
-                switch (column.ValueType)
-                { 
-                    case DataValueType.Int:
-                        {
-                            int targetValue = targetColValue.GetInt();
-                            int temp = int.Parse(curValue);
-                            needDelete = targetValue == temp ? true : false;
-                        }
-                        break;
-                    case DataValueType.Char:
-                    case DataValueType.String:
-                        {
-                            string targetValue = targetColValue.GetStr();
-                            needDelete = targetValue == curValue ? true : false;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-
-                if (needDelete)
-                {
-                    DeleteDataRow(i);
-                    this.Rows.RemoveAt(i);
-                }
-            }
-        }
-
-        public DataRow GetSelectedRow(out Dictionary<string, int> colIndexMap)
-        {
-            int index = this.CurrentRow.Index;
-            colIndexMap = _dataTable.ColumnIndex;
-            return _dataTable.Rows[index];
-        }
-
         private void AddColumns()
         { 
             DataGridViewColumn[] gridColumns = new DataGridViewColumn[_columns.Count];
@@ -411,6 +451,15 @@ namespace Controls
             DataGridView dgv = (DataGridView)sender;
             if (dgv == null || e.ColumnIndex < 0 || e.RowIndex < 0)
                 return;
+
+            if (ClickRow != null)
+            {
+                if (_dataTable != null && _dataTable.Rows != null && e.RowIndex < _dataTable.Rows.Count)
+                {
+                    ClickRow(this, _dataTable.Rows[e.RowIndex], _dataTable.ColumnIndex);
+                }
+            }
+
             int cbColIndex = GetCheckBoxColumnIndex();
             if (cbColIndex < 0)
                 return;
@@ -419,7 +468,7 @@ namespace Controls
             if (e.ColumnIndex == cbColIndex)
             {
                 SwitchSelection(row, e.ColumnIndex);
-            }
+            }            
         }
 
         private void SwitchSelection(DataGridViewRow row, int colIndex)

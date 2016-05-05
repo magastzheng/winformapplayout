@@ -20,9 +20,11 @@ namespace TradingSystem.View
         private GridConfig _gridConfig = null;
         private const string GridTemplate = "stocktemplate";
         private const string GridStock = "templatestock";
-        HSGridView _tempGridView;
-        HSGridView _stockGridView;
-        StockTemplateDAO _dbdao = new StockTemplateDAO();
+        private HSGridView _tempGridView;
+        private HSGridView _stockGridView;
+        private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
+        private TemplateStockDAO _stockdbdao = new TemplateStockDAO();
+        private bool _isStockChange = false;
 
         public StockTemplateForm()
             :base()
@@ -40,6 +42,7 @@ namespace TradingSystem.View
         {
             _tempGridView = new HSGridView(_gridConfig.GetGid(GridTemplate));
             _tempGridView.Dock = DockStyle.Fill;
+            _tempGridView.ClickRow += new ClickRowHandler(GridView_Template_ClickRow);
 
             _stockGridView = new HSGridView(_gridConfig.GetGid(GridStock));
             _stockGridView.Dock = DockStyle.Fill;
@@ -50,10 +53,20 @@ namespace TradingSystem.View
             LoadData();
         }
 
+        private void GridView_Template_ClickRow(object sender, Model.Data.DataRow dataRow, Dictionary<string, int> ColumnIndex)
+        {
+            //
+            StockTemplate template = GetDialogData(dataRow, ColumnIndex);
+            if (template != null && template.TemplateNo > 0)
+            {
+                LoadTemplateStock(template.TemplateNo);
+            }
+        }
+
         private void Form_LoadActived(string json)
         {
             //StockTemplateDAO _dbdao = new StockTemplateDAO();
-            var items = _dbdao.GetTemplate(-1);
+            var items = _tempdbdao.GetTemplate(-1);
             json = JsonUtil.SerializeObject(items);
 
             if(!string.IsNullOrEmpty(json))
@@ -83,6 +96,41 @@ namespace TradingSystem.View
                 _tempGridView.Clear();
                 _tempGridView.FillData(dataTable);
             }
+
+            if (items.Count > 0)
+            {
+                LoadTemplateStock(items[0].TemplateNo);
+            }
+        }
+
+        private void LoadTemplateStock(int templateNo)
+        {
+            if (templateNo < 0)
+                return;
+
+            var stocks = _stockdbdao.GetTemplateStock(templateNo);
+            Model.Data.DataTable dataTable = new Model.Data.DataTable
+            {
+                ColumnIndex = new Dictionary<string, int>(),
+                Rows = new List<Model.Data.DataRow>()
+            };
+
+            Dictionary<string, int> columnIndex = new Dictionary<string, int>();
+            foreach (var stock in stocks)
+            {
+                Model.Data.DataRow dataRow = GetDataRow(stock, ref columnIndex);
+                if (dataRow != null)
+                {
+                    dataTable.Rows.Add(dataRow);
+                }
+            }
+            if (columnIndex.Count > 0)
+            {
+                dataTable.ColumnIndex = columnIndex;
+            }
+
+            _stockGridView.Clear();
+            _stockGridView.FillData(dataTable);
         }
 
         private Model.Data.DataRow GetDataRow(StockTemplate stockTemplate, ref Dictionary<string,int> columnIndex)
@@ -210,7 +258,7 @@ namespace TradingSystem.View
                         break;
                     }
                 }
-                if (valIndex >= dataRow.Columns.Count)
+                if (valIndex < 0 || valIndex >= dataRow.Columns.Count)
                 {
                     continue;
                 }
@@ -324,6 +372,11 @@ namespace TradingSystem.View
                 dataValue.Type = column.ValueType;
                 switch (column.Name)
                 {
+                    case "ts_selection":
+                        {
+                            dataValue.Value = 0;
+                        }
+                        break;
                     case "ts_secucode":
                         {
                             dataValue.Value = tempStock.SecuCode;
@@ -386,7 +439,7 @@ namespace TradingSystem.View
                         break;
                     }
                 }
-                if (valIndex >= dataRow.Columns.Count)
+                if (valIndex < 0 || valIndex >= dataRow.Columns.Count)
                 {
                     continue;
                 }
@@ -506,13 +559,13 @@ namespace TradingSystem.View
             {
                 case TempChangeType.New:
                     {
-                        int newid = _dbdao.CreateTemplate(stockTemplate.TemplateName, stockTemplate.WeightType, stockTemplate.ReplaceType, stockTemplate.FutureCopies, stockTemplate.MarketCapOpt, stockTemplate.Benchmark, 11111);
+                        int newid = _tempdbdao.CreateTemplate(stockTemplate.TemplateName, stockTemplate.WeightType, stockTemplate.ReplaceType, stockTemplate.FutureCopies, stockTemplate.MarketCapOpt, stockTemplate.Benchmark, 11111);
                         stockTemplate.TemplateNo = newid;
                     }
                     break;
                 case TempChangeType.Update:
                     {
-                        int tempid = _dbdao.UpdateTemplate(stockTemplate.TemplateNo, stockTemplate.TemplateName, stockTemplate.WeightType, stockTemplate.ReplaceType, stockTemplate.FutureCopies, stockTemplate.MarketCapOpt, stockTemplate.Benchmark, 11111);
+                        int tempid = _tempdbdao.UpdateTemplate(stockTemplate.TemplateNo, stockTemplate.TemplateName, stockTemplate.WeightType, stockTemplate.ReplaceType, stockTemplate.FutureCopies, stockTemplate.MarketCapOpt, stockTemplate.Benchmark, 11111);
                         stockTemplate.TemplateNo = tempid;
                     }
                     break;
@@ -586,6 +639,61 @@ namespace TradingSystem.View
             }
         }
 
+        private void ToolStripButton_Save_Click(object sender, EventArgs e)
+        {
+            StockTemplate template = GetSelectTemplate();
+            Model.Data.DataTable dataTable = _stockGridView.DataTable;
+            if (template == null || dataTable == null)
+            {
+                //TODO: error handle
+                return;
+            }
+
+            foreach (Model.Data.DataRow dataRow in dataTable.Rows)
+            {
+                TemplateStock stock = GetStockDialogData(dataRow, dataTable.ColumnIndex);
+                stock.TemplateNo = template.TemplateNo;
+                int newid = _stockdbdao.CreateTemplateStock(stock);
+                if (newid != template.TemplateNo)
+                { 
+                    //TODO: popup the error message
+                }
+            }
+        }
+
+        private void ToolStripButton_DeleteStock_Click(object sender, EventArgs e)
+        {
+            StockTemplate template = GetSelectTemplate();
+            Model.Data.DataTable dataTable = _stockGridView.GetSeletedRows();
+            if (template == null || dataTable == null)
+            {
+                //TODO: popup the message there is no row selected
+                return;
+            }
+
+            foreach (Model.Data.DataRow dataRow in dataTable.Rows)
+            {
+                TemplateStock stock = GetStockDialogData(dataRow, dataTable.ColumnIndex);
+
+                string newid = _stockdbdao.DeleteTemplateStock(template.TemplateNo, stock.SecuCode);
+                if (string.IsNullOrEmpty(newid))
+                {
+                    //TODO: popup the error message
+                }
+            }
+        }
+
+        private void ToolStripButton_AddStock_Click(object sender, EventArgs e)
+        {
+            PortfolioSecurityDialog psDialog = new PortfolioSecurityDialog();
+            psDialog.ShowDialog();
+        }
+
+        private void ToolStripButton_ModifyStock_Click(object sender, EventArgs e)
+        {
+            PortfolioSecurityDialog psDialog = new PortfolioSecurityDialog();
+            psDialog.ShowDialog();
+        }
         #endregion
 
         #region Import method
@@ -620,6 +728,7 @@ namespace TradingSystem.View
                 {
                     var gridData = ExcelToGrid(table);
                     this._stockGridView.FillData(gridData);
+                    this._isStockChange = true;
                 }
             }
 

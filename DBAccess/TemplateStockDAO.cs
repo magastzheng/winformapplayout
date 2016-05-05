@@ -24,9 +24,30 @@ namespace DBAccess
         { 
         }
 
-        public string CreateTemplateStock(TemplateStock tempStock)
+        public int CreateTemplateStock(TemplateStock tempStock)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_NewTemplateStock);
+            _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, tempStock.TemplateNo);
+            _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, tempStock.SecuCode);
+            _dbHelper.AddInParameter(dbCommand, "@Amount", System.Data.DbType.Int32, tempStock.Amount);
+            _dbHelper.AddInParameter(dbCommand, "@MarketCap", System.Data.DbType.Decimal, tempStock.MarketCap);
+            _dbHelper.AddInParameter(dbCommand, "@MarketCapOpt", System.Data.DbType.Decimal, tempStock.MarketCapWeight);
+            _dbHelper.AddInParameter(dbCommand, "@SettingWeight", System.Data.DbType.Decimal, tempStock.SettingWeight);
+
+            _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.String);
+
+            int newid = -1;
+            int ret = _dbHelper.ExecuteNonQuery(dbCommand);
+            if (ret > 0)
+            {
+                newid = (int)dbCommand.Parameters["@return"].Value;
+            }
+            return newid;
+        }
+
+        public string UpdateTemplateStock(TemplateStock tempStock)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyTemplateStock);
             _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, tempStock.TemplateNo);
             _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, tempStock.SecuCode);
             _dbHelper.AddInParameter(dbCommand, "@Amount", System.Data.DbType.Int32, tempStock.Amount);
@@ -45,15 +66,11 @@ namespace DBAccess
             return newid;
         }
 
-        public string UpdateTemplateStock(TemplateStock tempStock)
+        public string DeleteTemplateStock(int templateNo, string secuCode)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyTemplateStock);
-            _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, tempStock.TemplateNo);
-            _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, tempStock.SecuCode);
-            _dbHelper.AddInParameter(dbCommand, "@Amount", System.Data.DbType.Int32, tempStock.Amount);
-            _dbHelper.AddInParameter(dbCommand, "@MarketCap", System.Data.DbType.Decimal, tempStock.MarketCap);
-            _dbHelper.AddInParameter(dbCommand, "@MarketCapOpt", System.Data.DbType.Decimal, tempStock.MarketCapWeight);
-            _dbHelper.AddInParameter(dbCommand, "@SettingWeight", System.Data.DbType.Decimal, tempStock.SettingWeight);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_DeleteTemplateStock);
+            _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, templateNo);
+            _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, secuCode);
 
             _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.String);
 
@@ -93,6 +110,8 @@ namespace DBAccess
                     stockTemplates.Add(item);
                 }
             }
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
 
             return stockTemplates;
         }

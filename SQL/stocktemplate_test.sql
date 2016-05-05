@@ -53,3 +53,7 @@ insert into benchmark(
 	,'жажЄ500'
 	,'sz'
 )
+
+declare @newstid int
+exec @newstid = procInsertTemplateStock 2, '600985', 1300, 13780, 1.02, 1.08
+select @newstid

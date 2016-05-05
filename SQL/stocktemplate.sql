@@ -196,7 +196,7 @@ create proc procInsertTemplateStock(
 as
 begin
 	declare @newid varchar(20)
-	begin try
+	--begin try
 		insert into templatestock(
 			TemplateId,
 			SecuCode,
@@ -213,12 +213,13 @@ begin
 			@MarketCapOpt,
 			@SettingWeight
 		)
-	end try
-	begin catch
-		select ERROR_NUMBER() as ErrorNumber, ERROR_MESSAGE() as ErrorMesssage
-	end catch
+	--end try
+	--begin catch
+	--	select ERROR_NUMBER() as ErrorNumber, ERROR_MESSAGE() as ErrorMesssage
+	--end catch
 
-	set @newid=@SecuCode+';'+convert(varchar(10),@TemplateId)
+	--set @newid=@SecuCode+';'+convert(varchar(10),@TemplateId)
+	set @newid=@TemplateId
 	return @newid
 end
 
