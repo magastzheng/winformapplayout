@@ -13,7 +13,119 @@ namespace Util
 {
     public class ExcelUtil
     {
-        public static void CreateExcel()
+        //public static void CreateExcel()
+        //{
+        //    //create the workbook
+        //    HSSFWorkbook wk = new HSSFWorkbook();
+
+        //    //create the sheet
+        //    ISheet sheet = wk.CreateSheet("mysheet");
+
+        //    //create a row
+        //    IRow row = sheet.CreateRow(1);
+        //    for (int i = 0; i < 20; i++)
+        //    {
+        //        //create the cell in row
+        //        ICell cell = row.CreateCell(i);
+        //        //add data into the cell
+        //        cell.SetCellValue(i);
+        //    }
+
+        //    using (FileStream fs = File.OpenWrite(@"d:/myxls.xls"))
+        //    {
+        //        wk.Write(fs);
+        //    }
+        //}
+
+        //public static void ReadExcel(string fileName, string sheetName)
+        //{
+        //    ISheet sheet;
+        //    FileStream fs = null;
+        //    try
+        //    {
+        //        fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+        //        HSSFWorkbook wk = new HSSFWorkbook(fs);
+        //        //sheet = wk.GetSheet(sheetName);
+        //        ReadSheet(wk, sheetName);
+        //    }
+        //    catch
+        //    {
+        //        fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+        //        XSSFWorkbook wk = new XSSFWorkbook(fs);
+        //        //sheet = wk.GetSheet(sheetName);
+        //        ReadSheet(wk, sheetName);
+        //    }
+        //    finally
+        //    {
+        //        fs.Close();
+        //        fs.Dispose();
+        //    }
+        //}
+
+        //public static void ReadExcel()
+        //{
+        //    StringBuilder sb = new StringBuilder();
+        //    using (FileStream fs = File.OpenRead(@"d:/myxls.xls"))
+        //    {
+        //        HSSFWorkbook wk = new HSSFWorkbook(fs);
+        //        for (int i = 0; i < wk.NumberOfSheets; i++)
+        //        {
+        //            ISheet sheet = wk.GetSheetAt(i);
+        //            for (int rowIndex = 0; rowIndex <= sheet.LastRowNum; rowIndex++)
+        //            {
+        //                IRow row = sheet.GetRow(rowIndex);
+        //                if (row != null)
+        //                {
+        //                    sb.Append("--------------------------------\r\n");
+        //                    for (int colIndex = 0; colIndex <= row.LastCellNum; colIndex++)
+        //                    {
+        //                        ICell cell = row.GetCell(colIndex);
+        //                        if (cell != null)
+        //                        {
+        //                            sb.Append(cell.ToString());
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //    using (StreamWriter wr = new StreamWriter(new FileStream(@"d:/mytext.txt", FileMode.Append)))
+        //    {
+        //        wr.Write(sb.ToString());
+        //        wr.Flush();
+        //    }
+        //}
+
+        //public static void ReadSheet(IWorkbook workbook, string sheetName)
+        //{
+        //    ISheet sheet = workbook.GetSheet(sheetName);
+        //    if (sheet == null)
+        //        return;
+
+        //    StringBuilder sb = new StringBuilder();
+        //    for (int rowIndex = 0; rowIndex <= sheet.LastRowNum; rowIndex++)
+        //    {
+        //        IRow row = sheet.GetRow(rowIndex);
+        //        if (row != null)
+        //        {
+        //            sb.Append("--------------------------------\r\n");
+        //            for (int colIndex = 0; colIndex <= row.LastCellNum; colIndex++)
+        //            {
+        //                ICell cell = row.GetCell(colIndex);
+        //                if (cell != null)
+        //                {
+        //                    sb.AppendFormat("{0}\t",cell.ToString());
+        //                }
+        //            }
+        //        }
+        //    }
+        //    Console.WriteLine(sb.ToString());
+        //}
+
+        #region public method to write sheet data
+
+        public static void CreateExcel(string fileName, DataTable dataTable)
         {
             //create the workbook
             HSSFWorkbook wk = new HSSFWorkbook();
@@ -21,107 +133,53 @@ namespace Util
             //create the sheet
             ISheet sheet = wk.CreateSheet("mysheet");
 
-            //create a row
-            IRow row = sheet.CreateRow(1);
-            for (int i = 0; i < 20; i++)
+            //create a row to write header
+            IRow rowHead = sheet.CreateRow(0);
+            foreach(var kv in dataTable.ColumnIndex)
             {
                 //create the cell in row
-                ICell cell = row.CreateCell(i);
+                ICell cell = rowHead.CreateCell(kv.Value);
                 //add data into the cell
-                cell.SetCellValue(i);
+                cell.SetCellValue(kv.Key);
             }
 
-            using (FileStream fs = File.OpenWrite(@"d:/myxls.xls"))
+            for (int rowIndex = 0, rowSize = dataTable.Rows.Count; rowIndex < rowSize; rowIndex++)
+            { 
+                DataRow dataRow = dataTable.Rows[rowIndex];
+                IRow row = sheet.CreateRow(rowIndex + 1);
+
+                for (int colIndex = 0, colSize = dataRow.Columns.Count; colIndex < colSize; colIndex++)
+                {
+                    DataValue dataValue = dataRow.Columns[colIndex];
+                    ICell cell = row.CreateCell(colIndex);
+                    switch(dataValue.Type)
+                    {
+                        case DataValueType.Int:
+                            cell.SetCellValue(dataValue.GetInt());
+                            break;
+                        case DataValueType.Float:
+                            cell.SetCellValue(dataValue.GetDouble());
+                            break;
+                        case DataValueType.String:
+                            cell.SetCellValue(dataValue.GetStr());
+                            break;
+                        default:
+                            cell.SetCellValue(dataValue.GetStr());
+                            break;
+                    }
+                    
+                }
+            }
+
+            using (FileStream fs = File.OpenWrite(fileName))
             {
                 wk.Write(fs);
             }
         }
 
-        public static void ReadExcel(string fileName, string sheetName)
-        {
-            ISheet sheet;
-            FileStream fs = null;
-            try
-            {
-                fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-                HSSFWorkbook wk = new HSSFWorkbook(fs);
-                //sheet = wk.GetSheet(sheetName);
-                ReadSheet(wk, sheetName);
-            }
-            catch
-            {
-                fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-                XSSFWorkbook wk = new XSSFWorkbook(fs);
-                //sheet = wk.GetSheet(sheetName);
-                ReadSheet(wk, sheetName);
-            }
-            finally
-            {
-                fs.Close();
-                fs.Dispose();
-            }
-        }
+        #endregion
 
-        public static void ReadExcel()
-        {
-            StringBuilder sb = new StringBuilder();
-            using (FileStream fs = File.OpenRead(@"d:/myxls.xls"))
-            {
-                HSSFWorkbook wk = new HSSFWorkbook(fs);
-                for (int i = 0; i < wk.NumberOfSheets; i++)
-                {
-                    ISheet sheet = wk.GetSheetAt(i);
-                    for (int rowIndex = 0; rowIndex <= sheet.LastRowNum; rowIndex++)
-                    {
-                        IRow row = sheet.GetRow(rowIndex);
-                        if (row != null)
-                        {
-                            sb.Append("--------------------------------\r\n");
-                            for (int colIndex = 0; colIndex <= row.LastCellNum; colIndex++)
-                            {
-                                ICell cell = row.GetCell(colIndex);
-                                if (cell != null)
-                                {
-                                    sb.Append(cell.ToString());
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            using (StreamWriter wr = new StreamWriter(new FileStream(@"d:/mytext.txt", FileMode.Append)))
-            {
-                wr.Write(sb.ToString());
-                wr.Flush();
-            }
-        }
-
-        public static void ReadSheet(IWorkbook workbook, string sheetName)
-        {
-            ISheet sheet = workbook.GetSheet(sheetName);
-            if (sheet == null)
-                return;
-
-            StringBuilder sb = new StringBuilder();
-            for (int rowIndex = 0; rowIndex <= sheet.LastRowNum; rowIndex++)
-            {
-                IRow row = sheet.GetRow(rowIndex);
-                if (row != null)
-                {
-                    sb.Append("--------------------------------\r\n");
-                    for (int colIndex = 0; colIndex <= row.LastCellNum; colIndex++)
-                    {
-                        ICell cell = row.GetCell(colIndex);
-                        if (cell != null)
-                        {
-                            sb.AppendFormat("{0}\t",cell.ToString());
-                        }
-                    }
-                }
-            }
-            Console.WriteLine(sb.ToString());
-        }
+        #region public method to read sheet data
 
         public static DataTable GetSheetData(string fileName, string sheetName, Dictionary<string, DataColumnHeader> colHeadMap)
         {
@@ -136,7 +194,24 @@ namespace Util
             return table;
         }
 
-        public static IWorkbook GetWorkbook(string fileName)
+        public static DataTable GetSheetData(string fileName, int sheetIndex, Dictionary<string, DataColumnHeader> colHeadMap)
+        {
+            DataTable table = new DataTable();
+            var wb = GetWorkbook(fileName);
+            if (wb == null)
+                return table;
+            var sheet = GetSheet(wb, sheetIndex);
+            if (sheet == null)
+                return table;
+            table = ReadSheet(sheet, colHeadMap);
+            return table;
+        }
+
+        #endregion
+
+        #region private method to support read SheetData
+
+        private static IWorkbook GetWorkbook(string fileName)
         {
             IWorkbook workbook = null;
             FileStream fs = null;
@@ -165,17 +240,17 @@ namespace Util
             return workbook;
         }
 
-        public static ISheet GetSheet(IWorkbook workbook, string sheetName)
+        private static ISheet GetSheet(IWorkbook workbook, string sheetName)
         {
             return workbook.GetSheet(sheetName);
         }
 
-        public static ISheet GetSheet(IWorkbook workbook, int sheetIndex)
+        private static ISheet GetSheet(IWorkbook workbook, int sheetIndex)
         {
             return workbook.GetSheetAt(sheetIndex);
         }
 
-        public static DataTable ReadSheet(ISheet sheet, Dictionary<string, DataColumnHeader> colHeadMap)
+        private static DataTable ReadSheet(ISheet sheet, Dictionary<string, DataColumnHeader> colHeadMap)
         {
             DataTable table = new DataTable 
             {
@@ -280,5 +355,7 @@ namespace Util
 
             return table;
         }
+
+        #endregion
     }
 }

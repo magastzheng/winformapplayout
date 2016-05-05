@@ -18,7 +18,7 @@ namespace UtilTest
         {
             string fileName = @"d:/temp/HK-WIND西药.xlsx";
             string sheetName = @"file";
-            ExcelUtil.ReadExcel(fileName, sheetName);
+            //ExcelUtil.ReadExcel(fileName, sheetName);
             Console.WriteLine("test");
         }
 
@@ -28,7 +28,7 @@ namespace UtilTest
             //string fileName = @"d:/temp/20160222.xls";
             string fileName = @"d:/temp/20160222saveas.xls";
             string sheetName = @"file";
-            ExcelUtil.ReadExcel(fileName, sheetName);
+            //ExcelUtil.ReadExcel(fileName, sheetName);
             Console.WriteLine("test");
         }
 
