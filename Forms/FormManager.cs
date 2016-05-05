@@ -9,42 +9,42 @@ namespace Forms
 {
     public class FormManager
     {
-        public static BaseForm LoadForm(Form mainForm, Type formType, string json)
-        {
-            bool isFound = false;
-            BaseForm childForm = null;
-            foreach (Form form in mainForm.MdiChildren)
-            {
-                if (form is BaseForm)
-                {
-                    if (form.GetType() == formType)
-                    {
-                        isFound = true;
-                        childForm = form as BaseForm;
-                        break;
-                    }
-                }
-            }
+        //public static BaseForm LoadForm(Form mainForm, Type formType, string json)
+        //{
+        //    bool isFound = false;
+        //    BaseForm childForm = null;
+        //    foreach (Form form in mainForm.MdiChildren)
+        //    {
+        //        if (form is BaseForm)
+        //        {
+        //            if (form.GetType() == formType)
+        //            {
+        //                isFound = true;
+        //                childForm = form as BaseForm;
+        //                break;
+        //            }
+        //        }
+        //    }
 
-            if (!isFound)
-            {
-                childForm = (BaseForm)Activator.CreateInstance(formType);
-                childForm.MdiParent = mainForm;
-                childForm.Show();
-            }
+        //    if (!isFound)
+        //    {
+        //        childForm = (BaseForm)Activator.CreateInstance(formType);
+        //        childForm.MdiParent = mainForm;
+        //        childForm.Show();
+        //    }
 
-            //窗体激活的时候，传递对应的参数信息
-            ILoadFormActived formActived = childForm as ILoadFormActived;
-            if (formActived != null)
-            {
-                formActived.OnLoadFormActived(json);
-            }
+        //    //窗体激活的时候，传递对应的参数信息
+        //    ILoadFormActived formActived = childForm as ILoadFormActived;
+        //    if (formActived != null)
+        //    {
+        //        formActived.OnLoadFormActived(json);
+        //    }
 
-            childForm.BringToFront();
-            childForm.Activate();
+        //    childForm.BringToFront();
+        //    childForm.Activate();
 
-            return childForm;
-        }
+        //    return childForm;
+        //}
 
         public static BaseForm LoadForm(Form mainForm, Type formType, object[] constructorArgs, string json)
         {
@@ -79,14 +79,14 @@ namespace Forms
             }
 
             //窗体激活的时候，传递对应的参数信息
-            ILoadFormActived formActived = childForm as ILoadFormActived;
-            if (formActived != null)
-            {
-                formActived.OnLoadFormActived(json);
-            }
+            //ILoadFormActived formActived = childForm as ILoadFormActived;
+            //if (formActived != null)
+            //{
+            //    formActived.OnLoadFormActived(json);
+            //}
 
-            childForm.BringToFront();
-            childForm.Activate();
+            //childForm.BringToFront();
+            //childForm.Activate();
 
             return childForm;
         }

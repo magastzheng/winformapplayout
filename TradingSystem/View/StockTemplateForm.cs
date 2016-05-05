@@ -52,6 +52,10 @@ namespace TradingSystem.View
 
         private void Form_LoadActived(string json)
         {
+            //StockTemplateDAO _dbdao = new StockTemplateDAO();
+            var items = _dbdao.GetTemplate(-1);
+            json = JsonUtil.SerializeObject(items);
+
             if(!string.IsNullOrEmpty(json))
             {
                 List<StockTemplate> stockTemplateList = JsonUtil.DeserializeObject<List<StockTemplate>>(json);
@@ -75,6 +79,8 @@ namespace TradingSystem.View
                 {
                     dataTable.ColumnIndex = columnIndex;
                 }
+
+                _tempGridView.Clear();
                 _tempGridView.FillData(dataTable);
             }
         }
@@ -176,6 +182,8 @@ namespace TradingSystem.View
                         {
                             dataValue.Value = "";
                         }
+                        break;
+                    default:
                         break;
                 }
 
@@ -296,6 +304,139 @@ namespace TradingSystem.View
             }
 
             return stockTemplate;
+        }
+
+        private Model.Data.DataRow GetDataRow(TemplateStock tempStock, ref Dictionary<string, int> columnIndex)
+        {
+            Model.Data.DataRow dataRow = new Model.Data.DataRow
+            {
+                Columns = new List<DataValue>()
+            };
+            var columns = _stockGridView.GridColumns;
+            for (int i = 0, count = columns.Count; i < count; i++)
+            {
+                var column = columns[i];
+                if (!columnIndex.ContainsKey(column.Name))
+                {
+                    columnIndex.Add(column.Name, i);
+                }
+                DataValue dataValue = new DataValue();
+                dataValue.Type = column.ValueType;
+                switch (column.Name)
+                {
+                    case "ts_secucode":
+                        {
+                            dataValue.Value = tempStock.SecuCode;
+                        }
+                        break;
+                    case "ts_secuname":
+                        {
+                            dataValue.Value = tempStock.SecuName;
+                        }
+                        break;
+                    case "ts_market":
+                        {
+                            dataValue.Value = tempStock.Exchange;
+                        }
+                        break;
+                    case "ts_amount":
+                        {
+                            dataValue.Value = tempStock.Amount;
+                        }
+                        break;
+                    case "ts_marketcap":
+                        {
+                            dataValue.Value = tempStock.MarketCap;
+                        }
+                        break;
+                    case "ts_marketcapweight":
+                        {
+                            dataValue.Value = tempStock.MarketCapWeight;
+                        }
+                        break;
+                    case "ts_setweight":
+                        {
+                            dataValue.Value = tempStock.SettingWeight;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                dataRow.Columns.Add(dataValue);
+            }
+
+            return dataRow;
+        }
+
+        private TemplateStock GetStockDialogData(Model.Data.DataRow dataRow, Dictionary<string, int> columnIndex)
+        {
+            TemplateStock tempStock = new TemplateStock();
+
+            var columns = _stockGridView.GridColumns;
+            for (int i = 0, count = columns.Count; i < count; i++)
+            {
+                var column = columns[i];
+                int valIndex = -1;
+                foreach (var kv in columnIndex)
+                {
+                    if (kv.Key == column.Name)
+                    {
+                        valIndex = kv.Value;
+                        break;
+                    }
+                }
+                if (valIndex >= dataRow.Columns.Count)
+                {
+                    continue;
+                }
+
+                DataValue dataValue = dataRow.Columns[valIndex];
+                switch (column.Name)
+                {
+                    case "ts_secucode":
+                        {
+                            tempStock.SecuCode = dataValue.GetStr();
+                        }
+                        break;
+                    case "ts_secuname":
+                        {
+                            tempStock.SecuName = dataValue.GetStr();
+                        }
+                        break;
+                    case "ts_market":
+                        {
+                            tempStock.Exchange = dataValue.GetStr();
+                        }
+                        break;
+                    case "ts_amount":
+                        {
+                            tempStock.Amount = dataValue.GetInt();
+                        }
+                        break;
+                    case "ts_marketcap":
+                        {
+                            tempStock.MarketCap = dataValue.GetDouble();
+                        }
+                        break;
+                    case "ts_marketcapweight":
+                        {
+                            tempStock.MarketCapWeight = dataValue.GetDouble();
+                        }
+                        break;
+                    case "ts_setweight":
+                        {
+                            tempStock.SettingWeight = dataValue.GetDouble();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                dataRow.Columns.Add(dataValue);
+            }
+
+            return tempStock;
         }
 
         private void LoadData()
@@ -471,16 +612,59 @@ namespace TradingSystem.View
                 {
                     colHeadMap.Add(column.Name, column);
                 }
-                string sheetName = @"20160222";
-                var table = ExcelUtil.GetSheetData(fileDialog.FileName, sheetName, colHeadMap);
+                //string sheetName = @"20160222";
+                int sheetIndex = 0;
+                var table = ExcelUtil.GetSheetData(fileDialog.FileName, sheetIndex, colHeadMap);
                 //Console.WriteLine(table.ColumnIndex.Count);
                 if (table != null)
                 {
-                    this._stockGridView.FillData(table);
+                    var gridData = ExcelToGrid(table);
+                    this._stockGridView.FillData(gridData);
                 }
             }
 
             return true;
+        }
+
+        private Model.Data.DataTable ExcelToGrid(Model.Data.DataTable excelData)
+        {
+            Model.Data.DataTable dataTable = new Model.Data.DataTable 
+            {
+                ColumnIndex = new Dictionary<string,int>(),
+                Rows = excelData.Rows
+            };
+
+            var columns = _stockGridView.GridColumns;
+            for (int i = 0, count = columns.Count; i < count; i++)
+            {
+                var column = columns[i];
+                if (excelData.ColumnIndex.ContainsKey(column.Text))
+                {
+                    if (!dataTable.ColumnIndex.ContainsKey(column.Name))
+                    {
+                        dataTable.ColumnIndex.Add(column.Name, excelData.ColumnIndex[column.Text]);
+                    }
+                }
+                else
+                {
+                    bool isExisted = false;
+                    int index = -1;
+                    foreach (var kv in excelData.ColumnIndex)
+                    {
+                        if (kv.Key.StartsWith(column.Text) || column.Text.StartsWith(kv.Key))
+                        {
+                            index = kv.Value;
+                            isExisted = true;
+                        }
+                    }
+                    if (isExisted && !dataTable.ColumnIndex.ContainsKey(column.Name))
+                    {
+                        dataTable.ColumnIndex.Add(column.Name, index);
+                    }
+                }
+            }
+
+            return dataTable;
         }
 
         #endregion

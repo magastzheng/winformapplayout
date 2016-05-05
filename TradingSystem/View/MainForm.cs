@@ -86,39 +86,11 @@ namespace TradingSystem.View
                     {
                         if (!_childFormMap.ContainsKey(key))
                         {
-                            //form = new StockTemplateForm(_gridConfig);
-                            //form.BackColor = Color.DarkGray;
-                            //form.Dock = DockStyle.Fill;
-                            //_childFormMap[key] = form;
                             formType = typeof(StockTemplateForm);
                             hasGrid = true;
-                            //List<StockTemplate> items = new List<StockTemplate>();
-                            //StockTemplate item = new StockTemplate 
-                            //{
-                            //    TemplateNo = 12,
-                            //    TemplateName = "Test",
-                            //    FutureCopies = 1,
-                            //    MarketCapOpt = 100f,
-                            //    Benchmark = "000016",
-                            //    WeightType = 1,
-                            //    ReplaceType = 0
-                            //};
-
-                            //StockTemplate item2 = new StockTemplate
-                            //{
-                            //    TemplateNo = 13,
-                            //    TemplateName = "Test2",
-                            //    FutureCopies = 1,
-                            //    MarketCapOpt = 100f,
-                            //    Benchmark = "000016",
-                            //    WeightType = 1,
-                            //    ReplaceType = 0
-                            //};
-                            //items.Add(item);
-                            //items.Add(item2);
-                            StockTemplateDAO _dbdao = new StockTemplateDAO();
-                            var items = _dbdao.GetTemplate(-1);
-                            json = JsonUtil.SerializeObject(items);
+                            //StockTemplateDAO _dbdao = new StockTemplateDAO();
+                            //var items = _dbdao.GetTemplate(-1);
+                            //json = JsonUtil.SerializeObject(items);
                         }
                         else
                         {
@@ -140,17 +112,13 @@ namespace TradingSystem.View
                 }
                 else
                 {
-                    form = FormManager.LoadForm(this, formType, json);
+                    form = FormManager.LoadForm(this, formType, null, json);
                 }
                 _childFormMap[key] = form;
             }
 
             if (form != null)
             {
-                //_panelMain.Controls.Clear();
-                //_panelMain.Controls.Add(form);
-                //_splitContainerMain.Panel2.Controls.Clear();
-                //_splitContainerMain.Panel2.Controls.Add(form);
                 ILoadFormActived formActived = form as ILoadFormActived;
                 if (formActived != null)
                 {
@@ -163,6 +131,10 @@ namespace TradingSystem.View
                 form.Dock = DockStyle.Fill;
                 form.BringToFront();
                 form.Show();
+            }
+            else
+            { 
+                //default fomr
             }
         }
         #endregion

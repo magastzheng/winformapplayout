@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Model.Data;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,6 +51,27 @@ namespace UtilTest
             string newFileName = @"d:/temp/20160222_newcopy.xls";
             ExcelUtil.CreateExcel(newFileName, table);
             Console.WriteLine("test2");
+        }
+
+        [TestMethod]
+        public void TestStringParse()
+        {
+            string istr = "1,700";
+            int temp = 0;
+            NumberStyles styles = NumberStyles.Integer | NumberStyles.AllowThousands;
+
+            if (int.TryParse(istr, styles, CultureInfo.InvariantCulture, out temp))
+            {
+                Console.WriteLine(temp);
+            }
+
+            string dstr = "4,212,456.12";
+            double dTemp = 0.0f;
+            styles = NumberStyles.Float | NumberStyles.AllowThousands;
+            if (double.TryParse(dstr, styles, CultureInfo.InvariantCulture, out dTemp))
+            {
+                Console.WriteLine(dTemp);
+            }
         }
     }
 }

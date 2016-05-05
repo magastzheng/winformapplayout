@@ -161,6 +161,15 @@ namespace Controls
             SetRow(row, dataRow, _dataTable.ColumnIndex);
         }
 
+        public void Clear()
+        {
+            if(_dataTable != null && _dataTable.Rows != null)
+            {
+                _dataTable.Rows.Clear();
+            }
+
+            Rows.Clear();
+        }
         #endregion
 
 

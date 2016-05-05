@@ -5,6 +5,7 @@ using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -222,8 +223,9 @@ namespace Util
                         {
                             case DataValueType.Int:
                                 {
+                                    NumberStyles styles = NumberStyles.Integer | NumberStyles.AllowThousands;
                                     int temp;
-                                    if (int.TryParse(cell.StringCellValue, out temp))
+                                    if (int.TryParse(cell.StringCellValue, styles, CultureInfo.InvariantCulture, out temp))
                                     {
                                         dataValue.Value = temp;
                                     }
@@ -235,8 +237,9 @@ namespace Util
                                 break;
                             case DataValueType.Float:
                                 {
+                                    NumberStyles styles = NumberStyles.Float | NumberStyles.AllowThousands;
                                     double temp;
-                                    if (double.TryParse(cell.StringCellValue, out temp))
+                                    if (double.TryParse(cell.StringCellValue, styles, CultureInfo.InvariantCulture, out temp))
                                     {
                                         dataValue.Value = temp;
                                     }

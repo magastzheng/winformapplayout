@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller\FormFactory.cs" />
     <Compile Include="Controller\LoginController.cs" />
     <Compile Include="Controller\MainController.cs" />
     <Compile Include="View\ImportOptionDialog.cs">
@@ -78,6 +79,12 @@
     </Compile>
     <Compile Include="View\LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\PortfolioSecurityDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\PortfolioSecurityDialog.Designer.cs">
+      <DependentUpon>PortfolioSecurityDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="View\StockTemplateForm.cs">
       <SubType>Form</SubType>
@@ -131,6 +138,9 @@
     <EmbeddedResource Include="View\LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\PortfolioSecurityDialog.resx">
+      <DependentUpon>PortfolioSecurityDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\StockTemplateForm.resx">
       <DependentUpon>StockTemplateForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -143,6 +153,7 @@
     <EmbeddedResource Include="View\WarnForm.resx">
       <DependentUpon>WarnForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="config\excelgrid.json" />
     <None Include="config\import.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

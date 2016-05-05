@@ -1,0 +1,65 @@
+﻿/*
+match: 
+0 - full match
+1 - start with
+2 - contains
+*/
+[
+	{
+		"id": "templatestock",
+		"columns":[
+		{
+			"excel": "",
+			"grid": "ts_secucode",
+			"match": 0
+		},{
+			"excel": "",
+			"grid": "",
+			"match": 0
+		},{
+			"excel": "",
+			"grid": "",
+			"match": 0
+		},{
+			"excel": "",
+			"grid": "",
+			"match": 0
+		},{
+			"excel": "",
+			"grid": "",
+			"match": 0
+		},{
+			"excel": "",
+			"grid": "",
+			"match": 0
+		},{
+			"excel": "",
+			"grid": "",
+			"match": 0
+		},{
+			"excel": "",
+			"grid": "",
+			"match": 0
+		},{
+			"excel": "",
+			"grid": "",
+			"match": 0
+		},{
+			"excel": "",
+			"grid": "",
+			"match": 0
+		},{
+			"excel": "",
+			"grid": "",
+			"match": 0
+		},{
+			"excel": "",
+			"grid": "",
+			"match": 0
+		},{
+			"excel": "",
+			"grid": "",
+			"match": 0
+		}]
+	}
+]

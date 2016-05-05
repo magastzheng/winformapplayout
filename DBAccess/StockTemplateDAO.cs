@@ -102,6 +102,8 @@ namespace DBAccess
                     stockTemplates.Add(item);
                 }
             }
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
 
             return stockTemplates;
         }
