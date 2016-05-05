@@ -1,4 +1,5 @@
-﻿using Model.Data;
+﻿using log4net;
+using Model.Data;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -13,115 +14,7 @@ namespace Util
 {
     public class ExcelUtil
     {
-        //public static void CreateExcel()
-        //{
-        //    //create the workbook
-        //    HSSFWorkbook wk = new HSSFWorkbook();
-
-        //    //create the sheet
-        //    ISheet sheet = wk.CreateSheet("mysheet");
-
-        //    //create a row
-        //    IRow row = sheet.CreateRow(1);
-        //    for (int i = 0; i < 20; i++)
-        //    {
-        //        //create the cell in row
-        //        ICell cell = row.CreateCell(i);
-        //        //add data into the cell
-        //        cell.SetCellValue(i);
-        //    }
-
-        //    using (FileStream fs = File.OpenWrite(@"d:/myxls.xls"))
-        //    {
-        //        wk.Write(fs);
-        //    }
-        //}
-
-        //public static void ReadExcel(string fileName, string sheetName)
-        //{
-        //    ISheet sheet;
-        //    FileStream fs = null;
-        //    try
-        //    {
-        //        fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-        //        HSSFWorkbook wk = new HSSFWorkbook(fs);
-        //        //sheet = wk.GetSheet(sheetName);
-        //        ReadSheet(wk, sheetName);
-        //    }
-        //    catch
-        //    {
-        //        fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-        //        XSSFWorkbook wk = new XSSFWorkbook(fs);
-        //        //sheet = wk.GetSheet(sheetName);
-        //        ReadSheet(wk, sheetName);
-        //    }
-        //    finally
-        //    {
-        //        fs.Close();
-        //        fs.Dispose();
-        //    }
-        //}
-
-        //public static void ReadExcel()
-        //{
-        //    StringBuilder sb = new StringBuilder();
-        //    using (FileStream fs = File.OpenRead(@"d:/myxls.xls"))
-        //    {
-        //        HSSFWorkbook wk = new HSSFWorkbook(fs);
-        //        for (int i = 0; i < wk.NumberOfSheets; i++)
-        //        {
-        //            ISheet sheet = wk.GetSheetAt(i);
-        //            for (int rowIndex = 0; rowIndex <= sheet.LastRowNum; rowIndex++)
-        //            {
-        //                IRow row = sheet.GetRow(rowIndex);
-        //                if (row != null)
-        //                {
-        //                    sb.Append("--------------------------------\r\n");
-        //                    for (int colIndex = 0; colIndex <= row.LastCellNum; colIndex++)
-        //                    {
-        //                        ICell cell = row.GetCell(colIndex);
-        //                        if (cell != null)
-        //                        {
-        //                            sb.Append(cell.ToString());
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    using (StreamWriter wr = new StreamWriter(new FileStream(@"d:/mytext.txt", FileMode.Append)))
-        //    {
-        //        wr.Write(sb.ToString());
-        //        wr.Flush();
-        //    }
-        //}
-
-        //public static void ReadSheet(IWorkbook workbook, string sheetName)
-        //{
-        //    ISheet sheet = workbook.GetSheet(sheetName);
-        //    if (sheet == null)
-        //        return;
-
-        //    StringBuilder sb = new StringBuilder();
-        //    for (int rowIndex = 0; rowIndex <= sheet.LastRowNum; rowIndex++)
-        //    {
-        //        IRow row = sheet.GetRow(rowIndex);
-        //        if (row != null)
-        //        {
-        //            sb.Append("--------------------------------\r\n");
-        //            for (int colIndex = 0; colIndex <= row.LastCellNum; colIndex++)
-        //            {
-        //                ICell cell = row.GetCell(colIndex);
-        //                if (cell != null)
-        //                {
-        //                    sb.AppendFormat("{0}\t",cell.ToString());
-        //                }
-        //            }
-        //        }
-        //    }
-        //    Console.WriteLine(sb.ToString());
-        //}
+        private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         #region public method to write sheet data
 
@@ -171,9 +64,18 @@ namespace Util
                 }
             }
 
-            using (FileStream fs = File.OpenWrite(fileName))
+            try
             {
-                wk.Write(fs);
+                using (FileStream fs = File.OpenWrite(fileName))
+                {
+                    wk.Write(fs);
+                }
+            }
+            catch (Exception e)
+            {
+                string msg = string.Format("Fail to write the data into excel: {0}, message: {1}", fileName, e.Message);
+                logger.Error(msg);
+                throw;
             }
         }
 
@@ -221,8 +123,12 @@ namespace Util
             }
             catch(Exception e)
             {
-                Console.WriteLine("Fail to read file: " + fileName + e.Message);
+                string msg = string.Format("Fail to read the file: {0}, message: {1}", fileName, e.Message);
+                logger.Error(msg);
+
+                return workbook;
             }
+
             try
             {
                 workbook = new HSSFWorkbook(fs);

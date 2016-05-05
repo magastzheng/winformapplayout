@@ -46,6 +46,10 @@ namespace UtilTest
             string sheetName = @"20160222";
             var table = ExcelUtil.GetSheetData(fileName, sheetName, colHeadMap); 
             Console.WriteLine("test");
+
+            string newFileName = @"d:/temp/20160222_newcopy.xls";
+            ExcelUtil.CreateExcel(newFileName, table);
+            Console.WriteLine("test2");
         }
     }
 }
