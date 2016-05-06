@@ -86,7 +86,9 @@ namespace Controls.Entity
         {
             int col = _owner.DataTable.Rows[0].Columns.Count;
             //Type type = _owner.DataTable.Rows[0].Columns.GetType().GetElementType();
-            Type type = _owner.DataTable.GetType().GetElementType();
+            //Type type = _owner.DataTable.GetType().GetElementType();
+            //Type type = _owner.DataTable.Rows.GetType();
+            Type type = _owner.DataTable.Rows[0].Columns[0].GetType();
             PropertyDescriptor[] prop = new PropertyDescriptor[col];
             for (int i = 0; i < col; i++)
             {

@@ -28,20 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tsDataGridView1 = new Controls.GridView.TSDataGridView();
             this.button1 = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.tsDataGridView1)).BeginInit();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // tsDataGridView1
-            // 
-            this.tsDataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.tsDataGridView1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tsDataGridView1.Location = new System.Drawing.Point(0, 0);
-            this.tsDataGridView1.Name = "tsDataGridView1";
-            this.tsDataGridView1.RowTemplate.Height = 23;
-            this.tsDataGridView1.Size = new System.Drawing.Size(284, 183);
-            this.tsDataGridView1.TabIndex = 0;
             // 
             // button1
             // 
@@ -53,24 +43,34 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // dataGridView1
+            // 
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowTemplate.Height = 23;
+            this.dataGridView1.Size = new System.Drawing.Size(284, 182);
+            this.dataGridView1.TabIndex = 2;
+            // 
             // TSDataGridViewForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 262);
+            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.tsDataGridView1);
             this.Name = "TSDataGridViewForm";
             this.Text = "TSDataGridViewForm";
-            this.Load += new System.EventHandler(Form_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.tsDataGridView1)).EndInit();
+            this.Load += new System.EventHandler(this.Form_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private Controls.GridView.TSDataGridView tsDataGridView1;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.DataGridView dataGridView1;
     }
 }

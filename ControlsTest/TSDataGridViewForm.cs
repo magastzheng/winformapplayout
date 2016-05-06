@@ -26,7 +26,9 @@ namespace ControlsTest
             _dataTable = LoadData(out columns);
              
             _data = new TSGridViewData(_dataTable, columns);
-            this.tsDataGridView1.DataSource = _data;
+
+            //this.dataGridView1.DataSource = _dataTable.Rows;
+            this.dataGridView1.DataSource = _data;
         }
 
         private Model.Data.DataTable LoadData(out List<HSGridColumn> columns)
