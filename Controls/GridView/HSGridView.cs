@@ -1,4 +1,5 @@
-﻿using Model.Data;
+﻿using Controls.Entity;
+using Model.Data;
 using Model.UI;
 using System;
 using System.Collections.Generic;

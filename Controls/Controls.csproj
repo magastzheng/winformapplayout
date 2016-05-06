@@ -42,27 +42,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HSGridView.cs" />
-    <Compile Include="HSGridView.Designer.cs">
+    <Compile Include="AutoComplete\AutoComplete.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AutoComplete\AutoComplete.Designer.cs">
+      <DependentUpon>AutoComplete.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\AutoItem.cs" />
+    <Compile Include="Entity\HSGridColumn.cs" />
+    <Compile Include="Entity\TSNavNodeData.cs" />
+    <Compile Include="GridView\HSGridView.cs" />
+    <Compile Include="GridView\HSGridView.Designer.cs">
       <DependentUpon>HSGridView.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TreeViewEvent.cs" />
-    <Compile Include="TSNavBarContainer.cs">
+    <Compile Include="NavBar\TreeViewEvent.cs" />
+    <Compile Include="NavBar\TSNavBarContainer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="TSNavBarContainer.Designer.cs">
+    <Compile Include="NavBar\TSNavBarContainer.Designer.cs">
       <DependentUpon>TSNavBarContainer.cs</DependentUpon>
     </Compile>
-    <Compile Include="TSNavBarItem.cs">
+    <Compile Include="NavBar\TSNavBarItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="TSNavBarItem.Designer.cs">
+    <Compile Include="NavBar\TSNavBarItem.Designer.cs">
       <DependentUpon>TSNavBarItem.cs</DependentUpon>
     </Compile>
-    <Compile Include="TSNavBarItems.cs" />
-    <Compile Include="TSNavBarItemState.cs" />
-    <Compile Include="TSTreeView.cs">
+    <Compile Include="NavBar\TSNavBarItems.cs" />
+    <Compile Include="NavBar\TSNavBarItemState.cs" />
+    <Compile Include="NavBar\TSTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
@@ -73,10 +82,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TSNavBarContainer.resx">
+    <EmbeddedResource Include="AutoComplete\AutoComplete.resx">
+      <DependentUpon>AutoComplete.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NavBar\TSNavBarContainer.resx">
       <DependentUpon>TSNavBarContainer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TSNavBarItem.resx">
+    <EmbeddedResource Include="NavBar\TSNavBarItem.resx">
       <DependentUpon>TSNavBarItem.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>

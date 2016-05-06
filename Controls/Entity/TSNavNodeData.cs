@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Model.UI
+namespace Controls.Entity
 {
     public class TSNavNodeData
     {

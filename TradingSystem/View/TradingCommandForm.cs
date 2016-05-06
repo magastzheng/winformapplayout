@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Controls.Entity;
 
 namespace TradingSystem.View
 {
@@ -905,7 +906,7 @@ namespace TradingSystem.View
 
                 foreach (var column in this.dataGridViewBuySell.GridColumns)
                 {
-                    if (column.ColumnType == Model.UI.HSGridColumnType.None)
+                    if (column.ColumnType == HSGridColumnType.None)
                         continue;
 
                     Model.Data.DataValue dataValue = new Model.Data.DataValue();
@@ -914,7 +915,7 @@ namespace TradingSystem.View
                     {
                         dataValue.Value = dataRow.Columns["tc_commandno"].Value;
                     }
-                    else if (column.ColumnType == Model.UI.HSGridColumnType.Image)
+                    else if (column.ColumnType == HSGridColumnType.Image)
                     {
                         dataValue.Value = column.DefaultValue;
                     }
