@@ -49,11 +49,20 @@
       <DependentUpon>AutoComplete.cs</DependentUpon>
     </Compile>
     <Compile Include="Entity\AutoItem.cs" />
+    <Compile Include="Entity\RowPropertyDescriptor.cs" />
+    <Compile Include="Entity\TSGridViewData.cs" />
     <Compile Include="Entity\HSGridColumn.cs" />
     <Compile Include="Entity\TSNavNodeData.cs" />
+    <Compile Include="Entity\TSRowView.cs" />
     <Compile Include="GridView\HSGridView.cs" />
     <Compile Include="GridView\HSGridView.Designer.cs">
       <DependentUpon>HSGridView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GridView\TSDataGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GridView\TSDataGridView.Designer.cs">
+      <DependentUpon>TSDataGridView.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NavBar\TreeViewEvent.cs" />
