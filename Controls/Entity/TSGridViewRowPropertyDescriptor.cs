@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Controls.Entity
 {
-    public class RowPropertyDescriptor : PropertyDescriptor
+    public class TSGridViewRowPropertyDescriptor : PropertyDescriptor
     {
         private string _name;
         private Type _type;
         private int _index;
 
-        public RowPropertyDescriptor(string name, Type type, int index)
+        public TSGridViewRowPropertyDescriptor(string name, Type type, int index)
             : base(name, null)
         {
             _name = name;
@@ -40,7 +40,7 @@ namespace Controls.Entity
         {
             get 
             { 
-                return typeof(TSRowView); 
+                return typeof(TSGridViewRow); 
             }
         }
 
@@ -48,7 +48,7 @@ namespace Controls.Entity
         {
             try
             {
-                return ((TSRowView)component).GetColumn(_index);
+                return ((TSGridViewRow)component).GetColumn(_index);
             }
             catch (Exception e)
             {
@@ -84,7 +84,7 @@ namespace Controls.Entity
         {
             try
             {
-                ((TSRowView)component).SetColumnValue(_index, value);
+                ((TSGridViewRow)component).SetColumnValue(_index, value);
             }
             catch (Exception e)
             {

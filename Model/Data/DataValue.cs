@@ -25,6 +25,15 @@ namespace Model.Data
         {
             if (Type == DataValueType.Int)
             {
+                //int temp = 0;
+                //if (int.TryParse((string)Value, out temp))
+                //{
+                //    return temp;
+                //}
+                //else
+                //{
+                //    return 0;
+                //}
                 return (int)Value;
             }
             else
@@ -36,6 +45,12 @@ namespace Model.Data
         {
             if (Type == DataValueType.Float)
             {
+                //double temp = 0.0f;
+                //if (double.TryParse((string)Value, out temp))
+                //{
+                //    return temp;
+                //}
+                //return 0.0f;
                 return (double)Value;
             }
             return 0.0f;

@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Controls.Entity
 {
-    public class TSRowView : ICustomTypeDescriptor, IEditableObject, IDataErrorInfo
+    public class TSGridViewRow : ICustomTypeDescriptor, IEditableObject, IDataErrorInfo
     {
         private TSGridViewData _owner;
         private int _index;
         private string _error;
 
-        public TSRowView(TSGridViewData owner, int index)
+        public TSGridViewRow(TSGridViewData owner, int index)
         {
             _owner = owner;
             _index = index;
@@ -85,14 +85,11 @@ namespace Controls.Entity
         public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
         {
             int col = _owner.DataTable.Rows[0].Columns.Count;
-            //Type type = _owner.DataTable.Rows[0].Columns.GetType().GetElementType();
-            //Type type = _owner.DataTable.GetType().GetElementType();
-            //Type type = _owner.DataTable.Rows.GetType();
             Type type = _owner.DataTable.Rows[0].Columns[0].GetType();
             PropertyDescriptor[] prop = new PropertyDescriptor[col];
             for (int i = 0; i < col; i++)
             {
-                prop[i] = new RowPropertyDescriptor(_owner.Columns[i].Text, type, i);
+                prop[i] = new TSGridViewRowPropertyDescriptor(_owner.Columns[i].Text, type, i);
             }
 
             return new PropertyDescriptorCollection(prop);

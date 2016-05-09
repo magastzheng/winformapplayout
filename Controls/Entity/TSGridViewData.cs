@@ -11,17 +11,17 @@ namespace Controls.Entity
     {
         private Model.Data.DataTable _dataTable = null;
         private List<HSGridColumn> _columns = null;
-        private TSRowView[] _rows;
+        private TSGridViewRow[] _rows;
 
         public TSGridViewData(Model.Data.DataTable dataTable, List<HSGridColumn> columns)
         {
             _dataTable = dataTable;
             _columns = columns;
 
-            _rows = new TSRowView[_dataTable.Rows.Count];
+            _rows = new TSGridViewRow[_dataTable.Rows.Count];
             for (int i = 0; i < _rows.Length; i++)
             {
-                _rows[i] = new TSRowView(this, i);
+                _rows[i] = new TSGridViewRow(this, i);
             }
         }
 
