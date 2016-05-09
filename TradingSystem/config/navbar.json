@@ -25,6 +25,20 @@
                 "children": []
             }
         ]
+    },{
+        "id": "portfoliomanagement",
+        "title": "组合管理管理",
+        "parentid": "",
+        "isexpansed": false,
+        "children":[
+            {
+                "id": "portfoliomaintain",
+                "title": "组合维护",
+                "parentid": "portfoliomanagement",
+                "isexpansed": false,
+                "children": []
+            }
+        ]
     },
     {
         "id": "templatemanager",
