@@ -21,7 +21,9 @@ create table assetunit
 	AssetUnitCode varchar(10),
 	AssetUnitName varchar(50),
 	FundId int,
-	AssetUnitStatus int
+	AssetUnitStatus int, -- 1 正常，2 过期， 3 冻结
+	CanOverdraft int,  -- 1 允许透支; 2 不允许透支
+	AssetType int -- 1 收益资产; 2 保本资产
 )
 
 if object_id('portfolio') is not null
@@ -34,5 +36,7 @@ create table portfolio
 	PortfolioName varchar(50),
 	AssetUnitId int,
 	FundId int,
-	PortfolioType int
+	PortfolioType int, -- 1 个股组合, 2 基本组合
+	PortfolioStatus int, -- 1 正常，2 过期， 3 冻结
+	FuturesInvestType varchar(2) -- a 投机,  b 套保, c 套利
 )

@@ -82,6 +82,16 @@ namespace TradingSystem.View
                     break;
                 case "commandmanager":
                     break;
+                case "portfoliomaintain":
+                    if (!_childFormMap.ContainsKey(key))
+                    {
+                        formType = typeof(PortfolioForm);
+                    }
+                    else
+                    {
+                        form = _childFormMap[key];
+                    }
+                    break;
                 case "currenttemplate":
                     {
                         if (!_childFormMap.ContainsKey(key))
