@@ -36,10 +36,7 @@ namespace TradingSystem.View
             : this()
         {
             _gridConfig = gridConfig;
-        }
 
-        private void Form_Load(object sender, System.EventArgs e)
-        {
             _tempGridView = new HSGridView(_gridConfig.GetGid(GridTemplate));
             _tempGridView.Dock = DockStyle.Fill;
             _tempGridView.ClickRow += new ClickRowHandler(GridView_Template_ClickRow);
@@ -49,7 +46,10 @@ namespace TradingSystem.View
 
             splitContainerChild.Panel1.Controls.Add(_tempGridView);
             splitContainerChild.Panel2.Controls.Add(_stockGridView);
+        }
 
+        private void Form_Load(object sender, System.EventArgs e)
+        {
             LoadData();
         }
 

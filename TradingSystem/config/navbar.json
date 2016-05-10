@@ -31,6 +31,19 @@
         "parentid": "",
         "isexpansed": false,
         "children":[
+			{
+                "id": "fundmanagement",
+                "title": "产品管理",
+                "parentid": "portfoliomanagement",
+                "isexpansed": false,
+                "children": []
+            },{
+                "id": "assetunitmanagement",
+                "title": "资产单元管理",
+                "parentid": "portfoliomanagement",
+                "isexpansed": false,
+                "children": []
+            },
             {
                 "id": "portfoliomaintain",
                 "title": "组合维护",

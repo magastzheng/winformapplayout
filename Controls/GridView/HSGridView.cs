@@ -70,7 +70,10 @@ namespace Controls
             AddColumns();
 
             this.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_CellContentClick);
+            this.CellClick += new DataGridViewCellEventHandler(DataGridView_CellClikc);
+            this.CellDoubleClick += new DataGridViewCellEventHandler(DataGridView_CellDoubleClick);
         }
+
 
         //public void FillData(RawDataSet dataSet, Dictionary<string, string> colDataMap)
         //{
@@ -447,7 +450,22 @@ namespace Controls
 
         #endregion
 
-        private void DataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void DataGridView_CellClikc(object sender, DataGridViewCellEventArgs e)
+        {
+            //DataGridView dgv = (DataGridView)sender;
+            //if (dgv == null || e.ColumnIndex < 0 || e.RowIndex < 0)
+            //    return;
+
+            //if (ClickRow != null)
+            //{
+            //    if (_dataTable != null && _dataTable.Rows != null && e.RowIndex < _dataTable.Rows.Count)
+            //    {
+            //        ClickRow(this, _dataTable.Rows[e.RowIndex], _dataTable.ColumnIndex);
+            //    }
+            //}
+        }
+
+        private void DataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             DataGridView dgv = (DataGridView)sender;
             if (dgv == null || e.ColumnIndex < 0 || e.RowIndex < 0)
@@ -460,6 +478,21 @@ namespace Controls
                     ClickRow(this, _dataTable.Rows[e.RowIndex], _dataTable.ColumnIndex);
                 }
             }
+        }
+
+        private void DataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridView dgv = (DataGridView)sender;
+            if (dgv == null || e.ColumnIndex < 0 || e.RowIndex < 0)
+                return;
+
+            //if (ClickRow != null)
+            //{
+            //    if (_dataTable != null && _dataTable.Rows != null && e.RowIndex < _dataTable.Rows.Count)
+            //    {
+            //        ClickRow(this, _dataTable.Rows[e.RowIndex], _dataTable.ColumnIndex);
+            //    }
+            //}
 
             int cbColIndex = GetCheckBoxColumnIndex();
             if (cbColIndex < 0)

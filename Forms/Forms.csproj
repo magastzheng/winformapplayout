@@ -53,7 +53,6 @@
     <Compile Include="BaseForm.Designer.cs">
       <DependentUpon>BaseForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormManager.cs" />
     <Compile Include="FormUtil.cs" />
     <Compile Include="ILoadFormActived.cs" />
     <Compile Include="ISaveFormData.cs" />

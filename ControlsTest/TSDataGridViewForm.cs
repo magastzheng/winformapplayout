@@ -80,6 +80,20 @@ namespace ControlsTest
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Model.Data.DataRow dataRow = new Model.Data.DataRow
+            {
+                Columns = new List<Model.Data.DataValue>()
+            };
+
+            Random ran = new Random();
+            for (int j = 0; j < 10; j++)
+            {
+                Model.Data.DataValue dataValue = new Model.Data.DataValue();
+                dataValue.Type = Model.Data.DataValueType.Int;
+                dataValue.Value = ran.Next(150);
+                dataRow.Columns.Add(dataValue);
+            }
+            _dataTable.Rows.Add(dataRow);
 
         }
     }

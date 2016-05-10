@@ -27,6 +27,11 @@ namespace Controls.GridView
         public TSDataGridView()
         {
             InitializeComponent();
+
+            this.AllowUserToAddRows = false;
+            this.AllowUserToDeleteRows = false;
+            this.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+
             this.CellParsing += new DataGridViewCellParsingEventHandler(DataGridView_CellParsing);
             this.CellFormatting += new DataGridViewCellFormattingEventHandler(DataGridView_CellFormatting);
             //this.CellEnter += new DataGridViewCellEventHandler(DataGridView_CellEnter);
