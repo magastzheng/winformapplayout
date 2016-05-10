@@ -43,8 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssetUnitDAO.cs" />
     <Compile Include="BaseDAO.cs" />
     <Compile Include="DbHelper.cs" />
+    <Compile Include="FundDAO.cs" />
+    <Compile Include="PortfolioDAO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StockTemplateDAO.cs" />
     <Compile Include="TemplateStockDAO.cs" />

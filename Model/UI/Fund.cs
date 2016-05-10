@@ -14,7 +14,7 @@ namespace Model.UI
 
         public string FundName { get; set; }
 
-        public string FundManager { get; set; }
+        public string ManagerCode { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
