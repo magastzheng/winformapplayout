@@ -36,7 +36,19 @@ namespace Controls.GridView
             this.CellFormatting += new DataGridViewCellFormattingEventHandler(DataGridView_CellFormatting);
             //this.CellEnter += new DataGridViewCellEventHandler(DataGridView_CellEnter);
             this.CellValidating += new DataGridViewCellValidatingEventHandler(DataGridView_CellValidating);
+
+            //this.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(DataGridView_ColumnHeaderMouseClick);
         }
+
+        public override void Sort(DataGridViewColumn dataGridViewColumn, ListSortDirection direction)
+        {
+            base.Sort(dataGridViewColumn, direction);
+        }
+
+        //private void DataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        //{
+            
+        //}
 
         private void SwitchSelection(DataGridViewRow row, int colIndex)
         {

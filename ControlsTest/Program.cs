@@ -18,7 +18,8 @@ namespace ControlsTest
             Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new Form1());
             //Application.Run(new AutoCompleteForm());
-            Application.Run(new TSDataGridViewForm());
+            //Application.Run(new TSDataGridViewForm());
+            Application.Run(new TSDataGridVieweFormWithoutBinding());
         }
     }
 }
