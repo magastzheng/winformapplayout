@@ -30,6 +30,8 @@ namespace Controls.GridView
 
             this.AllowUserToAddRows = false;
             this.AllowUserToDeleteRows = false;
+            //设置AutoGenerateColumns以阻止数据绑定时自动添加新列 
+            this.AutoGenerateColumns = false;
             this.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 
             this.CellParsing += new DataGridViewCellParsingEventHandler(DataGridView_CellParsing);
