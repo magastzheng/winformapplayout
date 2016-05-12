@@ -84,6 +84,30 @@ namespace Controls.GridView
 
         #endregion
 
+        #region select
+
+        public static List<int> GetSelectRowIndex(TSDataGridView dgv)
+        {
+            List<int> selectedIndex = new List<int>();
+
+            int cbColIndex = GetCheckBoxColumnIndex(dgv);
+            if (cbColIndex < 0)
+                return selectedIndex;
+
+            foreach (DataGridViewRow row in dgv.Rows)
+            {
+                bool isChecked = (bool)row.Cells[cbColIndex].EditedFormattedValue;
+                if (!isChecked)
+                    continue;
+
+                selectedIndex.Add(row.Index);
+            }
+
+            return selectedIndex;
+        }
+
+        #endregion
+
         #region set data
         public static void SetData(TSDataGridView dgv, HSGrid hsGrid, DataTable dataTable)
         {

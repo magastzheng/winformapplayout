@@ -53,6 +53,12 @@
     <Compile Include="AutoCompleteForm.Designer.cs">
       <DependentUpon>AutoCompleteForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ButtonContainerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ButtonContainerForm.Designer.cs">
+      <DependentUpon>ButtonContainerForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -87,6 +93,9 @@
     </Compile>
     <EmbeddedResource Include="AutoCompleteForm.resx">
       <DependentUpon>AutoCompleteForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ButtonContainerForm.resx">
+      <DependentUpon>ButtonContainerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

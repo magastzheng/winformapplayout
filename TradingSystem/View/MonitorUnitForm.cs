@@ -32,6 +32,16 @@ namespace TradingSystem.View
             
             this.Load += new EventHandler(Form_Load);
             this.LoadFormActived += new FormActiveHandler(Form_LoadFormActived);
+            this.buttonContainer.ButtonClick += new EventHandler(ButtonContainer_ButtonClick);
+            LoadBottomButton();
+        }
+
+        private void ButtonContainer_ButtonClick(object sender, EventArgs e)
+        {
+            if (sender is Button)
+            {
+                Button button = sender as Button;
+            }
         }
 
         private void Form_LoadFormActived(string json)
@@ -56,6 +66,27 @@ namespace TradingSystem.View
             colDataMap.Add("stocktempid", "StockTemplateId");
             colDataMap.Add("stocktempname", "StockTemplateName");
             TSDataGridViewHelper.SetDataBinding(this.dataGridView, colDataMap);
+        }
+
+        private void LoadBottomButton()
+        {
+            Dictionary<string, string> buttonMap = new Dictionary<string, string>();
+            buttonMap.Add("SelectAll", "全选");
+            buttonMap.Add("UnSelectAll", "反选");
+            buttonMap.Add("Add", "增加");
+            buttonMap.Add("Remove", "删除");
+            buttonMap.Add("Modify", "修改");
+            buttonMap.Add("Refresh", "刷新");
+            buttonMap.Add("BatchAdd", "批量添加");
+
+            foreach (var kv in buttonMap)
+            {
+                Button button = new Button();
+                button.Name = kv.Key;
+                button.Text = kv.Value;
+
+                buttonContainer.AddButton(button);
+            }
         }
     }
 }

@@ -29,9 +29,15 @@
         private void InitializeComponent()
         {
             this.dataGridView = new Controls.GridView.TSDataGridView();
+            this.buttonContainer = new Controls.ButtonContainer.ButtonContainer();
+            this.panelBottom.SuspendLayout();
             this.panelMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
+            // 
+            // panelBottom
+            // 
+            this.panelBottom.Controls.Add(this.buttonContainer);
             // 
             // panelMain
             // 
@@ -49,11 +55,20 @@
             this.dataGridView.Size = new System.Drawing.Size(1125, 506);
             this.dataGridView.TabIndex = 0;
             // 
+            // buttonContainer
+            // 
+            this.buttonContainer.Dock = System.Windows.Forms.DockStyle.Left;
+            this.buttonContainer.Location = new System.Drawing.Point(0, 0);
+            this.buttonContainer.Name = "buttonContainer";
+            this.buttonContainer.Size = new System.Drawing.Size(833, 32);
+            this.buttonContainer.TabIndex = 0;
+            // 
             // MonitorUnitForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.ClientSize = new System.Drawing.Size(1125, 570);
             this.Name = "MonitorUnitForm";
+            this.panelBottom.ResumeLayout(false);
             this.panelMain.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
@@ -63,6 +78,7 @@
         #endregion
 
         private Controls.GridView.TSDataGridView dataGridView;
+        private Controls.ButtonContainer.ButtonContainer buttonContainer;
 
 
     }

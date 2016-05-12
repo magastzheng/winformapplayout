@@ -48,6 +48,12 @@
     <Compile Include="AutoComplete\AutoComplete.Designer.cs">
       <DependentUpon>AutoComplete.cs</DependentUpon>
     </Compile>
+    <Compile Include="ButtonContainer\ButtonContainer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ButtonContainer\ButtonContainer.Designer.cs">
+      <DependentUpon>ButtonContainer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entity\AutoItem.cs" />
     <Compile Include="Entity\ColumnConverter.cs" />
     <Compile Include="Entity\PropertyComparer.cs" />
@@ -98,6 +104,9 @@
   <ItemGroup>
     <EmbeddedResource Include="AutoComplete\AutoComplete.resx">
       <DependentUpon>AutoComplete.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ButtonContainer\ButtonContainer.resx">
+      <DependentUpon>ButtonContainer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NavBar\TSNavBarContainer.resx">
       <DependentUpon>TSNavBarContainer.cs</DependentUpon>
