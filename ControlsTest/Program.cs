@@ -20,7 +20,8 @@ namespace ControlsTest
             //Application.Run(new AutoCompleteForm());
             //Application.Run(new TSDataGridViewForm());
             //Application.Run(new TSDataGridVieweFormWithoutBinding());
-            Application.Run(new TSDGVSortableBindingForm());
+            //Application.Run(new TSDGVSortableBindingForm());
+            Application.Run(new TreeViewForm());
         }
     }
 }

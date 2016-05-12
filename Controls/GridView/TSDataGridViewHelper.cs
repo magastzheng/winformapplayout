@@ -64,6 +64,26 @@ namespace Controls.GridView
             dgv.Columns.AddRange(gridColumns);
         }
 
+        #region set databinding
+
+        public static void SetDataBinding(TSDataGridView dgv, Dictionary<string, string> colDataMap)
+        {
+            if (dgv == null)
+            {
+                throw new ArgumentNullException("dgv");
+            }
+
+            foreach (DataGridViewColumn column in dgv.Columns)
+            { 
+                if(colDataMap.ContainsKey(column.Name))
+                {
+                    column.DataPropertyName = colDataMap[column.Name];
+                }
+            }
+        }
+
+        #endregion
+
         #region set data
         public static void SetData(TSDataGridView dgv, HSGrid hsGrid, DataTable dataTable)
         {

@@ -60,6 +60,12 @@ namespace TradingSystem.Controller
                         break;
                     case "commandmanager":
                         break;
+                    case "monitorunit":
+                        {
+                            formType = typeof(MonitorUnitForm);
+                            hasGrid = true;
+                        }
+                        break;
                     case "portfoliomaintain":
                         {
                             formType = typeof(PortfolioForm);

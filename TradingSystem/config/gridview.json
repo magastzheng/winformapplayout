@@ -1456,6 +1456,351 @@ readonly:
 		}
 	]
 },{
+	"grid": "portfoliofund",
+	"columns": [
+	{
+		"name": "pf_fundcode",
+		"text": "基金代码",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "pf_fundname",
+		"text": "基金名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "pf_createddate",
+		"text": "创建时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "pf_modifieddate",
+		"text": "修改时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "pf_managercode",
+		"text": "基金经理",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "pf_last",
+		"text": "",
+		"width": 5,
+		"columntype": -1,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},{
+	"grid": "portfolioassetunit",
+	"columns": [
+	{
+		"name": "au_assetunitcode",
+		"text": "资产单元编号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "au_assetunitname",
+		"text": "资产单元名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "au_assetunitstatus",
+		"text": "资产状态",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "au_canoverdraft",
+		"text": "是否允许透支",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "au_assettype",
+		"text": "资产类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "au_createddate",
+		"text": "创建时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "au_modifieddate",
+		"text": "修改时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "au_last",
+		"text": "",
+		"width": 5,
+		"columntype": -1,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},{
+	"grid": "portfolio",
+	"columns": [
+	{
+		"name": "fundname",
+		"text": "基金名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},
+		{
+		"name": "assetunitname",
+		"text": "资产单元",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},
+		{
+		"name": "portfolioid",
+		"text": "组合序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},
+	{
+		"name": "portfoliocode",
+		"text": "组合编号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "portfolioname",
+		"text": "组合名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "portfoliotype",
+		"text": "组合类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "portfoliostatus",
+		"text": "组合状态",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "futuresinvesttype",
+		"text": "期货投资类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "createddate",
+		"text": "创建时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "modifieddate",
+		"text": "修改时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "last",
+		"text": "",
+		"width": 5,
+		"columntype": -1,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},{
+	"grid": "monitorunitmanager",
+	"columns": [
+	{
+		"name": "selection",
+		"text": "选择",
+		"width": 80,
+		"columntype": 1,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "monitorunitid",
+		"text": "监控单元序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "monitorunitname",
+		"text": "监控单元名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "accounttype",
+		"text": "账户类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "portfolioid",
+		"text": "组合序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "portfolioname",
+		"text": "组合名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "bearcontract",
+		"text": "空头合约",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "stocktempid",
+		"text": "现货模板序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "stocktempname",
+		"text": "现货模板名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "last",
+		"text": "",
+		"width": 5,
+		"columntype": -1,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},{
+	"grid": "",
+	"columns": [
+	{
+		"name": "tc_last",
+		"text": "",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "",
+		"text": "",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},{
+	"grid": "",
+	"columns": [
+	{
+		"name": "tc_last",
+		"text": "",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "",
+		"text": "",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},{
 	"grid": "",
 	"columns": [
 	{

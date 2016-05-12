@@ -23,6 +23,12 @@
                 "parentid": "trading",
                 "isexpansed": false,
                 "children": []
+            },{
+                "id": "monitorunit",
+                "title": "监控单元",
+                "parentid": "trading",
+                "isexpansed": false,
+                "children": []
             }
         ]
     },{

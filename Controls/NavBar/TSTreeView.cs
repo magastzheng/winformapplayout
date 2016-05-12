@@ -70,6 +70,7 @@ namespace Controls
             this.ShowPlusMinus = false;
             this.ShowLines = false;
             this.CheckBoxes = false;
+            this.Scrollable = true;
             this.ItemHeight = 30;
 
             _backgroundBrush = new SolidBrush(Color.FromArgb(90, Color.FromArgb(205, 226, 252)));
@@ -188,7 +189,15 @@ namespace Controls
             rect.X += 20;
             rect.Y += 1;
             rect.Width = Width - rect.X;
-            g.DrawString(node.Text, _nodeFont, Brushes.Black, rect);
+            //g.DrawString(node.Text, _nodeFont, Brushes.Black, rect);
+            SizeF size = g.MeasureString(node.Text, _nodeFont);
+            //if (size.Width > Width - rect.X)
+            //{
+            //    Width = rect.X + (int)size.Width + 15;
+            //}
+            g.DrawString(node.Text, _nodeFont, Brushes.Black, rect.X, rect.Y);
+
+            e.DrawDefault = false;
         }
 
         private Rectangle NodeBounds(TreeNode node)

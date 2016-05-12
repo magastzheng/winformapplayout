@@ -69,6 +69,7 @@
     <Compile Include="UI\AssetUnit.cs" />
     <Compile Include="UI\Fund.cs" />
     <Compile Include="UI\ImportSheet.cs" />
+    <Compile Include="UI\MonitorUnit.cs" />
     <Compile Include="UI\Portfolio.cs" />
     <Compile Include="UI\StockTemplate.cs" />
     <Compile Include="UI\TemplateStock.cs" />

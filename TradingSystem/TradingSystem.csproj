@@ -87,6 +87,12 @@
     <Compile Include="View\LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\MonitorUnitForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\MonitorUnitForm.Designer.cs">
+      <DependentUpon>MonitorUnitForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\PortfolioForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -153,6 +159,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\MonitorUnitForm.resx">
+      <DependentUpon>MonitorUnitForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\PortfolioForm.resx">
       <DependentUpon>PortfolioForm.cs</DependentUpon>

@@ -176,7 +176,8 @@ namespace Controls
 
         public void AddChildrenTreeNode(TreeNode parent, List<TSNavNodeData> nodes)
         {
-           
+            _tsTreeView.BeginUpdate();
+
             foreach (var node in nodes)
             {
                 TreeNode treeNode = new TreeNode();
@@ -191,23 +192,25 @@ namespace Controls
                     parent.Nodes.Add(treeNode);
                 }
 
-                if (node.Children.Count > 0)
+                if (node.Children != null && node.Children.Count > 0)
                 {
                     AddChildrenTreeNode(treeNode, node.Children);
                 }
             }
-        }
 
-        public void AddTreeNode(List<TreeNode> nodes)
-        {
-            _tsTreeView.BeginUpdate();
-            _tsTreeView.Top = _button.Bottom + _barSpace;
-            foreach (var node in nodes)
-            {
-                _tsTreeView.Nodes.Add(node);
-            }
             _tsTreeView.EndUpdate();
         }
+
+        //public void AddTreeNode(List<TreeNode> nodes)
+        //{
+        //    _tsTreeView.BeginUpdate();
+        //    _tsTreeView.Top = _button.Bottom + _barSpace;
+        //    foreach (var node in nodes)
+        //    {
+        //        _tsTreeView.Nodes.Add(node);
+        //    }
+        //    _tsTreeView.EndUpdate();
+        //}
 
         protected override void OnClick(EventArgs e)
         {
