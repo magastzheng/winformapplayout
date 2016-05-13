@@ -245,6 +245,7 @@
     <None Include="Resources\refresh.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="log4net.config" />
     <None Include="config\navbar.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

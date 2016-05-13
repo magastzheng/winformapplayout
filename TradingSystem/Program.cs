@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TradingSystem.View;
+using log4net.Config;
 
 namespace TradingSystem
 {
@@ -25,6 +26,10 @@ namespace TradingSystem
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            XmlConfigurator.Configure();
+            logger.Info("Log4net initialize...");
+            //XmlConfigurator.ConfigureAndWatch("log4net.config");
 
             //处理未捕获的异常
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
