@@ -1,0 +1,55 @@
+﻿/*
+*	direction: 0 - left to right; 1 - right to left
+*/
+[
+	{
+		"id": "monitorunit",
+		"direction": 0,
+		"buttons": [
+			{
+				"name": "SelectAll",
+				"text": "全选",
+				"visible": true
+			},{
+				"name": "UnSelect",
+				"text": "反选",
+				"visible": true
+			},{
+				"name": "Add",
+				"text": "增加",
+				"visible": true
+			},{
+				"name": "Delete",
+				"text": "删除",
+				"visible": true
+			},{
+				"name": "Modify",
+				"text": "修改",
+				"visible": true
+			},{
+				"name": "Refresh",
+				"text": "刷新",
+				"visible": true
+			},{
+				"name": "AddBatch",
+				"text": "批量添加",
+				"visible": false
+			}
+		]
+	},{
+		"id": "confirmcancel",
+		"direction": 1,
+		"buttons": [
+			{
+				"name": "Cancel",
+				"text": "取消",
+				"visible": true
+			},
+			{
+				"name": "Confirm",
+				"text": "确定",
+				"visible": true
+			}
+		]
+	}
+]

@@ -18,6 +18,7 @@ namespace Config
         private LabelConfig _labelConfig;
         private NavbarConfig _navBarConfig;
         private ImportConfig _importConfig;
+        private ButtonConfig _buttonConfig;
 
         private ConfigManager()
         {
@@ -39,6 +40,7 @@ namespace Config
             _labelConfig = new LabelConfig();
             _navBarConfig = new NavbarConfig();
             _importConfig = new ImportConfig();
+            _buttonConfig = new ButtonConfig();
 
             //_buySellConfig.Init();
             //_functionConfig.Init();
@@ -86,6 +88,11 @@ namespace Config
         public ImportConfig GetImportConfig()
         {
             return _instance._importConfig;
+        }
+
+        public ButtonConfig GetButtonConfig()
+        {
+            return _instance._buttonConfig;
         }
     }
 }

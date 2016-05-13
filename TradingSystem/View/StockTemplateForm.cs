@@ -504,7 +504,7 @@ namespace TradingSystem.View
         private void Button_Add_Click(object sender, System.EventArgs e)
         {
             TemplateDialog dialog = new TemplateDialog();
-            dialog.SaveFormData += new FormDataSaveHandler(Dialog_NewTemplate);
+            dialog.SaveData += new FormLoadHandler(Dialog_NewTemplate);
             dialog.Owner = this;
             dialog.StartPosition = FormStartPosition.CenterParent;
             //dialog.OnLoadFormActived(json);
@@ -526,10 +526,10 @@ namespace TradingSystem.View
             string json = JsonUtil.SerializeObject(stockTemplate);
 
             TemplateDialog dialog = new TemplateDialog();
-            dialog.SaveFormData += new FormDataSaveHandler(Dialog_ModifyTemplate);
+            dialog.SaveData += new FormLoadHandler(Dialog_ModifyTemplate);
             dialog.Owner = this;
             dialog.StartPosition = FormStartPosition.CenterParent;
-            dialog.OnLoadFormActived(json);
+            dialog.OnFormActived(json);
             dialog.ShowDialog();
             if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
             {

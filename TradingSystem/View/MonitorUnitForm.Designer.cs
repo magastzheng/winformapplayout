@@ -30,6 +30,7 @@
         {
             this.dataGridView = new Controls.GridView.TSDataGridView();
             this.buttonContainer = new Controls.ButtonContainer.ButtonContainer();
+            this.confirmCancelContainer = new Controls.ButtonContainer.ButtonContainer();
             this.panelBottom.SuspendLayout();
             this.panelMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -37,6 +38,7 @@
             // 
             // panelBottom
             // 
+            this.panelBottom.Controls.Add(this.confirmCancelContainer);
             this.panelBottom.Controls.Add(this.buttonContainer);
             // 
             // panelMain
@@ -63,6 +65,14 @@
             this.buttonContainer.Size = new System.Drawing.Size(833, 32);
             this.buttonContainer.TabIndex = 0;
             // 
+            // confirmCancelContainer
+            // 
+            this.confirmCancelContainer.Dock = System.Windows.Forms.DockStyle.Right;
+            this.confirmCancelContainer.Location = new System.Drawing.Point(874, 0);
+            this.confirmCancelContainer.Name = "confirmCancelContainer";
+            this.confirmCancelContainer.Size = new System.Drawing.Size(251, 32);
+            this.confirmCancelContainer.TabIndex = 1;
+            // 
             // MonitorUnitForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -79,6 +89,7 @@
 
         private Controls.GridView.TSDataGridView dataGridView;
         private Controls.ButtonContainer.ButtonContainer buttonContainer;
+        private Controls.ButtonContainer.ButtonContainer confirmCancelContainer;
 
 
     }

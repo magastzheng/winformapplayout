@@ -28,36 +28,8 @@ namespace ControlsTest
             GridConfig gridConfig = ConfigManager.Instance.GetGridConfig();
             HSGrid hsGrid = gridConfig.GetGid("templatestock");
             TSDataGridViewHelper.AddColumns(this.tsDataGridView1, hsGrid);
-
-            foreach (DataGridViewColumn column in this.tsDataGridView1.Columns)
-            {
-                switch (column.Name)
-                {
-                    case "ts_secucode":
-                        column.DataPropertyName = "SecuCode";
-                        break;
-                    case "ts_secuname":
-                        column.DataPropertyName = "SecuName";
-                        break;
-                    case "ts_market":
-                        column.DataPropertyName = "Exchange";
-                        break;
-                    case "ts_amount":
-                        column.DataPropertyName = "Amount";
-                        break;
-                    case "ts_marketcap":
-                        column.DataPropertyName = "MarketCap";
-                        break;
-                    case "ts_marketcapweight":
-                        column.DataPropertyName = "MarketCapWeight";
-                        break;
-                    case "ts_setweight":
-                        column.DataPropertyName = "SettingWeight";
-                        break;
-                }
-
-            }
-
+            Dictionary<string, string> colFieldMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(TemplateStock));
+            TSDataGridViewHelper.SetDataBinding(this.tsDataGridView1, colFieldMap);
             var stocks = GenerateData(hsGrid);
             _tempStocks = new SortableBindingList<TemplateStock>(stocks);
             this.tsDataGridView1.DataSource = _tempStocks;
@@ -124,6 +96,9 @@ namespace ControlsTest
             };
 
             _tempStocks.Add(item);
+
+            List<int> selectIndex = TSDataGridViewHelper.GetSelectRowIndex(this.tsDataGridView1);
+            Console.WriteLine(selectIndex);
 
         }
     }

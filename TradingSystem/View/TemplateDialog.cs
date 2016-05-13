@@ -22,9 +22,9 @@ namespace TradingSystem.View
             InitializeComponent();
         }
 
-        public override void OnLoadFormActived(string json)
+        public override void OnFormActived(string json)
         {
-            base.OnLoadFormActived(json);
+            base.OnFormActived(json);
         }
 
         private void Form_Load(object sender, EventArgs e)

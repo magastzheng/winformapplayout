@@ -55,6 +55,12 @@
     <Compile Include="Controller\FormManager.cs" />
     <Compile Include="Controller\LoginController.cs" />
     <Compile Include="Controller\MainController.cs" />
+    <Compile Include="Dialog\MonitorUnitDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\MonitorUnitDialog.Designer.cs">
+      <DependentUpon>MonitorUnitDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\GeneralForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -135,6 +141,9 @@
     <Compile Include="View\WarnForm.Designer.cs">
       <DependentUpon>WarnForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Dialog\MonitorUnitDialog.resx">
+      <DependentUpon>MonitorUnitDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\GeneralForm.resx">
       <DependentUpon>GeneralForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -181,6 +190,9 @@
     <EmbeddedResource Include="View\WarnForm.resx">
       <DependentUpon>WarnForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="config\buttons.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="config\excelgrid.json" />
     <None Include="config\import.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

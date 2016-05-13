@@ -60,8 +60,10 @@
       <DependentUpon>DefaultForm.cs</DependentUpon>
     </Compile>
     <Compile Include="FormUtil.cs" />
-    <Compile Include="ILoadFormActived.cs" />
-    <Compile Include="ISaveFormData.cs" />
+    <Compile Include="ILoadControl.cs" />
+    <Compile Include="ILoadData.cs" />
+    <Compile Include="IFormActived.cs" />
+    <Compile Include="ISaveData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

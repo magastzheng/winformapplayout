@@ -268,7 +268,7 @@
             this.Controls.Add(this.panelChildBottom);
             this.Controls.Add(this.panelChildTop);
             this.Name = "StockTemplateForm";
-            this.LoadFormActived += new Forms.BaseForm.FormActiveHandler(this.Form_LoadActived);
+            this.FormActived += new Forms.BaseForm.FormActiveHandler(this.Form_LoadActived);
             this.Load += new System.EventHandler(this.Form_Load);
             this.panelChildTop.ResumeLayout(false);
             this.panelChildTop.PerformLayout();

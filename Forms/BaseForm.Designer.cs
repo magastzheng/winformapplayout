@@ -36,11 +36,9 @@ namespace Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.BlueViolet;
+            this.BackColor = System.Drawing.Color.Silver;
             this.ClientSize = new System.Drawing.Size(1125, 570);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            //this.TopLevel = false;
-            //this.Dock = DockStyle.Fill;
             this.Name = "BaseForm";
             this.Text = "BaseForm";
             this.ResumeLayout(false);

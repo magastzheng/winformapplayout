@@ -32,13 +32,13 @@ namespace Controls
             }
         }
 
-        public string Title 
-        {
-            set 
-            {
-                this.lblTitle.Text = value;
-            }
-        }
+        //public string Title 
+        //{
+        //    set 
+        //    {
+        //        this.lblTitle.Text = value;
+        //    }
+        //}
 
         private ListBox lbDropdown;
 
@@ -50,6 +50,7 @@ namespace Controls
         public void SetDropdownList(ListBox listBox)
         {
             lbDropdown = listBox;
+            lbDropdown.Visible = false;
             lbDropdown.DrawMode = DrawMode.OwnerDrawFixed;
             lbDropdown.Click += new EventHandler(ListBox_Click);
             lbDropdown.MouseMove += new MouseEventHandler(ListBox_MouseMove);

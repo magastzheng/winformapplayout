@@ -458,5 +458,18 @@
 				"order": "2",
 				"name": "模板替代"
 			}]
+	},{
+		"name": "accounttype",
+		"selected": "1",
+		"items":[
+			{
+				"id": "1",
+				"order": "1",
+				"name": "单账户"
+			},{
+				"id": "2",
+				"order": "2",
+				"name": "多账户"
+			}]
 	}
 ]

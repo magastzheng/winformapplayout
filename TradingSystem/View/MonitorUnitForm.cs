@@ -10,6 +10,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using TradingSystem.Dialog;
 
 namespace TradingSystem.View
 {
@@ -17,6 +18,8 @@ namespace TradingSystem.View
     {
         private GridConfig _gridConfig = null;
         private const string GridId = "monitorunitmanager";
+        private const string BottomMenuId = "monitorunit";
+        private const string ConfirmCancelId = "confirmcancel";
         private MonitorUnitDAO _dbdao = new MonitorUnitDAO();
         private SortableBindingList<MonitorUnit> _dataSource;
 
@@ -31,18 +34,13 @@ namespace TradingSystem.View
             _gridConfig = gridConfig;
             
             this.Load += new EventHandler(Form_Load);
-            this.LoadFormActived += new FormActiveHandler(Form_LoadFormActived);
+            this.FormActived += new FormActiveHandler(Form_LoadFormActived);
             this.buttonContainer.ButtonClick += new EventHandler(ButtonContainer_ButtonClick);
+            this.confirmCancelContainer.ButtonClick += new EventHandler(ButtonContainer_ButtonClick);
             LoadBottomButton();
         }
 
-        private void ButtonContainer_ButtonClick(object sender, EventArgs e)
-        {
-            if (sender is Button)
-            {
-                Button button = sender as Button;
-            }
-        }
+        #region load 
 
         private void Form_LoadFormActived(string json)
         {
@@ -56,37 +54,67 @@ namespace TradingSystem.View
         private void Form_Load(object sender, EventArgs e)
         {
             TSDataGridViewHelper.AddColumns(this.dataGridView, _gridConfig.GetGid(GridId));
-            Dictionary<string, string> colDataMap = new Dictionary<string, string>();
-            colDataMap.Add("monitorunitid", "MonitorUnitId");
-            colDataMap.Add("monitorunitname", "MonitorUnitName");
-            colDataMap.Add("accounttype", "AccountType");
-            colDataMap.Add("portfolioid", "PortfolioId");
-            colDataMap.Add("portfolioname", "PortfolioName");
-            colDataMap.Add("bearcontract", "BearContract");
-            colDataMap.Add("stocktempid", "StockTemplateId");
-            colDataMap.Add("stocktempname", "StockTemplateName");
+            Dictionary<string, string> colDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(MonitorUnit));
             TSDataGridViewHelper.SetDataBinding(this.dataGridView, colDataMap);
         }
 
         private void LoadBottomButton()
         {
-            Dictionary<string, string> buttonMap = new Dictionary<string, string>();
-            buttonMap.Add("SelectAll", "全选");
-            buttonMap.Add("UnSelectAll", "反选");
-            buttonMap.Add("Add", "增加");
-            buttonMap.Add("Remove", "删除");
-            buttonMap.Add("Modify", "修改");
-            buttonMap.Add("Refresh", "刷新");
-            buttonMap.Add("BatchAdd", "批量添加");
+            ButtonGroup bottomButtonGroup = ConfigManager.Instance.GetButtonConfig().GetButtonGroup(BottomMenuId);
+            buttonContainer.AddButtonGroup(bottomButtonGroup);
 
-            foreach (var kv in buttonMap)
+            ButtonGroup confirmCancelGroup = ConfigManager.Instance.GetButtonConfig().GetButtonGroup(ConfirmCancelId);
+            confirmCancelContainer.AddButtonGroup(confirmCancelGroup);
+        }
+
+        #endregion
+
+        #region button event
+
+        private void ButtonContainer_ButtonClick(object sender, EventArgs e)
+        {
+            if (sender is Button)
             {
-                Button button = new Button();
-                button.Name = kv.Key;
-                button.Text = kv.Value;
+                Button button = sender as Button;
+                switch (button.Name)
+                { 
+                    case "SelectAll":
+                        break;
+                    case "UnSelect":
+                        break;
+                    case "Add":
+                        {
+                            MonitorUnitDialog dialog = new MonitorUnitDialog();
+                            dialog.Owner = this;
+                            dialog.StartPosition = FormStartPosition.CenterParent;
+                            //dialog.OnLoadFormActived(json);
+                            //dialog.Visible = true;
+                            dialog.OnLoadControl(dialog, null);
+                            dialog.OnLoadData(dialog, null);
+                            dialog.ShowDialog();
 
-                buttonContainer.AddButton(button);
+                            if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
+                            {
+                                dialog.Dispose();
+                            }
+                            else
+                            {
+                                dialog.Dispose();
+                            }
+                        }
+                        break;
+                    case "Delete":
+                        break;
+                    case "Modify":
+                        break;
+                    case "Confirm":
+                        break;
+                    case "Cancel":
+                        break;
+                }
             }
         }
+
+        #endregion
     }
 }

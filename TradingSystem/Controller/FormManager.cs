@@ -112,11 +112,23 @@ namespace TradingSystem.Controller
 
             if (form != null)
             {
-                ILoadFormActived formActived = form as ILoadFormActived;
+                ILoadControl loadControl = form as ILoadControl;
+                if (loadControl != null)
+                {
+                    loadControl.OnLoadControl(form, null);
+                }
+
+                ILoadData loadData = form as ILoadData;
+                if (loadData != null)
+                {
+                    loadData.OnLoadData(form, null);
+                }
+
+                IFormActived formActived = form as IFormActived;
                 if (formActived != null)
                 {
                     //TODO: add the step to load data and refresh the child form
-                    formActived.OnLoadFormActived("");
+                    formActived.OnFormActived("");
                 }
 
                 form.MdiParent = parentForm;

@@ -17,12 +17,12 @@ namespace ControlsTest
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new Form1());
-            //Application.Run(new AutoCompleteForm());
+            Application.Run(new AutoCompleteForm());
             //Application.Run(new TSDataGridViewForm());
             //Application.Run(new TSDataGridVieweFormWithoutBinding());
             //Application.Run(new TSDGVSortableBindingForm());
             //Application.Run(new TreeViewForm());
-            Application.Run(new ButtonContainerForm());
+            //Application.Run(new ButtonContainerForm());
         }
     }
 }

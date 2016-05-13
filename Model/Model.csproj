@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binding\BindingAttribute.cs" />
     <Compile Include="config\Benchmark.cs" />
     <Compile Include="config\ComboOption.cs" />
     <Compile Include="config\BuySellOption.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="UITradingCommandItem.cs" />
     <Compile Include="UI\AssetUnit.cs" />
     <Compile Include="UI\Fund.cs" />
+    <Compile Include="UI\FuturesContract.cs" />
     <Compile Include="UI\ImportSheet.cs" />
     <Compile Include="UI\MonitorUnit.cs" />
     <Compile Include="UI\Portfolio.cs" />

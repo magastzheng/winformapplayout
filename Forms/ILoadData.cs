@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Forms
 {
-    public interface ISaveFormData
+    public interface ILoadData
     {
-        void OnSave(object sender, object data);
+        void OnLoadData(object sender, object data);
     }
 }

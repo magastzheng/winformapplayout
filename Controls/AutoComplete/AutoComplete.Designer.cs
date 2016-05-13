@@ -28,23 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.lblTitle = new System.Windows.Forms.Label();
             this.tbInputId = new System.Windows.Forms.TextBox();
             this.tbName = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
-            // lblTitle
-            // 
-            this.lblTitle.AutoSize = true;
-            this.lblTitle.Location = new System.Drawing.Point(4, 6);
-            this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(41, 12);
-            this.lblTitle.TabIndex = 0;
-            this.lblTitle.Text = "";
-            // 
             // tbInputId
             // 
-            this.tbInputId.Location = new System.Drawing.Point(77, 6);
+            this.tbInputId.Location = new System.Drawing.Point(8, 6);
             this.tbInputId.Name = "tbInputId";
             this.tbInputId.Size = new System.Drawing.Size(87, 21);
             this.tbInputId.TabIndex = 1;
@@ -54,7 +44,7 @@
             // tbName
             // 
             this.tbName.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.tbName.Location = new System.Drawing.Point(170, 6);
+            this.tbName.Location = new System.Drawing.Point(101, 6);
             this.tbName.Name = "tbName";
             this.tbName.ReadOnly = true;
             this.tbName.Size = new System.Drawing.Size(78, 21);
@@ -66,9 +56,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tbName);
             this.Controls.Add(this.tbInputId);
-            this.Controls.Add(this.lblTitle);
             this.Name = "AutoComplete";
-            this.Size = new System.Drawing.Size(264, 42);
+            this.Size = new System.Drawing.Size(188, 31);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -76,7 +65,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Label lblTitle;
+        //private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.TextBox tbInputId;
         private System.Windows.Forms.TextBox tbName;
     }

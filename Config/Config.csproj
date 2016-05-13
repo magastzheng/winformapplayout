@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ButtonConfig.cs" />
     <Compile Include="ComboConfig.cs" />
     <Compile Include="ConfigManager.cs" />
     <Compile Include="FileUtil.cs" />
