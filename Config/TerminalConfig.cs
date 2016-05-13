@@ -43,24 +43,35 @@ namespace Config
                 }
             }
 
-            ManagementClass mc = new ManagementClass("Win32_NetworkAdapterConfiguration");
-            ManagementObjectCollection moc = mc.GetInstances();
-            foreach (ManagementObject mo in moc)
+            NetworkInterface[] nifs = NetworkInterface.GetAllNetworkInterfaces();
+            foreach (NetworkInterface nic in nifs)
             {
-                if (mo["IPEnabled"].ToString() == "True")
+                string tempMac = nic.GetPhysicalAddress().ToString();
+                if(nic.Speed > -1 && !string.IsNullOrEmpty(tempMac) && tempMac.Length >= 12)
                 {
-                    _macAddress = mo["MacAddress"].ToString();
+                    _macAddress = tempMac;
                     break;
                 }
             }
 
-            mc = new ManagementClass("Win32_DiskDrive");
-            moc = mc.GetInstances();
-            foreach (ManagementObject mo in moc)
-            {
-                _hdVolserial = mo.Properties["Model"].Value.ToString();
-                break;
-            }
+            //ManagementClass mc = new ManagementClass("Win32_NetworkAdapterConfiguration");
+            //ManagementObjectCollection moc = mc.GetInstances();
+            //foreach (ManagementObject mo in moc)
+            //{
+            //    if (mo["IPEnabled"].ToString() == "True")
+            //    {
+            //        _macAddress = mo["MacAddress"].ToString();
+            //        break;
+            //    }
+            //}
+
+            //mc = new ManagementClass("Win32_DiskDrive");
+            //moc = mc.GetInstances();
+            //foreach (ManagementObject mo in moc)
+            //{
+            //    _hdVolserial = mo.Properties["Model"].Value.ToString();
+            //    break;
+            //}
 
             _opStation = systemConfig.GetSystemStr("opstation");
             _authorizationId = systemConfig.GetSystemStr("authorizationid");

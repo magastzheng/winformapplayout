@@ -47,6 +47,8 @@ namespace TradingSystem
 
             //LoginBLL loginBLL = new LoginBLL(config);
 
+            var buttonConfig = ConfigManager.Instance.GetButtonConfig();
+
             T2SDKWrap t2SDKWrap = new T2SDKWrap();
             t2SDKWrap.Connect();
             //LoginBLL2 loginBLL = new LoginBLL2(t2SDKWrap);

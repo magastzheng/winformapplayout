@@ -32,15 +32,23 @@ namespace Config
 
         private int Init()
         {
-            _comboConfig = new ComboConfig();
-            _functionConfig = new FunctionConfig();
-            _systemConfig = new SystemConfig();
-            _terminalConfig = new TerminalConfig(_systemConfig);
-            _gridConfig = new GridConfig();
-            _labelConfig = new LabelConfig();
-            _navBarConfig = new NavbarConfig();
-            _importConfig = new ImportConfig();
-            _buttonConfig = new ButtonConfig();
+            //try
+            //{
+                _comboConfig = new ComboConfig();
+                _functionConfig = new FunctionConfig();
+                _systemConfig = new SystemConfig();
+                _gridConfig = new GridConfig();
+                _labelConfig = new LabelConfig();
+                _navBarConfig = new NavbarConfig();
+                _importConfig = new ImportConfig();
+                _buttonConfig = new ButtonConfig();
+
+                _terminalConfig = new TerminalConfig(_systemConfig);
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine(e.Message);
+            //}
 
             //_buySellConfig.Init();
             //_functionConfig.Init();
