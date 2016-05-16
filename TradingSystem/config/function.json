@@ -8,10 +8,7 @@
 			"type": "C512"
 		}
 		],
-		"response":[{
-			"name": "",
-			"type": ""
-			}
+		"response":[
 		]
 	},
 	{
@@ -82,10 +79,7 @@
 			"type": "C512",
 			"require": "Y"
 		}],
-		"response":[{
-			"name": "",
-			"type": ""
-			}
+		"response":[
 		]
 	},
 	{
@@ -530,16 +524,92 @@
 	},
 	{
 		"code": 35011,
-		"name_en": "",
-		"name_zh": "",
+		"name_en": "func_am_unit_asset_qry",
+		"name_zh": "资产单元资产查询",
 		"param": [{
-			"name": "",
-			"type": "",
-			"require": ""
+			"name": "user_token",
+			"type": "C512",
+			"require": "Y"
+		},{
+			"name": "account_code",
+			"type": "C32",
+			"require": "N"
+		},{
+			"name": "asset_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "combi_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "currency_code",
+			"type": "C3",
+			"require": "N"
 		}],
 		"response":[{
-			"name": "",
-			"type": ""
+			"name": "business_date",
+			"type": "N8"
+			},{
+			"name": "account_code",
+			"type": "C32"
+			},{
+			"name": "asset_no",
+			"type": "C16"
+			},{
+			"name": "currency_code",
+			"type": "C3"
+			},{
+			"name": "current_balance",
+			"type": "N16.2"
+			},{
+			"name": "begin_balance",
+			"type": "N16.2"
+			},{
+			"name": "futu_deposit_balance",
+			"type": "N16.2"
+			},{
+			"name": "futu_asset",
+			"type": "N16.2"
+			},{
+			"name": "stock_asset",
+			"type": "N16.2"
+			},{
+			"name": "bond_asset",
+			"type": "N16.2"
+			},{
+			"name": "fund_asset",
+			"type": "N16.2"
+			},{
+			"name": "repo_asset",
+			"type": "N16.2"
+			},{
+			"name": "option_asset",
+			"type": "N16.2"
+			},{
+			"name": "other_asset",
+			"type": "N16.2"
+			},{
+			"name": "payable_balance",
+			"type": "N16.2"
+			},{
+			"name": "receivable_balance",
+			"type": "N16.2"
+			},{
+			"name": "futu_today_profit",
+			"type": "N16.2"
+			},{
+			"name": "futu_float_profit",
+			"type": "N16.2"
+			},{
+			"name": "futu_close_profit",
+			"type": "N16.2"
+			},{
+			"name": "futu_fee",
+			"type": "N16.2"
+			},{
+			"name": "spot_accumulate_profit",
+			"type": "N16.2"
 			}
 		]
 	},

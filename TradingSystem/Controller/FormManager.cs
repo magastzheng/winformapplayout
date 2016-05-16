@@ -53,7 +53,8 @@ namespace TradingSystem.Controller
                         {
                             //form = new TradingForm();
                             //_childFormMap[key] = form;
-                            formType = typeof(TradingForm);
+                            formType = typeof(OpenPositionForm);
+                            hasGrid = true;
                         }
                         break;
                     case "close":
@@ -140,6 +141,7 @@ namespace TradingSystem.Controller
             else
             {
                 //default fomr
+                throw new NotSupportedException("The type is not support!");
             }
 
             return form;

@@ -72,6 +72,8 @@
     <Compile Include="UI\FuturesContract.cs" />
     <Compile Include="UI\ImportSheet.cs" />
     <Compile Include="UI\MonitorUnit.cs" />
+    <Compile Include="UI\OpenPositionItem.cs" />
+    <Compile Include="UI\OpenPositionSecurityItem.cs" />
     <Compile Include="UI\Portfolio.cs" />
     <Compile Include="UI\StockTemplate.cs" />
     <Compile Include="UI\TemplateStock.cs" />

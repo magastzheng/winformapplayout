@@ -13,6 +13,8 @@ namespace DBAccess
         private const string SP_Modify = "procMonitorUnitUpdate";
         private const string SP_Delete = "procMonitorUnitDelete";
         private const string SP_Get = "procMonitorUnitSelect";
+        private const string SP_GetCombine = "procMonitorUnitSelectCombine";
+        private const string SP_GetActive = "procMonitorUnitSelectActive";
 
         public MonitorUnitDAO()
             : base()
@@ -34,7 +36,14 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@PortfolioId", System.Data.DbType.Int32, monitorUnit.PortfolioId);
             _dbHelper.AddInParameter(dbCommand, "@BearContract", System.Data.DbType.String, monitorUnit.BearContract);
             _dbHelper.AddInParameter(dbCommand, "@StockTemplateId", System.Data.DbType.Int32, monitorUnit.StockTemplateId);
-            _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.String, monitorUnit.Owner);
+            if (monitorUnit.Owner == null || string.IsNullOrEmpty(monitorUnit.Owner))
+            {
+                _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.String, "");
+            }
+            else
+            {
+                _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.String, monitorUnit.Owner);
+            }
             _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, DateTime.Now);
 
             _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
@@ -123,6 +132,77 @@ namespace DBAccess
             _dbHelper.Close(dbCommand.Connection);
 
             return monitorUnits;
+        }
+
+        public List<MonitorUnit> GetCombine(int monitorUnitId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCombine);
+            if (monitorUnitId > 0)
+            {
+                _dbHelper.AddInParameter(dbCommand, "@MonitorUnitId", System.Data.DbType.String, monitorUnitId);
+            }
+
+            List<MonitorUnit> monitorUnits = new List<MonitorUnit>();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    MonitorUnit item = new MonitorUnit();
+                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
+                    item.MonitorUnitName = (string)reader["MonitorUnitName"];
+                    item.AccountType = (int)reader["AccountType"];
+                    item.PortfolioId = (int)reader["PortfolioId"];
+                    item.PortfolioName = (string)reader["PortfolioName"];
+                    item.BearContract = (string)reader["BearContract"];
+                    item.StockTemplateId = (int)reader["StockTemplateId"];
+                    item.StockTemplateName = (string)reader["TemplateName"];
+                    item.Owner = (string)reader["Owner"];
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+                    {
+                        //item.CreatedDate = (DateTime)reader["CreatedDate"];
+                    }
+
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+                    {
+                        //item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+                    }
+                    monitorUnits.Add(item);
+                }
+            }
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return monitorUnits;
+        }
+
+        public List<OpenPositionItem> GetActive()
+        {
+            List<OpenPositionItem> activeItems = new List<OpenPositionItem>();
+
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetActive);
+
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    OpenPositionItem item = new OpenPositionItem();
+                    item.MonitorId = (int)reader["MonitorUnitId"];
+                    item.MonitorName = (string)reader["MonitorUnitName"];
+                    item.PortfolioId = (int)reader["PortfolioId"];
+                    item.PortfolioName = (string)reader["PortfolioName"];
+                    item.TemplateId = (int)reader["StockTemplateId"];
+                    item.TemplateName = (string)reader["TemplateName"];
+                    item.FuturesContract = (string)reader["BearContract"];
+
+                    activeItems.Add(item);
+                }
+            }
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return activeItems;
         }
     }
 }

@@ -60,9 +60,19 @@ namespace DBAccess
                     item.Exchange = (string)reader["Exchange"];
                     item.PriceLimits = (double)(decimal)reader["PriceLimits"];
                     item.Deposit = (double)(decimal)reader["Deposit"];
-                    item.FirstTradingDay = (DateTime)reader["ListedDate"];
-                    item.LastTradingDay = (DateTime)reader["LastTradingDay"];
-                    item.LastDeliveryDay = (DateTime)reader["LastDeliveryDay"];
+                    if (reader["ListedDate"] != null && reader["ListedDate"] != DBNull.Value)
+                    {
+                        item.FirstTradingDay = (DateTime)reader["ListedDate"];
+                    }
+                    if (reader["LastTradingDay"] != DBNull.Value)
+                    {
+                        item.LastTradingDay = (DateTime)reader["LastTradingDay"];
+                    }
+
+                    if (reader["LastDeliveryDay"] != DBNull.Value)
+                    {
+                        item.LastDeliveryDay = (DateTime)reader["LastDeliveryDay"];
+                    }
 
                     itemList.Add(item);
                 }

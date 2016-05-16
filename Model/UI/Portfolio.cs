@@ -27,8 +27,8 @@ namespace Model.UI
         //a 投机,  b 套保, c 套利
         public string FuturesInvestType { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
-        public DateTime ModifiedDate { get; set; }
+        public DateTime? ModifiedDate { get; set; }
     }
 }

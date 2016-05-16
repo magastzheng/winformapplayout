@@ -26,7 +26,7 @@ namespace TradingSystem.Dialog
 
             this.LoadControl += new FormLoadHandler(Form_LoadControl);
             this.LoadData += new FormLoadHandler(Form_LoadData);
-            this.SaveData += new FormLoadHandler(Form_SaveData);
+            //this.SaveData += new FormLoadHandler(Form_SaveData);
 
             
             //TODO: set the datasource for dropdown list
@@ -119,24 +119,128 @@ namespace TradingSystem.Dialog
         }
         #endregion
 
+        #region 
+        private bool ValidateMonitorUnit(MonitorUnit monitorUnit)
+        {
+            if (string.IsNullOrEmpty(monitorUnit.MonitorUnitName))
+            {
+                return false;
+            }
+
+            if(monitorUnit.PortfolioId <= 0)
+            {
+                return false;
+            }
+
+            if (monitorUnit.StockTemplateId <= 0)
+            {
+                return false;
+            }
+            if (string.IsNullOrEmpty(monitorUnit.BearContract))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private MonitorUnit GetMonitorUnit()
+        {
+            MonitorUnit monitorUnit = new MonitorUnit();
+            if (!string.IsNullOrEmpty(tbMonitorUnitId.Text) && tbMonitorUnitId.Text != "0")
+            {
+                int temp = 0;
+                if (int.TryParse(tbMonitorUnitId.Text, out temp))
+                {
+                    monitorUnit.MonitorUnitId = temp;
+                }
+            }
+
+            monitorUnit.MonitorUnitName = tbMonitorUnitName.Text;
+            ComboOptionItem accountItem = (ComboOptionItem)cbAccountType.SelectedItem;
+            if (accountItem != null && !string.IsNullOrEmpty(accountItem.Id))
+            {
+                int temp = 0;
+                if (int.TryParse(accountItem.Id, out temp))
+                {
+                    monitorUnit.AccountType = temp;
+                }
+            }
+
+            ComboOptionItem portItem = (ComboOptionItem)cbPortfolioId.SelectedItem;
+            if (portItem != null && !string.IsNullOrEmpty(portItem.Id))
+            {
+                int temp = 0;
+                if (int.TryParse(portItem.Id, out temp))
+                {
+                    monitorUnit.PortfolioId = temp;
+                }
+            }
+
+            ComboOptionItem tempItem = (ComboOptionItem)cbPortfolioId.SelectedItem;
+            if (tempItem != null && !string.IsNullOrEmpty(tempItem.Id))
+            {
+                int temp = 0;
+                if (int.TryParse(tempItem.Id, out temp))
+                {
+                    monitorUnit.StockTemplateId = temp;
+                }
+            }
+
+            AutoItem futuresItem = acFuturesContracts.GetCurrentItem();
+            if (futuresItem != null && !string.IsNullOrEmpty(futuresItem.Id))
+            {
+                monitorUnit.BearContract = futuresItem.Id;
+            }
+
+            return monitorUnit;
+        }
+        #endregion
+
         private void Form_LoadData(object sender, object data)
         {
+            if (data != null && data is MonitorUnit)
+            {
+                MonitorUnit monitorUnit = data as MonitorUnit;
+                tbMonitorUnitId.Text = string.Format("{0}", monitorUnit.MonitorUnitId);
+                tbMonitorUnitName.Text = monitorUnit.MonitorUnitName;
+                //cbPortfolioId.SelectedValue
+                FormUtil.SetComboBoxSelect(cbPortfolioId, monitorUnit.PortfolioId.ToString());
+                FormUtil.SetComboBoxSelect(cbStockTemplate, monitorUnit.StockTemplateId.ToString());
 
+                AutoItem autoItem = new AutoItem 
+                {
+                    Id = monitorUnit.BearContract,
+                    Name = monitorUnit.BearContract
+                };
+
+                acFuturesContracts.SetCurrentItem(autoItem);
+            }
         }
 
-        private void Form_SaveData(object sender, object data)
-        {
+        //private void Form_SaveData(object sender, object data)
+        //{
             
-        }
+        //}
 
         private void Button_Confirm_Click(object sender, EventArgs e)
         {
-
+            MonitorUnit monitorUnit = GetMonitorUnit();
+            if (ValidateMonitorUnit(monitorUnit))
+            {
+                OnSave(this, monitorUnit);
+                DialogResult = System.Windows.Forms.DialogResult.OK;
+            }
+            else
+            { 
+                //TODO: make the error message
+                DialogResult = System.Windows.Forms.DialogResult.No;
+            }
         }
 
         private void Button_Cancel_Click(object sender, EventArgs e)
         {
-
+            DialogResult = System.Windows.Forms.DialogResult.No;
         }
     }
 }

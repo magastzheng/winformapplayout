@@ -99,6 +99,12 @@
     <Compile Include="View\MonitorUnitForm.Designer.cs">
       <DependentUpon>MonitorUnitForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\OpenPositionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\OpenPositionForm.Designer.cs">
+      <DependentUpon>OpenPositionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\PortfolioForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -172,6 +178,9 @@
     <EmbeddedResource Include="View\MonitorUnitForm.resx">
       <DependentUpon>MonitorUnitForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\OpenPositionForm.resx">
+      <DependentUpon>OpenPositionForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\PortfolioForm.resx">
       <DependentUpon>PortfolioForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -233,7 +242,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\open.png" />

@@ -111,8 +111,13 @@ namespace DBAccess
                     item.AssetUnitStatus = (int)reader["AssetUnitStatus"];
                     item.CanOverdraft = (int)reader["CanOverdraft"];
                     item.AssetType = (int)reader["AssetType"];
-                    item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    if (reader["ModifiedDate"] != null)
+
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+                    {
+                        item.CreatedDate = (DateTime)reader["CreatedDate"];
+                    }
+
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
                     {
                         item.ModifiedDate = (DateTime)reader["ModifiedDate"];
                     }

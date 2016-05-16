@@ -21,5 +21,18 @@ namespace Forms
                 }
             }
         }
+
+        public static void SetComboBoxSelect(ComboBox comboBox, string Id)
+        {
+            foreach (var item in comboBox.Items)
+            {
+                ComboOptionItem cbItem = (ComboOptionItem)item;
+                if (cbItem.Id.Equals(Id))
+                {
+                    comboBox.SelectedItem = item;
+                    break;
+                }
+            }
+        }
     }
 }

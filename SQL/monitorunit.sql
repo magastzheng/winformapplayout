@@ -10,6 +10,7 @@ create table monitorunit(
 	PortfolioId			int,
 	BearContract		varchar(10),
 	StockTemplateId		int,
+	Active				int, -- 0 -inactive, 1 - active, 只有active的才会在开仓界面中可见
 	Owner				varchar(10),
 	CreatedDate			datetime,
 	ModifiedDate		datetime
@@ -40,7 +41,8 @@ begin
 		,AccountType			
 		,PortfolioId			
 		,BearContract		
-		,StockTemplateId		
+		,StockTemplateId	
+		,Active	
 		,Owner				
 		,CreatedDate			
 	)
@@ -49,7 +51,8 @@ begin
 		,@AccountType			
 		,@PortfolioId			
 		,@BearContract		
-		,@StockTemplateId		
+		,@StockTemplateId	
+		,0	
 		,@Owner				
 		,@CreatedDate
 	)
@@ -93,6 +96,33 @@ end
 
 go
 
+if exists (select name from sysobjects where name='procMonitorUnitActive')
+drop proc procMonitorUnitActive
+
+go
+
+create proc procMonitorUnitActive(
+	@MonitorUnitId int
+	,@Active int
+)
+as
+begin
+	if @Active is NULL or @Active < 0 or @Active > 1
+	begin
+		raiserror('Pass invalid parameter for @Active', 16, -1)
+	end
+	 
+	if @MonitorUnitId is not null and @MonitorUnitId > 0
+	begin
+		update monitorunit
+		set
+			Active = @Active
+		where MonitorUnitId=@MonitorUnitId
+	end
+end
+
+go
+
 if exists (select name from sysobjects where name='procMonitorUnitDelete')
 drop proc procMonitorUnitDelete
 
@@ -130,6 +160,7 @@ begin
 			,PortfolioId
 			,BearContract
 			,StockTemplateId
+			,Active
 			,Owner
 			,CreatedDate
 			,ModifiedDate
@@ -144,9 +175,89 @@ begin
 			,PortfolioId
 			,BearContract
 			,StockTemplateId
+			,Active
 			,Owner
 			,CreatedDate
 			,ModifiedDate
 		from monitorunit
 	end
+end
+
+if exists (select name from sysobjects where name='procMonitorUnitSelectCombine')
+drop proc procMonitorUnitSelectCombine
+
+go
+
+create proc procMonitorUnitSelectCombine(
+	@MonitorUnitId int = NULL
+)
+as
+begin
+	if @MonitorUnitId is not null or @MonitorUnitId=-1
+	begin
+		select a.MonitorUnitId
+			,a.MonitorUnitName
+			,a.AccountType
+			,a.PortfolioId
+			,a.BearContract
+			,a.StockTemplateId
+			,a.Owner
+			,a.CreatedDate
+			,a.ModifiedDate
+			,b.PortfolioName
+			,c.TemplateName
+		from monitorunit a
+		inner join portfolio b
+		on a.PortfolioId = b.PortfolioId
+		inner join stocktemplate c
+		on a.StockTemplateId = c.TemplateId
+		where MonitorUnitId=@MonitorUnitId
+	end
+	else
+	begin
+		select a.MonitorUnitId
+			,a.MonitorUnitName
+			,a.AccountType
+			,a.PortfolioId
+			,a.BearContract
+			,a.StockTemplateId
+			,a.Owner
+			,a.CreatedDate
+			,a.ModifiedDate
+			,b.PortfolioName
+			,c.TemplateName
+		from monitorunit a
+		inner join portfolio b
+		on a.PortfolioId = b.PortfolioId
+		inner join stocktemplate c
+		on a.StockTemplateId = c.TemplateId
+	end
+end
+
+
+if exists (select name from sysobjects where name='procMonitorUnitSelectActive')
+drop proc procMonitorUnitSelectActive
+
+go
+
+create proc procMonitorUnitSelectActive
+as
+begin
+	select a.MonitorUnitId
+		,a.MonitorUnitName
+		,a.AccountType
+		,a.PortfolioId
+		,a.BearContract
+		,a.StockTemplateId
+		,a.Owner
+		,a.CreatedDate
+		,a.ModifiedDate
+		,b.PortfolioName
+		,c.TemplateName
+	from monitorunit a
+	inner join portfolio b
+	on a.PortfolioId = b.PortfolioId
+	inner join stocktemplate c
+	on a.StockTemplateId = c.TemplateId
+	where a.Active=1
 end

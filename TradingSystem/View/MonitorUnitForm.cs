@@ -14,6 +14,13 @@ using TradingSystem.Dialog;
 
 namespace TradingSystem.View
 {
+    enum MonitorType 
+    { 
+        None = -1,
+        New = 1,
+        Modify = 2,
+    }
+
     public partial class MonitorUnitForm : Forms.DefaultForm
     {
         private GridConfig _gridConfig = null;
@@ -21,7 +28,9 @@ namespace TradingSystem.View
         private const string BottomMenuId = "monitorunit";
         private const string ConfirmCancelId = "confirmcancel";
         private MonitorUnitDAO _dbdao = new MonitorUnitDAO();
+        //List<MonitorUnit> _monitorUnits;
         private SortableBindingList<MonitorUnit> _dataSource;
+        MonitorType _monitorType = MonitorType.None;
 
         public MonitorUnitForm() : base()
         {
@@ -45,7 +54,7 @@ namespace TradingSystem.View
         private void Form_LoadFormActived(string json)
         {
             //Load data here
-            List<MonitorUnit> monitorUnits = _dbdao.Get(-1);
+            var monitorUnits = _dbdao.Get(-1);
             _dataSource = new SortableBindingList<MonitorUnit>(monitorUnits);
             dataGridView.DataSource = _dataSource;
             
@@ -77,13 +86,20 @@ namespace TradingSystem.View
             {
                 Button button = sender as Button;
                 switch (button.Name)
-                { 
+                {
                     case "SelectAll":
+                        {
+                            dataGridView.SelectAll(true);
+                        }
                         break;
                     case "UnSelect":
+                        {
+                            dataGridView.SelectAll(false);
+                        }
                         break;
                     case "Add":
                         {
+                            _monitorType = MonitorType.New;
                             MonitorUnitDialog dialog = new MonitorUnitDialog();
                             dialog.Owner = this;
                             dialog.StartPosition = FormStartPosition.CenterParent;
@@ -91,6 +107,7 @@ namespace TradingSystem.View
                             //dialog.Visible = true;
                             dialog.OnLoadControl(dialog, null);
                             dialog.OnLoadData(dialog, null);
+                            dialog.SaveData += new FormLoadHandler(Dialog_SaveData);
                             dialog.ShowDialog();
 
                             if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
@@ -104,14 +121,122 @@ namespace TradingSystem.View
                         }
                         break;
                     case "Delete":
+                        {
+                            List<int> selectIndex = TSDataGridViewHelper.GetSelectRowIndex(dataGridView);
+                            if (selectIndex != null && selectIndex.Count > 0)
+                            {
+                                for (int i = selectIndex.Count - 1; i >= 0; i--)
+                                {
+                                    MonitorUnit monitorUnit = _dataSource[i];
+                                    int ret = _dbdao.Delete(monitorUnit.MonitorUnitId);
+                                    if (ret > 0)
+                                    {
+                                        _dataSource.RemoveAt(i);
+                                    }
+                                }
+                            }
+                        }
                         break;
                     case "Modify":
+                        {
+                            _monitorType = MonitorType.Modify;
+                            if (dataGridView.CurrentRow == null)
+                            {
+                                return;
+                            }
+
+                            int index = dataGridView.CurrentRow.Index;
+                            if (index < 0 || index > _dataSource.Count)
+                            {
+                                return;
+                            }
+
+                            MonitorUnit monitorUnit = _dataSource[index];
+
+                            MonitorUnitDialog dialog = new MonitorUnitDialog();
+                            dialog.Owner = this;
+                            dialog.StartPosition = FormStartPosition.CenterParent;
+                            //dialog.OnLoadFormActived(json);
+                            //dialog.Visible = true;
+                            dialog.OnLoadControl(dialog, null);
+                            dialog.OnLoadData(dialog, monitorUnit);
+                            dialog.SaveData += new FormLoadHandler(Dialog_SaveData);
+                            dialog.ShowDialog();
+
+                            if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
+                            {
+                                dialog.Close();
+                                dialog.Dispose();
+                            }
+                            else
+                            {
+                                dialog.Close();
+                                dialog.Dispose();
+                            }
+                        }
+                        break;
+                    case "Refresh":
+                        {
+                            _dataSource.Clear();
+                            var monitorUnits = _dbdao.Get(-1);
+                            if (monitorUnits != null)
+                            {
+                                foreach (var item in monitorUnits)
+                                {
+                                    _dataSource.Add(item);
+                                }
+                            }
+                        }
                         break;
                     case "Confirm":
                         break;
                     case "Cancel":
                         break;
                 }
+            }
+        }
+
+        private void Dialog_SaveData(object sender, object data)
+        {
+            if (sender == null || data == null)
+            {
+                throw new Exception("Fail to get the setting from dialog");
+            }
+
+            if (data is MonitorUnit)
+            {
+                MonitorUnit monitorUnit = data as MonitorUnit;
+                switch (_monitorType)
+                {
+                    case MonitorType.New:
+                        {
+                            int newid = _dbdao.Create(monitorUnit);
+                            if (newid > 0)
+                            {
+                                _dataSource.Add(monitorUnit);
+                            }
+                        }
+                        break;
+                    case MonitorType.Modify:
+                        {
+                            int newid = _dbdao.Update(monitorUnit);
+                            if (newid > 0)
+                            {
+                                for (int i = 0, count = _dataSource.Count; i < count; i++)
+                                {
+                                    if (_dataSource[i].MonitorUnitId == newid)
+                                    {
+                                        _dataSource[i] = monitorUnit;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                
             }
         }
 

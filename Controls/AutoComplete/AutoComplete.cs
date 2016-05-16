@@ -65,6 +65,12 @@ namespace Controls
 
             return autoItem;
         }
+
+        public void SetCurrentItem(AutoItem autoItem)
+        {
+            this.tbInputId.Text = autoItem.Id;
+            this.tbName.Text = autoItem.Name;
+        }
         #region event handler
 
         /// <summary>

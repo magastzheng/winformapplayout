@@ -101,8 +101,12 @@ namespace DBAccess
                     item.FundCode = (string)reader["FundCode"];
                     item.FundName = (string)reader["FundName"];
                     item.ManagerCode = (string)reader["ManagerCode"];
-                    item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    if (reader["ModifiedDate"] != null)
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+                    {
+                        item.CreatedDate = (DateTime)reader["CreatedDate"];
+                    }
+
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
                     {
                         item.ModifiedDate = (DateTime)reader["ModifiedDate"];
                     }

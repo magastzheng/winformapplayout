@@ -342,5 +342,22 @@ namespace Controls.GridView
         //    }
         //}
         //#endregion
+
+        #region select/unselect
+
+        public void SelectAll(bool isSelected)
+        {
+            foreach (DataGridViewRow row in this.Rows)
+            {
+                int cbColIndex = GetCheckBoxColumnIndex();
+                if (cbColIndex < 0)
+                    return;
+
+                row.Cells[cbColIndex].Value = isSelected;
+                SetSelectionRowBackground(row, isSelected);
+            }
+        }
+
+        #endregion
     }
 }

@@ -112,8 +112,11 @@ namespace DBAccess
                     item.PortfolioType = (int)reader["PortfolioType"];
                     item.PortfolioStatus = (int)reader["PortfolioStatus"];
                     item.FuturesInvestType = (string)reader["FuturesInvestType"];
-                    item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    if (reader["ModifiedDate"] != null)
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+                    {
+                        item.CreatedDate = (DateTime)reader["CreatedDate"];
+                    }
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
                     {
                         item.ModifiedDate = (DateTime)reader["ModifiedDate"];
                     }
