@@ -1,6 +1,7 @@
 ﻿using Model.Binding;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,6 +33,10 @@ namespace Model.UI
 
         [BindingAttribute("stocktempname")]
         public string StockTemplateName { get; set; }
+
+        [BindingAttribute("selection")]
+        //[TypeConverter(typeof(IntBoolConverter))]
+        public bool Selection { get; set; }
 
         public string Owner { get; set; }
     }

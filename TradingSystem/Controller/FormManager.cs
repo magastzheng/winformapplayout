@@ -49,6 +49,12 @@ namespace TradingSystem.Controller
             {
                 switch (formKey)
                 {
+                    case "cmdtrading":
+                        {
+                            formType = typeof(StrategyTradingForm);
+                            hasGrid = true;
+                        }
+                        break;
                     case "open":
                         {
                             //form = new TradingForm();
@@ -108,17 +114,12 @@ namespace TradingSystem.Controller
                 {
                     form = LoadForm(parentForm, formType, null, json);
                 }
+
                 _childFormMap[formKey] = form;
             }
 
             if (form != null)
             {
-                ILoadControl loadControl = form as ILoadControl;
-                if (loadControl != null)
-                {
-                    loadControl.OnLoadControl(form, null);
-                }
-
                 ILoadData loadData = form as ILoadData;
                 if (loadData != null)
                 {
@@ -175,6 +176,11 @@ namespace TradingSystem.Controller
                     childForm = (BaseForm)Activator.CreateInstance(formType);
                 }
 
+                ILoadControl loadControl = childForm as ILoadControl;
+                if (loadControl != null)
+                {
+                    loadControl.OnLoadControl(childForm, null);
+                }
                 //childForm.MdiParent = mainForm;
                 //childForm.Show();
             }

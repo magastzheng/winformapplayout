@@ -1,5 +1,31 @@
 ﻿[
     {
+        "id": "strategytrading",
+        "title": "策略交易",
+        "parentid": "",
+        "isexpansed": false,
+        "children":[
+            {
+                "id": "cmdtrading",
+                "title": "指令交易",
+                "parentid": "strategytrading",
+                "isexpansed": false,
+                "children": []
+            },{
+                "id": "entrustflow",
+                "title": "委托流水",
+                "parentid": "strategytrading",
+                "isexpansed": false,
+                "children": []
+            },{
+                "id": "dealflow",
+                "title": "成交流水",
+                "parentid": "strategytrading",
+                "isexpansed": false,
+                "children": []
+            }
+        ]
+    },{
         "id": "trading",
         "title": "交易管理",
         "parentid": "",

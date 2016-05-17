@@ -23,10 +23,15 @@ namespace TradingSystem.View
 
     public partial class MonitorUnitForm : Forms.DefaultForm
     {
-        private GridConfig _gridConfig = null;
+        private const string MsgBoxCaption = "警告";
+        private const string MsgConfirmDelete = "是否要删除这[{0}]个监控单元";
+        private const string MsgSelectDelete = "请先选择要删除的监控单元";
+        private const string MsgSelectMonitor = "请设置监控单元";
         private const string GridId = "monitorunitmanager";
         private const string BottomMenuId = "monitorunit";
         private const string ConfirmCancelId = "confirmcancel";
+
+        private GridConfig _gridConfig = null;
         private MonitorUnitDAO _dbdao = new MonitorUnitDAO();
         //List<MonitorUnit> _monitorUnits;
         private SortableBindingList<MonitorUnit> _dataSource;
@@ -54,7 +59,7 @@ namespace TradingSystem.View
         private void Form_LoadFormActived(string json)
         {
             //Load data here
-            var monitorUnits = _dbdao.Get(-1);
+            var monitorUnits = _dbdao.GetCombine(-1);
             _dataSource = new SortableBindingList<MonitorUnit>(monitorUnits);
             dataGridView.DataSource = _dataSource;
             
@@ -123,15 +128,28 @@ namespace TradingSystem.View
                     case "Delete":
                         {
                             List<int> selectIndex = TSDataGridViewHelper.GetSelectRowIndex(dataGridView);
-                            if (selectIndex != null && selectIndex.Count > 0)
+                            if (selectIndex == null && selectIndex.Count == 0)
                             {
-                                for (int i = selectIndex.Count - 1; i >= 0; i--)
+                                MessageBox.Show(MsgSelectDelete, MsgBoxCaption, MessageBoxButtons.OK);
+                                return;
+                            }
+
+                            string msg = string.Format(MsgConfirmDelete, selectIndex.Count);
+                            if (MessageBox.Show(msg, MsgBoxCaption, MessageBoxButtons.YesNo) != System.Windows.Forms.DialogResult.Yes)
+                            {
+                                return;
+                            }
+
+                            for (int i = selectIndex.Count - 1; i >= 0; i--)
+                            {
+                                int rowIndex = selectIndex[i];
+                                if (rowIndex >= 0 && rowIndex < _dataSource.Count)
                                 {
-                                    MonitorUnit monitorUnit = _dataSource[i];
+                                    MonitorUnit monitorUnit = _dataSource[rowIndex];
                                     int ret = _dbdao.Delete(monitorUnit.MonitorUnitId);
                                     if (ret > 0)
                                     {
-                                        _dataSource.RemoveAt(i);
+                                        _dataSource.RemoveAt(rowIndex);
                                     }
                                 }
                             }
@@ -178,7 +196,7 @@ namespace TradingSystem.View
                     case "Refresh":
                         {
                             _dataSource.Clear();
-                            var monitorUnits = _dbdao.Get(-1);
+                            var monitorUnits = _dbdao.GetCombine(-1);
                             if (monitorUnits != null)
                             {
                                 foreach (var item in monitorUnits)
@@ -189,6 +207,28 @@ namespace TradingSystem.View
                         }
                         break;
                     case "Confirm":
+                        {
+                            List<int> selectIndex = TSDataGridViewHelper.GetSelectRowIndex(dataGridView);
+                            if (selectIndex == null && selectIndex.Count == 0)
+                            {
+                                MessageBox.Show(MsgSelectMonitor, MsgBoxCaption, MessageBoxButtons.OK);
+                                return;
+                            }
+
+                            for (int rowIndex = 0; rowIndex < _dataSource.Count; rowIndex++)
+                            {
+                                MonitorUnit monitorUnit = _dataSource[rowIndex];
+                                if (selectIndex.Contains(rowIndex))
+                                {
+
+                                    int ret = _dbdao.Active(monitorUnit.MonitorUnitId, 1);
+                                }
+                                else
+                                {
+                                    int ret = _dbdao.Active(monitorUnit.MonitorUnitId, 0);
+                                }
+                            }
+                        }
                         break;
                     case "Cancel":
                         break;
@@ -213,6 +253,7 @@ namespace TradingSystem.View
                             int newid = _dbdao.Create(monitorUnit);
                             if (newid > 0)
                             {
+                                monitorUnit.MonitorUnitId = newid;
                                 _dataSource.Add(monitorUnit);
                             }
                         }

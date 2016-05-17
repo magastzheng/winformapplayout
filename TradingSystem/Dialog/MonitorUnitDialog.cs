@@ -28,10 +28,7 @@ namespace TradingSystem.Dialog
             this.LoadData += new FormLoadHandler(Form_LoadData);
             //this.SaveData += new FormLoadHandler(Form_SaveData);
 
-            
             //TODO: set the datasource for dropdown list
-
-            
         }
 
         #region loadcontrol
@@ -82,6 +79,7 @@ namespace TradingSystem.Dialog
                 ComboOptionItem item = new ComboOptionItem
                 {
                     Id = p.PortfolioId.ToString(),
+                    Data = p,
                     Name = string.Format("{0} {1} ({2}-{3})", p.PortfolioId, p.PortfolioName, p.FundId, p.AssetUnitId)
                 };
 
@@ -108,6 +106,7 @@ namespace TradingSystem.Dialog
                 ComboOptionItem item = new ComboOptionItem
                 {
                     Id = p.TemplateNo.ToString(),
+                    Data = p,
                     Name = string.Format("{0} {1}", p.TemplateNo, p.TemplateName)
                 };
 
@@ -168,22 +167,38 @@ namespace TradingSystem.Dialog
             }
 
             ComboOptionItem portItem = (ComboOptionItem)cbPortfolioId.SelectedItem;
-            if (portItem != null && !string.IsNullOrEmpty(portItem.Id))
+            if (portItem != null)
             {
-                int temp = 0;
-                if (int.TryParse(portItem.Id, out temp))
+                if (!string.IsNullOrEmpty(portItem.Id))
                 {
-                    monitorUnit.PortfolioId = temp;
+                    int temp = 0;
+                    if (int.TryParse(portItem.Id, out temp))
+                    {
+                        monitorUnit.PortfolioId = temp;
+                    }
+                }
+
+                if (portItem.Data != null && portItem.Data is Portfolio)
+                {
+                    monitorUnit.PortfolioName = (portItem.Data as Portfolio).PortfolioName;
                 }
             }
 
-            ComboOptionItem tempItem = (ComboOptionItem)cbPortfolioId.SelectedItem;
-            if (tempItem != null && !string.IsNullOrEmpty(tempItem.Id))
+            ComboOptionItem tempItem = (ComboOptionItem)cbStockTemplate.SelectedItem;
+            if (tempItem != null)
             {
-                int temp = 0;
-                if (int.TryParse(tempItem.Id, out temp))
+                if (!string.IsNullOrEmpty(tempItem.Id))
                 {
-                    monitorUnit.StockTemplateId = temp;
+                    int temp = 0;
+                    if (int.TryParse(tempItem.Id, out temp))
+                    {
+                        monitorUnit.StockTemplateId = temp;
+                    }
+                }
+
+                if (tempItem.Data != null && tempItem.Data is StockTemplate)
+                {
+                    monitorUnit.StockTemplateName = (tempItem.Data as StockTemplate).TemplateName;
                 }
             }
 
@@ -232,9 +247,10 @@ namespace TradingSystem.Dialog
                 DialogResult = System.Windows.Forms.DialogResult.OK;
             }
             else
-            { 
+            {
                 //TODO: make the error message
-                DialogResult = System.Windows.Forms.DialogResult.No;
+                //DialogResult = System.Windows.Forms.DialogResult.No;
+                MessageBox.Show("请确保监控名称和空头合约不为空", "错误", MessageBoxButtons.OK);
             }
         }
 

@@ -9,6 +9,12 @@ namespace Model.UI
 {
     public class OpenPositionSecurityItem
     {
+        [BindingAttribute("monitorid")]
+        public int MonitorId { get; set; }
+
+        [BindingAttribute("monitorname")]
+        public string MonitorName { get; set; }
+
         [BindingAttribute("secucode")]
         public string SecuCode { get; set; }
 

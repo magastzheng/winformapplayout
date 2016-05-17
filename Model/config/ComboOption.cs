@@ -11,6 +11,7 @@ namespace Model
         public string Id { get; set; }
         public string Order { get; set; }
         public string Name { get; set; }
+        public object Data { get; set; }
 
         public override string ToString()
         {

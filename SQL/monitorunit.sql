@@ -183,6 +183,7 @@ begin
 	end
 end
 
+go
 if exists (select name from sysobjects where name='procMonitorUnitSelectCombine')
 drop proc procMonitorUnitSelectCombine
 
@@ -201,6 +202,7 @@ begin
 			,a.PortfolioId
 			,a.BearContract
 			,a.StockTemplateId
+			,a.Active
 			,a.Owner
 			,a.CreatedDate
 			,a.ModifiedDate
@@ -221,6 +223,7 @@ begin
 			,a.PortfolioId
 			,a.BearContract
 			,a.StockTemplateId
+			,a.Active
 			,a.Owner
 			,a.CreatedDate
 			,a.ModifiedDate
@@ -234,7 +237,7 @@ begin
 	end
 end
 
-
+go
 if exists (select name from sysobjects where name='procMonitorUnitSelectActive')
 drop proc procMonitorUnitSelectActive
 

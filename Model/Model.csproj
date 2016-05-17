@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binding\BindingAttribute.cs" />
+    <Compile Include="Binding\IntBoolConverter.cs" />
     <Compile Include="config\Benchmark.cs" />
     <Compile Include="config\ComboOption.cs" />
     <Compile Include="config\BuySellOption.cs" />

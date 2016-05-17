@@ -11,6 +11,7 @@ namespace DBAccess
     {
         private const string SP_Create = "procMonitorUnitInsert";
         private const string SP_Modify = "procMonitorUnitUpdate";
+        private const string SP_Active = "procMonitorUnitActive";
         private const string SP_Delete = "procMonitorUnitDelete";
         private const string SP_Get = "procMonitorUnitSelect";
         private const string SP_GetCombine = "procMonitorUnitSelectCombine";
@@ -79,6 +80,19 @@ namespace DBAccess
             }
 
             return id;
+        }
+
+        public int Active(int monitorId, int status)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Active);
+            _dbHelper.AddInParameter(dbCommand, "@MonitorUnitId", System.Data.DbType.Int32, monitorId);
+            _dbHelper.AddInParameter(dbCommand, "@Active", System.Data.DbType.Int32, status);
+
+            _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
+
+            int ret = _dbHelper.ExecuteNonQuery(dbCommand);
+           
+            return ret;
         }
 
         public int Delete(int monitorUnitId)
@@ -157,6 +171,7 @@ namespace DBAccess
                     item.BearContract = (string)reader["BearContract"];
                     item.StockTemplateId = (int)reader["StockTemplateId"];
                     item.StockTemplateName = (string)reader["TemplateName"];
+                    item.Selection = ((int)reader["Active"] > 0) ? true : false;
                     item.Owner = (string)reader["Owner"];
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {

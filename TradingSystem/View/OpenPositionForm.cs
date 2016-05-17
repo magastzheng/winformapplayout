@@ -37,6 +37,29 @@ namespace TradingSystem.View
 
             LoadControl += new FormLoadHandler(Form_LoadControl);
             LoadData += new FormLoadHandler(Form_LoadData);
+            monitorGridView.UpdateRelatedDataGridHandler += new UpdateRelatedDataGrid(MonitorGridView_UpdateRelatedDataGrid);
+        }
+
+        private void MonitorGridView_UpdateRelatedDataGrid(UpdateDirection direction, int rowIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= _monitorDataSource.Count)
+                return;
+
+            OpenPositionItem monitorItem = _monitorDataSource[rowIndex];
+
+            switch (direction)
+            {
+                case UpdateDirection.Add:
+                    {
+                        LoadSecurityData(monitorItem);
+                    }
+                    break;
+                case UpdateDirection.Remove:
+                    {
+                        RemoveSecurityData(monitorItem);
+                    }
+                    break;
+            }
         }
 
         private void Form_LoadControl(object sender, object data)
@@ -60,9 +83,61 @@ namespace TradingSystem.View
             this.monitorGridView.DataSource = _monitorDataSource;
 
             //Load the data for each template
+            List<OpenPositionSecurityItem> secuItems = new List<OpenPositionSecurityItem>();
+            _securityDataSource = new SortableBindingList<OpenPositionSecurityItem>(secuItems);
+            this.securityGridView.DataSource = _securityDataSource;
+
             if (monitorList.Count > 0)
-            { 
-                
+            {
+                List<int> selectIndex = TSDataGridViewHelper.GetSelectRowIndex(monitorGridView);
+                if (selectIndex.Count > 0)
+                {
+                    List<OpenPositionItem> selectMonitors = new List<OpenPositionItem>();
+                    foreach (var index in selectIndex)
+                    {
+                        selectMonitors.Add(_monitorDataSource[index]);
+                    }
+
+                    LoadSecurityData(selectMonitors);
+                }
+            }
+        }
+
+        private void LoadSecurityData(List<OpenPositionItem> monitorItems)
+        {
+            foreach (var mitem in monitorItems)
+            {
+                LoadSecurityData(mitem);
+            }
+        }
+
+        public void LoadSecurityData(OpenPositionItem monitorItem)
+        {
+            List<TemplateStock> stocks = _stockdbdao.GetTemplateStock(monitorItem.TemplateId);
+            List<OpenPositionSecurityItem> secuItems = new List<OpenPositionSecurityItem>();
+            foreach (var stock in stocks)
+            {
+                OpenPositionSecurityItem secuItem = new OpenPositionSecurityItem
+                {
+                    MonitorId = monitorItem.MonitorId,
+                    MonitorName = monitorItem.MonitorName,
+                    SecuCode = stock.SecuCode,
+                    SecuName = stock.SecuName,
+                };
+
+                _securityDataSource.Add(secuItem);
+            }
+        }
+
+        public void RemoveSecurityData(OpenPositionItem monitorItem)
+        {
+            for (int i = _securityDataSource.Count - 1; i >= 0; i--)
+            {
+                var secuItem = _securityDataSource[i];
+                if (secuItem.MonitorId == monitorItem.MonitorId)
+                {
+                    _securityDataSource.RemoveAt(i);
+                }
             }
         }
     }

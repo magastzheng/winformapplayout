@@ -40,6 +40,7 @@ namespace Controls.GridView
                     case HSGridColumnType.Image:
                         {
                             column = new DataGridViewImageColumn();
+                            column.Tag = col.DefaultValue;
                         }
                         break;
                     case HSGridColumnType.Text:
@@ -86,6 +87,11 @@ namespace Controls.GridView
 
         #region select
 
+        /// <summary>
+        /// 返回选中行按升序排序的行号列表
+        /// </summary>
+        /// <param name="dgv"></param>
+        /// <returns></returns>
         public static List<int> GetSelectRowIndex(TSDataGridView dgv)
         {
             List<int> selectedIndex = new List<int>();
@@ -103,8 +109,195 @@ namespace Controls.GridView
                 selectedIndex.Add(row.Index);
             }
 
+            selectedIndex.Sort();
             return selectedIndex;
         }
+
+        #endregion
+
+        #region image
+
+        public static void CellFormatting(TSDataGridView dgv, DataGridViewCellFormattingEventArgs e)
+        {
+            DataGridViewColumn column = dgv.Columns[e.ColumnIndex];
+            if (column != null && column is DataGridViewImageColumn)
+            {
+                //e.Value = Image.FromFile((string)column.Tag);
+                Image image = Image.FromFile((string)column.Tag);
+                Bitmap bitmap = new Bitmap(image, new Size(20, 20));
+                e.Value = bitmap;
+            }
+        }
+
+        #endregion
+
+        #region edit
+
+        #region entrust copies input
+
+        //private void CellParsing(TSDataGridView dgv, DataGridViewCellParsingEventArgs e)
+        //{
+        //    if (dgv != null && dgv.Columns[e.ColumnIndex].Name == "copies")
+        //    {
+        //        if (e.DesiredType == typeof(int))
+        //        {
+        //            e.ParsingApplied = true;
+        //        }
+        //        else
+        //        {
+        //            Console.WriteLine("请输入数字！");
+        //        }
+        //    }
+        //}
+
+        public static void NumericCheck(object sender, KeyPressEventArgs e)
+        {
+            DataGridViewTextBoxEditingControl s = sender as DataGridViewTextBoxEditingControl;
+
+            if (s != null && (e.KeyChar == '.' || e.KeyChar == ','))
+            {
+                e.KeyChar = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0];
+                e.Handled = s.Text.Contains(e.KeyChar);
+            }
+            else
+                e.Handled = !char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar);
+        }
+
+        public static void CopiesCheck(object sender, KeyPressEventArgs e)
+        {
+            DataGridViewTextBoxEditingControl s = sender as DataGridViewTextBoxEditingControl;
+            if (s == null)
+                return;
+
+            if (char.IsNumber(e.KeyChar))
+            {
+                int preValue = 0;
+                if (!string.IsNullOrEmpty(s.Text))
+                {
+                    preValue = int.Parse(s.Text);
+                }
+                int curValue = int.Parse(e.KeyChar.ToString());
+                if (preValue * 10 + curValue <= MAX_ENTRUST_AMOUNT)
+                {
+                    //让操作失效
+                    e.Handled = false;
+                }
+                else
+                {
+                    //input beyond the range
+                    e.Handled = true;
+                }
+            }
+            else if (e.KeyChar == (char)Keys.Back)
+            {
+                //让操作失效
+                e.Handled = false;
+            }
+            else
+            {
+                Console.WriteLine("输入无效值！");
+                //取消事件响应
+                e.Handled = true;
+            }
+        }
+
+        private static void EditingControlShowing(TSDataGridView dgv, DataGridViewEditingControlShowingEventArgs e)
+        {
+            if (dgv == null)
+                return;
+
+            if (dgv.CurrentCell.ColumnIndex == dgv.Columns["copies"].Index)
+            {
+                DataGridViewTextBoxEditingControl dgvTxt = e.Control as DataGridViewTextBoxEditingControl;
+                dgvTxt.SelectAll();
+                dgvTxt.KeyPress += new KeyPressEventHandler(Cells_KeyPress);
+            }
+        }
+
+        private static void Cells_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            KeyPressEx(e, (DataGridViewTextBoxEditingControl)sender);
+        }
+
+        private static void KeyPressEx(KeyPressEventArgs e, DataGridViewTextBoxEditingControl dgvTxt)
+        {
+            if (char.IsNumber(e.KeyChar))
+            {
+                int preValue = 0;
+                if (!string.IsNullOrEmpty(dgvTxt.Text))
+                {
+                    preValue = int.Parse(dgvTxt.Text);
+                }
+                int curValue = int.Parse(e.KeyChar.ToString());
+                if (preValue * 10 + curValue <= MAX_ENTRUST_AMOUNT)
+                {
+                    //让操作失效
+                    e.Handled = false;
+                }
+                else
+                {
+                    //input beyond the range
+                    e.Handled = true;
+                }
+            }
+            else if (e.KeyChar == (char)Keys.Back)
+            {
+                //让操作失效
+                e.Handled = false;
+            }
+            else
+            {
+                Console.WriteLine("输入无效值！");
+                //取消事件响应
+                e.Handled = true;
+            }
+        }
+        #endregion
+
+        #region 增加和减少
+
+        public static void CellMouseClick(TSDataGridView dgv, DataGridViewCellMouseEventArgs e)
+        {
+            if (dgv == null || e.ColumnIndex < 0 || e.RowIndex < 0)
+                return;
+
+            if (dgv.Columns["copies"] != null)
+            {
+                int copiesIndex = dgv.Columns["copies"].Index;
+                DataGridViewRow row = dgv.Rows[e.RowIndex];
+                switch (dgv.Columns[e.ColumnIndex].Name)
+                {
+                    case "plus":
+                        {
+                            int oldValue = int.Parse(row.Cells["copies"].Value.ToString());
+                            if (oldValue < MAX_ENTRUST_AMOUNT)
+                            {
+                                row.Cells["copies"].Value = oldValue + 1;
+                            }
+                            else
+                            {
+                                //invalid input
+                            }
+                        }
+                        break;
+                    case "minus":
+                        {
+                            int oldValue = int.Parse(row.Cells["copies"].Value.ToString());
+                            if (oldValue > 0)
+                            {
+                                row.Cells["copies"].Value = oldValue - 1;
+                            }
+                            else
+                            {
+                                //invalid input
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+
+        #endregion
 
         #endregion
 
@@ -333,5 +526,7 @@ namespace Controls.GridView
         }
 
         #endregion
+
+        public static int MAX_ENTRUST_AMOUNT { get { return 10; } }
     }
 }

@@ -18,11 +18,17 @@ namespace Controls.GridView
         Remove = 2,
     }
 
-    public delegate void UpdateRelatedDataGrid(UpdateDirection direction, Model.Data.DataRow dataRow);
+    public delegate void UpdateRelatedDataGrid(UpdateDirection direction, int rowIndex);
 
     public partial class TSDataGridView : DataGridView
     {
         public event UpdateRelatedDataGrid UpdateRelatedDataGridHandler;
+        public KeyPressEventHandler CopiesCheckHandler = new KeyPressEventHandler(CopiesCheck);
+
+        private static void CopiesCheck(object sender, KeyPressEventArgs e)
+        {
+            TSDataGridViewHelper.CopiesCheck(sender, e);
+        }
 
         public TSDataGridView()
         {
@@ -35,11 +41,46 @@ namespace Controls.GridView
             this.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 
             //this.CellParsing += new DataGridViewCellParsingEventHandler(DataGridView_CellParsing);
-            //this.CellFormatting += new DataGridViewCellFormattingEventHandler(DataGridView_CellFormatting);
+            this.CellFormatting += new DataGridViewCellFormattingEventHandler(DataGridView_CellFormatting);
             //this.CellEnter += new DataGridViewCellEventHandler(DataGridView_CellEnter);
             //this.CellValidating += new DataGridViewCellValidatingEventHandler(DataGridView_CellValidating);
 
             //this.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(DataGridView_ColumnHeaderMouseClick);
+            this.CellMouseClick += new DataGridViewCellMouseEventHandler(DataGridView_CellMouseClick);
+            this.EditingControlShowing += new DataGridViewEditingControlShowingEventHandler(DataGridView_EditingControlShowing);
+            this.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_CellContentClick);
+        }
+
+        private void DataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridView dgv = (DataGridView)sender;
+            if (dgv == null || e.ColumnIndex < 0 || e.RowIndex < 0)
+                return;
+
+            int cbColIndex = GetCheckBoxColumnIndex();
+            if (cbColIndex < 0)
+                return;
+            DataGridViewRow row = dgv.Rows[e.RowIndex];
+            if (e.ColumnIndex == cbColIndex)
+            {
+                SwitchSelection(row, e.ColumnIndex);
+            }            
+        }
+
+        private void DataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            TSDataGridView dgv = sender as TSDataGridView;
+            int columnIndex = dgv.CurrentCell.ColumnIndex;
+            if (columnIndex == Columns["copies"].Index)
+            {
+                e.Control.KeyPress -= CopiesCheck;
+                e.Control.KeyPress += CopiesCheck;
+            }
+        }
+
+        private void DataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            TSDataGridViewHelper.CellMouseClick(this, e);
         }
 
         public override void Sort(DataGridViewColumn dataGridViewColumn, ListSortDirection direction)
@@ -59,26 +100,22 @@ namespace Controls.GridView
             if (currentStatus)
             {
                 row.Cells[colIndex].Value = true;
-                SetSelectionRowBackground(row, true);
+                //SetSelectionRowBackground(row, true);
 
                 //update the related datagridview if it needs              
                 if (UpdateRelatedDataGridHandler != null)
                 {
-                    int cbColIndex = GetCheckBoxColumnIndex();
-                    //Model.Data.DataRow dataRow = GetDataRow(row, 1);
-                    //UpdateRelatedDataGridHandler(UpdateDirection.Add, dataRow);
+                    UpdateRelatedDataGridHandler(UpdateDirection.Add, row.Index);
                 }
             }
             else
             {
                 row.Cells[colIndex].Value = false;
-                SetSelectionRowBackground(row, false);
+                //SetSelectionRowBackground(row, false);
 
                 if (UpdateRelatedDataGridHandler != null)
                 {
-                    int cbColIndex = GetCheckBoxColumnIndex();
-                    //Model.Data.DataRow dataRow = GetDataRow(row, 0);
-                    //UpdateRelatedDataGridHandler(UpdateDirection.Remove, dataRow);
+                    UpdateRelatedDataGridHandler(UpdateDirection.Remove, row.Index);
                 }
             }
         }
@@ -260,28 +297,10 @@ namespace Controls.GridView
         //////    }
         //////}
 
-        //private void DataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        //{
-        //    if (e.Value is DataValue)
-        //    {
-        //        DataValue dataValue = e.Value as DataValue;
-        //        switch(dataValue.Type)
-        //        {
-        //            case DataValueType.Int:
-        //                e.Value = dataValue.GetInt();
-        //                break;
-        //            case DataValueType.Float:
-        //                e.Value = dataValue.GetDouble();
-        //                break;
-        //            case DataValueType.String:
-        //                e.Value = dataValue.GetStr();
-        //                break;
-        //            default:
-        //                e.Value = dataValue.GetStr();
-        //                break;
-        //        }
-        //    }
-        //}
+        private void DataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            TSDataGridViewHelper.CellFormatting(this, e);
+        }
 
         //private void DataGridView_CellParsing(object sender, DataGridViewCellParsingEventArgs e)
         //{

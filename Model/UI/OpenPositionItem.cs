@@ -9,6 +9,9 @@ namespace Model.UI
 {
     public class OpenPositionItem
     {
+        [BindingAttribute("copies")]
+        public int Copies { get; set; }
+
         [BindingAttribute("monitorid")]
         public int MonitorId { get; set; }
 
