@@ -27,7 +27,7 @@
         ]
     },{
         "id": "trading",
-        "title": "交易管理",
+        "title": "策略指令",
         "parentid": "",
         "isexpansed": false,
         "children":[

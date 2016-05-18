@@ -32,6 +32,8 @@
             this.tpCmdTrading = new System.Windows.Forms.TabPage();
             this.cmdMainSplitter = new System.Windows.Forms.SplitContainer();
             this.cmdVerticalSplitter = new System.Windows.Forms.SplitContainer();
+            this.cmdTradingPanel = new System.Windows.Forms.Panel();
+            this.cmdGridView = new Controls.GridView.TSDataGridView();
             this.cmdMiddlePanel = new System.Windows.Forms.Panel();
             this.btnCmdUnSelect = new System.Windows.Forms.Button();
             this.btnCmdSelect = new System.Windows.Forms.Button();
@@ -85,8 +87,6 @@
             this.dfTopPanel = new System.Windows.Forms.Panel();
             this.tsDealFlow = new System.Windows.Forms.ToolStrip();
             this.tsbdfRefresh = new System.Windows.Forms.ToolStripButton();
-            this.cmdTradingPanel = new System.Windows.Forms.Panel();
-            this.cmdGridView = new Controls.GridView.TSDataGridView();
             this.tabParentMain.SuspendLayout();
             this.tpCmdTrading.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cmdMainSplitter)).BeginInit();
@@ -97,6 +97,8 @@
             this.cmdVerticalSplitter.Panel1.SuspendLayout();
             this.cmdVerticalSplitter.Panel2.SuspendLayout();
             this.cmdVerticalSplitter.SuspendLayout();
+            this.cmdTradingPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cmdGridView)).BeginInit();
             this.cmdMiddlePanel.SuspendLayout();
             this.tabChildSecurity.SuspendLayout();
             this.tpCmdSecurity.SuspendLayout();
@@ -121,18 +123,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.dfGridView)).BeginInit();
             this.dfTopPanel.SuspendLayout();
             this.tsDealFlow.SuspendLayout();
-            this.cmdTradingPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.cmdGridView)).BeginInit();
             this.SuspendLayout();
             // 
-            // tabChildMain
+            // tabParentMain
             // 
             this.tabParentMain.Controls.Add(this.tpCmdTrading);
             this.tabParentMain.Controls.Add(this.tpEntrustFlow);
             this.tabParentMain.Controls.Add(this.tpDealFlow);
             this.tabParentMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabParentMain.Location = new System.Drawing.Point(0, 0);
-            this.tabParentMain.Name = "tabChildMain";
+            this.tabParentMain.Name = "tabParentMain";
             this.tabParentMain.SelectedIndex = 0;
             this.tabParentMain.Size = new System.Drawing.Size(1125, 570);
             this.tabParentMain.TabIndex = 0;
@@ -186,6 +186,27 @@
             this.cmdVerticalSplitter.SplitterDistance = 276;
             this.cmdVerticalSplitter.TabIndex = 2;
             // 
+            // cmdTradingPanel
+            // 
+            this.cmdTradingPanel.Controls.Add(this.cmdGridView);
+            this.cmdTradingPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cmdTradingPanel.Location = new System.Drawing.Point(0, 0);
+            this.cmdTradingPanel.Name = "cmdTradingPanel";
+            this.cmdTradingPanel.Size = new System.Drawing.Size(900, 247);
+            this.cmdTradingPanel.TabIndex = 2;
+            // 
+            // cmdGridView
+            // 
+            this.cmdGridView.AllowUserToAddRows = false;
+            this.cmdGridView.AllowUserToDeleteRows = false;
+            this.cmdGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.cmdGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cmdGridView.Location = new System.Drawing.Point(0, 0);
+            this.cmdGridView.Name = "cmdGridView";
+            this.cmdGridView.RowTemplate.Height = 23;
+            this.cmdGridView.Size = new System.Drawing.Size(900, 247);
+            this.cmdGridView.TabIndex = 1;
+            // 
             // cmdMiddlePanel
             // 
             this.cmdMiddlePanel.Controls.Add(this.btnCmdUnSelect);
@@ -214,14 +235,14 @@
             this.btnCmdSelect.Text = "全选";
             this.btnCmdSelect.UseVisualStyleBackColor = true;
             // 
-            // tabSecurity
+            // tabChildSecurity
             // 
             this.tabChildSecurity.Controls.Add(this.tpCmdSecurity);
             this.tabChildSecurity.Controls.Add(this.tpCmdEntrustFlow);
             this.tabChildSecurity.Controls.Add(this.tpCmdDealFlow);
             this.tabChildSecurity.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabChildSecurity.Location = new System.Drawing.Point(0, 0);
-            this.tabChildSecurity.Name = "tabSecurity";
+            this.tabChildSecurity.Name = "tabChildSecurity";
             this.tabChildSecurity.SelectedIndex = 0;
             this.tabChildSecurity.Size = new System.Drawing.Size(900, 196);
             this.tabChildSecurity.TabIndex = 0;
@@ -466,6 +487,7 @@
             // 
             // cbFuturesSellPrice
             // 
+            this.cbFuturesSellPrice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbFuturesSellPrice.FormattingEnabled = true;
             this.cbFuturesSellPrice.Location = new System.Drawing.Point(80, 89);
             this.cbFuturesSellPrice.Name = "cbFuturesSellPrice";
@@ -474,6 +496,7 @@
             // 
             // cbFuturesBuyPrice
             // 
+            this.cbFuturesBuyPrice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbFuturesBuyPrice.FormattingEnabled = true;
             this.cbFuturesBuyPrice.Location = new System.Drawing.Point(80, 61);
             this.cbFuturesBuyPrice.Name = "cbFuturesBuyPrice";
@@ -482,6 +505,7 @@
             // 
             // cbSpotSellPrice
             // 
+            this.cbSpotSellPrice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSpotSellPrice.FormattingEnabled = true;
             this.cbSpotSellPrice.Location = new System.Drawing.Point(80, 32);
             this.cbSpotSellPrice.Name = "cbSpotSellPrice";
@@ -490,6 +514,7 @@
             // 
             // cbSpotBuyPrice
             // 
+            this.cbSpotBuyPrice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSpotBuyPrice.FormattingEnabled = true;
             this.cbSpotBuyPrice.Location = new System.Drawing.Point(80, 5);
             this.cbSpotBuyPrice.Name = "cbSpotBuyPrice";
@@ -532,13 +557,13 @@
             this.lblSpotBuyPrice.TabIndex = 0;
             this.lblSpotBuyPrice.Text = "现货委买价：";
             // 
-            // tbEntrustFlow
+            // tpEntrustFlow
             // 
             this.tpEntrustFlow.Controls.Add(this.efMainPanel);
             this.tpEntrustFlow.Controls.Add(this.efBottonPanel);
             this.tpEntrustFlow.Controls.Add(this.efTopPanel);
             this.tpEntrustFlow.Location = new System.Drawing.Point(4, 22);
-            this.tpEntrustFlow.Name = "tbEntrustFlow";
+            this.tpEntrustFlow.Name = "tpEntrustFlow";
             this.tpEntrustFlow.Padding = new System.Windows.Forms.Padding(3);
             this.tpEntrustFlow.Size = new System.Drawing.Size(1117, 544);
             this.tpEntrustFlow.TabIndex = 1;
@@ -716,27 +741,6 @@
             this.tsbdfRefresh.Size = new System.Drawing.Size(52, 22);
             this.tsbdfRefresh.Text = "刷新";
             // 
-            // cmdTradingPanel
-            // 
-            this.cmdTradingPanel.Controls.Add(this.cmdGridView);
-            this.cmdTradingPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cmdTradingPanel.Location = new System.Drawing.Point(0, 0);
-            this.cmdTradingPanel.Name = "cmdTradingPanel";
-            this.cmdTradingPanel.Size = new System.Drawing.Size(900, 247);
-            this.cmdTradingPanel.TabIndex = 2;
-            // 
-            // cmdGridView
-            // 
-            this.cmdGridView.AllowUserToAddRows = false;
-            this.cmdGridView.AllowUserToDeleteRows = false;
-            this.cmdGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.cmdGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cmdGridView.Location = new System.Drawing.Point(0, 0);
-            this.cmdGridView.Name = "cmdGridView";
-            this.cmdGridView.RowTemplate.Height = 23;
-            this.cmdGridView.Size = new System.Drawing.Size(900, 247);
-            this.cmdGridView.TabIndex = 1;
-            // 
             // StrategyTradingForm2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -753,6 +757,8 @@
             this.cmdVerticalSplitter.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.cmdVerticalSplitter)).EndInit();
             this.cmdVerticalSplitter.ResumeLayout(false);
+            this.cmdTradingPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.cmdGridView)).EndInit();
             this.cmdMiddlePanel.ResumeLayout(false);
             this.tabChildSecurity.ResumeLayout(false);
             this.tpCmdSecurity.ResumeLayout(false);
@@ -785,8 +791,6 @@
             this.dfTopPanel.PerformLayout();
             this.tsDealFlow.ResumeLayout(false);
             this.tsDealFlow.PerformLayout();
-            this.cmdTradingPanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.cmdGridView)).EndInit();
             this.ResumeLayout(false);
 
         }

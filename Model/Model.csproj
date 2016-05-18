@@ -64,6 +64,8 @@
     <Compile Include="strategy\AccountItem.cs" />
     <Compile Include="strategy\TradingInstance.cs" />
     <Compile Include="t2sdk\MarketCode.cs" />
+    <Compile Include="UI\ClosePositionItem.cs" />
+    <Compile Include="UI\ClosePositionSecurityItem.cs" />
     <Compile Include="UI\CommandSecurityItem.cs" />
     <Compile Include="UI\DealFlowItem.cs" />
     <Compile Include="UI\EntrustFlowItem.cs" />

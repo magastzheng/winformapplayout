@@ -2061,8 +2061,42 @@ readonly:
 	]
 },{
 	"grid": "closeposition",
-	"columns": [
-	{
+	"columns": [{
+		"name": "selection",
+		"text": "选择",
+		"width": 80,
+		"columntype": 1,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "plus",
+		"text": "增加",
+		"width": 40,
+		"columntype": 2,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1,
+		"defaultvalue": "img/plus.png"
+		},{
+		"name": "copies",
+		"text": "份数",
+		"width": 40,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "minus",
+		"text": "减少",
+		"width": 40,
+		"columntype": 2,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1,
+		"defaultvalue": "img/minus.png"
+		},
+		{
 		"name": "instanceid",
 		"text": "实例序号",
 		"width": 80,
@@ -2278,6 +2312,14 @@ readonly:
 		},{
 		"name": "commandprice",
 		"text": "指令价格",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "lastprice",
+		"text": "最新价",
 		"width": 80,
 		"columntype": 0,
 		"valuetype": 1,

@@ -64,6 +64,10 @@ namespace TradingSystem.Controller
                         }
                         break;
                     case "close":
+                        {
+                            formType = typeof(ClosePositionForm);
+                            hasGrid = true;
+                        }
                         break;
                     case "commandmanager":
                         break;
