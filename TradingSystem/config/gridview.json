@@ -26,7 +26,7 @@ readonly:
 [{
 	"grid": "cmdtrading",
 	"columns":[{
-		"name": "tc_selection",
+		"name": "selection",
 		"text": "选中",
 		"width": 60,
 		"columntype": 1,
@@ -34,7 +34,7 @@ readonly:
 		"visible": 1,
 		"readonly": 0
 		}, {
-		"name": "tc_commandno",
+		"name": "commandno",
 		"text": "指令序号",
 		"width": 80,
 		"columntype": 0,
@@ -42,7 +42,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_monitorunit",
+		"name": "monitorunit",
 		"text": "监控单元",
 		"width": 80,
 		"columntype": 0,
@@ -50,7 +50,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		}, {
-		"name": "tc_commandtype",
+		"name": "commandtype",
 		"text": "指令类型",
 		"width": 80,
 		"columntype": 0,
@@ -58,7 +58,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_executetype",
+		"name": "executetype",
 		"text": "执行类型",
 		"width": 80,
 		"columntype": 0,
@@ -66,7 +66,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_commandnum",
+		"name": "commandnum",
 		"text": "指令份数",
 		"width": 80,
 		"columntype": 0,
@@ -74,7 +74,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_targetnum",
+		"name": "targetnum",
 		"text": "目标份数",
 		"width": 80,
 		"columntype": 0,
@@ -82,7 +82,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_baisprice",
+		"name": "baisprice",
 		"text": "基差|价差",
 		"width": 80,
 		"columntype": 0,
@@ -90,7 +90,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_longmorethan",
+		"name": "longmorethan",
 		"text": "多头委比",
 		"width": 80,
 		"columntype": 0,
@@ -98,7 +98,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_bearmorethan",
+		"name": "bearmorethan",
 		"text": "空头委比",
 		"width": 80,
 		"columntype": 0,
@@ -106,7 +106,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_longratio",
+		"name": "longratio",
 		"text": "多头成比",
 		"width": 80,
 		"columntype": 0,
@@ -114,7 +114,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_bearratio",
+		"name": "bearratio",
 		"text": "空头成比",
 		"width": 80,
 		"columntype": 0,
@@ -122,7 +122,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_commandamount",
+		"name": "commandamount",
 		"text": "指令数量",
 		"width": 80,
 		"columntype": 0,
@@ -130,7 +130,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_entrustedamount",
+		"name": "entrustedamount",
 		"text": "已委托数量",
 		"width": 80,
 		"columntype": 0,
@@ -138,7 +138,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_dealamount",
+		"name": "dealamount",
 		"text": "已成数量",
 		"width": 80,
 		"columntype": 0,
@@ -146,7 +146,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_commandmoney",
+		"name": "commandmoney",
 		"text": "指令金额",
 		"width": 80,
 		"columntype": 0,
@@ -154,7 +154,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_exposure",
+		"name": "exposure",
 		"text": "裸敞口",
 		"width": 80,
 		"columntype": 0,
@@ -162,7 +162,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_startdate",
+		"name": "startdate",
 		"text": "开始日期",
 		"width": 80,
 		"columntype": 0,
@@ -170,7 +170,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_enddate",
+		"name": "enddate",
 		"text": "结束日期",
 		"width": 80,
 		"columntype": 0,
@@ -178,7 +178,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_starttime",
+		"name": "starttime",
 		"text": "开始时间",
 		"width": 80,
 		"columntype": 0,
@@ -186,7 +186,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_endtime",
+		"name": "endtime",
 		"text": "结束时间",
 		"width": 80,
 		"columntype": 0,
@@ -194,7 +194,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_dispatchtime",
+		"name": "dispatchtime",
 		"text": "分发时间",
 		"width": 80,
 		"columntype": 0,
@@ -202,7 +202,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_executeperson",
+		"name": "executeperson",
 		"text": "下达人",
 		"width": 80,
 		"columntype": 0,
@@ -210,7 +210,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_dispatchperson",
+		"name": "dispatchperson",
 		"text": "分发人",
 		"width": 80,
 		"columntype": 0,
@@ -218,7 +218,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_instanceid",
+		"name": "instanceid",
 		"text": "实例号",
 		"width": 80,
 		"columntype": 0,
@@ -226,7 +226,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_instanceno",
+		"name": "instanceno",
 		"text": "实例编号",
 		"width": 80,
 		"columntype": 0,
@@ -234,7 +234,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "tc_last",
+		"name": "last",
 		"text": "",
 		"width": 5,
 		"columntype": -1,
@@ -248,7 +248,7 @@ readonly:
 	"grid": "dealflow",
 	"columns": [
 	{
-		"name": "df_commandno",
+		"name": "commandno",
 		"text": "指令序号",
 		"width": 80,
 		"columntype": 0,
@@ -256,7 +256,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "df_securitycode",
+		"name": "securitycode",
 		"text": "证券代码",
 		"width": 80,
 		"columntype": 0,
@@ -264,7 +264,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "df_securityname",
+		"name": "securityname",
 		"text": "证券名称",
 		"width": 80,
 		"columntype": 0,
@@ -272,7 +272,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "df_fundno",
+		"name": "fundno",
 		"text": "基金序号",
 		"width": 80,
 		"columntype": 0,
@@ -280,7 +280,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "df_fundname",
+		"name": "fundname",
 		"text": "基金名称",
 		"width": 80,
 		"columntype": 0,
@@ -288,7 +288,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "df_portfoliocode",
+		"name": "portfoliocode",
 		"text": "组合代码",
 		"width": 80,
 		"columntype": 0,
@@ -296,7 +296,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "df_portfolioname",
+		"name": "portfolioname",
 		"text": "组合名称",
 		"width": 80,
 		"columntype": 0,
@@ -304,7 +304,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "df_pricetype",
+		"name": "pricetype",
 		"text": "价格类型",
 		"width": 80,
 		"columntype": 0,
@@ -312,7 +312,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "df_entrustprice",
+		"name": "entrustprice",
 		"text": "委托价格",
 		"width": 80,
 		"columntype": 0,
@@ -320,7 +320,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "df_entrustdirection",
+		"name": "entrustdirection",
 		"text": "委托方向",
 		"width": 80,
 		"columntype": 0,
@@ -328,7 +328,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "df_dealprice",
+		"name": "dealprice",
 		"text": "成交价格",
 		"width": 80,
 		"columntype": 0,
@@ -336,7 +336,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "df_dealamount",
+		"name": "dealamount",
 		"text": "成交数量",
 		"width": 80,
 		"columntype": 0,
@@ -344,7 +344,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "df_dealmoney",
+		"name": "dealmoney",
 		"text": "成交金额",
 		"width": 80,
 		"columntype": 0,
@@ -352,7 +352,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "df_dealtime",
+		"name": "dealtime",
 		"text": "成交时间",
 		"width": 80,
 		"columntype": 0,
@@ -360,7 +360,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "df_stockholdercode",
+		"name": "stockholdercode",
 		"text": "股东代码",
 		"width": 80,
 		"columntype": 0,
@@ -368,7 +368,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "df_declareno",
+		"name": "declareno",
 		"text": "申报序号",
 		"width": 80,
 		"columntype": 0,
@@ -376,7 +376,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "df_declareseat",
+		"name": "declareseat",
 		"text": "申报席位",
 		"width": 80,
 		"columntype": 0,
@@ -384,7 +384,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "df_entrustbatchno",
+		"name": "entrustbatchno",
 		"text": "申报批号",
 		"width": 80,
 		"columntype": 0,
@@ -392,7 +392,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "df_instanceid",
+		"name": "instanceid",
 		"text": "实例号",
 		"width": 80,
 		"columntype": 0,
@@ -400,7 +400,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "df_instanceno",
+		"name": "instanceno",
 		"text": "实例编号",
 		"width": 80,
 		"columntype": 0,
@@ -408,7 +408,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "df_entrustno",
+		"name": "entrustno",
 		"text": "委托序号",
 		"width": 80,
 		"columntype": 0,
@@ -416,7 +416,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "df_dealno",
+		"name": "dealno",
 		"text": "成交序号",
 		"width": 80,
 		"columntype": 0,
@@ -424,7 +424,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "df_last",
+		"name": "last",
 		"text": "",
 		"width": 5,
 		"columntype": -1,
@@ -437,7 +437,7 @@ readonly:
 	"grid": "cmdsecurity",
 	"columns": [
 	{
-		"name": "cs_selection",
+		"name": "selection",
 		"text": "选择",
 		"width": 80,
 		"columntype": 1,
@@ -445,7 +445,7 @@ readonly:
 		"visible": 1,
 		"readonly": 0
 		},{
-		"name": "cs_secucode",
+		"name": "secucode",
 		"text": "证券代码",
 		"width": 80,
 		"columntype": 0,
@@ -453,7 +453,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "cs_secuname",
+		"name": "secuname",
 		"text": "证券名称",
 		"width": 80,
 		"columntype": 0,
@@ -461,7 +461,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "cs_commandno",
+		"name": "commandno",
 		"text": "指令序号",
 		"width": 80,
 		"columntype": 0,
@@ -469,7 +469,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "cs_fundcode",
+		"name": "fundcode",
 		"text": "基金代码",
 		"width": 80,
 		"columntype": 0,
@@ -477,7 +477,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "cs_portfolioname",
+		"name": "portfolioname",
 		"text": "组合名称",
 		"width": 80,
 		"columntype": 0,
@@ -485,7 +485,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "cs_commandprice",
+		"name": "commandprice",
 		"text": "指令价格",
 		"width": 80,
 		"columntype": 0,
@@ -493,7 +493,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "cs_commandamount",
+		"name": "commandamount",
 		"text": "指令数量",
 		"width": 80,
 		"columntype": 0,
@@ -501,7 +501,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "cs_entrustdirection",
+		"name": "entrustdirection",
 		"text": "委托方向",
 		"width": 80,
 		"columntype": 0,
@@ -509,7 +509,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "cs_entrustedamount",
+		"name": "entrustedamount",
 		"text": "已委托数量",
 		"width": 80,
 		"columntype": 0,
@@ -517,7 +517,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "cs_pricetype",
+		"name": "pricetype",
 		"text": "价格类型",
 		"width": 80,
 		"columntype": 0,
@@ -525,7 +525,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "cs_entrustprice",
+		"name": "entrustprice",
 		"text": "委托价格",
 		"width": 80,
 		"columntype": 0,
@@ -533,7 +533,7 @@ readonly:
 		"visible": 1,
 		"readonly": 0
 		},{
-		"name": "cs_thisentrustamout",
+		"name": "thisentrustamout",
 		"text": "本次委托数量",
 		"width": 80,
 		"columntype": 0,
@@ -541,7 +541,7 @@ readonly:
 		"visible": 1,
 		"readonly": 0
 		},{
-		"name": "cs_dealamount",
+		"name": "dealamount",
 		"text": "已成交数量",
 		"width": 80,
 		"columntype": 0,
@@ -549,7 +549,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "cs_targetamount",
+		"name": "targetamount",
 		"text": "目标数量",
 		"width": 80,
 		"columntype": 0,
@@ -557,7 +557,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "cs_waitamount",
+		"name": "waitamount",
 		"text": "待补足数量",
 		"width": 80,
 		"columntype": 0,
@@ -565,7 +565,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "cs_suspensionflag",
+		"name": "suspensionflag",
 		"text": "停牌标志",
 		"width": 80,
 		"columntype": 0,
@@ -573,7 +573,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "cs_targetcopies",
+		"name": "targetcopies",
 		"text": "目标份数",
 		"width": 80,
 		"columntype": 0,
@@ -581,7 +581,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "cs_commandcopies",
+		"name": "commandcopies",
 		"text": "指令份数",
 		"width": 80,
 		"columntype": 0,
@@ -589,7 +589,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "cs_limitupprice",
+		"name": "limitupprice",
 		"text": "涨停价",
 		"width": 80,
 		"columntype": 0,
@@ -597,7 +597,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "cs_limitdownprice",
+		"name": "limitdownprice",
 		"text": "跌停价",
 		"width": 80,
 		"columntype": 0,
@@ -605,7 +605,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "cs_limitupdown",
+		"name": "limitupdown",
 		"text": "涨跌停",
 		"width": 80,
 		"columntype": 0,
@@ -613,7 +613,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "cs_last",
+		"name": "last",
 		"text": "",
 		"width": 5,
 		"columntype": -1,
@@ -626,7 +626,7 @@ readonly:
 	"grid": "buysell",
 	"columns": [
 	{
-		"name": "bs_selection",
+		"name": "selection",
 		"text": "选择",
 		"width": 30,
 		"columntype": 1,
@@ -634,7 +634,7 @@ readonly:
 		"visible": 1,
 		"readonly": 0
 		},{
-		"name": "bs_commandno",
+		"name": "commandno",
 		"text": "指令序号",
 		"width": 80,
 		"columntype": 0,
@@ -642,7 +642,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "bs_add",
+		"name": "add",
 		"text": "增加",
 		"width": 40,
 		"columntype": 2,
@@ -651,7 +651,7 @@ readonly:
 		"readonly": 1,
 		"defaultvalue": "img/plus.png"
 		},{
-		"name": "bs_copies",
+		"name": "copies",
 		"text": "份数",
 		"width": 40,
 		"columntype": 0,
@@ -659,7 +659,7 @@ readonly:
 		"visible": 1,
 		"readonly": 0
 		},{
-		"name": "bs_minus",
+		"name": "minus",
 		"text": "减少",
 		"width": 40,
 		"columntype": 2,
@@ -668,7 +668,7 @@ readonly:
 		"readonly": 1,
 		"defaultvalue": "img/minus.png"
 		},{
-		"name": "bs_last",
+		"name": "last",
 		"text": "",
 		"width": 5,
 		"columntype": -1,
@@ -681,7 +681,7 @@ readonly:
 	"grid": "entrustflow",
 	"columns": [
 	{
-		"name": "ef_commandno",
+		"name": "commandno",
 		"text": "指令序号",
 		"width": 80,
 		"columntype": 0,
@@ -689,7 +689,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_selection",
+		"name": "selection",
 		"text": "选择",
 		"width": 80,
 		"columntype": 1,
@@ -697,7 +697,7 @@ readonly:
 		"visible": 1,
 		"readonly": 0
 		},{
-		"name": "ef_market",
+		"name": "market",
 		"text": "交易市场",
 		"width": 80,
 		"columntype": 0,
@@ -705,7 +705,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_securitycode",
+		"name": "secucode",
 		"text": "证券代码",
 		"width": 80,
 		"columntype": 0,
@@ -713,7 +713,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_securityname",
+		"name": "secuname",
 		"text": "证券名称",
 		"width": 80,
 		"columntype": 0,
@@ -721,7 +721,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_entrustdirection",
+		"name": "entrustdirection",
 		"text": "委托方向",
 		"width": 80,
 		"columntype": 0,
@@ -729,7 +729,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_pricetype",
+		"name": "pricetype",
 		"text": "价格类型",
 		"width": 80,
 		"columntype": 0,
@@ -737,7 +737,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_entrustprice",
+		"name": "entrustprice",
 		"text": "委托价格",
 		"width": 80,
 		"columntype": 0,
@@ -745,7 +745,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_entrustamount",
+		"name": "entrustamount",
 		"text": "委托数量",
 		"width": 80,
 		"columntype": 0,
@@ -753,7 +753,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_entruststatus",
+		"name": "entruststatus",
 		"text": "委托状态",
 		"width": 80,
 		"columntype": 0,
@@ -761,7 +761,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_dealamount",
+		"name": "dealamount",
 		"text": "成交数量",
 		"width": 80,
 		"columntype": 0,
@@ -769,7 +769,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_dealmoney",
+		"name": "dealmoney",
 		"text": "成交金额",
 		"width": 80,
 		"columntype": 0,
@@ -777,7 +777,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_fundname",
+		"name": "fundname",
 		"text": "基金名称",
 		"width": 80,
 		"columntype": 0,
@@ -785,7 +785,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_portfolioname",
+		"name": "portfolioname",
 		"text": "组合名称",
 		"width": 80,
 		"columntype": 0,
@@ -793,7 +793,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_investmenttype",
+		"name": "investtype",
 		"text": "投资类型",
 		"width": 80,
 		"columntype": 0,
@@ -801,7 +801,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_pricebias",
+		"name": "pricebias",
 		"text": "价格偏离度(%)",
 		"width": 80,
 		"columntype": 0,
@@ -809,7 +809,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_dealtimes",
+		"name": "dealtimes",
 		"text": "成交次数",
 		"width": 80,
 		"columntype": 0,
@@ -817,7 +817,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_effectdate",
+		"name": "effectdate",
 		"text": "有效日期",
 		"width": 80,
 		"columntype": 0,
@@ -825,7 +825,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_entrusteddate",
+		"name": "entrusteddate",
 		"text": "委托下达日期",
 		"width": 80,
 		"columntype": 0,
@@ -833,7 +833,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_firstdealdate",
+		"name": "firstdealdate",
 		"text": "首次成交日期",
 		"width": 80,
 		"columntype": 0,
@@ -841,7 +841,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_shareholdercode",
+		"name": "shareholdercode",
 		"text": "股东代码",
 		"width": 80,
 		"columntype": 0,
@@ -849,7 +849,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_declareseat",
+		"name": "declareseat",
 		"text": "申报席位",
 		"width": 80,
 		"columntype": 0,
@@ -857,7 +857,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_withdrawroot",
+		"name": "withdrawcause",
 		"text": "撤单原因",
 		"width": 80,
 		"columntype": 0,
@@ -865,7 +865,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_turnoverratio",
+		"name": "turnoverratio",
 		"text": "成交比例",
 		"width": 80,
 		"columntype": 0,
@@ -873,7 +873,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_entrustedtime",
+		"name": "entrustedtime",
 		"text": "委托时间",
 		"width": 80,
 		"columntype": 0,
@@ -881,7 +881,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_withdrawamount",
+		"name": "withdrawamount",
 		"text": "已撤数量",
 		"width": 80,
 		"columntype": 0,
@@ -889,7 +889,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_instanceid",
+		"name": "instanceid",
 		"text": "实例号",
 		"width": 80,
 		"columntype": 0,
@@ -897,7 +897,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_instanceno",
+		"name": "instanceno",
 		"text": "实例编号",
 		"width": 80,
 		"columntype": 0,
@@ -905,7 +905,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_entrustno",
+		"name": "entrustno",
 		"text": "委托序号",
 		"width": 80,
 		"columntype": 0,
@@ -913,7 +913,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_entrustbatchno",
+		"name": "entrustbatchno",
 		"text": "委托批号",
 		"width": 80,
 		"columntype": 0,
@@ -921,7 +921,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_declareno",
+		"name": "declareno",
 		"text": "申报序号",
 		"width": 80,
 		"columntype": 0,
@@ -929,7 +929,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_errorno",
+		"name": "errorno",
 		"text": "错误号",
 		"width": 80,
 		"columntype": 0,
@@ -937,7 +937,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_errorinfo",
+		"name": "errorinfo",
 		"text": "错误信息",
 		"width": 80,
 		"columntype": 0,
@@ -945,7 +945,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ef_last",
+		"name": "last",
 		"text": "",
 		"width": 5,
 		"columntype": -1,
@@ -957,7 +957,7 @@ readonly:
 	"grid": "entrustcanceladd",
 	"columns": [
 	{
-		"name": "eca_selection",
+		"name": "selection",
 		"text": "选择",
 		"width": 60,
 		"columntype": 1,
@@ -965,7 +965,7 @@ readonly:
 		"visible": 1,
 		"readonly": 0
 		},{
-		"name": "eca_commandno",
+		"name": "commandno",
 		"text": "指令序号",
 		"width": 80,
 		"columntype": 0,
@@ -973,7 +973,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_entrustno",
+		"name": "entrustno",
 		"text": "委托序号",
 		"width": 80,
 		"columntype": 0,
@@ -981,7 +981,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_exchange",
+		"name": "exchange",
 		"text": "交易所",
 		"width": 80,
 		"columntype": 0,
@@ -989,7 +989,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_securitycode",
+		"name": "securitycode",
 		"text": "证券代码",
 		"width": 80,
 		"columntype": 0,
@@ -997,7 +997,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_securityname",
+		"name": "securityname",
 		"text": "证券名称",
 		"width": 80,
 		"columntype": 0,
@@ -1005,7 +1005,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_entrustdirection",
+		"name": "entrustdirection",
 		"text": "委托方向",
 		"width": 80,
 		"columntype": 0,
@@ -1013,7 +1013,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_commandprice",
+		"name": "commandprice",
 		"text": "指令价格",
 		"width": 80,
 		"columntype": 0,
@@ -1021,7 +1021,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_pricesetting",
+		"name": "pricesetting",
 		"text": "价格设置",
 		"width": 80,
 		"columntype": 0,
@@ -1029,7 +1029,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_pricetype",
+		"name": "pricetype",
 		"text": "价格类型",
 		"width": 80,
 		"columntype": 0,
@@ -1037,7 +1037,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_entrustprice",
+		"name": "entrustprice",
 		"text": "委托价格",
 		"width": 80,
 		"columntype": 0,
@@ -1045,7 +1045,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_entrustamount",
+		"name": "entrustamount",
 		"text": "委托数量",
 		"width": 80,
 		"columntype": 0,
@@ -1053,7 +1053,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_declareprice",
+		"name": "declareprice",
 		"text": "申报价格",
 		"width": 80,
 		"columntype": 0,
@@ -1061,7 +1061,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_restamount",
+		"name": "restamount",
 		"text": "剩余数量",
 		"width": 80,
 		"columntype": 0,
@@ -1069,7 +1069,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_declareamount",
+		"name": "declareamount",
 		"text": "申报数量",
 		"width": 80,
 		"columntype": 0,
@@ -1077,7 +1077,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_dealamount",
+		"name": "dealamount",
 		"text": "成交数量",
 		"width": 80,
 		"columntype": 0,
@@ -1085,7 +1085,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_originpricetype",
+		"name": "originpricetype",
 		"text": "原价格类型",
 		"width": 80,
 		"columntype": 0,
@@ -1093,7 +1093,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_turnoverratio",
+		"name": "turnoverratio",
 		"text": "成交比例",
 		"width": 80,
 		"columntype": 0,
@@ -1101,7 +1101,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_fundname",
+		"name": "fundname",
 		"text": "基金名称",
 		"width": 80,
 		"columntype": 0,
@@ -1109,7 +1109,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_portfolioname",
+		"name": "portfolioname",
 		"text": "组合名称",
 		"width": 80,
 		"columntype": 0,
@@ -1117,7 +1117,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_investmenttype",
+		"name": "investmenttype",
 		"text": "投资类型",
 		"width": 80,
 		"columntype": 0,
@@ -1125,7 +1125,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_lastprice",
+		"name": "lastprice",
 		"text": "最新价",
 		"width": 80,
 		"columntype": 0,
@@ -1133,7 +1133,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_pricebias",
+		"name": "pricebias",
 		"text": "价格偏差",
 		"width": 80,
 		"columntype": 0,
@@ -1141,7 +1141,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_releasedate",
+		"name": "releasedate",
 		"text": "下达日期",
 		"width": 80,
 		"columntype": 0,
@@ -1149,7 +1149,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_firstdeal",
+		"name": "firstdeal",
 		"text": "首次成交",
 		"width": 80,
 		"columntype": 0,
@@ -1157,7 +1157,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_dealmoney",
+		"name": "dealmoney",
 		"text": "成交金额",
 		"width": 80,
 		"columntype": 0,
@@ -1165,7 +1165,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_entrusttime",
+		"name": "entrusttime",
 		"text": "委托时间",
 		"width": 80,
 		"columntype": 0,
@@ -1173,7 +1173,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_dealtimes",
+		"name": "dealtimes",
 		"text": "成交次数",
 		"width": 80,
 		"columntype": 0,
@@ -1181,7 +1181,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_cancelamount",
+		"name": "cancelamount",
 		"text": "已撤数量",
 		"width": 80,
 		"columntype": 0,
@@ -1189,7 +1189,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_orderno",
+		"name": "orderno",
 		"text": "序列号",
 		"width": 80,
 		"columntype": 0,
@@ -1197,7 +1197,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_declareno",
+		"name": "declareno",
 		"text": "申报序号",
 		"width": 80,
 		"columntype": 0,
@@ -1205,7 +1205,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_entrustbatchno",
+		"name": "entrustbatchno",
 		"text": "申报批号",
 		"width": 80,
 		"columntype": 0,
@@ -1213,7 +1213,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_limitupprice",
+		"name": "limitupprice",
 		"text": "涨停价",
 		"width": 80,
 		"columntype": 0,
@@ -1221,7 +1221,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_limitdownprice",
+		"name": "limitdownprice",
 		"text": "跌停价",
 		"width": 80,
 		"columntype": 0,
@@ -1229,7 +1229,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "eca_last",
+		"name": "last",
 		"text": "",
 		"width": 5,
 		"columntype": -1,
@@ -1242,7 +1242,7 @@ readonly:
 	"grid": "stocktemplate",
 	"columns": [
 	{
-		"name": "st_order",
+		"name": "order",
 		"text": "序号",
 		"width": 60,
 		"columntype": 0,
@@ -1250,7 +1250,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "st_name",
+		"name": "name",
 		"text": "名称",
 		"width": 80,
 		"columntype": 0,
@@ -1258,7 +1258,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "st_status",
+		"name": "status",
 		"text": "状态",
 		"width": 80,
 		"columntype": 0,
@@ -1266,7 +1266,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "st_weighttype",
+		"name": "weighttype",
 		"text": "权重类别",
 		"width": 80,
 		"columntype": 0,
@@ -1274,7 +1274,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "st_futurescopies",
+		"name": "futurescopies",
 		"text": "期货份数",
 		"width": 80,
 		"columntype": 0,
@@ -1282,7 +1282,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "st_marketcapoption",
+		"name": "marketcapoption",
 		"text": "市值比例(%)",
 		"width": 80,
 		"columntype": 0,
@@ -1290,7 +1290,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "st_benchmark",
+		"name": "benchmark",
 		"text": "标的指数",
 		"width": 80,
 		"columntype": 0,
@@ -1298,7 +1298,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "st_addeddate",
+		"name": "addeddate",
 		"text": "添加日期",
 		"width": 80,
 		"columntype": 0,
@@ -1306,7 +1306,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "st_addedtime",
+		"name": "addedtime",
 		"text": "添加时间",
 		"width": 80,
 		"columntype": 0,
@@ -1314,7 +1314,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "st_modifieddate",
+		"name": "modifieddate",
 		"text": "修改日期",
 		"width": 80,
 		"columntype": 0,
@@ -1322,7 +1322,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "st_modifiedtime",
+		"name": "modifiedtime",
 		"text": "修改时间",
 		"width": 80,
 		"columntype": 0,
@@ -1330,7 +1330,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "st_addeduser",
+		"name": "addeduser",
 		"text": "添加用户",
 		"width": 80,
 		"columntype": 0,
@@ -1338,7 +1338,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "st_editableuser",
+		"name": "editableuser",
 		"text": "可编辑用户",
 		"width": 80,
 		"columntype": 0,
@@ -1346,7 +1346,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "st_viewuser",
+		"name": "viewuser",
 		"text": "可浏览用户",
 		"width": 80,
 		"columntype": 0,
@@ -1354,7 +1354,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "st_replacetype",
+		"name": "replacetype",
 		"text": "替代类型",
 		"width": 80,
 		"columntype": 0,
@@ -1362,7 +1362,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "st_replacetemplate",
+		"name": "replacetemplate",
 		"text": "替代模板",
 		"width": 80,
 		"columntype": 0,
@@ -1370,7 +1370,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "st_last",
+		"name": "last",
 		"text": "",
 		"width": 5,
 		"columntype": -1,
@@ -1382,7 +1382,7 @@ readonly:
 },{
 	"grid": "templatestock",
 	"columns": [{
-		"name": "ts_selection",
+		"name": "selection",
 		"text": "选中",
 		"width": 60,
 		"columntype": 1,
@@ -1390,7 +1390,7 @@ readonly:
 		"visible": 1,
 		"readonly": 0
 		},{
-		"name": "ts_secucode",
+		"name": "secucode",
 		"text": "证券代码",
 		"width": 80,
 		"columntype": 0,
@@ -1398,7 +1398,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ts_secuname",
+		"name": "secuname",
 		"text": "证券名称",
 		"width": 80,
 		"columntype": 0,
@@ -1406,7 +1406,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ts_market",
+		"name": "market",
 		"text": "交易市场",
 		"width": 80,
 		"columntype": 0,
@@ -1414,7 +1414,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ts_amount",
+		"name": "amount",
 		"text": "数量",
 		"width": 80,
 		"columntype": 0,
@@ -1422,7 +1422,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ts_marketcap",
+		"name": "marketcap",
 		"text": "市值",
 		"width": 80,
 		"columntype": 0,
@@ -1430,7 +1430,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ts_marketcapweight",
+		"name": "marketcapweight",
 		"text": "市值权重(%)",
 		"width": 80,
 		"columntype": 0,
@@ -1438,7 +1438,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ts_setweight",
+		"name": "setweight",
 		"text": "设置比例(%)",
 		"width": 80,
 		"columntype": 0,
@@ -1446,7 +1446,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "ts_last",
+		"name": "last",
 		"text": "",
 		"width": 5,
 		"columntype": -1,
@@ -1459,7 +1459,7 @@ readonly:
 	"grid": "portfoliofund",
 	"columns": [
 	{
-		"name": "pf_fundcode",
+		"name": "fundcode",
 		"text": "基金代码",
 		"width": 80,
 		"columntype": 0,
@@ -1467,7 +1467,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "pf_fundname",
+		"name": "fundname",
 		"text": "基金名称",
 		"width": 80,
 		"columntype": 0,
@@ -1475,7 +1475,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "pf_createddate",
+		"name": "createddate",
 		"text": "创建时间",
 		"width": 80,
 		"columntype": 0,
@@ -1483,7 +1483,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "pf_modifieddate",
+		"name": "modifieddate",
 		"text": "修改时间",
 		"width": 80,
 		"columntype": 0,
@@ -1491,7 +1491,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "pf_managercode",
+		"name": "managercode",
 		"text": "基金经理",
 		"width": 80,
 		"columntype": 0,
@@ -1499,7 +1499,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "pf_last",
+		"name": "last",
 		"text": "",
 		"width": 5,
 		"columntype": -1,
@@ -1512,7 +1512,7 @@ readonly:
 	"grid": "portfolioassetunit",
 	"columns": [
 	{
-		"name": "au_assetunitcode",
+		"name": "assetunitcode",
 		"text": "资产单元编号",
 		"width": 80,
 		"columntype": 0,
@@ -1520,7 +1520,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "au_assetunitname",
+		"name": "assetunitname",
 		"text": "资产单元名称",
 		"width": 80,
 		"columntype": 0,
@@ -1528,7 +1528,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "au_assetunitstatus",
+		"name": "assetunitstatus",
 		"text": "资产状态",
 		"width": 80,
 		"columntype": 0,
@@ -1536,7 +1536,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "au_canoverdraft",
+		"name": "canoverdraft",
 		"text": "是否允许透支",
 		"width": 80,
 		"columntype": 0,
@@ -1544,7 +1544,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "au_assettype",
+		"name": "assettype",
 		"text": "资产类型",
 		"width": 80,
 		"columntype": 0,
@@ -1552,7 +1552,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "au_createddate",
+		"name": "createddate",
 		"text": "创建时间",
 		"width": 80,
 		"columntype": 0,
@@ -1560,7 +1560,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "au_modifieddate",
+		"name": "modifieddate",
 		"text": "修改时间",
 		"width": 80,
 		"columntype": 0,
@@ -1568,7 +1568,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "au_last",
+		"name": "last",
 		"text": "",
 		"width": 5,
 		"columntype": -1,
@@ -2297,7 +2297,7 @@ readonly:
 	"grid": "",
 	"columns": [
 	{
-		"name": "tc_last",
+		"name": "last",
 		"text": "",
 		"width": 80,
 		"columntype": 0,
@@ -2318,7 +2318,7 @@ readonly:
 	"grid": "",
 	"columns": [
 	{
-		"name": "tc_last",
+		"name": "last",
 		"text": "",
 		"width": 80,
 		"columntype": 0,

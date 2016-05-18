@@ -143,12 +143,12 @@ namespace TradingSystem.View
 
         #region 填充指令交易
 
-        private List<UITradingCommandItem> GenerateTestCommandTrading()
+        private List<CommandTradingItem> GenerateTestCommandTrading()
         {
-            List<UITradingCommandItem> tcItems = new List<UITradingCommandItem>();
-            UITradingCommandItem item1 = new UITradingCommandItem
+            List<CommandTradingItem> tcItems = new List<CommandTradingItem>();
+            CommandTradingItem item1 = new CommandTradingItem
             {
-                Selected = 1,
+                Selection = true,
                 CommandNo = 12,
                 CommandType = "Test",
                 ExecuteType = "Buy",
@@ -176,9 +176,9 @@ namespace TradingSystem.View
             };
             tcItems.Add(item1);
 
-            UITradingCommandItem item2 = new UITradingCommandItem
+            CommandTradingItem item2 = new CommandTradingItem
             {
-                Selected = 1,
+                Selection = true,
                 CommandNo = 20,
                 CommandType = "Test",
                 ExecuteType = "Buy",
@@ -209,14 +209,14 @@ namespace TradingSystem.View
             return tcItems;
         }
 
-        private void FillCommandTrading(List<UITradingCommandItem> tcItems)
+        private void FillCommandTrading(List<CommandTradingItem> tcItems)
         {
             foreach (var dataItem in tcItems)
             {
                 int rowIndex = this.dataGridViewCmdTrading.Rows.Add();
                 DataGridViewRow row = this.dataGridViewCmdTrading.Rows[rowIndex];
 
-                bool isSelected = dataItem.Selected > 0 ? true : false;
+                bool isSelected = dataItem.Selection;
                 row.Cells["tc_selection"].Value = isSelected;
                 row.Cells["tc_commandno"].Value = dataItem.CommandNo;
                 row.Cells["tc_commandtype"].Value = dataItem.CommandType;
@@ -248,15 +248,15 @@ namespace TradingSystem.View
             }
         }
 
-        private List<UITradingCommandItem> GetSelectionCommandTradingItems()
+        private List<CommandTradingItem> GetSelectionCommandTradingItems()
         {
-            List<UITradingCommandItem> selectionItems = new List<UITradingCommandItem>();
+            List<CommandTradingItem> selectionItems = new List<CommandTradingItem>();
             var dgv = dataGridViewCmdTrading;
             try
             {
                 foreach (DataGridViewRow row in dgv.Rows)
                 {
-                    UITradingCommandItem item = new UITradingCommandItem();
+                    CommandTradingItem item = new CommandTradingItem();
                     item.CommandNo = (int)row.Cells["tc_commandno"].Value;
                     item.CommandType = (string)row.Cells["tc_commandtype"].Value;
                     item.ExecuteType = (string)row.Cells["tc_executetype"].Value;
@@ -314,14 +314,14 @@ namespace TradingSystem.View
                     SetSelectionRowBackground(dgv, e.RowIndex, true);
                     //dgv.Rows[e.RowIndex].Selected = true;
 
-                    UIEntrustItem item = new UIEntrustItem
+                    EntrustItem item = new EntrustItem
                     {
-                        Selected = 0,
+                        Selection = false,
                         CommandNo = commandNo,
                         Copies = 0
                     };
 
-                    FillEntrustGrid(new List<UIEntrustItem> { item });
+                    FillEntrustGrid(new List<EntrustItem> { item });
                 }
                 else
                 {
@@ -386,15 +386,15 @@ namespace TradingSystem.View
 
         #region 指令证券
 
-        private List<UICommandSecurityItem> GenerateTestCommandSecurity()
+        private List<CommandSecurityItem> GenerateTestCommandSecurity()
         {
-            List<UICommandSecurityItem> csItems = new List<UICommandSecurityItem>();
+            List<CommandSecurityItem> csItems = new List<CommandSecurityItem>();
 
-            UICommandSecurityItem item1 = new UICommandSecurityItem
+            CommandSecurityItem item1 = new CommandSecurityItem
             {
-                Selected = 0,
-                SecurityCode = "000002",
-                SecurityName = "万科A",
+                Selection = 0,
+                SecuCode = "000002",
+                SecuName = "万科A",
                 CommandNo = 23,
                 FundCode = "FO11123",
                 PortfolioName = "Test",
@@ -414,11 +414,11 @@ namespace TradingSystem.View
                 LimitDownPrice = 10.5,
                 LimitUpOrDown = "Up"
             };
-            UICommandSecurityItem item2 = new UICommandSecurityItem
+            CommandSecurityItem item2 = new CommandSecurityItem
             {
-                Selected = 0,
-                SecurityCode = "000001",
-                SecurityName = "中国平安",
+                Selection = 0,
+                SecuCode = "000001",
+                SecuName = "中国平安",
                 CommandNo = 23,
                 FundCode = "FO11123",
                 PortfolioName = "Test",
@@ -445,17 +445,17 @@ namespace TradingSystem.View
             return csItems;
         }
 
-        private void FillCommandSecurity(List<UICommandSecurityItem> csItems)
+        private void FillCommandSecurity(List<CommandSecurityItem> csItems)
         {
             foreach (var dataItem in csItems)
             {
                 int rowIndex = this.dataGridViewCmdSecurity.Rows.Add();
                 DataGridViewRow row = this.dataGridViewCmdSecurity.Rows[rowIndex];
 
-                bool isSelected = dataItem.Selected > 0 ? true : false;
+                bool isSelected = dataItem.Selection > 0 ? true : false;
                 row.Cells["cs_selection"].Value = isSelected;
-                row.Cells["cs_secucode"].Value = dataItem.SecurityCode;
-                row.Cells["cs_secuname"].Value = dataItem.SecurityName;
+                row.Cells["cs_secucode"].Value = dataItem.SecuCode;
+                row.Cells["cs_secuname"].Value = dataItem.SecuName;
                 row.Cells["cs_commandno"].Value = dataItem.CommandNo;
                 row.Cells["cs_fundcode"].Value = dataItem.FundCode;
                 row.Cells["cs_portfolioname"].Value = dataItem.PortfolioName;
@@ -480,18 +480,18 @@ namespace TradingSystem.View
             }
         }
 
-        private List<UICommandSecurityItem> GetSelectionCommandSecurityItems()
+        private List<CommandSecurityItem> GetSelectionCommandSecurityItems()
         {
-            List<UICommandSecurityItem> selectionItems = new List<UICommandSecurityItem>();
+            List<CommandSecurityItem> selectionItems = new List<CommandSecurityItem>();
             var dgv = dataGridViewCmdTrading;
             try
             {
                 foreach (DataGridViewRow row in dgv.Rows)
                 {
-                    UICommandSecurityItem item = new UICommandSecurityItem();
+                    CommandSecurityItem item = new CommandSecurityItem();
                     item.CommandNo = (int)row.Cells["tc_commandno"].Value;
-                    item.SecurityCode = (string)row.Cells["cs_secucode"].Value;
-                    item.SecurityName = (string)row.Cells["cs_secuname"].Value;
+                    item.SecuCode = (string)row.Cells["cs_secucode"].Value;
+                    item.SecuName = (string)row.Cells["cs_secuname"].Value;
                     item.CommandNo = (int)row.Cells["cs_commandno"].Value;
                     item.FundCode = (string)row.Cells["cs_fundcode"].Value;
                     item.PortfolioName = (string)row.Cells["cs_portfolioname"].Value;
@@ -525,15 +525,15 @@ namespace TradingSystem.View
         #endregion
 
         #region 成交流水
-        private List<UIDealFlowItem> GenerateDealFlowData()
+        private List<DealFlowItem> GenerateDealFlowData()
         {
-            List<UIDealFlowItem> dfItems = new List<UIDealFlowItem>();
+            List<DealFlowItem> dfItems = new List<DealFlowItem>();
 
-            UIDealFlowItem item = new UIDealFlowItem
+            DealFlowItem item = new DealFlowItem
             {
                 CommandNo = 112,
-                SecurityCode = "600369",
-                SecurityName = "从啦",
+                SecuCode = "600369",
+                SecuName = "从啦",
                 FundNo = "A125",
                 FundName = "Fund 1",
                 PortfolioCode = "P1112",
@@ -559,15 +559,15 @@ namespace TradingSystem.View
             return dfItems;
         }
 
-        private void FillDealFlow(List<UIDealFlowItem> dfItems)
+        private void FillDealFlow(List<DealFlowItem> dfItems)
         {
             foreach (var dataItem in dfItems)
             {
                 int rowIndex = this.dataGridViewDealFlow.Rows.Add();
 
                 this.dataGridViewDealFlow.Rows[rowIndex].Cells["df_commandno"].Value = dataItem.CommandNo;
-                this.dataGridViewDealFlow.Rows[rowIndex].Cells["df_securitycode"].Value = dataItem.SecurityCode;
-                this.dataGridViewDealFlow.Rows[rowIndex].Cells["df_securityname"].Value = dataItem.SecurityName;
+                this.dataGridViewDealFlow.Rows[rowIndex].Cells["df_securitycode"].Value = dataItem.SecuCode;
+                this.dataGridViewDealFlow.Rows[rowIndex].Cells["df_securityname"].Value = dataItem.SecuName;
                 this.dataGridViewDealFlow.Rows[rowIndex].Cells["df_fundno"].Value = dataItem.FundNo;
                 this.dataGridViewDealFlow.Rows[rowIndex].Cells["df_fundname"].Value = dataItem.FundName;
                 this.dataGridViewDealFlow.Rows[rowIndex].Cells["df_portfoliocode"].Value = dataItem.PortfolioCode;
@@ -664,16 +664,16 @@ namespace TradingSystem.View
 
         #region 委托
 
-        private List<UIEntrustItem> GetDefaultEntrustData()
+        private List<EntrustItem> GetDefaultEntrustData()
         {
-            List<UITradingCommandItem> selectionCommandItems = GetSelectionCommandTradingItems();
+            List<CommandTradingItem> selectionCommandItems = GetSelectionCommandTradingItems();
 
-            List<UIEntrustItem> eiItems = new List<UIEntrustItem>();
-            foreach (UITradingCommandItem tcItem in selectionCommandItems)
+            List<EntrustItem> eiItems = new List<EntrustItem>();
+            foreach (CommandTradingItem tcItem in selectionCommandItems)
             {
-                UIEntrustItem item = new UIEntrustItem
+                EntrustItem item = new EntrustItem
                 {
-                    Selected = 0,
+                    Selection = false,
                     CommandNo = tcItem.CommandNo,
                     Copies = 0
                 };
@@ -684,13 +684,13 @@ namespace TradingSystem.View
             return eiItems;
         }
 
-        private void FillEntrustGrid(List<UIEntrustItem> eiItems)
+        private void FillEntrustGrid(List<EntrustItem> eiItems)
         {
             foreach (var dataItem in eiItems)
             {
                 int rowIndex = this.dataGridViewBuySell.Rows.Add();
                 DataGridViewRow row = this.dataGridViewBuySell.Rows[rowIndex];
-                bool isSelected = dataItem.Selected > 0 ? true : false;
+                bool isSelected = dataItem.Selection;
                 row.Cells["bs_selection"].Value = isSelected;
                 row.Cells["bs_commandno"].Value = dataItem.CommandNo;
                 row.Cells["bs_copies"].Value = 0;
@@ -724,14 +724,14 @@ namespace TradingSystem.View
             }
         }
 
-        private List<UIEntrustItem> GetSelectionEntrustItems()
+        private List<EntrustItem> GetSelectionEntrustItems()
         {
-            List<UIEntrustItem> eiItems = new List<UIEntrustItem>();
+            List<EntrustItem> eiItems = new List<EntrustItem>();
             var dgv = this.dataGridViewBuySell;
             foreach (DataGridViewRow row in dgv.Rows)
             {
-                UIEntrustItem item = new UIEntrustItem();
-                item.Selected = 1;
+                EntrustItem item = new EntrustItem();
+                item.Selection = true;
                 item.CommandNo = (int)row.Cells["bs_commandno"].Value;
                 item.Copies = (int)row.Cells["bs_copies"].Value;
 

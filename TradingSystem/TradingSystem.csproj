@@ -129,6 +129,12 @@
     <Compile Include="View\StrategyTradingForm.Designer.cs">
       <DependentUpon>StrategyTradingForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\StrategyTradingForm2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\StrategyTradingForm2.Designer.cs">
+      <DependentUpon>StrategyTradingForm2.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\TemplateDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -199,6 +205,9 @@
     <EmbeddedResource Include="View\StrategyTradingForm.resx">
       <DependentUpon>StrategyTradingForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\StrategyTradingForm2.resx">
+      <DependentUpon>StrategyTradingForm2.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\TemplateDialog.resx">
       <DependentUpon>TemplateDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -265,6 +274,10 @@
     <None Include="Resources\refresh.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\cancelredo.png" />
+    <None Include="Resources\canceladd.jpeg" />
+    <None Include="Resources\undo.png" />
+    <None Include="Resources\refresh2.png" />
     <None Include="log4net.config" />
     <None Include="config\navbar.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -64,10 +64,11 @@
     <Compile Include="strategy\AccountItem.cs" />
     <Compile Include="strategy\TradingInstance.cs" />
     <Compile Include="t2sdk\MarketCode.cs" />
-    <Compile Include="UICommandSecurityItem.cs" />
-    <Compile Include="UIDealFlowItem.cs" />
-    <Compile Include="UIEntrustItem.cs" />
-    <Compile Include="UITradingCommandItem.cs" />
+    <Compile Include="UI\CommandSecurityItem.cs" />
+    <Compile Include="UI\DealFlowItem.cs" />
+    <Compile Include="UI\EntrustFlowItem.cs" />
+    <Compile Include="UI\EntrustItem.cs" />
+    <Compile Include="UI\CommandTradingItem.cs" />
     <Compile Include="UI\AssetUnit.cs" />
     <Compile Include="UI\Fund.cs" />
     <Compile Include="UI\FuturesContract.cs" />
