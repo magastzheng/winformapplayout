@@ -256,7 +256,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "securitycode",
+		"name": "secucode",
 		"text": "证券代码",
 		"width": 80,
 		"columntype": 0,
@@ -264,7 +264,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "securityname",
+		"name": "secuname",
 		"text": "证券名称",
 		"width": 80,
 		"columntype": 0,
@@ -628,7 +628,7 @@ readonly:
 	{
 		"name": "selection",
 		"text": "选择",
-		"width": 30,
+		"width": 40,
 		"columntype": 1,
 		"valuetype": 0,
 		"visible": 1,

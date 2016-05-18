@@ -29,7 +29,7 @@ namespace ControlsTest
             TSDataGridViewHelper.AddColumns(this.tsDataGridView1, hsGrid);
             var dataTable = GenerateData(hsGrid);
 
-            TSDataGridViewHelper.SetData(this.tsDataGridView1, hsGrid, dataTable);
+            //TSDataGridViewHelper.SetData(this.tsDataGridView1, hsGrid, dataTable);
         }
 
         private Model.Data.DataTable GenerateData(HSGrid hsGrid)
