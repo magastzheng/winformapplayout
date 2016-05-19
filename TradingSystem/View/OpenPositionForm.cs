@@ -113,7 +113,7 @@ namespace TradingSystem.View
 
         public void LoadSecurityData(OpenPositionItem monitorItem)
         {
-            List<TemplateStock> stocks = _stockdbdao.GetTemplateStock(monitorItem.TemplateId);
+            List<TemplateStock> stocks = _stockdbdao.Get(monitorItem.TemplateId);
             List<OpenPositionSecurityItem> secuItems = new List<OpenPositionSecurityItem>();
             foreach (var stock in stocks)
             {

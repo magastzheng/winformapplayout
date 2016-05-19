@@ -91,6 +91,13 @@
         "parentid": "",
         "isexpansed": false,
         "children": [
+			{
+                "id": "spottemplate",
+                "title": "现货模板",
+                "parentid": "templatemanager",
+                "isexpansed": false,
+                "children": []
+           },
            {
                 "id": "currenttemplate",
                 "title": "现货模板",

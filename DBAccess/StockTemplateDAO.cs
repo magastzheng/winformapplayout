@@ -10,10 +10,10 @@ namespace DBAccess
 {
     public class StockTemplateDAO : BaseDAO
     {
-        private const string SP_CreateTemplate = "procInsertTemplate";
-        private const string SP_ModifyTemplate = "procUpdateTemplate";
-        private const string SP_DeleteTemplate = "procDeleteTemplate";
-        private const string SP_GetTemplate = "procSelectTemplate";
+        private const string SP_Create = "procTemplateInsert";
+        private const string SP_Modify = "procTemplateUpdate";
+        private const string SP_Delete = "procTemplateDelete";
+        private const string SP_Get = "procTemplateSelect";
 
         public StockTemplateDAO()
             : base()
@@ -27,9 +27,9 @@ namespace DBAccess
         
         }
 
-        public int CreateTemplate(string templateName, int weightType, int replaceType, int futuresCopies, double marketCapOpt, string benchmarkId, int userId)
+        public int Create(string templateName, int weightType, int replaceType, int futuresCopies, double marketCapOpt, string benchmarkId, int userId)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_CreateTemplate);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
             _dbHelper.AddInParameter(dbCommand, "@TemplateName", System.Data.DbType.String, templateName);
             //_dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, status);
             _dbHelper.AddInParameter(dbCommand, "@WeightType", System.Data.DbType.Int32, weightType);
@@ -52,9 +52,9 @@ namespace DBAccess
             return templateId;
         }
 
-        public int UpdateTemplate(int templateNo, string templateName, int weightType, int replaceType, int futuresCopies, double marketCapOpt, string benchmarkId, int userId)
+        public int Update(int templateNo, string templateName, int weightType, int replaceType, int futuresCopies, double marketCapOpt, string benchmarkId, int userId)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyTemplate);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Modify);
             _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, templateNo);
             _dbHelper.AddInParameter(dbCommand, "@TemplateName", System.Data.DbType.String, templateName);
             _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, 1);
@@ -77,10 +77,24 @@ namespace DBAccess
             return templateId;
         }
 
-        public List<StockTemplate> GetTemplate(int userId)
+        public int Delete(int templateNo)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Delete);
+            _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, templateNo);
+            
+            int newid = -1;
+            int ret = _dbHelper.ExecuteNonQuery(dbCommand);
+            if (ret > 0)
+            {
+                newid = (int)dbCommand.Parameters["@return"].Value;
+            }
+            return newid;
+        }
+
+        public List<StockTemplate> Get(int userId)
         {
             List<StockTemplate> stockTemplates = new List<StockTemplate>();
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetTemplate);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
             if (userId > 0)
             {
                 _dbHelper.AddInParameter(dbCommand, "@UserId", System.Data.DbType.Int32, userId);
@@ -91,7 +105,7 @@ namespace DBAccess
                 while (reader.Read())
                 {
                     StockTemplate item = new StockTemplate();
-                    item.TemplateNo = (int)reader["TemplateId"];
+                    item.TemplateId = (int)reader["TemplateId"];
                     item.TemplateName = (string)reader["TemplateName"];
                     item.FutureCopies = (int)reader["FuturesCopies"];
                     item.MarketCapOpt = (double)(decimal)reader["MarketCapOpt"];

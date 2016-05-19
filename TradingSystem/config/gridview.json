@@ -1242,7 +1242,7 @@ readonly:
 	"grid": "stocktemplate",
 	"columns": [
 	{
-		"name": "order",
+		"name": "templateid",
 		"text": "序号",
 		"width": 60,
 		"columntype": 0,
@@ -1250,7 +1250,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "name",
+		"name": "templatename",
 		"text": "名称",
 		"width": 80,
 		"columntype": 0,

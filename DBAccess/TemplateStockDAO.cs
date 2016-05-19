@@ -9,10 +9,10 @@ namespace DBAccess
 {
     public class TemplateStockDAO : BaseDAO
     {
-        private const string SP_GetTemplateStock = "procSelectTemplateStock";
-        private const string SP_NewTemplateStock = "procInsertTemplateStock";
-        private const string SP_ModifyTemplateStock = "procUpdateTemplateStock";
-        private const string SP_DeleteTemplateStock = "procDeleteTemplateStock";
+        private const string SP_Get = "procTemplateStockSelect";
+        private const string SP_New = "procTemplateStockInsert";
+        private const string SP_Modify = "procTemplateStockUpdate";
+        private const string SP_Delete = "procTemplateStockDelete";
 
         public TemplateStockDAO()
             : base()
@@ -24,9 +24,9 @@ namespace DBAccess
         { 
         }
 
-        public int CreateTemplateStock(TemplateStock tempStock)
+        public string Create(TemplateStock tempStock)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_NewTemplateStock);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_New);
             _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, tempStock.TemplateNo);
             _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, tempStock.SecuCode);
             _dbHelper.AddInParameter(dbCommand, "@Amount", System.Data.DbType.Int32, tempStock.Amount);
@@ -34,20 +34,20 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@MarketCapOpt", System.Data.DbType.Decimal, tempStock.MarketCapWeight);
             _dbHelper.AddInParameter(dbCommand, "@SettingWeight", System.Data.DbType.Decimal, tempStock.SettingWeight);
 
-            _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.String);
+            _dbHelper.AddOutParameter(dbCommand, "@ReturnValue", System.Data.DbType.String, 20);
 
-            int newid = -1;
+            string newid = string.Empty;
             int ret = _dbHelper.ExecuteNonQuery(dbCommand);
             if (ret > 0)
             {
-                newid = (int)dbCommand.Parameters["@return"].Value;
+                newid = (string)dbCommand.Parameters["@ReturnValue"].Value;
             }
             return newid;
         }
 
-        public string UpdateTemplateStock(TemplateStock tempStock)
+        public string Update(TemplateStock tempStock)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyTemplateStock);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Modify);
             _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, tempStock.TemplateNo);
             _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, tempStock.SecuCode);
             _dbHelper.AddInParameter(dbCommand, "@Amount", System.Data.DbType.Int32, tempStock.Amount);
@@ -55,7 +55,7 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@MarketCapOpt", System.Data.DbType.Decimal, tempStock.MarketCapWeight);
             _dbHelper.AddInParameter(dbCommand, "@SettingWeight", System.Data.DbType.Decimal, tempStock.SettingWeight);
 
-            _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.String);
+            _dbHelper.AddOutParameter(dbCommand, "@TemplateStock", System.Data.DbType.String, 20);
 
             string newid = string.Empty;
             int ret = _dbHelper.ExecuteNonQuery(dbCommand);
@@ -66,24 +66,24 @@ namespace DBAccess
             return newid;
         }
 
-        public string DeleteTemplateStock(int templateNo, string secuCode)
+        public string Delete(int templateNo, string secuCode)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_DeleteTemplateStock);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Delete);
             _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, templateNo);
             _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, secuCode);
 
-            _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.String);
+            _dbHelper.AddOutParameter(dbCommand, "@ReturnValue", System.Data.DbType.String, 20);
 
             string newid = string.Empty;
             int ret = _dbHelper.ExecuteNonQuery(dbCommand);
             if (ret > 0)
             {
-                newid = (string)dbCommand.Parameters["@return"].Value;
+                newid = (string)dbCommand.Parameters["@ReturnValue"].Value;
             }
             return newid;
         }
 
-        public List<TemplateStock> GetTemplateStock(int templateId)
+        public List<TemplateStock> Get(int templateId)
         {
             List<TemplateStock> stockTemplates = new List<TemplateStock>();
             if (templateId < 1)
@@ -91,7 +91,7 @@ namespace DBAccess
                 return stockTemplates;
             }
 
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetTemplateStock);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
 
             _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, templateId);
             var reader = _dbHelper.ExecuteReader(dbCommand);

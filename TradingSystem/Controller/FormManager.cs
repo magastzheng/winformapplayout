@@ -92,6 +92,12 @@ namespace TradingSystem.Controller
                             formType = typeof(GeneralForm);
                         }
                         break;
+                    case "spottemplate":
+                        {
+                            formType = typeof(SpotTemplateForm);
+                            hasGrid = true;
+                        }
+                        break;
                     case "currenttemplate":
                         {
                             formType = typeof(StockTemplateForm);

@@ -19,10 +19,13 @@ namespace Controls.GridView
     }
 
     public delegate void UpdateRelatedDataGrid(UpdateDirection direction, int rowIndex);
+    public delegate void ClickRowHandler(object sender, int rowIndex);
 
     public partial class TSDataGridView : DataGridView
     {
         public event UpdateRelatedDataGrid UpdateRelatedDataGridHandler;
+        public event ClickRowHandler ClickRow;
+
         public KeyPressEventHandler CopiesCheckHandler = new KeyPressEventHandler(CopiesCheck);
 
         private static void CopiesCheck(object sender, KeyPressEventArgs e)
@@ -49,6 +52,19 @@ namespace Controls.GridView
             this.CellMouseClick += new DataGridViewCellMouseEventHandler(DataGridView_CellMouseClick);
             this.EditingControlShowing += new DataGridViewEditingControlShowingEventHandler(DataGridView_EditingControlShowing);
             this.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_CellContentClick);
+            this.CellDoubleClick += new DataGridViewCellEventHandler(DataGridView_CellDoubleClick);
+        }
+
+        private void DataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridView dgv = (DataGridView)sender;
+            if (dgv == null || e.ColumnIndex < 0 || e.RowIndex < 0)
+                return;
+
+            if (ClickRow != null)
+            {
+                ClickRow(this, e.RowIndex);
+            }
         }
 
         private void DataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)

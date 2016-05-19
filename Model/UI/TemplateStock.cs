@@ -7,51 +7,29 @@ using System.Threading.Tasks;
 
 namespace Model.UI
 {
-    //case "ts_secucode":
-    //                    column.DataPropertyName = "SecuCode";
-    //                    break;
-    //                case "ts_secuname":
-    //                    column.DataPropertyName = "SecuName";
-    //                    break;
-    //                case "ts_market":
-    //                    column.DataPropertyName = "Exchange";
-    //                    break;
-    //                case "ts_amount":
-    //                    column.DataPropertyName = "Amount";
-    //                    break;
-    //                case "ts_marketcap":
-    //                    column.DataPropertyName = "MarketCap";
-    //                    break;
-    //                case "ts_marketcapweight":
-    //                    column.DataPropertyName = "MarketCapWeight";
-    //                    break;
-    //                case "ts_setweight":
-    //                    column.DataPropertyName = "SettingWeight";
-    //                    break;
-
     public class TemplateStock
     {
         public int TemplateNo { get; set; }
 
-        [BindingAttribute("ts_secucode")]
+        [BindingAttribute("secucode")]
         public string SecuCode { get; set; }
 
-        [BindingAttribute("ts_secuname")]
+        [BindingAttribute("secuname")]
         public string SecuName { get; set; }
 
-        [BindingAttribute("ts_market")]
+        [BindingAttribute("market")]
         public string Exchange { get; set; }
 
-        [BindingAttribute("ts_amount")]
+        [BindingAttribute("amount")]
         public int Amount { get; set; }
 
-        [BindingAttribute("ts_marketcap")]
+        [BindingAttribute("marketcap")]
         public double MarketCap { get; set; }
 
-        [BindingAttribute("ts_marketcapweight")]
+        [BindingAttribute("marketcapweight")]
         public double MarketCapWeight { get; set; }
 
-        [BindingAttribute("ts_setweight")]
+        [BindingAttribute("setweight")]
         public double SettingWeight { get; set; }
     }
 }

@@ -13,6 +13,7 @@ namespace Controls.Entity
         Text = 0,
         CheckBox = 1,
         Image = 2,
+        ComboBox = 3,
     }
 
     public class HSGridColumn

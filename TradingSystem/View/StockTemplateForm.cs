@@ -57,16 +57,16 @@ namespace TradingSystem.View
         {
             //
             StockTemplate template = GetDialogData(dataRow, ColumnIndex);
-            if (template != null && template.TemplateNo > 0)
+            if (template != null && template.TemplateId > 0)
             {
-                LoadTemplateStock(template.TemplateNo);
+                LoadTemplateStock(template.TemplateId);
             }
         }
 
         private void Form_LoadActived(string json)
         {
             //StockTemplateDAO _dbdao = new StockTemplateDAO();
-            var items = _tempdbdao.GetTemplate(-1);
+            var items = _tempdbdao.Get(-1);
             json = JsonUtil.SerializeObject(items);
 
             if(!string.IsNullOrEmpty(json))
@@ -99,7 +99,7 @@ namespace TradingSystem.View
 
             if (items.Count > 0)
             {
-                LoadTemplateStock(items[0].TemplateNo);
+                LoadTemplateStock(items[0].TemplateId);
             }
         }
 
@@ -108,7 +108,7 @@ namespace TradingSystem.View
             if (templateNo < 0)
                 return;
 
-            var stocks = _stockdbdao.GetTemplateStock(templateNo);
+            var stocks = _stockdbdao.Get(templateNo);
             Model.Data.DataTable dataTable = new Model.Data.DataTable
             {
                 ColumnIndex = new Dictionary<string, int>(),
@@ -153,7 +153,7 @@ namespace TradingSystem.View
                 {
                     case "st_order":
                         {
-                            dataValue.Value = stockTemplate.TemplateNo;
+                            dataValue.Value = stockTemplate.TemplateId;
                         }
                         break;
                     case "st_name":
@@ -268,7 +268,7 @@ namespace TradingSystem.View
                 {
                     case "st_order":
                         {
-                            stockTemplate.TemplateNo = dataValue.GetInt();
+                            stockTemplate.TemplateId = dataValue.GetInt();
                         }
                         break;
                     case "st_name":
@@ -559,14 +559,14 @@ namespace TradingSystem.View
             {
                 case TempChangeType.New:
                     {
-                        int newid = _tempdbdao.CreateTemplate(stockTemplate.TemplateName, stockTemplate.WeightType, stockTemplate.ReplaceType, stockTemplate.FutureCopies, stockTemplate.MarketCapOpt, stockTemplate.Benchmark, 11111);
-                        stockTemplate.TemplateNo = newid;
+                        int newid = _tempdbdao.Create(stockTemplate.TemplateName, stockTemplate.WeightType, stockTemplate.ReplaceType, stockTemplate.FutureCopies, stockTemplate.MarketCapOpt, stockTemplate.Benchmark, 11111);
+                        stockTemplate.TemplateId = newid;
                     }
                     break;
                 case TempChangeType.Update:
                     {
-                        int tempid = _tempdbdao.UpdateTemplate(stockTemplate.TemplateNo, stockTemplate.TemplateName, stockTemplate.WeightType, stockTemplate.ReplaceType, stockTemplate.FutureCopies, stockTemplate.MarketCapOpt, stockTemplate.Benchmark, 11111);
-                        stockTemplate.TemplateNo = tempid;
+                        int tempid = _tempdbdao.Update(stockTemplate.TemplateId, stockTemplate.TemplateName, stockTemplate.WeightType, stockTemplate.ReplaceType, stockTemplate.FutureCopies, stockTemplate.MarketCapOpt, stockTemplate.Benchmark, 11111);
+                        stockTemplate.TemplateId = tempid;
                     }
                     break;
                 default:
@@ -583,7 +583,7 @@ namespace TradingSystem.View
                 stockTemplate = SaveTemplateToDB(stockTemplate, TempChangeType.New);
                 
                 //add into the view
-                if (stockTemplate.TemplateNo > 0)
+                if (stockTemplate.TemplateId > 0)
                 {
                     Dictionary<string, int> columnIndex = new Dictionary<string, int>();
                     Model.Data.DataRow dataRow = GetDataRow(stockTemplate, ref columnIndex);
@@ -600,7 +600,7 @@ namespace TradingSystem.View
                 stockTemplate = SaveTemplateToDB(stockTemplate, TempChangeType.Update);
 
                 //update the row in the view
-                if (stockTemplate.TemplateNo > 0)
+                if (stockTemplate.TemplateId > 0)
                 {
                     Dictionary<string, int> columnIndex = new Dictionary<string, int>();
                     Model.Data.DataRow dataRow = GetDataRow(stockTemplate, ref columnIndex);
@@ -652,9 +652,9 @@ namespace TradingSystem.View
             foreach (Model.Data.DataRow dataRow in dataTable.Rows)
             {
                 TemplateStock stock = GetStockDialogData(dataRow, dataTable.ColumnIndex);
-                stock.TemplateNo = template.TemplateNo;
-                int newid = _stockdbdao.CreateTemplateStock(stock);
-                if (newid != template.TemplateNo)
+                stock.TemplateNo = template.TemplateId;
+                string newid = _stockdbdao.Create(stock);
+                if (string.IsNullOrEmpty(newid))
                 { 
                     //TODO: popup the error message
                 }
@@ -675,7 +675,7 @@ namespace TradingSystem.View
             {
                 TemplateStock stock = GetStockDialogData(dataRow, dataTable.ColumnIndex);
 
-                string newid = _stockdbdao.DeleteTemplateStock(template.TemplateNo, stock.SecuCode);
+                string newid = _stockdbdao.Delete(template.TemplateId, stock.SecuCode);
                 if (string.IsNullOrEmpty(newid))
                 {
                     //TODO: popup the error message

@@ -51,12 +51,12 @@ create table benchmark(
 
 ---=========================stocktemplate begin======================
 go
-if exists (select name from sysobjects where name='procInsertTemplate')
-drop proc procInsertTemplate
+if exists (select name from sysobjects where name='procTemplateInsert')
+drop proc procTemplateInsert
 
 go
 
-create proc procInsertTemplate(
+create proc procTemplateInsert(
 	@TemplateName varchar(50),
 	@WeightType int,
 	@ReplaceType int,
@@ -98,12 +98,12 @@ end
 
 
 go
-if exists (select name from sysobjects where name='procUpdateTemplate')
-drop proc procUpdateTemplate
+if exists (select name from sysobjects where name='procTemplateUpdate')
+drop proc procTemplateUpdate
 
 go
 
-create proc procUpdateTemplate(
+create proc procTemplateUpdate(
 	@TemplateId int,
 	@TemplateName varchar(50),
 	@Status int,
@@ -135,12 +135,12 @@ end
 
 --Add userid as the parameter?
 go
-if exists (select name from sysobjects where name='procSelectTemplate')
-drop proc procSelectTemplate
+if exists (select name from sysobjects where name='procTemplateSelect')
+drop proc procTemplateSelect
 
 go
 
-create proc procSelectTemplate(
+create proc procTemplateSelect(
 	@UserId int = NULL
 )
 as
@@ -162,12 +162,12 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procDeleteTemplate')
-drop proc procDeleteTemplate
+if exists (select name from sysobjects where name='procTemplateDelete')
+drop proc procTemplateDelete
 
 go
 
-create proc procDeleteTemplate(
+create proc procTemplateDelete(
 	@TemplateId int
 )
 as
@@ -180,22 +180,23 @@ end
 
 ---=========================templatestock begin======================
 go
-if exists (select name from sysobjects where name='procInsertTemplateStock')
-drop proc procInsertTemplateStock
+if exists (select name from sysobjects where name='procTemplateStockInsert')
+drop proc procTemplateStockInsert
 
 go
 
-create proc procInsertTemplateStock(
+create proc procTemplateStockInsert(
 	@TemplateId int,
 	@SecuCode varchar(10),
 	@Amount int,
 	@MarketCap numeric(20, 4),
 	@MarketCapOpt numeric(5, 2),
-	@SettingWeight numeric(5, 2)
+	@SettingWeight numeric(5, 2),
+	@ReturnValue varchar(20) output
 )
 as
 begin
-	declare @newid varchar(20)
+	--declare @newid varchar(20)
 	--begin try
 		insert into templatestock(
 			TemplateId,
@@ -218,28 +219,27 @@ begin
 	--	select ERROR_NUMBER() as ErrorNumber, ERROR_MESSAGE() as ErrorMesssage
 	--end catch
 
-	--set @newid=@SecuCode+';'+convert(varchar(10),@TemplateId)
-	set @newid=@TemplateId
-	return @newid
+	set @ReturnValue=@SecuCode+';'+convert(varchar,@TemplateId)
 end
 
 go
-if exists (select name from sysobjects where name='procUpdateTemplateStock')
-drop proc procUpdateTemplateStock
+if exists (select name from sysobjects where name='procTemplateStockUpdate')
+drop proc procTemplateStockUpdate
 
 go
 
-create proc procUpdateTemplateStock(
+create proc procTemplateStockUpdate(
 	@TemplateId int,
 	@SecuCode varchar(10),
 	@Amount int,
 	@MarketCap numeric(20, 4),
 	@MarketCapOpt numeric(5, 2),
-	@SettingWeight numeric(5, 2)
+	@SettingWeight numeric(5, 2),
+	@ReturnValue varchar(20) output
 )
 as
 begin
-	declare @newid varchar(20)
+	--declare @newid varchar(20)
 	begin try
 		update templatestock
 		set Amount = @Amount,
@@ -252,34 +252,36 @@ begin
 		select ERROR_NUMBER() as ErrorNumber, ERROR_MESSAGE() as ErrorMesssage
 	end catch
 
-	set @newid=@SecuCode+';'+convert(varchar(10),@TemplateId)
-	return @newid
+	set @ReturnValue=@SecuCode+';'+convert(varchar,@TemplateId)
 end
 
 go
-if exists (select name from sysobjects where name='procDeleteTemplateStock')
-drop proc procDeleteTemplateStock
+if exists (select name from sysobjects where name='procTemplateStockDelete')
+drop proc procTemplateStockDelete
 
 go
 
-create proc procDeleteTemplateStock(
+create proc procTemplateStockDelete(
 	@TemplateId int,
-	@SecuCode varchar(10)
+	@SecuCode varchar(10),
+	@ReturnValue varchar(20) output
 )
 as
 begin
 	delete from templatestock
 	where TemplateId = @TemplateId and SecuCode = @SecuCode
+
+	set @ReturnValue=@SecuCode+';'+convert(varchar, @TemplateId)
 end
 
 
 go
-if exists (select name from sysobjects where name='procSelectTemplateStock')
-drop proc procSelectTemplateStock
+if exists (select name from sysobjects where name='procTemplateStockSelect')
+drop proc procTemplateStockSelect
 
 go
 
-create proc procSelectTemplateStock(
+create proc procTemplateStockSelect(
 	@TemplateId int
 )
 as

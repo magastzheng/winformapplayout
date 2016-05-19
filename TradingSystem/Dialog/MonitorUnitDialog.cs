@@ -92,7 +92,7 @@ namespace TradingSystem.Dialog
 
         private void LoadStockTemplate()
         {
-            var templates = _tempdbdao.GetTemplate(-1);
+            var templates = _tempdbdao.Get(-1);
             if (templates == null || templates.Count == 0)
                 return;
 
@@ -105,9 +105,9 @@ namespace TradingSystem.Dialog
             {
                 ComboOptionItem item = new ComboOptionItem
                 {
-                    Id = p.TemplateNo.ToString(),
+                    Id = p.TemplateId.ToString(),
                     Data = p,
-                    Name = string.Format("{0} {1}", p.TemplateNo, p.TemplateName)
+                    Name = string.Format("{0} {1}", p.TemplateId, p.TemplateName)
                 };
 
                 cbOption.Items.Add(item);

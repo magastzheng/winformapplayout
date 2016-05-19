@@ -98,12 +98,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Model\Model.csproj">
-      <Project>{9afc3370-02ab-444b-9c43-411e49f49b16}</Project>
-      <Name>Model</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="AutoComplete\AutoComplete.resx">
       <DependentUpon>AutoComplete.cs</DependentUpon>
     </EmbeddedResource>
@@ -116,6 +110,12 @@
     <EmbeddedResource Include="NavBar\TSNavBarItem.resx">
       <DependentUpon>TSNavBarItem.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{9afc3370-02ab-444b-9c43-411e49f49b16}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

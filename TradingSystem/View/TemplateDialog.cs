@@ -68,7 +68,7 @@ namespace TradingSystem.View
 
         private void FillData(StockTemplate stockTemplate)
         {
-            this.tbTemplateNo.Text = stockTemplate.TemplateNo.ToString();
+            this.tbTemplateNo.Text = stockTemplate.TemplateId.ToString();
             this.tbTemplateNo.Enabled = false;
 
             this.tbTemplateName.Text = stockTemplate.TemplateName;
@@ -89,7 +89,7 @@ namespace TradingSystem.View
                 int tempNo = -1;
                 if (int.TryParse(this.tbTemplateNo.Text, out tempNo))
                 {
-                    stockTemplate.TemplateNo = tempNo;
+                    stockTemplate.TemplateId = tempNo;
                 }
             }
 

@@ -48,6 +48,11 @@ namespace Controls.GridView
                             column = new DataGridViewTextBoxColumn();
                         }
                         break;
+                    case HSGridColumnType.ComboBox:
+                        {
+                            column = new DataGridViewComboBoxColumn();
+                        }
+                        break;
                     default:
                         {
                             column = new DataGridViewTextBoxColumn();
