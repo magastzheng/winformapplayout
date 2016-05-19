@@ -132,5 +132,79 @@ namespace CalculationTest
                 Console.WriteLine(a);
             }
         }
+
+        [TestMethod]
+        public void Test_CalcStockAmountPerCopy_Round_RandomData()
+        {
+            double totalMoney = 120000.0;
+            const int Number = 100;
+            const double Times = 100.0;
+            double[] rawWeight = new double[Number];
+            double[] prices = new double[Number];
+            double[] weights = new double[Number];
+
+            Random r = new Random();
+            for (int i = 0; i < Number; i++)
+            {
+                double v = Times * r.NextDouble();
+                if (v < 10.0)
+                {
+                    v = 10.0 + rawWeight.Average();
+                }
+                rawWeight[i] = v;
+            }
+
+
+            Console.WriteLine(rawWeight);
+
+            for (int i = 0; i < Number; i++)
+            {
+                double v = Times * r.NextDouble();
+                if (v < 10.0)
+                {
+                    v = 10.0 + prices.Average();
+                }
+                prices[i] = v / 10.0;
+            }
+
+            double totalWeight = rawWeight.Sum();
+            for (int i = 0; i < Number; i++)
+            {
+                weights[i] = rawWeight[i] / totalWeight;
+            }
+
+            var amounts = CalcUtil.CalcStockAmountPerCopyRound(totalMoney, weights, prices);
+
+            foreach (int a in amounts)
+            {
+                Console.WriteLine(a);
+            }
+
+            double adjustMoney = 0.0f;
+            for (int i = 0, count = amounts.Length; i < count; i++)
+            {
+                adjustMoney += amounts[i] * prices[i];
+            }
+
+            Console.WriteLine(adjustMoney);
+
+            double[] w = new double[amounts.Length];
+            for (int i = 0, count = amounts.Length; i < count; i++)
+            {
+                w[i] = amounts[i] * prices[i] / adjustMoney;
+            }
+
+            Console.WriteLine("Old weight: " + ((double)weights.Sum()).ToString());
+            foreach (var a in weights)
+            {
+                Console.WriteLine(a);
+            }
+
+            Console.WriteLine("New weight" + ((double)w.Sum()).ToString());
+            foreach (var a in w)
+            {
+                Console.WriteLine(a);
+            }
+        }
     }
 }
