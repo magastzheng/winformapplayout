@@ -24,6 +24,8 @@ namespace TradingSystem.View
             Update = 1,
         }
 
+        private const string MsgDeleteStock = "确定要从模板[{0}-{1}]中删除选择的[{2}]支证券吗?";
+
         private GridConfig _gridConfig = null;
         private const string GridTemplate = "stocktemplate";
         private const string GridStock = "templatestock";
@@ -293,7 +295,7 @@ namespace TradingSystem.View
             foreach (var stock in _spotDataSource)
             {
                 stock.TemplateNo = template.TemplateId;
-                string newid = _stockdbdao.Create(stock);
+                string newid = _stockdbdao.Update(stock);
                 if (string.IsNullOrEmpty(newid))
                 {
                     //TODO: popup the error message
@@ -304,8 +306,22 @@ namespace TradingSystem.View
         private void ToolStripButton_DeleteStock_Click(object sender, EventArgs e)
         {
             StockTemplate template = GetSelectTemplate();
+            if(template == null)
+                return;
 
             List<int> selectIndex = TSDataGridViewHelper.GetSelectRowIndex(this.secuGridView);
+            if (selectIndex.Count == 0)
+            {
+                MessageBox.Show("请选择要删除的证券", "警告", MessageBoxButtons.OK);
+                return;
+            }
+
+            string msg = string.Format(MsgDeleteStock, template.TemplateId, template.TemplateName, selectIndex.Count);
+            if (MessageBox.Show(msg, "警告", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
+            {
+                return;
+            }
+
             for (int i = selectIndex.Count - 1; i >= 0; i--)
             { 
                 int rowIndex = selectIndex[i];
@@ -317,21 +333,141 @@ namespace TradingSystem.View
                     {
                         //TODO: popup the error message
                     }
+                    else
+                    {
+                        _spotDataSource.Remove(stock);
+                    }
                 }
             }
         }
 
         private void ToolStripButton_AddStock_Click(object sender, EventArgs e)
         {
+            if (tempGridView.CurrentRow == null)
+            {
+                MessageBox.Show("请选择需要添加的现货模板！", "警告", MessageBoxButtons.OK);
+                return;
+            }
+
+            int rowIndex = tempGridView.CurrentRow.Index;
+            if (rowIndex < 0 || rowIndex > _tempDataSource.Count)
+            {
+                MessageBox.Show("无效选择！", "警告", MessageBoxButtons.OK);
+                return;
+            }
+
+            TemplateStock stock = new TemplateStock
+            {
+                TemplateNo = _tempDataSource[rowIndex].TemplateId
+            };
+
             PortfolioSecurityDialog psDialog = new PortfolioSecurityDialog();
+            psDialog.OnLoadControl(psDialog, DialogType.New);
+            psDialog.OnLoadData(psDialog, stock);
+            psDialog.SaveData += new FormLoadHandler(Dialog_SpotSecu_SaveData);
             psDialog.ShowDialog();
+            if (psDialog.DialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+                psDialog.Close();
+                psDialog.Dispose();
+            }
+            else
+            {
+                psDialog.Close();
+                psDialog.Dispose();
+            }
         }
 
         private void ToolStripButton_ModifyStock_Click(object sender, EventArgs e)
         {
+            List<int> selectIndex = TSDataGridViewHelper.GetSelectRowIndex(secuGridView);
+            if (selectIndex.Count == 0)
+            {
+                MessageBox.Show("请选择需要修改的证券！", "警告", MessageBoxButtons.OK);
+                return;
+            }
+
+            if (selectIndex.Count > 1)
+            {
+                MessageBox.Show("每次仅能对一支证券修改！", "警告", MessageBoxButtons.OK);
+                return;
+            }
+
+            int rowIndex = selectIndex[0];
+            if (rowIndex < 0 || rowIndex > _spotDataSource.Count)
+            {
+                MessageBox.Show("无效选择！", "警告", MessageBoxButtons.OK);
+                return;
+            }
+
+            TemplateStock stock = _spotDataSource[rowIndex];
+
             PortfolioSecurityDialog psDialog = new PortfolioSecurityDialog();
+            psDialog.OnLoadControl(psDialog, DialogType.Modify);
+            psDialog.OnLoadData(psDialog, stock);
+            psDialog.SaveData += new FormLoadHandler(Dialog_SpotSecu_SaveData);
             psDialog.ShowDialog();
+            if (psDialog.DialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+                psDialog.Close();
+                psDialog.Dispose();
+            }
+            else
+            {
+                psDialog.Close();
+                psDialog.Dispose();
+            }
         }
+
+        private void Dialog_SpotSecu_SaveData(object sender, object data)
+        {
+            if (sender == null || data == null)
+            {
+                throw new Exception("Fail to get the setting from dialog");
+            }
+
+            PortfolioSecurityDialog dialog = sender as PortfolioSecurityDialog;
+            if (dialog == null)
+                return;
+
+            if (data is TemplateStock)
+            {
+                TemplateStock stock = data as TemplateStock;
+                switch (dialog.DialogType)
+                {
+                    case DialogType.New:
+                        {
+                            //TODO: add the template id;
+                           string newid = _stockdbdao.Create(stock);
+                           if (!string.IsNullOrEmpty(newid))
+                           {
+                               _spotDataSource.Add(stock);
+                           }
+                        }
+                        break;
+                    case DialogType.Modify:
+                        {
+                            string newid = _stockdbdao.Update(stock);
+                            if (!string.IsNullOrEmpty(newid))
+                            {
+                                //TODO: update the datasource
+                                for (int i = 0, count = _spotDataSource.Count; i < count; i++)
+                                {
+                                    if (stock.SecuCode.Equals(_spotDataSource[i].SecuCode))
+                                    {
+                                        _spotDataSource[i] = stock;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
         #endregion
 
         #region Import method

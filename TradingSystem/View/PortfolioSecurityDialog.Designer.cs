@@ -38,13 +38,13 @@
             this.tbAmount = new System.Windows.Forms.TextBox();
             this.rdbAmount = new System.Windows.Forms.RadioButton();
             this.lblShare = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.tbSettingWeight = new System.Windows.Forms.TextBox();
             this.lblPercent = new System.Windows.Forms.Label();
             this.rdbPercent = new System.Windows.Forms.RadioButton();
             this.btnConfirm = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.tbSecuCode = new System.Windows.Forms.TextBox();
-            this.tbSecuName = new System.Windows.Forms.TextBox();
+            this.lbDropdown = new System.Windows.Forms.ListBox();
+            this.acSecurity = new Controls.AutoComplete();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
@@ -125,6 +125,7 @@
             // rdbAmount
             // 
             this.rdbAmount.AutoSize = true;
+            this.rdbAmount.Checked = true;
             this.rdbAmount.Location = new System.Drawing.Point(277, 156);
             this.rdbAmount.Name = "rdbAmount";
             this.rdbAmount.Size = new System.Drawing.Size(14, 13);
@@ -142,12 +143,13 @@
             this.lblShare.TabIndex = 6;
             this.lblShare.Text = "股";
             // 
-            // textBox1
+            // tbSettingWeight
             // 
-            this.textBox1.Location = new System.Drawing.Point(115, 184);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(133, 21);
-            this.textBox1.TabIndex = 7;
+            this.tbSettingWeight.Enabled = false;
+            this.tbSettingWeight.Location = new System.Drawing.Point(115, 184);
+            this.tbSettingWeight.Name = "tbSettingWeight";
+            this.tbSettingWeight.Size = new System.Drawing.Size(133, 21);
+            this.tbSettingWeight.TabIndex = 7;
             // 
             // lblPercent
             // 
@@ -166,7 +168,6 @@
             this.rdbPercent.Name = "rdbPercent";
             this.rdbPercent.Size = new System.Drawing.Size(14, 13);
             this.rdbPercent.TabIndex = 9;
-            this.rdbPercent.TabStop = true;
             this.rdbPercent.UseVisualStyleBackColor = true;
             // 
             // btnConfirm
@@ -187,33 +188,34 @@
             this.btnCancel.Text = "取消";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
-            // tbSecuCode
+            // lbDropdown
             // 
-            this.tbSecuCode.Location = new System.Drawing.Point(116, 122);
-            this.tbSecuCode.Name = "tbSecuCode";
-            this.tbSecuCode.Size = new System.Drawing.Size(74, 21);
-            this.tbSecuCode.TabIndex = 12;
+            this.lbDropdown.FormattingEnabled = true;
+            this.lbDropdown.ItemHeight = 12;
+            this.lbDropdown.Location = new System.Drawing.Point(120, 140);
+            this.lbDropdown.Name = "lbDropdown";
+            this.lbDropdown.Size = new System.Drawing.Size(129, 136);
+            this.lbDropdown.TabIndex = 14;
+            this.lbDropdown.Visible = false;
             // 
-            // tbSecuName
+            // acSecurity
             // 
-            this.tbSecuName.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.tbSecuName.Enabled = false;
-            this.tbSecuName.Location = new System.Drawing.Point(197, 122);
-            this.tbSecuName.Name = "tbSecuName";
-            this.tbSecuName.Size = new System.Drawing.Size(68, 21);
-            this.tbSecuName.TabIndex = 13;
+            this.acSecurity.Location = new System.Drawing.Point(108, 112);
+            this.acSecurity.Name = "acSecurity";
+            this.acSecurity.Size = new System.Drawing.Size(188, 31);
+            this.acSecurity.TabIndex = 15;
             // 
             // PortfolioSecurityDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.ClientSize = new System.Drawing.Size(341, 391);
-            this.Controls.Add(this.tbSecuName);
-            this.Controls.Add(this.tbSecuCode);
+            this.Controls.Add(this.acSecurity);
+            this.Controls.Add(this.lbDropdown);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnConfirm);
             this.Controls.Add(this.rdbPercent);
             this.Controls.Add(this.lblPercent);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.tbSettingWeight);
             this.Controls.Add(this.lblShare);
             this.Controls.Add(this.rdbAmount);
             this.Controls.Add(this.tbAmount);
@@ -242,12 +244,12 @@
         private System.Windows.Forms.TextBox tbAmount;
         private System.Windows.Forms.RadioButton rdbAmount;
         private System.Windows.Forms.Label lblShare;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox tbSettingWeight;
         private System.Windows.Forms.Label lblPercent;
         private System.Windows.Forms.RadioButton rdbPercent;
         private System.Windows.Forms.Button btnConfirm;
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.TextBox tbSecuCode;
-        private System.Windows.Forms.TextBox tbSecuName;
+        private System.Windows.Forms.ListBox lbDropdown;
+        private Controls.AutoComplete acSecurity;
     }
 }

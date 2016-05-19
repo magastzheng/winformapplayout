@@ -46,6 +46,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL", "SQL", "{98AB816C-294
 		SQL\stocktemplate_test.sql = SQL\stocktemplate_test.sql
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculationTest", "CalculationTest\CalculationTest.csproj", "{C78BDCE1-96C0-404B-9B71-1011CC11DFBA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -120,6 +122,10 @@ Global
 		{CC143059-3915-426E-992E-3825ED84F701}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC143059-3915-426E-992E-3825ED84F701}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC143059-3915-426E-992E-3825ED84F701}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C78BDCE1-96C0-404B-9B71-1011CC11DFBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C78BDCE1-96C0-404B-9B71-1011CC11DFBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C78BDCE1-96C0-404B-9B71-1011CC11DFBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C78BDCE1-96C0-404B-9B71-1011CC11DFBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -131,5 +137,6 @@ Global
 		{76E70086-D148-4EB0-8A60-098EBB165C50} = {0182E5DE-DB87-4D3A-9BB3-A6508C43A402}
 		{06208E1D-F1C1-458D-A124-C220CD862B97} = {0182E5DE-DB87-4D3A-9BB3-A6508C43A402}
 		{CC143059-3915-426E-992E-3825ED84F701} = {0182E5DE-DB87-4D3A-9BB3-A6508C43A402}
+		{C78BDCE1-96C0-404B-9B71-1011CC11DFBA} = {0182E5DE-DB87-4D3A-9BB3-A6508C43A402}
 	EndGlobalSection
 EndGlobal

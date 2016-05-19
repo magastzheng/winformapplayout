@@ -55,13 +55,13 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@MarketCapOpt", System.Data.DbType.Decimal, tempStock.MarketCapWeight);
             _dbHelper.AddInParameter(dbCommand, "@SettingWeight", System.Data.DbType.Decimal, tempStock.SettingWeight);
 
-            _dbHelper.AddOutParameter(dbCommand, "@TemplateStock", System.Data.DbType.String, 20);
+            _dbHelper.AddOutParameter(dbCommand, "@ReturnValue", System.Data.DbType.String, 20);
 
             string newid = string.Empty;
             int ret = _dbHelper.ExecuteNonQuery(dbCommand);
             if (ret > 0)
             {
-                newid = (string)dbCommand.Parameters["@return"].Value;
+                newid = (string)dbCommand.Parameters["@ReturnValue"].Value;
             }
             return newid;
         }
@@ -76,7 +76,7 @@ namespace DBAccess
 
             string newid = string.Empty;
             int ret = _dbHelper.ExecuteNonQuery(dbCommand);
-            if (ret > 0)
+            if (ret >= 0)
             {
                 newid = (string)dbCommand.Parameters["@ReturnValue"].Value;
             }

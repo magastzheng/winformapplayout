@@ -2,7 +2,7 @@ use tradingsystem
 
 declare @today datetime
 set @today=getdate()
-exec procInsertTemplate '≤‚ ‘1', 1, 1, 100.00, '000001', @today, 1243
+exec procTemplateInsert '≤‚ ‘1', 1, 1, 100.00, '000001', @today, 1243
 
 --@TemplateId int,
 --@TemplateName varchar(50),
@@ -17,7 +17,7 @@ exec procInsertTemplate '≤‚ ‘1', 1, 1, 100.00, '000001', @today, 1243
 declare @today datetime
 declare @ret int
 set @today=getdate()
-exec @ret = procUpdateTemplate 3, '≤‚ ‘1', 1, 1, 1, 1, 100.00, '000001', @today, 1243
+exec @ret = procTemplateUpdate 3, '≤‚ ‘1', 1, 1, 1, 1, 100.00, '000001', @today, 1243
 select @ret
 
 
@@ -55,5 +55,5 @@ insert into benchmark(
 )
 
 declare @newstid int
-exec @newstid = procInsertTemplateStock 2, '600985', 1300, 13780, 1.02, 1.08
+exec @newstid = procTemplateStockInsert 2, '600985', 1300, 13780, 1.02, 1.08
 select @newstid
