@@ -119,6 +119,7 @@ namespace TradingSystem.View
             {
                 OpenPositionSecurityItem secuItem = new OpenPositionSecurityItem
                 {
+                    Selection = true,
                     MonitorId = monitorItem.MonitorId,
                     MonitorName = monitorItem.MonitorName,
                     SecuCode = stock.SecuCode,
