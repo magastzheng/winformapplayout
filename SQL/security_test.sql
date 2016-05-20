@@ -33,7 +33,7 @@ select
 	F16_1090
 	,OB_OBJECT_NAME_1090
 	,F27_1090
-	,1
+	,2
 	,F17_1090
 from [176.1.11.55].localwind.dbo.TB_OBJECT_1090
 where F4_1090 ='A'             --A¹É
@@ -53,7 +53,7 @@ select
 	F16_1090
 	,OB_OBJECT_NAME_1090
 	,F27_1090
-	,2
+	,1
 	,F17_1090
 from [176.1.11.55].localwind.dbo.TB_OBJECT_1090
 where F4_1090 ='S'             --A¹É

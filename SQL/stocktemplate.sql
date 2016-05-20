@@ -287,14 +287,18 @@ create proc procTemplateStockSelect(
 as
 begin
 	select 
-		TemplateId,
-		SecuCode,
-		Amount,
-		MarketCap,
-		MarketCapOpt,
-		SettingWeight
-	from templatestock
-	where TemplateId=@TemplateId
+		a.TemplateId,
+		a.SecuCode,
+		a.Amount,
+		a.MarketCap,
+		a.MarketCapOpt,
+		a.SettingWeight,
+		b.SecuName,
+		b.ExchangeCode
+	from templatestock a
+	join securityinfo b
+	on a.SecuCode = b.SecuCode and b.SecuType=2
+	where a.TemplateId=@TemplateId
 end
 
 ---=========================templatestock end======================

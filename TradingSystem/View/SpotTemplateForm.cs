@@ -32,6 +32,7 @@ namespace TradingSystem.View
 
         private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
         private TemplateStockDAO _stockdbdao = new TemplateStockDAO();
+        private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
 
         private SortableBindingList<StockTemplate> _tempDataSource = new SortableBindingList<StockTemplate>(new List<StockTemplate>());
         private SortableBindingList<TemplateStock> _spotDataSource = new SortableBindingList<TemplateStock>(new List<TemplateStock>());
@@ -519,6 +520,7 @@ namespace TradingSystem.View
             if(template == null)
                 return stockList;
 
+            var secuInfoList = _secudbdao.Get(2);
             HSGrid hsGrid = _gridConfig.GetGid(GridStock);
             var columns = hsGrid.Columns;
             var attFieldMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(TemplateStock));
@@ -571,6 +573,15 @@ namespace TradingSystem.View
                     }
                 }
 
+                if (!string.IsNullOrEmpty(stock.SecuCode))
+                {
+                    var secuInfo = secuInfoList.Find(p => p.SecuCode.Equals(stock.SecuCode));
+                    if (secuInfo != null)
+                    {
+                        stock.SecuName = secuInfo.SecuName;
+                        stock.Exchange = secuInfo.ExchangeCode;
+                    }
+                }
                 stockList.Add(stock);
             }
 

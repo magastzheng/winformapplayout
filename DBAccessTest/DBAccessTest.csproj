@@ -43,6 +43,7 @@
     <Compile Include="DbHelperTest.cs" />
     <Compile Include="MonitorUnitDAOTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SecurityInfoDAOTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DBAccess\DBAccess.csproj">

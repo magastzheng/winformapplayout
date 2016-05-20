@@ -26,7 +26,7 @@ namespace WAPIWrapperCSharp
             }
         }
 
-        public void Callback(ulong reqId, WindData wd)
+        private void Callback(ulong reqId, WindData wd)
         { 
             //Fill data here
             Console.WriteLine(reqId);
@@ -54,6 +54,25 @@ namespace WAPIWrapperCSharp
             }
 
             return _windAPI.wsq(ref errCode, strCodes, strFields, strOptions, cb, updateAll);
+        }
+
+        public WindData SyncRequestData(List<string> secuCodes, List<string> fields, Dictionary<string, string> options)
+        {
+            string strCodes = string.Join(",", secuCodes);
+            string strFields = string.Join(",", fields);
+            string strOptions = string.Empty;
+            StringBuilder sb = new StringBuilder();
+            foreach (var kv in options)
+            {
+                sb.AppendFormat("{0}={1};", kv.Key, kv.Value);
+            }
+            if (sb.Length > 0)
+            {
+                sb.Remove(sb.Length - 1, 1);
+            }
+            strOptions = sb.ToString();
+
+            return _windAPI.wsq(strCodes, strFields, strOptions);
         }
 
         public void CancelRequest(ulong reqId)

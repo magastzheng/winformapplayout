@@ -24,6 +24,7 @@ namespace TradingSystem.View
         private HSGridView _stockGridView;
         private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
         private TemplateStockDAO _stockdbdao = new TemplateStockDAO();
+        private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
         private bool _isStockChange = false;
 
         public StockTemplateForm()

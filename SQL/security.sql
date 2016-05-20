@@ -23,8 +23,7 @@ create proc procSecurityInfoInsert(
 	@SecuName		varchar(50),
 	@ExchangeCode	varchar(10),
 	@SecuType		int,
-	@ListDate		varchar(10),
-	@DeListDate		varchar(10)
+	@ListDate		varchar(10)
 )
 as
 begin
@@ -34,7 +33,6 @@ begin
 		,ExchangeCode
 		,SecuType
 		,ListDate	
-		,DeListDate
 	)
 	values(
 		@SecuCode
@@ -42,7 +40,6 @@ begin
 		,@ExchangeCode
 		,@SecuType
 		,@ListDate	
-		,@DeListDate
 	)
 end
 
@@ -73,16 +70,17 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procSecurityInfoUpdate')
-drop proc procSecurityInfoUpdate
+if exists (select name from sysobjects where name='procSecurityInfoDelete')
+drop proc procSecurityInfoDelete
 
 go
-create proc procSecurityInfoUpdate(
-	@SecuCode varchar(10)
+create proc procSecurityInfoDelete(
+	@SecuCode varchar(10),
+	@SecuType int = 2 -- default remove the stock
 )
 as
 begin
-	delete from securityinfo where SecuCode=@SecuCode
+	delete from securityinfo where SecuCode=@SecuCode and SecuType = @SecuType
 end
 
 go
@@ -91,29 +89,58 @@ drop proc procSecurityInfoSelect
 
 go
 create proc procSecurityInfoSelect(
-	@SecuCode varchar(10) = NULL
+	@SecuCode varchar(10) = NULL,
+	@SecuType int = 2
 )
 as
 begin
 	if @SecuCode is not null and len(@SecuCode) > 0
 	begin
-		select SecuCode
-			,SecuName
-			,ExchangeCode
-			,SecuType
-			,ListDate
-			,DeListDate 
-		from securityinfo
-		where SecuCode = @SecuCode
+		if @SecuType is not null
+		begin
+			select SecuCode
+				,SecuName
+				,ExchangeCode
+				,SecuType
+				,ListDate
+				,DeListDate 
+			from securityinfo
+			where SecuCode = @SecuCode and SecuType = @SecuType
+		end
+		else
+		begin
+			select SecuCode
+				,SecuName
+				,ExchangeCode
+				,SecuType
+				,ListDate
+				,DeListDate 
+			from securityinfo
+			where SecuCode = @SecuCode
+		end
 	end
 	else
 	begin
-		select SecuCode
-			,SecuName
-			,ExchangeCode
-			,SecuType
-			,ListDate
-			,DeListDate 
-		from securityinfo
+		if @SecuType is not null
+		begin
+			select SecuCode
+				,SecuName
+				,ExchangeCode
+				,SecuType
+				,ListDate
+				,DeListDate 
+			from securityinfo
+		end
+		else
+		begin
+			select SecuCode
+				,SecuName
+				,ExchangeCode
+				,SecuType
+				,ListDate
+				,DeListDate 
+			from securityinfo
+			where SecuType = @SecuType
+		end
 	end
 end
