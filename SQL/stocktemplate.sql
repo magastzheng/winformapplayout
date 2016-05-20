@@ -31,14 +31,14 @@ create table templatestock(
 	constraint pk_templatestock_Id primary key(TemplateId,SecuCode)
 )
 
-if object_id('stock') is not null
-drop table stock
+--if object_id('stock') is not null
+--drop table stock
 
-create table stock(
-	SecuCode varchar(10) primary key,
-	SecuName varchar(30),
-	Exchange varchar(10)
-)
+--create table stock(
+--	SecuCode varchar(10) primary key,
+--	SecuName varchar(30),
+--	Exchange varchar(10)
+--)
 
 if object_id('benchmark') is not null
 drop table benchmark

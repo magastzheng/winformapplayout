@@ -57,3 +57,12 @@ insert into benchmark(
 declare @newstid int
 exec @newstid = procTemplateStockInsert 2, '600985', 1300, 13780, 1.02, 1.08
 select @newstid
+
+select * from templatestock
+where TemplateId=3
+
+declare @ret varchar(20)
+exec procTemplateStockDelete 3, '000692', @ret output
+select @ret
+
+select * from benchmark
