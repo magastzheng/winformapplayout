@@ -293,14 +293,29 @@ namespace TradingSystem.View
             if (template == null)
                 return;
 
+            List<TemplateStock> originStocks = _stockdbdao.Get(template.TemplateId);
+            if (originStocks == null)
+                return;
+
             foreach (var stock in _spotDataSource)
             {
-                stock.TemplateNo = template.TemplateId;
-                string newid = _stockdbdao.Update(stock);
-                if (string.IsNullOrEmpty(newid))
+                var findItem = originStocks.Find(p => p.SecuCode.Equals(stock.SecuCode));
+
+                //Update if there is existed
+                if (findItem != null && !string.IsNullOrEmpty(findItem.SecuCode))
                 {
-                    //TODO: popup the error message
+                    string newid = _stockdbdao.Update(stock);
                 }
+                else
+                {
+                    string newid = _stockdbdao.Create(stock);
+                }
+                //stock.TemplateNo = template.TemplateId;
+                //string newid = _stockdbdao.Update(stock);
+                //if (string.IsNullOrEmpty(newid))
+                //{
+                //    //TODO: popup the error message
+                //}
             }
         }
 
@@ -502,10 +517,39 @@ namespace TradingSystem.View
                 if (table != null)
                 {
                     var stockList = ExcelToGrid(table);
-                    _spotDataSource.Clear();
-                    foreach (var stock in stockList)
+                    switch (importType)
                     {
-                        _spotDataSource.Add(stock);
+                        case ImportType.Replace:
+                            {
+                                _spotDataSource.Clear();
+                                foreach (var stock in stockList)
+                                {
+                                    _spotDataSource.Add(stock);
+                                }
+                            }
+                            break;
+                        case ImportType.Append:
+                            {
+                                //List<TemplateStock> appendList = new List<TemplateStock>();
+                                List<TemplateStock> duplicatedList = new List<TemplateStock>();
+                                foreach (var sp in _spotDataSource)
+                                {
+                                    int index = stockList.FindIndex(p => p.SecuCode.Equals(sp.SecuCode));
+                                    if (index >= 0)
+                                    {
+                                        duplicatedList.Add(stockList[index]);
+                                        stockList.RemoveAt(index);
+                                    }
+                                }
+
+                                foreach (var nitem in stockList)
+                                {
+                                    _spotDataSource.Add(nitem);
+                                }
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 }
             }

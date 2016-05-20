@@ -120,6 +120,21 @@ namespace Quote
             return secuCodeList;
         }
 
+        public List<string> GetSecuCode(List<SecurityItem> secuItems)
+        {
+            List<string> secuCodeList = new List<string>();
+            foreach (var secuItem in secuItems)
+            {
+                var windcode = GetWindCode(secuItem);
+                if (!secuCodeList.Contains(windcode))
+                {
+                    secuCodeList.Add(windcode);
+                }
+            }
+
+            return secuCodeList;
+        }
+
         #endregion
     }
 
@@ -178,6 +193,21 @@ namespace Quote
             List<string> windCodes = queryHelper.GetSecuCode(secuCodes);
             List<string> fields = queryHelper.GetFields();
             Dictionary<string, string> optionMap = new Dictionary<string,string>();
+            Dictionary<string, int> fieldIndexMap = queryHelper.GetFieldIndex();
+
+            WindData wd = WindAPIWrap.Instance.SyncRequestData(windCodes, fields, optionMap);
+            if (wd != null)
+            {
+                FillData(wd, fieldIndexMap);
+            }
+        }
+
+        public void Quety(List<SecurityItem> secuItems)
+        {
+            QueryHelper queryHelper = new QueryHelper();
+            List<string> windCodes = queryHelper.GetSecuCode(secuItems);
+            List<string> fields = queryHelper.GetFields();
+            Dictionary<string, string> optionMap = new Dictionary<string, string>();
             Dictionary<string, int> fieldIndexMap = queryHelper.GetFieldIndex();
 
             WindData wd = WindAPIWrap.Instance.SyncRequestData(windCodes, fields, optionMap);
@@ -271,11 +301,9 @@ namespace Quote
                                     break;
                             }
                         }
-                    }
-
-                    
-                }
-            }
+                    }//end to fill read the field and fill into MarketData object
+                }//end to loop secucode
+            }//end to loop datetime
         }
 
         public static QuoteCenter Instance { get { return _instance; } }
