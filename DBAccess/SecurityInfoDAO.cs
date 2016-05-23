@@ -32,7 +32,7 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, securityItem.SecuCode);
             _dbHelper.AddInParameter(dbCommand, "@SecuName", System.Data.DbType.String, securityItem.SecuName);
             _dbHelper.AddInParameter(dbCommand, "@ExchangeCode", System.Data.DbType.String, securityItem.ExchangeCode);
-            _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, securityItem.SecuType);
+            _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, (int)securityItem.SecuType);
             _dbHelper.AddInParameter(dbCommand, "@ListDate", System.Data.DbType.Int32, securityItem.ListDate);
 
             int ret = _dbHelper.ExecuteNonQuery(dbCommand);
@@ -46,20 +46,20 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, securityItem.SecuCode);
             _dbHelper.AddInParameter(dbCommand, "@SecuName", System.Data.DbType.String, securityItem.SecuName);
             _dbHelper.AddInParameter(dbCommand, "@ExchangeCode", System.Data.DbType.String, securityItem.ExchangeCode);
-            _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, securityItem.SecuType);
+            _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, (int)securityItem.SecuType);
 
             int ret = _dbHelper.ExecuteNonQuery(dbCommand);
             return ret;
         }
 
-        public int Delete(string secuCode, int secuType)
+        public int Delete(string secuCode, SecurityType secuType)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Delete);
             _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, secuCode);
 
-            if (secuType > 0)
+            if (secuType != null)
             {
-                _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, secuType);
+                _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, (int)secuType);
             }
             
             int ret = _dbHelper.ExecuteNonQuery(dbCommand);
@@ -72,7 +72,7 @@ namespace DBAccess
         /// </summary>
         /// <param name="secuType"></param>
         /// <returns></returns>
-        public List<SecurityItem> Get(int secuType)
+        public List<SecurityItem> Get(SecurityType secuType)
         {
             return Select("", secuType);
         }
@@ -83,12 +83,12 @@ namespace DBAccess
         /// <param name="SecuCode"></param>
         /// <param name="secuType"></param>
         /// <returns></returns>
-        public List<SecurityItem> Get(string SecuCode, int secuType)
+        public List<SecurityItem> Get(string SecuCode, SecurityType secuType)
         {
             return Select(SecuCode, secuType);
         }
 
-        private List<SecurityItem> Select(string secuCode, int secuType)
+        private List<SecurityItem> Select(string secuCode, SecurityType secuType)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
             if (!string.IsNullOrEmpty(secuCode))
@@ -96,13 +96,13 @@ namespace DBAccess
                 _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, secuCode);
             }
 
-            if (secuType > 0)
+            if (secuType == SecurityType.All)
             {
-                _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, secuType);
-            }
-            else if (secuType == -1)
-            { 
                 _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32,  null);
+            }
+            else
+            {
+                _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, (int)secuType);
             }
 
             List<SecurityItem> items = new List<SecurityItem>();
@@ -115,7 +115,7 @@ namespace DBAccess
                     item.SecuCode = (string)reader["SecuCode"];
                     item.SecuName = (string)reader["SecuName"];
                     item.ExchangeCode = (string)reader["ExchangeCode"];
-                    item.SecuType = (int)reader["SecuType"];
+                    item.SecuType = (SecurityType)reader["SecuType"];
                     if (reader["ListDate"] != null && reader["ListDate"] != DBNull.Value)
                     {
                         item.ListDate = (string)reader["ListDate"];

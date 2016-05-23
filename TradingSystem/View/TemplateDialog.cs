@@ -20,28 +20,27 @@ namespace TradingSystem.View
         public TemplateDialog()
         {
             InitializeComponent();
+
+            this.LoadControl += new FormLoadHandler(Form_LoadControl);
+            this.LoadData += new FormLoadHandler(Form_LoadData);
         }
 
-        public override void OnFormActived(string json)
-        {
-            base.OnFormActived(json);
-        }
-
-        private void Form_Load(object sender, EventArgs e)
+        private bool Form_LoadControl(object sender, object data)
         {
             var weightType = ConfigManager.Instance.GetComboConfig().GetComboOption("weighttype");
-            FormUtil.SetComboBox(this.cbWeightType, weightType);
+            ComboBoxUtil.SetComboBox(this.cbWeightType, weightType);
 
             var replaceType = ConfigManager.Instance.GetComboConfig().GetComboOption("replacetype");
-            FormUtil.SetComboBox(this.cbReplaceType, replaceType);
+            ComboBoxUtil.SetComboBox(this.cbReplaceType, replaceType);
 
             var benchmarks = _dbdao.GetBenchmark();
-            ComboOption cbOption = new ComboOption { 
+            ComboOption cbOption = new ComboOption
+            {
                 Items = new List<ComboOptionItem>()
             };
             foreach (var benchmark in benchmarks)
             {
-                ComboOptionItem item = new ComboOptionItem 
+                ComboOptionItem item = new ComboOptionItem
                 {
                     Id = benchmark.BenchmarkId,
                     Name = benchmark.BenchmarkName
@@ -51,20 +50,48 @@ namespace TradingSystem.View
             }
 
             cbOption.Selected = benchmarks[0].BenchmarkId;
-            FormUtil.SetComboBox(this.cbBenchmark, cbOption);
+            ComboBoxUtil.SetComboBox(this.cbBenchmark, cbOption);
+
+            return true;
         }
 
-        private void Form_LoadActived(string json)
+        private bool Form_LoadData(object sender, object data)
         {
-            if (!string.IsNullOrEmpty(json))
+            if (sender == null || data == null)
+                return false;
+            if (!(data is StockTemplate))
+                return false;
+
+            StockTemplate stockTemplate = data as StockTemplate;
+            if (stockTemplate != null)
             {
-                StockTemplate stockTemplate = JsonUtil.DeserializeObject<StockTemplate>(json);
-                if (stockTemplate != null)
-                {
-                    FillData(stockTemplate);
-                }
+                FillData(stockTemplate);
             }
+
+            return true;
         }
+
+        //public override void OnFormActived(string json)
+        //{
+        //    base.OnFormActived(json);
+        //}
+
+        //private void Form_Load(object sender, EventArgs e)
+        //{
+            
+        //}
+
+        //private void Form_LoadActived(string json)
+        //{
+        //    if (!string.IsNullOrEmpty(json))
+        //    {
+        //        StockTemplate stockTemplate = JsonUtil.DeserializeObject<StockTemplate>(json);
+        //        if (stockTemplate != null)
+        //        {
+        //            FillData(stockTemplate);
+        //        }
+        //    }
+        //}
 
         private void FillData(StockTemplate stockTemplate)
         {
@@ -76,9 +103,9 @@ namespace TradingSystem.View
             this.tbFutureCopies.Text = stockTemplate.FutureCopies.ToString();
             this.tbMarketCapOpt.Text = stockTemplate.MarketCapOpt.ToString();
 
-            this.cbBenchmark.SelectedValue = stockTemplate.Benchmark.ToString();
-            this.cbWeightType.SelectedValue = stockTemplate.WeightType.ToString();
-            this.cbReplaceType.SelectedValue = stockTemplate.ReplaceType.ToString();
+            ComboBoxUtil.SetComboBoxSelect(this.cbBenchmark, stockTemplate.Benchmark);
+            ComboBoxUtil.SetComboBoxSelect(this.cbWeightType, stockTemplate.WeightType.ToString());
+            ComboBoxUtil.SetComboBoxSelect(this.cbReplaceType, stockTemplate.ReplaceType.ToString());
         }
 
         private StockTemplate GetData()

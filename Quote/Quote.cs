@@ -25,16 +25,16 @@ namespace Quote
 
         #region private method
 
-        private string GetWindCode(SecurityItem secuItem)
+        public static string GetWindCode(SecurityItem secuItem)
         {
             string windCode = secuItem.SecuCode;
             if (secuItem.ExchangeCode.Equals("SSE", StringComparison.OrdinalIgnoreCase))
             {
-                windCode += ".sh";
+                windCode += ".SH";
             }
             else if (secuItem.ExchangeCode.Equals("SZSE", StringComparison.OrdinalIgnoreCase))
             {
-                windCode += ".sz";
+                windCode += ".SZ";
             }
 
             return windCode;
@@ -44,7 +44,7 @@ namespace Quote
         {
             if (_secuItemList == null || _secuItemList.Count == 0)
             {
-                _secuItemList = _dbdao.Get(-1);
+                _secuItemList = _dbdao.Get(SecurityType.All);
             }
 
             return _secuItemList;
@@ -202,7 +202,7 @@ namespace Quote
             }
         }
 
-        public void Quety(List<SecurityItem> secuItems)
+        public void Query(List<SecurityItem> secuItems)
         {
             QueryHelper queryHelper = new QueryHelper();
             List<string> windCodes = queryHelper.GetSecuCode(secuItems);
@@ -215,6 +215,23 @@ namespace Quote
             {
                 FillData(wd, fieldIndexMap);
             }
+        }
+
+        public MarketData GetMarketData(SecurityItem secuItem)
+        {
+            string windCode = QueryHelper.GetWindCode(secuItem);
+
+            MarketData marketData = new MarketData 
+            {
+                InstrumentID = windCode
+            };
+
+            if (_quote.MarketDatas.ContainsKey(windCode))
+            {
+                return _quote.MarketDatas[windCode];
+            }
+
+            return marketData;
         }
 
         private void FillData(WindData wd, Dictionary<string, int> fieldIndexMap)
@@ -242,7 +259,7 @@ namespace Quote
                     }
                     else
                     {
-                        marketData = _quote.MarketDatas[marketData.InstrumentID];
+                        marketData = _quote.MarketDatas[investmentId];
                     }
                     
                     //loop for the field

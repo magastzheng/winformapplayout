@@ -31,27 +31,33 @@ truncate table stocktemplate
 insert into benchmark(
 	BenchmarkId,
 	BenchmarkName,
-	Exchange
+	Exchange,
+	ContractMultiple
 )values(
 	'000016'
 	,'上证50'
-	,'sh'
+	,'SSE'
+	,300
 ),(
 	'000300'
 	,'沪深300'
-	,'sh'
+	,'SSE'
+	,300
 ),(
 	'000905'
 	,'中证500'
-	,'sh'
+	,'SSE'
+	,200
 ),(
 	'399300'
 	,'沪深300'
-	,'sz'
+	,'SZSE'
+	,300
 ),(
 	'399905'
 	,'中证500'
-	,'sz'
+	,'SZSE'
+	,200
 )
 
 declare @newstid int
@@ -66,3 +72,6 @@ exec procTemplateStockDelete 3, '000692', @ret output
 select @ret
 
 select * from benchmark
+
+select * from securityinfo
+where SecuType=1

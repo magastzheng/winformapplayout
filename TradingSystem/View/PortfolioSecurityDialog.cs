@@ -55,7 +55,7 @@ namespace TradingSystem.View
             {
                 //TODO: make the error message
                 //DialogResult = System.Windows.Forms.DialogResult.No;
-                MessageBox.Show("请确保监控名称和空头合约不为空", "错误", MessageBoxButtons.OK);
+                MessageBox.Show(this, "证券代码不能为空", "错误", MessageBoxButtons.OK);
             }
         }
 
@@ -70,7 +70,7 @@ namespace TradingSystem.View
         }
         #endregion
 
-        private void Form_LoadData(object sender, object data)
+        private bool Form_LoadData(object sender, object data)
         {
             if (data != null && data is TemplateStock)
             {
@@ -78,9 +78,11 @@ namespace TradingSystem.View
                 _templateId = stock.TemplateNo;
                 InitControlData(stock);
             }
+
+            return true;
         }
 
-        private void Form_LoadControl(object sender, object data)
+        private bool Form_LoadControl(object sender, object data)
         {
             if (data is DialogType)
             {
@@ -89,6 +91,8 @@ namespace TradingSystem.View
                 {
                     this.acSecurity.Enabled = false;
                 }
+
+                this.StartPosition = FormStartPosition.CenterParent;
             }
 
             acSecurity.SetDropdownList(this.lbDropdown);
@@ -104,6 +108,8 @@ namespace TradingSystem.View
             //    dataSource.Add(autoItem);
             //}
             acSecurity.AutoDataSource = dataSource;
+
+            return true;
         }
 
         private void InitControlData(TemplateStock stock)
@@ -135,6 +141,15 @@ namespace TradingSystem.View
                 int temp = -1;
                 if (int.TryParse(tbAmount.Text, out temp))
                 {
+                    if (temp > 0)
+                    {
+                        temp = ((int)Math.Round((double)temp / 100)) * 100;
+                    }
+                    else
+                    {
+                        temp = 0;
+                    }
+
                     stock.Amount = temp;
                 }
             }

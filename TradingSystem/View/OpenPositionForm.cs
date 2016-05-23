@@ -62,7 +62,7 @@ namespace TradingSystem.View
             }
         }
 
-        private void Form_LoadControl(object sender, object data)
+        private bool Form_LoadControl(object sender, object data)
         {
             //set the monitorGridView
             TSDataGridViewHelper.AddColumns(this.monitorGridView, _gridConfig.GetGid(MonitorGridId));
@@ -73,9 +73,11 @@ namespace TradingSystem.View
             TSDataGridViewHelper.AddColumns(this.securityGridView, _gridConfig.GetGid(SecurityGridId));
             Dictionary<string, string> securityColDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(OpenPositionSecurityItem));
             TSDataGridViewHelper.SetDataBinding(this.securityGridView, securityColDataMap);
+
+            return true;
         }
 
-        private void Form_LoadData(object sender, object data)
+        private bool Form_LoadData(object sender, object data)
         {
             //Load the data of open posoition
             List<OpenPositionItem> monitorList = _monitordbdao.GetActive();
@@ -101,6 +103,8 @@ namespace TradingSystem.View
                     LoadSecurityData(selectMonitors);
                 }
             }
+
+            return true;
         }
 
         private void LoadSecurityData(List<OpenPositionItem> monitorItems)

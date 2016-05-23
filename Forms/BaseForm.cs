@@ -13,7 +13,7 @@ namespace Forms
     public partial class BaseForm : Form, IFormActived, ISaveData, ILoadControl, ILoadData
     {
         public delegate void FormActiveHandler(string json);
-        public delegate void FormLoadHandler(object sender, object data);
+        public delegate bool FormLoadHandler(object sender, object data);
 
         public event FormLoadHandler LoadControl;
         public event FormLoadHandler LoadData;
@@ -34,12 +34,14 @@ namespace Forms
 
         }
 
-        public virtual void OnSave(object sender, object data)
+        public virtual bool OnSave(object sender, object data)
         {
             if (SaveData != null)
             {
-                SaveData(sender, data);
+                return SaveData(sender, data);
             }
+
+            return false;
         }
 
         public void OnLoadControl(object sender, object data)

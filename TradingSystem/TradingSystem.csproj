@@ -317,6 +317,10 @@
       <Project>{11d6ae0d-bf60-4a4f-af42-cf7710dd8afe}</Project>
       <Name>BLL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Calculation\Calculation.csproj">
+      <Project>{0457500e-cf07-4842-998d-e06b16344c1c}</Project>
+      <Name>Calculation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Config\Config.csproj">
       <Project>{1538db09-6bfc-4623-9db4-34577f335cd4}</Project>
       <Name>Config</Name>
@@ -337,9 +341,17 @@
       <Project>{9afc3370-02ab-444b-9c43-411e49f49b16}</Project>
       <Name>Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Quote\Quote.csproj">
+      <Project>{2f5fdd7a-7491-4fa7-9349-47a4289c711a}</Project>
+      <Name>Quote</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Util\Util.csproj">
       <Project>{723db468-9d89-40e8-be82-ddecc927e2cb}</Project>
       <Name>Util</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WAPIWrapperCSharp\WAPIWrapperCSharp.csproj">
+      <Project>{7b9116b3-dcf4-4c50-953e-3457a77ea99b}</Project>
+      <Name>WAPIWrapperCSharp</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

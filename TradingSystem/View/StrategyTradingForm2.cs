@@ -49,7 +49,7 @@ namespace TradingSystem.View
 
         #region form loading
 
-        private void Form_LoadControl(object sender, object data)
+        private bool Form_LoadControl(object sender, object data)
         {
             //Load Command Trading
             TSDataGridViewHelper.AddColumns(this.cmdGridView, _gridConfig.GetGid(GridCmdTradingId));
@@ -84,21 +84,23 @@ namespace TradingSystem.View
             this.efGridView.DataSource = _efDataSource;
             this.dfGridView.DataSource = _dfDataSource;
             this.bsGridView.DataSource = _eiDataSource;
+
+            return true;
         }
 
         private void LoadEntrustControl()
         {
             var spotBuy = ConfigManager.Instance.GetComboConfig().GetComboOption("spotbuy");
-            FormUtil.SetComboBox(this.cbSpotBuyPrice, spotBuy);
+            ComboBoxUtil.SetComboBox(this.cbSpotBuyPrice, spotBuy);
 
             var spotSell = ConfigManager.Instance.GetComboConfig().GetComboOption("spotsell");
-            FormUtil.SetComboBox(this.cbSpotSellPrice, spotSell);
+            ComboBoxUtil.SetComboBox(this.cbSpotSellPrice, spotSell);
 
             var futureBuy = ConfigManager.Instance.GetComboConfig().GetComboOption("futurebuy");
-            FormUtil.SetComboBox(this.cbFuturesBuyPrice, futureBuy);
+            ComboBoxUtil.SetComboBox(this.cbFuturesBuyPrice, futureBuy);
 
             var futureSell = ConfigManager.Instance.GetComboConfig().GetComboOption("futuresell");
-            FormUtil.SetComboBox(this.cbFuturesSellPrice, futureSell);
+            ComboBoxUtil.SetComboBox(this.cbFuturesSellPrice, futureSell);
         }
 
         #endregion
@@ -163,9 +165,11 @@ namespace TradingSystem.View
         #endregion
 
         #region Load data
-        private void Form_LoadData(object sender, object data)
+        private bool Form_LoadData(object sender, object data)
         {
             //Load data here
+
+            return true;
         }
 
         #endregion

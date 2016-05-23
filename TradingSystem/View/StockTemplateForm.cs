@@ -508,6 +508,8 @@ namespace TradingSystem.View
             dialog.SaveData += new FormLoadHandler(Dialog_NewTemplate);
             dialog.Owner = this;
             dialog.StartPosition = FormStartPosition.CenterParent;
+            dialog.OnLoadControl(dialog, null);
+            dialog.OnLoadData(dialog, null);
             //dialog.OnLoadFormActived(json);
             dialog.ShowDialog();
             
@@ -524,13 +526,15 @@ namespace TradingSystem.View
         private void Button_Modify_Click(object sender, System.EventArgs e)
         {
             StockTemplate stockTemplate = GetSelectTemplate();
-            string json = JsonUtil.SerializeObject(stockTemplate);
+            //string json = JsonUtil.SerializeObject(stockTemplate);
 
             TemplateDialog dialog = new TemplateDialog();
             dialog.SaveData += new FormLoadHandler(Dialog_ModifyTemplate);
             dialog.Owner = this;
             dialog.StartPosition = FormStartPosition.CenterParent;
-            dialog.OnFormActived(json);
+            //dialog.OnFormActived(json);
+            dialog.OnLoadControl(dialog, null);
+            dialog.OnLoadData(dialog, stockTemplate);
             dialog.ShowDialog();
             if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
             {
@@ -576,7 +580,7 @@ namespace TradingSystem.View
             return stockTemplate;
         }
 
-        private void Dialog_NewTemplate(object sender, object data)
+        private bool Dialog_NewTemplate(object sender, object data)
         {
             if (data is StockTemplate)
             {
@@ -591,9 +595,11 @@ namespace TradingSystem.View
                     _tempGridView.FillRow(dataRow, columnIndex);
                 }
             }
+
+            return true;
         }
 
-        private void Dialog_ModifyTemplate(object sender, object data)
+        private bool Dialog_ModifyTemplate(object sender, object data)
         {
             if (data is StockTemplate)
             {
@@ -608,6 +614,8 @@ namespace TradingSystem.View
                     _tempGridView.UpdateRow(_tempGridView.CurrentRow.Index, dataRow);
                 }
             }
+
+            return true;
         }
 
         #endregion

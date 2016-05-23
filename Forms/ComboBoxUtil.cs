@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Forms
 {
-    public sealed class FormUtil
+    public sealed class ComboBoxUtil
     {
         public static void SetComboBox(ComboBox comboBox, ComboOption comboOption)
         {

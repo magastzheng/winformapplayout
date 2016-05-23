@@ -11,5 +11,6 @@ namespace Model.config
         public string BenchmarkId { get; set; }
         public string BenchmarkName { get; set; }
         public string Exchange { get; set; }
+        public int ContractMultiple { get; set; }
     }
 }

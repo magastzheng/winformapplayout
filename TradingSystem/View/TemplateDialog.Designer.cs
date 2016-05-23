@@ -110,11 +110,11 @@ namespace TradingSystem.View
             // 
             // tbTemplateNo
             // 
+            this.tbTemplateNo.Enabled = false;
             this.tbTemplateNo.Location = new System.Drawing.Point(117, 87);
             this.tbTemplateNo.Name = "tbTemplateNo";
             this.tbTemplateNo.Size = new System.Drawing.Size(190, 21);
             this.tbTemplateNo.TabIndex = 5;
-            this.tbTemplateNo.Enabled = false;
             this.tbTemplateNo.Text = "[新建]";
             // 
             // tbTemplateName
@@ -139,6 +139,7 @@ namespace TradingSystem.View
             this.tbFutureCopies.Name = "tbFutureCopies";
             this.tbFutureCopies.Size = new System.Drawing.Size(190, 21);
             this.tbFutureCopies.TabIndex = 9;
+            this.tbFutureCopies.Text = "1";
             // 
             // lblFutureCopies
             // 
@@ -155,6 +156,7 @@ namespace TradingSystem.View
             this.tbMarketCapOpt.Name = "tbMarketCapOpt";
             this.tbMarketCapOpt.Size = new System.Drawing.Size(190, 21);
             this.tbMarketCapOpt.TabIndex = 11;
+            this.tbMarketCapOpt.Text = "100";
             // 
             // lblMarketCapOpt
             // 
@@ -218,6 +220,7 @@ namespace TradingSystem.View
             // 
             // cbReplaceTemplate
             // 
+            this.cbReplaceTemplate.Enabled = false;
             this.cbReplaceTemplate.FormattingEnabled = true;
             this.cbReplaceTemplate.Location = new System.Drawing.Point(117, 276);
             this.cbReplaceTemplate.Name = "cbReplaceTemplate";
@@ -321,8 +324,6 @@ namespace TradingSystem.View
             this.Controls.Add(this.lblTemplateNo);
             this.Controls.Add(this.panelTop);
             this.Name = "TemplateDialog";
-            this.FormActived += new Forms.BaseForm.FormActiveHandler(this.Form_LoadActived);
-            this.Load += new System.EventHandler(this.Form_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();

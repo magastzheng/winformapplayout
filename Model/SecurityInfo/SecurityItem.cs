@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace Model.SecurityInfo
 {
+    public enum SecurityType
+    { 
+        All = -1,
+        Index = 1,
+        Stock = 2,
+    }
+
     public class SecurityItem
     {
         public string SecuCode { get; set; }
@@ -15,7 +22,7 @@ namespace Model.SecurityInfo
         public string ExchangeCode { get; set; }
 
         //1 - index; 2 - stock
-        public int SecuType { get; set; }
+        public SecurityType SecuType { get; set; }
 
         public string ListDate { get; set; }
 

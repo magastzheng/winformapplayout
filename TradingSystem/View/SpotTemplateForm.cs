@@ -1,9 +1,13 @@
-﻿using Config;
+﻿using Calculation;
+using Config;
 using Controls.Entity;
 using Controls.GridView;
 using DBAccess;
+using Model.config;
 using Model.Data;
+using Model.SecurityInfo;
 using Model.UI;
+using Quote;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,6 +17,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Util;
+using System.Linq;
 
 namespace TradingSystem.View
 {
@@ -33,9 +38,11 @@ namespace TradingSystem.View
         private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
         private TemplateStockDAO _stockdbdao = new TemplateStockDAO();
         private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
-
+        
         private SortableBindingList<StockTemplate> _tempDataSource = new SortableBindingList<StockTemplate>(new List<StockTemplate>());
         private SortableBindingList<TemplateStock> _spotDataSource = new SortableBindingList<TemplateStock>(new List<TemplateStock>());
+        private List<SecurityItem> _securityInfoList = new List<SecurityItem>();
+        private List<Benchmark> _benchmarkList = new List<Benchmark>();
 
         public SpotTemplateForm()
             :base()
@@ -55,6 +62,7 @@ namespace TradingSystem.View
             this.tsbModifyStock.Click += new System.EventHandler(ToolStripButton_ModifyStock_Click);
             this.tsbDeleteStock.Click += new System.EventHandler(ToolStripButton_DeleteStock_Click);
             this.tsbSave.Click += new System.EventHandler(ToolStripButton_Save_Click);
+            this.tsbCalcAmount.Click += new EventHandler(ToolStripButton_CalcAmount_Click);
 
             tempGridView.ClickRow += new ClickRowHandler(GridView_Template_ClickRow);
 
@@ -63,7 +71,7 @@ namespace TradingSystem.View
         }
 
         #region load control
-        private void Form_LoadControl(object sender, object data)
+        private bool Form_LoadControl(object sender, object data)
         {
             //set the monitorGridView
             TSDataGridViewHelper.AddColumns(this.tempGridView, _gridConfig.GetGid(GridTemplate));
@@ -77,13 +85,15 @@ namespace TradingSystem.View
 
             this.tempGridView.DataSource = _tempDataSource;
             this.secuGridView.DataSource = _spotDataSource;
+
+            return true;
         }
 
         #endregion
 
         #region load data
 
-        private void Form_LoadData(object sender, object data)
+        private bool Form_LoadData(object sender, object data)
         {
             _tempDataSource.Clear();
             _spotDataSource.Clear();
@@ -101,6 +111,11 @@ namespace TradingSystem.View
                     LoadTemplateStock(items[0].TemplateId);
                 }
             }
+
+            _securityInfoList = _secudbdao.Get(SecurityType.All);
+            _benchmarkList = _tempdbdao.GetBenchmark();
+
+            return true;
         }
 
         private void LoadTemplateStock(int templateNo)
@@ -147,6 +162,8 @@ namespace TradingSystem.View
             dialog.SaveData += new FormLoadHandler(Dialog_NewTemplate);
             dialog.Owner = this;
             dialog.StartPosition = FormStartPosition.CenterParent;
+            dialog.OnLoadControl(dialog, null);
+            dialog.OnLoadData(dialog, null);
             //dialog.OnLoadFormActived(json);
             dialog.ShowDialog();
 
@@ -166,13 +183,15 @@ namespace TradingSystem.View
             if (stockTemplate == null)
                 return;
 
-            string json = JsonUtil.SerializeObject(stockTemplate);
+            //string json = JsonUtil.SerializeObject(stockTemplate);
 
             TemplateDialog dialog = new TemplateDialog();
             dialog.SaveData += new FormLoadHandler(Dialog_ModifyTemplate);
             dialog.Owner = this;
             dialog.StartPosition = FormStartPosition.CenterParent;
-            dialog.OnFormActived(json);
+            //dialog.OnFormActived(json);
+            dialog.OnLoadControl(dialog, null);
+            dialog.OnLoadData(dialog, stockTemplate);
             dialog.ShowDialog();
             if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
             {
@@ -224,7 +243,7 @@ namespace TradingSystem.View
             return stockTemplate;
         }
 
-        private void Dialog_NewTemplate(object sender, object data)
+        private bool Dialog_NewTemplate(object sender, object data)
         {
             if (data is StockTemplate)
             {
@@ -237,13 +256,15 @@ namespace TradingSystem.View
                     _tempDataSource.Add(stockTemplate);
                 }
             }
+
+            return true;
         }
 
-        private void Dialog_ModifyTemplate(object sender, object data)
+        private bool Dialog_ModifyTemplate(object sender, object data)
         {
             if (!(data is StockTemplate))
             {
-                return;
+                return false;
             }
 
             StockTemplate stockTemplate = data as StockTemplate;
@@ -261,6 +282,8 @@ namespace TradingSystem.View
                     }
                 }
             }
+
+            return true;
         }
 
         #endregion
@@ -435,8 +458,9 @@ namespace TradingSystem.View
             }
         }
 
-        private void Dialog_SpotSecu_SaveData(object sender, object data)
+        private bool Dialog_SpotSecu_SaveData(object sender, object data)
         {
+            bool ret = false;
             if (sender == null || data == null)
             {
                 throw new Exception("Fail to get the setting from dialog");
@@ -444,7 +468,7 @@ namespace TradingSystem.View
 
             PortfolioSecurityDialog dialog = sender as PortfolioSecurityDialog;
             if (dialog == null)
-                return;
+                return ret;
 
             if (data is TemplateStock)
             {
@@ -453,12 +477,22 @@ namespace TradingSystem.View
                 {
                     case DialogType.New:
                         {
-                            //TODO: add the template id;
-                           string newid = _stockdbdao.Create(stock);
-                           if (!string.IsNullOrEmpty(newid))
-                           {
-                               _spotDataSource.Add(stock);
-                           }
+                            TemplateStock findStock = _spotDataSource.SingleOrDefault(p => p.SecuCode.Equals(stock.SecuCode));
+                            if (findStock != null)
+                            {
+                                ret = false;
+                                MessageBox.Show(this, "不能添加相同的证券", "警告", MessageBoxButtons.OK);
+                            }
+                            else
+                            {
+                                string newid = _stockdbdao.Create(stock);
+                                if (!string.IsNullOrEmpty(newid))
+                                {
+                                    _spotDataSource.Add(stock);
+                                }
+
+                                ret = true;
+                            }
                         }
                         break;
                     case DialogType.Modify:
@@ -466,11 +500,11 @@ namespace TradingSystem.View
                             string newid = _stockdbdao.Update(stock);
                             if (!string.IsNullOrEmpty(newid))
                             {
-                                //TODO: update the datasource
                                 for (int i = 0, count = _spotDataSource.Count; i < count; i++)
                                 {
                                     if (stock.SecuCode.Equals(_spotDataSource[i].SecuCode))
                                     {
+                                        ret = true;
                                         _spotDataSource[i] = stock;
                                         break;
                                     }
@@ -481,6 +515,66 @@ namespace TradingSystem.View
                     default:
                         break;
                 }
+            }
+
+            return ret;
+        }
+
+        private void ToolStripButton_CalcAmount_Click(object sender, EventArgs e)
+        {
+            StockTemplate template = GetSelectTemplate();
+            if (template == null)
+                return;
+
+            //_spotDataSource
+            List<SecurityItem> secuList = new List<SecurityItem>();
+            var benchmarkItem = _securityInfoList.Find(p => p.SecuCode.Equals(template.Benchmark) && p.SecuType == SecurityType.Index);
+            if (benchmarkItem != null)
+            {
+                secuList.Add(benchmarkItem);
+            }
+
+            double[] weights = new double[_spotDataSource.Count];
+            if (_spotDataSource != null)
+            {
+                for(int i = 0, count = _spotDataSource.Count; i < count; i++)
+                {
+                    var stock = _spotDataSource[i];
+                    weights[i] = stock.SettingWeight;
+
+                    var secuItem = _securityInfoList.Find(p => p.SecuCode.Equals(stock.SecuCode) && p.SecuType == SecurityType.Stock);
+                    secuList.Add(secuItem);
+                }
+            }
+
+            QuoteCenter.Instance.Query(secuList);
+
+            var benchmarkData = QuoteCenter.Instance.GetMarketData(benchmarkItem);
+            var benchmark = _benchmarkList.Find(p => p.BenchmarkId.Equals(benchmarkItem.SecuCode));
+            double totalValue = benchmarkData.CurrentPrice * benchmark.ContractMultiple;
+            double[] prices = new double[_spotDataSource.Count];
+            for (int i = 0, count = _spotDataSource.Count; i < count; i++)
+            {
+                var stock = _spotDataSource[i];
+                var secuItem = secuList.Find(p => p.SecuCode.Equals(stock.SecuCode) && p.SecuType == SecurityType.Stock);
+                var secuData = QuoteCenter.Instance.GetMarketData(secuItem);
+                prices[i] = secuData.CurrentPrice;
+            }
+
+            var amounts = CalcUtil.CalcStockAmountPerCopyRound(totalValue, weights, prices);
+            double[] mktCaps = new double[_spotDataSource.Count];
+            for (int i = 0, count = mktCaps.Length; i < count; i++)
+            {
+                mktCaps[i] = prices[i] * amounts[i];
+            }
+
+            double totalCap = mktCaps.Sum();
+            for (int i = 0, count = _spotDataSource.Count; i < count; i++)
+            {
+                var stock = _spotDataSource[i];
+                stock.Amount = amounts[i];
+                stock.MarketCap = mktCaps[i];
+                stock.MarketCapWeight = stock.MarketCap / totalCap;
             }
         }
 
@@ -564,7 +658,7 @@ namespace TradingSystem.View
             if(template == null)
                 return stockList;
 
-            var secuInfoList = _secudbdao.Get(2);
+            //var secuInfoList = _secudbdao.Get(2);
             HSGrid hsGrid = _gridConfig.GetGid(GridStock);
             var columns = hsGrid.Columns;
             var attFieldMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(TemplateStock));
@@ -619,7 +713,7 @@ namespace TradingSystem.View
 
                 if (!string.IsNullOrEmpty(stock.SecuCode))
                 {
-                    var secuInfo = secuInfoList.Find(p => p.SecuCode.Equals(stock.SecuCode));
+                    var secuInfo = _securityInfoList.Find(p => p.SecuCode.Equals(stock.SecuCode) && p.SecuType == SecurityType.Stock);
                     if (secuInfo != null)
                     {
                         stock.SecuName = secuInfo.SecuName;

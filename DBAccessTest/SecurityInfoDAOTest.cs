@@ -16,7 +16,7 @@ namespace DBAccessTest
         public void Test_SecurityInfoDAO_GetAll()
         {
             var dbdao = new SecurityInfoDAO();
-            List<SecurityItem> items = dbdao.Get("", -1);
+            List<SecurityItem> items = dbdao.Get("", SecurityType.All);
 
             Assert.IsNotNull(items);
             Assert.IsTrue(items.Count > 0);
@@ -26,7 +26,7 @@ namespace DBAccessTest
         public void Test_SecurityInfoDAO_GetSingle()
         {
             var dbdao = new SecurityInfoDAO();
-            List<SecurityItem> items = dbdao.Get("000001", 2);
+            List<SecurityItem> items = dbdao.Get("000001", SecurityType.Stock);
 
             Assert.IsNotNull(items);
             Assert.IsTrue(items.Count == 1);

@@ -32,7 +32,7 @@ namespace TradingSystem.Dialog
         }
 
         #region loadcontrol
-        private void Form_LoadControl(object sender, object data)
+        private bool Form_LoadControl(object sender, object data)
         {
             //FuturesContracts
             acFuturesContracts.SetDropdownList(lbDropdown);
@@ -54,13 +54,15 @@ namespace TradingSystem.Dialog
             //accounttype
             cbAccountType.Enabled = false;
             var accoutTypes = ConfigManager.Instance.GetComboConfig().GetComboOption("accounttype");
-            FormUtil.SetComboBox(this.cbAccountType, accoutTypes);
+            ComboBoxUtil.SetComboBox(this.cbAccountType, accoutTypes);
 
             //Portfolio combobox
             LoadPortfolio();
 
             //Load stock template combobox
             LoadStockTemplate();
+
+            return true;
         }
 
         private void LoadPortfolio()
@@ -87,7 +89,7 @@ namespace TradingSystem.Dialog
             }
 
             cbOption.Selected = cbOption.Items[0].Id;
-            FormUtil.SetComboBox(this.cbPortfolioId, cbOption);
+            ComboBoxUtil.SetComboBox(this.cbPortfolioId, cbOption);
         }
 
         private void LoadStockTemplate()
@@ -114,7 +116,7 @@ namespace TradingSystem.Dialog
             }
 
             cbOption.Selected = cbOption.Items[0].Id;
-            FormUtil.SetComboBox(this.cbStockTemplate, cbOption);
+            ComboBoxUtil.SetComboBox(this.cbStockTemplate, cbOption);
         }
         #endregion
 
@@ -212,7 +214,7 @@ namespace TradingSystem.Dialog
         }
         #endregion
 
-        private void Form_LoadData(object sender, object data)
+        private bool Form_LoadData(object sender, object data)
         {
             if (data != null && data is MonitorUnit)
             {
@@ -220,8 +222,8 @@ namespace TradingSystem.Dialog
                 tbMonitorUnitId.Text = string.Format("{0}", monitorUnit.MonitorUnitId);
                 tbMonitorUnitName.Text = monitorUnit.MonitorUnitName;
                 //cbPortfolioId.SelectedValue
-                FormUtil.SetComboBoxSelect(cbPortfolioId, monitorUnit.PortfolioId.ToString());
-                FormUtil.SetComboBoxSelect(cbStockTemplate, monitorUnit.StockTemplateId.ToString());
+                ComboBoxUtil.SetComboBoxSelect(cbPortfolioId, monitorUnit.PortfolioId.ToString());
+                ComboBoxUtil.SetComboBoxSelect(cbStockTemplate, monitorUnit.StockTemplateId.ToString());
 
                 AutoItem autoItem = new AutoItem 
                 {
@@ -231,6 +233,8 @@ namespace TradingSystem.Dialog
 
                 acFuturesContracts.SetCurrentItem(autoItem);
             }
+
+            return true;
         }
 
         //private void Form_SaveData(object sender, object data)

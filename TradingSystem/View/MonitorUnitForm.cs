@@ -236,7 +236,7 @@ namespace TradingSystem.View
             }
         }
 
-        private void Dialog_SaveData(object sender, object data)
+        private bool Dialog_SaveData(object sender, object data)
         {
             if (sender == null || data == null)
             {
@@ -279,6 +279,8 @@ namespace TradingSystem.View
                 }
                 
             }
+
+            return true;
         }
 
         #endregion

@@ -8,6 +8,6 @@ namespace Forms
 {
     public interface ISaveData
     {
-        void OnSave(object sender, object data);
+        bool OnSave(object sender, object data);
     }
 }

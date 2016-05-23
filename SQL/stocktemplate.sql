@@ -46,7 +46,8 @@ drop table benchmark
 create table benchmark(
 	BenchmarkId varchar(10) primary key,
 	BenchmarkName varchar(50) not null,
-	Exchange varchar(10) not null
+	Exchange varchar(10) not null,
+	ContractMultiple int
 )
 
 ---=========================stocktemplate begin======================

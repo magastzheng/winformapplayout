@@ -33,7 +33,7 @@ namespace TradingSystem.View
             this.LoadData += new FormLoadHandler(Form_LoadData);
         }
 
-        private void Form_LoadControl(object sender, object data)
+        private bool Form_LoadControl(object sender, object data)
         {
             //set the monitorGridView
             TSDataGridViewHelper.AddColumns(this.closeGridView, _gridConfig.GetGid(GridCloseId));
@@ -44,11 +44,13 @@ namespace TradingSystem.View
             TSDataGridViewHelper.AddColumns(this.securityGridView, _gridConfig.GetGid(GridSecurityId));
             Dictionary<string, string> securityColDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(ClosePositionSecurityItem));
             TSDataGridViewHelper.SetDataBinding(this.securityGridView, securityColDataMap);
+
+            return true;
         }
 
-        private void Form_LoadData(object sender, object data)
+        private bool Form_LoadData(object sender, object data)
         {
-            
+            return true;
         }
     }
 }
