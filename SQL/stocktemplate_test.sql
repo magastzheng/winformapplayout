@@ -75,3 +75,5 @@ select * from benchmark
 
 select * from securityinfo
 where SecuType=1
+
+exec procTemplateStockSelect @TemplateId=14

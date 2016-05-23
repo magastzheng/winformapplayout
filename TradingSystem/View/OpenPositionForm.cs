@@ -128,6 +128,7 @@ namespace TradingSystem.View
                     MonitorName = monitorItem.MonitorName,
                     SecuCode = stock.SecuCode,
                     SecuName = stock.SecuName,
+                    WeightAmount = stock.Amount,
                 };
 
                 _securityDataSource.Add(secuItem);
