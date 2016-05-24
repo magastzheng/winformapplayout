@@ -94,7 +94,7 @@ namespace TradingSystem.Dialog
 
         private void LoadStockTemplate()
         {
-            var templates = _tempdbdao.Get(-1);
+            var templates = _tempdbdao.GetByUser(-1);
             if (templates == null || templates.Count == 0)
                 return;
 

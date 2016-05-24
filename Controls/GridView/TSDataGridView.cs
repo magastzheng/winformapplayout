@@ -14,11 +14,14 @@ namespace Controls.GridView
 {
     public enum UpdateDirection
     {
-        Add = 1,
-        Remove = 2,
+        Select = 1,
+        UnSelect = 2,
+        Increase = 3,
+        Decrease = 4,
+        Update = 5,
     }
 
-    public delegate void UpdateRelatedDataGrid(UpdateDirection direction, int rowIndex);
+    public delegate void UpdateRelatedDataGrid(UpdateDirection direction, int rowIndex, int columnIndex);
     public delegate void ClickRowHandler(object sender, int rowIndex);
 
     public partial class TSDataGridView : DataGridView
@@ -45,7 +48,7 @@ namespace Controls.GridView
 
             //this.CellParsing += new DataGridViewCellParsingEventHandler(DataGridView_CellParsing);
             this.CellFormatting += new DataGridViewCellFormattingEventHandler(DataGridView_CellFormatting);
-            //this.CellEnter += new DataGridViewCellEventHandler(DataGridView_CellEnter);
+            this.CellEnter += new DataGridViewCellEventHandler(DataGridView_CellEnter);
             //this.CellValidating += new DataGridViewCellValidatingEventHandler(DataGridView_CellValidating);
 
             //this.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(DataGridView_ColumnHeaderMouseClick);
@@ -96,7 +99,56 @@ namespace Controls.GridView
 
         private void DataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            TSDataGridViewHelper.CellMouseClick(this, e);
+
+            if (sender == null || e.ColumnIndex < 0 || e.RowIndex < 0)
+                return;
+
+            TSDataGridView dgv = sender as TSDataGridView;
+            if (dgv == null)
+                return;
+
+            if (dgv.Columns["copies"] != null)
+            {
+                int copiesIndex = dgv.Columns["copies"].Index;
+                DataGridViewRow row = dgv.Rows[e.RowIndex];
+                switch (dgv.Columns[e.ColumnIndex].Name)
+                {
+                    case "plus":
+                        {
+                            int oldValue = int.Parse(row.Cells["copies"].Value.ToString());
+                            if (oldValue < TSDataGridViewHelper.MAX_ENTRUST_AMOUNT)
+                            {
+                                row.Cells["copies"].Value = oldValue + 1;
+                                if (dgv.UpdateRelatedDataGridHandler != null)
+                                {
+                                    dgv.UpdateRelatedDataGridHandler(UpdateDirection.Increase, e.RowIndex, e.ColumnIndex);
+                                }
+                            }
+                            else
+                            {
+                                //invalid input
+                            }
+                        }
+                        break;
+                    case "minus":
+                        {
+                            int oldValue = int.Parse(row.Cells["copies"].Value.ToString());
+                            if (oldValue > 1)
+                            {
+                                row.Cells["copies"].Value = oldValue - 1;
+                                if (dgv.UpdateRelatedDataGridHandler != null)
+                                { 
+                                    dgv.UpdateRelatedDataGridHandler(UpdateDirection.Decrease, e.RowIndex, e.ColumnIndex);
+                                }
+                            }
+                            else
+                            {
+                                //invalid input
+                            }
+                        }
+                        break;
+                }
+            }
         }
 
         public override void Sort(DataGridViewColumn dataGridViewColumn, ListSortDirection direction)
@@ -121,7 +173,7 @@ namespace Controls.GridView
                 //update the related datagridview if it needs              
                 if (UpdateRelatedDataGridHandler != null)
                 {
-                    UpdateRelatedDataGridHandler(UpdateDirection.Add, row.Index);
+                    UpdateRelatedDataGridHandler(UpdateDirection.Select, row.Index, colIndex);
                 }
             }
             else
@@ -131,7 +183,7 @@ namespace Controls.GridView
 
                 if (UpdateRelatedDataGridHandler != null)
                 {
-                    UpdateRelatedDataGridHandler(UpdateDirection.Remove, row.Index);
+                    UpdateRelatedDataGridHandler(UpdateDirection.UnSelect, row.Index, colIndex);
                 }
             }
         }
@@ -302,16 +354,26 @@ namespace Controls.GridView
         //    }
         //}
 
-        //////private void DataGridView_CellEnter(object sender, DataGridViewCellEventArgs e)
-        //////{
-        //////    if (e.ColumnIndex < 0 || e.RowIndex < 0)
-        //////        return;
-        //////    var ds = this.DataSource;
-        //////    if (ds is TSGridViewData)
-        //////    { 
-                
-        //////    }
-        //////}
+        private void DataGridView_CellEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex < 0 || e.RowIndex < 0)
+                return;
+            if (Columns["copies"] != null)
+            {
+                if (e.ColumnIndex == Columns["copies"].Index)
+                {
+                    if (UpdateRelatedDataGridHandler != null)
+                    {
+                        UpdateRelatedDataGridHandler(UpdateDirection.Update, e.RowIndex, e.ColumnIndex);
+                    }
+                }
+            }
+            //var ds = this.DataSource;
+            //if (ds is TSGridViewData)
+            //{
+
+            //}
+        }
 
         private void DataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {

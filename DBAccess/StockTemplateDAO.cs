@@ -13,7 +13,8 @@ namespace DBAccess
         private const string SP_Create = "procTemplateInsert";
         private const string SP_Modify = "procTemplateUpdate";
         private const string SP_Delete = "procTemplateDelete";
-        private const string SP_Get = "procTemplateSelect";
+        private const string SP_Get = "procTemplateSelectById";
+        private const string SP_GetByUser = "procTemplateSelect";
 
         public StockTemplateDAO()
             : base()
@@ -91,10 +92,41 @@ namespace DBAccess
             return newid;
         }
 
-        public List<StockTemplate> Get(int userId)
+        public List<StockTemplate> Get(int templateId)
         {
             List<StockTemplate> stockTemplates = new List<StockTemplate>();
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
+            if (templateId > 0)
+            {
+                _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, templateId);
+            }
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    StockTemplate item = new StockTemplate();
+                    item.TemplateId = (int)reader["TemplateId"];
+                    item.TemplateName = (string)reader["TemplateName"];
+                    item.FutureCopies = (int)reader["FuturesCopies"];
+                    item.MarketCapOpt = (double)(decimal)reader["MarketCapOpt"];
+                    item.WeightType = (int)reader["WeightType"];
+                    //item.ReplaceType = (int)reader["ReplaceType"];
+                    item.Benchmark = (string)reader["BenchmarkId"];
+
+                    stockTemplates.Add(item);
+                }
+            }
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return stockTemplates;
+        }
+
+        public List<StockTemplate> GetByUser(int userId)
+        {
+            List<StockTemplate> stockTemplates = new List<StockTemplate>();
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetByUser);
             if (userId > 0)
             {
                 _dbHelper.AddInParameter(dbCommand, "@UserId", System.Data.DbType.Int32, userId);

@@ -22,6 +22,7 @@ where a.F4_1090 ='A'             --A股
 
 truncate table securityinfo
 
+--加入股票
 insert into securityinfo(
 	SecuCode
 	,SecuName
@@ -41,7 +42,7 @@ where F4_1090 ='A'             --A股
 	and F19_1090 <> 1	--非退市
 	and F21_1090=1		--已上市
 
-
+--加入指数
 insert into securityinfo(
 	SecuCode
 	,SecuName
@@ -62,6 +63,24 @@ where F4_1090 ='S'             --A股
 	and F21_1090=1		--已上市
 	and F16_1090 in (select BenchmarkId from benchmark)
 
+--加入股指期货
+insert into securityinfo(
+	SecuCode
+	,SecuName
+	,ExchangeCode
+	,SecuType
+	,ListDate	
+)
+select 
+	Code
+	,Name
+	,Exchange
+	,3
+	,convert(varchar, ListedDate, 112)
+from futurescontract
+
+
+
 select * from securityinfo
 where SecuCode in (select BenchmarkId from benchmark)
 
@@ -75,3 +94,14 @@ where a.F4_1090 ='A'             --A股
 
 select * from [176.1.11.55].localwind.dbo.TB_OBJECT_1090
 where F16_1090 in (select BenchmarkId from benchmark)
+
+select * from securityinfo
+where SecuCode='IC1605'
+
+select * from [176.1.11.55].localwind.dbo.TB_OBJECT_1090
+where F16_1090 like 'IC16%'
+	and F19_1090=0
+	and F21_1090=1
+	and F27_1090='CFFEX'
+
+select * from futurescontract

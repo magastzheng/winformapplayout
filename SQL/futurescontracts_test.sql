@@ -74,7 +74,7 @@ select
 	,F9_3511 as LastDeliveryDay
 	,F10_3511 as Status
 from [10.1.37.70].wind.dbo.TB_OBJECT_3511
-where F1_3511 like 'IF16%' or F1_3511 like 'IH16%' --or F1_3511 like 'IC16%'
+where F1_3511 like 'IF16%' or F1_3511 like 'IH16%' or F1_3511 like 'IC16%'
   	
 declare @Code varchar(10)
 declare @Name varchar(50)
@@ -101,27 +101,40 @@ begin
 		--,convert(datetime, @ListedDate, 121)
 		--,convert(datetime, @LastTradingDay, 121)
 		--,convert(datetime, @LastDeliveryDay, 121)
-		insert into futurescontract(
-			Code
-			,Name
-			,Exchange
-			,PriceLimits
-			,Deposit
-			,ListedDate
-			,LastTradingDay
-			,LastDeliveryDay
-		)
-		values
-		(
-			@Code
-			,@Name
-			,@Exchange
-			,10
-			,40
-			,@ListedDate
-			,@LastTradingDay
-			,@LastDeliveryDay
-		)
+		print @Code
+		declare @total int
+		select @total=count(Code) from futurescontract where Code=@Code
+		if @total > 0
+		begin
+			print @Code + ' has been added!'
+		end
+		else
+		begin
+			print @Code + ' new one!'
+			insert into futurescontract(
+				Code
+				,Name
+				,Exchange
+				,PriceLimits
+				,Deposit
+				,ListedDate
+				,LastTradingDay
+				,LastDeliveryDay
+				,Status
+			)
+			values
+			(
+				@Code
+				,@Name
+				,@Exchange
+				,10
+				,40
+				,@ListedDate
+				,@LastTradingDay
+				,@LastDeliveryDay
+				,@Status
+			)
+		end
 	end
   	fetch next from cursor_fc into @Code, @Name, @Exchange, @ListedDate, @LastTradingDay, @LastDeliveryDay, @Status
 end
@@ -141,5 +154,10 @@ select * from futurescontract
 delete from futurescontract where Code like 'IF16%'
 delete from futurescontract where Code like 'IH16%'
 
+declare @Code varchar(10)
+declare @findCode varchar(10)
+set @Code='IC1607'
+select @findCode=Code from futurescontract where Code=@Code
+print @findCode
 
 exec procFuturesContractSelect

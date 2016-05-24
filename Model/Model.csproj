@@ -54,6 +54,8 @@
     <Compile Include="Data\DataTable.cs" />
     <Compile Include="Data\DataValue.cs" />
     <Compile Include="Data\DataValueType.cs" />
+    <Compile Include="Data\EntrustDirection.cs" />
+    <Compile Include="Data\StockPriceType.cs" />
     <Compile Include="EntrustParam.cs" />
     <Compile Include="config\FieldConfigItem.cs" />
     <Compile Include="FieldRequireType.cs" />
@@ -82,6 +84,7 @@
     <Compile Include="UI\Portfolio.cs" />
     <Compile Include="UI\StockTemplate.cs" />
     <Compile Include="UI\TemplateStock.cs" />
+    <Compile Include="UI\TradingInstance.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

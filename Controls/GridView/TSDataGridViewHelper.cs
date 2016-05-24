@@ -261,46 +261,50 @@ namespace Controls.GridView
 
         #region 增加和减少
 
-        public static void CellMouseClick(TSDataGridView dgv, DataGridViewCellMouseEventArgs e)
-        {
-            if (dgv == null || e.ColumnIndex < 0 || e.RowIndex < 0)
-                return;
+        //public static void CellMouseClick(TSDataGridView dgv, DataGridViewCellMouseEventArgs e)
+        //{
+        //    if (dgv == null || e.ColumnIndex < 0 || e.RowIndex < 0)
+        //        return;
 
-            if (dgv.Columns["copies"] != null)
-            {
-                int copiesIndex = dgv.Columns["copies"].Index;
-                DataGridViewRow row = dgv.Rows[e.RowIndex];
-                switch (dgv.Columns[e.ColumnIndex].Name)
-                {
-                    case "plus":
-                        {
-                            int oldValue = int.Parse(row.Cells["copies"].Value.ToString());
-                            if (oldValue < MAX_ENTRUST_AMOUNT)
-                            {
-                                row.Cells["copies"].Value = oldValue + 1;
-                            }
-                            else
-                            {
-                                //invalid input
-                            }
-                        }
-                        break;
-                    case "minus":
-                        {
-                            int oldValue = int.Parse(row.Cells["copies"].Value.ToString());
-                            if (oldValue > 0)
-                            {
-                                row.Cells["copies"].Value = oldValue - 1;
-                            }
-                            else
-                            {
-                                //invalid input
-                            }
-                        }
-                        break;
-                }
-            }
-        }
+        //    if (dgv.Columns["copies"] != null)
+        //    {
+        //        int copiesIndex = dgv.Columns["copies"].Index;
+        //        DataGridViewRow row = dgv.Rows[e.RowIndex];
+        //        switch (dgv.Columns[e.ColumnIndex].Name)
+        //        {
+        //            case "plus":
+        //                {
+        //                    int oldValue = int.Parse(row.Cells["copies"].Value.ToString());
+        //                    if (oldValue < MAX_ENTRUST_AMOUNT)
+        //                    {
+        //                        row.Cells["copies"].Value = oldValue + 1;
+        //                        if (dgv.ClickRow != null)
+        //                        { 
+                                    
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        //invalid input
+        //                    }
+        //                }
+        //                break;
+        //            case "minus":
+        //                {
+        //                    int oldValue = int.Parse(row.Cells["copies"].Value.ToString());
+        //                    if (oldValue > 1)
+        //                    {
+        //                        row.Cells["copies"].Value = oldValue - 1;
+        //                    }
+        //                    else
+        //                    {
+        //                        //invalid input
+        //                    }
+        //                }
+        //                break;
+        //        }
+        //    }
+        //}
 
         #endregion
 

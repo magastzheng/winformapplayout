@@ -122,7 +122,7 @@ namespace DBAccess
         public DbDataReader ExecuteReader(DbCommand cmd)
         {
             Open(cmd);
-            DbDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            DbDataReader reader = cmd.ExecuteReader(); //cmd.ExecuteReader(CommandBehavior.CloseConnection);
             return reader;
         }
 

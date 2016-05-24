@@ -134,6 +134,33 @@ begin
 	return @TemplateId
 end
 
+go
+if exists (select name from sysobjects where name='procTemplateSelectById')
+drop proc procTemplateSelectById
+
+go
+
+create proc procTemplateSelectById(
+	@TemplateId int = NULL
+)
+as
+begin
+	select 
+		TemplateId,
+		TemplateName,
+		Status,
+		WeightType,
+		ReplaceType,
+		FuturesCopies,
+		MarketCapOpt,
+		BenchmarkId,
+		CreatedDate,
+		ModifiedDate,
+		CreatedUserId
+	from stocktemplate
+	where @TemplateId is null or TemplateId=@TemplateId
+end
+
 --Add userid as the parameter?
 go
 if exists (select name from sysobjects where name='procTemplateSelect')

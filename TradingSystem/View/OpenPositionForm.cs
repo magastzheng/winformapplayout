@@ -2,6 +2,7 @@
 using Controls.Entity;
 using Controls.GridView;
 using DBAccess;
+using Model.SecurityInfo;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Linq;
+using Quote;
 
 namespace TradingSystem.View
 {
@@ -17,12 +20,18 @@ namespace TradingSystem.View
     {
         private const string MonitorGridId = "openposition";
         private const string SecurityGridId = "openpositionsecurity";
+        private const string BottomMenuId = "openposition";
 
         private GridConfig _gridConfig;
         private MonitorUnitDAO _monitordbdao = new MonitorUnitDAO();
         private TemplateStockDAO _stockdbdao = new TemplateStockDAO();
+        private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
+        private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
+        private TradingInstanceDAO _tradeinstdao = new TradingInstanceDAO();
+
         private SortableBindingList<OpenPositionItem> _monitorDataSource;
         private SortableBindingList<OpenPositionSecurityItem> _securityDataSource;
+        private List<SecurityItem> _securityInfoList = new List<SecurityItem>();
 
         public OpenPositionForm()
             :base()
@@ -38,9 +47,10 @@ namespace TradingSystem.View
             LoadControl += new FormLoadHandler(Form_LoadControl);
             LoadData += new FormLoadHandler(Form_LoadData);
             monitorGridView.UpdateRelatedDataGridHandler += new UpdateRelatedDataGrid(MonitorGridView_UpdateRelatedDataGrid);
+            btnBottomContainer.ButtonClick += new EventHandler(ButtonContainer_ButtonClick);
         }
 
-        private void MonitorGridView_UpdateRelatedDataGrid(UpdateDirection direction, int rowIndex)
+        private void MonitorGridView_UpdateRelatedDataGrid(UpdateDirection direction, int rowIndex, int columnIndex)
         {
             if (rowIndex < 0 || rowIndex >= _monitorDataSource.Count)
                 return;
@@ -49,19 +59,35 @@ namespace TradingSystem.View
 
             switch (direction)
             {
-                case UpdateDirection.Add:
+                case UpdateDirection.Select:
                     {
                         LoadSecurityData(monitorItem);
                     }
                     break;
-                case UpdateDirection.Remove:
+                case UpdateDirection.UnSelect:
                     {
                         RemoveSecurityData(monitorItem);
+                    }
+                    break;
+                case UpdateDirection.Increase:
+                    {
+                        CalcEntrustAmount(monitorItem);
+
+                        //monitorGridView.Invalidate();
+                        securityGridView.Invalidate();
+                    }
+                    break;
+                case UpdateDirection.Decrease:
+                    {
+                        CalcEntrustAmount(monitorItem);
+                        //monitorGridView.Invalidate();
+                        securityGridView.Invalidate();
                     }
                     break;
             }
         }
 
+        #region load control
         private bool Form_LoadControl(object sender, object data)
         {
             //set the monitorGridView
@@ -74,9 +100,18 @@ namespace TradingSystem.View
             Dictionary<string, string> securityColDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(OpenPositionSecurityItem));
             TSDataGridViewHelper.SetDataBinding(this.securityGridView, securityColDataMap);
 
+            //Load bottom button
+            LoadBottomButton();
+
             return true;
         }
 
+        private void LoadBottomButton()
+        {
+            ButtonGroup bottomButtonGroup = ConfigManager.Instance.GetButtonConfig().GetButtonGroup(BottomMenuId);
+            btnBottomContainer.AddButtonGroup(bottomButtonGroup);
+        }
+        #endregion
         private bool Form_LoadData(object sender, object data)
         {
             //Load the data of open posoition
@@ -84,11 +119,14 @@ namespace TradingSystem.View
             _monitorDataSource = new SortableBindingList<OpenPositionItem>(monitorList);
             this.monitorGridView.DataSource = _monitorDataSource;
 
+            //Load the securityinfo
+            this._securityInfoList = _secudbdao.Get(SecurityType.All);
+
             //Load the data for each template
             List<OpenPositionSecurityItem> secuItems = new List<OpenPositionSecurityItem>();
             _securityDataSource = new SortableBindingList<OpenPositionSecurityItem>(secuItems);
             this.securityGridView.DataSource = _securityDataSource;
-
+            
             if (monitorList.Count > 0)
             {
                 List<int> selectIndex = TSDataGridViewHelper.GetSelectRowIndex(monitorGridView);
@@ -119,6 +157,7 @@ namespace TradingSystem.View
         {
             List<TemplateStock> stocks = _stockdbdao.Get(monitorItem.TemplateId);
             List<OpenPositionSecurityItem> secuItems = new List<OpenPositionSecurityItem>();
+
             foreach (var stock in stocks)
             {
                 OpenPositionSecurityItem secuItem = new OpenPositionSecurityItem
@@ -129,10 +168,48 @@ namespace TradingSystem.View
                     SecuCode = stock.SecuCode,
                     SecuName = stock.SecuName,
                     WeightAmount = stock.Amount,
+                    EntrustAmount = monitorItem.Copies * stock.Amount,
+                    DirectionType = Model.Data.EntrustDirection.BuySpot
                 };
 
                 _securityDataSource.Add(secuItem);
             }
+
+            var templateItems = _tempdbdao.Get(monitorItem.TemplateId);
+            if (templateItems != null && templateItems.Count == 1)
+            {
+                var templateItem = templateItems[0];
+                //Load the future
+                OpenPositionSecurityItem futureItem = new OpenPositionSecurityItem
+                {
+                    Selection = true,
+                    MonitorId = monitorItem.MonitorId,
+                    MonitorName = monitorItem.MonitorName,
+                    SecuCode = monitorItem.FuturesContract,
+                    SecuName = monitorItem.FuturesContract,
+                    WeightAmount = templateItem.FutureCopies,
+                    EntrustAmount = monitorItem.Copies * templateItem.FutureCopies,
+                    DirectionType = Model.Data.EntrustDirection.SellOpen
+                };
+
+                int pos = _securityDataSource.Count - stocks.Count;
+                _securityDataSource.Insert(pos, futureItem);
+            }
+        }
+
+        private void CalcEntrustAmount(OpenPositionItem monitorItem)
+        {
+            //var secuItems = _securityDataSource.Select(p => p.MonitorId == monitorItem.MonitorId).ToList();
+            var secuItems = _securityDataSource.Where(p => p.MonitorId == monitorItem.MonitorId);
+            foreach (var secuItem in secuItems)
+            {
+                secuItem.EntrustAmount = monitorItem.Copies * secuItem.WeightAmount;
+            }
+
+            //foreach (var secuItem in _securityDataSource)
+            //{
+            //    secuItem.EntrustAmount = monitorItem.Copies * secuItem.WeightAmount;
+            //}
         }
 
         public void RemoveSecurityData(OpenPositionItem monitorItem)
@@ -146,5 +223,85 @@ namespace TradingSystem.View
                 }
             }
         }
+
+        #region button click in ButtonContainer
+
+        private void ButtonContainer_ButtonClick(object sender, EventArgs e)
+        {
+            if (!(sender is Button))
+            {
+                return;
+            }
+
+            Button button = sender as Button;
+            switch (button.Name)
+            {
+                case "Refresh":
+                    {
+                        List<SecurityItem> secuList = new List<SecurityItem>();
+                        foreach (var secuItem in _securityDataSource)
+                        {
+                            var findItem = _securityInfoList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
+                            if (findItem != null)
+                            {
+                                var addedItem = secuList.Find(p => p.SecuCode.Equals(findItem.SecuCode) && p.SecuType == findItem.SecuType);
+                                if (addedItem == null)
+                                {
+                                    secuList.Add(findItem);
+                                }
+                            }
+                        }
+                        
+                        QuoteCenter.Instance.Query(secuList);
+                        foreach (var secuItem in _securityDataSource)
+                        {
+                            var targetItem = secuList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
+                            var marketData = QuoteCenter.Instance.GetMarketData(targetItem);
+                            secuItem.LastPrice = marketData.CurrentPrice;
+                            secuItem.CommandMoney = secuItem.CommandPrice * secuItem.EntrustAmount;
+                            secuItem.BuyAmount = marketData.BuyAmount;
+                            secuItem.SellAmount = marketData.SellAmount;
+                        }
+
+                        this.securityGridView.Invalidate();    
+                    }
+                    break;
+                case "GiveOrder":
+                    {
+                        List<int> selectedList = TSDataGridViewHelper.GetSelectRowIndex(this.monitorGridView);
+                        foreach (var index in selectedList)
+                        {
+                            var openItem = _monitorDataSource[index];
+
+                            string instanceCode = string.Format("{0}-{1}-{2}", openItem.PortfolioId, openItem.TemplateId, DateTime.Now.ToString("yyyyMMdd"));
+                            TradingInstance tradingInstance = new TradingInstance
+                            {
+                                InstanceCode = instanceCode,
+                                MonitorUnitId = openItem.MonitorId,
+                                StockDirection = Model.Data.EntrustDirection.BuySpot,
+                                FuturesContract = openItem.FuturesContract,
+                                FuturesDirection = Model.Data.EntrustDirection.SellOpen,
+                                OperationCopies = openItem.Copies,
+                                StockPriceType = Model.Data.StockPriceType.NoLimit,
+                                FuturesPriceType = Model.Data.FuturesPriceType.NoLimit,
+                                Status = 1,
+                                Owner = "111111"
+                            };
+
+                            int instanceId = _tradeinstdao.Create(tradingInstance);
+                            if (instanceId <= 0)
+                            { 
+                                //TODO: error message
+                            }
+                        }
+
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        #endregion
     }
 }

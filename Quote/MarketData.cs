@@ -32,6 +32,13 @@ namespace Quote
 
         public double SellPrice5;
 
+        //外盘
+        public int BuyAmount;
+
+        //内盘
+        public int SellAmount;
+
         public string UpdateTime;
+
     }
 }

@@ -51,5 +51,20 @@
 				"visible": true
 			}
 		]
+	},{
+		"id": "openposition",
+		"direction": 0,
+		"buttons": [
+			{
+				"name": "Refresh",
+				"text": "刷新",
+				"visible": true
+			},
+			{
+				"name": "GiveOrder",
+				"text": "下达指令",
+				"visible": true
+			}
+		]
 	}
 ]

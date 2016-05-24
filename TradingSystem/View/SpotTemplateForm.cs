@@ -98,7 +98,7 @@ namespace TradingSystem.View
             _tempDataSource.Clear();
             _spotDataSource.Clear();
 
-            var items = _tempdbdao.Get(-1);
+            var items = _tempdbdao.GetByUser(-1);
             if (items != null)
             { 
                 foreach(var item in items)

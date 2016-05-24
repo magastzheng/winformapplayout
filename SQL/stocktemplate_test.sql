@@ -4,6 +4,8 @@ declare @today datetime
 set @today=getdate()
 exec procTemplateInsert '≤‚ ‘1', 1, 1, 100.00, '000001', @today, 1243
 
+exec procTemplateSelectById 1
+
 --@TemplateId int,
 --@TemplateName varchar(50),
 --@Status int,
@@ -77,3 +79,19 @@ select * from securityinfo
 where SecuType=1
 
 exec procTemplateStockSelect @TemplateId=14
+
+select 
+	a.TemplateId,
+	a.SecuCode,
+	a.Amount,
+	a.MarketCap,
+	a.MarketCapOpt,
+	a.SettingWeight,
+	b.SecuName,
+	b.ExchangeCode
+from templatestock a
+join securityinfo b
+on a.SecuCode = b.SecuCode and b.SecuType=2
+where a.TemplateId=1
+
+select * 

@@ -171,6 +171,10 @@ begin
 end
 
 go
+if exists (select name from sysobjects where name='procTradingInstanceSelectCombine')
+drop proc procTradingInstanceSelectCombine
+
+go
 create proc procTradingInstanceSelectCombine(
 	@InstanceId	int = NULL
 )
@@ -193,6 +197,7 @@ begin
 			,a.CreatedDate		
 			,a.ModifiedDate	
 			,b.MonitorUnitName	
+			,c.TemplateId
 			,c.TemplateName
 		from tradinginstance a
 		inner join monitorunit b

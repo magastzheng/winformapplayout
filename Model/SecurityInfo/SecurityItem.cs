@@ -11,6 +11,7 @@ namespace Model.SecurityInfo
         All = -1,
         Index = 1,
         Stock = 2,
+        Futures = 3,
     }
 
     public class SecurityItem

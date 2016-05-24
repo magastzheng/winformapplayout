@@ -1,4 +1,5 @@
 ﻿using Model.Binding;
+using Model.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,8 +37,58 @@ namespace Model.UI
         [BindingAttribute("commandmoney")]
         public double CommandMoney { get; set; }
 
+        public EntrustDirection DirectionType { get; set; }
+
         [BindingAttribute("entrustdirection")]
-        public int EntrustDirection { get; set; }
+        public string EntrustDirection
+        {
+            get
+            {
+                string ret = string.Empty;
+                switch (DirectionType)
+                {
+                    case Data.EntrustDirection.Buy:
+                        {
+                            ret = "买入";
+                        }
+                        break;
+                    case Data.EntrustDirection.Sell:
+                        {
+                            ret = "卖出";
+                        }
+                        break;
+                    case Data.EntrustDirection.AdjustedTo:
+                        {
+                            ret = "调整到[买卖]";
+                        }
+                        break;
+                    case Data.EntrustDirection.BuySpot:
+                        {
+                            ret = "买入";
+                        }
+                        break;
+                    case Data.EntrustDirection.SellSpot:
+                        {
+                            ret = "卖出";
+                        }
+                        break;
+                    case Data.EntrustDirection.SellOpen:
+                        {
+                            ret = "卖出开仓";
+                        }
+                        break;
+                    case  Data.EntrustDirection.BuyClose:
+                        {
+                            ret = "买入平仓";
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                return ret;
+            }
+        }
 
         [BindingAttribute("lastprice")]
         public double LastPrice { get; set; }

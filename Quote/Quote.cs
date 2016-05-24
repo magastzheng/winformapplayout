@@ -36,6 +36,10 @@ namespace Quote
             {
                 windCode += ".SZ";
             }
+            else if (secuItem.ExchangeCode.Equals("CFFEX", StringComparison.OrdinalIgnoreCase))
+            {
+                windCode += ".CFE";
+            }
 
             return windCode;
         }
@@ -215,6 +219,18 @@ namespace Quote
             {
                 FillData(wd, fieldIndexMap);
             }
+
+            wd = WindAPIWrap.Instance.SyncRequestData(windCodes, new List<string> { "rt_upward_vol" }, optionMap);
+            if (wd != null)
+            {
+                FillData(wd, fieldIndexMap);
+            }
+
+            wd = WindAPIWrap.Instance.SyncRequestData(windCodes, new List<string> { "rt_downward_vol" }, optionMap);
+            if (wd != null)
+            {
+                FillData(wd, fieldIndexMap);
+            }
         }
 
         public MarketData GetMarketData(SecurityItem secuItem)
@@ -313,6 +329,12 @@ namespace Quote
                                     break;
                                 case "rt_bid5":
                                     marketData.SellPrice5 = dval;
+                                    break;
+                                case "rt_upward_vol":
+                                    marketData.BuyAmount = (int)dval;
+                                    break;
+                                case "rt_downward_vol":
+                                    marketData.SellAmount = (int)dval;
                                     break;
                                 default:
                                     break;

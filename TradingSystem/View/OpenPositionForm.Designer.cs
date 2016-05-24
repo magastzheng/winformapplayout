@@ -31,6 +31,8 @@
             this.childSplitter = new System.Windows.Forms.SplitContainer();
             this.monitorGridView = new Controls.GridView.TSDataGridView();
             this.securityGridView = new Controls.GridView.TSDataGridView();
+            this.btnBottomContainer = new Controls.ButtonContainer.ButtonContainer();
+            this.panelBottom.SuspendLayout();
             this.panelMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.childSplitter)).BeginInit();
             this.childSplitter.Panel1.SuspendLayout();
@@ -39,6 +41,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.monitorGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.securityGridView)).BeginInit();
             this.SuspendLayout();
+            // 
+            // panelBottom
+            // 
+            this.panelBottom.Controls.Add(this.btnBottomContainer);
             // 
             // panelMain
             // 
@@ -86,11 +92,20 @@
             this.securityGridView.Size = new System.Drawing.Size(1125, 369);
             this.securityGridView.TabIndex = 0;
             // 
+            // btnBottomContainer
+            // 
+            this.btnBottomContainer.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnBottomContainer.Location = new System.Drawing.Point(0, 0);
+            this.btnBottomContainer.Name = "btnBottomContainer";
+            this.btnBottomContainer.Size = new System.Drawing.Size(804, 32);
+            this.btnBottomContainer.TabIndex = 0;
+            // 
             // OpenPositionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.ClientSize = new System.Drawing.Size(1125, 570);
             this.Name = "OpenPositionForm";
+            this.panelBottom.ResumeLayout(false);
             this.panelMain.ResumeLayout(false);
             this.childSplitter.Panel1.ResumeLayout(false);
             this.childSplitter.Panel2.ResumeLayout(false);
@@ -107,6 +122,7 @@
         private System.Windows.Forms.SplitContainer childSplitter;
         private Controls.GridView.TSDataGridView monitorGridView;
         private Controls.GridView.TSDataGridView securityGridView;
+        private Controls.ButtonContainer.ButtonContainer btnBottomContainer;
 
     }
 }
