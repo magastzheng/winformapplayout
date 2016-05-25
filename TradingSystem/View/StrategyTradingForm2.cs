@@ -1,6 +1,7 @@
 ﻿using Config;
 using Controls.Entity;
 using Controls.GridView;
+using DBAccess;
 using Forms;
 using Model.UI;
 using System;
@@ -20,6 +21,8 @@ namespace TradingSystem.View
         private const string GridDealFlowId = "dealflow";
         private const string GridCmdSecurityId = "cmdsecurity";
         private const string GridBuySellId = "buysell";
+
+        private TradingInstanceDAO _tradeInstdao = new TradingInstanceDAO();
 
         private SortableBindingList<CommandTradingItem> _cmdDataSource = new SortableBindingList<CommandTradingItem>(new List<CommandTradingItem>());
         private SortableBindingList<EntrustFlowItem> _efDataSource = new SortableBindingList<EntrustFlowItem>(new List<EntrustFlowItem>());
@@ -45,6 +48,30 @@ namespace TradingSystem.View
             tabChildSecurity.SelectedIndexChanged += new EventHandler(TabControl_Child_SelectedIndexChanged);
 
             tbCopies.KeyPress += new KeyPressEventHandler(TextBox_Copies_KeyPress);
+
+            this.cmdGridView.UpdateRelatedDataGridHandler += new UpdateRelatedDataGrid(GridView_Command_UpdateRelatedDataGridHandler);
+        }
+
+        private void GridView_Command_UpdateRelatedDataGridHandler(UpdateDirection direction, int rowIndex, int columnIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= _cmdDataSource.Count)
+                return;
+
+            CommandTradingItem cmdItem = _cmdDataSource[rowIndex];
+
+            switch (direction)
+            {
+                case UpdateDirection.Select:
+                    {
+                        
+                    }
+                    break;
+                case UpdateDirection.UnSelect:
+                    {
+                        
+                    }
+                    break;
+            }
         }
 
         #region form loading
@@ -168,6 +195,25 @@ namespace TradingSystem.View
         private bool Form_LoadData(object sender, object data)
         {
             //Load data here
+
+            var tradingInstances = _tradeInstdao.GetCombine(-1);
+            if (tradingInstances != null)
+            {
+                foreach (var instance in tradingInstances)
+                {
+                    CommandTradingItem cmdItem = new CommandTradingItem 
+                    {
+                        CommandNo = instance.InstanceId,
+                        CommandNum = instance.OperationCopies,
+                        InstanceId = instance.InstanceCode,
+                        InstanceNo = instance.InstanceId.ToString(),
+                        MonitorUnit = instance.MonitorUnitName,
+                        TemplateId = instance.TemplateId,
+                    };
+
+                    _cmdDataSource.Add(cmdItem);
+                }
+            }
 
             return true;
         }

@@ -112,5 +112,7 @@ namespace Model.UI
         //监控单元
         [BindingAttribute("monitorunit")]
         public string MonitorUnit { get; set; }
+
+        public int TemplateId { get; set; }
     }
 }

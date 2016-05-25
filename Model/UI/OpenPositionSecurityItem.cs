@@ -57,7 +57,7 @@ namespace Model.UI
                             ret = "卖出";
                         }
                         break;
-                    case Data.EntrustDirection.AdjustedTo:
+                    case Data.EntrustDirection.AdjustedToBuySell:
                         {
                             ret = "调整到[买卖]";
                         }

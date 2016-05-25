@@ -7,9 +7,9 @@ create table tradinginstance(
 	InstanceId			int identity(1, 1) primary key
 	,InstanceCode		varchar(20)
 	,MonitorUnitId		int
-	,StockDirection		int --1 - 买入， 2 - 卖出， 3 - 调整到[买卖]， 4 - 调整到[只买]， 5 - 调整到[只卖] 
+	,StockDirection		int --1 - 买入， 2 - 卖出， 3 - 调整到[买卖]， 4 - 调整到[只买]， 5 - 调整到[只卖], 10 -- 买入现货，11--卖出现货，12-卖出开仓，13 -买入平仓
 	,FuturesContract	varchar(10)
-	,FuturesDirection	int --1 -- 多头, 2 - 空头
+	,FuturesDirection	int --12-卖出开仓，13 -买入平仓
 	,OperationCopies	int
 	,StockPriceType		int -- 0 - 不限价，1 - 最新价，A-J盘1至盘10
 	,FuturesPriceType	int -- 0 - 不限价，1 - 最新价， A-E盘1到盘5
@@ -17,6 +17,9 @@ create table tradinginstance(
 	,Owner				varchar(10)
 	,CreatedDate		datetime
 	,ModifiedDate		datetime
+	--,StartDate			datetime -- 指令开始时间
+	--,EndDate			datetime -- 指令结束时间
+	--,EntrustedAmount	int		 -- 已委托数量	
 )
 
 go
@@ -223,6 +226,7 @@ begin
 			,a.CreatedDate		
 			,a.ModifiedDate	
 			,b.MonitorUnitName	
+			,c.TemplateId
 			,c.TemplateName
 		from tradinginstance a
 		inner join monitorunit b
