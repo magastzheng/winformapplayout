@@ -11,6 +11,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace TradingSystem.View
 {
@@ -50,6 +51,7 @@ namespace TradingSystem.View
             tbCopies.KeyPress += new KeyPressEventHandler(TextBox_Copies_KeyPress);
 
             this.cmdGridView.UpdateRelatedDataGridHandler += new UpdateRelatedDataGrid(GridView_Command_UpdateRelatedDataGridHandler);
+            this.bsGridView.UpdateRelatedDataGridHandler += new UpdateRelatedDataGrid(GridView_BuySell_UpdateRelatedDataGridHandler);
         }
 
         private void GridView_Command_UpdateRelatedDataGridHandler(UpdateDirection direction, int rowIndex, int columnIndex)
@@ -63,13 +65,72 @@ namespace TradingSystem.View
             {
                 case UpdateDirection.Select:
                     {
-                        
+                        //Add into two gridview: CommandSecurity and entrust
+
+                        //Add into buy/sell grid view
+                        var entrustItems = _eiDataSource.Where(p => p.CommandNo == cmdItem.CommandNo);
+                        if (entrustItems == null || entrustItems.Count() == 0)
+                        {
+                            var entrustItem = new EntrustItem
+                            {
+                                CommandNo = cmdItem.CommandNo,
+                                Selection = true
+                            };
+
+                            _eiDataSource.Add(entrustItem);
+                        }
                     }
                     break;
                 case UpdateDirection.UnSelect:
                     {
+                        //Remove from two GridView:
+                        var entrustItems = _eiDataSource.Where(p => p.CommandNo == cmdItem.CommandNo).ToList();
+                        if (entrustItems != null && entrustItems.Count() > 0)
+                        {
+                            foreach (var item in entrustItems)
+                            {
+                                _eiDataSource.Remove(item);
+                            }
+                        }
+                    }
+                    break;
+                case UpdateDirection.Increase:
+                    {
                         
                     }
+                    break;
+                case UpdateDirection.Decrease:
+                    {
+                        
+                    }
+                    break;
+            }
+        }
+
+        private void GridView_BuySell_UpdateRelatedDataGridHandler(UpdateDirection direction, int rowIndex, int columnIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= _eiDataSource.Count)
+                return;
+
+            EntrustItem eiItem = _eiDataSource[rowIndex];
+            switch (direction)
+            {
+                case UpdateDirection.Select:
+                    {
+                    }
+                    break;
+                case UpdateDirection.UnSelect:
+                    {
+                    }
+                    break;
+                case UpdateDirection.Increase:
+                    { 
+                        
+                    }
+                    break;
+                case UpdateDirection.Decrease:
+                    break;
+                default:
                     break;
             }
         }
@@ -195,6 +256,7 @@ namespace TradingSystem.View
         private bool Form_LoadData(object sender, object data)
         {
             //Load data here
+            _cmdDataSource.Clear();
 
             var tradingInstances = _tradeInstdao.GetCombine(-1);
             if (tradingInstances != null)

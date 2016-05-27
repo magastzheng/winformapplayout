@@ -642,7 +642,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "add",
+		"name": "plus",
 		"text": "增加",
 		"width": 40,
 		"columntype": 2,
