@@ -164,7 +164,7 @@
             // 
             this.cmdMainSplitter.Panel2.Controls.Add(this.bsSplitter);
             this.cmdMainSplitter.Size = new System.Drawing.Size(1111, 538);
-            this.cmdMainSplitter.SplitterDistance = 900;
+            this.cmdMainSplitter.SplitterDistance = 881;
             this.cmdMainSplitter.TabIndex = 0;
             // 
             // cmdVerticalSplitter
@@ -182,7 +182,7 @@
             // cmdVerticalSplitter.Panel2
             // 
             this.cmdVerticalSplitter.Panel2.Controls.Add(this.tabChildSecurity);
-            this.cmdVerticalSplitter.Size = new System.Drawing.Size(900, 476);
+            this.cmdVerticalSplitter.Size = new System.Drawing.Size(881, 476);
             this.cmdVerticalSplitter.SplitterDistance = 276;
             this.cmdVerticalSplitter.TabIndex = 2;
             // 
@@ -192,7 +192,7 @@
             this.cmdTradingPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cmdTradingPanel.Location = new System.Drawing.Point(0, 0);
             this.cmdTradingPanel.Name = "cmdTradingPanel";
-            this.cmdTradingPanel.Size = new System.Drawing.Size(900, 247);
+            this.cmdTradingPanel.Size = new System.Drawing.Size(881, 247);
             this.cmdTradingPanel.TabIndex = 2;
             // 
             // cmdGridView
@@ -204,7 +204,7 @@
             this.cmdGridView.Location = new System.Drawing.Point(0, 0);
             this.cmdGridView.Name = "cmdGridView";
             this.cmdGridView.RowTemplate.Height = 23;
-            this.cmdGridView.Size = new System.Drawing.Size(900, 247);
+            this.cmdGridView.Size = new System.Drawing.Size(881, 247);
             this.cmdGridView.TabIndex = 1;
             // 
             // cmdMiddlePanel
@@ -214,7 +214,7 @@
             this.cmdMiddlePanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.cmdMiddlePanel.Location = new System.Drawing.Point(0, 247);
             this.cmdMiddlePanel.Name = "cmdMiddlePanel";
-            this.cmdMiddlePanel.Size = new System.Drawing.Size(900, 29);
+            this.cmdMiddlePanel.Size = new System.Drawing.Size(881, 29);
             this.cmdMiddlePanel.TabIndex = 1;
             // 
             // btnCmdUnSelect
@@ -244,7 +244,7 @@
             this.tabChildSecurity.Location = new System.Drawing.Point(0, 0);
             this.tabChildSecurity.Name = "tabChildSecurity";
             this.tabChildSecurity.SelectedIndex = 0;
-            this.tabChildSecurity.Size = new System.Drawing.Size(900, 196);
+            this.tabChildSecurity.Size = new System.Drawing.Size(881, 196);
             this.tabChildSecurity.TabIndex = 0;
             // 
             // tpCmdSecurity
@@ -253,7 +253,7 @@
             this.tpCmdSecurity.Location = new System.Drawing.Point(4, 22);
             this.tpCmdSecurity.Name = "tpCmdSecurity";
             this.tpCmdSecurity.Padding = new System.Windows.Forms.Padding(3);
-            this.tpCmdSecurity.Size = new System.Drawing.Size(892, 170);
+            this.tpCmdSecurity.Size = new System.Drawing.Size(873, 170);
             this.tpCmdSecurity.TabIndex = 0;
             this.tpCmdSecurity.Text = "指令证券";
             this.tpCmdSecurity.UseVisualStyleBackColor = true;
@@ -267,7 +267,7 @@
             this.securityGridView.Location = new System.Drawing.Point(3, 3);
             this.securityGridView.Name = "securityGridView";
             this.securityGridView.RowTemplate.Height = 23;
-            this.securityGridView.Size = new System.Drawing.Size(886, 164);
+            this.securityGridView.Size = new System.Drawing.Size(867, 164);
             this.securityGridView.TabIndex = 0;
             // 
             // tpCmdEntrustFlow
@@ -298,7 +298,7 @@
             this.cmdBottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.cmdBottomPanel.Location = new System.Drawing.Point(0, 507);
             this.cmdBottomPanel.Name = "cmdBottomPanel";
-            this.cmdBottomPanel.Size = new System.Drawing.Size(900, 31);
+            this.cmdBottomPanel.Size = new System.Drawing.Size(881, 31);
             this.cmdBottomPanel.TabIndex = 1;
             // 
             // btnSecuUnSelect
@@ -326,7 +326,7 @@
             this.cmdTopPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.cmdTopPanel.Location = new System.Drawing.Point(0, 0);
             this.cmdTopPanel.Name = "cmdTopPanel";
-            this.cmdTopPanel.Size = new System.Drawing.Size(900, 31);
+            this.cmdTopPanel.Size = new System.Drawing.Size(881, 31);
             this.cmdTopPanel.TabIndex = 0;
             // 
             // tsCmdTrading
@@ -339,7 +339,7 @@
             this.tsbCancelAdd});
             this.tsCmdTrading.Location = new System.Drawing.Point(0, 0);
             this.tsCmdTrading.Name = "tsCmdTrading";
-            this.tsCmdTrading.Size = new System.Drawing.Size(898, 25);
+            this.tsCmdTrading.Size = new System.Drawing.Size(879, 25);
             this.tsCmdTrading.TabIndex = 0;
             this.tsCmdTrading.Text = "toolStrip1";
             // 
@@ -392,7 +392,7 @@
             this.bsSplitter.Panel2.Controls.Add(this.bsGridView);
             this.bsSplitter.Panel2.Controls.Add(this.entrustBottonPanel);
             this.bsSplitter.Panel2.Controls.Add(this.entrustTopPanel);
-            this.bsSplitter.Size = new System.Drawing.Size(207, 538);
+            this.bsSplitter.Size = new System.Drawing.Size(226, 538);
             this.bsSplitter.SplitterDistance = 73;
             this.bsSplitter.TabIndex = 0;
             // 
@@ -405,7 +405,7 @@
             this.bsGridView.Location = new System.Drawing.Point(0, 124);
             this.bsGridView.Name = "bsGridView";
             this.bsGridView.RowTemplate.Height = 23;
-            this.bsGridView.Size = new System.Drawing.Size(207, 237);
+            this.bsGridView.Size = new System.Drawing.Size(226, 237);
             this.bsGridView.TabIndex = 2;
             // 
             // entrustBottonPanel
@@ -419,7 +419,7 @@
             this.entrustBottonPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.entrustBottonPanel.Location = new System.Drawing.Point(0, 361);
             this.entrustBottonPanel.Name = "entrustBottonPanel";
-            this.entrustBottonPanel.Size = new System.Drawing.Size(207, 100);
+            this.entrustBottonPanel.Size = new System.Drawing.Size(226, 100);
             this.entrustBottonPanel.TabIndex = 1;
             // 
             // btnEntrust
@@ -482,7 +482,7 @@
             this.entrustTopPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.entrustTopPanel.Location = new System.Drawing.Point(0, 0);
             this.entrustTopPanel.Name = "entrustTopPanel";
-            this.entrustTopPanel.Size = new System.Drawing.Size(207, 124);
+            this.entrustTopPanel.Size = new System.Drawing.Size(226, 124);
             this.entrustTopPanel.TabIndex = 0;
             // 
             // cbFuturesSellPrice
