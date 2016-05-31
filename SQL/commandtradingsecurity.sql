@@ -6,6 +6,7 @@ drop table tradingcommand
 create table tradingcommand(
 	CommandId			int identity(1, 1) primary key
 	,InstanceId			int not null
+	,OperationCopies	int
 	,ModifiedTimes		int
 	,CommandType		int -- 1 - 期现套利
 	,ExecuteType		int -- 1 开仓， 2 - 平仓
@@ -24,6 +25,7 @@ create table tradingcommandsecurity(
 	CommandId			int not null
 	,SecuCode			varchar(10) not null
 	,SecuType			int
+	,WeightAmount		int
 	,CommandAmount		int
 	,EntrustedAmount	int
 	,CommandPrice		numeric(20, 4) --如果不限价，则价格设置为0
@@ -54,6 +56,7 @@ drop proc procTradingCommandInsert
 go
 create proc procTradingCommandInsert(
 	@InstanceId			int	
+	,@OperationCopies	int
 	,@CommandType		int	
 	,@ExecuteType		int	
 	,@StockDirection	int	
@@ -67,7 +70,8 @@ as
 begin
 	declare @newid int
 	insert into tradingcommand(
-		InstanceId			
+		InstanceId	
+		,OperationCopies		
 		,ModifiedTimes		
 		,CommandType		
 		,ExecuteType		
@@ -79,7 +83,8 @@ begin
 		,EndDate			
 	)
 	values(
-		@InstanceId			
+		@InstanceId
+		,@OperationCopies			
 		,1		
 		,@CommandType		
 		,@ExecuteType		
@@ -124,6 +129,7 @@ create proc procTradingCommandDelete(
 )
 as
 begin
+	--TODO:delete the tradingcommandsecurity
 	delete from tradingcommand where CommandId=@CommandId
 end
 
@@ -141,7 +147,8 @@ begin
 	begin
 		select 
 			CommandId			
-			,InstanceId			
+			,InstanceId	
+			,OperationCopies		
 			,ModifiedTimes		
 			,CommandType		
 			,ExecuteType		
@@ -158,7 +165,8 @@ begin
 	begin
 		select 
 			CommandId			
-			,InstanceId			
+			,InstanceId	
+			,OperationCopies		
 			,ModifiedTimes		
 			,CommandType		
 			,ExecuteType		
@@ -183,6 +191,7 @@ create proc procTradingCommandSecurityInsert(
 	@CommandId			int 
 	,@SecuCode			varchar(10) 
 	,@SecuType			int
+	,@WeightAmount		int
 	,@CommandAmount		int
 	,@CommandPrice		numeric(20, 4) --如果不限价，则价格设置为0
 )
@@ -191,7 +200,8 @@ begin
 	insert into tradingcommandsecurity(
 		CommandId			
 		,SecuCode			
-		,SecuType			
+		,SecuType
+		,WeightAmount			
 		,CommandAmount		
 		,EntrustedAmount	
 		,CommandPrice		
@@ -199,7 +209,8 @@ begin
 	)values(
 		@CommandId			
 		,@SecuCode			
-		,@SecuType			
+		,@SecuType
+		,@WeightAmount			
 		,@CommandAmount		
 		,0	
 		,@CommandPrice		
@@ -230,11 +241,11 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procTradingCommandSecurityUpdateEntrustDelete')
-drop proc procTradingCommandSecurityUpdateEntrustDelete
+if exists (select name from sysobjects where name='procTradingCommandSecurityDelete')
+drop proc procTradingCommandSecurityDelete
 
 go
-create proc procTradingCommandSecurityUpdateEntrustDelete(
+create proc procTradingCommandSecurityDelete(
 	@CommandId			int 
 	,@SecuCode			varchar(10) 
 )
@@ -256,7 +267,8 @@ begin
 	select
 		CommandId		
 		,SecuCode		
-		,SecuType		
+		,SecuType	
+		,WeightAmount	
 		,CommandAmount	
 		,EntrustedAmount
 		,CommandPrice	

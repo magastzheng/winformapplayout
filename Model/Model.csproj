@@ -55,6 +55,7 @@
     <Compile Include="Data\DataValue.cs" />
     <Compile Include="Data\DataValueType.cs" />
     <Compile Include="Data\EntrustDirection.cs" />
+    <Compile Include="Data\PosistionType.cs" />
     <Compile Include="Data\StockPriceType.cs" />
     <Compile Include="EntrustParam.cs" />
     <Compile Include="config\FieldConfigItem.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="strategy\AccountItem.cs" />
     <Compile Include="strategy\TradingInstance.cs" />
     <Compile Include="t2sdk\MarketCode.cs" />
+    <Compile Include="TradingCommand\TradingCommandItem.cs" />
     <Compile Include="UI\ClosePositionItem.cs" />
     <Compile Include="UI\ClosePositionSecurityItem.cs" />
     <Compile Include="UI\CommandSecurityItem.cs" />
