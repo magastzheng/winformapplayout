@@ -1,9 +1,9 @@
 use tradingsystem
 
-if object_id('commandtrading') is not null
-drop table commandtrading
+if object_id('tradingcommand') is not null
+drop table tradingcommand
 
-create table commandtrading(
+create table tradingcommand(
 	CommandId			int identity(1, 1) primary key
 	,InstanceId			int not null
 	,ModifiedTimes		int
@@ -17,10 +17,10 @@ create table commandtrading(
 	,EndDate			datetime
 )
 
-if object_id('commandtradingsecurity') is not null
-drop table commandtradingsecurity
+if object_id('tradingcommandsecurity') is not null
+drop table tradingcommandsecurity
 
-create table commandtradingsecurity(
+create table tradingcommandsecurity(
 	CommandId			int not null
 	,SecuCode			varchar(10) not null
 	,SecuType			int
@@ -45,14 +45,14 @@ create table entrustsecurity(
 
 
 --====================================
---commandtrading table
+--tradingcommand table
 --====================================
 go
-if exists (select name from sysobjects where name='procCommandTradingInsert')
-drop proc procCommandTradingInsert
+if exists (select name from sysobjects where name='procTradingCommandInsert')
+drop proc procTradingCommandInsert
 
 go
-create proc procCommandTradingInsert(
+create proc procTradingCommandInsert(
 	@InstanceId			int	
 	,@CommandType		int	
 	,@ExecuteType		int	
@@ -66,7 +66,7 @@ create proc procCommandTradingInsert(
 as
 begin
 	declare @newid int
-	insert into commandtrading(
+	insert into tradingcommand(
 		InstanceId			
 		,ModifiedTimes		
 		,CommandType		
@@ -96,18 +96,18 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procCommandTradingUpdateStatus')
-drop proc procCommandTradingUpdateStatus
+if exists (select name from sysobjects where name='procTradingCommandUpdateStatus')
+drop proc procTradingCommandUpdateStatus
 
 go
-create proc procCommandTradingUpdateStatus(
+create proc procTradingCommandUpdateStatus(
 	@CommandId			int
 	,@EntrustStatus		int
 	,@DealStatus		int	
 )
 as
 begin
-	update commandtrading
+	update tradingcommand
 	set			
 		EntrustStatus		= @EntrustStatus
 		,DealStatus			= @DealStatus
@@ -115,24 +115,24 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procCommandTradingDelete')
-drop proc procCommandTradingDelete
+if exists (select name from sysobjects where name='procTradingCommandDelete')
+drop proc procTradingCommandDelete
 
 go
-create proc procCommandTradingDelete(
+create proc procTradingCommandDelete(
 	@CommandId			int
 )
 as
 begin
-	delete from commandtrading where CommandId=@CommandId
+	delete from tradingcommand where CommandId=@CommandId
 end
 
 go
-if exists (select name from sysobjects where name='procCommandTradingSelect')
-drop proc procCommandTradingSelect
+if exists (select name from sysobjects where name='procTradingCommandSelect')
+drop proc procTradingCommandSelect
 
 go
-create proc procCommandTradingSelect(
+create proc procTradingCommandSelect(
 	@CommandId			int
 )
 as
@@ -151,7 +151,7 @@ begin
 			,DealStatus			
 			,StartDate			
 			,EndDate			
-		from commandtrading
+		from tradingcommand
 		where CommandId=@CommandId
 	end
 	else
@@ -168,18 +168,18 @@ begin
 			,DealStatus			
 			,StartDate			
 			,EndDate			
-		from commandtrading
+		from tradingcommand
 	end
 end
 --====================================
---commandtradingsecurity table
+--tradingcommandsecurity table
 --====================================
 go
-if exists (select name from sysobjects where name='procCommandTradingSecurityInsert')
-drop proc procCommandTradingSecurityInsert
+if exists (select name from sysobjects where name='procTradingCommandSecurityInsert')
+drop proc procTradingCommandSecurityInsert
 
 go
-create proc procCommandTradingSecurityInsert(
+create proc procTradingCommandSecurityInsert(
 	@CommandId			int 
 	,@SecuCode			varchar(10) 
 	,@SecuType			int
@@ -188,7 +188,7 @@ create proc procCommandTradingSecurityInsert(
 )
 as
 begin
-	insert into commandtradingsecurity(
+	insert into tradingcommandsecurity(
 		CommandId			
 		,SecuCode			
 		,SecuType			
@@ -208,18 +208,18 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procCommandTradingSecurityUpdateEntrustAmount')
-drop proc procCommandTradingSecurityUpdateEntrustAmount
+if exists (select name from sysobjects where name='procTradingCommandSecurityUpdateEntrustAmount')
+drop proc procTradingCommandSecurityUpdateEntrustAmount
 
 go
-create proc procCommandTradingSecurityUpdateEntrustAmount(
+create proc procTradingCommandSecurityUpdateEntrustAmount(
 	@CommandId			int 
 	,@SecuCode			varchar(10) 
 	,@EntrustedAmount	int
 )
 as
 begin
-	update commandtradingsecurity
+	update tradingcommandsecurity
 	set EntrustedAmount=@EntrustedAmount,
 		EntrustStatus=
 		case 
@@ -230,25 +230,25 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procCommandTradingSecurityUpdateEntrustDelete')
-drop proc procCommandTradingSecurityUpdateEntrustDelete
+if exists (select name from sysobjects where name='procTradingCommandSecurityUpdateEntrustDelete')
+drop proc procTradingCommandSecurityUpdateEntrustDelete
 
 go
-create proc procCommandTradingSecurityUpdateEntrustDelete(
+create proc procTradingCommandSecurityUpdateEntrustDelete(
 	@CommandId			int 
 	,@SecuCode			varchar(10) 
 )
 as
 begin
-	delete from commandtradingsecurity where CommandId=@CommandId and SecuCode=@SecuCode
+	delete from tradingcommandsecurity where CommandId=@CommandId and SecuCode=@SecuCode
 end
 
 go
-if exists (select name from sysobjects where name='procCommandTradingSecuritySelect')
-drop proc procCommandTradingSecuritySelect
+if exists (select name from sysobjects where name='procTradingCommandSecuritySelect')
+drop proc procTradingCommandSecuritySelect
 
 go
-create proc procCommandTradingSecuritySelect(
+create proc procTradingCommandSecuritySelect(
 	@CommandId	int 
 )
 as
@@ -261,7 +261,7 @@ begin
 		,EntrustedAmount
 		,CommandPrice	
 		,EntrustStatus	
-	from commandtradingsecurity 
+	from tradingcommandsecurity 
 	where CommandId=@CommandId
 end
 --====================================
