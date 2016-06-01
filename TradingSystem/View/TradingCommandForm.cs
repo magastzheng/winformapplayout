@@ -143,15 +143,15 @@ namespace TradingSystem.View
 
         #region 填充指令交易
 
-        private List<CommandTradingItem> GenerateTestCommandTrading()
+        private List<TradingCommandItem> GenerateTestCommandTrading()
         {
-            List<CommandTradingItem> tcItems = new List<CommandTradingItem>();
-            CommandTradingItem item1 = new CommandTradingItem
+            List<TradingCommandItem> tcItems = new List<TradingCommandItem>();
+            TradingCommandItem item1 = new TradingCommandItem
             {
                 Selection = true,
-                CommandNo = 12,
-                CommandType = "Test",
-                ExecuteType = "Buy",
+                CommandId = 12,
+                //CommandType = "Test",
+                //ExecuteType = "Buy",
                 CommandNum = 100,
                 TargetNum = 150,
                 BaisPrice = 0.25,
@@ -163,25 +163,25 @@ namespace TradingSystem.View
                 EntrustedAmount = 120,
                 CommandMoney = 154014.00,
                 Exposure = 12.0,
-                StartDate = "20160321",
-                EndDate = "20160321",
-                StartTime = "134200",
-                EndTime = "134500",
+                //StartDate = "20160321",
+                //EndDate = "20160321",
+                //StartTime = "134200",
+                //EndTime = "134500",
                 DispatchTime = "134311",
                 ExecutePerson = "Magast",
                 DispatchPerson = "Youyo",
-                InstanceId = "1120",
+                //InstanceId = "1120",
                 InstanceNo = "A110",
                 MonitorUnit = "M10"
             };
             tcItems.Add(item1);
 
-            CommandTradingItem item2 = new CommandTradingItem
+            TradingCommandItem item2 = new TradingCommandItem
             {
                 Selection = true,
-                CommandNo = 20,
-                CommandType = "Test",
-                ExecuteType = "Buy",
+                CommandId = 20,
+                //CommandType = "Test",
+                //ExecuteType = "Buy",
                 CommandNum = 100,
                 TargetNum = 150,
                 BaisPrice = 0.25,
@@ -193,14 +193,14 @@ namespace TradingSystem.View
                 EntrustedAmount = 120,
                 CommandMoney = 154014.00,
                 Exposure = 12.0,
-                StartDate = "20160321",
-                EndDate = "20160321",
-                StartTime = "134200",
-                EndTime = "134500",
+                //StartDate = "20160321",
+                //EndDate = "20160321",
+                //StartTime = "134200",
+                //EndTime = "134500",
                 DispatchTime = "134311",
                 ExecutePerson = "Magast",
                 DispatchPerson = "Youyo",
-                InstanceId = "1120",
+                //InstanceId = "1120",
                 InstanceNo = "A110",
                 MonitorUnit = "M10"
             };
@@ -209,7 +209,7 @@ namespace TradingSystem.View
             return tcItems;
         }
 
-        private void FillCommandTrading(List<CommandTradingItem> tcItems)
+        private void FillCommandTrading(List<TradingCommandItem> tcItems)
         {
             foreach (var dataItem in tcItems)
             {
@@ -218,7 +218,7 @@ namespace TradingSystem.View
 
                 bool isSelected = dataItem.Selection;
                 row.Cells["tc_selection"].Value = isSelected;
-                row.Cells["tc_commandno"].Value = dataItem.CommandNo;
+                row.Cells["tc_commandno"].Value = dataItem.CommandId;
                 row.Cells["tc_commandtype"].Value = dataItem.CommandType;
                 row.Cells["tc_executetype"].Value = dataItem.ExecuteType;
                 row.Cells["tc_commandnum"].Value = dataItem.CommandNum;
@@ -248,18 +248,18 @@ namespace TradingSystem.View
             }
         }
 
-        private List<CommandTradingItem> GetSelectionCommandTradingItems()
+        private List<TradingCommandItem> GetSelectionCommandTradingItems()
         {
-            List<CommandTradingItem> selectionItems = new List<CommandTradingItem>();
+            List<TradingCommandItem> selectionItems = new List<TradingCommandItem>();
             var dgv = dataGridViewCmdTrading;
             try
             {
                 foreach (DataGridViewRow row in dgv.Rows)
                 {
-                    CommandTradingItem item = new CommandTradingItem();
-                    item.CommandNo = (int)row.Cells["tc_commandno"].Value;
-                    item.CommandType = (string)row.Cells["tc_commandtype"].Value;
-                    item.ExecuteType = (string)row.Cells["tc_executetype"].Value;
+                    TradingCommandItem item = new TradingCommandItem();
+                    item.CommandId = (int)row.Cells["tc_commandno"].Value;
+                    //item.CommandType = (string)row.Cells["tc_commandtype"].Value;
+                    //item.ExecuteType = (string)row.Cells["tc_executetype"].Value;
                     item.CommandNum = (int)row.Cells["tc_commandnum"].Value;
                     item.TargetNum = (int)row.Cells["tc_targetnum"].Value;
                     item.BaisPrice = (double)row.Cells["tc_baisprice"].Value;
@@ -272,14 +272,14 @@ namespace TradingSystem.View
                     item.DealAmount = (int)row.Cells["tc_dealamount"].Value;
                     item.CommandMoney = (double)row.Cells["tc_commandmoney"].Value;
                     item.Exposure = (double)row.Cells["tc_exposure"].Value;
-                    item.StartDate = (string)row.Cells["tc_startdate"].Value;
-                    item.EndDate = (string)row.Cells["tc_enddate"].Value;
-                    item.StartTime = (string)row.Cells["tc_starttime"].Value;
-                    item.EndTime = (string)row.Cells["tc_endtime"].Value;
+                    //item.StartDate = (string)row.Cells["tc_startdate"].Value;
+                    //item.EndDate = (string)row.Cells["tc_enddate"].Value;
+                    //item.StartTime = (string)row.Cells["tc_starttime"].Value;
+                    //item.EndTime = (string)row.Cells["tc_endtime"].Value;
                     item.DispatchTime = (string)row.Cells["tc_dispatchtime"].Value;
                     item.ExecutePerson = (string)row.Cells["tc_executeperson"].Value;
                     item.DispatchPerson = (string)row.Cells["tc_dispatchperson"].Value;
-                    item.InstanceId = (string)row.Cells["tc_instanceid"].Value;
+                    //item.InstanceId = (string)row.Cells["tc_instanceid"].Value;
                     item.InstanceNo = (string)row.Cells["tc_instanceno"].Value;
                     item.MonitorUnit = (string)row.Cells["tc_monitorunit"].Value;
 
@@ -392,10 +392,10 @@ namespace TradingSystem.View
 
             CommandSecurityItem item1 = new CommandSecurityItem
             {
-                Selection = 0,
+                Selection = false,
                 SecuCode = "000002",
                 SecuName = "万科A",
-                CommandNo = 23,
+                CommandId = 23,
                 FundCode = "FO11123",
                 PortfolioName = "Test",
                 CommandPrice = 12.23,
@@ -416,10 +416,10 @@ namespace TradingSystem.View
             };
             CommandSecurityItem item2 = new CommandSecurityItem
             {
-                Selection = 0,
+                Selection = false,
                 SecuCode = "000001",
                 SecuName = "中国平安",
-                CommandNo = 23,
+                CommandId = 23,
                 FundCode = "FO11123",
                 PortfolioName = "Test",
                 CommandPrice = 12.23,
@@ -452,11 +452,11 @@ namespace TradingSystem.View
                 int rowIndex = this.dataGridViewCmdSecurity.Rows.Add();
                 DataGridViewRow row = this.dataGridViewCmdSecurity.Rows[rowIndex];
 
-                bool isSelected = dataItem.Selection > 0 ? true : false;
+                bool isSelected = dataItem.Selection;
                 row.Cells["cs_selection"].Value = isSelected;
                 row.Cells["cs_secucode"].Value = dataItem.SecuCode;
                 row.Cells["cs_secuname"].Value = dataItem.SecuName;
-                row.Cells["cs_commandno"].Value = dataItem.CommandNo;
+                row.Cells["cs_commandno"].Value = dataItem.CommandId;
                 row.Cells["cs_fundcode"].Value = dataItem.FundCode;
                 row.Cells["cs_portfolioname"].Value = dataItem.PortfolioName;
                 row.Cells["cs_commandprice"].Value = dataItem.CommandPrice;
@@ -489,10 +489,10 @@ namespace TradingSystem.View
                 foreach (DataGridViewRow row in dgv.Rows)
                 {
                     CommandSecurityItem item = new CommandSecurityItem();
-                    item.CommandNo = (int)row.Cells["tc_commandno"].Value;
+                    item.CommandId = (int)row.Cells["tc_commandno"].Value;
                     item.SecuCode = (string)row.Cells["cs_secucode"].Value;
                     item.SecuName = (string)row.Cells["cs_secuname"].Value;
-                    item.CommandNo = (int)row.Cells["cs_commandno"].Value;
+                    item.CommandId = (int)row.Cells["cs_commandno"].Value;
                     item.FundCode = (string)row.Cells["cs_fundcode"].Value;
                     item.PortfolioName = (string)row.Cells["cs_portfolioname"].Value;
                     item.CommandPrice = (double)row.Cells["cs_commandprice"].Value;
@@ -666,15 +666,15 @@ namespace TradingSystem.View
 
         private List<EntrustItem> GetDefaultEntrustData()
         {
-            List<CommandTradingItem> selectionCommandItems = GetSelectionCommandTradingItems();
+            List<TradingCommandItem> selectionCommandItems = GetSelectionCommandTradingItems();
 
             List<EntrustItem> eiItems = new List<EntrustItem>();
-            foreach (CommandTradingItem tcItem in selectionCommandItems)
+            foreach (TradingCommandItem tcItem in selectionCommandItems)
             {
                 EntrustItem item = new EntrustItem
                 {
                     Selection = false,
-                    CommandNo = tcItem.CommandNo,
+                    CommandNo = tcItem.CommandId,
                     Copies = 0
                 };
 

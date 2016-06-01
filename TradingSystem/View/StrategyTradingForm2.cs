@@ -23,12 +23,15 @@ namespace TradingSystem.View
         private const string GridCmdSecurityId = "cmdsecurity";
         private const string GridBuySellId = "buysell";
 
-        private TradingInstanceDAO _tradeInstdao = new TradingInstanceDAO();
+        //private TradingInstanceDAO _tradeInstdao = new TradingInstanceDAO();
+        private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
+        private TradingCommandSecurityDAO _tradecmdsecudao = new TradingCommandSecurityDAO();
 
-        private SortableBindingList<CommandTradingItem> _cmdDataSource = new SortableBindingList<CommandTradingItem>(new List<CommandTradingItem>());
+        private SortableBindingList<TradingCommandItem> _cmdDataSource = new SortableBindingList<TradingCommandItem>(new List<TradingCommandItem>());
         private SortableBindingList<EntrustFlowItem> _efDataSource = new SortableBindingList<EntrustFlowItem>(new List<EntrustFlowItem>());
         private SortableBindingList<DealFlowItem> _dfDataSource = new SortableBindingList<DealFlowItem>(new List<DealFlowItem>());
         private SortableBindingList<EntrustItem> _eiDataSource = new SortableBindingList<EntrustItem>(new List<EntrustItem>());
+        private SortableBindingList<CommandSecurityItem> _secuDataSource = new SortableBindingList<CommandSecurityItem>(new List<CommandSecurityItem>());
 
         GridConfig _gridConfig;
         public StrategyTradingForm2()
@@ -59,21 +62,34 @@ namespace TradingSystem.View
             if (rowIndex < 0 || rowIndex >= _cmdDataSource.Count)
                 return;
 
-            CommandTradingItem cmdItem = _cmdDataSource[rowIndex];
+            TradingCommandItem cmdItem = _cmdDataSource[rowIndex];
 
             switch (direction)
             {
                 case UpdateDirection.Select:
                     {
                         //Add into two gridview: CommandSecurity and entrust
+                        var secuItems = _secuDataSource.Where(p => p.CommandId == cmdItem.CommandId);
+                        if(secuItems == null || secuItems.Count() == 0)
+                        {
+                            secuItems = _tradecmdsecudao.Get(cmdItem.CommandId);
+                            if (secuItems != null)
+                            {
+                                foreach (var secuItem in secuItems)
+                                {
+                                    secuItem.Selection = true;
+                                    _secuDataSource.Add(secuItem);
+                                }
+                            }
+                        }
 
                         //Add into buy/sell grid view
-                        var entrustItems = _eiDataSource.Where(p => p.CommandNo == cmdItem.CommandNo);
+                        var entrustItems = _eiDataSource.Where(p => p.CommandNo == cmdItem.CommandId);
                         if (entrustItems == null || entrustItems.Count() == 0)
                         {
                             var entrustItem = new EntrustItem
                             {
-                                CommandNo = cmdItem.CommandNo,
+                                CommandNo = cmdItem.CommandId,
                                 Selection = true
                             };
 
@@ -83,8 +99,18 @@ namespace TradingSystem.View
                     break;
                 case UpdateDirection.UnSelect:
                     {
+                        //Remove from Security GridView
+                        var secuItems = _secuDataSource.Where(p => p.CommandId == cmdItem.CommandId).ToList();
+                        if (secuItems != null && secuItems.Count() > 0)
+                        {
+                            foreach (var secuItem in secuItems)
+                            {
+                                _secuDataSource.Remove(secuItem);
+                            }
+                        }
+    
                         //Remove from two GridView:
-                        var entrustItems = _eiDataSource.Where(p => p.CommandNo == cmdItem.CommandNo).ToList();
+                        var entrustItems = _eiDataSource.Where(p => p.CommandNo == cmdItem.CommandId).ToList();
                         if (entrustItems != null && entrustItems.Count() > 0)
                         {
                             foreach (var item in entrustItems)
@@ -141,7 +167,7 @@ namespace TradingSystem.View
         {
             //Load Command Trading
             TSDataGridViewHelper.AddColumns(this.cmdGridView, _gridConfig.GetGid(GridCmdTradingId));
-            Dictionary<string, string> cmdColDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(CommandTradingItem));
+            Dictionary<string, string> cmdColDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(TradingCommandItem));
             TSDataGridViewHelper.SetDataBinding(this.cmdGridView, cmdColDataMap);           
 
             //Load EntrustFlow gridview
@@ -172,6 +198,7 @@ namespace TradingSystem.View
             this.efGridView.DataSource = _efDataSource;
             this.dfGridView.DataSource = _dfDataSource;
             this.bsGridView.DataSource = _eiDataSource;
+            this.securityGridView.DataSource = _secuDataSource;
 
             return true;
         }
@@ -258,20 +285,21 @@ namespace TradingSystem.View
             //Load data here
             _cmdDataSource.Clear();
 
-            var tradingInstances = _tradeInstdao.GetCombine(-1);
-            if (tradingInstances != null)
+            //var tradingInstances = _tradeInstdao.GetCombine(-1);
+            var tradingcmds = _tradecmddao.Get(-1);
+            if (tradingcmds != null)
             {
-                foreach (var instance in tradingInstances)
+                foreach (var cmdItem in tradingcmds)
                 {
-                    CommandTradingItem cmdItem = new CommandTradingItem 
-                    {
-                        CommandNo = instance.InstanceId,
-                        CommandNum = instance.OperationCopies,
-                        InstanceId = instance.InstanceCode,
-                        InstanceNo = instance.InstanceId.ToString(),
-                        MonitorUnit = instance.MonitorUnitName,
-                        TemplateId = instance.TemplateId,
-                    };
+                    //TradingCommandItem cmdItem = new TradingCommandItem 
+                    //{
+                    //    CommandId = instance.InstanceId,
+                    //    CommandNum = instance.OperationCopies,
+                    //    //InstanceId = instance.InstanceCode,
+                    //    InstanceNo = instance.InstanceId.ToString(),
+                    //    MonitorUnit = instance.MonitorUnitName,
+                    //    TemplateId = instance.TemplateId,
+                    //};
 
                     _cmdDataSource.Add(cmdItem);
                 }

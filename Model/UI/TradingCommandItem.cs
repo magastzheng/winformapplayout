@@ -1,4 +1,5 @@
 ﻿using Model.Binding;
+using Model.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,23 +8,68 @@ using System.Threading.Tasks;
 
 namespace Model.UI
 {
-    public class CommandTradingItem
+    public class TradingCommandItem
     {
         //选中
         [BindingAttribute("selection")]
         public bool Selection { get; set; }
 
         //指令序号
-        [BindingAttribute("commandno")]
-        public int CommandNo { get; set; }
+        [BindingAttribute("commandid")]
+        public int CommandId { get; set; }
 
         //指令类型
         [BindingAttribute("commandtype")]
-        public string CommandType { get; set; }
+        public string CommandType 
+        { 
+            get 
+            {
+                string ret = string.Empty;
+                switch (ECommandType)
+                {
+                    case UI.CommandType.Arbitrage:
+                        {
+                            ret = "期现套利";
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                return ret;
+            } 
+        }
 
         //执行类型
         [BindingAttribute("executetype")]
-        public string ExecuteType { get; set; }
+        public string ExecuteType 
+        {
+            get
+            {
+                string ret = string.Empty;
+                switch (EExecuteType)
+                {
+                    case UI.ExecuteType.OpenPosition:
+                        {
+                            ret = "开仓";
+                        }
+                        break;
+                    case UI.ExecuteType.ClosePosition:
+                        {
+                            ret = "平仓";
+                        }
+                        break;
+                    case UI.ExecuteType.AdjustPosition:
+                        {
+                            ret = "调仓";
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                return ret;
+            }
+        }
 
         //指令份数
         [BindingAttribute("commandnum")]
@@ -75,19 +121,37 @@ namespace Model.UI
 
         //开始日期yyyyMMdd
         [BindingAttribute("startdate")]
-        public string StartDate { get; set; }
+        public string StartDate 
+        {
+            get { return DStartDate.ToString("yyyyMMdd"); }
+        }
 
         //结束日期yyyyMMdd
         [BindingAttribute("enddate")]
-        public string EndDate { get; set; }
+        public string EndDate 
+        {
+            get { return DEndDate.ToString("yyyyMMdd"); }
+        }
 
         //开始时间
         [BindingAttribute("starttime")]
-        public string StartTime { get; set; }
+        public string StartTime 
+        {
+            get 
+            {
+                return DStartDate.ToString("hh:mm:ss");
+            }
+        }
 
         //结束时间
         [BindingAttribute("endtime")]
-        public string EndTime { get; set; }
+        public string EndTime
+        {
+            get
+            {
+                return DEndDate.ToString("hh:mm:ss");
+            }
+        }
 
         //分发时间
         [BindingAttribute("dispatchtime")]
@@ -103,7 +167,7 @@ namespace Model.UI
 
         //实例号
         [BindingAttribute("instanceid")]
-        public string InstanceId { get; set; }
+        public int InstanceId { get; set; }
 
         //实例编号
         [BindingAttribute("instanceno")]
@@ -114,5 +178,23 @@ namespace Model.UI
         public string MonitorUnit { get; set; }
 
         public int TemplateId { get; set; }
+
+        public int ModifiedTimes { get; set; }
+
+        public CommandType ECommandType { get; set; }
+
+        public ExecuteType EExecuteType { get; set; }
+
+        public EntrustDirection EStockDirection { get; set; }
+
+        public EntrustDirection EFuturesDirection { get; set; }
+
+        public EntrustStatus EEntrustStatus { get; set; }
+
+        public DealStatus EDealStatus { get; set; }
+
+        public DateTime DStartDate { get; set; }
+
+        public DateTime DEndDate { get; set; }
     }
 }

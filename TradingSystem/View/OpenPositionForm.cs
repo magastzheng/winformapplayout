@@ -28,6 +28,8 @@ namespace TradingSystem.View
         private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
         private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
         private TradingInstanceDAO _tradeinstdao = new TradingInstanceDAO();
+        private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
+        private TradingCommandSecurityDAO _tradecmdsecudao = new TradingCommandSecurityDAO();
 
         private SortableBindingList<OpenPositionItem> _monitorDataSource;
         private SortableBindingList<OpenPositionSecurityItem> _securityDataSource;
@@ -289,8 +291,50 @@ namespace TradingSystem.View
                             };
 
                             int instanceId = _tradeinstdao.Create(tradingInstance);
-                            if (instanceId <= 0)
-                            { 
+
+                            if (instanceId > 0)
+                            {
+                                //success! Will send generate TradingCommand
+                                TradingCommandItem cmdItem = new TradingCommandItem 
+                                {
+                                    InstanceId = instanceId,
+                                    ECommandType = Model.UI.CommandType.Arbitrage,
+                                    EExecuteType = ExecuteType.OpenPosition,
+                                    CommandNum = openItem.Copies,
+                                    EStockDirection = Model.Data.EntrustDirection.BuySpot,
+                                    EFuturesDirection = Model.Data.EntrustDirection.SellOpen,
+                                    EEntrustStatus = EntrustStatus.NoExecuted,
+                                    EDealStatus = DealStatus.NoDeal,
+                                    ModifiedTimes = 1
+                                };
+
+                                int commandId = _tradecmddao.Create(cmdItem);
+                                if (commandId > 0)
+                                {
+                                    var cmdSecuItems = GetSelectCommandSecurities(openItem, commandId);
+                                    if (cmdSecuItems != null)
+                                    {
+                                        foreach (var cmdSecuItem in cmdSecuItems)
+                                        {
+                                            int ret = _tradecmdsecudao.Create(cmdSecuItem);
+                                            if (ret > 0)
+                                            {
+                                                //Success
+                                            }
+                                            else
+                                            { 
+                                                //TODO: Fail
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                { 
+                                    //Fail to submit the command
+                                }
+                            }
+                            else
+                            {
                                 //TODO: error message
                             }
                         }
@@ -302,6 +346,30 @@ namespace TradingSystem.View
             }
         }
 
+
+        private List<CommandSecurityItem> GetSelectCommandSecurities(OpenPositionItem openItem, int commandId)
+        {
+            List<CommandSecurityItem> cmdSecuItems = new List<CommandSecurityItem>();
+            foreach (var item in _securityDataSource)
+            {
+                if (item.Selection && item.MonitorId == openItem.MonitorId)
+                {
+                    CommandSecurityItem secuItem = new CommandSecurityItem 
+                    {
+                        CommandId = commandId,
+                        SecuCode = item.SecuCode,
+                        WeightAmount = item.WeightAmount,
+                        CommandAmount = item.EntrustAmount,
+                        CommandPrice = item.CommandPrice,
+                        EntrustStatus = EntrustStatus.NoExecuted
+                    };
+
+                    cmdSecuItems.Add(secuItem);
+                }
+            }
+
+            return cmdSecuItems;
+        }
         #endregion
     }
 }

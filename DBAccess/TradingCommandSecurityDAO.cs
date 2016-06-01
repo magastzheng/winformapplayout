@@ -1,5 +1,5 @@
 ﻿using Model.SecurityInfo;
-using Model.TradingCommand;
+using Model.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +27,7 @@ namespace DBAccess
             
         }
 
-        public int Create(TradingCommandSecurityItem secItem)
+        public int Create(CommandSecurityItem secItem)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, secItem.CommandId);
@@ -40,7 +40,7 @@ namespace DBAccess
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public int Update(TradingCommandSecurityItem secItem)
+        public int Update(CommandSecurityItem secItem)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustAmount);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, secItem.CommandId);
@@ -58,18 +58,18 @@ namespace DBAccess
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public List<TradingCommandSecurityItem> Get(int commandId)
+        public List<CommandSecurityItem> Get(int commandId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
-  
-            List<TradingCommandSecurityItem> items = new List<TradingCommandSecurityItem>();
+
+            List<CommandSecurityItem> items = new List<CommandSecurityItem>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    TradingCommandSecurityItem item = new TradingCommandSecurityItem();
+                    CommandSecurityItem item = new CommandSecurityItem();
                     item.CommandId = (int)reader["CommandId"];
                     item.SecuCode = (string)reader["SecuCode"];
                     item.SecuType = (SecurityType)reader["SecuType"];

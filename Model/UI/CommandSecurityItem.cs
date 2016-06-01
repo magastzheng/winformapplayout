@@ -1,4 +1,5 @@
 ﻿using Model.Binding;
+using Model.SecurityInfo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace Model.UI
     {
         //选择
         [BindingAttribute("selection")]
-        public int Selection { get; set; }
+        public bool Selection { get; set; }
 
         //证券代码
         [BindingAttribute("secucode")]
@@ -23,8 +24,8 @@ namespace Model.UI
         public string SecuName { get; set; }
 
         //指令序号
-        [BindingAttribute("commandno")]
-        public int CommandNo { get; set; }
+        [BindingAttribute("commandid")]
+        public int CommandId { get; set; }
 
         //基金代码
         [BindingAttribute("fundcode")]
@@ -97,5 +98,11 @@ namespace Model.UI
         //涨跌停
         [BindingAttribute("limitupdown")]
         public string LimitUpOrDown { get; set; }
+
+        public SecurityType SecuType { get; set; }
+
+        public int WeightAmount { get; set; }
+
+        public EntrustStatus EntrustStatus { get; set; }
     }
 }

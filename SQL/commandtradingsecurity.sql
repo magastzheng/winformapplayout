@@ -6,7 +6,7 @@ drop table tradingcommand
 create table tradingcommand(
 	CommandId			int identity(1, 1) primary key
 	,InstanceId			int not null
-	,OperationCopies	int
+	,CommandNum	int
 	,ModifiedTimes		int
 	,CommandType		int -- 1 - 期现套利
 	,ExecuteType		int -- 1 开仓， 2 - 平仓
@@ -56,7 +56,7 @@ drop proc procTradingCommandInsert
 go
 create proc procTradingCommandInsert(
 	@InstanceId			int	
-	,@OperationCopies	int
+	,@CommandNum	int
 	,@CommandType		int	
 	,@ExecuteType		int	
 	,@StockDirection	int	
@@ -71,7 +71,7 @@ begin
 	declare @newid int
 	insert into tradingcommand(
 		InstanceId	
-		,OperationCopies		
+		,CommandNum		
 		,ModifiedTimes		
 		,CommandType		
 		,ExecuteType		
@@ -84,7 +84,7 @@ begin
 	)
 	values(
 		@InstanceId
-		,@OperationCopies			
+		,@CommandNum			
 		,1		
 		,@CommandType		
 		,@ExecuteType		
@@ -148,7 +148,7 @@ begin
 		select 
 			CommandId			
 			,InstanceId	
-			,OperationCopies		
+			,CommandNum		
 			,ModifiedTimes		
 			,CommandType		
 			,ExecuteType		
@@ -166,7 +166,7 @@ begin
 		select 
 			CommandId			
 			,InstanceId	
-			,OperationCopies		
+			,CommandNum		
 			,ModifiedTimes		
 			,CommandType		
 			,ExecuteType		

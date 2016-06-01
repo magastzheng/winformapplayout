@@ -34,7 +34,7 @@ readonly:
 		"visible": 1,
 		"readonly": 0
 		}, {
-		"name": "commandno",
+		"name": "commandid",
 		"text": "指令序号",
 		"width": 80,
 		"columntype": 0,
@@ -461,7 +461,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "commandno",
+		"name": "commandid",
 		"text": "指令序号",
 		"width": 80,
 		"columntype": 0,

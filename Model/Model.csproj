@@ -69,13 +69,14 @@
     <Compile Include="strategy\TradingInstance.cs" />
     <Compile Include="t2sdk\MarketCode.cs" />
     <Compile Include="TradingCommand\TradingCommandItem.cs" />
+    <Compile Include="TradingCommand\TradingCommandSecurityItem.cs" />
     <Compile Include="UI\ClosePositionItem.cs" />
     <Compile Include="UI\ClosePositionSecurityItem.cs" />
     <Compile Include="UI\CommandSecurityItem.cs" />
     <Compile Include="UI\DealFlowItem.cs" />
     <Compile Include="UI\EntrustFlowItem.cs" />
     <Compile Include="UI\EntrustItem.cs" />
-    <Compile Include="UI\CommandTradingItem.cs" />
+    <Compile Include="UI\TradingCommandItem.cs" />
     <Compile Include="UI\AssetUnit.cs" />
     <Compile Include="UI\Fund.cs" />
     <Compile Include="UI\FuturesContract.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="UI\Portfolio.cs" />
     <Compile Include="UI\StockTemplate.cs" />
     <Compile Include="UI\TemplateStock.cs" />
+    <Compile Include="UI\TradingCommandType.cs" />
     <Compile Include="UI\TradingInstance.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
