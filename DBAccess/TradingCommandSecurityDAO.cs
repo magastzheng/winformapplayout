@@ -1,4 +1,5 @@
-﻿using Model.TradingCommand;
+﻿using Model.SecurityInfo;
+using Model.TradingCommand;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace DBAccess
     public class TradingCommandSecurityDAO: BaseDAO
     {
         private const string SP_Create = "procTradingCommandSecurityInsert";
-        private const string SP_Modify = "procTradingCommandSecurityUpdateEntrustAmount";
+        private const string SP_ModifyEntrustAmount = "procTradingCommandSecurityUpdateEntrustAmount";
         private const string SP_Delete = "procTradingCommandSecurityDelete";
         private const string SP_Get = "procTradingCommandSecuritySelect";
 
@@ -37,6 +38,54 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@CommandPrice", System.Data.DbType.Double, secItem.CommandPrice);
      
             return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int Update(TradingCommandSecurityItem secItem)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustAmount);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, secItem.CommandId);
+            _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, secItem.SecuCode);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustedAmount", System.Data.DbType.Int32, secItem.EntrustedAmount);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int Delete(int commandId, string secuCode)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Delete);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public List<TradingCommandSecurityItem> Get(int commandId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+  
+            List<TradingCommandSecurityItem> items = new List<TradingCommandSecurityItem>();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    TradingCommandSecurityItem item = new TradingCommandSecurityItem();
+                    item.CommandId = (int)reader["CommandId"];
+                    item.SecuCode = (string)reader["SecuCode"];
+                    item.SecuType = (SecurityType)reader["SecuType"];
+                    item.WeightAmount = (int)reader["WeightAmount"];
+                    item.CommandAmount = (int)reader["CommandAmount"];
+                    item.EntrustedAmount = (int)reader["EntrustedAmount"];
+                    item.CommandPrice = (double)(decimal)reader["CommandPrice"];
+                    item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+
+                    items.Add(item);
+                }
+            }
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return items;
         }
     }
 }

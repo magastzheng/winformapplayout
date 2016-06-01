@@ -23,6 +23,6 @@ namespace Model.TradingCommand
 
         public double CommandPrice { get; set; }
 
-        public int EntrustStatus { get; set; }
+        public EntrustStatus EntrustStatus { get; set; }
     }
 }
