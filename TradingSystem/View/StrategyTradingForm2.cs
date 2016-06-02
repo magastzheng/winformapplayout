@@ -14,6 +14,8 @@ using System.Windows.Forms;
 using System.Linq;
 using Model.SecurityInfo;
 using Quote;
+using Model;
+using Model.config;
 
 namespace TradingSystem.View
 {
@@ -221,17 +223,28 @@ namespace TradingSystem.View
 
         private void LoadEntrustControl()
         {
-            var spotBuy = ConfigManager.Instance.GetComboConfig().GetComboOption("spotbuy");
-            ComboBoxUtil.SetComboBox(this.cbSpotBuyPrice, spotBuy);
+            var spotPrices = ConfigManager.Instance.GetComboConfig().GetComboOption("spotprice");
+            ComboBoxUtil.SetComboBox(this.cbSpotBuyPrice, spotPrices);
 
-            var spotSell = ConfigManager.Instance.GetComboConfig().GetComboOption("spotsell");
-            ComboBoxUtil.SetComboBox(this.cbSpotSellPrice, spotSell);
+            var spotSellPrices = new ComboOption 
+            {
+                Name = spotPrices.Name,
+                Selected = spotPrices.Selected,
+                Items = spotPrices.Items.OrderBy(p => p.Order2).ToList()
+            };
+            ComboBoxUtil.SetComboBox(this.cbSpotSellPrice, spotSellPrices);
 
-            var futureBuy = ConfigManager.Instance.GetComboConfig().GetComboOption("futurebuy");
-            ComboBoxUtil.SetComboBox(this.cbFuturesBuyPrice, futureBuy);
+            var futurePrice = ConfigManager.Instance.GetComboConfig().GetComboOption("futureprice");
+            ComboBoxUtil.SetComboBox(this.cbFuturesBuyPrice, futurePrice);
 
-            var futureSell = ConfigManager.Instance.GetComboConfig().GetComboOption("futuresell");
-            ComboBoxUtil.SetComboBox(this.cbFuturesSellPrice, futureSell);
+            var futureSellPrices = new ComboOption
+            {
+                Name = futurePrice.Name,
+                Selected = futurePrice.Selected,
+                Items = futurePrice.Items.OrderBy(p => p.Order2).ToList()
+            };
+
+            ComboBoxUtil.SetComboBox(this.cbFuturesSellPrice, futureSellPrices);
         }
 
         #endregion
@@ -366,7 +379,7 @@ namespace TradingSystem.View
             //TODO:
             if (!ValidateCopies())
             {
-                MessageBox.Show(this, "请输入委托份数", "警告", MessageBoxButtons.OK);
+                MessageBox.Show(this, "委托份数非法，请输入正确的委托份数！", "警告", MessageBoxButtons.OK);
                 return;
             }
 
@@ -389,6 +402,12 @@ namespace TradingSystem.View
                 }
             }
 
+            //Get the price type
+            PriceType spotBuyPrice = GetPriceType(this.cbSpotBuyPrice);
+            PriceType spotSellPrice = GetPriceType(this.cbSpotSellPrice);
+            PriceType futureBuyPrice = GetPriceType(this.cbFuturesBuyPrice);
+            PriceType futureSellPrice = GetPriceType(this.cbFuturesSellPrice);
+
             //query the price and set it
             List<SecurityItem> secuList = new List<SecurityItem>();
             var uniqueSecuItems = _secuDataSource.GroupBy(p => p.SecuCode).Select(p => p.First());
@@ -396,14 +415,6 @@ namespace TradingSystem.View
             {
                 var findItem = _securityInfoList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
                 secuList.Add(findItem);
-                //if (findItem != null)
-                //{
-                //    var addedItem = secuList.Find(p => p.SecuCode.Equals(findItem.SecuCode) && p.SecuType == findItem.SecuType);
-                //    if (addedItem == null)
-                //    {
-                //        secuList.Add(findItem);
-                //    }
-                //}
             }
 
             QuoteCenter.Instance.Query(secuList);
@@ -411,10 +422,13 @@ namespace TradingSystem.View
             {
                 var targetItem = secuList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
                 var marketData = QuoteCenter.Instance.GetMarketData(targetItem);
-                secuItem.EntrustedPrice = marketData.CurrentPrice;
+
                 secuItem.LimitUpPrice = marketData.HighLimitPrice;
                 secuItem.LimitDownPrice = marketData.LowLimitPrice;
                 secuItem.SuspensionFlag = marketData.SuspendFlag.ToString();
+
+                //TODO: use the setting price
+                secuItem.EntrustedPrice = marketData.CurrentPrice;
             }
 
             //refresh UI
@@ -430,8 +444,6 @@ namespace TradingSystem.View
 
         private bool ValidateCopies()
         {
-            bool ret = true;
-
             int copies = 0;
             if(!string.IsNullOrEmpty(tbCopies.Text))
             {
@@ -450,14 +462,40 @@ namespace TradingSystem.View
                 }
             }
 
+            foreach (var eiItem in _eiDataSource)
+            {
+                var cmdItem = _cmdDataSource.Single(p => p.CommandId == eiItem.CommandNo);
+                if (cmdItem != null && cmdItem.CommandNum < eiItem.Copies)
+                {
+                    return false;
+                }
+            }
+
             var selItems = _eiDataSource.Where(p => p.Selection && p.Copies == 0).ToList();
             if (selItems != null && selItems.Count > 0)
             {
-                ret = false;
+                return false;
             }
 
-            return ret;
+            return true;
         }
+
+        private PriceType GetPriceType(ComboBox comboBox)
+        {
+            PriceType priceType = PriceType.Market;
+            var selectItem = (ComboOptionItem)comboBox.SelectedItem;
+            if (selectItem != null && !string.IsNullOrEmpty(selectItem.Id))
+            {
+                string selectId = selectItem.Id.Substring(0, 1).ToUpper() + selectItem.Id.Substring(1);
+                if (Enum.IsDefined(typeof(PriceType), selectId))
+                {
+                    priceType = (PriceType)Enum.Parse(typeof(PriceType), selectId);
+                }
+            }
+
+            return priceType;
+        }
+
         #endregion
     }
 }

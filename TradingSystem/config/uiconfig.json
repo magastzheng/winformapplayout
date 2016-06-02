@@ -1,371 +1,260 @@
 ﻿[{
-	"name": "spotbuy",
-	"selected": "b0",
+	"name": "spotprice",
+	"selected": "market",
 	"items":[{
-			"id": "b0",
+			"id": "market",
 			"code": "0",
+			"order1": 0,
+			"order2": 0,
 			"name": "市价"
 		},
 		{
-			"id": "b1",
+			"id": "assign",
 			"code": "1",
+			"order1": 1,
+			"order2": 1,
 			"name": "指定价"
 		},
 		{
-			"id": "b2",
+			"id": "last",
 			"code": "2",
+			"order1": 2,
+			"order2": 2,
 			"name": "最新价"
 		},
 		{
-			"id": "b3",
+			"id": "automatic",
 			"code": "3",
+			"order1": 3,
+			"order2": 3,
 			"name": "自动盘口"
 		},
 		{
-			"id": "b4",
+			"id": "sell1",
 			"code": "S1",
+			"order1": 11,
+			"order2": 41,
 			"name": "卖一价"
 		},
 		{
-			"id": "b5",
+			"id": "sell2",
 			"code": "S2",
+			"order1": 12,
+			"order2": 42,
 			"name": "卖二价"
 		},
 		{
-			"id": "b6",
+			"id": "sell3",
 			"code": "S3",
+			"order1": 13,
+			"order2": 43,
 			"name": "卖三价"
 		},
 		{
-			"id": "b7",
+			"id": "sell4",
 			"code": "S4",
+			"order1": 14,
+			"order2": 44,
 			"name": "卖四价"
 		},
 		{
-			"id": "b8",
+			"id": "sell5",
 			"code": "S5",
+			"order1": 15,
+			"order2": 45,
 			"name": "卖五价"
 		},
 		{
-			"id": "b9",
+			"id": "sell6",
 			"code": "S6",
+			"order1": 16,
+			"order2": 46,
 			"name": "卖六价"
 		},
 		{
-			"id": "b10",
+			"id": "sell7",
 			"code": "S7",
+			"order1": 17,
+			"order2": 47,
 			"name": "卖七价"
 		},
 		{
-			"id": "b11",
+			"id": "sell8",
 			"code": "S8",
+			"order1": 18,
+			"order2": 48,
 			"name": "卖八价"
 		},
 		{
-			"id": "b12",
+			"id": "sell9",
 			"code": "S9",
+			"order1": 19,
+			"order2": 49,
 			"name": "卖九价"
 		},
 		{
-			"id": "b13",
+			"id": "sell10",
 			"code": "S10",
+			"order1": 20,
+			"order2": 50,
 			"name": "卖十价"
 		},
 		{
-			"id": "b14",
+			"id": "buy1",
 			"code": "B1",
+			"order1": 41,
+			"order2": 11,
 			"name": "买一价"
 		},
 		{
-			"id": "b15",
+			"id": "buy2",
 			"code": "B2",
+			"order1": 42,
+			"order2": 12,
 			"name": "买二价"
 		},
 		{
-			"id": "b16",
+			"id": "buy3",
 			"code": "B3",
+			"order1": 43,
+			"order2": 13,
 			"name": "买三价"
 		},
 		{
-			"id": "b17",
+			"id": "buy4",
 			"code": "B4",
+			"order1": 44,
+			"order2": 14,
 			"name": "买四价"
 		},
 		{
-			"id": "b18",
+			"id": "buy5",
 			"code": "B5",
+			"order1": 45,
+			"order2": 15,
 			"name": "买五价"
 		},
 		{
-			"id": "b19",
+			"id": "buy6",
 			"code": "B6",
+			"order1": 46,
+			"order2": 16,
 			"name": "买六价"
 		},
 		{
-			"id": "b20",
+			"id": "buy7",
 			"code": "B7",
+			"order1": 47,
+			"order2": 17,
 			"name": "买七价"
 		},
 		{
-			"id": "b21",
+			"id": "buy8",
 			"code": "B8",
+			"order1": 48,
+			"order2": 18,
 			"name": "买八价"
 		},
 		{
-			"id": "b22",
+			"id": "buy9",
 			"code": "B9",
+			"order1": 49,
+			"order2": 19,
 			"name": "买九价"
 		},
 		{
-			"id": "b23",
+			"id": "buy10",
 			"code": "B10",
+			"order1": 50,
+			"order2": 20,
 			"name": "买十价"
 		}
-	]},{
-	"name": "spotsell",
-	"selected": "s0",
-	"items":[
-		{
-			"id": "s0",
-			"code": "0",
-			"name": "市价"
-		},
-		{
-			"id": "s1",
-			"code": "1",
-			"name": "指定价"
-		},
-		{
-			"id": "s2",
-			"code": "2",
-			"name": "最新价"
-		},
-		{
-			"id": "s3",
-			"code": "3",
-			"name": "自动盘口"
-		},
-		{
-			"id": "s4",
-			"code": "B1",
-			"name": "买一价"
-		},
-		{
-			"id": "s5",
-			"code": "B2",
-			"name": "买二价"
-		},
-		{
-			"id": "s6",
-			"code": "B3",
-			"name": "买三价"
-		},
-		{
-			"id": "s7",
-			"code": "B4",
-			"name": "买四价"
-		},
-		{
-			"id": "s8",
-			"code": "B5",
-			"name": "买五价"
-		},
-		{
-			"id": "s9",
-			"code": "B6",
-			"name": "买六价"
-		},
-		{
-			"id": "s10",
-			"code": "B7",
-			"name": "买七价"
-		},
-		{
-			"id": "s11",
-			"code": "B8",
-			"name": "买八价"
-		},
-		{
-			"id": "s12",
-			"code": "B9",
-			"name": "买九价"
-		},
-		{
-			"id": "s13",
-			"code": "B10",
-			"name": "买十价"
-		},
-		{
-			"id": "s14",
-			"code": "S1",
-			"name": "卖一价"
-		},
-		{
-			"id": "s15",
-			"code": "S2",
-			"name": "卖二价"
-		},
-		{
-			"id": "s16",
-			"code": "S3",
-			"name": "卖三价"
-		},
-		{
-			"id": "s17",
-			"code": "S4",
-			"name": "卖四价"
-		},
-		{
-			"id": "s18",
-			"code": "S5",
-			"name": "卖五价"
-		},
-		{
-			"id": "s19",
-			"code": "S6",
-			"name": "卖六价"
-		},
-		{
-			"id": "s20",
-			"code": "S7",
-			"name": "卖七价"
-		},
-		{
-			"id": "s21",
-			"code": "S8",
-			"name": "卖八价"
-		},
-		{
-			"id": "s22",
-			"code": "S9",
-			"name": "卖九价"
-		},
-		{
-			"id": "s23",
-			"code": "S10",
-			"name": "卖十价"
-		}
 	]},
-	{"name": "futurebuy",
-	"selected": "fb0",
+	{"name": "futureprice",
+	"selected": "arbitrary",
 	"items": [
 		{
-			"id": "fb0",
+			"id": "arbitrary",
 			"code": "0",
+			"order1": 0,
+			"order2": 0,
 			"name": "任意价"
 		},{
-			"id": "fb1",
+			"id": "assign",
 			"code": "1",
-			"name": "指定价"
-		},{
-			"id": "fb2",
-			"code": "2",
-			"name": "最新价"
-		},{
-			"id": "fb3",
-			"code": "3",
-			"name": "自动盘口"
-		},{
-			"id": "fb4",
-			"code": "S1",
-			"name": "卖一价"
-		},{
-			"id": "fb5",
-			"code": "S2",
-			"name": "卖二价"
-		},{
-			"id": "fb6",
-			"code": "S3",
-			"name": "卖三价"
-		},{
-			"id": "fb7",
-			"code": "S4",
-			"name": "卖四价"
-		},{
-			"id": "fb8",
-			"code": "S5",
-			"name": "卖五价"
-		},{
-			"id": "fb9",
-			"code": "B1",
-			"name": "买一价"
-		},{
-			"id": "fb10",
-			"code": "B2",
-			"name": "买二价"
-		},{
-			"id": "fb11",
-			"code": "B3",
-			"name": "买三价"
-		},{
-			"id": "fb12",
-			"code": "B4",
-			"name": "买四价"
-		},{
-			"id": "fb13",
-			"code": "B5",
-			"name": "买五价"
-		}
-	]},
-	{"name": "futuresell",
-	"selected": "fs0",
-	"items": [
-		{
-			"id": "fs0",
-			"code": "0",
-			"name": "任意价"
-		},{
-			"id": "fs1",
-			"code": "1",
+			"order1": 1,
+			"order2": 1,
 			"name": "指定价"
 		},{
 			"id": "fs2",
 			"code": "2",
 			"name": "最新价"
 		},{
-			"id": "fs3",
+			"id": "automatic",
 			"code": "3",
+			"order1": 3,
+			"order2": 3,
 			"name": "自动盘口"
 		},{
-			"id": "fs4",
-			"code": "B1",
-			"name": "买一价"
-		},{
-			"id": "fs5",
-			"code": "B2",
-			"name": "买二价"
-		},{
-			"id": "fs6",
-			"code": "B3",
-			"name": "买三价"
-		},{
-			"id": "fs7",
-			"code": "B4",
-			"name": "买四价"
-		},{
-			"id": "fs8",
-			"code": "B5",
-			"name": "买五价"
-		},{
-			"id": "fs9",
+			"id": "sell1",
 			"code": "S1",
+			"order1": 11,
+			"order2": 21,
 			"name": "卖一价"
 		},{
-			"id": "fs10",
+			"id": "sell2",
 			"code": "S2",
+			"order1": 12,
+			"order2": 22,
 			"name": "卖二价"
 		},{
-			"id": "fs11",
+			"id": "sell3",
 			"code": "S3",
+			"order1": 13,
+			"order2": 23,
 			"name": "卖三价"
 		},{
-			"id": "fs12",
+			"id": "sell4",
 			"code": "S4",
+			"order1": 14,
+			"order2": 24,
 			"name": "卖四价"
 		},{
-			"id": "fs13",
+			"id": "sell5",
 			"code": "S5",
+			"order1": 15,
+			"order2": 25,
 			"name": "卖五价"
+		},{
+			"id": "buy1",
+			"code": "B1",
+			"order1": 21,
+			"order2": 11,
+			"name": "买一价"
+		},{
+			"id": "buy2",
+			"code": "B2",
+			"order1": 22,
+			"order2": 12,
+			"name": "买二价"
+		},{
+			"id": "buy3",
+			"code": "B3",
+			"order1": 23,
+			"order2": 13,
+			"name": "买三价"
+		},{
+			"id": "buy4",
+			"code": "B4",
+			"order1": 24,
+			"order2": 14,
+			"name": "买四价"
+		},{
+			"id": "buy5",
+			"code": "B5",
+			"order1": 25,
+			"order2": 15,
+			"name": "买五价"
 		}
 	]},
 	{

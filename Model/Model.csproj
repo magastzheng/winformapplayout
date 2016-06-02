@@ -47,9 +47,9 @@
     <Compile Include="Binding\IntBoolConverter.cs" />
     <Compile Include="config\Benchmark.cs" />
     <Compile Include="config\ComboOption.cs" />
-    <Compile Include="config\BuySellOption.cs" />
     <Compile Include="config\FunctionItem.cs" />
     <Compile Include="config\Label.cs" />
+    <Compile Include="config\PriceType.cs" />
     <Compile Include="ConnectionCode.cs" />
     <Compile Include="Data\DataTable.cs" />
     <Compile Include="Data\DataValue.cs" />
