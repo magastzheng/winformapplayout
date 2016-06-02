@@ -16,33 +16,16 @@ namespace Quote
 
     public class QueryHelper
     {
+        public static List<string> AllFields = new List<string>() { "rt_last", "rt_amt", "rt_susp_flag", "rt_trade_status", "rt_high_limit", "rt_low_limit", "rt_upward_vol", "rt_downward_vol"};//, "rt_ask1", "rt_ask2", "rt_ask3", "rt_ask4", "rt_ask5", "rt_ask6", "rt_ask7", "rt_ask8", "rt_ask9", "rt_ask10", "rt_bid1", "rt_bid2", "rt_bid3", "rt_bid4", "rt_bid5", "rt_bid6", "rt_bid7", "rt_bid8", "rt_bid9", "rt_bid10" };
         private SecurityInfoDAO _dbdao = new SecurityInfoDAO();
         //private List<string> _fields = new List<string>() { "rt_last", "rt_amt", "rt_trade_status", "rt_high_limit", "rt_low_limit", "rt_upward_vol", "rt_downward_vol", "rt_ask1", "rt_ask2", "rt_ask3", "rt_ask4", "rt_ask5", "rt_ask6", "rt_ask7", "rt_ask8", "rt_ask9", "rt_ask10", "rt_bid1", "rt_bid2", "rt_bid3", "rt_bid4", "rt_bid5", "rt_bid6", "rt_bid7", "rt_bid8", "rt_bid9", "rt_bid10" };
-        private List<string> _fields = new List<string>() { "rt_last" };
+
+        //private List<string> _fields = new List<string>() { "rt_last" };
         //000001<->000001.sz
         private Dictionary<string, string> _secuCodeMap = new Dictionary<string, string>();
         private List<SecurityItem> _secuItemList = new List<SecurityItem>();
 
         #region private method
-
-        public static string GetWindCode(SecurityItem secuItem)
-        {
-            string windCode = secuItem.SecuCode;
-            if (secuItem.ExchangeCode.Equals("SSE", StringComparison.OrdinalIgnoreCase))
-            {
-                windCode += ".SH";
-            }
-            else if (secuItem.ExchangeCode.Equals("SZSE", StringComparison.OrdinalIgnoreCase))
-            {
-                windCode += ".SZ";
-            }
-            else if (secuItem.ExchangeCode.Equals("CFFEX", StringComparison.OrdinalIgnoreCase))
-            {
-                windCode += ".CFE";
-            }
-
-            return windCode;
-        }
 
         private List<SecurityItem> GetSecuList()
         {
@@ -58,25 +41,10 @@ namespace Quote
 
         #region public method
 
-        public List<string> GetFields()
-        {
-            return _fields;
-        }
-
-        public Dictionary<string, int> GetFieldIndex()
-        {
-            Dictionary<string, int> fieldIndexMap = new Dictionary<string, int>();
-
-            for (int i = 0, count = _fields.Count; i < count; i++)
-            {
-                if (!fieldIndexMap.ContainsKey(_fields[i]))
-                {
-                    fieldIndexMap.Add(_fields[i], i);
-                }
-            }
-
-            return fieldIndexMap;
-        }
+        //public List<string> GetFields()
+        //{
+        //    return _fields;
+        //}
 
         public List<string> GetSecuCode()
         {
@@ -140,6 +108,66 @@ namespace Quote
         }
 
         #endregion
+
+        #region static method
+
+        public static string GetWindCode(SecurityItem secuItem)
+        {
+            string windCode = secuItem.SecuCode;
+            if (secuItem.ExchangeCode.Equals("SSE", StringComparison.OrdinalIgnoreCase))
+            {
+                windCode += ".SH";
+            }
+            else if (secuItem.ExchangeCode.Equals("SZSE", StringComparison.OrdinalIgnoreCase))
+            {
+                windCode += ".SZ";
+            }
+            else if (secuItem.ExchangeCode.Equals("CFFEX", StringComparison.OrdinalIgnoreCase))
+            {
+                windCode += ".CFE";
+            }
+
+            return windCode;
+        }
+
+        public static Dictionary<string, int> GetFieldIndex(List<string> fieldList)
+        {
+            Dictionary<string, int> fieldIndexMap = new Dictionary<string, int>();
+
+            for (int i = 0, count = fieldList.Count; i < count; i++)
+            {
+                if (!fieldIndexMap.ContainsKey(fieldList[i]))
+                {
+                    fieldIndexMap.Add(fieldList[i], i);
+                }
+            }
+
+            return fieldIndexMap;
+        }
+
+        public static SuspendFlag GetSuspendFlag(int flagCode)
+        {
+            flagCode = flagCode % 10;
+            SuspendFlag flag = SuspendFlag.Unknown;
+            if (Enum.IsDefined(typeof(SuspendFlag), flagCode))
+            {
+                flag = (SuspendFlag)Enum.ToObject(typeof(SuspendFlag), flagCode);
+            }
+
+            return flag;
+        }
+
+        public static TradingStatus GetTradingStatus(int statusCode)
+        {
+            TradingStatus status = TradingStatus.Unknown;
+            if (Enum.IsDefined(typeof(TradingStatus), statusCode))
+            {
+                status = (TradingStatus)Enum.ToObject(typeof(TradingStatus), statusCode);
+            }
+            
+            return status;
+        }
+        #endregion
     }
 
     public class Quote : IQuote
@@ -180,9 +208,9 @@ namespace Quote
         {
             QueryHelper queryHelper = new QueryHelper();
             List<string> windCodes = queryHelper.GetSecuCode();
-            List<string> fields = queryHelper.GetFields();
+            List<string> fields = new List<string> { "rt_last" };
             Dictionary<string, string> optionMap = new Dictionary<string, string>();
-            Dictionary<string, int> fieldIndexMap = queryHelper.GetFieldIndex();
+            Dictionary<string, int> fieldIndexMap = QueryHelper.GetFieldIndex(fields);
 
             WindData wd = WindAPIWrap.Instance.SyncRequestData(windCodes, fields, optionMap);
             if (wd != null)
@@ -195,9 +223,9 @@ namespace Quote
         { 
             QueryHelper queryHelper = new QueryHelper();
             List<string> windCodes = queryHelper.GetSecuCode(secuCodes);
-            List<string> fields = queryHelper.GetFields();
+            List<string> fields = new List<string> { "rt_last" };
             Dictionary<string, string> optionMap = new Dictionary<string,string>();
-            Dictionary<string, int> fieldIndexMap = queryHelper.GetFieldIndex();
+            Dictionary<string, int> fieldIndexMap = QueryHelper.GetFieldIndex(fields);
 
             WindData wd = WindAPIWrap.Instance.SyncRequestData(windCodes, fields, optionMap);
             if (wd != null)
@@ -209,28 +237,78 @@ namespace Quote
         public void Query(List<SecurityItem> secuItems)
         {
             QueryHelper queryHelper = new QueryHelper();
+            List<string> allFields = QueryHelper.AllFields;
             List<string> windCodes = queryHelper.GetSecuCode(secuItems);
-            List<string> fields = queryHelper.GetFields();
             Dictionary<string, string> optionMap = new Dictionary<string, string>();
-            Dictionary<string, int> fieldIndexMap = queryHelper.GetFieldIndex();
 
-            WindData wd = WindAPIWrap.Instance.SyncRequestData(windCodes, fields, optionMap);
-            if (wd != null)
+            foreach (var field in allFields)
             {
-                FillData(wd, fieldIndexMap);
+                var fields = new List<string>() { field };
+                var fieldIndexMap = QueryHelper.GetFieldIndex(fields);
+                var wd = WindAPIWrap.Instance.SyncRequestData(windCodes, fields, optionMap);
+                if (wd != null)
+                {
+                    FillData(wd, fieldIndexMap);
+                }
             }
 
-            wd = WindAPIWrap.Instance.SyncRequestData(windCodes, new List<string> { "rt_upward_vol" }, optionMap);
-            if (wd != null)
-            {
-                FillData(wd, fieldIndexMap);
-            }
+            //WindData wd = WindAPIWrap.Instance.SyncRequestData(windCodes, fields, optionMap);
+            //if (wd != null)
+            //{
+            //    FillData(wd, fieldIndexMap);
+            //}
 
-            wd = WindAPIWrap.Instance.SyncRequestData(windCodes, new List<string> { "rt_downward_vol" }, optionMap);
-            if (wd != null)
-            {
-                FillData(wd, fieldIndexMap);
-            }
+            //fields = new List<string> { "rt_upward_vol" };
+            //fieldIndexMap = QueryHelper.GetFieldIndex(fields);
+            //wd = WindAPIWrap.Instance.SyncRequestData(windCodes, fields, optionMap);
+            //if (wd != null)
+            //{
+            //    FillData(wd, fieldIndexMap);
+            //}
+
+            //fields = new List<string> { "rt_downward_vol" };
+            //fieldIndexMap = QueryHelper.GetFieldIndex(fields);
+            //wd = WindAPIWrap.Instance.SyncRequestData(windCodes, fields, optionMap);
+            //if (wd != null)
+            //{
+            //    FillData(wd, fieldIndexMap);
+            //}
+
+            ////停牌标记
+            //fields = new List<string> { "rt_susp_flag" };
+            //fieldIndexMap = QueryHelper.GetFieldIndex(fields);
+            //wd = WindAPIWrap.Instance.SyncRequestData(windCodes, fields, optionMap);
+            //if (wd != null)
+            //{
+            //    FillData(wd, fieldIndexMap);
+            //}
+
+            ////交易状态
+            //fields = new List<string> { "rt_trade_status" };
+            //fieldIndexMap = QueryHelper.GetFieldIndex(fields);
+            //wd = WindAPIWrap.Instance.SyncRequestData(windCodes, fields, optionMap);
+            //if (wd != null)
+            //{
+            //    FillData(wd, fieldIndexMap);
+            //}
+
+            ////涨停价
+            //fields = new List<string> { "rt_high_limit" };
+            //fieldIndexMap = QueryHelper.GetFieldIndex(fields);
+            //wd = WindAPIWrap.Instance.SyncRequestData(windCodes, fields, optionMap);
+            //if (wd != null)
+            //{
+            //    FillData(wd, fieldIndexMap);
+            //}
+
+            ////跌停价
+            //fields = new List<string> { "rt_low_limit" };
+            //fieldIndexMap = QueryHelper.GetFieldIndex(fields);
+            //wd = WindAPIWrap.Instance.SyncRequestData(windCodes, fields, optionMap);
+            //if (wd != null)
+            //{
+            //    FillData(wd, fieldIndexMap);
+            //}
         }
 
         public MarketData GetMarketData(SecurityItem secuItem)
@@ -335,6 +413,26 @@ namespace Quote
                                     break;
                                 case "rt_downward_vol":
                                     marketData.SellAmount = (int)dval;
+                                    break;
+                                case "rt_susp_flag":
+                                    {
+                                        marketData.SuspendFlag = QueryHelper.GetSuspendFlag((int)dval);
+                                    }
+                                    break;
+                                case "rt_trade_status":
+                                    {
+                                        marketData.TradingStatus = QueryHelper.GetTradingStatus((int)dval);
+                                    }
+                                    break;
+                                case "rt_high_limit":
+                                    {
+                                        marketData.HighLimitPrice = dval;
+                                    }
+                                    break;
+                                case "rt_low_limit":
+                                    {
+                                        marketData.LowLimitPrice = dval;
+                                    }
                                     break;
                                 default:
                                     break;

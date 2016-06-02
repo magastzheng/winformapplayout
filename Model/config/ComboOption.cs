@@ -9,13 +9,13 @@ namespace Model
     public class ComboOptionItem
     {
         public string Id { get; set; }
-        public string Order { get; set; }
+        public string Code { get; set; }
         public string Name { get; set; }
         public object Data { get; set; }
 
         public override string ToString()
         {
-            return string.Format("{0}  {1}", Order, Name);
+            return string.Format("{0}  {1}", Code, Name);
         }
     }
 

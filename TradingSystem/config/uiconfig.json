@@ -3,122 +3,122 @@
 	"selected": "b0",
 	"items":[{
 			"id": "b0",
-			"order": "0",
+			"code": "0",
 			"name": "市价"
 		},
 		{
 			"id": "b1",
-			"order": "1",
+			"code": "1",
 			"name": "指定价"
 		},
 		{
 			"id": "b2",
-			"order": "2",
+			"code": "2",
 			"name": "最新价"
 		},
 		{
 			"id": "b3",
-			"order": "3",
+			"code": "3",
 			"name": "自动盘口"
 		},
 		{
 			"id": "b4",
-			"order": "S1",
+			"code": "S1",
 			"name": "卖一价"
 		},
 		{
 			"id": "b5",
-			"order": "S2",
+			"code": "S2",
 			"name": "卖二价"
 		},
 		{
 			"id": "b6",
-			"order": "S3",
+			"code": "S3",
 			"name": "卖三价"
 		},
 		{
 			"id": "b7",
-			"order": "S4",
+			"code": "S4",
 			"name": "卖四价"
 		},
 		{
 			"id": "b8",
-			"order": "S5",
+			"code": "S5",
 			"name": "卖五价"
 		},
 		{
 			"id": "b9",
-			"order": "S6",
+			"code": "S6",
 			"name": "卖六价"
 		},
 		{
 			"id": "b10",
-			"order": "S7",
+			"code": "S7",
 			"name": "卖七价"
 		},
 		{
 			"id": "b11",
-			"order": "S8",
+			"code": "S8",
 			"name": "卖八价"
 		},
 		{
 			"id": "b12",
-			"order": "S9",
+			"code": "S9",
 			"name": "卖九价"
 		},
 		{
 			"id": "b13",
-			"order": "S10",
+			"code": "S10",
 			"name": "卖十价"
 		},
 		{
 			"id": "b14",
-			"order": "B1",
+			"code": "B1",
 			"name": "买一价"
 		},
 		{
 			"id": "b15",
-			"order": "B2",
+			"code": "B2",
 			"name": "买二价"
 		},
 		{
 			"id": "b16",
-			"order": "B3",
+			"code": "B3",
 			"name": "买三价"
 		},
 		{
 			"id": "b17",
-			"order": "B4",
+			"code": "B4",
 			"name": "买四价"
 		},
 		{
 			"id": "b18",
-			"order": "B5",
+			"code": "B5",
 			"name": "买五价"
 		},
 		{
 			"id": "b19",
-			"order": "B6",
+			"code": "B6",
 			"name": "买六价"
 		},
 		{
 			"id": "b20",
-			"order": "B7",
+			"code": "B7",
 			"name": "买七价"
 		},
 		{
 			"id": "b21",
-			"order": "B8",
+			"code": "B8",
 			"name": "买八价"
 		},
 		{
 			"id": "b22",
-			"order": "B9",
+			"code": "B9",
 			"name": "买九价"
 		},
 		{
 			"id": "b23",
-			"order": "B10",
+			"code": "B10",
 			"name": "买十价"
 		}
 	]},{
@@ -127,122 +127,122 @@
 	"items":[
 		{
 			"id": "s0",
-			"order": "0",
+			"code": "0",
 			"name": "市价"
 		},
 		{
 			"id": "s1",
-			"order": "1",
+			"code": "1",
 			"name": "指定价"
 		},
 		{
 			"id": "s2",
-			"order": "2",
+			"code": "2",
 			"name": "最新价"
 		},
 		{
 			"id": "s3",
-			"order": "3",
+			"code": "3",
 			"name": "自动盘口"
 		},
 		{
 			"id": "s4",
-			"order": "B1",
+			"code": "B1",
 			"name": "买一价"
 		},
 		{
 			"id": "s5",
-			"order": "B2",
+			"code": "B2",
 			"name": "买二价"
 		},
 		{
 			"id": "s6",
-			"order": "B3",
+			"code": "B3",
 			"name": "买三价"
 		},
 		{
 			"id": "s7",
-			"order": "B4",
+			"code": "B4",
 			"name": "买四价"
 		},
 		{
 			"id": "s8",
-			"order": "B5",
+			"code": "B5",
 			"name": "买五价"
 		},
 		{
 			"id": "s9",
-			"order": "B6",
+			"code": "B6",
 			"name": "买六价"
 		},
 		{
 			"id": "s10",
-			"order": "B7",
+			"code": "B7",
 			"name": "买七价"
 		},
 		{
 			"id": "s11",
-			"order": "B8",
+			"code": "B8",
 			"name": "买八价"
 		},
 		{
 			"id": "s12",
-			"order": "B9",
+			"code": "B9",
 			"name": "买九价"
 		},
 		{
 			"id": "s13",
-			"order": "B10",
+			"code": "B10",
 			"name": "买十价"
 		},
 		{
 			"id": "s14",
-			"order": "S1",
+			"code": "S1",
 			"name": "卖一价"
 		},
 		{
 			"id": "s15",
-			"order": "S2",
+			"code": "S2",
 			"name": "卖二价"
 		},
 		{
 			"id": "s16",
-			"order": "S3",
+			"code": "S3",
 			"name": "卖三价"
 		},
 		{
 			"id": "s17",
-			"order": "S4",
+			"code": "S4",
 			"name": "卖四价"
 		},
 		{
 			"id": "s18",
-			"order": "S5",
+			"code": "S5",
 			"name": "卖五价"
 		},
 		{
 			"id": "s19",
-			"order": "S6",
+			"code": "S6",
 			"name": "卖六价"
 		},
 		{
 			"id": "s20",
-			"order": "S7",
+			"code": "S7",
 			"name": "卖七价"
 		},
 		{
 			"id": "s21",
-			"order": "S8",
+			"code": "S8",
 			"name": "卖八价"
 		},
 		{
 			"id": "s22",
-			"order": "S9",
+			"code": "S9",
 			"name": "卖九价"
 		},
 		{
 			"id": "s23",
-			"order": "S10",
+			"code": "S10",
 			"name": "卖十价"
 		}
 	]},
@@ -251,59 +251,59 @@
 	"items": [
 		{
 			"id": "fb0",
-			"order": "0",
+			"code": "0",
 			"name": "任意价"
 		},{
 			"id": "fb1",
-			"order": "1",
+			"code": "1",
 			"name": "指定价"
 		},{
 			"id": "fb2",
-			"order": "2",
+			"code": "2",
 			"name": "最新价"
 		},{
 			"id": "fb3",
-			"order": "3",
+			"code": "3",
 			"name": "自动盘口"
 		},{
 			"id": "fb4",
-			"order": "S1",
+			"code": "S1",
 			"name": "卖一价"
 		},{
 			"id": "fb5",
-			"order": "S2",
+			"code": "S2",
 			"name": "卖二价"
 		},{
 			"id": "fb6",
-			"order": "S3",
+			"code": "S3",
 			"name": "卖三价"
 		},{
 			"id": "fb7",
-			"order": "S4",
+			"code": "S4",
 			"name": "卖四价"
 		},{
 			"id": "fb8",
-			"order": "S5",
+			"code": "S5",
 			"name": "卖五价"
 		},{
 			"id": "fb9",
-			"order": "B1",
+			"code": "B1",
 			"name": "买一价"
 		},{
 			"id": "fb10",
-			"order": "B2",
+			"code": "B2",
 			"name": "买二价"
 		},{
 			"id": "fb11",
-			"order": "B3",
+			"code": "B3",
 			"name": "买三价"
 		},{
 			"id": "fb12",
-			"order": "B4",
+			"code": "B4",
 			"name": "买四价"
 		},{
 			"id": "fb13",
-			"order": "B5",
+			"code": "B5",
 			"name": "买五价"
 		}
 	]},
@@ -312,59 +312,59 @@
 	"items": [
 		{
 			"id": "fs0",
-			"order": "0",
+			"code": "0",
 			"name": "任意价"
 		},{
 			"id": "fs1",
-			"order": "1",
+			"code": "1",
 			"name": "指定价"
 		},{
 			"id": "fs2",
-			"order": "2",
+			"code": "2",
 			"name": "最新价"
 		},{
 			"id": "fs3",
-			"order": "3",
+			"code": "3",
 			"name": "自动盘口"
 		},{
 			"id": "fs4",
-			"order": "B1",
+			"code": "B1",
 			"name": "买一价"
 		},{
 			"id": "fs5",
-			"order": "B2",
+			"code": "B2",
 			"name": "买二价"
 		},{
 			"id": "fs6",
-			"order": "B3",
+			"code": "B3",
 			"name": "买三价"
 		},{
 			"id": "fs7",
-			"order": "B4",
+			"code": "B4",
 			"name": "买四价"
 		},{
 			"id": "fs8",
-			"order": "B5",
+			"code": "B5",
 			"name": "买五价"
 		},{
 			"id": "fs9",
-			"order": "S1",
+			"code": "S1",
 			"name": "卖一价"
 		},{
 			"id": "fs10",
-			"order": "S2",
+			"code": "S2",
 			"name": "卖二价"
 		},{
 			"id": "fs11",
-			"order": "S3",
+			"code": "S3",
 			"name": "卖三价"
 		},{
 			"id": "fs12",
-			"order": "S4",
+			"code": "S4",
 			"name": "卖四价"
 		},{
 			"id": "fs13",
-			"order": "S5",
+			"code": "S5",
 			"name": "卖五价"
 		}
 	]},
@@ -374,23 +374,23 @@
 		"items":[
 			{
 				"id": "shpt1",
-				"order": "H",
+				"code": "H",
 				"name": "意向申报"
 			},{
 				"id": "shpt2",
-				"order": "I",
+				"code": "I",
 				"name": "定价申报"
 			},{
 				"id": "shpt3",
-				"order": "J",
+				"code": "J",
 				"name": "成交申报"
 			},{
 				"id": "shpt4",
-				"order": "a",
+				"code": "a",
 				"name": "五档即成剩撤"
 			},{
 				"id": "shpt5",
-				"order": "b",
+				"code": "b",
 				"name": "五档即成剩转"
 			}
 		]
@@ -400,35 +400,35 @@
 		"items":[
 			{
 				"id": "szpt1",
-				"order": "A",
+				"code": "A",
 				"name": "五档即成剩撤"
 			},{
 				"id": "szpt2",
-				"order": "C",
+				"code": "C",
 				"name": "即成剩撤"
 			},{
 				"id": "szpt3",
-				"order": "D",
+				"code": "D",
 				"name": "对手方最优"
 			},{
 				"id": "szpt4",
-				"order": "E",
+				"code": "E",
 				"name": "本方最优"
 			},{
 				"id": "szpt5",
-				"order": "F",
+				"code": "F",
 				"name": "全额成或撤"
 			},{
 				"id": "szpt6",
-				"order": "H",
+				"code": "H",
 				"name": "意向申报"
 			},{
 				"id": "szpt7",
-				"order": "I",
+				"code": "I",
 				"name": "定价申报"
 			},{
 				"id": "szpt8",
-				"order": "J",
+				"code": "J",
 				"name": "成交申报"
 			}
 		]
@@ -438,11 +438,11 @@
 		"items":[
 			{
 				"id": "1",
-				"order": "1",
+				"code": "1",
 				"name": "数量权重"
 			},{
 				"id": "2",
-				"order": "2",
+				"code": "2",
 				"name": "比例权重"
 			}]
 	},{
@@ -451,11 +451,11 @@
 		"items":[
 			{
 				"id": "0",
-				"order": "1",
+				"code": "1",
 				"name": "个股替代"
 			},{
 				"id": "1",
-				"order": "2",
+				"code": "2",
 				"name": "模板替代"
 			}]
 	},{
@@ -464,11 +464,11 @@
 		"items":[
 			{
 				"id": "1",
-				"order": "1",
+				"code": "1",
 				"name": "单账户"
 			},{
 				"id": "2",
-				"order": "2",
+				"code": "2",
 				"name": "多账户"
 			}]
 	}

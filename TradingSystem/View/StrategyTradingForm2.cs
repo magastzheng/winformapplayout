@@ -12,6 +12,8 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Linq;
+using Model.SecurityInfo;
+using Quote;
 
 namespace TradingSystem.View
 {
@@ -26,12 +28,15 @@ namespace TradingSystem.View
         //private TradingInstanceDAO _tradeInstdao = new TradingInstanceDAO();
         private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
         private TradingCommandSecurityDAO _tradecmdsecudao = new TradingCommandSecurityDAO();
+        private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
 
         private SortableBindingList<TradingCommandItem> _cmdDataSource = new SortableBindingList<TradingCommandItem>(new List<TradingCommandItem>());
         private SortableBindingList<EntrustFlowItem> _efDataSource = new SortableBindingList<EntrustFlowItem>(new List<EntrustFlowItem>());
         private SortableBindingList<DealFlowItem> _dfDataSource = new SortableBindingList<DealFlowItem>(new List<DealFlowItem>());
         private SortableBindingList<EntrustItem> _eiDataSource = new SortableBindingList<EntrustItem>(new List<EntrustItem>());
         private SortableBindingList<CommandSecurityItem> _secuDataSource = new SortableBindingList<CommandSecurityItem>(new List<CommandSecurityItem>());
+
+        private List<SecurityItem> _securityInfoList = new List<SecurityItem>();
 
         GridConfig _gridConfig;
         public StrategyTradingForm2()
@@ -55,6 +60,16 @@ namespace TradingSystem.View
 
             this.cmdGridView.UpdateRelatedDataGridHandler += new UpdateRelatedDataGrid(GridView_Command_UpdateRelatedDataGridHandler);
             this.bsGridView.UpdateRelatedDataGridHandler += new UpdateRelatedDataGrid(GridView_BuySell_UpdateRelatedDataGridHandler);
+
+            //Refresh
+            this.tsbRefresh.Click += new EventHandler(ToolStripButton_Command_Refresh);
+            this.tsbefRefresh.Click += new EventHandler(ToolStripButton_EntrustFlow_Refresh);
+            this.tsbdfRefresh.Click += new EventHandler(ToolStripButton_DealFlow_Refresh);
+
+            //Calculate
+            this.btnCalc.Click += new EventHandler(Button_Calculate_Click);
+
+            this.btnEntrust.Click += new EventHandler(Button_Entrust_Click);
         }
 
         private void GridView_Command_UpdateRelatedDataGridHandler(UpdateDirection direction, int rowIndex, int columnIndex)
@@ -78,6 +93,7 @@ namespace TradingSystem.View
                                 foreach (var secuItem in secuItems)
                                 {
                                     secuItem.Selection = true;
+                                    secuItem.CommandCopies = cmdItem.CommandNum;
                                     _secuDataSource.Add(secuItem);
                                 }
                             }
@@ -282,30 +298,32 @@ namespace TradingSystem.View
         #region Load data
         private bool Form_LoadData(object sender, object data)
         {
+            Clear();
+            
             //Load data here
-            _cmdDataSource.Clear();
+            
+            //Load the securityinfo
+            this._securityInfoList = _secudbdao.Get(SecurityType.All);
 
-            //var tradingInstances = _tradeInstdao.GetCombine(-1);
             var tradingcmds = _tradecmddao.Get(-1);
             if (tradingcmds != null)
             {
                 foreach (var cmdItem in tradingcmds)
                 {
-                    //TradingCommandItem cmdItem = new TradingCommandItem 
-                    //{
-                    //    CommandId = instance.InstanceId,
-                    //    CommandNum = instance.OperationCopies,
-                    //    //InstanceId = instance.InstanceCode,
-                    //    InstanceNo = instance.InstanceId.ToString(),
-                    //    MonitorUnit = instance.MonitorUnitName,
-                    //    TemplateId = instance.TemplateId,
-                    //};
-
                     _cmdDataSource.Add(cmdItem);
                 }
             }
 
             return true;
+        }
+
+        private void Clear()
+        {
+            _cmdDataSource.Clear();
+            _secuDataSource.Clear();
+            _efDataSource.Clear();
+            _eiDataSource.Clear();
+            _dfDataSource.Clear();
         }
 
         #endregion
@@ -320,6 +338,126 @@ namespace TradingSystem.View
             }
         }
 
+        #endregion
+
+        #region toolstrip click event handler
+
+        private void ToolStripButton_DealFlow_Refresh(object sender, EventArgs e)
+        {
+            //TODO: load the dealflow security
+        }
+
+        private void ToolStripButton_EntrustFlow_Refresh(object sender, EventArgs e)
+        {
+            //TODO: load the entrustflow security
+        }
+
+        private void ToolStripButton_Command_Refresh(object sender, EventArgs e)
+        {
+            Form_LoadData(this, null);
+        }
+
+        #endregion
+
+        #region buy/sell button click event
+
+        private void Button_Calculate_Click(object sender, EventArgs e)
+        {
+            //TODO:
+            if (!ValidateCopies())
+            {
+                MessageBox.Show(this, "请输入委托份数", "警告", MessageBoxButtons.OK);
+                return;
+            }
+
+            //update each command item
+            foreach (var eiItem in _eiDataSource)
+            {
+                var selCmdItems = _cmdDataSource.Where(p => p.CommandId == eiItem.CommandNo).ToList();
+                if (selCmdItems != null && selCmdItems.Count == 1)
+                {
+                    selCmdItems[0].TargetNum = eiItem.Copies;
+
+                    _secuDataSource.Where(p => p.CommandId == eiItem.CommandNo)
+                        .ToList()
+                        .ForEach(p => {
+                            p.TargetCopies = eiItem.Copies;
+                            p.TargetAmount = p.TargetCopies * p.WeightAmount;
+                            p.ThisEntrustAmount = p.TargetCopies * p.WeightAmount;
+                            p.WaitAmount = p.TargetCopies * p.WeightAmount;
+                        });
+                }
+            }
+
+            //query the price and set it
+            List<SecurityItem> secuList = new List<SecurityItem>();
+            var uniqueSecuItems = _secuDataSource.GroupBy(p => p.SecuCode).Select(p => p.First());
+            foreach (var secuItem in uniqueSecuItems)
+            {
+                var findItem = _securityInfoList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
+                secuList.Add(findItem);
+                //if (findItem != null)
+                //{
+                //    var addedItem = secuList.Find(p => p.SecuCode.Equals(findItem.SecuCode) && p.SecuType == findItem.SecuType);
+                //    if (addedItem == null)
+                //    {
+                //        secuList.Add(findItem);
+                //    }
+                //}
+            }
+
+            QuoteCenter.Instance.Query(secuList);
+            foreach (var secuItem in _secuDataSource)
+            {
+                var targetItem = secuList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
+                var marketData = QuoteCenter.Instance.GetMarketData(targetItem);
+                secuItem.EntrustedPrice = marketData.CurrentPrice;
+                secuItem.LimitUpPrice = marketData.HighLimitPrice;
+                secuItem.LimitDownPrice = marketData.LowLimitPrice;
+                secuItem.SuspensionFlag = marketData.SuspendFlag.ToString();
+            }
+
+            //refresh UI
+            this.cmdGridView.Invalidate();
+            this.bsGridView.Invalidate();
+            this.securityGridView.Invalidate();
+        }
+
+        private void Button_Entrust_Click(object sender, EventArgs e)
+        {
+            //TODO:
+        }
+
+        private bool ValidateCopies()
+        {
+            bool ret = true;
+
+            int copies = 0;
+            if(!string.IsNullOrEmpty(tbCopies.Text))
+            {
+                int temp = 0;
+                if (int.TryParse(tbCopies.Text, out temp))
+                {
+                    copies = temp;
+                }
+            }
+
+            if (copies > 0)
+            {
+                foreach (var eiItem in _eiDataSource)
+                {
+                    eiItem.Copies = copies;
+                }
+            }
+
+            var selItems = _eiDataSource.Where(p => p.Selection && p.Copies == 0).ToList();
+            if (selItems != null && selItems.Count > 0)
+            {
+                ret = false;
+            }
+
+            return ret;
+        }
         #endregion
     }
 }

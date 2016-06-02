@@ -260,7 +260,7 @@ namespace TradingSystem.View
                             var targetItem = secuList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
                             var marketData = QuoteCenter.Instance.GetMarketData(targetItem);
                             secuItem.LastPrice = marketData.CurrentPrice;
-                            secuItem.CommandMoney = secuItem.CommandPrice * secuItem.EntrustAmount;
+                            secuItem.CommandMoney = secuItem.LastPrice * secuItem.EntrustAmount;
                             secuItem.BuyAmount = marketData.BuyAmount;
                             secuItem.SellAmount = marketData.SellAmount;
                         }
