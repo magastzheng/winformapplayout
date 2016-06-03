@@ -58,6 +58,7 @@
     <Compile Include="TradingCommandDAO.cs" />
     <Compile Include="TradingCommandSecurityDAO.cs" />
     <Compile Include="TradingInstanceDAO.cs" />
+    <Compile Include="TradingInstanceSecurityDAO.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

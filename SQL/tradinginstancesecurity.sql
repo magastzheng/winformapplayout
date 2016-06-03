@@ -9,6 +9,7 @@ create table tradinginstancesecurity(
 	--,InstanceCode		varchar(20)
 	,SecuCode			varchar(10) not null		--证券代码
 	,SecuType			int				--证券类型： 股票2， 期货3
+	--,WeightAmount		int				--权重数量 直接从模板中获取
 	,PositionType		int				--股票多头1，股票空头2，期货多头3， 期货空头4
 	,PositionAmount		int				--持仓数量
 	,AvailableAmount	int				--可用数量
@@ -23,10 +24,14 @@ drop proc procTradingInstanceSecurityInsert
 
 go
 create proc procTradingInstanceSecurityInsert(
-	@InstanceId		int
-	,@SecuCode		varchar(10)
-	,@SecuType		int
-	,@PositionType	int
+	@InstanceId			int
+	,@SecuCode			varchar(10)
+	,@SecuType			int
+	,@PositionType		int
+	--,@PositionAmount	int
+	--,@AvailableAmount	int
+	,@InstructionPreBuy	int
+	,@InstructionPreSell	int
 	,@RowId	varchar(20) output
 )
 as
@@ -36,11 +41,16 @@ begin
 		,SecuCode
 		,SecuType
 		,PositionType
+		,InstructionPreBuy
+		,InstructionPreSell
 	)
 	values(@InstanceId
-		,@SecuCode
-		,@SecuType
-		,@PositionType)
+			,@SecuCode
+			,@SecuType
+			,@PositionType
+			,@InstructionPreBuy
+			,@InstructionPreSell
+		)
 
 	set @RowId=@SecuCode+';'+cast(@InstanceId as varchar)
 end
@@ -66,32 +76,32 @@ begin
 	where InstanceId=@InstanceId and SecuCode=@SecuCode
 end
 
-go
-if exists (select name from sysobjects where name='procTradingInstanceSecurityUpdatePreTrading')
-drop proc procTradingInstanceSecurityUpdatePreTrading
+--go
+--if exists (select name from sysobjects where name='procTradingInstanceSecurityUpdatePreTrading')
+--drop proc procTradingInstanceSecurityUpdatePreTrading
+
+--go
+--create proc procTradingInstanceSecurityUpdatePreTrading(
+--	@InstanceId				int
+--	,@SecuCode				varchar(10)
+--	,@InstructionPreBuy		int
+--	,@InstructionPreSell	int
+--)
+--as
+--begin
+--	update tradinginstancesecurity
+--	set
+--		InstructionPreBuy = @InstructionPreBuy
+--		,InstructionPreSell = @InstructionPreSell
+--	where InstanceId=@InstanceId and SecuCode=@SecuCode
+--end
 
 go
-create proc procTradingInstanceSecurityUpdatePreTrading(
-	@InstanceId				int
-	,@SecuCode				varchar(10)
-	,@InstructionPreBuy		int
-	,@InstructionPreSell	int
-)
-as
-begin
-	update tradinginstancesecurity
-	set
-		InstructionPreBuy = @InstructionPreBuy
-		,InstructionPreSell = @InstructionPreSell
-	where InstanceId=@InstanceId and SecuCode=@SecuCode
-end
+if exists (select name from sysobjects where name='procTradingInstanceSecurityDelete')
+drop proc procTradingInstanceSecurityDelete
 
 go
-if exists (select name from sysobjects where name='procTradingInstanceSecurityUpdateDelete')
-drop proc procTradingInstanceSecurityUpdateDelete
-
-go
-create proc procTradingInstanceSecurityUpdateDelete(
+create proc procTradingInstanceSecurityDelete(
 	@InstanceId int
 	,@SecuCode	varchar(10)
 )
@@ -99,4 +109,26 @@ as
 begin
 	delete from tradinginstancesecurity
 	where InstanceId=@InstanceId and SecuCode=@SecuCode
+end
+
+go
+if exists (select name from sysobjects where name='procTradingInstanceSecuritySelect')
+drop proc procTradingInstanceSecuritySelect
+
+go
+create proc procTradingInstanceSecuritySelect(
+	@InstanceId int
+)
+as
+begin
+	select InstanceId
+		   ,SecuCode		
+		   ,SecuType		
+		   ,PositionType	
+		   ,PositionAmount	
+		   ,AvailableAmount
+		   ,InstructionPreBuy
+		   ,InstructionPreSell
+	from tradinginstancesecurity
+	where InstanceId=@InstanceId
 end

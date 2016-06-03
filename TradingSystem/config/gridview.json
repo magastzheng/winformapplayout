@@ -2218,7 +2218,7 @@ readonly:
 		"text": "多空",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 3,
 		"visible": 1,
 		"readonly": 1
 		},{

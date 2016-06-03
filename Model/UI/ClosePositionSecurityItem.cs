@@ -1,4 +1,5 @@
 ﻿using Model.Binding;
+using Model.SecurityInfo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +22,31 @@ namespace Model.UI
         [BindingAttribute("secuname")]
         public string SecuName { get; set; }
 
+        public string ExchangeCode { get; set; }
+
         [BindingAttribute("exchange")]
-        public string Exchange { get; set; }
+        public string Exchange { get { return ExchangeCode; } }
 
         [BindingAttribute("longshort")]
-        public int LongShort { get; set; }
+        public string LongShort
+        {
+            get
+            {
+                string ret = string.Empty;
+                switch (SecuType)
+                {
+                    case SecurityType.Stock:
+                        ret = "多头";
+                        break;
+                    case SecurityType.Futures:
+                        ret = "空头";
+                        break;
+                    default:
+                        break;
+                }
+                return ret;
+            }
+        }
 
         [BindingAttribute("portfolioid")]
         public int PortfolioId { get; set; }
@@ -65,5 +86,7 @@ namespace Model.UI
 
         [BindingAttribute("lastprice")]
         public double LastPrice { get; set; }
+
+        public SecurityType SecuType { get; set; }
     }
 }

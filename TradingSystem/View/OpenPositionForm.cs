@@ -30,6 +30,7 @@ namespace TradingSystem.View
         private TradingInstanceDAO _tradeinstdao = new TradingInstanceDAO();
         private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
         private TradingCommandSecurityDAO _tradecmdsecudao = new TradingCommandSecurityDAO();
+        private TradingInstanceSecurityDAO _tradeinstsecudao = new TradingInstanceSecurityDAO();
 
         private SortableBindingList<OpenPositionItem> _monitorDataSource;
         private SortableBindingList<OpenPositionSecurityItem> _securityDataSource;
@@ -294,6 +295,20 @@ namespace TradingSystem.View
 
                             if (instanceId > 0)
                             {
+                                //store the instance security
+                                var tradeinstSecus = GetTradingInstanceSecurities(openItem, instanceId);
+                                if (tradeinstSecus != null && tradeinstSecus.Count > 0)
+                                {
+                                    foreach (var tiItem in tradeinstSecus)
+                                    {
+                                        string rowid = _tradeinstsecudao.Create(tiItem);
+                                        if (string.IsNullOrEmpty(rowid))
+                                        { 
+                                            //TODO: find to store the ....
+                                        }
+                                    }
+                                }
+
                                 //success! Will send generate TradingCommand
                                 TradingCommandItem cmdItem = new TradingCommandItem 
                                 {
@@ -346,6 +361,48 @@ namespace TradingSystem.View
             }
         }
 
+        private List<TradingInstanceSecurity> GetTradingInstanceSecurities(OpenPositionItem openItem, int instanceId)
+        {
+            List<TradingInstanceSecurity> tradeInstanceSecuItems = new List<TradingInstanceSecurity>();
+            var targetSecurities = _securityDataSource.Where(p => p.MonitorId == openItem.MonitorId).ToList();
+            foreach (var item in targetSecurities)
+            {
+                TradingInstanceSecurity tiSecuItem = new TradingInstanceSecurity
+                {
+                    InstanceId = instanceId,
+                    SecuCode = item.SecuCode
+                };
+
+                var findItem = _securityInfoList.Single(p => p.SecuCode.Equals(item.SecuCode));
+                if (findItem != null)
+                {
+                    tiSecuItem.SecuType = findItem.SecuType;
+                }
+
+                if (item.Selection)
+                {
+                    switch (tiSecuItem.SecuType)
+                    {
+                        case SecurityType.Stock:
+                            {
+                                tiSecuItem.InstructionPreBuy = openItem.Copies * item.WeightAmount;
+                            }
+                            break;
+                        case SecurityType.Futures:
+                            {
+                                tiSecuItem.InstructionPreSell = openItem.Copies * item.WeightAmount;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                tradeInstanceSecuItems.Add(tiSecuItem);
+            }
+
+            return tradeInstanceSecuItems;
+        }
 
         private List<CommandSecurityItem> GetSelectCommandSecurities(OpenPositionItem openItem, int commandId)
         {

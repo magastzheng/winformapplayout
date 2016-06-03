@@ -74,6 +74,8 @@ namespace TradingSystem.View
             this.btnEntrust.Click += new EventHandler(Button_Entrust_Click);
         }
 
+        #region GridView UpdateRelatedDataGridHandler
+
         private void GridView_Command_UpdateRelatedDataGridHandler(UpdateDirection direction, int rowIndex, int columnIndex)
         {
             if (rowIndex < 0 || rowIndex >= _cmdDataSource.Count)
@@ -178,6 +180,8 @@ namespace TradingSystem.View
                     break;
             }
         }
+
+        #endregion
 
         #region form loading
 
