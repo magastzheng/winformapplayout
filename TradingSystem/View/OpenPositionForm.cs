@@ -13,6 +13,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Linq;
 using Quote;
+using TradingSystem.Dialog;
 
 namespace TradingSystem.View
 {
@@ -275,6 +276,26 @@ namespace TradingSystem.View
                         foreach (var index in selectedList)
                         {
                             var openItem = _monitorDataSource[index];
+
+                            //Open the dialog
+                            OpenPositionDialog dialog = new OpenPositionDialog();
+                            dialog.Owner = this;
+                            dialog.StartPosition = FormStartPosition.CenterParent;
+                            //dialog.OnLoadFormActived(json);
+                            //dialog.Visible = true;
+                            dialog.OnLoadControl(dialog, null);
+                            dialog.OnLoadData(dialog, openItem);
+                            //dialog.SaveData += new FormLoadHandler(Dialog_SaveData);
+                            dialog.ShowDialog();
+
+                            if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
+                            {
+                                dialog.Dispose();
+                            }
+                            else
+                            {
+                                dialog.Dispose();
+                            }
 
                             string instanceCode = string.Format("{0}-{1}-{2}", openItem.PortfolioId, openItem.TemplateId, DateTime.Now.ToString("yyyyMMdd"));
                             TradingInstance tradingInstance = new TradingInstance

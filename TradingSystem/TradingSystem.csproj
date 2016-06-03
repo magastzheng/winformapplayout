@@ -61,6 +61,12 @@
     <Compile Include="Dialog\MonitorUnitDialog.Designer.cs">
       <DependentUpon>MonitorUnitDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialog\OpenPositionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\OpenPositionDialog.Designer.cs">
+      <DependentUpon>OpenPositionDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\ClosePositionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -173,6 +179,9 @@
     </Compile>
     <EmbeddedResource Include="Dialog\MonitorUnitDialog.resx">
       <DependentUpon>MonitorUnitDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialog\OpenPositionDialog.resx">
+      <DependentUpon>OpenPositionDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\ClosePositionForm.resx">
       <DependentUpon>ClosePositionForm.cs</DependentUpon>
