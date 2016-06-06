@@ -142,10 +142,13 @@ namespace TradingSystem.View
                 TradeDirection = ((int)EntrustDirection.Buy).ToString()
             };
 
-            var futuresItem = _secuDataSource.First(p => p.SecuType == Model.SecurityInfo.SecurityType.Futures);
-            if (futuresItem != null)
+            if (_secuDataSource != null && _secuDataSource.Count > 0)
             {
-                cmdItem.FuturesContract = futuresItem.SecuCode;
+                var futuresItem = _secuDataSource.First(p => p.SecuType == Model.SecurityInfo.SecurityType.Futures);
+                if (futuresItem != null)
+                {
+                    cmdItem.FuturesContract = futuresItem.SecuCode;
+                }
             }
 
             _cmdDataSource.Add(cmdItem);
