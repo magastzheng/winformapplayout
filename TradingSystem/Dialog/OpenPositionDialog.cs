@@ -23,6 +23,23 @@ namespace TradingSystem.Dialog
 
             this.LoadControl += new FormLoadHandler(Form_LoadControl);
             this.LoadData += new FormLoadHandler(Form_LoadData);
+
+            this.ckbInstanceCode.CheckedChanged += new EventHandler(CheckBox_InstanceCode_CheckedChanged);
+        }
+
+        private void CheckBox_InstanceCode_CheckedChanged(object sender, EventArgs e)
+        {
+            if (sender == null || !(sender is CheckBox))
+                return;
+            CheckBox ckb = sender as CheckBox;
+            if (ckb.Checked)
+            {
+                cbInstanceCode.Enabled = true;
+            }
+            else
+            {
+                cbInstanceCode.Enabled = false;
+            }
         }
 
         #region load control
@@ -58,6 +75,7 @@ namespace TradingSystem.Dialog
             this.tbTemlate.Text = string.Format("{0}-{1}", openItem.TemplateId, openItem.TemplateName);
             this.tbFutures.Text = openItem.FuturesContract;
             this.tbCopies.Text = string.Format("{0}", openItem.Copies);
+            this.tbCopies.Enabled = false;
             this.tbBias.Text = "0";
 
             DateTime now = DateTime.Now;

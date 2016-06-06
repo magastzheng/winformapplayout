@@ -1,4 +1,5 @@
 ﻿using Controls.Entity;
+using Model;
 using Model.Data;
 using System;
 using System.Collections.Generic;
@@ -80,10 +81,31 @@ namespace Controls.GridView
             }
 
             foreach (DataGridViewColumn column in dgv.Columns)
-            { 
-                if(colDataMap.ContainsKey(column.Name))
+            {
+                if (colDataMap.ContainsKey(column.Name))
                 {
                     column.DataPropertyName = colDataMap[column.Name];
+                }
+            }
+        }
+
+        public static void SetDataBinding(TSDataGridView dgv, string cbName, ComboOption cbOption)
+        {
+            if (dgv == null)
+            {
+                throw new ArgumentNullException("dgv");
+            }
+
+            foreach (DataGridViewColumn column in dgv.Columns)
+            {
+                if (column.Name.Equals(cbName) && column is DataGridViewComboBoxColumn)
+                {
+                    var cbColumn = column as DataGridViewComboBoxColumn;
+                    cbColumn.DataSource = cbOption.Items;
+                    cbColumn.DisplayMember = "Name";
+                    cbColumn.ValueMember = "Id";
+
+                    break;
                 }
             }
         }

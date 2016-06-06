@@ -90,7 +90,7 @@ namespace Controls.GridView
         {
             TSDataGridView dgv = sender as TSDataGridView;
             int columnIndex = dgv.CurrentCell.ColumnIndex;
-            if (columnIndex == Columns["copies"].Index)
+            if (Columns["copies"] != null && columnIndex == Columns["copies"].Index)
             {
                 e.Control.KeyPress -= CopiesCheck;
                 e.Control.KeyPress += CopiesCheck;
