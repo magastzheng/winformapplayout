@@ -360,5 +360,22 @@
 				"code": "2",
 				"name": "多账户"
 			}]
+	},{
+		"name": "tradedirection",
+		"selected": "1",
+		"items":[
+			{
+				"id": "1",
+				"code": "1",
+				"name": "买入"
+			},{
+				"id": "2",
+				"code": "2",
+				"name": "卖出"
+			},{
+				"id": "3",
+				"code": "3",
+				"name": "调整到[买卖]"
+			}]
 	}
 ]

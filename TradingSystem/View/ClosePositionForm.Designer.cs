@@ -32,10 +32,19 @@
             this.tsbRefresh = new System.Windows.Forms.ToolStripButton();
             this.tsSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.mainSplitter = new System.Windows.Forms.SplitContainer();
-            this.closeBottomPanel = new System.Windows.Forms.Panel();
             this.closeGridView = new Controls.GridView.TSDataGridView();
+            this.closeBottomPanel = new System.Windows.Forms.Panel();
             this.securityGridView = new Controls.GridView.TSDataGridView();
+            this.panelCmdBotton = new System.Windows.Forms.Panel();
+            this.cmdGridView = new Controls.GridView.TSDataGridView();
+            this.lblCopies = new System.Windows.Forms.Label();
+            this.tbCopies = new System.Windows.Forms.TextBox();
+            this.btnCalc = new System.Windows.Forms.Button();
+            this.btnCloseAll = new System.Windows.Forms.Button();
+            this.btnChgPosition = new System.Windows.Forms.Button();
+            this.btnSubmit = new System.Windows.Forms.Button();
             this.panelTop.SuspendLayout();
+            this.panelBottom.SuspendLayout();
             this.panelMain.SuspendLayout();
             this.tsChildMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitter)).BeginInit();
@@ -44,6 +53,8 @@
             this.mainSplitter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.closeGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.securityGridView)).BeginInit();
+            this.panelCmdBotton.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cmdGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // panelTop
@@ -52,13 +63,15 @@
             // 
             // panelBottom
             // 
-            this.panelBottom.Location = new System.Drawing.Point(0, 450);
-            this.panelBottom.Size = new System.Drawing.Size(1125, 120);
+            this.panelBottom.Controls.Add(this.cmdGridView);
+            this.panelBottom.Controls.Add(this.panelCmdBotton);
+            this.panelBottom.Location = new System.Drawing.Point(0, 378);
+            this.panelBottom.Size = new System.Drawing.Size(1125, 192);
             // 
             // panelMain
             // 
             this.panelMain.Controls.Add(this.mainSplitter);
-            this.panelMain.Size = new System.Drawing.Size(1125, 418);
+            this.panelMain.Size = new System.Drawing.Size(1125, 346);
             // 
             // tsChildMain
             // 
@@ -100,17 +113,9 @@
             // mainSplitter.Panel2
             // 
             this.mainSplitter.Panel2.Controls.Add(this.securityGridView);
-            this.mainSplitter.Size = new System.Drawing.Size(1125, 418);
-            this.mainSplitter.SplitterDistance = 201;
+            this.mainSplitter.Size = new System.Drawing.Size(1125, 346);
+            this.mainSplitter.SplitterDistance = 166;
             this.mainSplitter.TabIndex = 0;
-            // 
-            // closeBottomPanel
-            // 
-            this.closeBottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.closeBottomPanel.Location = new System.Drawing.Point(0, 170);
-            this.closeBottomPanel.Name = "closeBottomPanel";
-            this.closeBottomPanel.Size = new System.Drawing.Size(1125, 31);
-            this.closeBottomPanel.TabIndex = 0;
             // 
             // closeGridView
             // 
@@ -121,8 +126,16 @@
             this.closeGridView.Location = new System.Drawing.Point(0, 0);
             this.closeGridView.Name = "closeGridView";
             this.closeGridView.RowTemplate.Height = 23;
-            this.closeGridView.Size = new System.Drawing.Size(1125, 170);
+            this.closeGridView.Size = new System.Drawing.Size(1125, 135);
             this.closeGridView.TabIndex = 1;
+            // 
+            // closeBottomPanel
+            // 
+            this.closeBottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.closeBottomPanel.Location = new System.Drawing.Point(0, 135);
+            this.closeBottomPanel.Name = "closeBottomPanel";
+            this.closeBottomPanel.Size = new System.Drawing.Size(1125, 31);
+            this.closeBottomPanel.TabIndex = 0;
             // 
             // securityGridView
             // 
@@ -133,8 +146,87 @@
             this.securityGridView.Location = new System.Drawing.Point(0, 0);
             this.securityGridView.Name = "securityGridView";
             this.securityGridView.RowTemplate.Height = 23;
-            this.securityGridView.Size = new System.Drawing.Size(1125, 213);
+            this.securityGridView.Size = new System.Drawing.Size(1125, 176);
             this.securityGridView.TabIndex = 0;
+            // 
+            // panelCmdBotton
+            // 
+            this.panelCmdBotton.Controls.Add(this.btnSubmit);
+            this.panelCmdBotton.Controls.Add(this.btnChgPosition);
+            this.panelCmdBotton.Controls.Add(this.btnCloseAll);
+            this.panelCmdBotton.Controls.Add(this.btnCalc);
+            this.panelCmdBotton.Controls.Add(this.tbCopies);
+            this.panelCmdBotton.Controls.Add(this.lblCopies);
+            this.panelCmdBotton.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panelCmdBotton.Location = new System.Drawing.Point(0, 156);
+            this.panelCmdBotton.Name = "panelCmdBotton";
+            this.panelCmdBotton.Size = new System.Drawing.Size(1125, 36);
+            this.panelCmdBotton.TabIndex = 0;
+            // 
+            // cmdGridView
+            // 
+            this.cmdGridView.AllowUserToAddRows = false;
+            this.cmdGridView.AllowUserToDeleteRows = false;
+            this.cmdGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.cmdGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cmdGridView.Location = new System.Drawing.Point(0, 0);
+            this.cmdGridView.Name = "cmdGridView";
+            this.cmdGridView.RowTemplate.Height = 23;
+            this.cmdGridView.Size = new System.Drawing.Size(1125, 156);
+            this.cmdGridView.TabIndex = 1;
+            // 
+            // lblCopies
+            // 
+            this.lblCopies.AutoSize = true;
+            this.lblCopies.Location = new System.Drawing.Point(12, 13);
+            this.lblCopies.Name = "lblCopies";
+            this.lblCopies.Size = new System.Drawing.Size(59, 12);
+            this.lblCopies.TabIndex = 0;
+            this.lblCopies.Text = "操作份数:";
+            // 
+            // tbCopies
+            // 
+            this.tbCopies.Location = new System.Drawing.Point(71, 8);
+            this.tbCopies.Name = "tbCopies";
+            this.tbCopies.Size = new System.Drawing.Size(67, 21);
+            this.tbCopies.TabIndex = 1;
+            this.tbCopies.Text = "1";
+            // 
+            // btnCalc
+            // 
+            this.btnCalc.Location = new System.Drawing.Point(144, 8);
+            this.btnCalc.Name = "btnCalc";
+            this.btnCalc.Size = new System.Drawing.Size(55, 23);
+            this.btnCalc.TabIndex = 2;
+            this.btnCalc.Text = "计算";
+            this.btnCalc.UseVisualStyleBackColor = true;
+            // 
+            // btnCloseAll
+            // 
+            this.btnCloseAll.Location = new System.Drawing.Point(205, 8);
+            this.btnCloseAll.Name = "btnCloseAll";
+            this.btnCloseAll.Size = new System.Drawing.Size(55, 23);
+            this.btnCloseAll.TabIndex = 3;
+            this.btnCloseAll.Text = "全平";
+            this.btnCloseAll.UseVisualStyleBackColor = true;
+            // 
+            // btnChgPosition
+            // 
+            this.btnChgPosition.Location = new System.Drawing.Point(266, 8);
+            this.btnChgPosition.Name = "btnChgPosition";
+            this.btnChgPosition.Size = new System.Drawing.Size(55, 23);
+            this.btnChgPosition.TabIndex = 4;
+            this.btnChgPosition.Text = "换仓";
+            this.btnChgPosition.UseVisualStyleBackColor = true;
+            // 
+            // btnSubmit
+            // 
+            this.btnSubmit.Location = new System.Drawing.Point(327, 8);
+            this.btnSubmit.Name = "btnSubmit";
+            this.btnSubmit.Size = new System.Drawing.Size(55, 23);
+            this.btnSubmit.TabIndex = 5;
+            this.btnSubmit.Text = "下达指令";
+            this.btnSubmit.UseVisualStyleBackColor = true;
             // 
             // ClosePositionForm
             // 
@@ -143,6 +235,7 @@
             this.Name = "ClosePositionForm";
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
+            this.panelBottom.ResumeLayout(false);
             this.panelMain.ResumeLayout(false);
             this.tsChildMain.ResumeLayout(false);
             this.tsChildMain.PerformLayout();
@@ -152,6 +245,9 @@
             this.mainSplitter.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.closeGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.securityGridView)).EndInit();
+            this.panelCmdBotton.ResumeLayout(false);
+            this.panelCmdBotton.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cmdGridView)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -165,5 +261,13 @@
         private Controls.GridView.TSDataGridView closeGridView;
         private System.Windows.Forms.Panel closeBottomPanel;
         private Controls.GridView.TSDataGridView securityGridView;
+        private Controls.GridView.TSDataGridView cmdGridView;
+        private System.Windows.Forms.Panel panelCmdBotton;
+        private System.Windows.Forms.Button btnSubmit;
+        private System.Windows.Forms.Button btnChgPosition;
+        private System.Windows.Forms.Button btnCloseAll;
+        private System.Windows.Forms.Button btnCalc;
+        private System.Windows.Forms.TextBox tbCopies;
+        private System.Windows.Forms.Label lblCopies;
     }
 }

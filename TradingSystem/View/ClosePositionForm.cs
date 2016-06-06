@@ -11,6 +11,9 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Linq;
+using Model.Data;
+using Model;
+using Model.SecurityInfo;
 
 namespace TradingSystem.View
 {
@@ -18,14 +21,21 @@ namespace TradingSystem.View
     {
         private const string GridCloseId = "closeposition";
         private const string GridSecurityId = "closepositionsecurity";
+        private const string GridCloseCmdId = "closepositioncmd";
 
         private GridConfig _gridConfig;
         private TradingInstanceDAO _tradeinstdao = new TradingInstanceDAO();
         private TradingInstanceSecurityDAO _tradeinstsecudao = new TradingInstanceSecurityDAO();
         private TemplateStockDAO _tempstockdao = new TemplateStockDAO();
+        private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
+        private FuturesContractDAO _fcdbdao = new FuturesContractDAO();
+        private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
 
         private SortableBindingList<ClosePositionItem> _instDataSource = new SortableBindingList<ClosePositionItem>(new List<ClosePositionItem>());
         private SortableBindingList<ClosePositionSecurityItem> _secuDataSource = new SortableBindingList<ClosePositionSecurityItem>(new List<ClosePositionSecurityItem>());
+        private SortableBindingList<ClosePositionCmdItem> _cmdDataSource = new SortableBindingList<ClosePositionCmdItem>(new List<ClosePositionCmdItem>());
+
+        private List<SecurityItem> _securityInfoList = new List<SecurityItem>();
 
         public ClosePositionForm()
             :base()
@@ -57,6 +67,7 @@ namespace TradingSystem.View
                 case UpdateDirection.Select:
                     {
                         LoadSecurity(closeItem);
+                        LoadCloseCommand(closeItem);
                     }
                     break;
                 case UpdateDirection.UnSelect:
@@ -68,6 +79,15 @@ namespace TradingSystem.View
                             foreach (var secuItem in secuItems)
                             {
                                 _secuDataSource.Remove(secuItem);
+                            }
+                        }
+
+                        var cmdItems = _cmdDataSource.Where(p => p.InstanceId == closeItem.InstanceId).ToList();
+                        if (cmdItems != null && cmdItems.Count > 0)
+                        {
+                            foreach (var cmdItem in cmdItems)
+                            {
+                                _cmdDataSource.Remove(cmdItem);
                             }
                         }
                     }
@@ -97,11 +117,40 @@ namespace TradingSystem.View
                         AvailableAmount = secuItem.AvailableAmount,
                     };
 
+                    var secuInfo = _securityInfoList.Find(p => p.SecuCode.Equals(closeSecuItem.SecuCode) && p.SecuType == closeSecuItem.SecuType);
+                    if (secuInfo != null)
+                    { 
+                        closeSecuItem.SecuName = secuInfo.SecuName;
+                        closeSecuItem.ExchangeCode = secuInfo.ExchangeCode;
+                    }
+
                     _secuDataSource.Add(closeSecuItem);
                 }
             }
 
         }
+
+        private void LoadCloseCommand(ClosePositionItem closeItem)
+        {
+            ClosePositionCmdItem cmdItem = new ClosePositionCmdItem 
+            {
+                InstanceId = closeItem.InstanceId,
+                InstanceCode = closeItem.InstanceCode,
+                Selection = true,
+                SpotTemplate = closeItem.TemplateId.ToString(),
+                MonitorName = closeItem.MonitorName,
+                TradeDirection = ((int)EntrustDirection.Buy).ToString()
+            };
+
+            var futuresItem = _secuDataSource.First(p => p.SecuType == Model.SecurityInfo.SecurityType.Futures);
+            if (futuresItem != null)
+            {
+                cmdItem.FuturesContract = futuresItem.SecuCode;
+            }
+
+            _cmdDataSource.Add(cmdItem);
+        }
+
         #endregion
 
         #region load control
@@ -117,11 +166,68 @@ namespace TradingSystem.View
             Dictionary<string, string> securityColDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(ClosePositionSecurityItem));
             TSDataGridViewHelper.SetDataBinding(this.securityGridView, securityColDataMap);
 
+            //set the command gridview
+            TSDataGridViewHelper.AddColumns(this.cmdGridView, _gridConfig.GetGid(GridCloseCmdId));
+            Dictionary<string, string> cmdColDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(ClosePositionCmdItem));
+            TSDataGridViewHelper.SetDataBinding(this.cmdGridView, cmdColDataMap);
 
             this.closeGridView.DataSource = _instDataSource;
             this.securityGridView.DataSource = _secuDataSource;
+            this.cmdGridView.DataSource = _cmdDataSource;
+
+            LoadCommandComboBoxOption();
 
             return true;
+        }
+
+        private void LoadCommandComboBoxOption()
+        {
+            var tradeDirectionOption = ConfigManager.Instance.GetComboConfig().GetComboOption("tradedirection");
+            TSDataGridViewHelper.SetDataBinding(this.cmdGridView, "tradedirection", tradeDirectionOption);
+
+            var templates = _tempdbdao.Get(-1);
+            if (templates != null && templates.Count > 0)
+            {
+                ComboOption tempOption = new ComboOption 
+                {
+                    Items = new List<ComboOptionItem>(),
+                };
+
+                foreach (var temp in templates)
+                {
+                    ComboOptionItem option = new ComboOptionItem 
+                    {
+                        Id = temp.TemplateId.ToString(),
+                        Name = string.Format("{0} {1}",temp.TemplateId, temp.TemplateName)
+                    };
+
+                    tempOption.Items.Add(option);
+                }
+
+                TSDataGridViewHelper.SetDataBinding(this.cmdGridView, "spottemplate", tempOption);
+            }
+
+            var futures = _fcdbdao.Get("");
+            if (futures != null && futures.Count > 0)
+            {
+                ComboOption futuresOption = new ComboOption
+                {
+                    Items = new List<ComboOptionItem>(),
+                };
+
+                foreach (var future in futures)
+                {
+                    ComboOptionItem option = new ComboOptionItem 
+                    {
+                        Id = future.Code,
+                        Name = future.Code
+                    };
+
+                    futuresOption.Items.Add(option);
+                }
+
+                TSDataGridViewHelper.SetDataBinding(this.cmdGridView, "futurescontract", futuresOption);
+            }
         }
 
         #endregion
@@ -132,6 +238,10 @@ namespace TradingSystem.View
         {
             _instDataSource.Clear();
             _secuDataSource.Clear();
+            _cmdDataSource.Clear();
+            _securityInfoList.Clear();
+
+            _securityInfoList = _secudbdao.Get(SecurityType.All);
 
             var tradeInstances = _tradeinstdao.GetCombine(-1);
             if (tradeInstances != null && tradeInstances.Count > 0)

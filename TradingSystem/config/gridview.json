@@ -2069,32 +2069,6 @@ readonly:
 		"valuetype": 0,
 		"visible": 1,
 		"readonly": 0
-		},{
-		"name": "plus",
-		"text": "增加",
-		"width": 40,
-		"columntype": 2,
-		"valuetype": 3,
-		"visible": 1,
-		"readonly": 1,
-		"defaultvalue": "img/plus.png"
-		},{
-		"name": "copies",
-		"text": "份数",
-		"width": 40,
-		"columntype": 0,
-		"valuetype": 0,
-		"visible": 1,
-		"readonly": 0
-		},{
-		"name": "minus",
-		"text": "减少",
-		"width": 40,
-		"columntype": 2,
-		"valuetype": 3,
-		"visible": 1,
-		"readonly": 1,
-		"defaultvalue": "img/minus.png"
 		},
 		{
 		"name": "instanceid",
@@ -2188,7 +2162,7 @@ readonly:
 		"columntype": 1,
 		"valuetype": 0,
 		"visible": 1,
-		"readonly": 1
+		"readonly": 0
 		},{
 		"name": "secucode",
 		"text": "证券代码",
@@ -2260,7 +2234,7 @@ readonly:
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
-		"readonly": 1
+		"readonly": 0
 		},{
 		"name": "targetmktcap",
 		"text": "目标市值",
@@ -2308,7 +2282,7 @@ readonly:
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
-		"readonly": 1
+		"readonly": 0
 		},{
 		"name": "commandprice",
 		"text": "指令价格",
@@ -2316,7 +2290,7 @@ readonly:
 		"columntype": 0,
 		"valuetype": 1,
 		"visible": 1,
-		"readonly": 1
+		"readonly": 0
 		},{
 		"name": "lastprice",
 		"text": "最新价",
@@ -2325,6 +2299,100 @@ readonly:
 		"valuetype": 1,
 		"visible": 1,
 		"readonly": 1
+		},{
+		"name": "last",
+		"text": "",
+		"width": 5,
+		"columntype": -1,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},{
+	"grid": "closepositioncmd",
+	"columns": [{
+		"name": "selection",
+		"text": "选择",
+		"width": 80,
+		"columntype": 1,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "plus",
+		"text": "增加",
+		"width": 40,
+		"columntype": 2,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1,
+		"defaultvalue": "img/plus.png"
+		},{
+		"name": "copies",
+		"text": "份数",
+		"width": 40,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "minus",
+		"text": "减少",
+		"width": 40,
+		"columntype": 2,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1,
+		"defaultvalue": "img/minus.png"
+		},{
+		"name": "instanceid",
+		"text": "实例序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "instancecode",
+		"text": "实例编号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "monitorname",
+		"text": "监控名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "tradedirection",
+		"text": "买卖方向",
+		"width": 80,
+		"columntype": 3,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "spottemplate",
+		"text": "现货模板",
+		"width": 80,
+		"columntype": 3,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "futurescontract",
+		"text": "期货合约",
+		"width": 80,
+		"columntype": 3,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 0
 		},{
 		"name": "last",
 		"text": "",

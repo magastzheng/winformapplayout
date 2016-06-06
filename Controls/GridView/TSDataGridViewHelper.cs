@@ -65,6 +65,7 @@ namespace Controls.GridView
                 column.Name = col.Name;
                 column.Width = col.Width;
                 column.ReadOnly = (col.ReadOnly != 0) ? true : false;
+                column.Visible = (col.Visible != 0) ? true : false;
                 gridColumns[i] = column;
             }
 
@@ -147,12 +148,39 @@ namespace Controls.GridView
         public static void CellFormatting(TSDataGridView dgv, DataGridViewCellFormattingEventArgs e)
         {
             DataGridViewColumn column = dgv.Columns[e.ColumnIndex];
-            if (column != null && column is DataGridViewImageColumn)
+            if (column != null)
             {
-                //e.Value = Image.FromFile((string)column.Tag);
-                Image image = Image.FromFile((string)column.Tag);
-                Bitmap bitmap = new Bitmap(image, new Size(20, 20));
-                e.Value = bitmap;
+                if (column is DataGridViewImageColumn)
+                {
+                    //e.Value = Image.FromFile((string)column.Tag);
+                    Image image = Image.FromFile((string)column.Tag);
+                    Bitmap bitmap = new Bitmap(image, new Size(20, 20));
+                    e.Value = bitmap;
+                }
+                //else if (column is DataGridViewComboBoxColumn)
+                //{
+                //    string cbSource = string.Format("{0}_{1}", column.Name, "source");
+                //    DataGridViewColumn srccolumn = dgv.Columns[cbSource];
+                //    if(srccolumn != null)
+                //    {
+                //        var cellSource = dgv.Rows[e.RowIndex].Cells[srccolumn.Name];
+                //        ComboOption cbOption = (ComboOption)cellSource.Value;
+                //        if (cbOption != null)
+                //        {
+                //            var cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                //            var cbCell = (DataGridViewComboBoxCell)cell;
+                //            if (cbCell != null)
+                //            {
+                //                //cbCell.DataSource = cbOption.Items;
+                //                //cbCell.DisplayMember = "Name";
+                //                //cbCell.ValueMember = "Id";
+                //                cbCell.Items.AddRange(cbOption.Items);
+                //                cbCell.DisplayMember = "Name";
+                //                cbCell.ValueMember = "Id";
+                //            }
+                //        }
+                //    }
+                //}
             }
         }
 
