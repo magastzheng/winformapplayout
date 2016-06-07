@@ -61,6 +61,11 @@ namespace Controls.GridView
                         break;
                 }
 
+                if (col.ValueType == DataValueType.Float)
+                {
+                    column.DefaultCellStyle.Format = "##0.000";
+                }
+
                 column.HeaderText = col.Text;
                 column.Name = col.Name;
                 column.Width = col.Width;

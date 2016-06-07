@@ -67,6 +67,7 @@
     <Compile Include="Dialog\OpenPositionDialog.Designer.cs">
       <DependentUpon>OpenPositionDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="TradeUtil\TradingCommandHelper.cs" />
     <Compile Include="View\ClosePositionForm.cs">
       <SubType>Form</SubType>
     </Compile>

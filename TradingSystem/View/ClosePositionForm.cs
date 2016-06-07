@@ -14,6 +14,7 @@ using System.Linq;
 using Model.Data;
 using Model;
 using Model.SecurityInfo;
+using TradingSystem.TradeUtil;
 
 namespace TradingSystem.View
 {
@@ -313,7 +314,63 @@ namespace TradingSystem.View
 
         private void Button_Submit_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            var cmdItems = _cmdDataSource.Where(p => p.Selection).ToList();
+            foreach (var cmdItem in cmdItems)
+            {
+                TradingCommandItem tdcmdItem = new TradingCommandItem
+                {
+                    InstanceId = cmdItem.InstanceId,
+                    ECommandType = Model.UI.CommandType.Arbitrage,
+                    //EExecuteType = ExecuteType.OpenPosition,
+                    CommandNum = cmdItem.Copies,
+                    //EStockDirection = Model.Data.EntrustDirection.BuySpot,
+                    //EFuturesDirection = Model.Data.EntrustDirection.SellOpen,
+                    EEntrustStatus = EntrustStatus.NoExecuted,
+                    EDealStatus = DealStatus.NoDeal,
+                    ModifiedTimes = 1
+                };
+
+                EntrustDirection direction = GetEntrustDirection(cmdItem.TradeDirection);
+                switch (direction)
+                {
+                    case EntrustDirection.Buy:
+                        {
+                            tdcmdItem.EExecuteType = ExecuteType.OpenPosition;
+                            tdcmdItem.EStockDirection = EntrustDirection.BuySpot;
+                            tdcmdItem.EFuturesDirection = EntrustDirection.SellOpen;
+                        }
+                        break;
+                    case EntrustDirection.Sell:
+                        {
+                            tdcmdItem.EExecuteType = ExecuteType.ClosePosition;
+                            tdcmdItem.EStockDirection = EntrustDirection.SellSpot;
+                            tdcmdItem.EFuturesDirection = EntrustDirection.BuyClose;
+                        }
+                        break;
+                    case EntrustDirection.AdjustedToBuySell:
+                        {
+                            tdcmdItem.EExecuteType = ExecuteType.AdjustPosition;
+                            tdcmdItem.EStockDirection = EntrustDirection.BuySpot;
+                            tdcmdItem.EFuturesDirection = EntrustDirection.SellOpen;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                var cmdSecuItems = GetSelectCommandSecurities(cmdItem);
+                TradingCommandHelper tradeCommandHelper = new TradingCommandHelper();
+                int total = tradeCommandHelper.Submit(tdcmdItem, cmdSecuItems);
+                if (total == cmdSecuItems.Count)
+                {
+
+                }
+                else
+                { 
+                    //TODO:
+                }
+            }
+
         }
 
         private bool ValidateCopies(List<ClosePositionCmdItem> closeCmdItems)
@@ -340,19 +397,26 @@ namespace TradingSystem.View
             return true;
         }
 
-        private void CalculateInstance(ClosePositionCmdItem cmdItem)
+        private EntrustDirection GetEntrustDirection(string tradeDirection)
         {
-            int copies = cmdItem.Copies;
             int temp = 0;
             EntrustDirection direction = EntrustDirection.Buy;
-            if(int.TryParse(cmdItem.TradeDirection, out temp))
+            if (int.TryParse(tradeDirection, out temp))
             {
-                if(Enum.IsDefined(typeof(EntrustDirection), temp))
+                if (Enum.IsDefined(typeof(EntrustDirection), temp))
                 {
-                    direction = (EntrustDirection)Enum.ToObject(typeof(EntrustDirection),temp);
+                    direction = (EntrustDirection)Enum.ToObject(typeof(EntrustDirection), temp);
                 }
             }
 
+            return direction;
+        }
+
+        private void CalculateInstance(ClosePositionCmdItem cmdItem)
+        {
+            int copies = cmdItem.Copies;
+            EntrustDirection direction = GetEntrustDirection(cmdItem.TradeDirection);
+            
             var instance = _instDataSource.Single(p => p.InstanceId == cmdItem.InstanceId);
             if (instance == null)
             {
@@ -500,16 +564,7 @@ namespace TradingSystem.View
 
         private void CloseAll(ClosePositionCmdItem cmdItem)
         {
-            int temp = 0;
-            EntrustDirection direction = EntrustDirection.Buy;
-            if (int.TryParse(cmdItem.TradeDirection, out temp))
-            {
-                if (Enum.IsDefined(typeof(EntrustDirection), temp))
-                {
-                    direction = (EntrustDirection)Enum.ToObject(typeof(EntrustDirection), temp);
-                }
-            }
-
+            EntrustDirection direction = GetEntrustDirection(cmdItem.TradeDirection);
             var instance = _instDataSource.Single(p => p.InstanceId == cmdItem.InstanceId);
             if (instance == null)
             {
@@ -543,6 +598,39 @@ namespace TradingSystem.View
                         break;
                 }
             }
+        }
+
+        private List<CommandSecurityItem> GetSelectCommandSecurities(ClosePositionCmdItem cmdItem)
+        {
+            List<CommandSecurityItem> cmdSecuItems = new List<CommandSecurityItem>();
+
+            var template = _instDataSource.First(p => p.InstanceId == cmdItem.InstanceId);
+
+            var tempStockItems = _tempstockdao.Get(template.TemplateId);
+            foreach (var item in _secuDataSource)
+            {
+                if (item.Selection && item.InstanceId == cmdItem.InstanceId)
+                {
+                    CommandSecurityItem secuItem = new CommandSecurityItem
+                    {
+                        SecuCode = item.SecuCode,
+                        //WeightAmount = item.,
+                        CommandAmount = item.EntrustAmount,
+                        CommandPrice = item.CommandPrice,
+                        EntrustStatus = EntrustStatus.NoExecuted
+                    };
+
+                    var tempStockItem = tempStockItems.Find(p => p.SecuCode.Equals(secuItem.SecuCode));
+                    if (tempStockItem != null)
+                    {
+                        secuItem.WeightAmount = tempStockItem.Amount;
+                    }
+
+                    cmdSecuItems.Add(secuItem);
+                }
+            }
+
+            return cmdSecuItems;
         }
         #endregion
     }
