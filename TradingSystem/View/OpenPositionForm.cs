@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using System.Linq;
 using Quote;
 using TradingSystem.Dialog;
+using TradingSystem.TradeUtil;
 
 namespace TradingSystem.View
 {
@@ -203,17 +204,11 @@ namespace TradingSystem.View
 
         private void CalcEntrustAmount(OpenPositionItem monitorItem)
         {
-            //var secuItems = _securityDataSource.Select(p => p.MonitorId == monitorItem.MonitorId).ToList();
             var secuItems = _securityDataSource.Where(p => p.MonitorId == monitorItem.MonitorId);
             foreach (var secuItem in secuItems)
             {
                 secuItem.EntrustAmount = monitorItem.Copies * secuItem.WeightAmount;
             }
-
-            //foreach (var secuItem in _securityDataSource)
-            //{
-            //    secuItem.EntrustAmount = monitorItem.Copies * secuItem.WeightAmount;
-            //}
         }
 
         public void RemoveSecurityData(OpenPositionItem monitorItem)
@@ -344,29 +339,17 @@ namespace TradingSystem.View
                                     ModifiedTimes = 1
                                 };
 
-                                int commandId = _tradecmddao.Create(cmdItem);
-                                if (commandId > 0)
+                                var cmdSecuItems = GetSelectCommandSecurities(openItem, -1);
+
+                                TradingCommandHelper tradeCommandHelper = new TradingCommandHelper();
+                                int total = tradeCommandHelper.Submit(cmdItem, cmdSecuItems);
+                                if (total == cmdSecuItems.Count)
                                 {
-                                    var cmdSecuItems = GetSelectCommandSecurities(openItem, commandId);
-                                    if (cmdSecuItems != null)
-                                    {
-                                        foreach (var cmdSecuItem in cmdSecuItems)
-                                        {
-                                            int ret = _tradecmdsecudao.Create(cmdSecuItem);
-                                            if (ret > 0)
-                                            {
-                                                //Success
-                                            }
-                                            else
-                                            { 
-                                                //TODO: Fail
-                                            }
-                                        }
-                                    }
+                                    //Success
                                 }
                                 else
                                 { 
-                                    //Fail to submit the command
+                                    //Some item fail
                                 }
                             }
                             else

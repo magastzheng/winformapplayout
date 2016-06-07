@@ -123,7 +123,8 @@ namespace BLL
             int iRet = _conn.SendBizMsg(message, 1);
             if (iRet < 0)
             {
-                logger.Error(string.Format("异步发送数据失败！ 错误码：{0}, 错误消息：{1}", iRet, _conn.GetErrorMsg(iRet)));
+                string msg = string.Format("异步发送数据失败！ 错误码：{0}, 错误消息：{1}", iRet, _conn.GetErrorMsg(iRet));
+                logger.Error(msg);
                 return iRet;
             }
 
@@ -135,7 +136,8 @@ namespace BLL
             int iRet = _conn.SendBizMsg(message, 0);
             if (iRet < 0)
             {
-                logger.Error(string.Format("同步发送数据失败！ 错误码：{0}, 错误消息：{1}", iRet, _conn.GetErrorMsg(iRet)));
+                string msg = string.Format("同步发送数据失败！ 错误码：{0}, 错误消息：{1}", iRet, _conn.GetErrorMsg(iRet));
+                logger.Error(msg);
                 return iRet;
             }
 
@@ -143,7 +145,8 @@ namespace BLL
             int retCode = _conn.RecvBizMsg(iRet, out bizMessage, (int)_timeOut, 1);
             if (retCode < 0)
             {
-                logger.Error("同步接收出错: " + _conn.GetErrorMsg(retCode));
+                string msg = "同步接收出错: " + _conn.GetErrorMsg(retCode);
+                logger.Error(msg);
                 return (int)ConnectionCode.ErrorSendMsg;
             }
 

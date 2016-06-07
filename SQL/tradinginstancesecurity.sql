@@ -15,6 +15,8 @@ create table tradinginstancesecurity(
 	,AvailableAmount	int				--可用数量
 	,InstructionPreBuy	int				--指令预买
 	,InstructionPreSell	int				--指令预卖
+	,Cost				numeric(20, 4)	--成本
+	,BuyToday			int				--当日买量
 	,constraint pk_TradingInstanceSecurity_IdSecuCode primary key(InstanceId, SecuCode)
 )
 
