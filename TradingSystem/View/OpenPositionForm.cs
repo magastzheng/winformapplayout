@@ -307,10 +307,15 @@ namespace TradingSystem.View
                                 Owner = "111111"
                             };
 
-                            int instanceId = _tradeinstdao.Create(tradingInstance);
-
-                            if (instanceId > 0)
+                            int instanceId = -1;
+                            var instance = _tradeinstdao.Get(instanceCode);
+                            if (instance != null && !string.IsNullOrEmpty(instance.InstanceCode) && instance.InstanceCode.Equals(instanceCode))
                             {
+                                instanceId = instance.InstanceId;
+                            }
+                            else
+                            {
+                                instanceId = _tradeinstdao.Create(tradingInstance);
                                 //store the instance security
                                 var tradeinstSecus = GetTradingInstanceSecurities(openItem, instanceId);
                                 if (tradeinstSecus != null && tradeinstSecus.Count > 0)
@@ -319,12 +324,15 @@ namespace TradingSystem.View
                                     {
                                         string rowid = _tradeinstsecudao.Create(tiItem);
                                         if (string.IsNullOrEmpty(rowid))
-                                        { 
+                                        {
                                             //TODO: find to store the ....
                                         }
                                     }
                                 }
+                            }
 
+                            if (instanceId > 0)
+                            {
                                 //success! Will send generate TradingCommand
                                 TradingCommandItem cmdItem = new TradingCommandItem 
                                 {

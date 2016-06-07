@@ -235,3 +235,48 @@ begin
 		on b.StockTemplateId = c.TemplateId
 	end
 end
+
+go
+if exists (select name from sysobjects where name='procTradingInstanceSelectByCode')
+drop proc procTradingInstanceSelectByCode
+
+go
+create proc procTradingInstanceSelectByCode(
+	@InstanceCode varchar(20)
+)
+as
+begin
+	select 
+		InstanceId			
+		,InstanceCode		
+		,MonitorUnitId		
+		,StockDirection		
+		,FuturesContract	
+		,FuturesDirection	
+		,OperationCopies	
+		,StockPriceType		
+		,FuturesPriceType	
+		,Status				
+		,Owner				
+		,CreatedDate		
+		,ModifiedDate		
+	from tradinginstance
+	where InstanceCode=@InstanceCode
+end
+
+go
+if exists (select name from sysobjects where name='procTradingInstanceExist')
+drop proc procTradingInstanceExist
+
+go
+create proc procTradingInstanceExist(
+	@InstanceCode varchar(20)
+)
+as
+begin
+	declare @total int
+	set @total = (select count(InstanceId)		
+					from tradinginstance
+					where InstanceCode=@InstanceCode)
+	return @total
+end
