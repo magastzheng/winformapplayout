@@ -1,4 +1,5 @@
-﻿using Model.SecurityInfo;
+﻿using Model.Data;
+using Model.SecurityInfo;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,22 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, (int)secItem.SecuType);
             _dbHelper.AddInParameter(dbCommand, "@WeightAmount", System.Data.DbType.Int32, secItem.WeightAmount);
             _dbHelper.AddInParameter(dbCommand, "@CommandAmount", System.Data.DbType.Int32, secItem.CommandAmount);
+            if (!string.IsNullOrEmpty(secItem.EntrustDirection))
+            {
+                int temp = 0;
+                EntrustDirection direction = EntrustDirection.None;
+                if (int.TryParse(secItem.EntrustDirection, out temp))
+                {
+                    if (Enum.IsDefined(typeof(EntrustDirection), temp))
+                    {
+                        direction = (EntrustDirection)Enum.ToObject(typeof(EntrustDirection), temp);
+                    }
+                }
+
+
+                _dbHelper.AddInParameter(dbCommand, "@CommandDirection", System.Data.DbType.Int32, (int)direction);
+            }
+
             _dbHelper.AddInParameter(dbCommand, "@CommandPrice", System.Data.DbType.Double, secItem.CommandPrice);
      
             return _dbHelper.ExecuteNonQuery(dbCommand);
@@ -75,6 +92,7 @@ namespace DBAccess
                     item.SecuType = (SecurityType)reader["SecuType"];
                     item.WeightAmount = (int)reader["WeightAmount"];
                     item.CommandAmount = (int)reader["CommandAmount"];
+                    item.EntrustDirection = ((int)reader["CommandDirection"]).ToString();
                     item.EntrustedAmount = (int)reader["EntrustedAmount"];
                     item.CommandPrice = (double)(decimal)reader["CommandPrice"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];

@@ -15,6 +15,7 @@ using System.Linq;
 using Quote;
 using TradingSystem.Dialog;
 using TradingSystem.TradeUtil;
+using Model.Data;
 
 namespace TradingSystem.View
 {
@@ -174,7 +175,8 @@ namespace TradingSystem.View
                     SecuName = stock.SecuName,
                     WeightAmount = stock.Amount,
                     EntrustAmount = monitorItem.Copies * stock.Amount,
-                    DirectionType = Model.Data.EntrustDirection.BuySpot
+                    DirectionType = Model.Data.EntrustDirection.BuySpot,
+                    SecuType = SecurityType.Stock
                 };
 
                 _securityDataSource.Add(secuItem);
@@ -194,7 +196,8 @@ namespace TradingSystem.View
                     SecuName = monitorItem.FuturesContract,
                     WeightAmount = templateItem.FutureCopies,
                     EntrustAmount = monitorItem.Copies * templateItem.FutureCopies,
-                    DirectionType = Model.Data.EntrustDirection.SellOpen
+                    DirectionType = Model.Data.EntrustDirection.SellOpen,
+                    SecuType = SecurityType.Futures
                 };
 
                 int pos = _securityDataSource.Count - stocks.Count;
@@ -427,12 +430,22 @@ namespace TradingSystem.View
                     {
                         CommandId = commandId,
                         SecuCode = item.SecuCode,
+                        SecuType = item.SecuType,
                         WeightAmount = item.WeightAmount,
                         CommandAmount = item.EntrustAmount,
                         CommandPrice = item.CommandPrice,
                         EntrustStatus = EntrustStatus.NoExecuted
                     };
 
+                    if(secuItem.SecuType == SecurityType.Stock)
+                    {
+                        secuItem.EntrustDirection = string.Format("{0}", (int)EntrustDirection.BuySpot);
+                    }
+                    else
+                    {
+                        secuItem.EntrustDirection = string.Format("{0}", (int)EntrustDirection.SellOpen);
+                    }
+                       
                     cmdSecuItems.Add(secuItem);
                 }
             }

@@ -240,6 +240,10 @@ namespace Quote
             List<string> allFields = QueryHelper.AllFields;
             List<string> windCodes = queryHelper.GetSecuCode(secuItems);
             Dictionary<string, string> optionMap = new Dictionary<string, string>();
+            if (windCodes == null || windCodes.Count == 0)
+            {
+                return;
+            }
 
             foreach (var field in allFields)
             {
@@ -251,64 +255,6 @@ namespace Quote
                     FillData(wd, fieldIndexMap);
                 }
             }
-
-            //WindData wd = WindAPIWrap.Instance.SyncRequestData(windCodes, fields, optionMap);
-            //if (wd != null)
-            //{
-            //    FillData(wd, fieldIndexMap);
-            //}
-
-            //fields = new List<string> { "rt_upward_vol" };
-            //fieldIndexMap = QueryHelper.GetFieldIndex(fields);
-            //wd = WindAPIWrap.Instance.SyncRequestData(windCodes, fields, optionMap);
-            //if (wd != null)
-            //{
-            //    FillData(wd, fieldIndexMap);
-            //}
-
-            //fields = new List<string> { "rt_downward_vol" };
-            //fieldIndexMap = QueryHelper.GetFieldIndex(fields);
-            //wd = WindAPIWrap.Instance.SyncRequestData(windCodes, fields, optionMap);
-            //if (wd != null)
-            //{
-            //    FillData(wd, fieldIndexMap);
-            //}
-
-            ////停牌标记
-            //fields = new List<string> { "rt_susp_flag" };
-            //fieldIndexMap = QueryHelper.GetFieldIndex(fields);
-            //wd = WindAPIWrap.Instance.SyncRequestData(windCodes, fields, optionMap);
-            //if (wd != null)
-            //{
-            //    FillData(wd, fieldIndexMap);
-            //}
-
-            ////交易状态
-            //fields = new List<string> { "rt_trade_status" };
-            //fieldIndexMap = QueryHelper.GetFieldIndex(fields);
-            //wd = WindAPIWrap.Instance.SyncRequestData(windCodes, fields, optionMap);
-            //if (wd != null)
-            //{
-            //    FillData(wd, fieldIndexMap);
-            //}
-
-            ////涨停价
-            //fields = new List<string> { "rt_high_limit" };
-            //fieldIndexMap = QueryHelper.GetFieldIndex(fields);
-            //wd = WindAPIWrap.Instance.SyncRequestData(windCodes, fields, optionMap);
-            //if (wd != null)
-            //{
-            //    FillData(wd, fieldIndexMap);
-            //}
-
-            ////跌停价
-            //fields = new List<string> { "rt_low_limit" };
-            //fieldIndexMap = QueryHelper.GetFieldIndex(fields);
-            //wd = WindAPIWrap.Instance.SyncRequestData(windCodes, fields, optionMap);
-            //if (wd != null)
-            //{
-            //    FillData(wd, fieldIndexMap);
-            //}
         }
 
         public MarketData GetMarketData(SecurityItem secuItem)

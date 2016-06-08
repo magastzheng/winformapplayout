@@ -446,18 +446,20 @@ namespace TradingSystem.View
             //TODO: handle those 
             foreach (var secuItem in secuItems)
             {
+                if (!secuItem.Selection)
+                {
+                    secuItem.EntrustAmount = 0;
+                    //TODO: set the EntrustDirection as empty
+                    continue;
+                }
+
                 var tempsecuItem = tempstockitems.Find(p => p.SecuCode.Equals(secuItem.SecuCode));
 
                 int weightAmount = 0;
                 if (tempsecuItem != null)
                 {
                     weightAmount = tempsecuItem.Amount;
-                    //secuItem.EntrustAmount = tempsecuItem.Amount * copies;
                 }
-                //else
-                //{
-                //    weightAmount = secuItem.HoldingAmount;
-                //}
 
                 switch (direction)
                 {
@@ -614,9 +616,10 @@ namespace TradingSystem.View
                     CommandSecurityItem secuItem = new CommandSecurityItem
                     {
                         SecuCode = item.SecuCode,
-                        //WeightAmount = item.,
+                        SecuType = item.SecuType,
                         CommandAmount = item.EntrustAmount,
                         CommandPrice = item.CommandPrice,
+                        EntrustDirection = string.Format("{0}", item.EntrustDirection),
                         EntrustStatus = EntrustStatus.NoExecuted
                     };
 

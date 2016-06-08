@@ -1,5 +1,6 @@
 ﻿using Model.Binding;
 using Model.Data;
+using Model.SecurityInfo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -107,5 +108,7 @@ namespace Model.UI
 
         [BindingAttribute("limitmove")]
         public int LimitMove { get; set; }
+
+        public SecurityType SecuType { get; set; }
     }
 }

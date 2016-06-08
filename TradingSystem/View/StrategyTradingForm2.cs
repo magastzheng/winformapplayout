@@ -16,6 +16,7 @@ using Model.SecurityInfo;
 using Quote;
 using Model;
 using Model.config;
+using Model.Data;
 
 namespace TradingSystem.View
 {
@@ -72,7 +73,73 @@ namespace TradingSystem.View
             this.btnCalc.Click += new EventHandler(Button_Calculate_Click);
 
             this.btnEntrust.Click += new EventHandler(Button_Entrust_Click);
+
+            //select/unselect
+            this.btnCmdSelect.Click += new EventHandler(Button_Command_Select_Click);
+            this.btnCmdUnSelect.Click += new EventHandler(Button_Command_UnSelect_Click);
+
+            this.btnSecuSelect.Click += new EventHandler(Button_Security_Select_Click);
+            this.btnSecuUnSelect.Click += new EventHandler(Button_Security_UnSelect_Click);
+
+            this.cbSpotBuyPrice.SelectedIndexChanged += new EventHandler(ComboBox_SelectedIndexChange);
+            this.cbSpotSellPrice.SelectedIndexChanged += new EventHandler(ComboBox_SelectedIndexChange);
+            this.cbFuturesBuyPrice.SelectedIndexChanged += new EventHandler(ComboBox_SelectedIndexChange);
+            this.cbFuturesSellPrice.SelectedIndexChanged += new EventHandler(ComboBox_SelectedIndexChange);
         }
+
+        #region price type change
+
+        private void ComboBox_SelectedIndexChange(object sender, EventArgs e)
+        {
+            if (sender == null || !(sender is ComboBox))
+                return;
+            ComboBox cb = sender as ComboBox;
+            string priceType = GetPriceTypeId(cb);
+            string direction = string.Empty;
+            SecurityType secuType = SecurityType.All;
+            switch (cb.Name)
+            {
+                case "cbSpotBuyPrice":
+                    { 
+                        direction = string.Format("{0}", (int)EntrustDirection.BuySpot);
+                        secuType = SecurityType.Stock;
+                    }
+                    break;
+                case "cbSpotSellPrice":
+                    {
+                        direction = string.Format("{0}", (int)EntrustDirection.SellSpot);
+                        secuType = SecurityType.Stock;
+                    }
+                    break;
+                case "cbFuturesBuyPrice":
+                    {
+                        direction = string.Format("{0}", (int)EntrustDirection.BuyClose);
+                        secuType = SecurityType.Futures;
+                    }
+                    break;
+                case "cbFuturesSellPrice":
+                    {
+                        direction = string.Format("{0}", (int)EntrustDirection.SellOpen);
+                        secuType = SecurityType.Futures;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            var items = _secuDataSource.Where(p => p.SecuType == secuType && p.EntrustDirection.Equals(direction)).ToList();
+            if (items != null && items.Count > 0)
+            {
+                foreach (var item in items)
+                {
+                    item.PriceType = priceType;
+                }
+            }
+
+            this.securityGridView.Invalidate();
+        }
+
+        #endregion
 
         #region GridView UpdateRelatedDataGridHandler
 
@@ -87,57 +154,12 @@ namespace TradingSystem.View
             {
                 case UpdateDirection.Select:
                     {
-                        //Add into two gridview: CommandSecurity and entrust
-                        var secuItems = _secuDataSource.Where(p => p.CommandId == cmdItem.CommandId);
-                        if(secuItems == null || secuItems.Count() == 0)
-                        {
-                            secuItems = _tradecmdsecudao.Get(cmdItem.CommandId);
-                            if (secuItems != null)
-                            {
-                                foreach (var secuItem in secuItems)
-                                {
-                                    secuItem.Selection = true;
-                                    secuItem.CommandCopies = cmdItem.CommandNum;
-                                    _secuDataSource.Add(secuItem);
-                                }
-                            }
-                        }
-
-                        //Add into buy/sell grid view
-                        var entrustItems = _eiDataSource.Where(p => p.CommandNo == cmdItem.CommandId);
-                        if (entrustItems == null || entrustItems.Count() == 0)
-                        {
-                            var entrustItem = new EntrustItem
-                            {
-                                CommandNo = cmdItem.CommandId,
-                                Selection = true
-                            };
-
-                            _eiDataSource.Add(entrustItem);
-                        }
+                        GridView_Command_Select(cmdItem);
                     }
                     break;
                 case UpdateDirection.UnSelect:
                     {
-                        //Remove from Security GridView
-                        var secuItems = _secuDataSource.Where(p => p.CommandId == cmdItem.CommandId).ToList();
-                        if (secuItems != null && secuItems.Count() > 0)
-                        {
-                            foreach (var secuItem in secuItems)
-                            {
-                                _secuDataSource.Remove(secuItem);
-                            }
-                        }
-    
-                        //Remove from two GridView:
-                        var entrustItems = _eiDataSource.Where(p => p.CommandNo == cmdItem.CommandId).ToList();
-                        if (entrustItems != null && entrustItems.Count() > 0)
-                        {
-                            foreach (var item in entrustItems)
-                            {
-                                _eiDataSource.Remove(item);
-                            }
-                        }
+                        GridView_Command_UnSelect(cmdItem);
                     }
                     break;
                 case UpdateDirection.Increase:
@@ -179,6 +201,115 @@ namespace TradingSystem.View
                 default:
                     break;
             }
+        }
+
+        private void GridView_Command_Select(TradingCommandItem cmdItem)
+        {
+            string spotBuyPrice = GetPriceTypeId(this.cbSpotBuyPrice);
+            string spotSellPrice = GetPriceTypeId(this.cbSpotSellPrice);
+            string futuBuyPrice = GetPriceTypeId(this.cbFuturesBuyPrice);
+            string futuSellPrice = GetPriceTypeId(this.cbFuturesSellPrice);
+
+            //Add into two gridview: CommandSecurity and entrust
+            var secuItems = _secuDataSource.Where(p => p.CommandId == cmdItem.CommandId);
+            if (secuItems == null || secuItems.Count() == 0)
+            {
+                secuItems = _tradecmdsecudao.Get(cmdItem.CommandId);
+                if (secuItems != null)
+                {
+                    foreach (var secuItem in secuItems)
+                    {
+                        secuItem.Selection = true;
+                        secuItem.CommandCopies = cmdItem.CommandNum;
+                        switch (GetEntrustDirection(secuItem.EntrustDirection))
+                        {
+                            case EntrustDirection.BuySpot:
+                                {
+                                    secuItem.PriceType = spotBuyPrice;
+                                }
+                                break;
+                            case EntrustDirection.SellSpot:
+                                {
+                                    secuItem.PriceType = spotSellPrice;
+                                }
+                                break;
+                            case EntrustDirection.SellOpen:
+                                {
+                                    secuItem.PriceType = futuSellPrice;
+                                }
+                                break;
+                            case EntrustDirection.BuyClose:
+                                {
+                                    secuItem.PriceType = futuBuyPrice;
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+
+
+                        _secuDataSource.Add(secuItem);
+                    }
+                }
+            }
+
+            //Add into buy/sell grid view
+            var entrustItems = _eiDataSource.Where(p => p.CommandNo == cmdItem.CommandId);
+            if (entrustItems == null || entrustItems.Count() == 0)
+            {
+                var entrustItem = new EntrustItem
+                {
+                    CommandNo = cmdItem.CommandId,
+                    Selection = true
+                };
+
+                _eiDataSource.Add(entrustItem);
+            }
+        }
+
+        private void GridView_Command_UnSelect(TradingCommandItem cmdItem)
+        {
+            //Remove from Security GridView
+            var secuItems = _secuDataSource.Where(p => p.CommandId == cmdItem.CommandId).ToList();
+            if (secuItems != null && secuItems.Count() > 0)
+            {
+                foreach (var secuItem in secuItems)
+                {
+                    _secuDataSource.Remove(secuItem);
+                }
+            }
+
+            //Remove from two GridView:
+            var entrustItems = _eiDataSource.Where(p => p.CommandNo == cmdItem.CommandId).ToList();
+            if (entrustItems != null && entrustItems.Count() > 0)
+            {
+                foreach (var item in entrustItems)
+                {
+                    _eiDataSource.Remove(item);
+                }
+            }
+        }
+
+        private EntrustDirection GetEntrustDirection(string direction)
+        {
+            EntrustDirection eD = EntrustDirection.None;
+            int temp = -1;
+            if (int.TryParse(direction, out temp))
+            {
+                if (Enum.IsDefined(typeof(EntrustDirection), temp))
+                {
+                    eD = (EntrustDirection)Enum.ToObject(typeof(EntrustDirection), temp);
+                }
+            }
+
+            return eD;
+        }
+
+        private string GetPriceTypeId(ComboBox comboBox)
+        {
+            var selectedItem = (ComboOptionItem)comboBox.SelectedItem;
+
+            return selectedItem.Id;
         }
 
         #endregion
@@ -372,6 +503,62 @@ namespace TradingSystem.View
         private void ToolStripButton_Command_Refresh(object sender, EventArgs e)
         {
             Form_LoadData(this, null);
+        }
+
+        #endregion
+
+        #region TradingCommand select/unselect click
+
+        private void Button_Command_Select_Click(object sender, EventArgs e)
+        {
+            foreach (var cmdItem in _cmdDataSource)
+            {
+                cmdItem.Selection = true;
+
+                GridView_Command_Select(cmdItem);
+            }
+
+            this.cmdGridView.InvalidateColumn(0);
+            this.securityGridView.InvalidateColumn(0);
+            this.bsGridView.InvalidateColumn(0);
+        }
+
+        private void Button_Command_UnSelect_Click(object sender, EventArgs e)
+        {
+            foreach (var cmdItem in _cmdDataSource)
+            {
+                cmdItem.Selection = false;
+
+                GridView_Command_UnSelect(cmdItem);
+            }
+
+            this.cmdGridView.InvalidateColumn(0);
+            this.securityGridView.InvalidateColumn(0);
+            this.bsGridView.InvalidateColumn(0);
+        }
+
+        #endregion
+
+        #region TradingCommand Security select/unselect
+
+        private void Button_Security_Select_Click(object sender, EventArgs e)
+        {
+            foreach (var secuItem in _secuDataSource)
+            {
+                secuItem.Selection = true;
+            }
+
+            this.securityGridView.Invalidate();
+        }
+
+        private void Button_Security_UnSelect_Click(object sender, EventArgs e)
+        {
+            foreach (var secuItem in _secuDataSource)
+            {
+                secuItem.Selection = false;
+            }
+
+            this.securityGridView.Invalidate();
         }
 
         #endregion
