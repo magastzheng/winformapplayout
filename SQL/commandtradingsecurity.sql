@@ -33,6 +33,16 @@ create table tradingcommandsecurity(
 	,EntrustStatus		int			 --1 - 未执行
 )
 
+--==通过交易系统委托之后，将委托指令添加到本表，由于可以分多次进行委托
+if object_id('entrustcommand') is not null
+drop table entrustcommand
+
+create table entrustcommand(
+	CommandId	int not null,
+	EntrustNo	int,
+	BatchNo		int
+)
+
 if object_id('entrustsecurity') is not null
 drop table entrustsecurity
 
@@ -44,6 +54,7 @@ create table entrustsecurity(
 	,EntrustPrice		numeric(20, 4) 
 	,EntrustDirection	int			 --10 - 买入股票， 11 - 卖出股票， 12 - 卖出开仓， 13 - 买入平仓
 	,EntrustStatus		int			 -- 1 - 未执行， 2 - 部分执行， 3- 已完成
+	,BatchId			int			 --委托后返回的批号ID
 )
 
 
