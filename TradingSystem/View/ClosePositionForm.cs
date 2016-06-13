@@ -15,6 +15,7 @@ using Model.Data;
 using Model;
 using Model.SecurityInfo;
 using TradingSystem.TradeUtil;
+using Util;
 
 namespace TradingSystem.View
 {
@@ -330,7 +331,7 @@ namespace TradingSystem.View
                     ModifiedTimes = 1
                 };
 
-                EntrustDirection direction = GetEntrustDirection(cmdItem.TradeDirection);
+                EntrustDirection direction = EntrustDirectionUtil.GetEntrustDirection(cmdItem.TradeDirection);
                 switch (direction)
                 {
                     case EntrustDirection.Buy:
@@ -397,25 +398,10 @@ namespace TradingSystem.View
             return true;
         }
 
-        private EntrustDirection GetEntrustDirection(string tradeDirection)
-        {
-            int temp = 0;
-            EntrustDirection direction = EntrustDirection.Buy;
-            if (int.TryParse(tradeDirection, out temp))
-            {
-                if (Enum.IsDefined(typeof(EntrustDirection), temp))
-                {
-                    direction = (EntrustDirection)Enum.ToObject(typeof(EntrustDirection), temp);
-                }
-            }
-
-            return direction;
-        }
-
         private void CalculateInstance(ClosePositionCmdItem cmdItem)
         {
             int copies = cmdItem.Copies;
-            EntrustDirection direction = GetEntrustDirection(cmdItem.TradeDirection);
+            EntrustDirection direction = EntrustDirectionUtil.GetEntrustDirection(cmdItem.TradeDirection);
             
             var instance = _instDataSource.Single(p => p.InstanceId == cmdItem.InstanceId);
             if (instance == null)
@@ -566,7 +552,7 @@ namespace TradingSystem.View
 
         private void CloseAll(ClosePositionCmdItem cmdItem)
         {
-            EntrustDirection direction = GetEntrustDirection(cmdItem.TradeDirection);
+            EntrustDirection direction = EntrustDirectionUtil.GetEntrustDirection(cmdItem.TradeDirection);
             var instance = _instDataSource.Single(p => p.InstanceId == cmdItem.InstanceId);
             if (instance == null)
             {

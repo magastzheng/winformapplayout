@@ -57,7 +57,7 @@ namespace Model.UI
 
         //委托价格
         [BindingAttribute("entrustprice")]
-        public double EntrustedPrice { get; set; }
+        public double EntrustPrice { get; set; }
 
         //本次委托数量
         [BindingAttribute("thisentrustamout")]

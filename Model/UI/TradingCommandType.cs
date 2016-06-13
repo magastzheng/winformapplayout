@@ -21,9 +21,11 @@ namespace Model.UI
 
     public enum EntrustStatus
     {
-        NoExecuted = 1,     //未执行
-        PartExecuted = 2,   //部分执行
-        Completed = 3,      //已完成
+        SubmitToDB = 0,     //提交到数据库
+        SubmitToUFX = 1,    //提交到UFX
+        NoExecuted = 2,     //未执行
+        PartExecuted = 3,   //部分执行
+        Completed = 4,      //已完成
     }
 
     public enum DealStatus

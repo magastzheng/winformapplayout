@@ -57,7 +57,6 @@
             this.entrustBottonPanel = new System.Windows.Forms.Panel();
             this.btnEntrust = new System.Windows.Forms.Button();
             this.btnCalc = new System.Windows.Forms.Button();
-            this.tbCopies = new System.Windows.Forms.TextBox();
             this.lblCopyUnit = new System.Windows.Forms.Label();
             this.lblCopies = new System.Windows.Forms.Label();
             this.entrustTopPanel = new System.Windows.Forms.Panel();
@@ -87,6 +86,7 @@
             this.dfTopPanel = new System.Windows.Forms.Panel();
             this.tsDealFlow = new System.Windows.Forms.ToolStrip();
             this.tsbdfRefresh = new System.Windows.Forms.ToolStripButton();
+            this.nudCopies = new System.Windows.Forms.NumericUpDown();
             this.tabParentMain.SuspendLayout();
             this.tpCmdTrading.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cmdMainSplitter)).BeginInit();
@@ -123,6 +123,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dfGridView)).BeginInit();
             this.dfTopPanel.SuspendLayout();
             this.tsDealFlow.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudCopies)).BeginInit();
             this.SuspendLayout();
             // 
             // tabParentMain
@@ -275,7 +276,7 @@
             this.tpCmdEntrustFlow.Location = new System.Drawing.Point(4, 22);
             this.tpCmdEntrustFlow.Name = "tpCmdEntrustFlow";
             this.tpCmdEntrustFlow.Padding = new System.Windows.Forms.Padding(3);
-            this.tpCmdEntrustFlow.Size = new System.Drawing.Size(892, 170);
+            this.tpCmdEntrustFlow.Size = new System.Drawing.Size(873, 170);
             this.tpCmdEntrustFlow.TabIndex = 1;
             this.tpCmdEntrustFlow.Text = "委托流水";
             this.tpCmdEntrustFlow.UseVisualStyleBackColor = true;
@@ -285,7 +286,7 @@
             this.tpCmdDealFlow.Location = new System.Drawing.Point(4, 22);
             this.tpCmdDealFlow.Name = "tpCmdDealFlow";
             this.tpCmdDealFlow.Padding = new System.Windows.Forms.Padding(3);
-            this.tpCmdDealFlow.Size = new System.Drawing.Size(892, 170);
+            this.tpCmdDealFlow.Size = new System.Drawing.Size(873, 170);
             this.tpCmdDealFlow.TabIndex = 2;
             this.tpCmdDealFlow.Text = "成交流水";
             this.tpCmdDealFlow.UseVisualStyleBackColor = true;
@@ -411,9 +412,9 @@
             // entrustBottonPanel
             // 
             this.entrustBottonPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.entrustBottonPanel.Controls.Add(this.nudCopies);
             this.entrustBottonPanel.Controls.Add(this.btnEntrust);
             this.entrustBottonPanel.Controls.Add(this.btnCalc);
-            this.entrustBottonPanel.Controls.Add(this.tbCopies);
             this.entrustBottonPanel.Controls.Add(this.lblCopyUnit);
             this.entrustBottonPanel.Controls.Add(this.lblCopies);
             this.entrustBottonPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -439,13 +440,6 @@
             this.btnCalc.TabIndex = 3;
             this.btnCalc.Text = "计算";
             this.btnCalc.UseVisualStyleBackColor = true;
-            // 
-            // tbCopies
-            // 
-            this.tbCopies.Location = new System.Drawing.Point(58, 13);
-            this.tbCopies.Name = "tbCopies";
-            this.tbCopies.Size = new System.Drawing.Size(86, 21);
-            this.tbCopies.TabIndex = 2;
             // 
             // lblCopyUnit
             // 
@@ -741,6 +735,13 @@
             this.tsbdfRefresh.Size = new System.Drawing.Size(52, 22);
             this.tsbdfRefresh.Text = "刷新";
             // 
+            // nudCopies
+            // 
+            this.nudCopies.Location = new System.Drawing.Point(60, 14);
+            this.nudCopies.Name = "nudCopies";
+            this.nudCopies.Size = new System.Drawing.Size(84, 21);
+            this.nudCopies.TabIndex = 5;
+            // 
             // StrategyTradingForm2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -791,6 +792,7 @@
             this.dfTopPanel.PerformLayout();
             this.tsDealFlow.ResumeLayout(false);
             this.tsDealFlow.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudCopies)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -841,7 +843,6 @@
         private System.Windows.Forms.Button btnefSelect;
         private System.Windows.Forms.ToolStrip tsDealFlow;
         private System.Windows.Forms.ToolStripButton tsbdfRefresh;
-        private System.Windows.Forms.TextBox tbCopies;
         private System.Windows.Forms.Label lblCopyUnit;
         private System.Windows.Forms.Label lblCopies;
         private System.Windows.Forms.ComboBox cbFuturesSellPrice;
@@ -856,5 +857,6 @@
         private System.Windows.Forms.Button btnCalc;
         private System.Windows.Forms.Panel cmdTradingPanel;
         private Controls.GridView.TSDataGridView cmdGridView;
+        private System.Windows.Forms.NumericUpDown nudCopies;
     }
 }

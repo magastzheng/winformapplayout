@@ -34,6 +34,7 @@ namespace DBAccess
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, item.CommandId);
+            _dbHelper.AddInParameter(dbCommand, "@Copies", System.Data.DbType.Int32, item.Copies);
             _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, DateTime.Now);
 
             _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
@@ -84,6 +85,7 @@ namespace DBAccess
                     EntrustCommandItem item = new EntrustCommandItem();
                     item.SubmitId = (int)reader["SubmitId"];
                     item.CommandId = (int)reader["CommandId"];
+                    item.Copies = (int)reader["Copies"];
                     item.EntrustNo = (int)reader["EntrustNo"];
                     item.BatchNo = (int)reader["BatchNo"];
                     item.Status = (int)reader["Status"];
@@ -120,6 +122,7 @@ namespace DBAccess
                     EntrustCommandItem item = new EntrustCommandItem();
                     item.SubmitId = (int)reader["SubmitId"];
                     item.CommandId = (int)reader["CommandId"];
+                    item.Copies = (int)reader["Copies"];
                     item.EntrustNo = (int)reader["EntrustNo"];
                     item.BatchNo = (int)reader["BatchNo"];
                     item.Status = (int)reader["Status"];
@@ -157,6 +160,7 @@ namespace DBAccess
                     
                     item.SubmitId = (int)reader["SubmitId"];
                     item.CommandId = (int)reader["CommandId"];
+                    item.Copies = (int)reader["Copies"];
                     item.EntrustNo = (int)reader["EntrustNo"];
                     item.BatchNo = (int)reader["BatchNo"];
                     item.Status = (int)reader["Status"];

@@ -12,6 +12,8 @@ namespace Model.UI
 
         public int CommandId { get; set; }
 
+        public int Copies { get; set; }
+
         public int EntrustNo { get; set; }
 
         public int BatchNo { get; set; }

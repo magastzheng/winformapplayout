@@ -7,6 +7,7 @@ drop table entrustcommand
 create table entrustcommand(
 	SubmitId		int identity(1, 1) primary key
 	,CommandId		int not null
+	,Copies			int			--指令份数
 	,EntrustNo		int			--委托之后，服务器返回的委托号
 	,BatchNo		int			--委托之后，服务器返回的批号
 	,Status			int			--0初始状态，1 - 提交完成，2 - 委托完成
@@ -21,6 +22,7 @@ drop proc procEntrustCommandInsert
 go
 create proc procEntrustCommandInsert(
 	@CommandId		int
+	,@Copies		int
 	,@CreatedDate	datetime
 )
 as
@@ -28,11 +30,13 @@ begin
 	declare @newid int
 	insert into entrustcommand(
 		CommandId
+		,Copies
 		,Status
 		,CreatedDate
 	)
 	values(
 		@CommandId
+		,@Copies
 		,0
 		,@CreatedDate
 	)
@@ -123,6 +127,7 @@ as
 begin
 	select SubmitId
 		  ,CommandId
+		  ,Copies
 		  ,EntrustNo
 		  ,BatchNo
 		  ,Status
@@ -144,6 +149,7 @@ as
 begin
 	select SubmitId
 		  ,CommandId
+		  ,Copies
 		  ,EntrustNo
 		  ,BatchNo
 		  ,Status
@@ -164,6 +170,7 @@ as
 begin
 	select SubmitId
 		  ,CommandId
+		  ,Copies
 		  ,EntrustNo
 		  ,BatchNo
 		  ,Status

@@ -17,6 +17,7 @@ using Quote;
 using Model;
 using Model.config;
 using Model.Data;
+using Util;
 
 namespace TradingSystem.View
 {
@@ -32,6 +33,8 @@ namespace TradingSystem.View
         private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
         private TradingCommandSecurityDAO _tradecmdsecudao = new TradingCommandSecurityDAO();
         private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
+        private EntrustCommandDAO _entrustcmddao = new EntrustCommandDAO();
+        private EntrustSecurityDAO _entrustsecudao = new EntrustSecurityDAO();
 
         private SortableBindingList<TradingCommandItem> _cmdDataSource = new SortableBindingList<TradingCommandItem>(new List<TradingCommandItem>());
         private SortableBindingList<EntrustFlowItem> _efDataSource = new SortableBindingList<EntrustFlowItem>(new List<EntrustFlowItem>());
@@ -58,8 +61,6 @@ namespace TradingSystem.View
 
             tabParentMain.SelectedIndexChanged += new EventHandler(TabControl_Parent_SelectedIndexChanged);
             tabChildSecurity.SelectedIndexChanged += new EventHandler(TabControl_Child_SelectedIndexChanged);
-
-            tbCopies.KeyPress += new KeyPressEventHandler(TextBox_Copies_KeyPress);
 
             this.cmdGridView.UpdateRelatedDataGridHandler += new UpdateRelatedDataGrid(GridView_Command_UpdateRelatedDataGridHandler);
             this.bsGridView.UpdateRelatedDataGridHandler += new UpdateRelatedDataGrid(GridView_BuySell_UpdateRelatedDataGridHandler);
@@ -476,18 +477,6 @@ namespace TradingSystem.View
 
         #endregion
 
-        #region control event handler
-        
-        private void TextBox_Copies_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar != '\b' && !Char.IsDigit(e.KeyChar))
-            {
-                e.Handled = true;
-            }
-        }
-
-        #endregion
-
         #region toolstrip click event handler
 
         private void ToolStripButton_DealFlow_Refresh(object sender, EventArgs e)
@@ -619,7 +608,7 @@ namespace TradingSystem.View
                 secuItem.SuspensionFlag = marketData.SuspendFlag.ToString();
 
                 //TODO: use the setting price
-                secuItem.EntrustedPrice = marketData.CurrentPrice;
+                secuItem.EntrustPrice = marketData.CurrentPrice;
             }
 
             //refresh UI
@@ -631,34 +620,118 @@ namespace TradingSystem.View
         private void Button_Entrust_Click(object sender, EventArgs e)
         {
             //TODO:
+            //Check the entrust security items of entrust item. Make sure there is security item selected
+            var selectedEntrustItems = _eiDataSource.Where(p => p.Selection).ToList();
+            if (selectedEntrustItems == null || selectedEntrustItems.Count == 0)
+            {
+                //TODO: show message
+                MessageBox.Show(this, "请选择要委托的指令！", "警告", MessageBoxButtons.OK);
+                return;
+            }
+
+            foreach (var eiItem in selectedEntrustItems)
+            {
+                int count = _secuDataSource.Count(p => p.Selection && p.CommandId == eiItem.CommandNo);
+                if (count == 0)
+                {
+                    MessageBox.Show(this, "请确保委托指令中包含有效证券！", "警告", MessageBoxButtons.OK);
+                    return;
+                }
+            }
+
+            //submit each entrust item and each security in the entrustitem
+            //1. submit into database
+            foreach (var eiItem in selectedEntrustItems)
+            {
+                int submitId = SubmitCommandToDB(eiItem);
+                if (submitId > 0)
+                {
+                    var failItems = SubmitSecurityToDB(submitId, eiItem.CommandNo);
+                    if (failItems.Count > 0)
+                    {
+                        //TODO: fail to submit the securities
+                    }
+                }
+                else
+                { 
+                    //TODO: fail to submit the commandId
+                }
+            }
+
+            //2.submit into UFX then update the status 
+
+            //listen the callback to notify the entrust/deal status
+        }
+
+        private int SubmitCommandToDB(EntrustItem eiItem)
+        {
+            EntrustCommandItem eciItem = new EntrustCommandItem
+            {
+                CommandId = eiItem.CommandNo,
+                Copies = eiItem.Copies
+            };
+
+            return _entrustcmddao.Create(eciItem);
+        }
+
+        private List<EntrustSecurityItem> SubmitSecurityToDB(int submitId, int commandId)
+        {
+            List<EntrustSecurityItem> failItems = new List<EntrustSecurityItem>();
+
+            var secuItems = _secuDataSource.Where(p => p.Selection && p.CommandId == commandId).ToList();
+            if (secuItems == null || secuItems.Count == 0)
+            {
+                return failItems;
+            }
+
+            foreach (var secuItem in secuItems)
+            {
+                EntrustSecurityItem entrustSecurityItem = new EntrustSecurityItem 
+                {
+                    SubmitId = submitId,
+                    CommandId = commandId,
+                    SecuCode = secuItem.SecuCode,
+                    SecuType = secuItem.SecuType,
+                    EntrustAmount = secuItem.ThisEntrustAmount,
+                    EntrustPrice = secuItem.EntrustPrice,
+                    EntrustDirection = EntrustDirectionUtil.GetEntrustDirection(secuItem.EntrustDirection),
+                    EntrustStatus = EntrustStatus.SubmitToDB
+                };
+
+                int ret = _entrustsecudao.Create(entrustSecurityItem);
+                if (ret < 0)
+                {
+                    failItems.Add(entrustSecurityItem);
+                }
+            }
+
+            return failItems;
         }
 
         private bool ValidateCopies()
         {
-            int copies = 0;
-            if(!string.IsNullOrEmpty(tbCopies.Text))
-            {
-                int temp = 0;
-                if (int.TryParse(tbCopies.Text, out temp))
-                {
-                    copies = temp;
-                }
-            }
+            int copies = (int)nudCopies.Value;
 
             if (copies > 0)
             {
+                _eiDataSource.Where(p => p.Selection).ToList().ForEach(p => p.Copies = copies);
+                //foreach (var eiItem in _eiDataSource)
+                //{
+                //    if (eiItem.Selection)
+                //    {
+                //        eiItem.Copies = copies;
+                //    }
+                //}
+            }
+            else
+            {
                 foreach (var eiItem in _eiDataSource)
                 {
-                    eiItem.Copies = copies;
-                }
-            }
-
-            foreach (var eiItem in _eiDataSource)
-            {
-                var cmdItem = _cmdDataSource.Single(p => p.CommandId == eiItem.CommandNo);
-                if (cmdItem != null && cmdItem.CommandNum < eiItem.Copies)
-                {
-                    return false;
+                    var cmdItem = _cmdDataSource.Single(p => p.Selection && p.CommandId == eiItem.CommandNo);
+                    if (cmdItem != null && cmdItem.CommandNum < eiItem.Copies)
+                    {
+                        return false;
+                    }
                 }
             }
 

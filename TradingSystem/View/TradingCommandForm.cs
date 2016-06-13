@@ -403,7 +403,7 @@ namespace TradingSystem.View
                 EntrustDirection = "Buy",
                 EntrustedAmount = 1200,
                 PriceType = "B1",
-                EntrustedPrice = 12.20,
+                EntrustPrice = 12.20,
                 ThisEntrustAmount = 120,
                 DealAmount = 200,
                 TargetAmount = 250,
@@ -427,7 +427,7 @@ namespace TradingSystem.View
                 EntrustDirection = "Buy",
                 EntrustedAmount = 1200,
                 PriceType = "B1",
-                EntrustedPrice = 12.20,
+                EntrustPrice = 12.20,
                 ThisEntrustAmount = 120,
                 DealAmount = 200,
                 TargetAmount = 250,
@@ -464,7 +464,7 @@ namespace TradingSystem.View
                 row.Cells["cs_entrustdirection"].Value = dataItem.EntrustDirection;
                 row.Cells["cs_entrustedamount"].Value = dataItem.EntrustedAmount;
                 row.Cells["cs_pricetype"].Value = dataItem.PriceType;
-                row.Cells["cs_entrustprice"].Value = dataItem.EntrustedPrice;
+                row.Cells["cs_entrustprice"].Value = dataItem.EntrustPrice;
                 row.Cells["cs_thisentrustamout"].Value = dataItem.ThisEntrustAmount;
                 row.Cells["cs_dealamount"].Value = dataItem.DealAmount;
                 row.Cells["cs_targetamount"].Value = dataItem.TargetAmount;
@@ -500,7 +500,7 @@ namespace TradingSystem.View
                     item.EntrustDirection = (string)row.Cells["cs_entrustdirection"].Value;
                     item.EntrustedAmount = (int)row.Cells["cs_entrustedamount"].Value;
                     item.PriceType = (string)row.Cells["cs_pricetype"].Value;
-                    item.EntrustedPrice = (double)row.Cells["cs_entrustprice"].Value;
+                    item.EntrustPrice = (double)row.Cells["cs_entrustprice"].Value;
                     item.ThisEntrustAmount = (int)row.Cells["cs_thisentrustamout"].Value;
                     item.DealAmount = (int)row.Cells["cs_dealamount"].Value;
                     item.TargetAmount = (int)row.Cells["cs_targetamount"].Value;

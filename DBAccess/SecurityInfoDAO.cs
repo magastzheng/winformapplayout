@@ -57,7 +57,7 @@ namespace DBAccess
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Delete);
             _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, secuCode);
 
-            if (secuType != null)
+            if (secuType != SecurityType.All)
             {
                 _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, (int)secuType);
             }
