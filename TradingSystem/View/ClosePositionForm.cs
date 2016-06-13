@@ -16,6 +16,7 @@ using Model;
 using Model.SecurityInfo;
 using TradingSystem.TradeUtil;
 using Util;
+using BLL.SecurityInfo;
 
 namespace TradingSystem.View
 {
@@ -31,13 +32,10 @@ namespace TradingSystem.View
         private TemplateStockDAO _tempstockdao = new TemplateStockDAO();
         private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
         private FuturesContractDAO _fcdbdao = new FuturesContractDAO();
-        private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
 
         private SortableBindingList<ClosePositionItem> _instDataSource = new SortableBindingList<ClosePositionItem>(new List<ClosePositionItem>());
         private SortableBindingList<ClosePositionSecurityItem> _secuDataSource = new SortableBindingList<ClosePositionSecurityItem>(new List<ClosePositionSecurityItem>());
         private SortableBindingList<ClosePositionCmdItem> _cmdDataSource = new SortableBindingList<ClosePositionCmdItem>(new List<ClosePositionCmdItem>());
-
-        private List<SecurityItem> _securityInfoList = new List<SecurityItem>();
 
         public ClosePositionForm()
             :base()
@@ -123,7 +121,7 @@ namespace TradingSystem.View
                         AvailableAmount = secuItem.AvailableAmount,
                     };
 
-                    var secuInfo = _securityInfoList.Find(p => p.SecuCode.Equals(closeSecuItem.SecuCode) && p.SecuType == closeSecuItem.SecuType);
+                    var secuInfo = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
                     if (secuInfo != null)
                     { 
                         closeSecuItem.SecuName = secuInfo.SecuName;
@@ -248,10 +246,7 @@ namespace TradingSystem.View
             _instDataSource.Clear();
             _secuDataSource.Clear();
             _cmdDataSource.Clear();
-            _securityInfoList.Clear();
-
-            _securityInfoList = _secudbdao.Get(SecurityType.All);
-
+            
             var tradeInstances = _tradeinstdao.GetCombine(-1);
             if (tradeInstances != null && tradeInstances.Count > 0)
             {

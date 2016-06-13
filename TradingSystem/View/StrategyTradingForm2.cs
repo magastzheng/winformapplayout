@@ -18,6 +18,7 @@ using Model;
 using Model.config;
 using Model.Data;
 using Util;
+using BLL.SecurityInfo;
 
 namespace TradingSystem.View
 {
@@ -32,7 +33,6 @@ namespace TradingSystem.View
         //private TradingInstanceDAO _tradeInstdao = new TradingInstanceDAO();
         private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
         private TradingCommandSecurityDAO _tradecmdsecudao = new TradingCommandSecurityDAO();
-        private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
         private EntrustCommandDAO _entrustcmddao = new EntrustCommandDAO();
         private EntrustSecurityDAO _entrustsecudao = new EntrustSecurityDAO();
 
@@ -41,8 +41,6 @@ namespace TradingSystem.View
         private SortableBindingList<DealFlowItem> _dfDataSource = new SortableBindingList<DealFlowItem>(new List<DealFlowItem>());
         private SortableBindingList<EntrustItem> _eiDataSource = new SortableBindingList<EntrustItem>(new List<EntrustItem>());
         private SortableBindingList<CommandSecurityItem> _secuDataSource = new SortableBindingList<CommandSecurityItem>(new List<CommandSecurityItem>());
-
-        private List<SecurityItem> _securityInfoList = new List<SecurityItem>();
 
         GridConfig _gridConfig;
         public StrategyTradingForm2()
@@ -451,9 +449,6 @@ namespace TradingSystem.View
             
             //Load data here
             
-            //Load the securityinfo
-            this._securityInfoList = _secudbdao.Get(SecurityType.All);
-
             var tradingcmds = _tradecmddao.Get(-1);
             if (tradingcmds != null)
             {
@@ -593,7 +588,7 @@ namespace TradingSystem.View
             var uniqueSecuItems = _secuDataSource.GroupBy(p => p.SecuCode).Select(p => p.First());
             foreach (var secuItem in uniqueSecuItems)
             {
-                var findItem = _securityInfoList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
+                var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
                 secuList.Add(findItem);
             }
 

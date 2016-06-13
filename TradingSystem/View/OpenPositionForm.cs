@@ -16,6 +16,7 @@ using Quote;
 using TradingSystem.Dialog;
 using TradingSystem.TradeUtil;
 using Model.Data;
+using BLL.SecurityInfo;
 
 namespace TradingSystem.View
 {
@@ -29,7 +30,6 @@ namespace TradingSystem.View
         private MonitorUnitDAO _monitordbdao = new MonitorUnitDAO();
         private TemplateStockDAO _stockdbdao = new TemplateStockDAO();
         private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
-        private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
         private TradingInstanceDAO _tradeinstdao = new TradingInstanceDAO();
         private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
         private TradingCommandSecurityDAO _tradecmdsecudao = new TradingCommandSecurityDAO();
@@ -37,7 +37,6 @@ namespace TradingSystem.View
 
         private SortableBindingList<OpenPositionItem> _monitorDataSource;
         private SortableBindingList<OpenPositionSecurityItem> _securityDataSource;
-        private List<SecurityItem> _securityInfoList = new List<SecurityItem>();
 
         public OpenPositionForm()
             :base()
@@ -124,9 +123,6 @@ namespace TradingSystem.View
             List<OpenPositionItem> monitorList = _monitordbdao.GetActive();
             _monitorDataSource = new SortableBindingList<OpenPositionItem>(monitorList);
             this.monitorGridView.DataSource = _monitorDataSource;
-
-            //Load the securityinfo
-            this._securityInfoList = _secudbdao.Get(SecurityType.All);
 
             //Load the data for each template
             List<OpenPositionSecurityItem> secuItems = new List<OpenPositionSecurityItem>();
@@ -243,7 +239,7 @@ namespace TradingSystem.View
                         List<SecurityItem> secuList = new List<SecurityItem>();
                         foreach (var secuItem in _securityDataSource)
                         {
-                            var findItem = _securityInfoList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
+                            var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
                             if (findItem != null)
                             {
                                 var addedItem = secuList.Find(p => p.SecuCode.Equals(findItem.SecuCode) && p.SecuType == findItem.SecuType);
@@ -388,7 +384,7 @@ namespace TradingSystem.View
                     SecuCode = item.SecuCode
                 };
 
-                var findItem = _securityInfoList.Single(p => p.SecuCode.Equals(item.SecuCode));
+                var findItem = SecurityInfoManager.Instance.Get(item.SecuCode);
                 if (findItem != null)
                 {
                     tiSecuItem.SecuType = findItem.SecuType;

@@ -25,6 +25,14 @@ namespace BLL.SecurityInfo
             return secuItem;
         }
 
+        public SecurityItem Get(string secuCode)
+        {
+            var secuItems = GetAllItems();
+            var secuItem = secuItems.Find(p => p.SecuCode.Equals(secuCode));
+
+            return secuItem;
+        }
+
         public List<SecurityItem> GetAllItems()
         {
             if (_secuItems == null || _secuItems.Count == 0)
@@ -54,6 +62,11 @@ namespace BLL.SecurityInfo
         public SecurityItem Get(string secuCode, SecurityType secuType)
         {
             return _secuInfoBLL.Get(secuCode, secuType);
+        }
+
+        public SecurityItem Get(string secuCode)
+        {
+            return _secuInfoBLL.Get(secuCode);
         }
 
         public List<SecurityItem> Get()
