@@ -75,8 +75,10 @@
     <Compile Include="UI\ClosePositionSecurityItem.cs" />
     <Compile Include="UI\CommandSecurityItem.cs" />
     <Compile Include="UI\DealFlowItem.cs" />
+    <Compile Include="UI\EntrustCommandItem.cs" />
     <Compile Include="UI\EntrustFlowItem.cs" />
     <Compile Include="UI\EntrustItem.cs" />
+    <Compile Include="UI\EntrustSecurityItem.cs" />
     <Compile Include="UI\TradingCommandItem.cs" />
     <Compile Include="UI\AssetUnit.cs" />
     <Compile Include="UI\Fund.cs" />
