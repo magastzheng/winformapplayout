@@ -619,6 +619,12 @@ namespace TradingSystem.View
                 return;
             }
 
+            //Get the price type
+            PriceType spotBuyPrice = GetPriceType(this.cbSpotBuyPrice);
+            PriceType spotSellPrice = GetPriceType(this.cbSpotSellPrice);
+            PriceType futureBuyPrice = GetPriceType(this.cbFuturesBuyPrice);
+            PriceType futureSellPrice = GetPriceType(this.cbFuturesSellPrice);
+
             //update each command item
             foreach (var eiItem in _eiDataSource)
             {
@@ -636,15 +642,48 @@ namespace TradingSystem.View
                             p.TargetAmount = p.TargetCopies * p.WeightAmount;
                             p.ThisEntrustAmount = thisCopies * p.WeightAmount;
                             p.WaitAmount = p.TargetCopies * p.WeightAmount;
+
+                            var direction = EntrustDirectionUtil.GetEntrustDirection(p.EntrustDirection);
+                            switch (direction)
+                            {
+                                case EntrustDirection.BuySpot:
+                                    {
+                                        if (p.SecuType == SecurityType.Stock)
+                                        {
+                                            p.PriceType = string.Format("{0}", (int)spotBuyPrice);
+                                        }
+                                    }
+                                    break;
+                                case EntrustDirection.SellSpot:
+                                    {
+                                        if (p.SecuType == SecurityType.Stock)
+                                        {
+                                            p.PriceType = string.Format("{0}", (int)spotSellPrice);
+                                        }
+                                    }
+                                    break;
+                                case EntrustDirection.SellOpen:
+                                    {
+                                        if (p.SecuType == SecurityType.Futures)
+                                        {
+                                            p.PriceType = string.Format("{0}", (int)futureSellPrice);
+                                        }
+                                    }
+                                    break;
+                                case EntrustDirection.BuyClose:
+                                    {
+                                        if (p.SecuType == SecurityType.Futures)
+                                        {
+                                            p.PriceType = string.Format("{0}", (int)futureBuyPrice);
+                                        } 
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
                         });
                 }
             }
-
-            //Get the price type
-            PriceType spotBuyPrice = GetPriceType(this.cbSpotBuyPrice);
-            PriceType spotSellPrice = GetPriceType(this.cbSpotSellPrice);
-            PriceType futureBuyPrice = GetPriceType(this.cbFuturesBuyPrice);
-            PriceType futureSellPrice = GetPriceType(this.cbFuturesSellPrice);
 
             //query the price and set it
             List<SecurityItem> secuList = new List<SecurityItem>();

@@ -65,6 +65,11 @@
     <Compile Include="Entity\HSGridColumn.cs" />
     <Compile Include="Entity\TSNavNodeData.cs" />
     <Compile Include="Entity\TSGridViewRow.cs" />
+    <Compile Include="GridView\DataGridViewNumericUpDownCell.cs" />
+    <Compile Include="GridView\DataGridViewNumericUpDownColumn.cs" />
+    <Compile Include="GridView\DataGridViewNumericUpDownEditingControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="GridView\HSGridView.cs" />
     <Compile Include="GridView\HSGridView.Designer.cs">
       <DependentUpon>HSGridView.cs</DependentUpon>

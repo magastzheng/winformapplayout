@@ -54,6 +54,16 @@ namespace Controls.GridView
                             column = new DataGridViewComboBoxColumn();
                         }
                         break;
+                    case HSGridColumnType.NumericUpDown:
+                        {
+                            var numericCell = new DataGridViewNumericUpDownColumn();
+                            numericCell.Minimum = 0;
+                            numericCell.Increment = 1;
+                            numericCell.Maximum = 100;
+
+                            column = numericCell;
+                        }
+                        break;
                     default:
                         {
                             column = new DataGridViewTextBoxColumn();

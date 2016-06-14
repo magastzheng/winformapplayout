@@ -14,6 +14,7 @@ namespace Controls.Entity
         CheckBox = 1,
         Image = 2,
         ComboBox = 3,
+        NumericUpDown = 4,
     }
 
     public class HSGridColumn

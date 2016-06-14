@@ -97,6 +97,12 @@
     <Compile Include="TSDGVComboBoxVarRowForm.Designer.cs">
       <DependentUpon>TSDGVComboBoxVarRowForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TSDGVNumericColumnForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TSDGVNumericColumnForm.Designer.cs">
+      <DependentUpon>TSDGVNumericColumnForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="TSDGVSortableBindingForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -135,6 +141,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="TSDGVComboBoxVarRowForm.resx">
       <DependentUpon>TSDGVComboBoxVarRowForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TSDGVNumericColumnForm.resx">
+      <DependentUpon>TSDGVNumericColumnForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TSDGVSortableBindingForm.resx">
       <DependentUpon>TSDGVSortableBindingForm.cs</DependentUpon>
