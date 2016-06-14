@@ -17,6 +17,7 @@ namespace DBAccess
         private const string SP_Get = "procEntrustCommandSelectAll";
         private const string SP_GetBySubmitId = "procEntrustCommandSelectBySubmitId";
         private const string SP_GetByCommandId = "procEntrustCommandSelectByCommandId";
+        private const string SP_GetByStatus = "procEntrustCommandSelectByStatus";
 
         public EntrustCommandDAO()
             : base()
@@ -182,6 +183,44 @@ namespace DBAccess
             _dbHelper.Close(dbCommand.Connection);
 
             return item;
+        }
+
+        public List<EntrustCommandItem> GetByStatus(EntrustStatus status)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetByStatus);
+            _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)status);
+
+            List<EntrustCommandItem> items = new List<EntrustCommandItem>();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    EntrustCommandItem item = new EntrustCommandItem();
+                    item.SubmitId = (int)reader["SubmitId"];
+                    item.CommandId = (int)reader["CommandId"];
+                    item.Copies = (int)reader["Copies"];
+                    item.EntrustNo = (int)reader["EntrustNo"];
+                    item.BatchNo = (int)reader["BatchNo"];
+                    item.Status = (int)reader["Status"];
+
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+                    {
+                        item.CreatedDate = (DateTime)reader["CreatedDate"];
+                    }
+
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+                    {
+                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+                    }
+
+                    items.Add(item);
+                }
+            }
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return items;
         }
     }
 }

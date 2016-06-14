@@ -178,3 +178,26 @@ begin
 		  ,ModifiedDate
 	from entrustcommand
 end
+
+
+go
+if exists (select name from sysobjects where name='procEntrustCommandSelectByStatus')
+drop proc procEntrustCommandSelectByStatus
+
+go
+create proc procEntrustCommandSelectByStatus(
+	@Status int
+)
+as
+begin
+	select SubmitId
+		  ,CommandId
+		  ,Copies
+		  ,EntrustNo
+		  ,BatchNo
+		  ,Status
+		  ,CreatedDate
+		  ,ModifiedDate
+	from entrustcommand
+	where Status=@Status
+end

@@ -6,14 +6,15 @@ drop table tradingcommand
 create table tradingcommand(
 	CommandId			int identity(1, 1) primary key
 	,InstanceId			int not null
-	,CommandNum	int
-	,ModifiedTimes		int
+	,CommandNum			int	--指令份数
+	,TargetNum			int	--目标份数
+	,ModifiedTimes		int	--修改次数
 	,CommandType		int -- 1 - 期现套利
 	,ExecuteType		int -- 1 开仓， 2 - 平仓
 	,StockDirection		int --10 -- 买入现货，11--卖出现货
 	,FuturesDirection	int --12-卖出开仓，13 -买入平仓
 	,EntrustStatus		int	-- 1 - 未执行， 2 - 部分执行， 3- 已完成
-	,DealStatus			int		-- 1 - 未成交， 2 - 部分成交， 3 - 已完成
+	,DealStatus			int	-- 1 - 未成交， 2 - 部分成交， 3 - 已完成
 	,StartDate			datetime
 	,EndDate			datetime
 )
@@ -58,7 +59,8 @@ begin
 	declare @newid int
 	insert into tradingcommand(
 		InstanceId	
-		,CommandNum		
+		,CommandNum	
+		,TargetNum	
 		,ModifiedTimes		
 		,CommandType		
 		,ExecuteType		
@@ -71,7 +73,8 @@ begin
 	)
 	values(
 		@InstanceId
-		,@CommandNum			
+		,@CommandNum
+		,0			
 		,1		
 		,@CommandType		
 		,@ExecuteType		
@@ -107,6 +110,22 @@ begin
 end
 
 go
+if exists (select name from sysobjects where name='procTradingCommandUpdateTargetNum')
+drop proc procTradingCommandUpdateTargetNum
+
+go
+create proc procTradingCommandUpdateTargetNum(
+	@CommandId			int
+	,@TargetNum			int
+)
+as
+begin
+	update tradingcommand
+	set	TargetNum	= @TargetNum
+	where CommandId=@CommandId
+end
+
+go
 if exists (select name from sysobjects where name='procTradingCommandDelete')
 drop proc procTradingCommandDelete
 
@@ -135,7 +154,8 @@ begin
 		select 
 			CommandId			
 			,InstanceId	
-			,CommandNum		
+			,CommandNum
+			,TargetNum		
 			,ModifiedTimes		
 			,CommandType		
 			,ExecuteType		
@@ -153,7 +173,8 @@ begin
 		select 
 			CommandId			
 			,InstanceId	
-			,CommandNum		
+			,CommandNum	
+			,TargetNum		
 			,ModifiedTimes		
 			,CommandType		
 			,ExecuteType		

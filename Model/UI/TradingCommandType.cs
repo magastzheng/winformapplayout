@@ -26,6 +26,10 @@ namespace Model.UI
         NoExecuted = 2,     //未执行
         PartExecuted = 3,   //部分执行
         Completed = 4,      //已完成
+
+        CancelToDB = 10,    //撤单
+        CancelToUFX = 11,   //撤单到UFX
+        CancelSuccess = 12, //撤单成功 
     }
 
     public enum DealStatus

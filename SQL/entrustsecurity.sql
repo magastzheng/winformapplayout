@@ -227,3 +227,27 @@ begin
 	from entrustsecurity
 end
 
+go
+if exists (select name from sysobjects where name='procEntrustSecuritySelectByStatus')
+drop proc procEntrustSecuritySelectByStatus
+
+go
+create proc procEntrustSecuritySelectByStatus(
+	@EntrustStatus int
+)
+as
+begin
+	select SubmitId 
+		,CommandId			
+		,SecuCode			
+		,SecuType			
+		,EntrustAmount	
+		,EntrustPrice		
+		,EntrustDirection	
+		,EntrustStatus
+		,CreatedDate
+		,ModifiedDate
+	from entrustsecurity
+	where EntrustStatus=@EntrustStatus
+end
+

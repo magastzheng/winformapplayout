@@ -68,6 +68,13 @@ namespace TradingSystem.View
             this.tsbefRefresh.Click += new EventHandler(ToolStripButton_EntrustFlow_Refresh);
             this.tsbdfRefresh.Click += new EventHandler(ToolStripButton_DealFlow_Refresh);
 
+            //cancel
+            this.tsbCancel.Click += new EventHandler(ToolStripButton_Command_Cancel);
+
+            this.tsbCancelAppend.Click += new EventHandler(ToolStripButton_Command_CancelAppend);
+
+            this.tsbCancelAdd.Click += new EventHandler(ToolStripButton_Command_CancelAdd);
+
             //Calculate
             this.btnCalc.Click += new EventHandler(Button_Calculate_Click);
 
@@ -85,6 +92,57 @@ namespace TradingSystem.View
             this.cbFuturesBuyPrice.SelectedIndexChanged += new EventHandler(ComboBox_SelectedIndexChange);
             this.cbFuturesSellPrice.SelectedIndexChanged += new EventHandler(ComboBox_SelectedIndexChange);
         }
+
+        #region Command panel cancel/cancelappend/canceladd click event
+
+        private void ToolStripButton_Command_Cancel(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ToolStripButton_Command_CancelAppend(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ToolStripButton_Command_CancelAdd(object sender, EventArgs e)
+        {
+            var selectCmdItems = _cmdDataSource.Where(p => p.Selection);
+            //撤销本次计算结果，仅影响到指令证券中的价格类型、本次委托数量、目标数量、指令份数
+            if (selectCmdItems != null && selectCmdItems.Count() > 0)
+            {
+                foreach (var cmdItem in selectCmdItems)
+                {
+                    GridView_Command_CancelAdd(cmdItem);
+                }
+            }
+
+            //Update the GridView
+            this.securityGridView.Invalidate();
+        }
+
+        private void GridView_Command_CancelAdd(TradingCommandItem cmdItem)
+        {
+            //Reset some columns
+            var secuItems = _secuDataSource.Where(p => p.CommandId == cmdItem.CommandId);
+            if (secuItems != null && secuItems.Count() > 0)
+            {
+
+                foreach (var secuItem in secuItems)
+                {
+                    secuItem.Selection = true;
+                    secuItem.CommandCopies = cmdItem.CommandNum;
+                    secuItem.TargetCopies = cmdItem.TargetNum;
+                    secuItem.TargetAmount = secuItem.TargetCopies * secuItem.WeightAmount;
+                    secuItem.WaitAmount = secuItem.TargetCopies * secuItem.WeightAmount;
+                    secuItem.PriceType = string.Empty;
+                    secuItem.EntrustPrice = 0.0f;
+                    secuItem.ThisEntrustAmount = 0;
+                }
+            }
+        }
+
+        #endregion
 
         #region price type change
 
@@ -220,6 +278,9 @@ namespace TradingSystem.View
                     {
                         secuItem.Selection = true;
                         secuItem.CommandCopies = cmdItem.CommandNum;
+                        secuItem.TargetCopies = cmdItem.TargetNum;
+                        secuItem.TargetAmount = secuItem.TargetCopies * secuItem.WeightAmount;
+
                         switch (GetEntrustDirection(secuItem.EntrustDirection))
                         {
                             case EntrustDirection.BuySpot:
@@ -472,7 +533,7 @@ namespace TradingSystem.View
 
         #endregion
 
-        #region toolstrip click event handler
+        #region toolstrip refresh click event handler
 
         private void ToolStripButton_DealFlow_Refresh(object sender, EventArgs e)
         {
@@ -561,17 +622,19 @@ namespace TradingSystem.View
             //update each command item
             foreach (var eiItem in _eiDataSource)
             {
-                var selCmdItems = _cmdDataSource.Where(p => p.CommandId == eiItem.CommandNo).ToList();
-                if (selCmdItems != null && selCmdItems.Count == 1)
+                var selCmdItem = _cmdDataSource.Single(p => p.CommandId == eiItem.CommandNo);
+                if (selCmdItem != null)
                 {
-                    selCmdItems[0].TargetNum = eiItem.Copies;
+                    //selCmdItems[0].TargetNum = eiItem.Copies;
+                    int thisCopies = eiItem.Copies;
+                    int targetNum = selCmdItem.TargetNum + eiItem.Copies;
 
                     _secuDataSource.Where(p => p.CommandId == eiItem.CommandNo)
                         .ToList()
                         .ForEach(p => {
-                            p.TargetCopies = eiItem.Copies;
+                            p.TargetCopies = targetNum;
                             p.TargetAmount = p.TargetCopies * p.WeightAmount;
-                            p.ThisEntrustAmount = p.TargetCopies * p.WeightAmount;
+                            p.ThisEntrustAmount = thisCopies * p.WeightAmount;
                             p.WaitAmount = p.TargetCopies * p.WeightAmount;
                         });
                 }
@@ -646,6 +709,18 @@ namespace TradingSystem.View
                     {
                         //TODO: fail to submit the securities
                     }
+
+                    //add the target num
+                    var cmdItem = _cmdDataSource.Single(p => p.CommandId == eiItem.CommandNo);
+                    if (cmdItem != null)
+                    {
+                        cmdItem.TargetNum += eiItem.Copies;
+                        int targetNumFlag = _tradecmddao.UpdateTargetNum(cmdItem);
+                        if (targetNumFlag <= 0)
+                        { 
+                            //TODO: failed to update
+                        }
+                    }
                 }
                 else
                 { 
@@ -656,6 +731,11 @@ namespace TradingSystem.View
             //2.submit into UFX then update the status 
 
             //listen the callback to notify the entrust/deal status
+
+            //update the UI
+            nudCopies.Value = 1;
+            this.cmdGridView.Invalidate();
+            this.bsGridView.Invalidate();
         }
 
         private int SubmitCommandToDB(EntrustItem eiItem)

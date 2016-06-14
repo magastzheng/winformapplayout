@@ -20,6 +20,7 @@ namespace DBAccess
         private const string SP_Get = "procEntrustSecuritySelectAll";
         private const string SP_GetBySubmitId = "procEntrustSecuritySelectBySubmitId";
         private const string SP_GetByCommandId = "procEntrustSecuritySelectByCommandId";
+        private const string SP_GetByStatus = "procEntrustSecuritySelectByStatus";
 
         public EntrustSecurityDAO()
             : base()
@@ -186,6 +187,46 @@ namespace DBAccess
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+
+            List<EntrustSecurityItem> items = new List<EntrustSecurityItem>();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    EntrustSecurityItem item = new EntrustSecurityItem();
+                    item.SubmitId = (int)reader["SubmitId"];
+                    item.CommandId = (int)reader["CommandId"];
+                    item.SecuCode = (string)reader["SecuCode"];
+                    item.SecuType = (SecurityType)(int)reader["SecuType"];
+                    item.EntrustAmount = (int)reader["EntrustAmount"];
+                    item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
+                    item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
+                    item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+                    {
+                        item.CreatedDate = (DateTime)reader["CreatedDate"];
+                    }
+
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+                    {
+                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+                    }
+
+                    items.Add(item);
+                }
+            }
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return items;
+        }
+
+        public List<EntrustSecurityItem> GetByStatus(int entrustStatus)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetByStatus);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, entrustStatus);
 
             List<EntrustSecurityItem> items = new List<EntrustSecurityItem>();
             var reader = _dbHelper.ExecuteReader(dbCommand);

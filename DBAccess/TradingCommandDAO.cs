@@ -13,6 +13,7 @@ namespace DBAccess
     {
         private const string SP_Create = "procTradingCommandInsert";
         private const string SP_Modify = "procTradingCommandUpdateStatus";
+        private const string SP_ModifyTargetNum = "procTradingCommandUpdateTargetNum";
         private const string SP_Delete = "procTradingCommandDelete";
         private const string SP_Get = "procTradingCommandSelect";
 
@@ -65,10 +66,19 @@ namespace DBAccess
         public int Update(TradingCommandItem cmdItem)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Modify);
-            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, cmdItem.InstanceId);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, cmdItem.CommandId);
             _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)cmdItem.EEntrustStatus);
             _dbHelper.AddInParameter(dbCommand, "@DealStatus", System.Data.DbType.Int32, (int)cmdItem.EDealStatus);
 
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int UpdateTargetNum(TradingCommandItem cmdItem)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyTargetNum);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, cmdItem.CommandId);
+            _dbHelper.AddInParameter(dbCommand, "@TargetNum", System.Data.DbType.Int32, (int)cmdItem.TargetNum);
+            
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
@@ -96,7 +106,8 @@ namespace DBAccess
                     item.CommandId = (int)reader["CommandId"];
                     item.InstanceId = (int)reader["InstanceId"];
                     item.CommandNum = (int)reader["CommandNum"];
-                    item.ModifiedTimes = (int)reader["CommandNum"];
+                    item.TargetNum = (int)reader["TargetNum"];
+                    item.ModifiedTimes = (int)reader["ModifiedTimes"];
                     item.ECommandType = (CommandType)reader["CommandType"];
                     item.EExecuteType = (ExecuteType)reader["ExecuteType"];
                     item.EStockDirection = (EntrustDirection)(int)reader["StockDirection"];
