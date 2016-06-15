@@ -26,6 +26,10 @@ namespace Model.UI
 
         public EntrustStatus EntrustStatus { get; set; }
 
+        public DealStatus DealStatus { get; set; }
+
+        public int DealAmount { get; set; }
+
         public DateTime CreatedDate { get; set; }
 
         public DateTime ModifiedDate { get; set; }

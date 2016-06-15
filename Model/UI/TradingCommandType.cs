@@ -30,6 +30,7 @@ namespace Model.UI
         CancelToDB = 10,    //撤单
         CancelToUFX = 11,   //撤单到UFX
         CancelSuccess = 12, //撤单成功 
+        CancelFail = 13,    //撤单失败
     }
 
     public enum DealStatus

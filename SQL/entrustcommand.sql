@@ -10,7 +10,8 @@ create table entrustcommand(
 	,Copies			int			--指令份数
 	,EntrustNo		int			--委托之后，服务器返回的委托号
 	,BatchNo		int			--委托之后，服务器返回的批号
-	,Status			int			--0初始状态，1 - 提交完成，2 - 委托完成
+	,EntrustStatus	int
+	,DealStatus		int
 	,CreatedDate	datetime
 	,ModifiedDate	datetime
 )
@@ -31,37 +32,24 @@ begin
 	insert into entrustcommand(
 		CommandId
 		,Copies
-		,Status
+		,EntrustNo
+		,BatchNo
+		,EntrustStatus
+		,DealStatus
 		,CreatedDate
 	)
 	values(
 		@CommandId
 		,@Copies
+		,-1
+		,-1
 		,0
+		,1
 		,@CreatedDate
 	)
 
 	set @newid = SCOPE_IDENTITY()
 	return @newid
-end
-
-go
-if exists (select name from sysobjects where name='procEntrustCommandUpdateStatus')
-drop proc procEntrustCommandUpdateStatus
-
-go
-create proc procEntrustCommandUpdateStatus(
-	@SubmitId		int
-	,@Status		int
-	,@ModifiedDate	datetime
-)
-as
-begin
-	declare @newid int
-	update entrustcommand
-	set Status			= @Status
-		,ModifiedDate	= @ModifiedDate
-	where SubmitId=@SubmitId
 end
 
 go
@@ -73,18 +61,83 @@ create proc procEntrustCommandUpdate(
 	@SubmitId		int
 	,@EntrustNo		int
 	,@BatchNo		int
-	,@Status		int
+	,@EntrustStatus	int
+	,@DealStatus	int
 	,@ModifiedDate	datetime
 )
 as
 begin
-	declare @newid int
 	update entrustcommand
 	set EntrustNo		= @EntrustNo
 		,BatchNo		= @BatchNo
-		,Status			= @Status
+		,EntrustStatus	= @EntrustStatus
+		,DealStatus		= @DealStatus
 		,ModifiedDate	= @ModifiedDate
 	where SubmitId=@SubmitId
+end
+
+
+go
+if exists (select name from sysobjects where name='procEntrustCommandUpdateDealStatus')
+drop proc procEntrustCommandUpdateDealStatus
+
+go
+create proc procEntrustCommandUpdateDealStatus(
+	@SubmitId			int
+	,@DealStatus		int
+	,@ModifiedDate		datetime
+)
+as
+begin
+	--declare @newid int
+	update entrustcommand
+	set DealStatus		= @DealStatus
+		,ModifiedDate	= @ModifiedDate
+	where SubmitId=@SubmitId
+end
+
+
+go
+if exists (select name from sysobjects where name='procEntrustCommandUpdateEntrustStatus')
+drop proc procEntrustCommandUpdateEntrustStatus
+
+go
+create proc procEntrustCommandUpdateEntrustStatus(
+	@SubmitId			int
+	,@EntrustStatus		int
+	,@ModifiedDate		datetime
+)
+as
+begin
+	--declare @newid int
+	update entrustcommand
+	set EntrustStatus	= @EntrustStatus
+		,ModifiedDate	= @ModifiedDate
+	where SubmitId=@SubmitId
+end
+
+go
+if exists (select name from sysobjects where name='procEntrustCommandUpdateCancel')
+drop proc procEntrustCommandUpdateCancel
+
+go
+create proc procEntrustCommandUpdateCancel(
+	@CommandId			int
+	,@ModifiedDate		datetime
+)
+as
+begin
+	--declare @newid int
+	update entrustcommand
+	set EntrustStatus	= 10
+		,ModifiedDate	= @ModifiedDate
+	where CommandId=@CommandId
+		and DealStatus = 1		--未成交
+		and (EntrustStatus = 0	--提交到数据库
+		or EntrustStatus = 1	--提交到UFX
+		or EntrustStatus = 2	--未执行
+		or EntrustStatus = 3	--部分执行
+		or EntrustStatus = 4)	--已完成
 end
 
 go
@@ -116,6 +169,21 @@ begin
 end
 
 go
+if exists (select name from sysobjects where name='procEntrustCommandDeleteByCommandIdEntrustStatus')
+drop proc procEntrustCommandDeleteByCommandIdEntrustStatus
+
+go
+create proc procEntrustCommandDeleteByCommandIdEntrustStatus(
+	@CommandId		int
+	,@EntrustStatus	int
+)
+as
+begin
+	delete from entrustcommand
+	where CommandId=@CommandId and EntrustStatus=@EntrustStatus
+end
+
+go
 if exists (select name from sysobjects where name='procEntrustCommandSelectBySubmitId')
 drop proc procEntrustCommandSelectBySubmitId
 
@@ -130,7 +198,8 @@ begin
 		  ,Copies
 		  ,EntrustNo
 		  ,BatchNo
-		  ,Status
+		  ,EntrustStatus
+		  ,DealStatus
 		  ,CreatedDate
 		  ,ModifiedDate
 	from entrustcommand
@@ -152,7 +221,8 @@ begin
 		  ,Copies
 		  ,EntrustNo
 		  ,BatchNo
-		  ,Status
+		  ,EntrustStatus
+		  ,DealStatus
 		  ,CreatedDate
 		  ,ModifiedDate
 	from entrustcommand
@@ -173,7 +243,8 @@ begin
 		  ,Copies
 		  ,EntrustNo
 		  ,BatchNo
-		  ,Status
+		  ,EntrustStatus
+		  ,DealStatus
 		  ,CreatedDate
 		  ,ModifiedDate
 	from entrustcommand
@@ -181,12 +252,13 @@ end
 
 
 go
-if exists (select name from sysobjects where name='procEntrustCommandSelectByStatus')
-drop proc procEntrustCommandSelectByStatus
+if exists (select name from sysobjects where name='procEntrustCommandSelectByCommandIdEntrustStatus')
+drop proc procEntrustCommandSelectByCommandIdEntrustStatus
 
 go
-create proc procEntrustCommandSelectByStatus(
-	@Status int
+create proc procEntrustCommandSelectByCommandIdEntrustStatus(
+	@CommandId		int
+	,@EntrustStatus	int
 )
 as
 begin
@@ -195,9 +267,37 @@ begin
 		  ,Copies
 		  ,EntrustNo
 		  ,BatchNo
-		  ,Status
+		  ,EntrustStatus
+		  ,DealStatus
 		  ,CreatedDate
 		  ,ModifiedDate
 	from entrustcommand
-	where Status=@Status
+	where CommandId = @CommandId 
+		and EntrustStatus=@EntrustStatus
+end
+
+go
+if exists (select name from sysobjects where name='procEntrustCommandSelectCancel')
+drop proc procEntrustCommandSelectCancel
+
+go
+create proc procEntrustCommandSelectCancel(
+	@CommandId int
+)
+as
+begin
+	select SubmitId
+		  ,CommandId
+		  ,Copies
+		  ,EntrustNo
+		  ,BatchNo
+		  ,EntrustStatus
+		  ,DealStatus
+		  ,CreatedDate
+		  ,ModifiedDate
+	from entrustcommand
+	where DealStatus=1		--未成交
+		and EntrustStatus != 10	--撤单
+		and EntrustStatus != 11 --撤单到UFX
+		and EntrustStatus != 12 --撤单成功
 end

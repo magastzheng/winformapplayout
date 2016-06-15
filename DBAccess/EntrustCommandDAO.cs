@@ -11,13 +11,17 @@ namespace DBAccess
     {
         private const string SP_Create = "procEntrustCommandInsert";
         private const string SP_Modify = "procEntrustCommandUpdate";
-        private const string SP_ModifyStatus = "procEntrustCommandUpdateStatus";
+        private const string SP_ModifyEntrustStatus = "procEntrustCommandUpdateEntrustStatus";
+        private const string SP_ModifyDealStatus = "procEntrustCommandUpdateDealStatus";
+        private const string SP_ModifyCancel = "procEntrustCommandUpdateCancel";
         private const string SP_DeleteBySubmitId = "procEntrustCommandDeleteBySubmitId";
         private const string SP_DeleteByCommandId = "procEntrustCommandDeleteByCommandId";
+        private const string SP_DeleteByCommandIdStatus = "procEntrustCommandDeleteByCommandIdStatus";
         private const string SP_Get = "procEntrustCommandSelectAll";
         private const string SP_GetBySubmitId = "procEntrustCommandSelectBySubmitId";
         private const string SP_GetByCommandId = "procEntrustCommandSelectByCommandId";
-        private const string SP_GetByStatus = "procEntrustCommandSelectByStatus";
+        private const string SP_GetByCommandIdEntrustStatus = "procEntrustCommandSelectByCommandIdEntrustStatus";
+        private const string SP_GetCancel = "procEntrustCommandSelectCancel";
 
         public EntrustCommandDAO()
             : base()
@@ -57,18 +61,63 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, item.SubmitId);
             _dbHelper.AddInParameter(dbCommand, "@EntrustNo", System.Data.DbType.Int32, item.EntrustNo);
             _dbHelper.AddInParameter(dbCommand, "@BatchNo", System.Data.DbType.Int32, item.BatchNo);
-            _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, item.Status);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, item.EntrustStatus);
+            _dbHelper.AddInParameter(dbCommand, "@DealStatus", System.Data.DbType.Int32, item.DealStatus);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public int UpdateStatus(EntrustCommandItem item)
+        public int UpdateEntrustStatus(int submitId, EntrustStatus entrustStatus)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyStatus);
-            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, item.SubmitId);
-            _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, item.Status);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustStatus);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, entrustStatus);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int UpdateDealStatus(int submitId, DealStatus dealStatus)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyDealStatus);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
+            _dbHelper.AddInParameter(dbCommand, "@DealStatus", System.Data.DbType.Int32, dealStatus);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int UpdateCancel(int commandId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyCancel);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int DeleteBySubmitId(int submitId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_DeleteBySubmitId);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int DeleteByCommandId(int commandId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_DeleteByCommandId);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int DeleteByCommandIdStatus(int commandId, EntrustStatus status)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_DeleteByCommandIdStatus);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)status);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
@@ -87,9 +136,17 @@ namespace DBAccess
                     item.SubmitId = (int)reader["SubmitId"];
                     item.CommandId = (int)reader["CommandId"];
                     item.Copies = (int)reader["Copies"];
-                    item.EntrustNo = (int)reader["EntrustNo"];
-                    item.BatchNo = (int)reader["BatchNo"];
-                    item.Status = (int)reader["Status"];
+                    if (reader["EntrustNo"] != null && reader["EntrustNo"] != DBNull.Value)
+                    {
+                        item.EntrustNo = (int)reader["EntrustNo"];
+                    }
+
+                    if (reader["BatchNo"] != null && reader["BatchNo"] != DBNull.Value)
+                    {
+                        item.BatchNo = (int)reader["BatchNo"];
+                    }
+                    item.EntrustStatus = (EntrustStatus)(int)reader["EntrustStatus"];
+                    item.DealStatus = (DealStatus)(int)reader["DealStatus"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {
@@ -110,9 +167,10 @@ namespace DBAccess
             return items;
         }
 
-        public List<EntrustCommandItem> GetByCommandId()
+        public List<EntrustCommandItem> GetByCommandId(int commandId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetByCommandId);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
 
             List<EntrustCommandItem> items = new List<EntrustCommandItem>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
@@ -124,9 +182,17 @@ namespace DBAccess
                     item.SubmitId = (int)reader["SubmitId"];
                     item.CommandId = (int)reader["CommandId"];
                     item.Copies = (int)reader["Copies"];
-                    item.EntrustNo = (int)reader["EntrustNo"];
-                    item.BatchNo = (int)reader["BatchNo"];
-                    item.Status = (int)reader["Status"];
+                    if (reader["EntrustNo"] != null && reader["EntrustNo"] != DBNull.Value)
+                    {
+                        item.EntrustNo = (int)reader["EntrustNo"];
+                    }
+
+                    if (reader["BatchNo"] != null && reader["BatchNo"] != DBNull.Value)
+                    {
+                        item.BatchNo = (int)reader["BatchNo"];
+                    }
+                    item.EntrustStatus = (EntrustStatus)(int)reader["EntrustStatus"];
+                    item.DealStatus = (DealStatus)(int)reader["DealStatus"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {
@@ -162,9 +228,17 @@ namespace DBAccess
                     item.SubmitId = (int)reader["SubmitId"];
                     item.CommandId = (int)reader["CommandId"];
                     item.Copies = (int)reader["Copies"];
-                    item.EntrustNo = (int)reader["EntrustNo"];
-                    item.BatchNo = (int)reader["BatchNo"];
-                    item.Status = (int)reader["Status"];
+                    if (reader["EntrustNo"] != null && reader["EntrustNo"] != DBNull.Value)
+                    {
+                        item.EntrustNo = (int)reader["EntrustNo"];
+                    }
+
+                    if (reader["BatchNo"] != null && reader["BatchNo"] != DBNull.Value)
+                    {
+                        item.BatchNo = (int)reader["BatchNo"];
+                    }
+                    item.EntrustStatus = (EntrustStatus)(int)reader["EntrustStatus"];
+                    item.DealStatus = (DealStatus)(int)reader["DealStatus"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {
@@ -185,10 +259,11 @@ namespace DBAccess
             return item;
         }
 
-        public List<EntrustCommandItem> GetByStatus(EntrustStatus status)
+        public List<EntrustCommandItem> GetByEntrustStatus(int commandId, EntrustStatus status)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetByStatus);
-            _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)status);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetByCommandIdEntrustStatus);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)status);
 
             List<EntrustCommandItem> items = new List<EntrustCommandItem>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
@@ -200,9 +275,64 @@ namespace DBAccess
                     item.SubmitId = (int)reader["SubmitId"];
                     item.CommandId = (int)reader["CommandId"];
                     item.Copies = (int)reader["Copies"];
-                    item.EntrustNo = (int)reader["EntrustNo"];
-                    item.BatchNo = (int)reader["BatchNo"];
-                    item.Status = (int)reader["Status"];
+                    if (reader["EntrustNo"] != null && reader["EntrustNo"] != DBNull.Value)
+                    {
+                        item.EntrustNo = (int)reader["EntrustNo"];
+                    }
+
+                    if (reader["BatchNo"] != null && reader["BatchNo"] != DBNull.Value)
+                    {
+                        item.BatchNo = (int)reader["BatchNo"];
+                    }
+
+                    item.EntrustStatus = (EntrustStatus)(int)reader["EntrustStatus"];
+                    item.DealStatus = (DealStatus)(int)reader["DealStatus"];
+
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+                    {
+                        item.CreatedDate = (DateTime)reader["CreatedDate"];
+                    }
+
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+                    {
+                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+                    }
+
+                    items.Add(item);
+                }
+            }
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return items;
+        }
+
+        public List<EntrustCommandItem> GetCancel(int commandId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCancel);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+
+            List<EntrustCommandItem> items = new List<EntrustCommandItem>();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    EntrustCommandItem item = new EntrustCommandItem();
+                    item.SubmitId = (int)reader["SubmitId"];
+                    item.CommandId = (int)reader["CommandId"];
+                    item.Copies = (int)reader["Copies"];
+                    if (reader["EntrustNo"] != null && reader["EntrustNo"] != DBNull.Value)
+                    {
+                        item.EntrustNo = (int)reader["EntrustNo"];
+                    }
+
+                    if (reader["BatchNo"] != null && reader["BatchNo"] != DBNull.Value)
+                    {
+                        item.BatchNo = (int)reader["BatchNo"];
+                    }
+                    item.EntrustStatus = (EntrustStatus)(int)reader["EntrustStatus"];
+                    item.DealStatus = (DealStatus)(int)reader["DealStatus"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {

@@ -13,14 +13,18 @@ namespace DBAccess
     {
         private const string SP_Create = "procEntrustSecurityInsert";
         private const string SP_Modify = "procEntrustSecurityUpdate";
-        private const string SP_ModifyStatus = "procEntrustSecurityUpdateStatus";
+        private const string SP_ModifyEntrustStatus = "procEntrustSecurityUpdateEntrustStatus";
+        private const string SP_ModifyDeal = "procEntrustSecurityUpdateDeal";
+        private const string SP_ModifyCancel = "procEntrustSecurityUpdateCancel";
         private const string SP_Delete = "procEntrustSecurityDelete";
         private const string SP_DeleteBySubmitId = "procEntrustSecurityDeleteBySubmitId";
         private const string SP_DeleteByCommandId = "procEntrustSecurityDeleteByCommandId";
+        private const string SP_DeleteByCommandIdEntrustStatus = "procEntrustSecurityDeleteByCommandIdEntrustStatus";
         private const string SP_Get = "procEntrustSecuritySelectAll";
         private const string SP_GetBySubmitId = "procEntrustSecuritySelectBySubmitId";
         private const string SP_GetByCommandId = "procEntrustSecuritySelectByCommandId";
-        private const string SP_GetByStatus = "procEntrustSecuritySelectByStatus";
+        private const string SP_GetByEntrustStatus = "procEntrustSecuritySelectByEntrustStatus";
+        private const string SP_GetCancel = "procEntrustSecuritySelectCancel";
 
         public EntrustSecurityDAO()
             : base()
@@ -65,13 +69,35 @@ namespace DBAccess
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public int UpdateStatus(EntrustSecurityItem item)
+        public int UpdateEntrustStatus(EntrustSecurityItem item, EntrustStatus entrustStatus)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyStatus);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustStatus);
             _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, item.SubmitId);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, item.CommandId);
             _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, item.SecuCode);
-            _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, item.EntrustStatus);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)entrustStatus);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int UpdateDeal(EntrustSecurityItem item)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustStatus);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, item.SubmitId);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, item.CommandId);
+            _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, item.SecuCode);
+            _dbHelper.AddInParameter(dbCommand, "@DealStatus", System.Data.DbType.Int32, (int)item.DealStatus);
+            _dbHelper.AddInParameter(dbCommand, "@DealAmount", System.Data.DbType.Int32, item.DealAmount);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int UpdateCancel(int commandId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyCancel);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
@@ -89,17 +115,27 @@ namespace DBAccess
 
         public int DeleteBySubmitId(int submitId)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Delete);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_DeleteBySubmitId);
             _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public int Delete(int commandId)
+        public int DeleteByCommandId(int commandId)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Delete);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_DeleteByCommandId);
             
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int DeleteByCommandIdEntrustStatus(int commandId, EntrustStatus status)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_DeleteByCommandIdEntrustStatus);
+
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)status);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
@@ -123,6 +159,8 @@ namespace DBAccess
                     item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
                     item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+                    item.DealStatus = (DealStatus)reader["DealStatus"];
+                    item.DealAmount = (int)reader["DealAmount"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {
@@ -163,6 +201,8 @@ namespace DBAccess
                     item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
                     item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+                    item.DealStatus = (DealStatus)reader["DealStatus"];
+                    item.DealAmount = (int)reader["DealAmount"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {
@@ -203,6 +243,8 @@ namespace DBAccess
                     item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
                     item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+                    item.DealStatus = (DealStatus)reader["DealStatus"];
+                    item.DealAmount = (int)reader["DealAmount"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {
@@ -223,9 +265,11 @@ namespace DBAccess
             return items;
         }
 
-        public List<EntrustSecurityItem> GetByStatus(int entrustStatus)
+        public List<EntrustSecurityItem> GetByEntrustStatus(int submitId, int commandId, EntrustStatus entrustStatus)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetByStatus);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetByEntrustStatus);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
             _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, entrustStatus);
 
             List<EntrustSecurityItem> items = new List<EntrustSecurityItem>();
@@ -243,6 +287,50 @@ namespace DBAccess
                     item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
                     item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+                    item.DealStatus = (DealStatus)reader["DealStatus"];
+                    item.DealAmount = (int)reader["DealAmount"];
+
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+                    {
+                        item.CreatedDate = (DateTime)reader["CreatedDate"];
+                    }
+
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+                    {
+                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+                    }
+
+                    items.Add(item);
+                }
+            }
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return items;
+        }
+
+        public List<EntrustSecurityItem> GetCancel(int commandId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCancel);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+
+            List<EntrustSecurityItem> items = new List<EntrustSecurityItem>();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    EntrustSecurityItem item = new EntrustSecurityItem();
+                    item.SubmitId = (int)reader["SubmitId"];
+                    item.CommandId = (int)reader["CommandId"];
+                    item.SecuCode = (string)reader["SecuCode"];
+                    item.SecuType = (SecurityType)(int)reader["SecuType"];
+                    item.EntrustAmount = (int)reader["EntrustAmount"];
+                    item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
+                    item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
+                    item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+                    item.DealStatus = (DealStatus)reader["DealStatus"];
+                    item.DealAmount = (int)reader["DealAmount"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {

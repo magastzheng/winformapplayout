@@ -8,6 +8,7 @@ create table tradingcommand(
 	,InstanceId			int not null
 	,CommandNum			int	--指令份数
 	,TargetNum			int	--目标份数
+	--,DealNum			int --成交份数
 	,ModifiedTimes		int	--修改次数
 	,CommandType		int -- 1 - 期现套利
 	,ExecuteType		int -- 1 开仓， 2 - 平仓

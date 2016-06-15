@@ -97,7 +97,68 @@ namespace TradingSystem.View
 
         private void ToolStripButton_Command_Cancel(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            //
+            var selectCmdItems = _cmdDataSource.Where(p => p.Selection);
+            if (selectCmdItems != null && selectCmdItems.Count() > 0)
+            {
+                foreach (var cmdItem in selectCmdItems)
+                {
+                    GridView_Command_Cancel(cmdItem);
+                }
+            }
+        }
+
+        private void GridView_Command_Cancel(TradingCommandItem cmdItem)
+        {
+            int retCancel = _entrustsecudao.UpdateCancel(cmdItem.CommandId);
+            if (retCancel <= 0)
+            {
+                //TODO: fail to cancel
+            }
+            else
+            {
+                retCancel = _entrustcmddao.UpdateCancel(cmdItem.CommandId);
+            }
+
+            var cancelCmdItems = _entrustcmddao.GetByEntrustStatus(cmdItem.CommandId, EntrustStatus.CancelToDB);
+            if (cancelCmdItems != null && cancelCmdItems.Count() > 0)
+            {
+                cancelCmdItems.ForEach(p =>
+                {
+                    //TODO: call UFX to cancel
+                    //.....
+
+                    //Update the EntrustStatus in db table
+                    var cancelSecuItems = _entrustsecudao.GetByEntrustStatus(p.SubmitId, p.CommandId, EntrustStatus.CancelToDB);
+                    if (cancelSecuItems != null && cancelSecuItems.Count() > 0)
+                    {
+                        cancelSecuItems.ForEach(s =>
+                        {
+                            _entrustsecudao.UpdateEntrustStatus(s, EntrustStatus.CancelToUFX);
+                        });
+                    }
+
+                    _entrustcmddao.UpdateEntrustStatus(p.SubmitId, EntrustStatus.CancelToUFX);
+                    //TODO: callback from UFX to update the CancelStatus to Fail or Success
+
+                    //Change the status to CancelSuccess after UFX callback/response
+                    cancelSecuItems = _entrustsecudao.GetByEntrustStatus(p.SubmitId, p.CommandId, EntrustStatus.CancelToUFX);
+                    if (cancelSecuItems != null && cancelSecuItems.Count() > 0)
+                    {
+                        cancelSecuItems.ForEach(s =>
+                        {
+                            _entrustsecudao.UpdateEntrustStatus(s, EntrustStatus.CancelSuccess);
+                        });
+                    }
+                    _entrustcmddao.UpdateEntrustStatus(p.SubmitId, EntrustStatus.CancelSuccess);
+
+                    //Update the tradingcommand table TargetNum
+                    cmdItem.TargetNum -= p.Copies;
+                    _tradecmddao.UpdateTargetNum(cmdItem);
+                });
+            }
+
+            this.cmdGridView.Invalidate();
         }
 
         private void ToolStripButton_Command_CancelAppend(object sender, EventArgs e)
@@ -740,6 +801,27 @@ namespace TradingSystem.View
             //1. submit into database
             foreach (var eiItem in selectedEntrustItems)
             {
+                if (eiItem.Copies <= 0)
+                {
+                    //TODO: please input copies
+                    continue;
+                }
+
+                var cmdItem = _cmdDataSource.Single(p => p.CommandId == eiItem.CommandNo);
+                if (cmdItem == null)
+                {
+                    //TODO: there is no CommandItem
+                    continue;
+                }
+
+                //cmdItem.TargetNum += eiItem.Copies;
+                int targetNum = cmdItem.TargetNum + eiItem.Copies;
+                if (targetNum > cmdItem.CommandNum)
+                { 
+                    //TODO: there are no so many securities
+                    continue;
+                }
+
                 int submitId = SubmitCommandToDB(eiItem);
                 if (submitId > 0)
                 {
@@ -749,17 +831,14 @@ namespace TradingSystem.View
                         //TODO: fail to submit the securities
                     }
 
-                    //add the target num
-                    var cmdItem = _cmdDataSource.Single(p => p.CommandId == eiItem.CommandNo);
-                    if (cmdItem != null)
+                    //update the TargetNum
+                    cmdItem.TargetNum = targetNum;
+                    int targetNumFlag = _tradecmddao.UpdateTargetNum(cmdItem);
+                    if (targetNumFlag <= 0)
                     {
-                        cmdItem.TargetNum += eiItem.Copies;
-                        int targetNumFlag = _tradecmddao.UpdateTargetNum(cmdItem);
-                        if (targetNumFlag <= 0)
-                        { 
-                            //TODO: failed to update
-                        }
+                        //TODO: failed to update TargetNum
                     }
+                    
                 }
                 else
                 { 

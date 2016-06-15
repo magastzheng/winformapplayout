@@ -18,7 +18,9 @@ namespace Model.UI
 
         public int BatchNo { get; set; }
 
-        public int Status { get; set; }
+        public EntrustStatus EntrustStatus { get; set; }
+
+        public DealStatus DealStatus { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
