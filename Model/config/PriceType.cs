@@ -43,7 +43,64 @@ namespace Model.config
 
     public enum EntrustPriceType
     { 
-        //FixedPrice = char('0'),
+        //限价
+        FixedPrice = '0',
 
+        //任意价（上交所股票期权）
+        Arbitrary = '1',
+
+        //市价剩转限价（上交所股票期权）
+        TransferPrice = '2',
+
+        //市价剩余撤销（上交所股票期权）
+        ResidualMarketWithdrawal = '3',
+
+        //FOK限价（上交所股票期权）
+        FOKLimit = '4',
+
+        //FOK市价（上交所股票期权）
+        FOKMarket = '5',
+
+        //五档即成剩撤（上交所市价）
+        FifthIsLeftOffSH = 'a',
+
+        //五档即成剩转（上交所市价）
+        FifthIsLeftTurnSH = 'b',
+
+        //五档即成剩撤（深交所市价）
+        FifthIsLeftOffSZ = 'A',
+
+        //五档即成剩转（深交所市价）
+        LeftTurnSZ = 'C',
+
+        //对手方最优（深交所市价）
+        OppSideOptSZ = 'D',
+
+        //本方最优（深交所市价）
+        BestBestSZ = 'E',
+
+        //全额成或撤（FOK市价）（深交所市价）
+        FOKMarketSZ = 'F',
+
+        //全额成或撤（FOK限价）（上期所、中金所、深交所）
+        FOKLimit = 'G',
+
+        //即成剩撤（FAK）（上期所、郑商所、中金所）
+        FAK = 'K',
+
+        //任意价转限价（中金所）
+        ArbitraryToLimit = 'X',
+
+        //五档即成剩撤（中金所五档市价）
+        FifthIsLeftOffCFX = 'L',
+
+        //五档即成剩转（中金所五档市价转限价）
+        FifthIsLeftOffCFX = 'M',
+
+        //最优一档即成剩撤（中金所最优价）
+        BestOneLeftOff = 'N',
+
+        //最优一档即成剩转（中金所最优价）
+        BestOneLeftTurn = 'O',
     }
 }
