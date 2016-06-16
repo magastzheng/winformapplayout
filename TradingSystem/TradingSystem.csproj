@@ -68,6 +68,12 @@
       <DependentUpon>OpenPositionDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="TradeUtil\TradingCommandHelper.cs" />
+    <Compile Include="Dialog\CancelRedoDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\CancelRedoDialog.Designer.cs">
+      <DependentUpon>CancelRedoDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\ClosePositionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -94,11 +100,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="View\CancelRedoForm.cs">
+    <Compile Include="View\CancelRedoForm2.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\CancelRedoForm.Designer.cs">
-      <DependentUpon>CancelRedoForm.cs</DependentUpon>
+    <Compile Include="View\CancelRedoForm2.Designer.cs">
+      <DependentUpon>CancelRedoForm2.cs</DependentUpon>
     </Compile>
     <Compile Include="View\LoginForm.cs">
       <SubType>Form</SubType>
@@ -142,17 +148,17 @@
     <Compile Include="View\StockTemplateForm.Designer.cs">
       <DependentUpon>StockTemplateForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\StrategyTradingForm_old.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\StrategyTradingForm_old.Designer.cs">
+      <DependentUpon>StrategyTradingForm_old.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\StrategyTradingForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\StrategyTradingForm.Designer.cs">
       <DependentUpon>StrategyTradingForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="View\StrategyTradingForm2.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\StrategyTradingForm2.Designer.cs">
-      <DependentUpon>StrategyTradingForm2.cs</DependentUpon>
     </Compile>
     <Compile Include="View\TemplateDialog.cs">
       <SubType>Form</SubType>
@@ -184,6 +190,9 @@
     <EmbeddedResource Include="Dialog\OpenPositionDialog.resx">
       <DependentUpon>OpenPositionDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dialog\CancelRedoDialog.resx">
+      <DependentUpon>CancelRedoDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\ClosePositionForm.resx">
       <DependentUpon>ClosePositionForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -206,8 +215,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="View\CancelRedoForm.resx">
-      <DependentUpon>CancelRedoForm.cs</DependentUpon>
+    <EmbeddedResource Include="View\CancelRedoForm2.resx">
+      <DependentUpon>CancelRedoForm2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
@@ -230,11 +239,11 @@
     <EmbeddedResource Include="View\StockTemplateForm.resx">
       <DependentUpon>StockTemplateForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\StrategyTradingForm_old.resx">
+      <DependentUpon>StrategyTradingForm_old.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\StrategyTradingForm.resx">
       <DependentUpon>StrategyTradingForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="View\StrategyTradingForm2.resx">
-      <DependentUpon>StrategyTradingForm2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\TemplateDialog.resx">
       <DependentUpon>TemplateDialog.cs</DependentUpon>

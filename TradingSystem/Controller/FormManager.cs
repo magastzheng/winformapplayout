@@ -51,7 +51,7 @@ namespace TradingSystem.Controller
                 {
                     case "cmdtrading":
                         {
-                            formType = typeof(StrategyTradingForm2);
+                            formType = typeof(StrategyTradingForm);
                             hasGrid = true;
                         }
                         break;

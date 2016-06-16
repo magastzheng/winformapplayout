@@ -12,13 +12,19 @@ using System.Windows.Forms;
 
 namespace TradingSystem.View
 {
-    public partial class CancelRedoForm : Form
+    public partial class CancelRedoForm2 : Forms.BaseForm
     {
-        public CancelRedoForm(GridConfig gridConfig)
-        {
-            _gridConfig = gridConfig;
+        private GridConfig _gridConfig = null;
+        private const string GridECA = "entrustcanceladd";
 
+        public CancelRedoForm2()
+            :base()
+        {
             InitializeComponent();
+        }
+        public CancelRedoForm2(GridConfig gridConfig)
+            :this()
+        {
         }
 
         private void CancelRedoForm_Load(object sender, System.EventArgs e)
@@ -97,12 +103,12 @@ namespace TradingSystem.View
 
         private void ButtonUnSelectAll_Click(object sender, System.EventArgs e)
         {
-            this.dataGridViewECA.SelectAll(false);
+            //this.dataGridViewECA.SelectAll(false);
         }
 
         private void ButtonSelectAll_Click(object sender, System.EventArgs e)
         {
-            this.dataGridViewECA.SelectAll(true);
+            //this.dataGridViewECA.SelectAll(true);
         }
 
         private void ButtonConfirm_Click(object sender, System.EventArgs e)

@@ -1074,7 +1074,7 @@ namespace TradingSystem.View
 
         private void ToolStripButton_CmdCancelRedo_Click(object sender, System.EventArgs e)
         {
-            CancelRedoForm cancelRedoForm = new CancelRedoForm(this._gridConfig);
+            CancelRedoForm2 cancelRedoForm = new CancelRedoForm2(this._gridConfig);
             cancelRedoForm.Owner = this;
             cancelRedoForm.ShowDialog();
             if (cancelRedoForm.DialogResult == System.Windows.Forms.DialogResult.OK)

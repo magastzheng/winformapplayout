@@ -2,26 +2,14 @@
 using Controls;
 namespace TradingSystem.View
 {
-    partial class CancelRedoForm
+    partial class CancelRedoForm2
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private System.ComponentModel.IContainer components = null;
-
-        private GridConfig _gridConfig = null;
-        private const string GridECA = "entrustcanceladd";
-
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
             base.Dispose(disposing);
         }
 
@@ -58,10 +46,6 @@ namespace TradingSystem.View
             this.btnConfirm = new System.Windows.Forms.Button();
             this.btnUnSelectAll = new System.Windows.Forms.Button();
             this.btnSelectAll = new System.Windows.Forms.Button();
-            //this.dataGridViewECA = new System.Windows.Forms.DataGridView();
-
-            this.dataGridViewECA = new HSGridView(_gridConfig.GetGid(GridECA));
-
             this.tlPanelMain.SuspendLayout();
             this.panelCaption.SuspendLayout();
             this.panelSetting.SuspendLayout();
@@ -69,7 +53,6 @@ namespace TradingSystem.View
             this.gbFuturesPrice.SuspendLayout();
             this.gbSpotPrice.SuspendLayout();
             this.panelBottomButton.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewECA)).BeginInit();
             this.SuspendLayout();
             // 
             // tlPanelMain
@@ -79,7 +62,6 @@ namespace TradingSystem.View
             this.tlPanelMain.Controls.Add(this.panelCaption, 0, 0);
             this.tlPanelMain.Controls.Add(this.panelSetting, 0, 1);
             this.tlPanelMain.Controls.Add(this.panelBottomButton, 0, 3);
-            this.tlPanelMain.Controls.Add(this.dataGridViewECA, 0, 2);
             this.tlPanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlPanelMain.Location = new System.Drawing.Point(0, 0);
             this.tlPanelMain.Name = "tlPanelMain";
@@ -124,7 +106,7 @@ namespace TradingSystem.View
             // btnSetting
             // 
             this.btnSetting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSetting.Location = new System.Drawing.Point(984, 11);
+            this.btnSetting.Location = new System.Drawing.Point(980, 12);
             this.btnSetting.Name = "btnSetting";
             this.btnSetting.Size = new System.Drawing.Size(75, 23);
             this.btnSetting.TabIndex = 3;
@@ -294,7 +276,7 @@ namespace TradingSystem.View
             this.btnCancel.TabIndex = 3;
             this.btnCancel.Text = "取消";
             this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(ButtonCancel_Click);
+            this.btnCancel.Click += new System.EventHandler(this.ButtonCancel_Click);
             // 
             // btnConfirm
             // 
@@ -305,7 +287,7 @@ namespace TradingSystem.View
             this.btnConfirm.TabIndex = 2;
             this.btnConfirm.Text = "确定";
             this.btnConfirm.UseVisualStyleBackColor = true;
-            this.btnConfirm.Click += new System.EventHandler(ButtonConfirm_Click);
+            this.btnConfirm.Click += new System.EventHandler(this.ButtonConfirm_Click);
             // 
             // btnUnSelectAll
             // 
@@ -315,7 +297,7 @@ namespace TradingSystem.View
             this.btnUnSelectAll.TabIndex = 1;
             this.btnUnSelectAll.Text = "反选";
             this.btnUnSelectAll.UseVisualStyleBackColor = true;
-            this.btnUnSelectAll.Click += new System.EventHandler(ButtonUnSelectAll_Click);
+            this.btnUnSelectAll.Click += new System.EventHandler(this.ButtonUnSelectAll_Click);
             // 
             // btnSelectAll
             // 
@@ -325,25 +307,15 @@ namespace TradingSystem.View
             this.btnSelectAll.TabIndex = 0;
             this.btnSelectAll.Text = "全选";
             this.btnSelectAll.UseVisualStyleBackColor = true;
-            this.btnSelectAll.Click += new System.EventHandler(ButtonSelectAll_Click);
+            this.btnSelectAll.Click += new System.EventHandler(this.ButtonSelectAll_Click);
             // 
-            // dataGridViewECA
-            // 
-            this.dataGridViewECA.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewECA.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewECA.Location = new System.Drawing.Point(3, 93);
-            this.dataGridViewECA.Name = "dataGridViewECA";
-            this.dataGridViewECA.RowTemplate.Height = 23;
-            this.dataGridViewECA.Size = new System.Drawing.Size(1062, 439);
-            this.dataGridViewECA.TabIndex = 3;
-            // 
-            // CancelRedoForm
+            // CancelRedoForm2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1068, 575);
             this.Controls.Add(this.tlPanelMain);
-            this.Name = "CancelRedoForm";
+            this.Name = "CancelRedoForm2";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "委托撤补";
             this.Load += new System.EventHandler(this.CancelRedoForm_Load);
@@ -358,7 +330,6 @@ namespace TradingSystem.View
             this.gbSpotPrice.ResumeLayout(false);
             this.gbSpotPrice.PerformLayout();
             this.panelBottomButton.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewECA)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -371,7 +342,7 @@ namespace TradingSystem.View
         private System.Windows.Forms.Panel panelBottomButton;
         //private System.Windows.Forms.DataGridView dataGridViewECA;
 
-        private HSGridView dataGridViewECA;
+        //private HSGridView dataGridViewECA;
 
         private System.Windows.Forms.Label lblCaption;
         private System.Windows.Forms.Button btnSetting;

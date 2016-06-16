@@ -70,6 +70,7 @@
     <Compile Include="t2sdk\MarketCode.cs" />
     <Compile Include="TradingCommand\TradingCommandItem.cs" />
     <Compile Include="TradingCommand\TradingCommandSecurityItem.cs" />
+    <Compile Include="UI\CancelRedoItem.cs" />
     <Compile Include="UI\ClosePositionCmdItem.cs" />
     <Compile Include="UI\ClosePositionItem.cs" />
     <Compile Include="UI\ClosePositionSecurityItem.cs" />

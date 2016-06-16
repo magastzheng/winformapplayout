@@ -949,7 +949,7 @@ readonly:
 		"visible": 1,
 		"readonly": 0
 		},{
-		"name": "commandno",
+		"name": "commandid",
 		"text": "指令序号",
 		"width": 80,
 		"columntype": 0,
@@ -969,23 +969,23 @@ readonly:
 		"text": "交易所",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 3,
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "securitycode",
+		"name": "secucode",
 		"text": "证券代码",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 3,
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "securityname",
+		"name": "secuname",
 		"text": "证券名称",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 3,
 		"visible": 1,
 		"readonly": 1
 		},{
@@ -1001,7 +1001,7 @@ readonly:
 		"text": "指令价格",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 3,
 		"visible": 1,
 		"readonly": 1
 		},{
@@ -1009,7 +1009,7 @@ readonly:
 		"text": "价格设置",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 3,
 		"visible": 1,
 		"readonly": 1
 		},{
@@ -1017,7 +1017,7 @@ readonly:
 		"text": "价格类型",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 3,
 		"visible": 1,
 		"readonly": 1
 		},{
@@ -1025,7 +1025,7 @@ readonly:
 		"text": "委托价格",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 1,
 		"visible": 1,
 		"readonly": 1
 		},{
@@ -1037,15 +1037,15 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "declareprice",
+		"name": "reportprice",
 		"text": "申报价格",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 1,
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "restamount",
+		"name": "leftamount",
 		"text": "剩余数量",
 		"width": 80,
 		"columntype": 0,
@@ -1053,7 +1053,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "declareamount",
+		"name": "reportamount",
 		"text": "申报数量",
 		"width": 80,
 		"columntype": 0,
@@ -1081,7 +1081,7 @@ readonly:
 		"text": "成交比例",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 1,
 		"visible": 1,
 		"readonly": 1
 		},{
@@ -1089,7 +1089,7 @@ readonly:
 		"text": "基金名称",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 3,
 		"visible": 1,
 		"readonly": 1
 		},{
@@ -1097,15 +1097,15 @@ readonly:
 		"text": "组合名称",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 3,
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "investmenttype",
+		"name": "investmenttypename",
 		"text": "投资类型",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 3,
 		"visible": 1,
 		"readonly": 1
 		},{
@@ -1113,7 +1113,7 @@ readonly:
 		"text": "最新价",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 1,
 		"visible": 1,
 		"readonly": 1
 		},{
@@ -1121,7 +1121,7 @@ readonly:
 		"text": "价格偏差",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 1,
 		"visible": 1,
 		"readonly": 1
 		},{
@@ -1129,7 +1129,7 @@ readonly:
 		"text": "下达日期",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 3,
 		"visible": 1,
 		"readonly": 1
 		},{
@@ -1145,7 +1145,7 @@ readonly:
 		"text": "成交金额",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 1,
 		"visible": 1,
 		"readonly": 1
 		},{
@@ -1153,7 +1153,7 @@ readonly:
 		"text": "委托时间",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 3,
 		"visible": 1,
 		"readonly": 1
 		},{
@@ -1181,7 +1181,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "declareno",
+		"name": "reportno",
 		"text": "申报序号",
 		"width": 80,
 		"columntype": 0,
