@@ -1,169 +1,169 @@
 ﻿[{
 	"name": "spotprice",
-	"selected": "market",
+	"selected": "Market",
 	"items":[{
-			"id": "market",
+			"id": "Market",
 			"code": "0",
 			"order1": 0,
 			"order2": 0,
 			"name": "市价"
 		},
 		{
-			"id": "assign",
+			"id": "Assign",
 			"code": "1",
 			"order1": 1,
 			"order2": 1,
 			"name": "指定价"
 		},
 		{
-			"id": "last",
+			"id": "Last",
 			"code": "2",
 			"order1": 2,
 			"order2": 2,
 			"name": "最新价"
 		},
 		{
-			"id": "automatic",
+			"id": "Automatic",
 			"code": "3",
 			"order1": 3,
 			"order2": 3,
 			"name": "自动盘口"
 		},
 		{
-			"id": "sell1",
+			"id": "Sell1",
 			"code": "S1",
 			"order1": 11,
 			"order2": 41,
 			"name": "卖一价"
 		},
 		{
-			"id": "sell2",
+			"id": "Sell2",
 			"code": "S2",
 			"order1": 12,
 			"order2": 42,
 			"name": "卖二价"
 		},
 		{
-			"id": "sell3",
+			"id": "Sell3",
 			"code": "S3",
 			"order1": 13,
 			"order2": 43,
 			"name": "卖三价"
 		},
 		{
-			"id": "sell4",
+			"id": "Sell4",
 			"code": "S4",
 			"order1": 14,
 			"order2": 44,
 			"name": "卖四价"
 		},
 		{
-			"id": "sell5",
+			"id": "Sell5",
 			"code": "S5",
 			"order1": 15,
 			"order2": 45,
 			"name": "卖五价"
 		},
 		{
-			"id": "sell6",
+			"id": "Sell6",
 			"code": "S6",
 			"order1": 16,
 			"order2": 46,
 			"name": "卖六价"
 		},
 		{
-			"id": "sell7",
+			"id": "Sell7",
 			"code": "S7",
 			"order1": 17,
 			"order2": 47,
 			"name": "卖七价"
 		},
 		{
-			"id": "sell8",
+			"id": "Sell8",
 			"code": "S8",
 			"order1": 18,
 			"order2": 48,
 			"name": "卖八价"
 		},
 		{
-			"id": "sell9",
+			"id": "Sell9",
 			"code": "S9",
 			"order1": 19,
 			"order2": 49,
 			"name": "卖九价"
 		},
 		{
-			"id": "sell10",
+			"id": "Sell10",
 			"code": "S10",
 			"order1": 20,
 			"order2": 50,
 			"name": "卖十价"
 		},
 		{
-			"id": "buy1",
+			"id": "Buy1",
 			"code": "B1",
 			"order1": 41,
 			"order2": 11,
 			"name": "买一价"
 		},
 		{
-			"id": "buy2",
+			"id": "Buy2",
 			"code": "B2",
 			"order1": 42,
 			"order2": 12,
 			"name": "买二价"
 		},
 		{
-			"id": "buy3",
+			"id": "Buy3",
 			"code": "B3",
 			"order1": 43,
 			"order2": 13,
 			"name": "买三价"
 		},
 		{
-			"id": "buy4",
+			"id": "Buy4",
 			"code": "B4",
 			"order1": 44,
 			"order2": 14,
 			"name": "买四价"
 		},
 		{
-			"id": "buy5",
+			"id": "Buy5",
 			"code": "B5",
 			"order1": 45,
 			"order2": 15,
 			"name": "买五价"
 		},
 		{
-			"id": "buy6",
+			"id": "Buy6",
 			"code": "B6",
 			"order1": 46,
 			"order2": 16,
 			"name": "买六价"
 		},
 		{
-			"id": "buy7",
+			"id": "Buy7",
 			"code": "B7",
 			"order1": 47,
 			"order2": 17,
 			"name": "买七价"
 		},
 		{
-			"id": "buy8",
+			"id": "Buy8",
 			"code": "B8",
 			"order1": 48,
 			"order2": 18,
 			"name": "买八价"
 		},
 		{
-			"id": "buy9",
+			"id": "Buy9",
 			"code": "B9",
 			"order1": 49,
 			"order2": 19,
 			"name": "买九价"
 		},
 		{
-			"id": "buy10",
+			"id": "Buy10",
 			"code": "B10",
 			"order1": 50,
 			"order2": 20,
@@ -171,86 +171,86 @@
 		}
 	]},
 	{"name": "futureprice",
-	"selected": "arbitrary",
+	"selected": "Arbitrary",
 	"items": [
 		{
-			"id": "arbitrary",
+			"id": "Arbitrary",
 			"code": "0",
 			"order1": 0,
 			"order2": 0,
 			"name": "任意价"
 		},{
-			"id": "assign",
+			"id": "Assign",
 			"code": "1",
 			"order1": 1,
 			"order2": 1,
 			"name": "指定价"
 		},{
-			"id": "fs2",
+			"id": "Last",
 			"code": "2",
 			"name": "最新价"
 		},{
-			"id": "automatic",
+			"id": "Automatic",
 			"code": "3",
 			"order1": 3,
 			"order2": 3,
 			"name": "自动盘口"
 		},{
-			"id": "sell1",
+			"id": "Sell1",
 			"code": "S1",
 			"order1": 11,
 			"order2": 21,
 			"name": "卖一价"
 		},{
-			"id": "sell2",
+			"id": "Sell2",
 			"code": "S2",
 			"order1": 12,
 			"order2": 22,
 			"name": "卖二价"
 		},{
-			"id": "sell3",
+			"id": "Sell3",
 			"code": "S3",
 			"order1": 13,
 			"order2": 23,
 			"name": "卖三价"
 		},{
-			"id": "sell4",
+			"id": "Sell4",
 			"code": "S4",
 			"order1": 14,
 			"order2": 24,
 			"name": "卖四价"
 		},{
-			"id": "sell5",
+			"id": "Sell5",
 			"code": "S5",
 			"order1": 15,
 			"order2": 25,
 			"name": "卖五价"
 		},{
-			"id": "buy1",
+			"id": "Buy1",
 			"code": "B1",
 			"order1": 21,
 			"order2": 11,
 			"name": "买一价"
 		},{
-			"id": "buy2",
+			"id": "Buy2",
 			"code": "B2",
 			"order1": 22,
 			"order2": 12,
 			"name": "买二价"
 		},{
-			"id": "buy3",
+			"id": "Buy3",
 			"code": "B3",
 			"order1": 23,
 			"order2": 13,
 			"name": "买三价"
 		},{
-			"id": "buy4",
+			"id": "Buy4",
 			"code": "B4",
 			"order1": 24,
 			"order2": 14,
 			"name": "买四价"
 		},{
-			"id": "buy5",
+			"id": "Buy5",
 			"code": "B5",
 			"order1": 25,
 			"order2": 15,

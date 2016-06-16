@@ -301,3 +301,28 @@ begin
 		and EntrustStatus != 11 --撤单到UFX
 		and EntrustStatus != 12 --撤单成功
 end
+
+go
+if exists (select name from sysobjects where name='procEntrustCommandSelectCancelRedo')
+drop proc procEntrustCommandSelectCancelRedo
+
+go
+create proc procEntrustCommandSelectCancelRedo(
+	@CommandId int
+)
+as
+begin
+	select SubmitId
+		  ,CommandId
+		  ,Copies
+		  ,EntrustNo
+		  ,BatchNo
+		  ,EntrustStatus
+		  ,DealStatus
+		  ,CreatedDate
+		  ,ModifiedDate
+	from entrustcommand
+	where (DealStatus = 1 		--未成交
+		or DealStatus = 2)		--部分成交
+		and EntrustStatus = 5	--已完成委托
+end

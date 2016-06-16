@@ -22,6 +22,7 @@ namespace DBAccess
         private const string SP_GetByCommandId = "procEntrustCommandSelectByCommandId";
         private const string SP_GetByCommandIdEntrustStatus = "procEntrustCommandSelectByCommandIdEntrustStatus";
         private const string SP_GetCancel = "procEntrustCommandSelectCancel";
+        private const string SP_GetCancelRedo = "procEntrustCommandSelectCancelRedo";
 
         public EntrustCommandDAO()
             : base()
@@ -310,6 +311,52 @@ namespace DBAccess
         public List<EntrustCommandItem> GetCancel(int commandId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCancel);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+
+            List<EntrustCommandItem> items = new List<EntrustCommandItem>();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    EntrustCommandItem item = new EntrustCommandItem();
+                    item.SubmitId = (int)reader["SubmitId"];
+                    item.CommandId = (int)reader["CommandId"];
+                    item.Copies = (int)reader["Copies"];
+                    if (reader["EntrustNo"] != null && reader["EntrustNo"] != DBNull.Value)
+                    {
+                        item.EntrustNo = (int)reader["EntrustNo"];
+                    }
+
+                    if (reader["BatchNo"] != null && reader["BatchNo"] != DBNull.Value)
+                    {
+                        item.BatchNo = (int)reader["BatchNo"];
+                    }
+                    item.EntrustStatus = (EntrustStatus)(int)reader["EntrustStatus"];
+                    item.DealStatus = (DealStatus)(int)reader["DealStatus"];
+
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+                    {
+                        item.CreatedDate = (DateTime)reader["CreatedDate"];
+                    }
+
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+                    {
+                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+                    }
+
+                    items.Add(item);
+                }
+            }
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return items;
+        }
+
+        public List<EntrustCommandItem> GetCancelRedo(int commandId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCancelRedo);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
 
             List<EntrustCommandItem> items = new List<EntrustCommandItem>();

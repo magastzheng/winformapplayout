@@ -164,7 +164,7 @@ namespace TradingSystem.View
 
         private void ToolStripButton_Command_CancelRedo(object sender, EventArgs e)
         {
-            var selectCmdItems = _cmdDataSource.Where(p => p.Selection);
+            var selectCmdItems = _cmdDataSource.Where(p => p.Selection).ToList();
             if (selectCmdItems == null || selectCmdItems.Count() == 0)
             {
                 return;
@@ -173,8 +173,14 @@ namespace TradingSystem.View
             var form = new CancelRedoDialog(_gridConfig);
             form.Owner = this;
             form.OnLoadControl(form, null);
-            form.OnLoadData(form, null);
+            form.OnLoadData(form, selectCmdItems);
+            form.SaveData += new FormLoadHandler(Dialog_CancelRedoDialog_SaveData);
             form.ShowDialog();
+        }
+
+        private bool Dialog_CancelRedoDialog_SaveData(object sender, object data)
+        {
+            throw new NotImplementedException();
         }
 
         private void ToolStripButton_Command_CancelAdd(object sender, EventArgs e)
@@ -809,6 +815,7 @@ namespace TradingSystem.View
             }
 
             //submit each entrust item and each security in the entrustitem
+            List<int> submitIds = new List<int>();
             //1. submit into database
             foreach (var eiItem in selectedEntrustItems)
             {
@@ -836,6 +843,8 @@ namespace TradingSystem.View
                 int submitId = SubmitCommandToDB(eiItem);
                 if (submitId > 0)
                 {
+                    submitIds.Add(submitId);
+
                     var failItems = SubmitSecurityToDB(submitId, eiItem.CommandNo);
                     if (failItems.Count > 0)
                     {
@@ -860,6 +869,12 @@ namespace TradingSystem.View
             //2.submit into UFX then update the status 
 
             //listen the callback to notify the entrust/deal status
+            //Update the status
+            foreach (var submitId in submitIds)
+            {
+                _entrustcmddao.UpdateEntrustStatus(submitId, EntrustStatus.Completed);
+                _entrustsecudao.UpdateEntrustStatusBySubmitId(submitId, EntrustStatus.Completed);
+            }
 
             //update the UI
             nudCopies.Value = 1;
@@ -890,6 +905,7 @@ namespace TradingSystem.View
 
             foreach (var secuItem in secuItems)
             {
+                var priceType = GetPriceType(secuItem.PriceType);
                 EntrustSecurityItem entrustSecurityItem = new EntrustSecurityItem 
                 {
                     SubmitId = submitId,
@@ -899,7 +915,8 @@ namespace TradingSystem.View
                     EntrustAmount = secuItem.ThisEntrustAmount,
                     EntrustPrice = secuItem.EntrustPrice,
                     EntrustDirection = EntrustDirectionUtil.GetEntrustDirection(secuItem.EntrustDirection),
-                    EntrustStatus = EntrustStatus.SubmitToDB
+                    EntrustStatus = EntrustStatus.SubmitToDB,
+                    PriceType = priceType,
                 };
 
                 int ret = _entrustsecudao.Create(entrustSecurityItem);
@@ -950,20 +967,23 @@ namespace TradingSystem.View
 
         private PriceType GetPriceType(ComboBox comboBox)
         {
-            PriceType priceType = PriceType.Market;
             var selectItem = (ComboOptionItem)comboBox.SelectedItem;
-            if (selectItem != null && !string.IsNullOrEmpty(selectItem.Id))
+            return GetPriceType(selectItem.Id);
+        }
+
+        private PriceType GetPriceType(string priceTypeId)
+        {
+            PriceType priceType = PriceType.Market;
+            if (priceTypeId != null && !string.IsNullOrEmpty(priceTypeId))
             {
-                string selectId = selectItem.Id.Substring(0, 1).ToUpper() + selectItem.Id.Substring(1);
-                if (Enum.IsDefined(typeof(PriceType), selectId))
+                if (Enum.IsDefined(typeof(PriceType), priceTypeId))
                 {
-                    priceType = (PriceType)Enum.Parse(typeof(PriceType), selectId);
+                    priceType = (PriceType)Enum.Parse(typeof(PriceType), priceTypeId);
                 }
             }
 
             return priceType;
         }
-
         #endregion
     }
 }

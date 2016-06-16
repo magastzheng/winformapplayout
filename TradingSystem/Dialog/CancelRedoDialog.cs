@@ -12,12 +12,16 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Linq;
+using DBAccess;
 
 namespace TradingSystem.Dialog
 {
     public partial class CancelRedoDialog : Forms.BaseFixedForm
     {
         private const string GridCancelRedoId = "entrustcanceladd";
+
+        private EntrustCommandDAO _entrustcmddao = new EntrustCommandDAO();
+        private EntrustSecurityDAO _entrustsecudao = new EntrustSecurityDAO();
 
         private SortableBindingList<CancelRedoItem> _secuDataSource = new SortableBindingList<CancelRedoItem>(new List<CancelRedoItem>());
 
@@ -97,6 +101,42 @@ namespace TradingSystem.Dialog
 
         private bool Form_LoadData(object sender, object data)
         {
+            if (data == null)
+            {
+                return false;
+            }
+
+            if (!(data is List<TradingCommandItem>))
+            {
+                return false;
+            }
+
+            _secuDataSource.Clear();
+            var cmdItems = data as List<TradingCommandItem>;
+            foreach (var cmdItem in cmdItems)
+            { 
+                //var entrustItems = _entrustcmddao.GetByEntrustStatus(
+                var entrustSecuItems = _entrustsecudao.GetCancelRedo(cmdItem.CommandId);
+                if (entrustSecuItems != null && entrustSecuItems.Count() > 0)
+                {
+                    foreach (var p in entrustSecuItems)
+                    {
+                        CancelRedoItem cancelRedoItem = new CancelRedoItem {
+                            Selection = true,
+                            CommandId = cmdItem.CommandId,
+                            EntrustAmount = p.EntrustAmount,
+                            EntrustDirection = p.EntrustDirection,
+                            EntrustPrice = p.EntrustPrice,
+                            SecuCode = p.SecuCode,
+                            SecuType = p.SecuType,
+                            EntrustNo = p.SubmitId,
+                            CommandPrice = p.PriceType.ToString(),
+                        };
+
+                        _secuDataSource.Add(cancelRedoItem);
+                    }
+                }
+            }
 
             return true;
         }
@@ -107,12 +147,16 @@ namespace TradingSystem.Dialog
 
         private void Button_SelectAll_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            _secuDataSource.Where(p => !p.Selection).ToList().ForEach(p => p.Selection = true);
+
+            this.secuGridView.Invalidate();
         }
 
         private void Button_UnSelectAll_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            _secuDataSource.Where(p => p.Selection).ToList().ForEach(p => p.Selection = false);
+
+            this.secuGridView.Invalidate();
         }
 
         private void Button_Confirm_Click(object sender, EventArgs e)

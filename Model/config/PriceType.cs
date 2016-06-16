@@ -8,11 +8,18 @@ namespace Model.config
 {
     public enum PriceType
     {
-        Market = 0,
+        //市价
+        Market = 0,  
+        //指定价
         Assign = 1,
+        //最新价
         Last = 2,
-        Automatic,
-        Sell1,
+        //自动盘口
+        Automatic = 3,
+        //任意价
+        Arbitrary = 4,
+
+        Sell1 = 10,
         Sell2,
         Sell3,
         Sell4,
@@ -22,7 +29,7 @@ namespace Model.config
         Sell8,
         Sell9,
         Sell10,
-        Buy1,
+        Buy1 = 20,
         Buy2,
         Buy3,
         Buy4,
@@ -32,5 +39,11 @@ namespace Model.config
         Buy8,
         Buy9,
         Buy10,
+    }
+
+    public enum EntrustPriceType
+    { 
+        //FixedPrice = char('0'),
+
     }
 }

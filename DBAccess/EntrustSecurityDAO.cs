@@ -1,4 +1,5 @@
-﻿using Model.Data;
+﻿using Model.config;
+using Model.Data;
 using Model.SecurityInfo;
 using Model.UI;
 using System;
@@ -14,6 +15,7 @@ namespace DBAccess
         private const string SP_Create = "procEntrustSecurityInsert";
         private const string SP_Modify = "procEntrustSecurityUpdate";
         private const string SP_ModifyEntrustStatus = "procEntrustSecurityUpdateEntrustStatus";
+        private const string SP_ModifyEntrustStatusBySubmitId = "procEntrustSecurityUpdateEntrustStatusBySubmitId";
         private const string SP_ModifyDeal = "procEntrustSecurityUpdateDeal";
         private const string SP_ModifyCancel = "procEntrustSecurityUpdateCancel";
         private const string SP_Delete = "procEntrustSecurityDelete";
@@ -25,6 +27,7 @@ namespace DBAccess
         private const string SP_GetByCommandId = "procEntrustSecuritySelectByCommandId";
         private const string SP_GetByEntrustStatus = "procEntrustSecuritySelectByEntrustStatus";
         private const string SP_GetCancel = "procEntrustSecuritySelectCancel";
+        private const string SP_GetCancelRedo = "procEntrustSecuritySelectCancelRedo";
 
         public EntrustSecurityDAO()
             : base()
@@ -49,6 +52,7 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@EntrustPrice", System.Data.DbType.Decimal, item.EntrustPrice);
             _dbHelper.AddInParameter(dbCommand, "@EntrustDirection", System.Data.DbType.Int32, (int)item.EntrustDirection);
             _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)item.EntrustStatus);
+            _dbHelper.AddInParameter(dbCommand, "@PriceType", System.Data.DbType.Int32, (int)item.PriceType);
             _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, DateTime.Now);
             
             return _dbHelper.ExecuteNonQuery(dbCommand);
@@ -64,6 +68,7 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@EntrustPrice", System.Data.DbType.Decimal, item.EntrustPrice);
             _dbHelper.AddInParameter(dbCommand, "@EntrustDirection", System.Data.DbType.Int32, (int)item.EntrustDirection);
             _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)item.EntrustStatus);
+            _dbHelper.AddInParameter(dbCommand, "@PriceType", System.Data.DbType.Int32, (int)item.PriceType);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
@@ -75,6 +80,16 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, item.SubmitId);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, item.CommandId);
             _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, item.SecuCode);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)entrustStatus);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int UpdateEntrustStatusBySubmitId(int submitId, EntrustStatus entrustStatus)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustStatusBySubmitId);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
             _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)entrustStatus);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
@@ -159,6 +174,7 @@ namespace DBAccess
                     item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
                     item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+                    item.PriceType = (PriceType)reader["PriceType"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
 
@@ -201,6 +217,7 @@ namespace DBAccess
                     item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
                     item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+                    item.PriceType = (PriceType)reader["PriceType"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
 
@@ -243,6 +260,7 @@ namespace DBAccess
                     item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
                     item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+                    item.PriceType = (PriceType)reader["PriceType"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
 
@@ -287,6 +305,7 @@ namespace DBAccess
                     item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
                     item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+                    item.PriceType = (PriceType)reader["PriceType"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
 
@@ -329,6 +348,50 @@ namespace DBAccess
                     item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
                     item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+                    item.PriceType = (PriceType)reader["PriceType"];
+                    item.DealStatus = (DealStatus)reader["DealStatus"];
+                    item.DealAmount = (int)reader["DealAmount"];
+
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+                    {
+                        item.CreatedDate = (DateTime)reader["CreatedDate"];
+                    }
+
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+                    {
+                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+                    }
+
+                    items.Add(item);
+                }
+            }
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return items;
+        }
+
+        public List<EntrustSecurityItem> GetCancelRedo(int commandId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCancelRedo);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+
+            List<EntrustSecurityItem> items = new List<EntrustSecurityItem>();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    EntrustSecurityItem item = new EntrustSecurityItem();
+                    item.SubmitId = (int)reader["SubmitId"];
+                    item.CommandId = (int)reader["CommandId"];
+                    item.SecuCode = (string)reader["SecuCode"];
+                    item.SecuType = (SecurityType)(int)reader["SecuType"];
+                    item.EntrustAmount = (int)reader["EntrustAmount"];
+                    item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
+                    item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
+                    item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+                    item.PriceType = (PriceType)reader["PriceType"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
 

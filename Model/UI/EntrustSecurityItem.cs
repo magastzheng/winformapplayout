@@ -1,4 +1,5 @@
-﻿using Model.Data;
+﻿using Model.config;
+using Model.Data;
 using Model.SecurityInfo;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,8 @@ namespace Model.UI
         public EntrustStatus EntrustStatus { get; set; }
 
         public DealStatus DealStatus { get; set; }
+
+        public PriceType PriceType { get; set; }
 
         public int DealAmount { get; set; }
 
