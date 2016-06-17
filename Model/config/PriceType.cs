@@ -18,7 +18,7 @@ namespace Model.config
         Automatic = 3,
         //任意价
         Arbitrary = 4,
-
+        //卖一价
         Sell1 = 10,
         Sell2,
         Sell3,
@@ -29,6 +29,7 @@ namespace Model.config
         Sell8,
         Sell9,
         Sell10,
+        //买一价
         Buy1 = 20,
         Buy2,
         Buy3,
@@ -56,10 +57,10 @@ namespace Model.config
         ResidualMarketWithdrawal = '3',
 
         //FOK限价（上交所股票期权）
-        FOKLimit = '4',
+        FOKLimitSH = '4',
 
         //FOK市价（上交所股票期权）
-        FOKMarket = '5',
+        FOKMarketSH = '5',
 
         //五档即成剩撤（上交所市价）
         FifthIsLeftOffSH = 'a',
@@ -95,7 +96,7 @@ namespace Model.config
         FifthIsLeftOffCFX = 'L',
 
         //五档即成剩转（中金所五档市价转限价）
-        FifthIsLeftOffCFX = 'M',
+        FifthIsLeftTurnCFX = 'M',
 
         //最优一档即成剩撤（中金所最优价）
         BestOneLeftOff = 'N',
