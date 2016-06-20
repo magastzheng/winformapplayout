@@ -917,6 +917,7 @@ namespace TradingSystem.View
                     EntrustDirection = EntrustDirectionUtil.GetEntrustDirection(secuItem.EntrustDirection),
                     EntrustStatus = EntrustStatus.SubmitToDB,
                     PriceType = priceType,
+                    EntrustDate = DateTime.Now,
                 };
 
                 int ret = _entrustsecudao.Create(entrustSecurityItem);

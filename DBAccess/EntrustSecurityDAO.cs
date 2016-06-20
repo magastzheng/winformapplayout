@@ -53,6 +53,7 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@EntrustDirection", System.Data.DbType.Int32, (int)item.EntrustDirection);
             _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)item.EntrustStatus);
             _dbHelper.AddInParameter(dbCommand, "@PriceType", System.Data.DbType.Int32, (int)item.PriceType);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustDate", System.Data.DbType.DateTime, item.EntrustDate);
             _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, DateTime.Now);
             
             return _dbHelper.ExecuteNonQuery(dbCommand);
@@ -69,6 +70,7 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@EntrustDirection", System.Data.DbType.Int32, (int)item.EntrustDirection);
             _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)item.EntrustStatus);
             _dbHelper.AddInParameter(dbCommand, "@PriceType", System.Data.DbType.Int32, (int)item.PriceType);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustDate", System.Data.DbType.DateTime, item.EntrustDate);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
@@ -178,6 +180,11 @@ namespace DBAccess
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
 
+                    if (reader["EntrustDate"] != null && reader["EntrustDate"] != DBNull.Value)
+                    {
+                        item.EntrustDate = (DateTime)reader["EntrustDate"];
+                    }
+
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {
                         item.CreatedDate = (DateTime)reader["CreatedDate"];
@@ -221,6 +228,11 @@ namespace DBAccess
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
 
+                    if (reader["EntrustDate"] != null && reader["EntrustDate"] != DBNull.Value)
+                    {
+                        item.EntrustDate = (DateTime)reader["EntrustDate"];
+                    }
+
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {
                         item.CreatedDate = (DateTime)reader["CreatedDate"];
@@ -263,6 +275,11 @@ namespace DBAccess
                     item.PriceType = (PriceType)reader["PriceType"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
+
+                    if (reader["EntrustDate"] != null && reader["EntrustDate"] != DBNull.Value)
+                    {
+                        item.EntrustDate = (DateTime)reader["EntrustDate"];
+                    }
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {
@@ -309,6 +326,11 @@ namespace DBAccess
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
 
+                    if (reader["EntrustDate"] != null && reader["EntrustDate"] != DBNull.Value)
+                    {
+                        item.EntrustDate = (DateTime)reader["EntrustDate"];
+                    }
+
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {
                         item.CreatedDate = (DateTime)reader["CreatedDate"];
@@ -352,6 +374,11 @@ namespace DBAccess
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
 
+                    if (reader["EntrustDate"] != null && reader["EntrustDate"] != DBNull.Value)
+                    {
+                        item.EntrustDate = (DateTime)reader["EntrustDate"];
+                    }
+
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {
                         item.CreatedDate = (DateTime)reader["CreatedDate"];
@@ -394,6 +421,11 @@ namespace DBAccess
                     item.PriceType = (PriceType)reader["PriceType"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
+
+                    if (reader["EntrustDate"] != null && reader["EntrustDate"] != DBNull.Value)
+                    {
+                        item.EntrustDate = (DateTime)reader["EntrustDate"];
+                    }
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {

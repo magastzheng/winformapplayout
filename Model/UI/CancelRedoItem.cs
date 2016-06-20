@@ -81,7 +81,13 @@ namespace Model.UI
         public double PriceBias { get; set; }
 
         [BindingAttribute("releasedate")]
-        public string ReleaseDate { get; set; }
+        public string ReleaseDate
+        {
+            get
+            {
+                return EntrustDate.ToString("yyyyMMdd");
+            }
+        }
 
         [BindingAttribute("firstdeal")]
         public int FirstDeal { get; set; }
@@ -90,7 +96,13 @@ namespace Model.UI
         public double DealMoney { get; set; }
 
         [BindingAttribute("entrusttime")]
-        public string EntrustTime { get; set; }
+        public string EntrustTime
+        {
+            get
+            {
+                return EntrustDate.ToString("hhmmss");
+            }
+        }
 
         [BindingAttribute("dealtimes")]
         public int DealTimes { get; set; }
@@ -116,5 +128,7 @@ namespace Model.UI
         public string ExchangeCode { get; set; }
 
         public SecurityType SecuType { get; set; }
+
+        public DateTime EntrustDate { get; set; }
     }
 }

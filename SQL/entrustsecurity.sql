@@ -16,7 +16,9 @@ create table entrustsecurity(
 	,PriceType			int			 -- 
 	,DealStatus			int			 -- 1 - 未成交， 2 - 部分成交， 3 - 已完成
 	,DealAmount			int			 -- 成交数量
-	--,BatchId			int			 --委托后返回的批号ID
+	--,BatchId			int			 -- 委托后返回的批号ID
+	,DealTimes			int			 -- 成交次数
+	,EntrustDate		datetime	 -- 委托时间
 	,CreatedDate		datetime
 	,ModifiedDate		datetime
 )
@@ -39,6 +41,7 @@ create proc procEntrustSecurityInsert(
 	,@EntrustDirection	int
 	,@EntrustStatus		int
 	,@PriceType			int
+	,@EntrustDate		datetime
 	,@CreatedDate		datetime
 )
 as
@@ -55,6 +58,8 @@ begin
 		,PriceType
 		,DealStatus
 		,DealAmount
+		,DealTimes
+		,EntrustDate
 		,CreatedDate
 	)values(
 		@SubmitId
@@ -68,6 +73,8 @@ begin
 		,@PriceType
 		,1					--未成交
 		,0					--成交量初始为0
+		,0					--成交次数0
+		,@EntrustDate
 		,@CreatedDate	
 	)		
 end
@@ -86,6 +93,7 @@ create proc procEntrustSecurityUpdate(
 	,@EntrustDirection	int
 	,@EntrustStatus		int
 	,@PriceType			int
+	,@EntrustDate		datetime
 	,@ModifiedDate		datetime
 )
 as
@@ -96,6 +104,7 @@ begin
 		,EntrustDirection	= @EntrustDirection
 		,EntrustStatus		= @EntrustStatus
 		,PriceType			= @PriceType
+		,EntrustDate		= @EntrustDate
 		,ModifiedDate		= @ModifiedDate
 	where SubmitId=@SubmitId
 		and CommandId=@CommandId 
@@ -159,9 +168,18 @@ create proc procEntrustSecurityUpdateDeal(
 as
 begin
 	--成交量?
+	declare @DealTimes int
+	set @DealTimes=(select DealTimes 
+					from entrustsecurity
+					where SubmitId=@SubmitId
+					and CommandId=@CommandId 
+					and SecuCode=@SecuCode
+					)
+
 	update entrustsecurity
 	set DealStatus		= @DealStatus
 		,DealAmount		= @DealAmount
+		,DealTimes		= @DealTimes+1
 		,ModifiedDate	= @ModifiedDate
 	where SubmitId=@SubmitId
 		and CommandId=@CommandId 
@@ -275,6 +293,8 @@ begin
 		,PriceType
 		,DealStatus
 		,DealAmount
+		,DealTimes
+		,EntrustDate
 		,CreatedDate
 		,ModifiedDate
 	from entrustsecurity
@@ -302,6 +322,8 @@ begin
 		,PriceType
 		,DealStatus
 		,DealAmount
+		,DealTimes
+		,EntrustDate
 		,CreatedDate
 		,ModifiedDate
 	from entrustsecurity
@@ -327,6 +349,8 @@ begin
 		,PriceType
 		,DealStatus
 		,DealAmount
+		,DealTimes
+		,EntrustDate
 		,CreatedDate
 		,ModifiedDate
 	from entrustsecurity
@@ -355,6 +379,8 @@ begin
 		,PriceType
 		,DealStatus
 		,DealAmount
+		,DealTimes
+		,EntrustDate
 		,CreatedDate
 		,ModifiedDate
 	from entrustsecurity
@@ -385,6 +411,8 @@ begin
 		,PriceType
 		,DealStatus
 		,DealAmount
+		,DealTimes
+		,EntrustDate
 		,CreatedDate
 		,ModifiedDate
 	from entrustsecurity
@@ -414,6 +442,8 @@ begin
 		,PriceType
 		,DealStatus
 		,DealAmount
+		,DealTimes
+		,EntrustDate
 		,CreatedDate
 		,ModifiedDate
 	from entrustsecurity

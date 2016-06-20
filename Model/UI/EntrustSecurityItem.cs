@@ -33,6 +33,10 @@ namespace Model.UI
 
         public int DealAmount { get; set; }
 
+        public int DealTimes { get; set; }
+
+        public DateTime EntrustDate { get; set; }
+
         public DateTime CreatedDate { get; set; }
 
         public DateTime ModifiedDate { get; set; }

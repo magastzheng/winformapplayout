@@ -131,6 +131,11 @@ namespace TradingSystem.Dialog
                             SecuType = p.SecuType,
                             EntrustNo = p.SubmitId,
                             CommandPrice = p.PriceType.ToString(),
+                            ReportPrice = p.EntrustPrice,
+                            LeftAmount = p.EntrustAmount - p.DealAmount,
+                            ReportAmount = p.EntrustAmount,
+                            DealAmount = p.DealAmount,
+                            EntrustDate = p.EntrustDate,
                         };
 
                         _secuDataSource.Add(cancelRedoItem);
