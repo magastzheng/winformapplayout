@@ -28,6 +28,31 @@ namespace DBAccess
         
         }
 
+        public int Create(StockTemplate template)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
+            _dbHelper.AddInParameter(dbCommand, "@TemplateName", System.Data.DbType.String, template.TemplateName);
+            //_dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, status);
+            _dbHelper.AddInParameter(dbCommand, "@WeightType", System.Data.DbType.Int32, template.WeightType);
+            _dbHelper.AddInParameter(dbCommand, "@ReplaceType", System.Data.DbType.Int32, template.ReplaceType);
+            _dbHelper.AddInParameter(dbCommand, "@FuturesCopies", System.Data.DbType.Int32, template.FutureCopies);
+            _dbHelper.AddInParameter(dbCommand, "@MarketCapOpt", System.Data.DbType.Decimal, template.MarketCapOpt);
+            _dbHelper.AddInParameter(dbCommand, "@BenchmarkId", System.Data.DbType.String, template.Benchmark);
+            _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, DateTime.Now);
+            _dbHelper.AddInParameter(dbCommand, "@CreatedUserId", System.Data.DbType.Int32, template.UserId);
+
+            _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
+
+            int ret = _dbHelper.ExecuteNonQuery(dbCommand);
+            int templateId = -1;
+            if (ret > 0)
+            {
+                templateId = (int)dbCommand.Parameters["@return"].Value;
+            }
+
+            return templateId;
+        }
+
         public int Create(string templateName, int weightType, int replaceType, int futuresCopies, double marketCapOpt, string benchmarkId, int userId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
@@ -82,14 +107,8 @@ namespace DBAccess
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Delete);
             _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, templateNo);
-            
-            int newid = -1;
-            int ret = _dbHelper.ExecuteNonQuery(dbCommand);
-            if (ret > 0)
-            {
-                newid = (int)dbCommand.Parameters["@return"].Value;
-            }
-            return newid;
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
         public List<StockTemplate> Get(int templateId)

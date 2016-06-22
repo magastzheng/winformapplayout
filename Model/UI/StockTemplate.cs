@@ -38,5 +38,7 @@ namespace Model.UI
 
         [BindingAttribute("modifieddate")]
         public DateTime ModifiedDate { get; set; }
+
+        public int UserId { get; set; }
     }
 }

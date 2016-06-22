@@ -18,6 +18,7 @@ using System.Text;
 using System.Windows.Forms;
 using Util;
 using System.Linq;
+using BLL.Template;
 
 namespace TradingSystem.View
 {
@@ -29,7 +30,10 @@ namespace TradingSystem.View
             Update = 1,
         }
 
+        private const string MsgTitleWarn = "警告";
         private const string MsgDeleteStock = "确定要从模板[{0}-{1}]中删除选择的[{2}]支证券吗?";
+        private const string MsgSaveStock = "现货模板尚未保存，确定要放弃修改吗？";
+        private const string MsgDeleteTemp = "该现货模板还有占用的监控单元，不能注销。";
 
         private GridConfig _gridConfig = null;
         private const string GridTemplate = "stocktemplate";
@@ -38,11 +42,15 @@ namespace TradingSystem.View
         private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
         private TemplateStockDAO _stockdbdao = new TemplateStockDAO();
         private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
+        private TemplateBLL _templateBLL = new TemplateBLL();
         
         private SortableBindingList<StockTemplate> _tempDataSource = new SortableBindingList<StockTemplate>(new List<StockTemplate>());
         private SortableBindingList<TemplateStock> _spotDataSource = new SortableBindingList<TemplateStock>(new List<TemplateStock>());
         private List<SecurityItem> _securityInfoList = new List<SecurityItem>();
         private List<Benchmark> _benchmarkList = new List<Benchmark>();
+
+        private bool _isTempStockChanged = false;
+        private int _currentTemplateIndex = -1;
 
         public SpotTemplateForm()
             :base()
@@ -55,8 +63,12 @@ namespace TradingSystem.View
         {
             _gridConfig = gridConfig;
 
-            this.tsbAdd.Click += new System.EventHandler(this.Button_Add_Click);
-            this.tsbModify.Click += new System.EventHandler(this.Button_Modify_Click);
+            this.tsbSave.Enabled = false;
+
+            this.tsbAdd.Click += new System.EventHandler(this.ToolStripButton_AddTemplate_Click);
+            this.tsbModify.Click += new System.EventHandler(this.ToolStripButton_ModifyTemplate_Click);
+            this.tsbCopy.Click += new EventHandler(this.ToolStripButton_CopyTemplate_Click);
+            this.tsbDelete.Click += new EventHandler(this.ToolStripButton_DeleteTemplate_Click);
             this.tsbImport.Click += new System.EventHandler(this.ToolStripButton_Import_Click);
             this.tsbAddStock.Click += new System.EventHandler(ToolStripButton_AddStock_Click);
             this.tsbModifyStock.Click += new System.EventHandler(ToolStripButton_ModifyStock_Click);
@@ -65,10 +77,16 @@ namespace TradingSystem.View
             this.tsbCalcAmount.Click += new EventHandler(ToolStripButton_CalcAmount_Click);
             this.tsbExport.Click += new EventHandler(ToolStripButton_Export_Click);
 
-            tempGridView.ClickRow += new ClickRowHandler(GridView_Template_ClickRow);
+            tempGridView.MouseClickRow += new ClickRowHandler(GridView_Template_MouseClickRow);
 
             this.LoadControl += new FormLoadHandler(Form_LoadControl);
             this.LoadData += new FormLoadHandler(Form_LoadData);
+        }
+
+        private void SwitchTemplateStockSave(bool isEnable)
+        {
+            this._isTempStockChanged = isEnable;
+            this.tsbSave.Enabled = this._isTempStockChanged;
         }
 
         #region load control
@@ -116,6 +134,8 @@ namespace TradingSystem.View
             _securityInfoList = _secudbdao.Get(SecurityType.All);
             _benchmarkList = _tempdbdao.GetBenchmark();
 
+            SetCurrentTemplate();
+
             return true;
         }
 
@@ -139,17 +159,33 @@ namespace TradingSystem.View
 
         #region
 
-        private void GridView_Template_ClickRow(object sender, int rowIndex)
+        private void GridView_Template_MouseClickRow(object sender, int rowIndex)
         {
             //
             if (rowIndex < 0 || rowIndex >= _tempDataSource.Count)
                 return;
+
+            //如果之前的现货模板有改动，提示保存
+            if (this._isTempStockChanged)
+            {
+                if (MessageBox.Show(this, MsgSaveStock, MsgTitleWarn, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
+                {
+                    return;
+                }
+                else
+                {
+                    SwitchTemplateStockSave(false);
+                }
+            }
+
             var template = _tempDataSource[rowIndex];
 
             if (template != null && template.TemplateId > 0)
             {
                 LoadTemplateStock(template.TemplateId);
             }
+
+            SetCurrentTemplate();
         }
 
 
@@ -157,7 +193,7 @@ namespace TradingSystem.View
 
         #region button click
 
-        private void Button_Add_Click(object sender, System.EventArgs e)
+        private void ToolStripButton_AddTemplate_Click(object sender, System.EventArgs e)
         {
             TemplateDialog dialog = new TemplateDialog();
             dialog.SaveData += new FormLoadHandler(Dialog_NewTemplate);
@@ -178,7 +214,7 @@ namespace TradingSystem.View
             }
         }
 
-        private void Button_Modify_Click(object sender, System.EventArgs e)
+        private void ToolStripButton_ModifyTemplate_Click(object sender, System.EventArgs e)
         {
             StockTemplate stockTemplate = GetSelectTemplate();
             if (stockTemplate == null)
@@ -205,15 +241,74 @@ namespace TradingSystem.View
             }
         }
 
+        private void ToolStripButton_CopyTemplate_Click(object sender, EventArgs e)
+        {
+            StockTemplate template = GetSelectTemplate();
+            if (template == null)
+                return;
+
+            string templateName = string.Format("copy_{0}", template.TemplateName);
+            StockTemplate temp = new StockTemplate
+            {
+                TemplateName = templateName,
+                FutureCopies = template.FutureCopies,
+                MarketCapOpt = template.MarketCapOpt,
+                ReplaceType = template.ReplaceType,
+                WeightType = template.WeightType,
+                Benchmark = template.Benchmark,
+                UserId = template.UserId,
+                Status = template.Status,
+                CreatedDate = DateTime.Now
+            };
+
+            StockTemplate newtemp = _templateBLL.CreateTemplate(temp);
+            if (newtemp.TemplateId > 0)
+            {
+                _tempDataSource.Add(newtemp);
+            }
+
+            this.tempGridView.Invalidate();
+        }
+
+        private void ToolStripButton_DeleteTemplate_Click(object sender, EventArgs e)
+        {
+            StockTemplate template = GetSelectTemplate();
+            if (template == null)
+                return;
+
+            int ret = _templateBLL.DeleteTemplate(template);
+            if (ret == 1)
+            {
+                //TODO:  注销成功
+            }
+            else
+            {
+                MessageBox.Show(this, MsgDeleteTemp, MsgTitleWarn, MessageBoxButtons.OK);
+            }
+        }
+
         #endregion
 
         #region Template change method
 
+        private void SetCurrentTemplate()
+        { 
+            if (tempGridView.CurrentRow == null)
+                return;
+            int rowIndex = tempGridView.CurrentRow.Index;
+            if (rowIndex < 0 && rowIndex >= _tempDataSource.Count)
+            {
+                return;
+            }
+
+            this._currentTemplateIndex = rowIndex;
+        }
+
         private StockTemplate GetSelectTemplate()
         {
-            if (tempGridView.CurrentRow == null)
+            if (this._currentTemplateIndex < 0)
                 return null;
-            int rowIndex = tempGridView.CurrentRow.Index;
+            int rowIndex = this._currentTemplateIndex;
             if (rowIndex < 0 && rowIndex >= _tempDataSource.Count)
             {
                 return null;
@@ -302,7 +397,11 @@ namespace TradingSystem.View
                 ioDialog.Close();
                 ioDialog.Dispose();
 
-                ImportFromExcel(importType);
+                bool ret = ImportFromExcel(importType);
+                if (ret)
+                {
+                    SwitchTemplateStockSave(true);
+                }
             }
             else
             {
@@ -315,41 +414,19 @@ namespace TradingSystem.View
         {
             StockTemplate template = GetSelectTemplate();
             if (template == null)
-                return;
-
-            List<TemplateStock> originStocks = _stockdbdao.Get(template.TemplateId);
-            if (originStocks == null)
-                return;
-
-            foreach (var stock in _spotDataSource)
             {
-                var findItem = originStocks.Find(p => p.SecuCode.Equals(stock.SecuCode));
-
-                //Update if there is existed
-                if (findItem != null && !string.IsNullOrEmpty(findItem.SecuCode))
-                {
-                    string newid = _stockdbdao.Update(stock);
-                    originStocks.Remove(findItem);
-                }
-                else
-                {
-                    string newid = _stockdbdao.Create(stock);
-                    if (string.IsNullOrEmpty(newid))
-                    {
-                        //TODO: popup the error message
-                    }
-                }
+                return;
             }
 
-            if (originStocks.Count > 0)
+            if (_spotDataSource.Count <= 0)
             {
-                originStocks.ForEach(p => {
-                    string retid = _stockdbdao.Delete(p.TemplateNo, p.SecuCode);
-                    if (string.IsNullOrEmpty(retid))
-                    { 
-                        //TODO: fail to remove the template stock
-                    }
-                });
+                return;
+            }
+
+            int ret = _stockdbdao.Replace(template.TemplateId, _spotDataSource.ToList());
+            if (ret > 0)
+            {
+                SwitchTemplateStockSave(false);
             }
         }
 
@@ -378,17 +455,11 @@ namespace TradingSystem.View
                 if(rowIndex >= 0 && rowIndex < _spotDataSource.Count)
                 {
                     TemplateStock stock = _spotDataSource[rowIndex];
-                    string newid = _stockdbdao.Delete(template.TemplateId, stock.SecuCode);
-                    if (string.IsNullOrEmpty(newid))
-                    {
-                        //TODO: popup the error message
-                    }
-                    else
-                    {
-                        _spotDataSource.Remove(stock);
-                    }
+                    _spotDataSource.Remove(stock);
                 }
             }
+
+            SwitchTemplateStockSave(true);
         }
 
         private void ToolStripButton_AddStock_Click(object sender, EventArgs e)
@@ -521,6 +592,8 @@ namespace TradingSystem.View
                 var template = _tempDataSource.Single(p => p.TemplateId == stock.TemplateNo);
                 CalculateAmount(template);
 
+                SwitchTemplateStockSave(true);
+
                 this.secuGridView.Invalidate();
             }
 
@@ -581,6 +654,26 @@ namespace TradingSystem.View
 
                     var secuItem = _securityInfoList.Find(p => p.SecuCode.Equals(stock.SecuCode) && p.SecuType == SecurityType.Stock);
                     secuList.Add(secuItem);
+                }
+            }
+
+            double totalWeight = weights.Sum();
+            double minusResult = 100.0 - totalWeight;
+            if ( minusResult > 0.001 )
+            {
+                int[] origAmounts = new int[_spotDataSource.Count];
+                for (int i = 0, count = _spotDataSource.Count; i < count; i++)
+                {
+                    var stock = _spotDataSource[i];
+                    origAmounts[i] = stock.Amount;
+                }
+
+                weights = CalcUtil.CalcStockWeightByAmount(origAmounts);
+                for (int i = 0, count = weights.Length; i < count; i++)
+                {
+                    double weight = weights[i];
+                    var stock = _spotDataSource[i];
+                    stock.SettingWeight = 100 * weight;
                 }
             }
 

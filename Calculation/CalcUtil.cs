@@ -129,5 +129,22 @@ namespace Calculation
 
             return amounts;
         }
+
+        /// <summary>
+        /// 通过数量计算权重
+        /// </summary>
+        /// <param name="amounts"></param>
+        /// <returns>返回现货个股浮点型权重，不进行百分比处理</returns>
+        public static double[] CalcStockWeightByAmount(int[] amounts)
+        {
+            double[] weights = new double[amounts.Length];
+            double total = (double)amounts.Sum();
+            for (int i = 0, count = amounts.Length; i < count; i++)
+            {
+                weights[i] = amounts[i] / total;
+            }
+
+            return weights;
+        }
     }
 }

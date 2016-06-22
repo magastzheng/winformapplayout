@@ -206,5 +206,20 @@ namespace CalculationTest
                 Console.WriteLine(a);
             }
         }
+
+        [TestMethod]
+        public void Test_CalcStockWeightByAmount()
+        {
+            int[] amounts = new int[10]{2000, 1500, 4200, 800, 900, 3100, 4500, 1500, 500, 1000};
+
+            var weights = CalcUtil.CalcStockWeightByAmount(amounts);
+            var total = weights.Sum();
+
+            Console.WriteLine(total);
+            foreach (var a in weights)
+            {
+                Console.WriteLine(a);
+            }
+        }
     }
 }

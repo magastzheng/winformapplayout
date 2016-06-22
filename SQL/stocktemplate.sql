@@ -200,8 +200,23 @@ create proc procTemplateDelete(
 )
 as
 begin
-	delete from stocktemplate
-	where TemplateId=@TemplateId
+	--如果该模板被监控单元使用，不能删除
+	declare @UsedTotal int
+	set @UsedTotal=(select count(StockTemplateId) from monitorunit where StockTemplateId=@TemplateId)
+	if @UsedTotal > 0
+	begin
+		return -1
+	end
+	else
+	begin
+		delete from stocktemplate
+		where TemplateId=@TemplateId
+
+		delete from templatestock
+		where TemplateId=@TemplateId
+
+		return 1
+	end
 end
 
 ---=========================stocktemplate end======================

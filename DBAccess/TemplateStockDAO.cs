@@ -3,6 +3,7 @@ using Model.UI;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -135,8 +136,7 @@ namespace DBAccess
         public int Replace(int templateNo, List<TemplateStock> tempStocks)
         {
             var dbCommand = _dbHelper.GetCommand();
-
-            _dbHelper.Open(dbCommand);
+            _dbHelper.Open(_dbHelper.Connection);
 
             //use transaction to execute
             DbTransaction transaction = dbCommand.Connection.BeginTransaction();
@@ -148,14 +148,13 @@ namespace DBAccess
                 //delete all old one
                 dbCommand.CommandText = SP_DeleteAll;
                 _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, templateNo);
-                ret = _dbHelper.ExecuteNonQuery(dbCommand);
-                if (ret > 0)
+                ret = dbCommand.ExecuteNonQuery();
+                if (ret >= 0)
                 {
                     foreach (var tempStock in tempStocks)
                     {
-                        dbCommand.CommandText = SP_New;
                         dbCommand.Parameters.Clear();
-
+                        dbCommand.CommandText = SP_Modify;
                         _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, tempStock.TemplateNo);
                         _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, tempStock.SecuCode);
                         _dbHelper.AddInParameter(dbCommand, "@Amount", System.Data.DbType.Int32, tempStock.Amount);
@@ -166,7 +165,7 @@ namespace DBAccess
                         _dbHelper.AddOutParameter(dbCommand, "@ReturnValue", System.Data.DbType.String, 20);
 
                         //string newid = string.Empty;
-                        ret = _dbHelper.ExecuteNonQuery(dbCommand);
+                        ret = dbCommand.ExecuteNonQuery();
                     }
                 }
 
@@ -177,6 +176,7 @@ namespace DBAccess
                 transaction.Rollback();
                 //TODO: add log
                 logger.Error(ex);
+                ret = -1;
                 throw;
             }
             finally
