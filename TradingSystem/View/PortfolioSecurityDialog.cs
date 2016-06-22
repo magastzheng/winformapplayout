@@ -1,4 +1,6 @@
 ﻿using Controls.Entity;
+using DBAccess;
+using Model.SecurityInfo;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -19,6 +21,11 @@ namespace TradingSystem.View
     public partial class PortfolioSecurityDialog : Forms.BaseFixedForm
     {
         private int _templateId = -1;
+        private IList<AutoItem> _dataSource = new List<AutoItem>();
+
+        private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
+        private List<SecurityItem> _securityInfoList = new List<SecurityItem>();
+
         public DialogType DialogType
         {
             set;
@@ -96,18 +103,18 @@ namespace TradingSystem.View
             }
 
             acSecurity.SetDropdownList(this.lbDropdown);
-            IList<AutoItem> dataSource = new List<AutoItem>();
-            //foreach (var fcItem in itemList)
-            //{
-            //    AutoItem autoItem = new AutoItem
-            //    {
-            //        Id = fcItem.Code,
-            //        Name = fcItem.Code
-            //    };
+            _securityInfoList = _secudbdao.Get(SecurityType.All);
+            foreach (var secuInfo in _securityInfoList)
+            { 
+                AutoItem autoItem = new AutoItem
+                {
+                    Id = secuInfo.SecuCode,
+                    Name = secuInfo.SecuName,
+                };
 
-            //    dataSource.Add(autoItem);
-            //}
-            acSecurity.AutoDataSource = dataSource;
+                _dataSource.Add(autoItem);
+            }
+            acSecurity.AutoDataSource = _dataSource;
 
             return true;
         }

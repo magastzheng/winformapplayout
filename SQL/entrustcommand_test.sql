@@ -20,3 +20,12 @@ exec procEntrustCommandSelectByStatus 0
 
 select * from entrustsecurity
 where CommandId=1
+order by SecuCode
+
+exec procTradingCommandSecuritySelect 1
+
+select * from tradingcommandsecurity
+where CommandId=1
+order by SecuCode
+
+truncate table tradingcommandsecurity

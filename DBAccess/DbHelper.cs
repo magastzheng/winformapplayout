@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,11 @@ namespace DBAccess
         private static string dbProviderName = ConfigurationManager.AppSettings["DbHelperProvider"];
         private static string dbConnectionString = ConfigurationManager.AppSettings["DbHelperConnectionString"];
         private DbConnection connection;
+
+        public DbConnection Connection
+        {
+            get { return this.connection; }
+        }
 
         public DbHelper()
         {
@@ -36,6 +42,11 @@ namespace DBAccess
             DbConnection dbConn = dbFactory.CreateConnection();
             dbConn.ConnectionString = dbConnectionString;
             return dbConn;
+        }
+
+        public DbCommand GetCommand()
+        {
+            return this.connection.CreateCommand();
         }
 
         public DbCommand GetStoredProcCommand(string storedProcedure)
@@ -136,6 +147,30 @@ namespace DBAccess
         }
 
         #endregion
+
+
+        //#region 事务
+
+        //public int ExecuteTrans(List<DbCommand> dbCommands)
+        //{
+        //    Open(this.connection);
+
+        //    //SqlTransaction 
+        //    DbTransaction trans = this.connection.BeginTransaction();
+
+        //    try
+        //    {
+        //        foreach (var dbcommand in dbCommands)
+        //        {
+        //            dbcommand.Transaction = trans;
+        //            dbcommand.ExecuteNonQuery();
+        //        }
+
+        //        trans.Commit();
+        //    }
+        //}
+    
+        //#endregion
 
         #region 打开和关闭
 

@@ -63,6 +63,7 @@ namespace TradingSystem.View
             this.tsbDeleteStock.Click += new System.EventHandler(ToolStripButton_DeleteStock_Click);
             this.tsbSave.Click += new System.EventHandler(ToolStripButton_Save_Click);
             this.tsbCalcAmount.Click += new EventHandler(ToolStripButton_CalcAmount_Click);
+            this.tsbExport.Click += new EventHandler(ToolStripButton_Export_Click);
 
             tempGridView.ClickRow += new ClickRowHandler(GridView_Template_ClickRow);
 
@@ -328,17 +329,27 @@ namespace TradingSystem.View
                 if (findItem != null && !string.IsNullOrEmpty(findItem.SecuCode))
                 {
                     string newid = _stockdbdao.Update(stock);
+                    originStocks.Remove(findItem);
                 }
                 else
                 {
                     string newid = _stockdbdao.Create(stock);
+                    if (string.IsNullOrEmpty(newid))
+                    {
+                        //TODO: popup the error message
+                    }
                 }
-                //stock.TemplateNo = template.TemplateId;
-                //string newid = _stockdbdao.Update(stock);
-                //if (string.IsNullOrEmpty(newid))
-                //{
-                //    //TODO: popup the error message
-                //}
+            }
+
+            if (originStocks.Count > 0)
+            {
+                originStocks.ForEach(p => {
+                    string retid = _stockdbdao.Delete(p.TemplateNo, p.SecuCode);
+                    if (string.IsNullOrEmpty(retid))
+                    { 
+                        //TODO: fail to remove the template stock
+                    }
+                });
             }
         }
 
@@ -485,29 +496,20 @@ namespace TradingSystem.View
                             }
                             else
                             {
-                                string newid = _stockdbdao.Create(stock);
-                                if (!string.IsNullOrEmpty(newid))
-                                {
-                                    _spotDataSource.Add(stock);
-                                }
-
+                                _spotDataSource.Add(stock);
                                 ret = true;
                             }
                         }
                         break;
                     case DialogType.Modify:
                         {
-                            string newid = _stockdbdao.Update(stock);
-                            if (!string.IsNullOrEmpty(newid))
+                            for (int i = 0, count = _spotDataSource.Count; i < count; i++)
                             {
-                                for (int i = 0, count = _spotDataSource.Count; i < count; i++)
+                                if (stock.SecuCode.Equals(_spotDataSource[i].SecuCode))
                                 {
-                                    if (stock.SecuCode.Equals(_spotDataSource[i].SecuCode))
-                                    {
-                                        ret = true;
-                                        _spotDataSource[i] = stock;
-                                        break;
-                                    }
+                                    ret = true;
+                                    _spotDataSource[i] = stock;
+                                    break;
                                 }
                             }
                         }
@@ -515,6 +517,11 @@ namespace TradingSystem.View
                     default:
                         break;
                 }
+
+                var template = _tempDataSource.Single(p => p.TemplateId == stock.TemplateNo);
+                CalculateAmount(template);
+
+                this.secuGridView.Invalidate();
             }
 
             return ret;
@@ -524,8 +531,38 @@ namespace TradingSystem.View
         {
             StockTemplate template = GetSelectTemplate();
             if (template == null)
+            {
                 return;
+            }
 
+            if (_spotDataSource == null || _spotDataSource.Count == 0)
+            {
+                return;
+            }
+
+            var invalidSecuItem = _spotDataSource.Where(p => p.SettingWeight <= 0.0001 || p.Amount == 0).ToList();
+            if (invalidSecuItem != null && invalidSecuItem.Count() > 0)
+            {
+                if (MessageBox.Show(this, "存在权重设置为零的证券，如果继续将删除这些证券!", "警告", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
+                {
+                    return;
+                }
+                else
+                {
+                    foreach (var item in invalidSecuItem)
+                    {
+                        _spotDataSource.Remove(item);
+                    }
+                }
+            }
+
+            CalculateAmount(template);
+
+            this.secuGridView.Invalidate();
+        }
+
+        private void CalculateAmount(StockTemplate template)
+        {
             //_spotDataSource
             List<SecurityItem> secuList = new List<SecurityItem>();
             var benchmarkItem = _securityInfoList.Find(p => p.SecuCode.Equals(template.Benchmark) && p.SecuType == SecurityType.Index);
@@ -537,10 +574,10 @@ namespace TradingSystem.View
             double[] weights = new double[_spotDataSource.Count];
             if (_spotDataSource != null)
             {
-                for(int i = 0, count = _spotDataSource.Count; i < count; i++)
+                for (int i = 0, count = _spotDataSource.Count; i < count; i++)
                 {
                     var stock = _spotDataSource[i];
-                    weights[i] = stock.SettingWeight;
+                    weights[i] = stock.SettingWeight / 100;
 
                     var secuItem = _securityInfoList.Find(p => p.SecuCode.Equals(stock.SecuCode) && p.SecuType == SecurityType.Stock);
                     secuList.Add(secuItem);
@@ -659,20 +696,23 @@ namespace TradingSystem.View
                 return stockList;
 
             //var secuInfoList = _secudbdao.Get(2);
+            //用于获取二维表表头名字与Excel中表头进行匹配，获取Excel DataTable中列的位置
             HSGrid hsGrid = _gridConfig.GetGid(GridStock);
-            var columns = hsGrid.Columns;
+            var gridColumns = hsGrid.Columns;
+
+            //标签与属性名映射表
             var attFieldMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(TemplateStock));
             
-            Dictionary<string, int> fieldColumnIndex = new Dictionary<string, int>();
-            
-            for (int i = 0, count = columns.Count; i < count; i++)
+            //实体类标签名与Excel DataTable DataRow.Columns中列索引映射表
+            Dictionary<string, int> fieldNameColumnIndexMap = new Dictionary<string, int>();
+            for (int i = 0, count = gridColumns.Count; i < count; i++)
             {
-                var column = columns[i];
+                var column = gridColumns[i];
                 if (excelData.ColumnIndex.ContainsKey(column.Text))
                 {
-                    if (!fieldColumnIndex.ContainsKey(column.Name))
+                    if (!fieldNameColumnIndexMap.ContainsKey(column.Name))
                     {
-                        fieldColumnIndex.Add(column.Name, excelData.ColumnIndex[column.Text]);
+                        fieldNameColumnIndexMap.Add(column.Name, excelData.ColumnIndex[column.Text]);
                     }
                 }
             }
@@ -682,13 +722,13 @@ namespace TradingSystem.View
                 TemplateStock stock = new TemplateStock();
                 stock.TemplateNo = template.TemplateId;
 
-                foreach (var kv in fieldColumnIndex)
+                foreach (var kv in fieldNameColumnIndexMap)
                 {
-                    if (!attFieldMap.ContainsKey(kv.Key) || !fieldColumnIndex.ContainsKey(kv.Key))
+                    if (!attFieldMap.ContainsKey(kv.Key) || !fieldNameColumnIndexMap.ContainsKey(kv.Key))
                         continue;
 
                     string fieldName = attFieldMap[kv.Key];
-                    int valIndex = fieldColumnIndex[kv.Key];
+                    int valIndex = fieldNameColumnIndexMap[kv.Key];
 
                     var field = stock.GetType().GetProperty(fieldName);
                     if (field == null)
@@ -727,5 +767,123 @@ namespace TradingSystem.View
         }
 
         #endregion
+
+        private void ToolStripButton_Export_Click(object sender, EventArgs e)
+        {
+            var template = GetSelectTemplate();
+            if (template == null)
+            {
+                return;
+            }
+
+            SaveFileDialog fileDialog = new SaveFileDialog();
+            //设置文件类型
+            fileDialog.Filter = "Excel文档(*.xls)|*.xls";
+            //设置默认文件类型显示顺序
+            fileDialog.FilterIndex = 1;
+            //保存对话框是否记忆上次打开的目录
+            fileDialog.RestoreDirectory = true;
+            //设置默认文件名
+            fileDialog.FileName = template.TemplateName;
+            if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string filePath = Path.GetDirectoryName(fileDialog.FileName);
+                string extension = Path.GetExtension(fileDialog.FileName);
+
+                var tempStocks = _spotDataSource.Where(p => p.TemplateNo == template.TemplateId).ToList();
+                var table = GridToExecl(tempStocks);
+                ExcelUtil.CreateExcel(fileDialog.FileName, table);
+            }
+        }
+
+        private Model.Data.DataTable GridToExecl(List<TemplateStock> tempStocks)
+        {
+            HSGrid hsGrid = _gridConfig.GetGid(GridStock);
+            var gridColumns = hsGrid.Columns;
+
+            var sheetConfig = ConfigManager.Instance.GetImportConfig().GetSheet("stocktemplate");
+            Dictionary<string, DataColumnHeader> colHeadMap = new Dictionary<string, DataColumnHeader>();
+            foreach (var column in sheetConfig.Columns)
+            {
+                //colHeadMap.Add(column.Name, column);
+                var gridColumn = gridColumns.Find(p => p.Text.Equals(column.Name));
+                if (gridColumn != null)
+                {
+                    if (!colHeadMap.ContainsKey(gridColumn.Name))
+                    {
+                        colHeadMap.Add(gridColumn.Name, column);
+                    }
+                }
+            }
+
+            //实体类标签名与Excel DataTable DataRow.Columns中列索引映射表
+            Dictionary<string, int> excelNameColumnIndexMap = new Dictionary<string, int>();
+            for (int i = 0, count = sheetConfig.Columns.Count; i < count; i++)
+            {
+                if (!excelNameColumnIndexMap.ContainsKey(sheetConfig.Columns[i].Name))
+                {
+                    excelNameColumnIndexMap.Add(sheetConfig.Columns[i].Name, i);
+                }
+            }
+
+            Dictionary<string, int> fieldNameColumnIndexMap = new Dictionary<string, int>();
+            for (int i = 0, count = gridColumns.Count; i < count; i++)
+            {
+                var column = gridColumns[i];
+                int index = sheetConfig.Columns.FindIndex(p => p.Name.Equals(column.Text));
+                if (index >= 0)
+                {
+                    if (!fieldNameColumnIndexMap.ContainsKey(column.Name))
+                    {
+                        fieldNameColumnIndexMap.Add(column.Name, index);
+                    }
+                }
+            }
+
+            Model.Data.DataTable table = new Model.Data.DataTable 
+            {
+                ColumnIndex = new Dictionary<string,int>(),
+                Rows = new List<Model.Data.DataRow>()
+            };
+
+            table.ColumnIndex = excelNameColumnIndexMap;
+
+            var attFieldMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(TemplateStock));
+            foreach (var tempStock in tempStocks)
+            {
+                Model.Data.DataRow dataRow = new Model.Data.DataRow 
+                {
+                    Columns = new List<DataValue>(table.ColumnIndex.Count)
+                };
+
+                foreach (var kv in attFieldMap)
+                {
+                    if (!attFieldMap.ContainsKey(kv.Key) || !fieldNameColumnIndexMap.ContainsKey(kv.Key))
+                        continue;
+
+                    string fieldName = attFieldMap[kv.Key];
+                    int valIndex = fieldNameColumnIndexMap[kv.Key];
+
+                    var field = tempStock.GetType().GetProperty(fieldName);
+                    if (field == null)
+                        continue;
+
+                    Model.Data.DataValue dataValue = new DataValue();
+                    if(colHeadMap.ContainsKey(kv.Key))
+                    {
+                        dataValue.Type = colHeadMap[kv.Key].Type;
+                    }
+
+                    dataValue.Value = field.GetValue(tempStock, null);
+
+                    //dataRow.Columns[valIndex] = dataValue;
+                    dataRow.Columns.Insert(valIndex, dataValue);
+                }
+
+                table.Rows.Add(dataRow);
+            }
+
+            return table;
+        }
     }
 }

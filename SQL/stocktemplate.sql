@@ -251,12 +251,12 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procTemplateStockUpdate')
-drop proc procTemplateStockUpdate
+if exists (select name from sysobjects where name='procTemplateStockInsertOrUpdate')
+drop proc procTemplateStockInsertOrUpdate
 
 go
 
-create proc procTemplateStockUpdate(
+create proc procTemplateStockInsertOrUpdate(
 	@TemplateId int,
 	@SecuCode varchar(10),
 	@Amount int,
@@ -268,17 +268,41 @@ create proc procTemplateStockUpdate(
 as
 begin
 	--declare @newid varchar(20)
-	begin try
-		update templatestock
-		set Amount = @Amount,
-			MarketCap = @MarketCap,
-			MarketCapOpt = @MarketCapOpt,
-			SettingWeight = @SettingWeight
-		where TemplateId = @TemplateId and SecuCode = @SecuCode
-	end try
-	begin catch
-		select ERROR_NUMBER() as ErrorNumber, ERROR_MESSAGE() as ErrorMesssage
-	end catch
+	declare @Total int
+	set @Total=(select count(SecuCode) as Total from templatestock where TemplateId=@TemplateId and SecuCode=@SecuCode)
+	if @Total = 0
+	begin
+		insert into templatestock(
+			TemplateId,
+			SecuCode,
+			Amount,
+			MarketCap,
+			MarketCapOpt,
+			SettingWeight
+		)
+		values(
+			@TemplateId,
+			@SecuCode,
+			@Amount,
+			@MarketCap,
+			@MarketCapOpt,
+			@SettingWeight
+		)
+	end
+	else
+	begin
+		begin try
+			update templatestock
+			set Amount = @Amount,
+				MarketCap = @MarketCap,
+				MarketCapOpt = @MarketCapOpt,
+				SettingWeight = @SettingWeight
+			where TemplateId = @TemplateId and SecuCode = @SecuCode
+		end try
+		begin catch
+			select ERROR_NUMBER() as ErrorNumber, ERROR_MESSAGE() as ErrorMesssage
+		end catch
+	end
 
 	set @ReturnValue=@SecuCode+';'+convert(varchar,@TemplateId)
 end
@@ -300,6 +324,21 @@ begin
 	where TemplateId = @TemplateId and SecuCode = @SecuCode
 
 	set @ReturnValue=@SecuCode+';'+convert(varchar, @TemplateId)
+end
+
+go
+if exists (select name from sysobjects where name='procTemplateStockDeleteAll')
+drop proc procTemplateStockDeleteAll
+
+go
+
+create proc procTemplateStockDeleteAll(
+	@TemplateId int
+)
+as
+begin
+	delete from templatestock
+	where TemplateId = @TemplateId
 end
 
 
