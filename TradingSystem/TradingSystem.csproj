@@ -282,6 +282,9 @@
     <None Include="config\t2sdk.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="config\tdfapiconfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="config\uiconfig.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

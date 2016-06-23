@@ -50,6 +50,7 @@
     <Compile Include="config\FunctionItem.cs" />
     <Compile Include="config\Label.cs" />
     <Compile Include="config\PriceType.cs" />
+    <Compile Include="config\TDFAPISetting.cs" />
     <Compile Include="ConnectionCode.cs" />
     <Compile Include="Data\DataTable.cs" />
     <Compile Include="Data\DataValue.cs" />

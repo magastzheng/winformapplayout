@@ -19,6 +19,7 @@ namespace Config
         private NavbarConfig _navBarConfig;
         private ImportConfig _importConfig;
         private ButtonConfig _buttonConfig;
+        private TDFAPIConfig _tdfAPIConfig;
 
         private ConfigManager()
         {
@@ -42,7 +43,8 @@ namespace Config
                 _navBarConfig = new NavbarConfig();
                 _importConfig = new ImportConfig();
                 _buttonConfig = new ButtonConfig();
-
+                _tdfAPIConfig = new TDFAPIConfig();
+                
                 _terminalConfig = new TerminalConfig(_systemConfig);
             //}
             //catch (Exception e)
@@ -101,6 +103,11 @@ namespace Config
         public ButtonConfig GetButtonConfig()
         {
             return _instance._buttonConfig;
+        }
+
+        public TDFAPIConfig GetTDFAPIConfig()
+        {
+            return _instance._tdfAPIConfig;
         }
     }
 }

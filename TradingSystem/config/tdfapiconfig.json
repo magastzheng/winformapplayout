@@ -1,0 +1,28 @@
+﻿/*
+* ip: 服务器Ip
+* port: 服务器端口
+* user: 服务器用户名
+* password: 服务器密码
+* subScriptions: 订阅列表，以 ; 分割的代码列表，例如:if1406.cf;if1403.cf；如果置为空，则全市场订阅
+* markets: 市场列表，以 ; 分割，例如: sh;sz;cf;shf;czc;dce
+* reconnectCount: 当连接断开时重连次数，断开重连在TDFDataSource.Connect成功之后才有效
+* reconnectGap: 重连间隔秒数
+* connectionId: 连接ID，标识某个Open调用，跟回调消息中TDFMSG结构nConnectionID字段相同
+* date: 请求的日期，格式YYMMDD，为0则请求今天
+* time: 请求的时间，格式HHMMSS，为0则请求实时行情，为(uint)-1从头请求
+* typeFlags: //为0请求所有品种，或者取值为DataTypeFlag中多种类别，比如DATA_TYPE_MARKET | DATA_TYPE_TRANSACTION
+*/
+
+{
+	"ip": "188.188.3.226",
+	"port": 10000,
+	"user": "htzq_tdf15",
+	"password": "htzq_tdf15",
+	"reconnectCount": 9999999,
+	"reconnectGap": 5,
+	"connectionId": 1,
+	"date": 0,
+	"time": 0,
+	"markets": "SZ;SH;CF",
+	"typeFlags": 0
+}

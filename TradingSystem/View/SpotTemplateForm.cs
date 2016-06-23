@@ -734,10 +734,9 @@ namespace TradingSystem.View
                 {
                     colHeadMap.Add(column.Name, column);
                 }
-                //string sheetName = @"20160222";
+
                 int sheetIndex = 0;
                 var table = ExcelUtil.GetSheetData(fileDialog.FileName, sheetIndex, colHeadMap);
-                //Console.WriteLine(table.ColumnIndex.Count);
                 if (table != null)
                 {
                     var stockList = ExcelToGrid(table);

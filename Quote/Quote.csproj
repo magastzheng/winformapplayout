@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -38,6 +42,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="TDFApi_CSharp">
+      <HintPath>..\lib\TDFApi_CSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IPublisher.cs" />
@@ -46,8 +53,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PublishEvent.cs" />
     <Compile Include="Quote.cs" />
+    <Compile Include="TDF\TDFImp.cs" />
+    <Compile Include="TDF\TDFService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Config\Config.csproj">
+      <Project>{1538db09-6bfc-4623-9db4-34577f335cd4}</Project>
+      <Name>Config</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DBAccess\DBAccess.csproj">
       <Project>{3cf9d5b6-128c-48d9-8a03-38d81c5845c0}</Project>
       <Name>DBAccess</Name>
@@ -60,6 +73,9 @@
       <Project>{7b9116b3-dcf4-4c50-953e-3457a77ea99b}</Project>
       <Name>WAPIWrapperCSharp</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
