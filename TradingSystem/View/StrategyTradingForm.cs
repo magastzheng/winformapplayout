@@ -840,30 +840,39 @@ namespace TradingSystem.View
                     continue;
                 }
 
-                int submitId = SubmitCommandToDB(eiItem);
-                if (submitId > 0)
+                EntrustCommandItem eciItem = new EntrustCommandItem
                 {
-                    submitIds.Add(submitId);
+                    CommandId = eiItem.CommandNo,
+                    Copies = eiItem.Copies
+                };
 
-                    var failItems = SubmitSecurityToDB(submitId, eiItem.CommandNo);
-                    if (failItems.Count > 0)
-                    {
-                        //TODO: fail to submit the securities
-                    }
+                var entrustSecuItems = GetEntrustSecurityItems(-1, eiItem.CommandNo);
+                int sumbitRet = _entrustcmddao.Submit(eciItem, entrustSecuItems);
 
-                    //update the TargetNum
-                    cmdItem.TargetNum = targetNum;
-                    int targetNumFlag = _tradecmddao.UpdateTargetNum(cmdItem);
-                    if (targetNumFlag <= 0)
-                    {
-                        //TODO: failed to update TargetNum
-                    }
-                    
-                }
-                else
-                { 
-                    //TODO: fail to submit the commandId
-                }
+                //int submitId = SubmitCommandToDB(eiItem);
+                //if (submitId > 0)
+                //{
+                //    submitIds.Add(submitId);
+
+                //    var failItems = SubmitSecurityToDB(submitId, eiItem.CommandNo);
+                //    if (failItems.Count > 0)
+                //    {
+                //        //TODO: fail to submit the securities
+                //    }
+
+                //    //update the TargetNum
+                //    cmdItem.TargetNum = targetNum;
+                //    int targetNumFlag = _tradecmddao.UpdateTargetNum(cmdItem);
+                //    if (targetNumFlag <= 0)
+                //    {
+                //        //TODO: failed to update TargetNum
+                //    }
+
+                //}
+                //else
+                //{
+                //    //TODO: fail to submit the commandId
+                //}
             }
 
             //2.submit into UFX then update the status 
@@ -882,31 +891,20 @@ namespace TradingSystem.View
             this.bsGridView.Invalidate();
         }
 
-        private int SubmitCommandToDB(EntrustItem eiItem)
+        private List<EntrustSecurityItem> GetEntrustSecurityItems(int submitId, int commandId)
         {
-            EntrustCommandItem eciItem = new EntrustCommandItem
-            {
-                CommandId = eiItem.CommandNo,
-                Copies = eiItem.Copies
-            };
-
-            return _entrustcmddao.Create(eciItem);
-        }
-
-        private List<EntrustSecurityItem> SubmitSecurityToDB(int submitId, int commandId)
-        {
-            List<EntrustSecurityItem> failItems = new List<EntrustSecurityItem>();
+            List<EntrustSecurityItem> entrustSecuItems = new List<EntrustSecurityItem>();
 
             var secuItems = _secuDataSource.Where(p => p.Selection && p.CommandId == commandId).ToList();
             if (secuItems == null || secuItems.Count == 0)
             {
-                return failItems;
+                return entrustSecuItems;
             }
 
             foreach (var secuItem in secuItems)
             {
                 var priceType = GetPriceType(secuItem.PriceType);
-                EntrustSecurityItem entrustSecurityItem = new EntrustSecurityItem 
+                EntrustSecurityItem entrustSecurityItem = new EntrustSecurityItem
                 {
                     SubmitId = submitId,
                     CommandId = commandId,
@@ -920,14 +918,10 @@ namespace TradingSystem.View
                     EntrustDate = DateTime.Now,
                 };
 
-                int ret = _entrustsecudao.Create(entrustSecurityItem);
-                if (ret < 0)
-                {
-                    failItems.Add(entrustSecurityItem);
-                }
+                entrustSecuItems.Add(entrustSecurityItem);
             }
 
-            return failItems;
+            return entrustSecuItems;
         }
 
         private bool ValidateCopies()
