@@ -58,6 +58,7 @@
     <Compile Include="ArbitrageBLL.cs" />
     <Compile Include="CallbackDataReady.cs" />
     <Compile Include="DataParser.cs" />
+    <Compile Include="Entrust\EntrustBLL.cs" />
     <Compile Include="IDataHandler.cs" />
     <Compile Include="IDataReceiver.cs" />
     <Compile Include="IStrategryDataChange.cs" />

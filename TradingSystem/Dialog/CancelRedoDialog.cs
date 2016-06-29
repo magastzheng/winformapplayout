@@ -13,6 +13,9 @@ using System.Text;
 using System.Windows.Forms;
 using System.Linq;
 using DBAccess;
+using Model.config;
+using TradingSystem.TradeUtil;
+using BLL.Entrust;
 
 namespace TradingSystem.Dialog
 {
@@ -22,8 +25,10 @@ namespace TradingSystem.Dialog
 
         private EntrustCommandDAO _entrustcmddao = new EntrustCommandDAO();
         private EntrustSecurityDAO _entrustsecudao = new EntrustSecurityDAO();
+        private EntrustBLL _entrustBLL = new EntrustBLL();
 
         private SortableBindingList<CancelRedoItem> _secuDataSource = new SortableBindingList<CancelRedoItem>(new List<CancelRedoItem>());
+        private List<TradingCommandItem> _tradeCommandItems = new List<TradingCommandItem>();
 
         GridConfig _gridConfig;
 
@@ -112,8 +117,8 @@ namespace TradingSystem.Dialog
             }
 
             _secuDataSource.Clear();
-            var cmdItems = data as List<TradingCommandItem>;
-            foreach (var cmdItem in cmdItems)
+            _tradeCommandItems = data as List<TradingCommandItem>;
+            foreach (var cmdItem in _tradeCommandItems)
             { 
                 //var entrustItems = _entrustcmddao.GetByEntrustStatus(
                 var entrustSecuItems = _entrustsecudao.GetCancelRedo(cmdItem.CommandId);
@@ -136,6 +141,7 @@ namespace TradingSystem.Dialog
                             ReportAmount = p.EntrustAmount,
                             DealAmount = p.DealAmount,
                             EntrustDate = p.EntrustDate,
+                            SubmitId = p.SubmitId,
                         };
 
                         _secuDataSource.Add(cancelRedoItem);
@@ -166,7 +172,25 @@ namespace TradingSystem.Dialog
 
         private void Button_Confirm_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            //Get the price type
+            PriceType spotBuyPrice = PriceTypeUtil.GetPriceType(this.cbSpotBuyPrice);
+            PriceType spotSellPrice = PriceTypeUtil.GetPriceType(this.cbSpotSellPrice);
+            PriceType futureBuyPrice = PriceTypeUtil.GetPriceType(this.cbFuturesBuyPrice);
+            PriceType futureSellPrice = PriceTypeUtil.GetPriceType(this.cbFuturesSellPrice);
+
+            var selectItems = _secuDataSource.Where(p => p.Selection).ToList();
+            var commandIds = selectItems.Select(p => p.CommandId).Distinct().ToList();
+            //var entrustItems = selectItems
+            //    .GroupBy(p => new { p.SubmitId, p.CommandId })
+            //    .Select(g => g.First())
+            //    .ToList();
+            
+            int ret = _entrustBLL.Cancel(selectItems);
+
+            //Call the UFX to cancel
+
+            //Update the EntrustCommand
+
         }
 
         private void Button_Cancel_Click(object sender, EventArgs e)

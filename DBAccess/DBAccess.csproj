@@ -48,6 +48,7 @@
     <Compile Include="BaseDAO.cs" />
     <Compile Include="DbHelper.cs" />
     <Compile Include="EntrustCommandDAO.cs" />
+    <Compile Include="EntrustDAO.cs" />
     <Compile Include="EntrustSecurityDAO.cs" />
     <Compile Include="FundDAO.cs" />
     <Compile Include="FuturesContractDAO.cs" />

@@ -136,7 +136,7 @@ namespace DBAccess
         public int Replace(int templateNo, List<TemplateStock> tempStocks)
         {
             var dbCommand = _dbHelper.GetCommand();
-            _dbHelper.Open(_dbHelper.Connection);
+            _dbHelper.Open(dbCommand);
 
             //use transaction to execute
             DbTransaction transaction = dbCommand.Connection.BeginTransaction();

@@ -40,5 +40,7 @@ namespace Model.UI
         public DateTime CreatedDate { get; set; }
 
         public DateTime ModifiedDate { get; set; }
+
+        public int EntrustNo { get; set; }
     }
 }

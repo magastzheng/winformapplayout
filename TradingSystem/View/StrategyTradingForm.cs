@@ -20,6 +20,7 @@ using Model.Data;
 using Util;
 using BLL.SecurityInfo;
 using TradingSystem.Dialog;
+using TradingSystem.TradeUtil;
 
 namespace TradingSystem.View
 {
@@ -36,6 +37,7 @@ namespace TradingSystem.View
         private TradingCommandSecurityDAO _tradecmdsecudao = new TradingCommandSecurityDAO();
         private EntrustCommandDAO _entrustcmddao = new EntrustCommandDAO();
         private EntrustSecurityDAO _entrustsecudao = new EntrustSecurityDAO();
+        private EntrustDAO _entrustdao = new EntrustDAO();
 
         private SortableBindingList<TradingCommandItem> _cmdDataSource = new SortableBindingList<TradingCommandItem>(new List<TradingCommandItem>());
         private SortableBindingList<EntrustFlowItem> _efDataSource = new SortableBindingList<EntrustFlowItem>(new List<EntrustFlowItem>());
@@ -139,7 +141,7 @@ namespace TradingSystem.View
                         });
                     }
 
-                    _entrustcmddao.UpdateEntrustStatus(p.SubmitId, EntrustStatus.CancelToUFX);
+                    _entrustdao.UpdateOneEntrustStatus(p.SubmitId, EntrustStatus.CancelToUFX);
                     //TODO: callback from UFX to update the CancelStatus to Fail or Success
 
                     //Change the status to CancelSuccess after UFX callback/response
@@ -151,7 +153,7 @@ namespace TradingSystem.View
                             _entrustsecudao.UpdateEntrustStatus(s, EntrustStatus.CancelSuccess);
                         });
                     }
-                    _entrustcmddao.UpdateEntrustStatus(p.SubmitId, EntrustStatus.CancelSuccess);
+                    _entrustdao.UpdateOneEntrustStatus(p.SubmitId, EntrustStatus.CancelSuccess);
 
                     //Update the tradingcommand table TargetNum
                     cmdItem.TargetNum -= p.Copies;
@@ -698,10 +700,10 @@ namespace TradingSystem.View
             }
 
             //Get the price type
-            PriceType spotBuyPrice = GetPriceType(this.cbSpotBuyPrice);
-            PriceType spotSellPrice = GetPriceType(this.cbSpotSellPrice);
-            PriceType futureBuyPrice = GetPriceType(this.cbFuturesBuyPrice);
-            PriceType futureSellPrice = GetPriceType(this.cbFuturesSellPrice);
+            PriceType spotBuyPrice = PriceTypeUtil.GetPriceType(this.cbSpotBuyPrice);
+            PriceType spotSellPrice = PriceTypeUtil.GetPriceType(this.cbSpotSellPrice);
+            PriceType futureBuyPrice = PriceTypeUtil.GetPriceType(this.cbFuturesBuyPrice);
+            PriceType futureSellPrice = PriceTypeUtil.GetPriceType(this.cbFuturesSellPrice);
 
             //update each command item
             foreach (var eiItem in _eiDataSource)
@@ -843,36 +845,29 @@ namespace TradingSystem.View
                 EntrustCommandItem eciItem = new EntrustCommandItem
                 {
                     CommandId = eiItem.CommandNo,
-                    Copies = eiItem.Copies
+                    Copies = eiItem.Copies,
                 };
 
                 var entrustSecuItems = GetEntrustSecurityItems(-1, eiItem.CommandNo);
-                int sumbitRet = _entrustcmddao.Submit(eciItem, entrustSecuItems);
+                int sumbitRet = _entrustdao.Submit(eciItem, entrustSecuItems);
 
-                //int submitId = SubmitCommandToDB(eiItem);
-                //if (submitId > 0)
-                //{
-                //    submitIds.Add(submitId);
+                if (sumbitRet > 0)
+                {
+                    //success to submit into database
+                    submitIds.Add(eciItem.SubmitId);
 
-                //    var failItems = SubmitSecurityToDB(submitId, eiItem.CommandNo);
-                //    if (failItems.Count > 0)
-                //    {
-                //        //TODO: fail to submit the securities
-                //    }
-
-                //    //update the TargetNum
-                //    cmdItem.TargetNum = targetNum;
-                //    int targetNumFlag = _tradecmddao.UpdateTargetNum(cmdItem);
-                //    if (targetNumFlag <= 0)
-                //    {
-                //        //TODO: failed to update TargetNum
-                //    }
-
-                //}
-                //else
-                //{
-                //    //TODO: fail to submit the commandId
-                //}
+                    //update the TargetNum
+                    cmdItem.TargetNum = targetNum;
+                    int targetNumFlag = _tradecmddao.UpdateTargetNum(cmdItem);
+                    if (targetNumFlag <= 0)
+                    {
+                        //TODO: failed to update TargetNum
+                    }
+                }
+                else
+                { 
+                    //Fail to submit into database
+                }
             }
 
             //2.submit into UFX then update the status 
@@ -881,8 +876,7 @@ namespace TradingSystem.View
             //Update the status
             foreach (var submitId in submitIds)
             {
-                _entrustcmddao.UpdateEntrustStatus(submitId, EntrustStatus.Completed);
-                _entrustsecudao.UpdateEntrustStatusBySubmitId(submitId, EntrustStatus.Completed);
+                _entrustdao.UpdateOneEntrustStatus(submitId, EntrustStatus.Completed);
             }
 
             //update the UI
@@ -903,7 +897,7 @@ namespace TradingSystem.View
 
             foreach (var secuItem in secuItems)
             {
-                var priceType = GetPriceType(secuItem.PriceType);
+                var priceType = PriceTypeUtil.GetPriceType(secuItem.PriceType);
                 EntrustSecurityItem entrustSecurityItem = new EntrustSecurityItem
                 {
                     SubmitId = submitId,
@@ -931,13 +925,6 @@ namespace TradingSystem.View
             if (copies > 0)
             {
                 _eiDataSource.Where(p => p.Selection).ToList().ForEach(p => p.Copies = copies);
-                //foreach (var eiItem in _eiDataSource)
-                //{
-                //    if (eiItem.Selection)
-                //    {
-                //        eiItem.Copies = copies;
-                //    }
-                //}
             }
             else
             {
@@ -960,25 +947,6 @@ namespace TradingSystem.View
             return true;
         }
 
-        private PriceType GetPriceType(ComboBox comboBox)
-        {
-            var selectItem = (ComboOptionItem)comboBox.SelectedItem;
-            return GetPriceType(selectItem.Id);
-        }
-
-        private PriceType GetPriceType(string priceTypeId)
-        {
-            PriceType priceType = PriceType.Market;
-            if (priceTypeId != null && !string.IsNullOrEmpty(priceTypeId))
-            {
-                if (Enum.IsDefined(typeof(PriceType), priceTypeId))
-                {
-                    priceType = (PriceType)Enum.Parse(typeof(PriceType), priceTypeId);
-                }
-            }
-
-            return priceType;
-        }
         #endregion
     }
 }

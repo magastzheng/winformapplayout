@@ -130,5 +130,7 @@ namespace Model.UI
         public SecurityType SecuType { get; set; }
 
         public DateTime EntrustDate { get; set; }
+
+        public int SubmitId { get; set; }
     }
 }

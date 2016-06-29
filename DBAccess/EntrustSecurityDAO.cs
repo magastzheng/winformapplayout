@@ -15,6 +15,7 @@ namespace DBAccess
         private const string SP_Create = "procEntrustSecurityInsert";
         private const string SP_Modify = "procEntrustSecurityUpdate";
         private const string SP_ModifyEntrustStatus = "procEntrustSecurityUpdateEntrustStatus";
+        private const string SP_ModifyEntrustNo = "procEntrustSecurityUpdateEntrustNo";
         private const string SP_ModifyEntrustStatusBySubmitId = "procEntrustSecurityUpdateEntrustStatusBySubmitId";
         private const string SP_ModifyDeal = "procEntrustSecurityUpdateDeal";
         private const string SP_ModifyCancel = "procEntrustSecurityUpdateCancel";
@@ -70,6 +71,7 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@EntrustDirection", System.Data.DbType.Int32, (int)item.EntrustDirection);
             _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)item.EntrustStatus);
             _dbHelper.AddInParameter(dbCommand, "@PriceType", System.Data.DbType.Int32, (int)item.PriceType);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustNo", System.Data.DbType.Int32, (int)item.EntrustNo);
             _dbHelper.AddInParameter(dbCommand, "@EntrustDate", System.Data.DbType.DateTime, item.EntrustDate);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
@@ -83,6 +85,18 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, item.CommandId);
             _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, item.SecuCode);
             _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)entrustStatus);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int UpdateEntrustNo(EntrustSecurityItem item)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustStatus);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, item.SubmitId);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, item.CommandId);
+            _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, item.SecuCode);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustNo", System.Data.DbType.Int32, item.EntrustNo);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
@@ -177,6 +191,7 @@ namespace DBAccess
                     item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
                     item.PriceType = (PriceType)reader["PriceType"];
+                    item.EntrustNo = (int)reader["EntrustNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
 
@@ -225,6 +240,7 @@ namespace DBAccess
                     item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
                     item.PriceType = (PriceType)reader["PriceType"];
+                    item.EntrustNo = (int)reader["EntrustNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
 
@@ -273,6 +289,7 @@ namespace DBAccess
                     item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
                     item.PriceType = (PriceType)reader["PriceType"];
+                    item.EntrustNo = (int)reader["EntrustNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
 
@@ -323,6 +340,7 @@ namespace DBAccess
                     item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
                     item.PriceType = (PriceType)reader["PriceType"];
+                    item.EntrustNo = (int)reader["EntrustNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
 
@@ -371,6 +389,7 @@ namespace DBAccess
                     item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
                     item.PriceType = (PriceType)reader["PriceType"];
+                    item.EntrustNo = (int)reader["EntrustNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
 
@@ -419,6 +438,7 @@ namespace DBAccess
                     item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
                     item.PriceType = (PriceType)reader["PriceType"];
+                    item.EntrustNo = (int)reader["EntrustNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
 

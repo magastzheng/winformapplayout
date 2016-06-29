@@ -14,7 +14,6 @@ namespace DBAccess
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const string SP_Create = "procEntrustCommandInsert";
-        private const string SP_CreateEntrustSecurity = "procEntrustSecurityInsert";
         private const string SP_Modify = "procEntrustCommandUpdate";
         private const string SP_ModifyEntrustStatus = "procEntrustCommandUpdateEntrustStatus";
         private const string SP_ModifyDealStatus = "procEntrustCommandUpdateDealStatus";
@@ -61,77 +60,6 @@ namespace DBAccess
             return entrustId;
         }
 
-        public int Submit(EntrustCommandItem cmdItem, List<EntrustSecurityItem> entrustItems)
-        {
-            var dbCommand = _dbHelper.GetCommand();
-            _dbHelper.Open(_dbHelper.Connection);
-
-            //use transaction to execute
-            DbTransaction transaction = dbCommand.Connection.BeginTransaction();
-            dbCommand.Transaction = transaction;
-            dbCommand.CommandType = System.Data.CommandType.StoredProcedure;
-            int ret = -1;
-            try
-            {
-                //delete all old one
-                dbCommand.CommandText = SP_Create;
-                _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, cmdItem.CommandId);
-                _dbHelper.AddInParameter(dbCommand, "@Copies", System.Data.DbType.Int32, cmdItem.Copies);
-                _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, DateTime.Now);
-
-                _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
-
-                ret = dbCommand.ExecuteNonQuery();
-
-                if (ret >= 0)
-                {
-                    int entrustId = -1;
-                    if (ret > 0)
-                    {
-                        entrustId = (int)dbCommand.Parameters["@return"].Value;
-                    }
-
-                    foreach (var entrustItem in entrustItems)
-                    {
-                        dbCommand.Parameters.Clear();
-                        dbCommand.CommandText = SP_CreateEntrustSecurity;
-
-                        _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, entrustId);
-                        _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, entrustItem.CommandId);
-                        _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, entrustItem.SecuCode);
-                        _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, entrustItem.SecuType);
-                        _dbHelper.AddInParameter(dbCommand, "@EntrustAmount", System.Data.DbType.Int32, entrustItem.EntrustAmount);
-                        _dbHelper.AddInParameter(dbCommand, "@EntrustPrice", System.Data.DbType.Decimal, entrustItem.EntrustPrice);
-                        _dbHelper.AddInParameter(dbCommand, "@EntrustDirection", System.Data.DbType.Int32, (int)entrustItem.EntrustDirection);
-                        _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)entrustItem.EntrustStatus);
-                        _dbHelper.AddInParameter(dbCommand, "@PriceType", System.Data.DbType.Int32, (int)entrustItem.PriceType);
-                        _dbHelper.AddInParameter(dbCommand, "@EntrustDate", System.Data.DbType.DateTime, entrustItem.EntrustDate);
-                        _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, DateTime.Now);
-
-                        //string newid = string.Empty;
-                        ret = dbCommand.ExecuteNonQuery();
-                    }
-                }
-
-                transaction.Commit();
-            }
-            catch (Exception ex)
-            {
-                transaction.Rollback();
-                //TODO: add log
-                logger.Error(ex);
-                ret = -1;
-                throw;
-            }
-            finally
-            {
-                _dbHelper.Close(dbCommand.Connection);
-                transaction.Dispose();
-            }
-
-            return ret;
-        }
-
         public int Update(EntrustCommandItem item)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Modify);
@@ -145,7 +73,7 @@ namespace DBAccess
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public int UpdateEntrustStatus(int submitId, EntrustStatus entrustStatus)
+        public int UpdateEntrustCommandStatus(int submitId, EntrustStatus entrustStatus)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustStatus);
             _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);

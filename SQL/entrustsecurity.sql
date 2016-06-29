@@ -12,8 +12,9 @@ create table entrustsecurity(
 	,EntrustAmount		int
 	,EntrustPrice		numeric(20, 4) 
 	,EntrustDirection	int			 --10 - 买入股票， 11 - 卖出股票， 12 - 卖出开仓， 13 - 买入平仓
-	,EntrustStatus		int			 -- 1 - 未执行， 2 - 部分执行， 3- 已完成
+	,EntrustStatus		int			 -- 0 - 提交到DB, 1 - 提交到UFX， 2 - 未执行， 3 - 部分执行， 4 - 已完成， 10 - 撤单DB, 11 - 撤单UFX, 12 - 撤单成功， 13 - 撤单失败
 	,PriceType			int			 -- 
+	,EntrustNo			int			--委托之后，服务器返回的委托号
 	,DealStatus			int			 -- 1 - 未成交， 2 - 部分成交， 3 - 已完成
 	,DealAmount			int			 -- 成交数量
 	--,BatchId			int			 -- 委托后返回的批号ID
@@ -56,6 +57,7 @@ begin
 		,EntrustDirection	
 		,EntrustStatus
 		,PriceType
+		,EntrustNo
 		,DealStatus
 		,DealAmount
 		,DealTimes
@@ -71,6 +73,7 @@ begin
 		,@EntrustDirection	
 		,@EntrustStatus
 		,@PriceType
+		,-1					--初始时没有委托序号，只有通过UFX委托完成之后，才会产生
 		,1					--未成交
 		,0					--成交量初始为0
 		,0					--成交次数0
@@ -93,6 +96,7 @@ create proc procEntrustSecurityUpdate(
 	,@EntrustDirection	int
 	,@EntrustStatus		int
 	,@PriceType			int
+	,@EntrustNo			int
 	,@EntrustDate		datetime
 	,@ModifiedDate		datetime
 )
@@ -104,6 +108,7 @@ begin
 		,EntrustDirection	= @EntrustDirection
 		,EntrustStatus		= @EntrustStatus
 		,PriceType			= @PriceType
+		,EntrustNo			= @EntrustNo
 		,EntrustDate		= @EntrustDate
 		,ModifiedDate		= @ModifiedDate
 	where SubmitId=@SubmitId
@@ -127,6 +132,30 @@ as
 begin
 	update entrustsecurity
 	set EntrustStatus		= @EntrustStatus
+		,ModifiedDate		= @ModifiedDate
+	where SubmitId=@SubmitId
+		and CommandId=@CommandId 
+		and SecuCode=@SecuCode
+		and DealStatus != 3			--已完成成交的不可以撤单
+end
+
+go
+if exists (select name from sysobjects where name='procEntrustSecurityUpdateEntrustNo')
+drop proc procEntrustSecurityUpdateEntrustNo
+
+go
+create proc procEntrustSecurityUpdateEntrustNo(
+	@SubmitId			int
+	,@CommandId			int
+	,@SecuCode			varchar(10)
+	,@EntrustNo			int
+	,@ModifiedDate		datetime
+)
+as
+begin
+	update entrustsecurity
+	set EntrustNo			= @EntrustNo
+		,EntrustStatus		= 4				--委托成功
 		,ModifiedDate		= @ModifiedDate
 	where SubmitId=@SubmitId
 		and CommandId=@CommandId 
@@ -291,6 +320,7 @@ begin
 		,EntrustDirection	
 		,EntrustStatus
 		,PriceType
+		,EntrustNo
 		,DealStatus
 		,DealAmount
 		,DealTimes
@@ -320,6 +350,7 @@ begin
 		,EntrustDirection	
 		,EntrustStatus
 		,PriceType
+		,EntrustNo
 		,DealStatus
 		,DealAmount
 		,DealTimes
@@ -347,6 +378,7 @@ begin
 		,EntrustDirection	
 		,EntrustStatus
 		,PriceType
+		,EntrustNo
 		,DealStatus
 		,DealAmount
 		,DealTimes
@@ -377,6 +409,7 @@ begin
 		,EntrustDirection	
 		,EntrustStatus
 		,PriceType
+		,EntrustNo
 		,DealStatus
 		,DealAmount
 		,DealTimes
@@ -409,6 +442,7 @@ begin
 		,EntrustDirection	
 		,EntrustStatus
 		,PriceType
+		,EntrustNo
 		,DealStatus
 		,DealAmount
 		,DealTimes
@@ -421,6 +455,8 @@ begin
 		and EntrustStatus != 11 --撤单到UFX
 		and EntrustStatus != 12 --撤单成功
 end
+
+go
 
 if exists (select name from sysobjects where name='procEntrustSecuritySelectCancelRedo')
 drop proc procEntrustSecuritySelectCancelRedo
@@ -440,6 +476,7 @@ begin
 		,EntrustDirection	
 		,EntrustStatus
 		,PriceType
+		,EntrustNo
 		,DealStatus
 		,DealAmount
 		,DealTimes
