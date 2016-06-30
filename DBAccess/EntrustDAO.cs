@@ -212,5 +212,60 @@ namespace DBAccess
 
             return ret;
         }
+
+        public int UpdateCommandSecurityEntrustStatus(int submitId, List<EntrustSecurityItem> entrustItems, EntrustStatus entrustStatus)
+        { 
+            var dbCommand = _dbHelper.GetCommand();
+            _dbHelper.Open(dbCommand);
+
+            //use transaction to execute
+            DbTransaction transaction = dbCommand.Connection.BeginTransaction();
+            dbCommand.Transaction = transaction;
+            dbCommand.CommandType = System.Data.CommandType.StoredProcedure;
+            int ret = -1;
+            try
+            {
+                DateTime now = DateTime.Now;
+                foreach (var item in entrustItems)
+                {
+                    dbCommand.Parameters.Clear();
+                    dbCommand.CommandText = SP_ModifySecurityEntrustStatus;
+
+                    _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, item.SubmitId);
+                    _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, item.CommandId);
+                    _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, item.SecuCode);
+                    _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)entrustStatus);
+                    _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, now);
+
+                    ret = dbCommand.ExecuteNonQuery();
+                }
+
+                //update the entrust status of EntrustCommand
+                dbCommand.Parameters.Clear();
+                dbCommand.CommandText = SP_ModifyEntrustCommandStatus;
+                _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
+                _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, entrustStatus);
+                _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, now);
+
+                ret = dbCommand.ExecuteNonQuery();
+
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                //TODO: add log
+                logger.Error(ex);
+                ret = -1;
+                throw;
+            }
+            finally
+            {
+                _dbHelper.Close(dbCommand.Connection);
+                transaction.Dispose();
+            }
+
+            return ret;
+        }
     }
 }

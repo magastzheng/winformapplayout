@@ -37,18 +37,43 @@ namespace BLL.Entrust
 
         public int Cancel(List<CancelRedoItem> cancelItems)
         {
-            return UpdateEntrustStatus(cancelItems, EntrustStatus.CancelToDB);
-        }
+            int ret = -1;
+            var submitIds = cancelItems.Select(p => p.SubmitId).ToList();
+            foreach (var submitId in submitIds)
+            { 
+                var matchItems = cancelItems.Where(p => p.SubmitId == submitId).ToList();
 
-        public int CancelSuccess(List<CancelRedoItem> cancelItems)
-        {
-            int ret = UpdateEntrustStatus(cancelItems, EntrustStatus.CancelSuccess);
-            ret = UpdateCommandEntrustStatus(cancelItems, EntrustStatus.CancelSuccess);
+                ret = UpdateCommandSecurityEntrustStatus(submitId, matchItems, EntrustStatus.CancelToDB);
+            }
 
             return ret;
         }
 
-        private int UpdateEntrustStatus(List<CancelRedoItem> cancelItems, EntrustStatus entrustStatus)
+        public int CancelSuccess(List<CancelRedoItem> cancelItems)
+        {
+            int ret = -1;
+            var submitIds = cancelItems.Select(p => p.SubmitId).ToList();
+            foreach (var submitId in submitIds)
+            {
+                var matchItems = cancelItems.Where(p => p.SubmitId == submitId).ToList();
+
+                ret = UpdateCommandSecurityEntrustStatus(submitId, matchItems, EntrustStatus.CancelSuccess);
+            }
+
+            return ret;
+        }
+
+        private int UpdateCommandSecurityEntrustStatus(int submitId, List<CancelRedoItem> cancelItems, EntrustStatus entrustStatus)
+        {
+            int ret = -1;
+            var matchItems = cancelItems.Where(p => p.SubmitId == submitId).ToList();
+            var entrustSecuItems = GetEntrustSecurityItems(matchItems);
+
+            ret = _entrustdao.UpdateCommandSecurityEntrustStatus(submitId, entrustSecuItems, entrustStatus);
+            return ret;
+        }
+
+        private List<EntrustSecurityItem> GetEntrustSecurityItems(List<CancelRedoItem> cancelItems)
         {
             List<EntrustSecurityItem> secuItems = new List<EntrustSecurityItem>();
             foreach (var cancelItem in cancelItems)
@@ -64,21 +89,7 @@ namespace BLL.Entrust
                 secuItems.Add(item);
             }
 
-            int ret = _entrustdao.UpdateSecurityEntrustStatus(secuItems, entrustStatus);
-
-            return ret;
-        }
-
-        private int UpdateCommandEntrustStatus(List<CancelRedoItem> cancelItems, EntrustStatus entrustStatus)
-        {
-            var submitIds = cancelItems.Select(p => p.SubmitId).ToList();
-            int ret = -1;
-            foreach (var submitId in submitIds)
-            {
-                ret = _entrustcmddao.UpdateEntrustCommandStatus(submitId, entrustStatus);
-            }
-
-            return ret;
+            return secuItems;
         }
     }
 }

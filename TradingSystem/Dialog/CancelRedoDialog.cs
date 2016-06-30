@@ -50,7 +50,76 @@ namespace TradingSystem.Dialog
             this.btnUnSelectAll.Click += new EventHandler(Button_UnSelectAll_Click);
             this.btnConfirm.Click += new EventHandler(Button_Confirm_Click);
             this.btnCancel.Click += new EventHandler(Button_Cancel_Click);
+
+            this.cbSpotBuyPrice.Click += new EventHandler(ComboBox_SpotBuyPrice_Click);
+            this.cbSpotSellPrice.Click += new EventHandler(ComboBox_SpotSellPrice_Click);
+            this.cbFuturesBuyPrice.Click += new EventHandler(ComboBox_FuturesBuyPrice_Click);
+            this.cbFuturesSellPrice.Click += new EventHandler(ComboBox_FuturesSellPrice_Click);
+            this.cbSHExchangePrice.Click += new EventHandler(ComboBox_SHExchangePrice_Click);
+            this.cbSZExchangePrice.Click += new EventHandler(ComboBox_SZExchangePrice_Click);
         }
+
+        #region price type
+        
+        private void ComboBox_SpotBuyPrice_Click(object sender, EventArgs e)
+        {
+            PriceType spotBuyPrice = PriceTypeUtil.GetPriceType(this.cbSpotBuyPrice);
+            var stockItems = _secuDataSource.Where(p => p.EntrustDirection == Model.Data.EntrustDirection.BuySpot && p.SecuType == Model.SecurityInfo.SecurityType.Stock).ToList();
+            stockItems.ForEach(p => { p.PriceType = spotBuyPrice.ToString(); });
+
+            //TODO: update the price by setting
+
+            this.secuGridView.Invalidate();
+        }
+
+        private void ComboBox_SpotSellPrice_Click(object sender, EventArgs e)
+        {
+            PriceType spotSellPrice = PriceTypeUtil.GetPriceType(this.cbSpotSellPrice);
+            var stockItems = _secuDataSource.Where(p => p.EntrustDirection == Model.Data.EntrustDirection.SellSpot && p.SecuType == Model.SecurityInfo.SecurityType.Stock).ToList();
+            stockItems.ForEach(p => { p.PriceType = spotSellPrice.ToString(); });
+
+            //TODO: update the price by setting
+
+            this.secuGridView.Invalidate();
+        }
+
+        private void ComboBox_FuturesBuyPrice_Click(object sender, EventArgs e)
+        {
+            PriceType futuBuyPrice = PriceTypeUtil.GetPriceType(this.cbFuturesBuyPrice);
+            var stockItems = _secuDataSource.Where(p => p.EntrustDirection == Model.Data.EntrustDirection.BuyClose && p.SecuType == Model.SecurityInfo.SecurityType.Futures).ToList();
+            stockItems.ForEach(p => { p.PriceType = futuBuyPrice.ToString(); });
+
+            //TODO: update the price by setting
+
+            this.secuGridView.Invalidate();
+        }
+
+        private void ComboBox_FuturesSellPrice_Click(object sender, EventArgs e)
+        {
+            PriceType futuSellPrice = PriceTypeUtil.GetPriceType(this.cbSpotSellPrice);
+            var stockItems = _secuDataSource.Where(p => p.EntrustDirection == Model.Data.EntrustDirection.SellOpen && p.SecuType == Model.SecurityInfo.SecurityType.Futures).ToList();
+            stockItems.ForEach(p => { p.PriceType = futuSellPrice.ToString(); });
+
+            //TODO: update the price by setting
+
+            this.secuGridView.Invalidate();
+        }
+
+        #endregion
+
+        #region market price type
+
+        private void ComboBox_SHExchangePrice_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ComboBox_SZExchangePrice_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
 
         #region loadcontrol
 
@@ -179,24 +248,44 @@ namespace TradingSystem.Dialog
             PriceType futureSellPrice = PriceTypeUtil.GetPriceType(this.cbFuturesSellPrice);
 
             var selectItems = _secuDataSource.Where(p => p.Selection).ToList();
-            var commandIds = selectItems.Select(p => p.CommandId).Distinct().ToList();
-            //var entrustItems = selectItems
-            //    .GroupBy(p => new { p.SubmitId, p.CommandId })
-            //    .Select(g => g.First())
-            //    .ToList();
-            
-            int ret = _entrustBLL.Cancel(selectItems);
-
-            //Call the UFX to cancel
-
-            //Update the EntrustCommand
-
+            var submitIds = selectItems.Select(p => p.SubmitId).ToList();
+            foreach (var submitId in submitIds)
+            {
+                var oneCancelRedoItem = selectItems.Where(p => p.SubmitId == submitId).ToList();
+                CancelRedo(oneCancelRedoItem);
+            }
         }
+
 
         private void Button_Cancel_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            DialogResult = System.Windows.Forms.DialogResult.Cancel;
         }
+
+        #endregion
+
+        #region
+
+        private void CancelRedo(List<CancelRedoItem> cancelRedoItems)
+        {
+            var submitId = cancelRedoItems.Select(p => p.SubmitId).Single();
+            if (submitId <= 0)
+            {
+                //TODO: fail to get the submitId
+                return;
+            }
+            //set the cancel status
+            int ret = _entrustBLL.Cancel(cancelRedoItems);
+            
+            //Call the UFX to cancel
+
+            //Update the EntrustCommand
+            //_entrustBLL.Submit(
+
+            ret = _entrustBLL.CancelSuccess(cancelRedoItems);
+        }
+
+        //private void UpdateEntrustStatus(EntrustSecurityItem 
 
         #endregion
     }
