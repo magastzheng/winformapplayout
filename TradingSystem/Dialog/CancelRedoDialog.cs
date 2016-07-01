@@ -18,6 +18,7 @@ using TradingSystem.TradeUtil;
 using BLL.Entrust;
 using Model.SecurityInfo;
 using Model.Data;
+using BLL.SecurityInfo;
 
 namespace TradingSystem.Dialog
 {
@@ -70,7 +71,7 @@ namespace TradingSystem.Dialog
                 return;
             ComboBox cb = sender as ComboBox;
 
-            PriceType priceType = PriceTypeUtil.GetPriceType(cb);
+            PriceType priceType = PriceTypeHelper.GetPriceType(cb);
             EntrustDirection direction = EntrustDirection.BuySpot;
             SecurityType secuType = SecurityType.All;
             switch (cb.Name)
@@ -104,7 +105,7 @@ namespace TradingSystem.Dialog
             }
 
             var stockItems = _secuDataSource.Where(p => p.EntrustDirection == direction && p.SecuType == secuType).ToList();
-            stockItems.ForEach(p => { p.PriceType = priceType.ToString(); });
+            stockItems.ForEach(p => { p.EPriceSetting = priceType; });
 
             //TODO: update the price by setting
 
@@ -177,12 +178,23 @@ namespace TradingSystem.Dialog
 
         private void ComboBox_SHExchangePrice_SelectedIndexChanged(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            EntrustPriceType priceType = EntrustPriceTypeHelper.GetPriceType(this.cbSHExchangePrice);
+            _secuDataSource.Where(p => p.SecuType == SecurityType.Stock && p.ExchangeCode.Equals("SSE"))
+                .ToList()
+                .ForEach(o => o.EEntrustPriceType = priceType);
+
+            this.secuGridView.Invalidate();
         }
 
         private void ComboBox_SZExchangePrice_SelectedIndexChanged(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            EntrustPriceType priceType = EntrustPriceTypeHelper.GetPriceType(this.cbSZExchangePrice);
+
+            _secuDataSource.Where(p => p.SecuType == SecurityType.Stock && p.ExchangeCode.Equals("SZSE"))
+               .ToList()
+               .ForEach(o => o.EEntrustPriceType = priceType);
+
+            this.secuGridView.Invalidate();
         }
 
         #endregion
@@ -251,6 +263,14 @@ namespace TradingSystem.Dialog
                 return false;
             }
 
+            //Get the price type
+            PriceType spotBuyPrice = PriceTypeHelper.GetPriceType(this.cbSpotBuyPrice);
+            PriceType spotSellPrice = PriceTypeHelper.GetPriceType(this.cbSpotSellPrice);
+            PriceType futureBuyPrice = PriceTypeHelper.GetPriceType(this.cbFuturesBuyPrice);
+            PriceType futureSellPrice = PriceTypeHelper.GetPriceType(this.cbFuturesSellPrice);
+            EntrustPriceType shPriceType = EntrustPriceTypeHelper.GetPriceType(this.cbSHExchangePrice);
+            EntrustPriceType szPriceType = EntrustPriceTypeHelper.GetPriceType(this.cbSZExchangePrice);
+
             _secuDataSource.Clear();
             _tradeCommandItems = data as List<TradingCommandItem>;
             foreach (var cmdItem in _tradeCommandItems)
@@ -270,14 +290,51 @@ namespace TradingSystem.Dialog
                             SecuCode = p.SecuCode,
                             SecuType = p.SecuType,
                             EntrustNo = p.SubmitId,
-                            CommandPrice = p.PriceType.ToString(),
+                            ECommandPrice = p.PriceType,
                             ReportPrice = p.EntrustPrice,
+                            EOriginPriceType = p.EntrustPriceType,
                             LeftAmount = p.EntrustAmount - p.DealAmount,
                             ReportAmount = p.EntrustAmount,
                             DealAmount = p.DealAmount,
                             EntrustDate = p.EntrustDate,
                             SubmitId = p.SubmitId,
                         };
+
+                        var secuInfo = SecurityInfoManager.Instance.Get(p.SecuCode, p.SecuType);
+                        if (secuInfo != null)
+                        {
+                            cancelRedoItem.ExchangeCode = secuInfo.ExchangeCode;
+                        }
+                        else
+                        {
+                            cancelRedoItem.ExchangeCode = SecurityInfoHelper.GetExchangeCode(p.SecuCode);
+                        }
+
+                        if (cancelRedoItem.ExchangeCode.Equals("SZSE"))
+                        {
+                            cancelRedoItem.EEntrustPriceType = szPriceType;
+                        }
+                        else if (cancelRedoItem.ExchangeCode.Equals("SSE"))
+                        {
+                            cancelRedoItem.EEntrustPriceType = shPriceType;
+                        }
+
+                        if (cancelRedoItem.SecuType == SecurityType.Stock && cancelRedoItem.EntrustDirection == EntrustDirection.BuySpot)
+                        {
+                            cancelRedoItem.EPriceSetting = spotBuyPrice;
+                        }
+                        else if (cancelRedoItem.SecuType == SecurityType.Stock && cancelRedoItem.EntrustDirection == EntrustDirection.BuySpot)
+                        {
+                            cancelRedoItem.EPriceSetting = spotSellPrice;
+                        }
+                        else if (cancelRedoItem.SecuType == SecurityType.Futures && cancelRedoItem.EntrustDirection == EntrustDirection.SellOpen)
+                        {
+                            cancelRedoItem.EPriceSetting = futureSellPrice;
+                        }
+                        else if (cancelRedoItem.SecuType == SecurityType.Futures && cancelRedoItem.EntrustDirection == EntrustDirection.BuyClose)
+                        {
+                            cancelRedoItem.EPriceSetting = futureBuyPrice;
+                        }
 
                         _secuDataSource.Add(cancelRedoItem);
                     }
@@ -308,17 +365,17 @@ namespace TradingSystem.Dialog
         private void Button_Confirm_Click(object sender, EventArgs e)
         {
             //Get the price type
-            PriceType spotBuyPrice = PriceTypeUtil.GetPriceType(this.cbSpotBuyPrice);
-            PriceType spotSellPrice = PriceTypeUtil.GetPriceType(this.cbSpotSellPrice);
-            PriceType futureBuyPrice = PriceTypeUtil.GetPriceType(this.cbFuturesBuyPrice);
-            PriceType futureSellPrice = PriceTypeUtil.GetPriceType(this.cbFuturesSellPrice);
+            PriceType spotBuyPrice = PriceTypeHelper.GetPriceType(this.cbSpotBuyPrice);
+            PriceType spotSellPrice = PriceTypeHelper.GetPriceType(this.cbSpotSellPrice);
+            PriceType futureBuyPrice = PriceTypeHelper.GetPriceType(this.cbFuturesBuyPrice);
+            PriceType futureSellPrice = PriceTypeHelper.GetPriceType(this.cbFuturesSellPrice);
 
             var selectItems = _secuDataSource.Where(p => p.Selection).ToList();
             var submitIds = selectItems.Select(p => p.SubmitId).ToList();
             foreach (var submitId in submitIds)
             {
                 var oneCancelRedoItem = selectItems.Where(p => p.SubmitId == submitId).ToList();
-                CancelRedo(oneCancelRedoItem);
+                CancelRedo(submitId, oneCancelRedoItem);
             }
         }
 
@@ -332,14 +389,14 @@ namespace TradingSystem.Dialog
 
         #region
 
-        private void CancelRedo(List<CancelRedoItem> cancelRedoItems)
+        private void CancelRedo(int submitId, List<CancelRedoItem> cancelRedoItems)
         {
-            var submitId = cancelRedoItems.Select(p => p.SubmitId).Single();
-            if (submitId <= 0)
-            {
-                //TODO: fail to get the submitId
-                return;
-            }
+            //var submitId = cancelRedoItems.Select(p => p.SubmitId).Single();
+            //if (submitId <= 0)
+            //{
+            //    //TODO: fail to get the submitId
+            //    return;
+            //}
             //set the cancel status
             int ret = _entrustBLL.Cancel(cancelRedoItems);
             

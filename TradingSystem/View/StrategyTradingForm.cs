@@ -232,7 +232,7 @@ namespace TradingSystem.View
                 return;
             ComboBox cb = sender as ComboBox;
 
-            PriceType priceType = PriceTypeUtil.GetPriceType(cb);
+            PriceType priceType = PriceTypeHelper.GetPriceType(cb);
             EntrustDirection direction = EntrustDirection.BuySpot;
             SecurityType secuType = SecurityType.All;
             switch (cb.Name)
@@ -343,10 +343,10 @@ namespace TradingSystem.View
 
         private void GridView_Command_Select(TradingCommandItem cmdItem)
         {
-            var spotBuyPrice = PriceTypeUtil.GetPriceType(this.cbSpotBuyPrice);
-            var spotSellPrice = PriceTypeUtil.GetPriceType(this.cbSpotSellPrice);
-            var futuBuyPrice = PriceTypeUtil.GetPriceType(this.cbFuturesBuyPrice);
-            var futuSellPrice = PriceTypeUtil.GetPriceType(this.cbFuturesSellPrice);
+            var spotBuyPrice = PriceTypeHelper.GetPriceType(this.cbSpotBuyPrice);
+            var spotSellPrice = PriceTypeHelper.GetPriceType(this.cbSpotSellPrice);
+            var futuBuyPrice = PriceTypeHelper.GetPriceType(this.cbFuturesBuyPrice);
+            var futuSellPrice = PriceTypeHelper.GetPriceType(this.cbFuturesSellPrice);
 
             //Add into two gridview: CommandSecurity and entrust
             var secuItems = _secuDataSource.Where(p => p.CommandId == cmdItem.CommandId);
@@ -679,10 +679,10 @@ namespace TradingSystem.View
             }
 
             //Get the price type
-            PriceType spotBuyPrice = PriceTypeUtil.GetPriceType(this.cbSpotBuyPrice);
-            PriceType spotSellPrice = PriceTypeUtil.GetPriceType(this.cbSpotSellPrice);
-            PriceType futureBuyPrice = PriceTypeUtil.GetPriceType(this.cbFuturesBuyPrice);
-            PriceType futureSellPrice = PriceTypeUtil.GetPriceType(this.cbFuturesSellPrice);
+            PriceType spotBuyPrice = PriceTypeHelper.GetPriceType(this.cbSpotBuyPrice);
+            PriceType spotSellPrice = PriceTypeHelper.GetPriceType(this.cbSpotSellPrice);
+            PriceType futureBuyPrice = PriceTypeHelper.GetPriceType(this.cbFuturesBuyPrice);
+            PriceType futureSellPrice = PriceTypeHelper.GetPriceType(this.cbFuturesSellPrice);
 
             //update each command item
             foreach (var eiItem in _eiDataSource)
@@ -876,7 +876,7 @@ namespace TradingSystem.View
 
             foreach (var secuItem in secuItems)
             {
-                var priceType = PriceTypeUtil.GetPriceType(secuItem.PriceType);
+                var priceType = PriceTypeHelper.GetPriceType(secuItem.PriceType);
                 EntrustSecurityItem entrustSecurityItem = new EntrustSecurityItem
                 {
                     SubmitId = submitId,
@@ -890,6 +890,35 @@ namespace TradingSystem.View
                     PriceType = priceType,
                     EntrustDate = DateTime.Now,
                 };
+
+                var secuInfo = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
+                string exchangeCode = string.Empty;
+                if (secuInfo != null)
+                {
+                    exchangeCode = secuInfo.ExchangeCode;
+                }
+                else
+                {
+                    exchangeCode = SecurityInfoHelper.GetExchangeCode(secuItem.SecuCode);
+                }
+
+                if (exchangeCode.Equals("SZSE"))
+                {
+                    entrustSecurityItem.EntrustPriceType = EntrustPriceType.FifthIsLeftOffSZ;
+                }
+                else if (exchangeCode.Equals("SSE"))
+                {
+                    entrustSecurityItem.EntrustPriceType = EntrustPriceType.FifthIsLeftOffSH;
+                }
+                else if (exchangeCode.Equals("CFFEX"))
+                {
+                    entrustSecurityItem.EntrustPriceType = EntrustPriceType.FifthIsLeftOffCFX;
+                }
+                else
+                { 
+                    //Do nothing
+                }
+                
 
                 entrustSecuItems.Add(entrustSecurityItem);
             }

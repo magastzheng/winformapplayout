@@ -13,8 +13,9 @@ create table entrustsecurity(
 	,EntrustPrice		numeric(20, 4) 
 	,EntrustDirection	int			 --10 - 买入股票， 11 - 卖出股票， 12 - 卖出开仓， 13 - 买入平仓
 	,EntrustStatus		int			 -- 0 - 提交到DB, 1 - 提交到UFX， 2 - 未执行， 3 - 部分执行， 4 - 已完成， 10 - 撤单DB, 11 - 撤单UFX, 12 - 撤单成功， 13 - 撤单失败
+	,EntrustPriceType	int			 -- 委托价格类型： 0 - 限价，'a'五档即成剩撤(上交所市价)， 'A'五档即成剩撤(深交所市价)
 	,PriceType			int			 -- 
-	,EntrustNo			int			--委托之后，服务器返回的委托号
+	,EntrustNo			int			 --委托之后，服务器返回的委托号
 	,DealStatus			int			 -- 1 - 未成交， 2 - 部分成交， 3 - 已完成
 	,DealAmount			int			 -- 成交数量
 	--,BatchId			int			 -- 委托后返回的批号ID
@@ -41,6 +42,7 @@ create proc procEntrustSecurityInsert(
 	,@EntrustPrice		numeric(20, 4)
 	,@EntrustDirection	int
 	,@EntrustStatus		int
+	,@EntrustPriceType	int
 	,@PriceType			int
 	,@EntrustDate		datetime
 	,@CreatedDate		datetime
@@ -56,6 +58,7 @@ begin
 		,EntrustPrice		
 		,EntrustDirection	
 		,EntrustStatus
+		,EntrustPriceType
 		,PriceType
 		,EntrustNo
 		,DealStatus
@@ -72,6 +75,7 @@ begin
 		,@EntrustPrice		
 		,@EntrustDirection	
 		,@EntrustStatus
+		,@EntrustPriceType
 		,@PriceType
 		,-1					--初始时没有委托序号，只有通过UFX委托完成之后，才会产生
 		,1					--未成交
@@ -95,6 +99,7 @@ create proc procEntrustSecurityUpdate(
 	,@EntrustPrice		numeric(20, 4)
 	,@EntrustDirection	int
 	,@EntrustStatus		int
+	,@EntrustPriceType	int
 	,@PriceType			int
 	,@EntrustNo			int
 	,@EntrustDate		datetime
@@ -107,6 +112,7 @@ begin
 		,EntrustPrice		= @EntrustPrice
 		,EntrustDirection	= @EntrustDirection
 		,EntrustStatus		= @EntrustStatus
+		,EntrustPriceType	= @EntrustPriceType
 		,PriceType			= @PriceType
 		,EntrustNo			= @EntrustNo
 		,EntrustDate		= @EntrustDate
@@ -319,6 +325,7 @@ begin
 		,EntrustPrice		
 		,EntrustDirection	
 		,EntrustStatus
+		,EntrustPriceType
 		,PriceType
 		,EntrustNo
 		,DealStatus
@@ -349,6 +356,7 @@ begin
 		,EntrustPrice		
 		,EntrustDirection	
 		,EntrustStatus
+		,EntrustPriceType
 		,PriceType
 		,EntrustNo
 		,DealStatus
@@ -377,6 +385,7 @@ begin
 		,EntrustPrice		
 		,EntrustDirection	
 		,EntrustStatus
+		,EntrustPriceType
 		,PriceType
 		,EntrustNo
 		,DealStatus
@@ -408,6 +417,7 @@ begin
 		,EntrustPrice		
 		,EntrustDirection	
 		,EntrustStatus
+		,EntrustPriceType
 		,PriceType
 		,EntrustNo
 		,DealStatus
@@ -441,6 +451,7 @@ begin
 		,EntrustPrice		
 		,EntrustDirection	
 		,EntrustStatus
+		,EntrustPriceType
 		,PriceType
 		,EntrustNo
 		,DealStatus
@@ -475,6 +486,7 @@ begin
 		,EntrustPrice		
 		,EntrustDirection	
 		,EntrustStatus
+		,EntrustPriceType
 		,PriceType
 		,EntrustNo
 		,DealStatus

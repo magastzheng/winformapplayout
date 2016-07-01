@@ -53,6 +53,7 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@EntrustPrice", System.Data.DbType.Decimal, item.EntrustPrice);
             _dbHelper.AddInParameter(dbCommand, "@EntrustDirection", System.Data.DbType.Int32, (int)item.EntrustDirection);
             _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)item.EntrustStatus);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustPriceType", System.Data.DbType.Int32, (int)item.EntrustPriceType);
             _dbHelper.AddInParameter(dbCommand, "@PriceType", System.Data.DbType.Int32, (int)item.PriceType);
             _dbHelper.AddInParameter(dbCommand, "@EntrustDate", System.Data.DbType.DateTime, item.EntrustDate);
             _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, DateTime.Now);
@@ -70,6 +71,7 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@EntrustPrice", System.Data.DbType.Decimal, item.EntrustPrice);
             _dbHelper.AddInParameter(dbCommand, "@EntrustDirection", System.Data.DbType.Int32, (int)item.EntrustDirection);
             _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)item.EntrustStatus);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustPriceType", System.Data.DbType.Int32, (int)item.EntrustPriceType);
             _dbHelper.AddInParameter(dbCommand, "@PriceType", System.Data.DbType.Int32, (int)item.PriceType);
             _dbHelper.AddInParameter(dbCommand, "@EntrustNo", System.Data.DbType.Int32, (int)item.EntrustNo);
             _dbHelper.AddInParameter(dbCommand, "@EntrustDate", System.Data.DbType.DateTime, item.EntrustDate);
@@ -190,6 +192,7 @@ namespace DBAccess
                     item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
                     item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+                    item.EntrustPriceType = (EntrustPriceType)reader["EntrustPriceType"];
                     item.PriceType = (PriceType)reader["PriceType"];
                     item.EntrustNo = (int)reader["EntrustNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
@@ -239,6 +242,7 @@ namespace DBAccess
                     item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
                     item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+                    item.EntrustPriceType = (EntrustPriceType)reader["EntrustPriceType"];
                     item.PriceType = (PriceType)reader["PriceType"];
                     item.EntrustNo = (int)reader["EntrustNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
@@ -288,6 +292,7 @@ namespace DBAccess
                     item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
                     item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+                    item.EntrustPriceType = (EntrustPriceType)reader["EntrustPriceType"];
                     item.PriceType = (PriceType)reader["PriceType"];
                     item.EntrustNo = (int)reader["EntrustNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
@@ -339,6 +344,7 @@ namespace DBAccess
                     item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
                     item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+                    item.EntrustPriceType = (EntrustPriceType)reader["EntrustPriceType"];
                     item.PriceType = (PriceType)reader["PriceType"];
                     item.EntrustNo = (int)reader["EntrustNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
@@ -388,6 +394,7 @@ namespace DBAccess
                     item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
                     item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+                    item.EntrustPriceType = (EntrustPriceType)reader["EntrustPriceType"];
                     item.PriceType = (PriceType)reader["PriceType"];
                     item.EntrustNo = (int)reader["EntrustNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
@@ -437,6 +444,7 @@ namespace DBAccess
                     item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
                     item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+                    item.EntrustPriceType = (EntrustPriceType)reader["EntrustPriceType"];
                     item.PriceType = (PriceType)reader["PriceType"];
                     item.EntrustNo = (int)reader["EntrustNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];

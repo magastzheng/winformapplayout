@@ -75,6 +75,7 @@ namespace DBAccess
                         _dbHelper.AddInParameter(dbCommand, "@EntrustPrice", System.Data.DbType.Decimal, entrustItem.EntrustPrice);
                         _dbHelper.AddInParameter(dbCommand, "@EntrustDirection", System.Data.DbType.Int32, (int)entrustItem.EntrustDirection);
                         _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)entrustItem.EntrustStatus);
+                        _dbHelper.AddInParameter(dbCommand, "@EntrustPriceType", System.Data.DbType.Int32, (int)entrustItem.EntrustPriceType);
                         _dbHelper.AddInParameter(dbCommand, "@PriceType", System.Data.DbType.Int32, (int)entrustItem.PriceType);
                         _dbHelper.AddInParameter(dbCommand, "@EntrustDate", System.Data.DbType.DateTime, entrustItem.EntrustDate);
                         _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, DateTime.Now);

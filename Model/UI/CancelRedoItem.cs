@@ -1,4 +1,5 @@
 ﻿using Model.Binding;
+using Model.config;
 using Model.Data;
 using Model.SecurityInfo;
 using System;
@@ -33,13 +34,46 @@ namespace Model.UI
         public EntrustDirection EntrustDirection { get; set; }
 
         [BindingAttribute("commandprice")]
-        public string CommandPrice { get; set; }
+        public string CommandPrice
+        {
+            get 
+            {
+                if (ECommandPrice == config.PriceType.None)
+                {
+                    return string.Empty;
+                }
+                else
+                {
+                    return ECommandPrice.ToString();
+                }
+            }
+        }
 
         [BindingAttribute("pricesetting")]
-        public string PriceSetting { get; set; }
+        public string PriceSetting
+        {
+            get
+            {
+                if (EPriceSetting == config.PriceType.None)
+                {
+                    return string.Empty;
+                }
+                else
+                {
+                    return EPriceSetting.ToString();
+                }
+            }
+        }
 
         [BindingAttribute("pricetype")]
-        public string PriceType { get; set; }
+        public string PriceType
+        {
+            get
+            {
+                return EEntrustPriceType.ToString();
+            }
+        }
+
 
         [BindingAttribute("entrustprice")]
         public double EntrustPrice { get; set; }
@@ -60,7 +94,13 @@ namespace Model.UI
         public int DealAmount { get; set; }
 
         [BindingAttribute("originpricetype")]
-        public string OriginPriceType { get; set; }
+        public string OriginPriceType
+        {
+            get 
+            {
+                return EOriginPriceType.ToString();
+            }
+        }
 
         [BindingAttribute("turnoverratio")]
         public double TurnoverRatio { get; set; }
@@ -132,5 +172,13 @@ namespace Model.UI
         public DateTime EntrustDate { get; set; }
 
         public int SubmitId { get; set; }
+
+        public PriceType EPriceSetting { get; set; }
+
+        public PriceType ECommandPrice { get; set; }
+
+        public EntrustPriceType EEntrustPriceType { get; set; }
+
+        public EntrustPriceType EOriginPriceType { get; set; }
     }
 }

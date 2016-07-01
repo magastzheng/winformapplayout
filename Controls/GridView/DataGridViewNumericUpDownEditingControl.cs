@@ -15,7 +15,7 @@ namespace Controls.GridView
         private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
 
         // The grid that owns this editing control
-        private DataGridView dataGridView;
+        private TSDataGridView dataGridView;
         // Stores whether the editing control's value has changed or not
         private bool valueChanged;
         // Stores the row index in which the editing control resides
@@ -43,7 +43,7 @@ namespace Controls.GridView
             }
             set
             {
-                this.dataGridView = value;
+                this.dataGridView = (TSDataGridView)value;
             }
         }
 
@@ -283,6 +283,7 @@ namespace Controls.GridView
                 this.valueChanged = true;
                 this.dataGridView.NotifyCurrentCellDirty(true);
             }
+
         }
 
         /// <summary>
@@ -338,6 +339,8 @@ namespace Controls.GridView
                 // Let the DataGridView know about the value change
                 NotifyDataGridViewOfValueChange();
             }
+
+            this.dataGridView.NotifyNumericUpDownValueChanged(this.Value);
         }
 
         /// <summary>

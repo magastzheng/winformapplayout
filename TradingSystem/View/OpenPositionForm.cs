@@ -52,7 +52,20 @@ namespace TradingSystem.View
             LoadControl += new FormLoadHandler(Form_LoadControl);
             LoadData += new FormLoadHandler(Form_LoadData);
             monitorGridView.UpdateRelatedDataGridHandler += new UpdateRelatedDataGrid(MonitorGridView_UpdateRelatedDataGrid);
+            monitorGridView.NumericUpDownValueChanged += new NumericUpDownValueChanged(MonitorGridView_NumericUpDownValueChanged);
+
             btnBottomContainer.ButtonClick += new EventHandler(ButtonContainer_ButtonClick);
+        }
+
+        private void MonitorGridView_NumericUpDownValueChanged(int newValue, int rowIndex, int columnIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= _monitorDataSource.Count)
+                return;
+            //该事件触发时，绑定数据还没有被同步
+            OpenPositionItem monitorItem = _monitorDataSource[rowIndex];
+            CalcEntrustAmount(monitorItem, newValue);
+
+            securityGridView.Invalidate();
         }
 
         private void MonitorGridView_UpdateRelatedDataGrid(UpdateDirection direction, int rowIndex, int columnIndex)
@@ -198,6 +211,15 @@ namespace TradingSystem.View
 
                 int pos = _securityDataSource.Count - stocks.Count;
                 _securityDataSource.Insert(pos, futureItem);
+            }
+        }
+
+        private void CalcEntrustAmount(OpenPositionItem monitorItem, int copies)
+        {
+            var secuItems = _securityDataSource.Where(p => p.MonitorId == monitorItem.MonitorId);
+            foreach (var secuItem in secuItems)
+            {
+                secuItem.EntrustAmount = copies * secuItem.WeightAmount;
             }
         }
 

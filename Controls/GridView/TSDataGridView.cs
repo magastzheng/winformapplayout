@@ -20,16 +20,19 @@ namespace Controls.GridView
         Increase = 3,
         Decrease = 4,
         Update = 5,
+        NumericChanged = 6,
     }
 
     public delegate void UpdateRelatedDataGrid(UpdateDirection direction, int rowIndex, int columnIndex);
     public delegate void ClickRowHandler(object sender, int rowIndex);
+    public delegate void NumericUpDownValueChanged(int newValue, int rowIndex, int columnIndex);
 
     public partial class TSDataGridView : DataGridView
     {
         public event UpdateRelatedDataGrid UpdateRelatedDataGridHandler;
         public event ClickRowHandler MouseClickRow;
         public event ClickRowHandler DoubleClickRow;
+        public event NumericUpDownValueChanged NumericUpDownValueChanged;
 
         public KeyPressEventHandler CopiesCheckHandler = new KeyPressEventHandler(CopiesCheck);
 
@@ -59,6 +62,21 @@ namespace Controls.GridView
             this.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_CellContentClick);
             this.CellDoubleClick += new DataGridViewCellEventHandler(DataGridView_CellDoubleClick);
             this.CellEndEdit += new DataGridViewCellEventHandler(DataGridView_CellEndEdit);
+
+            this.CurrentCellChanged += new EventHandler(DataGridView_CurrentCellChanged);
+        }
+
+        public void NotifyNumericUpDownValueChanged(decimal newValue)
+        {
+            if (NumericUpDownValueChanged != null)
+            {
+                NumericUpDownValueChanged((int)newValue, CurrentCell.RowIndex, CurrentCell.ColumnIndex);
+            }
+        }
+
+        private void DataGridView_CurrentCellChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("test");
         }
 
         private void DataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)

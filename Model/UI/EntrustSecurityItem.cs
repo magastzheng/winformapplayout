@@ -29,6 +29,8 @@ namespace Model.UI
 
         public DealStatus DealStatus { get; set; }
 
+        public EntrustPriceType EntrustPriceType { get; set; }
+
         public PriceType PriceType { get; set; }
 
         public int DealAmount { get; set; }

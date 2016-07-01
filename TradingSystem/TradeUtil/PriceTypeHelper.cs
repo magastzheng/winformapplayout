@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace TradingSystem.TradeUtil
 {
-    public class PriceTypeUtil
+    public class PriceTypeHelper
     {
         public static PriceType GetPriceType(ComboBox comboBox)
         {

@@ -29,3 +29,5 @@ where CommandId=1
 order by SecuCode
 
 truncate table tradingcommandsecurity
+
+select * from securityinfo
