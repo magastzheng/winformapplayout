@@ -18,6 +18,38 @@ namespace BLL.Entrust
         { 
         }
 
+        public int SubmitOne(List<CancelRedoItem> cancelItems)
+        {
+            var commandIds = cancelItems.Select(p => p.CommandId).Distinct().ToList();
+            var commandId = commandIds.First();
+            EntrustCommandItem cmdItem = new EntrustCommandItem 
+            {
+                CommandId = commandId,
+            };
+
+            //TODO: adjust the EntrustAmount
+            List<EntrustSecurityItem> entrustItems = new List<EntrustSecurityItem>();
+            foreach (var cancelItem in cancelItems)
+            {
+                EntrustSecurityItem item = new EntrustSecurityItem
+                {
+                    CommandId = cancelItem.CommandId,
+                    SecuCode = cancelItem.SecuCode,
+                    SecuType = cancelItem.SecuType,
+                    EntrustAmount = cancelItem.LeftAmount,
+                    EntrustPrice = cancelItem.EntrustPrice,
+                    EntrustDirection = cancelItem.EntrustDirection,
+                    EntrustPriceType = cancelItem.EEntrustPriceType,
+                    PriceType = cancelItem.EPriceSetting,
+                    EntrustDate = DateTime.Now,
+                };
+
+                entrustItems.Add(item);
+            }
+
+            return SubmitOne(cmdItem, entrustItems);
+        }
+
         public int SubmitOne(EntrustCommandItem cmdItem, List<EntrustSecurityItem> entrustItems)
         {
             return _entrustdao.Submit(cmdItem, entrustItems);

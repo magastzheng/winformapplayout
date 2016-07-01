@@ -112,66 +112,6 @@ namespace TradingSystem.Dialog
             this.secuGridView.Invalidate();
         }
 
-        //private void ComboBox_SpotBuyPrice_SelectedIndexChanged(object sender, EventArgs e)
-        //{
-        //    if (sender == null || !(sender is ComboBox))
-        //        return;
-        //    ComboBox cb = sender as ComboBox;
-
-        //    PriceType spotBuyPrice = PriceTypeUtil.GetPriceType(cb);
-        //    var stockItems = _secuDataSource.Where(p => p.EntrustDirection == Model.Data.EntrustDirection.BuySpot && p.SecuType == Model.SecurityInfo.SecurityType.Stock).ToList();
-        //    stockItems.ForEach(p => { p.PriceType = spotBuyPrice.ToString(); });
-
-        //    //TODO: update the price by setting
-
-        //    this.secuGridView.Invalidate();
-        //}
-
-        //private void ComboBox_SpotSellPrice_SelectedIndexChanged(object sender, EventArgs e)
-        //{
-        //    if (sender == null || !(sender is ComboBox))
-        //        return;
-        //    ComboBox cb = sender as ComboBox;
-
-        //    PriceType spotSellPrice = PriceTypeUtil.GetPriceType(cb);
-        //    var stockItems = _secuDataSource.Where(p => p.EntrustDirection == Model.Data.EntrustDirection.SellSpot && p.SecuType == Model.SecurityInfo.SecurityType.Stock).ToList();
-        //    stockItems.ForEach(p => { p.PriceType = spotSellPrice.ToString(); });
-
-        //    //TODO: update the price by setting
-
-        //    this.secuGridView.Invalidate();
-        //}
-
-        //private void ComboBox_FuturesBuyPrice_SelectedIndexChanged(object sender, EventArgs e)
-        //{
-        //    if (sender == null || !(sender is ComboBox))
-        //        return;
-        //    ComboBox cb = sender as ComboBox;
-
-        //    PriceType futuBuyPrice = PriceTypeUtil.GetPriceType(cb);
-        //    var stockItems = _secuDataSource.Where(p => p.EntrustDirection == Model.Data.EntrustDirection.BuyClose && p.SecuType == Model.SecurityInfo.SecurityType.Futures).ToList();
-        //    stockItems.ForEach(p => { p.PriceType = futuBuyPrice.ToString(); });
-
-        //    //TODO: update the price by setting
-
-        //    this.secuGridView.Invalidate();
-        //}
-
-        //private void ComboBox_FuturesSellPrice_SelectedIndexChanged(object sender, EventArgs e)
-        //{
-        //    if (sender == null || !(sender is ComboBox))
-        //        return;
-        //    ComboBox cb = sender as ComboBox;
-
-        //    PriceType futuSellPrice = PriceTypeUtil.GetPriceType(cb);
-        //    var stockItems = _secuDataSource.Where(p => p.EntrustDirection == Model.Data.EntrustDirection.SellOpen && p.SecuType == Model.SecurityInfo.SecurityType.Futures).ToList();
-        //    stockItems.ForEach(p => { p.PriceType = futuSellPrice.ToString(); });
-
-        //    //TODO: update the price by setting
-
-        //    this.secuGridView.Invalidate();
-        //}
-
         #endregion
 
         #region market price type
@@ -275,7 +215,6 @@ namespace TradingSystem.Dialog
             _tradeCommandItems = data as List<TradingCommandItem>;
             foreach (var cmdItem in _tradeCommandItems)
             { 
-                //var entrustItems = _entrustcmddao.GetByEntrustStatus(
                 var entrustSecuItems = _entrustsecudao.GetCancelRedo(cmdItem.CommandId);
                 if (entrustSecuItems != null && entrustSecuItems.Count() > 0)
                 {
@@ -376,9 +315,9 @@ namespace TradingSystem.Dialog
             {
                 var oneCancelRedoItem = selectItems.Where(p => p.SubmitId == submitId).ToList();
                 CancelRedo(submitId, oneCancelRedoItem);
+                Submit(oneCancelRedoItem);
             }
         }
-
 
         private void Button_Cancel_Click(object sender, EventArgs e)
         {
@@ -408,7 +347,10 @@ namespace TradingSystem.Dialog
             ret = _entrustBLL.CancelSuccess(cancelRedoItems);
         }
 
-        //private void UpdateEntrustStatus(EntrustSecurityItem 
+        private void Submit(List<CancelRedoItem> cancelRedoItems)
+        {
+            var ret = _entrustBLL.SubmitOne(cancelRedoItems);
+        }
 
         #endregion
     }
