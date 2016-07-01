@@ -400,9 +400,9 @@ namespace TradingSystem.View
                 PortfolioName = "Test",
                 CommandPrice = 12.23,
                 CommandAmount = 12345,
-                EntrustDirection = "Buy",
+                //EntrustDirection = "Buy",
                 EntrustedAmount = 1200,
-                PriceType = "B1",
+                //PriceType = "B1",
                 EntrustPrice = 12.20,
                 ThisEntrustAmount = 120,
                 DealAmount = 200,
@@ -424,9 +424,9 @@ namespace TradingSystem.View
                 PortfolioName = "Test",
                 CommandPrice = 12.23,
                 CommandAmount = 12345,
-                EntrustDirection = "Buy",
+                //EntrustDirection = "Buy",
                 EntrustedAmount = 1200,
-                PriceType = "B1",
+                //PriceType = "B1",
                 EntrustPrice = 12.20,
                 ThisEntrustAmount = 120,
                 DealAmount = 200,
@@ -497,9 +497,9 @@ namespace TradingSystem.View
                     item.PortfolioName = (string)row.Cells["cs_portfolioname"].Value;
                     item.CommandPrice = (double)row.Cells["cs_commandprice"].Value;
                     item.CommandAmount = (int)row.Cells["cs_commandamount"].Value;
-                    item.EntrustDirection = (string)row.Cells["cs_entrustdirection"].Value;
+                    //item.EntrustDirection = (string)row.Cells["cs_entrustdirection"].Value;
                     item.EntrustedAmount = (int)row.Cells["cs_entrustedamount"].Value;
-                    item.PriceType = (string)row.Cells["cs_pricetype"].Value;
+                    //item.PriceType = (string)row.Cells["cs_pricetype"].Value;
                     item.EntrustPrice = (double)row.Cells["cs_entrustprice"].Value;
                     item.ThisEntrustAmount = (int)row.Cells["cs_thisentrustamout"].Value;
                     item.DealAmount = (int)row.Cells["cs_dealamount"].Value;

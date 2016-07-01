@@ -16,6 +16,8 @@ using DBAccess;
 using Model.config;
 using TradingSystem.TradeUtil;
 using BLL.Entrust;
+using Model.SecurityInfo;
+using Model.Data;
 
 namespace TradingSystem.Dialog
 {
@@ -51,70 +53,134 @@ namespace TradingSystem.Dialog
             this.btnConfirm.Click += new EventHandler(Button_Confirm_Click);
             this.btnCancel.Click += new EventHandler(Button_Cancel_Click);
 
-            this.cbSpotBuyPrice.Click += new EventHandler(ComboBox_SpotBuyPrice_Click);
-            this.cbSpotSellPrice.Click += new EventHandler(ComboBox_SpotSellPrice_Click);
-            this.cbFuturesBuyPrice.Click += new EventHandler(ComboBox_FuturesBuyPrice_Click);
-            this.cbFuturesSellPrice.Click += new EventHandler(ComboBox_FuturesSellPrice_Click);
-            this.cbSHExchangePrice.Click += new EventHandler(ComboBox_SHExchangePrice_Click);
-            this.cbSZExchangePrice.Click += new EventHandler(ComboBox_SZExchangePrice_Click);
+
+            this.cbSpotBuyPrice.SelectedIndexChanged += new EventHandler(ComboBox_PriceType_SelectedIndexChange);
+            this.cbSpotSellPrice.SelectedIndexChanged += new EventHandler(ComboBox_PriceType_SelectedIndexChange);
+            this.cbFuturesBuyPrice.SelectedIndexChanged += new EventHandler(ComboBox_PriceType_SelectedIndexChange);
+            this.cbFuturesSellPrice.SelectedIndexChanged += new EventHandler(ComboBox_PriceType_SelectedIndexChange);
+            this.cbSHExchangePrice.SelectedIndexChanged += new EventHandler(ComboBox_SHExchangePrice_SelectedIndexChanged);
+            this.cbSZExchangePrice.SelectedIndexChanged += new EventHandler(ComboBox_SZExchangePrice_SelectedIndexChanged);
         }
 
         #region price type
-        
-        private void ComboBox_SpotBuyPrice_Click(object sender, EventArgs e)
+
+        private void ComboBox_PriceType_SelectedIndexChange(object sender, EventArgs e)
         {
-            PriceType spotBuyPrice = PriceTypeUtil.GetPriceType(this.cbSpotBuyPrice);
-            var stockItems = _secuDataSource.Where(p => p.EntrustDirection == Model.Data.EntrustDirection.BuySpot && p.SecuType == Model.SecurityInfo.SecurityType.Stock).ToList();
-            stockItems.ForEach(p => { p.PriceType = spotBuyPrice.ToString(); });
+            if (sender == null || !(sender is ComboBox))
+                return;
+            ComboBox cb = sender as ComboBox;
+
+            PriceType priceType = PriceTypeUtil.GetPriceType(cb);
+            EntrustDirection direction = EntrustDirection.BuySpot;
+            SecurityType secuType = SecurityType.All;
+            switch (cb.Name)
+            {
+                case "cbSpotBuyPrice":
+                    {
+                        direction = EntrustDirection.BuySpot;
+                        secuType = SecurityType.Stock;
+                    }
+                    break;
+                case "cbSpotSellPrice":
+                    {
+                        direction = EntrustDirection.SellSpot;
+                        secuType = SecurityType.Stock;
+                    }
+                    break;
+                case "cbFuturesBuyPrice":
+                    {
+                        direction = EntrustDirection.BuyClose;
+                        secuType = SecurityType.Futures;
+                    }
+                    break;
+                case "cbFuturesSellPrice":
+                    {
+                        direction = EntrustDirection.SellOpen;
+                        secuType = SecurityType.Futures;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            var stockItems = _secuDataSource.Where(p => p.EntrustDirection == direction && p.SecuType == secuType).ToList();
+            stockItems.ForEach(p => { p.PriceType = priceType.ToString(); });
 
             //TODO: update the price by setting
 
             this.secuGridView.Invalidate();
         }
 
-        private void ComboBox_SpotSellPrice_Click(object sender, EventArgs e)
-        {
-            PriceType spotSellPrice = PriceTypeUtil.GetPriceType(this.cbSpotSellPrice);
-            var stockItems = _secuDataSource.Where(p => p.EntrustDirection == Model.Data.EntrustDirection.SellSpot && p.SecuType == Model.SecurityInfo.SecurityType.Stock).ToList();
-            stockItems.ForEach(p => { p.PriceType = spotSellPrice.ToString(); });
+        //private void ComboBox_SpotBuyPrice_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    if (sender == null || !(sender is ComboBox))
+        //        return;
+        //    ComboBox cb = sender as ComboBox;
 
-            //TODO: update the price by setting
+        //    PriceType spotBuyPrice = PriceTypeUtil.GetPriceType(cb);
+        //    var stockItems = _secuDataSource.Where(p => p.EntrustDirection == Model.Data.EntrustDirection.BuySpot && p.SecuType == Model.SecurityInfo.SecurityType.Stock).ToList();
+        //    stockItems.ForEach(p => { p.PriceType = spotBuyPrice.ToString(); });
 
-            this.secuGridView.Invalidate();
-        }
+        //    //TODO: update the price by setting
 
-        private void ComboBox_FuturesBuyPrice_Click(object sender, EventArgs e)
-        {
-            PriceType futuBuyPrice = PriceTypeUtil.GetPriceType(this.cbFuturesBuyPrice);
-            var stockItems = _secuDataSource.Where(p => p.EntrustDirection == Model.Data.EntrustDirection.BuyClose && p.SecuType == Model.SecurityInfo.SecurityType.Futures).ToList();
-            stockItems.ForEach(p => { p.PriceType = futuBuyPrice.ToString(); });
+        //    this.secuGridView.Invalidate();
+        //}
 
-            //TODO: update the price by setting
+        //private void ComboBox_SpotSellPrice_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    if (sender == null || !(sender is ComboBox))
+        //        return;
+        //    ComboBox cb = sender as ComboBox;
 
-            this.secuGridView.Invalidate();
-        }
+        //    PriceType spotSellPrice = PriceTypeUtil.GetPriceType(cb);
+        //    var stockItems = _secuDataSource.Where(p => p.EntrustDirection == Model.Data.EntrustDirection.SellSpot && p.SecuType == Model.SecurityInfo.SecurityType.Stock).ToList();
+        //    stockItems.ForEach(p => { p.PriceType = spotSellPrice.ToString(); });
 
-        private void ComboBox_FuturesSellPrice_Click(object sender, EventArgs e)
-        {
-            PriceType futuSellPrice = PriceTypeUtil.GetPriceType(this.cbSpotSellPrice);
-            var stockItems = _secuDataSource.Where(p => p.EntrustDirection == Model.Data.EntrustDirection.SellOpen && p.SecuType == Model.SecurityInfo.SecurityType.Futures).ToList();
-            stockItems.ForEach(p => { p.PriceType = futuSellPrice.ToString(); });
+        //    //TODO: update the price by setting
 
-            //TODO: update the price by setting
+        //    this.secuGridView.Invalidate();
+        //}
 
-            this.secuGridView.Invalidate();
-        }
+        //private void ComboBox_FuturesBuyPrice_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    if (sender == null || !(sender is ComboBox))
+        //        return;
+        //    ComboBox cb = sender as ComboBox;
+
+        //    PriceType futuBuyPrice = PriceTypeUtil.GetPriceType(cb);
+        //    var stockItems = _secuDataSource.Where(p => p.EntrustDirection == Model.Data.EntrustDirection.BuyClose && p.SecuType == Model.SecurityInfo.SecurityType.Futures).ToList();
+        //    stockItems.ForEach(p => { p.PriceType = futuBuyPrice.ToString(); });
+
+        //    //TODO: update the price by setting
+
+        //    this.secuGridView.Invalidate();
+        //}
+
+        //private void ComboBox_FuturesSellPrice_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    if (sender == null || !(sender is ComboBox))
+        //        return;
+        //    ComboBox cb = sender as ComboBox;
+
+        //    PriceType futuSellPrice = PriceTypeUtil.GetPriceType(cb);
+        //    var stockItems = _secuDataSource.Where(p => p.EntrustDirection == Model.Data.EntrustDirection.SellOpen && p.SecuType == Model.SecurityInfo.SecurityType.Futures).ToList();
+        //    stockItems.ForEach(p => { p.PriceType = futuSellPrice.ToString(); });
+
+        //    //TODO: update the price by setting
+
+        //    this.secuGridView.Invalidate();
+        //}
 
         #endregion
 
         #region market price type
 
-        private void ComboBox_SHExchangePrice_Click(object sender, EventArgs e)
+        private void ComboBox_SHExchangePrice_SelectedIndexChanged(object sender, EventArgs e)
         {
             throw new NotImplementedException();
         }
 
-        private void ComboBox_SZExchangePrice_Click(object sender, EventArgs e)
+        private void ComboBox_SZExchangePrice_SelectedIndexChanged(object sender, EventArgs e)
         {
             throw new NotImplementedException();
         }

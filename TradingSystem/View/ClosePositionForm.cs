@@ -600,7 +600,7 @@ namespace TradingSystem.View
                         SecuType = item.SecuType,
                         CommandAmount = item.EntrustAmount,
                         CommandPrice = item.CommandPrice,
-                        EntrustDirection = string.Format("{0}", item.EntrustDirection),
+                        EDirection = (EntrustDirection)item.EntrustDirection,
                         EntrustStatus = EntrustStatus.NoExecuted
                     };
 

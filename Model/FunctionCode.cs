@@ -102,5 +102,14 @@ namespace Model
 
         //撤销篮子委托
         WithdrawBasket = 91102,
+
+        //消息中心心跳
+        MCHeartBeat = 620000,
+
+        //收到订阅应答
+        MCRecvSubscribe = 620001,
+
+        //收到取消订阅应答
+        MCRecvUnsubscribe = 620002,
     }
 }

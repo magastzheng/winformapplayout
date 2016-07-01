@@ -1,4 +1,5 @@
 ﻿using BLL;
+using BLL.UFX;
 using Config;
 using Model;
 using Model.strategy;
@@ -46,14 +47,19 @@ namespace TradingSystem.Controller
             };
 
             int retCode = (int)_loginBLL.Login(user);
-            if (retCode == (int)ConnectionCode.Success)
-            {
-                _loginBLL.QueryAccount(new DataHandlerCallback(ParseAccount));
-                _loginBLL.QueryAssetUnit();
+            //if (retCode == (int)ConnectionCode.Success)
+            //{
+                //_loginBLL.QueryAccount(new DataHandlerCallback(ParseAccount));
+                //_loginBLL.QueryAssetUnit();
                 //_loginBLL.QueryPortfolio();
                 //_loginBLL.QueryHolder();
                 //_loginBLL.QueryTrading();
-            }
+
+                var gridConfig = ConfigManager.Instance.GetGridConfig();
+                MainForm mainForm = new MainForm(gridConfig);
+                MainController mainController = new MainController(mainForm, this._t2SDKWrap);
+                Program._s_mainfrmController = mainController;
+            //}
 
             return retCode;
         }

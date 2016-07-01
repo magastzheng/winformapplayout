@@ -435,11 +435,11 @@ namespace TradingSystem.View
 
                     if(secuItem.SecuType == SecurityType.Stock)
                     {
-                        secuItem.EntrustDirection = string.Format("{0}", (int)EntrustDirection.BuySpot);
+                        secuItem.EDirection = EntrustDirection.BuySpot;
                     }
                     else
                     {
-                        secuItem.EntrustDirection = string.Format("{0}", (int)EntrustDirection.SellOpen);
+                        secuItem.EDirection = EntrustDirection.SellOpen;
                     }
                        
                     cmdSecuItems.Add(secuItem);

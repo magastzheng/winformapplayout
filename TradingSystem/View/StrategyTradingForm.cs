@@ -90,10 +90,10 @@ namespace TradingSystem.View
             this.btnSecuSelect.Click += new EventHandler(Button_Security_Select_Click);
             this.btnSecuUnSelect.Click += new EventHandler(Button_Security_UnSelect_Click);
 
-            this.cbSpotBuyPrice.SelectedIndexChanged += new EventHandler(ComboBox_SelectedIndexChange);
-            this.cbSpotSellPrice.SelectedIndexChanged += new EventHandler(ComboBox_SelectedIndexChange);
-            this.cbFuturesBuyPrice.SelectedIndexChanged += new EventHandler(ComboBox_SelectedIndexChange);
-            this.cbFuturesSellPrice.SelectedIndexChanged += new EventHandler(ComboBox_SelectedIndexChange);
+            this.cbSpotBuyPrice.SelectedIndexChanged += new EventHandler(ComboBox_PriceType_SelectedIndexChange);
+            this.cbSpotSellPrice.SelectedIndexChanged += new EventHandler(ComboBox_PriceType_SelectedIndexChange);
+            this.cbFuturesBuyPrice.SelectedIndexChanged += new EventHandler(ComboBox_PriceType_SelectedIndexChange);
+            this.cbFuturesSellPrice.SelectedIndexChanged += new EventHandler(ComboBox_PriceType_SelectedIndexChange);
         }
 
         #region Command panel cancel/cancelappend/canceladd click event
@@ -215,7 +215,7 @@ namespace TradingSystem.View
                     secuItem.TargetCopies = cmdItem.TargetNum;
                     secuItem.TargetAmount = secuItem.TargetCopies * secuItem.WeightAmount;
                     secuItem.WaitAmount = secuItem.TargetCopies * secuItem.WeightAmount;
-                    secuItem.PriceType = string.Empty;
+                    secuItem.EPriceType = PriceType.None;
                     secuItem.EntrustPrice = 0.0f;
                     secuItem.ThisEntrustAmount = 0;
                 }
@@ -226,37 +226,38 @@ namespace TradingSystem.View
 
         #region price type change
 
-        private void ComboBox_SelectedIndexChange(object sender, EventArgs e)
+        private void ComboBox_PriceType_SelectedIndexChange(object sender, EventArgs e)
         {
             if (sender == null || !(sender is ComboBox))
                 return;
             ComboBox cb = sender as ComboBox;
-            string priceType = GetPriceTypeId(cb);
-            string direction = string.Empty;
+
+            PriceType priceType = PriceTypeUtil.GetPriceType(cb);
+            EntrustDirection direction = EntrustDirection.BuySpot;
             SecurityType secuType = SecurityType.All;
             switch (cb.Name)
             {
                 case "cbSpotBuyPrice":
                     { 
-                        direction = string.Format("{0}", (int)EntrustDirection.BuySpot);
+                        direction = EntrustDirection.BuySpot;
                         secuType = SecurityType.Stock;
                     }
                     break;
                 case "cbSpotSellPrice":
                     {
-                        direction = string.Format("{0}", (int)EntrustDirection.SellSpot);
+                        direction = EntrustDirection.SellSpot;
                         secuType = SecurityType.Stock;
                     }
                     break;
                 case "cbFuturesBuyPrice":
                     {
-                        direction = string.Format("{0}", (int)EntrustDirection.BuyClose);
+                        direction = EntrustDirection.BuyClose;
                         secuType = SecurityType.Futures;
                     }
                     break;
                 case "cbFuturesSellPrice":
                     {
-                        direction = string.Format("{0}", (int)EntrustDirection.SellOpen);
+                        direction = EntrustDirection.SellOpen;
                         secuType = SecurityType.Futures;
                     }
                     break;
@@ -264,12 +265,12 @@ namespace TradingSystem.View
                     break;
             }
 
-            var items = _secuDataSource.Where(p => p.SecuType == secuType && p.EntrustDirection.Equals(direction)).ToList();
+            var items = _secuDataSource.Where(p => p.SecuType == secuType && p.EDirection == direction).ToList();
             if (items != null && items.Count > 0)
             {
                 foreach (var item in items)
                 {
-                    item.PriceType = priceType;
+                    item.EPriceType = priceType;
                 }
             }
 
@@ -342,10 +343,10 @@ namespace TradingSystem.View
 
         private void GridView_Command_Select(TradingCommandItem cmdItem)
         {
-            string spotBuyPrice = GetPriceTypeId(this.cbSpotBuyPrice);
-            string spotSellPrice = GetPriceTypeId(this.cbSpotSellPrice);
-            string futuBuyPrice = GetPriceTypeId(this.cbFuturesBuyPrice);
-            string futuSellPrice = GetPriceTypeId(this.cbFuturesSellPrice);
+            var spotBuyPrice = PriceTypeUtil.GetPriceType(this.cbSpotBuyPrice);
+            var spotSellPrice = PriceTypeUtil.GetPriceType(this.cbSpotSellPrice);
+            var futuBuyPrice = PriceTypeUtil.GetPriceType(this.cbFuturesBuyPrice);
+            var futuSellPrice = PriceTypeUtil.GetPriceType(this.cbFuturesSellPrice);
 
             //Add into two gridview: CommandSecurity and entrust
             var secuItems = _secuDataSource.Where(p => p.CommandId == cmdItem.CommandId);
@@ -361,26 +362,26 @@ namespace TradingSystem.View
                         secuItem.TargetCopies = cmdItem.TargetNum;
                         secuItem.TargetAmount = secuItem.TargetCopies * secuItem.WeightAmount;
 
-                        switch (GetEntrustDirection(secuItem.EntrustDirection))
+                        switch (secuItem.EDirection)
                         {
                             case EntrustDirection.BuySpot:
                                 {
-                                    secuItem.PriceType = spotBuyPrice;
+                                    secuItem.EPriceType = spotBuyPrice;
                                 }
                                 break;
                             case EntrustDirection.SellSpot:
                                 {
-                                    secuItem.PriceType = spotSellPrice;
+                                    secuItem.EPriceType = spotSellPrice;
                                 }
                                 break;
                             case EntrustDirection.SellOpen:
                                 {
-                                    secuItem.PriceType = futuSellPrice;
+                                    secuItem.EPriceType = futuSellPrice;
                                 }
                                 break;
                             case EntrustDirection.BuyClose:
                                 {
-                                    secuItem.PriceType = futuBuyPrice;
+                                    secuItem.EPriceType = futuBuyPrice;
                                 }
                                 break;
                             default:
@@ -428,28 +429,6 @@ namespace TradingSystem.View
                     _eiDataSource.Remove(item);
                 }
             }
-        }
-
-        private EntrustDirection GetEntrustDirection(string direction)
-        {
-            EntrustDirection eD = EntrustDirection.None;
-            int temp = -1;
-            if (int.TryParse(direction, out temp))
-            {
-                if (Enum.IsDefined(typeof(EntrustDirection), temp))
-                {
-                    eD = (EntrustDirection)Enum.ToObject(typeof(EntrustDirection), temp);
-                }
-            }
-
-            return eD;
-        }
-
-        private string GetPriceTypeId(ComboBox comboBox)
-        {
-            var selectedItem = (ComboOptionItem)comboBox.SelectedItem;
-
-            return selectedItem.Id;
         }
 
         #endregion
@@ -730,7 +709,7 @@ namespace TradingSystem.View
                                     {
                                         if (p.SecuType == SecurityType.Stock)
                                         {
-                                            p.PriceType = string.Format("{0}", (int)spotBuyPrice);
+                                            p.EPriceType = spotBuyPrice;
                                         }
                                     }
                                     break;
@@ -738,7 +717,7 @@ namespace TradingSystem.View
                                     {
                                         if (p.SecuType == SecurityType.Stock)
                                         {
-                                            p.PriceType = string.Format("{0}", (int)spotSellPrice);
+                                            p.EPriceType = spotSellPrice;
                                         }
                                     }
                                     break;
@@ -746,7 +725,7 @@ namespace TradingSystem.View
                                     {
                                         if (p.SecuType == SecurityType.Futures)
                                         {
-                                            p.PriceType = string.Format("{0}", (int)futureSellPrice);
+                                            p.EPriceType = futureSellPrice;
                                         }
                                     }
                                     break;
@@ -754,7 +733,7 @@ namespace TradingSystem.View
                                     {
                                         if (p.SecuType == SecurityType.Futures)
                                         {
-                                            p.PriceType = string.Format("{0}", (int)futureBuyPrice);
+                                            p.EPriceType = futureBuyPrice;
                                         } 
                                     }
                                     break;

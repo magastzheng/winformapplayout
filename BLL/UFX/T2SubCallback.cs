@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL
+namespace BLL.UFX
 {
     //订阅回调
     public unsafe class T2SubCallback : CT2SubCallbackInterface
@@ -46,7 +46,7 @@ namespace BLL
 
         public override void OnRecvTickMsg(CT2SubscribeInterface lpSub, int subscribeIndex, string TickMsgInfo)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

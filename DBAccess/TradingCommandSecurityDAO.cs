@@ -92,7 +92,7 @@ namespace DBAccess
                     item.SecuType = (SecurityType)reader["SecuType"];
                     item.WeightAmount = (int)reader["WeightAmount"];
                     item.CommandAmount = (int)reader["CommandAmount"];
-                    item.EntrustDirection = ((int)reader["CommandDirection"]).ToString();
+                    item.EDirection = (EntrustDirection)reader["CommandDirection"];
                     item.EntrustedAmount = (int)reader["EntrustedAmount"];
                     item.CommandPrice = (double)(decimal)reader["CommandPrice"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];

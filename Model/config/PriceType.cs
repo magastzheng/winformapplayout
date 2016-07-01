@@ -8,6 +8,7 @@ namespace Model.config
 {
     public enum PriceType
     {
+        None = -1,
         //市价
         Market = 0,  
         //指定价

@@ -1,4 +1,6 @@
 ﻿using Model.Binding;
+using Model.config;
+using Model.Data;
 using Model.SecurityInfo;
 using System;
 using System.Collections.Generic;
@@ -45,7 +47,10 @@ namespace Model.UI
 
         //委托方向
         [BindingAttribute("entrustdirection")]
-        public string EntrustDirection { get; set; }
+        public string EntrustDirection 
+        {
+            get { return EDirection.ToString(); }
+        }
 
         //已委托数量
         [BindingAttribute("entrustedamount")]
@@ -53,7 +58,10 @@ namespace Model.UI
 
         //价格类型
         [BindingAttribute("pricetype")]
-        public string PriceType { get; set; }
+        public string PriceType
+        {
+            get { return EPriceType.ToString(); }
+        }
 
         //委托价格
         [BindingAttribute("entrustprice")]
@@ -98,6 +106,10 @@ namespace Model.UI
         //涨跌停
         [BindingAttribute("limitupdown")]
         public string LimitUpOrDown { get; set; }
+
+        public EntrustDirection EDirection { get; set; }
+
+        public PriceType EPriceType { get; set; }
 
         public SecurityType SecuType { get; set; }
 

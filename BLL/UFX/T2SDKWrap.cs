@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL
+namespace BLL.UFX
 {
     public delegate int ReceivedBizMsg(CT2BizMessage lpMsg);
 

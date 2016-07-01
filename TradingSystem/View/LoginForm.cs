@@ -53,14 +53,8 @@ namespace TradingSystem.View
             var retCode = _loginController.Login(userName, password);
             //if (retCode == (int)ConnectionCode.Success)
             //{
-                var gridConfig = ConfigManager.Instance.GetGridConfig();
-                //TradingSystem.View.TradingCommandForm mainForm = new TradingSystem.View.TradingCommandForm(gridConfig);
-                MainForm mainForm = new MainForm(gridConfig);
-                MainController mainController = new MainController(mainForm, _loginController.T2SDKWrap);
-                Program._s_mainfrmController = mainController;
-
-                this._isExit = false;
-                this.Close();
+            this._isExit = false;
+            this.Close();
             //}
             //else
             //{
