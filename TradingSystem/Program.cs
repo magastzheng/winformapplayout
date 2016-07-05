@@ -41,25 +41,24 @@ namespace TradingSystem
             //处理非UI线程异常
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
-            //ConfigManager.Instance.GetTerminalConfig();
-            //var config = new CT2Configinterface();
-            //int iRet = config.Load("config/t2sdk.ini");
-
-            //if (iRet != 0)
-            //{
-            //    string msg = "读取连接配置对象失败！";
-            //    return;
-            //}
-
-            //LoginBLL loginBLL = new LoginBLL(config);
-
             var buttonConfig = ConfigManager.Instance.GetButtonConfig();
 
             T2SDKWrap t2SDKWrap = new T2SDKWrap();
-            t2SDKWrap.Connect();
+            var conRet = t2SDKWrap.Connect();
+            if (conRet != Model.ConnectionCode.Success)
+            {
+                glExitApp = true;
+                return;
+            }
 
             T2Subscriber t2Subscriber = new T2Subscriber();
-            t2Subscriber.Connect();
+            conRet = t2Subscriber.Connect();
+
+            if (conRet != Model.ConnectionCode.Success)
+            {
+                glExitApp = true;
+                return;
+            }
 
             //TODO: subscribe the message after getting login information
             LoginController loginController = new LoginController(new LoginForm(), t2SDKWrap);

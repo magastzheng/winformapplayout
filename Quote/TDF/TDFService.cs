@@ -64,7 +64,7 @@ namespace Quote.TDF
             }
 
             _serviceThread = new Thread(() => {
-                //TODO:
+                InitServiceThread(1000);
             });
 
             _serviceThread.Start();

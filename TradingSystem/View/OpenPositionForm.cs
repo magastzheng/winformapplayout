@@ -17,6 +17,9 @@ using TradingSystem.Dialog;
 using TradingSystem.TradeUtil;
 using Model.Data;
 using BLL.SecurityInfo;
+using BLL.Entrust;
+using BLL.TradingCommand;
+using BLL.TradeCommand;
 
 namespace TradingSystem.View
 {
@@ -32,8 +35,10 @@ namespace TradingSystem.View
         private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
         private TradingInstanceDAO _tradeinstdao = new TradingInstanceDAO();
         private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
-        private TradingCommandSecurityDAO _tradecmdsecudao = new TradingCommandSecurityDAO();
-        private TradingInstanceSecurityDAO _tradeinstsecudao = new TradingInstanceSecurityDAO();
+
+        private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
+        private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
+
 
         private SortableBindingList<OpenPositionItem> _monitorDataSource;
         private SortableBindingList<OpenPositionSecurityItem> _securityDataSource;
@@ -314,42 +319,34 @@ namespace TradingSystem.View
                             }
 
                             string instanceCode = string.Format("{0}-{1}-{2}", openItem.PortfolioId, openItem.TemplateId, DateTime.Now.ToString("yyyyMMdd"));
-                            TradingInstance tradingInstance = new TradingInstance
-                            {
-                                InstanceCode = instanceCode,
-                                MonitorUnitId = openItem.MonitorId,
-                                StockDirection = Model.Data.EntrustDirection.BuySpot,
-                                FuturesContract = openItem.FuturesContract,
-                                FuturesDirection = Model.Data.EntrustDirection.SellOpen,
-                                OperationCopies = openItem.Copies,
-                                StockPriceType = Model.Data.StockPriceType.NoLimit,
-                                FuturesPriceType = Model.Data.FuturesPriceType.NoLimit,
-                                Status = 1,
-                                Owner = "111111"
-                            };
 
                             int instanceId = -1;
                             var instance = _tradeinstdao.Get(instanceCode);
                             if (instance != null && !string.IsNullOrEmpty(instance.InstanceCode) && instance.InstanceCode.Equals(instanceCode))
                             {
                                 instanceId = instance.InstanceId;
+                                instance.OperationCopies += openItem.Copies;
+                                _tradeInstanceBLL.Update(instance);
                             }
                             else
                             {
-                                instanceId = _tradeinstdao.Create(tradingInstance);
-                                //store the instance security
-                                var tradeinstSecus = GetTradingInstanceSecurities(openItem, instanceId);
-                                if (tradeinstSecus != null && tradeinstSecus.Count > 0)
+                                TradingInstance tradeInstance = new TradingInstance
                                 {
-                                    foreach (var tiItem in tradeinstSecus)
-                                    {
-                                        string rowid = _tradeinstsecudao.Create(tiItem);
-                                        if (string.IsNullOrEmpty(rowid))
-                                        {
-                                            //TODO: find to store the ....
-                                        }
-                                    }
-                                }
+                                    InstanceCode = instanceCode,
+                                    MonitorUnitId = openItem.MonitorId,
+                                    StockDirection = Model.Data.EntrustDirection.BuySpot,
+                                    FuturesContract = openItem.FuturesContract,
+                                    FuturesDirection = Model.Data.EntrustDirection.SellOpen,
+                                    OperationCopies = openItem.Copies,
+                                    StockPriceType = Model.Data.StockPriceType.NoLimit,
+                                    FuturesPriceType = Model.Data.FuturesPriceType.NoLimit,
+                                    Status = 1,
+                                    Owner = "111111"
+                                };
+
+                                var secuItems = _securityDataSource.Where(p => p.MonitorId == openItem.MonitorId).ToList();
+
+                                instanceId = _tradeInstanceBLL.Create(tradeInstance, openItem, secuItems);
                             }
 
                             if (instanceId > 0)
@@ -370,9 +367,9 @@ namespace TradingSystem.View
 
                                 var cmdSecuItems = GetSelectCommandSecurities(openItem, -1);
 
-                                TradingCommandHelper tradeCommandHelper = new TradingCommandHelper();
-                                int total = tradeCommandHelper.Submit(cmdItem, cmdSecuItems);
-                                if (total == cmdSecuItems.Count)
+                                int ret = _tradeCommandBLL.Submit(cmdItem, cmdSecuItems);
+
+                                if (ret > 0)
                                 {
                                     //Success
                                 }
@@ -392,49 +389,6 @@ namespace TradingSystem.View
                 default:
                     break;
             }
-        }
-
-        private List<TradingInstanceSecurity> GetTradingInstanceSecurities(OpenPositionItem openItem, int instanceId)
-        {
-            List<TradingInstanceSecurity> tradeInstanceSecuItems = new List<TradingInstanceSecurity>();
-            var targetSecurities = _securityDataSource.Where(p => p.MonitorId == openItem.MonitorId).ToList();
-            foreach (var item in targetSecurities)
-            {
-                TradingInstanceSecurity tiSecuItem = new TradingInstanceSecurity
-                {
-                    InstanceId = instanceId,
-                    SecuCode = item.SecuCode
-                };
-
-                var findItem = SecurityInfoManager.Instance.Get(item.SecuCode);
-                if (findItem != null)
-                {
-                    tiSecuItem.SecuType = findItem.SecuType;
-                }
-
-                if (item.Selection)
-                {
-                    switch (tiSecuItem.SecuType)
-                    {
-                        case SecurityType.Stock:
-                            {
-                                tiSecuItem.InstructionPreBuy = openItem.Copies * item.WeightAmount;
-                            }
-                            break;
-                        case SecurityType.Futures:
-                            {
-                                tiSecuItem.InstructionPreSell = openItem.Copies * item.WeightAmount;
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                }
-
-                tradeInstanceSecuItems.Add(tiSecuItem);
-            }
-
-            return tradeInstanceSecuItems;
         }
 
         private List<CommandSecurityItem> GetSelectCommandSecurities(OpenPositionItem openItem, int commandId)

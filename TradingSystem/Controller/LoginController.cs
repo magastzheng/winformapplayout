@@ -47,8 +47,8 @@ namespace TradingSystem.Controller
             };
 
             int retCode = (int)_loginBLL.Login(user);
-            //if (retCode == (int)ConnectionCode.Success)
-            //{
+            if (retCode == (int)ConnectionCode.Success)
+            {
                 //_loginBLL.QueryAccount(new DataHandlerCallback(ParseAccount));
                 //_loginBLL.QueryAssetUnit();
                 //_loginBLL.QueryPortfolio();
@@ -59,7 +59,7 @@ namespace TradingSystem.Controller
                 MainForm mainForm = new MainForm(gridConfig);
                 MainController mainController = new MainController(mainForm, this._t2SDKWrap);
                 Program._s_mainfrmController = mainController;
-            //}
+            }
 
             return retCode;
         }

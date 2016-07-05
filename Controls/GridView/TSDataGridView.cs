@@ -63,7 +63,7 @@ namespace Controls.GridView
             this.CellDoubleClick += new DataGridViewCellEventHandler(DataGridView_CellDoubleClick);
             this.CellEndEdit += new DataGridViewCellEventHandler(DataGridView_CellEndEdit);
 
-            this.CurrentCellChanged += new EventHandler(DataGridView_CurrentCellChanged);
+            //this.CurrentCellChanged += new EventHandler(DataGridView_CurrentCellChanged);
         }
 
         public void NotifyNumericUpDownValueChanged(decimal newValue)
@@ -74,10 +74,10 @@ namespace Controls.GridView
             }
         }
 
-        private void DataGridView_CurrentCellChanged(object sender, EventArgs e)
-        {
-            Console.WriteLine("test");
-        }
+        //private void DataGridView_CurrentCellChanged(object sender, EventArgs e)
+        //{
+        //    Console.WriteLine("test");
+        //}
 
         private void DataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
