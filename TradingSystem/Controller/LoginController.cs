@@ -49,11 +49,11 @@ namespace TradingSystem.Controller
             int retCode = (int)_loginBLL.Login(user);
             if (retCode == (int)ConnectionCode.Success)
             {
-                //_loginBLL.QueryAccount(new DataHandlerCallback(ParseAccount));
-                //_loginBLL.QueryAssetUnit();
-                //_loginBLL.QueryPortfolio();
-                //_loginBLL.QueryHolder();
-                //_loginBLL.QueryTrading();
+                _loginBLL.QueryAccount(new DataHandlerCallback(ParseAccount));
+                _loginBLL.QueryAssetUnit();
+                _loginBLL.QueryPortfolio();
+                _loginBLL.QueryHolder();
+                _loginBLL.QueryTrading();
 
                 var gridConfig = ConfigManager.Instance.GetGridConfig();
                 MainForm mainForm = new MainForm(gridConfig);

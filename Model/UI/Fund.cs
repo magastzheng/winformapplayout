@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Model.Binding;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +9,15 @@ namespace Model.UI
 {
     public class Fund
     {
-        public int FundId { get; set; }
-
+        //public int FundId { get; set; }
+        [BindingAttribute("fundcode")]
         public string FundCode { get; set; }
 
+        [BindingAttribute("fundname")]
         public string FundName { get; set; }
+
+        [BindingAttribute("accounttype")]
+        public int AccountType { get; set; }
 
         public string ManagerCode { get; set; }
 

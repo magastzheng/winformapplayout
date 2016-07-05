@@ -12,20 +12,20 @@ using System.Windows.Forms;
 
 namespace TradingSystem.View
 {
-    public partial class PortfolioForm : Forms.BaseForm
+    public partial class AssetUnitForm : Forms.DefaultForm
     {
-        private const string GridId = "portfoliomaintain";
+        private const string GridId = "assetunitmanagement";
         private GridConfig _gridConfig = null;
 
-        private SortableBindingList<Portfolio> _instDataSource = new SortableBindingList<Portfolio>(new List<Portfolio>());
+        private SortableBindingList<AssetUnit> _instDataSource = new SortableBindingList<AssetUnit>(new List<AssetUnit>());
 
-        public PortfolioForm():
+        public AssetUnitForm():
             base()
         {
             InitializeComponent();
         }
 
-        public PortfolioForm(GridConfig gridConfig)
+        public AssetUnitForm(GridConfig gridConfig)
             : this()
         {
             _gridConfig = gridConfig;

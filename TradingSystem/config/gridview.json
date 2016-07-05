@@ -2352,9 +2352,34 @@ readonly:
 		}
 	]
 },{
-	"grid": "",
+	"grid": "fundmanagement",
 	"columns": [
-	{
+		{
+		"name": "fundname",
+		"text": "基金名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "fundcode",
+		"text": "基金代码",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "accounttype",
+		"text": "产品类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},
+		{
 		"name": "last",
 		"text": "",
 		"width": 80,
@@ -2362,8 +2387,138 @@ readonly:
 		"valuetype": 0,
 		"visible": 1,
 		"readonly": 1
+		}
+	]
+},{
+	"grid": "assetunitmanagement",
+	"columns": [
+		{
+		"name": "fundname",
+		"text": "基金名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
 		},{
-		"name": "",
+		"name": "fundcode",
+		"text": "基金代码",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "accounttype",
+		"text": "产品类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "capitalaccount",
+		"text": "资金账号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "assetno",
+		"text": "资产单元编号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "assetname",
+		"text": "资产单元名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "last",
+		"text": "",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},{
+	"grid": "portfoliomaintain",
+	"columns": [
+		{
+		"name": "fundname",
+		"text": "基金名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "fundcode",
+		"text": "基金代码",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "accounttype",
+		"text": "产品类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "capitalaccount",
+		"text": "资金账号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "assetno",
+		"text": "资产单元编号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "assetname",
+		"text": "资产单元名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "portfoliono",
+		"text": "组合编号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "portfolioname",
+		"text": "组合名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "last",
 		"text": "",
 		"width": 80,
 		"columntype": 0,

@@ -12,20 +12,20 @@ using System.Windows.Forms;
 
 namespace TradingSystem.View
 {
-    public partial class PortfolioForm : Forms.BaseForm
+    public partial class ProductForm : Forms.DefaultForm
     {
-        private const string GridId = "portfoliomaintain";
+        private const string GridId = "fundmanagement";
         private GridConfig _gridConfig = null;
 
-        private SortableBindingList<Portfolio> _instDataSource = new SortableBindingList<Portfolio>(new List<Portfolio>());
+        private SortableBindingList<Fund> _instDataSource = new SortableBindingList<Fund>(new List<Fund>());
 
-        public PortfolioForm():
-            base()
+        public ProductForm()
+            :base()
         {
             InitializeComponent();
         }
 
-        public PortfolioForm(GridConfig gridConfig)
+        public ProductForm(GridConfig gridConfig)
             : this()
         {
             _gridConfig = gridConfig;
@@ -37,15 +37,17 @@ namespace TradingSystem.View
         private bool Form_LoadControl(object sender, object data)
         {
             //set the monitorGridView
-            TSDataGridViewHelper.AddColumns(this.gridView, _gridConfig.GetGid(GridId));
+            TSDataGridViewHelper.AddColumns(this.fundGridView, _gridConfig.GetGid(GridId));
             Dictionary<string, string> colDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(ClosePositionItem));
-            TSDataGridViewHelper.SetDataBinding(this.gridView, colDataMap);
+            TSDataGridViewHelper.SetDataBinding(this.fundGridView, colDataMap);
 
             return true;
         }
 
         private bool Form_LoadData(object sender, object data)
         {
+
+
             return true;
         }
     }

@@ -77,6 +77,12 @@
     <Compile Include="Dialog\CancelRedoDialog.Designer.cs">
       <DependentUpon>CancelRedoDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\AssetUnitForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\AssetUnitForm.Designer.cs">
+      <DependentUpon>AssetUnitForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\ClosePositionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -139,6 +145,12 @@
     <Compile Include="View\PortfolioSecurityDialog.Designer.cs">
       <DependentUpon>PortfolioSecurityDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\ProductForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\ProductForm.Designer.cs">
+      <DependentUpon>ProductForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\SpotTemplateForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -196,6 +208,9 @@
     <EmbeddedResource Include="Dialog\CancelRedoDialog.resx">
       <DependentUpon>CancelRedoDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\AssetUnitForm.resx">
+      <DependentUpon>AssetUnitForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\ClosePositionForm.resx">
       <DependentUpon>ClosePositionForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -235,6 +250,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\PortfolioSecurityDialog.resx">
       <DependentUpon>PortfolioSecurityDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\ProductForm.resx">
+      <DependentUpon>ProductForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\SpotTemplateForm.resx">
       <DependentUpon>SpotTemplateForm.cs</DependentUpon>

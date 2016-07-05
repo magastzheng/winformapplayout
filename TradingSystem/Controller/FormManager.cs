@@ -80,16 +80,19 @@ namespace TradingSystem.Controller
                     case "portfoliomaintain":
                         {
                             formType = typeof(PortfolioForm);
+                            hasGrid = true;
                         }
                         break;
                     case "fundmanagement":
                         {
-                            formType = typeof(GeneralForm);
+                            formType = typeof(ProductForm);
+                            hasGrid = true;
                         }
                         break;
                     case "assetunitmanagement":
                         {
-                            formType = typeof(GeneralForm);
+                            formType = typeof(AssetUnitForm);
+                            hasGrid = true;
                         }
                         break;
                     case "spottemplate":
