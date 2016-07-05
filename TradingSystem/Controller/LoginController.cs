@@ -56,7 +56,7 @@ namespace TradingSystem.Controller
                 _loginBLL.QueryTrading();
 
                 var gridConfig = ConfigManager.Instance.GetGridConfig();
-                MainForm mainForm = new MainForm(gridConfig);
+                MainForm mainForm = new MainForm(gridConfig, this._t2SDKWrap);
                 MainController mainController = new MainController(mainForm, this._t2SDKWrap);
                 Program._s_mainfrmController = mainController;
             }

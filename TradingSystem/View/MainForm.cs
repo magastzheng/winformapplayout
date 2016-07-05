@@ -1,4 +1,5 @@
-﻿using Config;
+﻿using BLL.UFX;
+using Config;
 using DBAccess;
 using Forms;
 using Model.UI;
@@ -19,18 +20,20 @@ namespace TradingSystem.View
     public partial class MainForm : Form
     {
         private GridConfig _gridConfig;
-        private Dictionary<string, Forms.BaseForm> _childFormMap = new Dictionary<string, Forms.BaseForm>();
+        private T2SDKWrap _t2SDKWrap;
 
+        //private Dictionary<string, Forms.BaseForm> _childFormMap = new Dictionary<string, Forms.BaseForm>();
 
         public MainForm()
         {
             InitializeComponent();
         }
 
-        public MainForm(GridConfig gridConfig)
+        public MainForm(GridConfig gridConfig, T2SDKWrap t2SDKWrap)
             :this()
         {
             _gridConfig = gridConfig;
+            _t2SDKWrap = t2SDKWrap;
         }
 
         #region event handler
@@ -58,7 +61,7 @@ namespace TradingSystem.View
                 return;
             }
 
-            Forms.BaseForm form = FormManager.Instance.ActiveForm(this, _panelMain, e.TreeNodeEvent.Name);
+            Forms.BaseForm form = FormManager.Instance.ActiveForm(this, _panelMain, e.TreeNodeEvent.Name, _gridConfig, _t2SDKWrap);
 
             //TODO:
         }

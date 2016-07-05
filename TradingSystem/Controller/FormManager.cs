@@ -1,4 +1,5 @@
-﻿using Config;
+﻿using BLL.UFX;
+using Config;
 using Forms;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace TradingSystem.Controller
     {
         private readonly static FormManager _instance = new FormManager();
 
-        private static GridConfig _gridConfig;
+        //private static GridConfig _gridConfig;
 
         private FormManager()
         {
@@ -28,14 +29,14 @@ namespace TradingSystem.Controller
 
         private void Init()
         {
-            _gridConfig = ConfigManager.Instance.GetGridConfig();
+            //_gridConfig = ConfigManager.Instance.GetGridConfig();
         }
 
         private Dictionary<string, Forms.BaseForm> _childFormMap = new Dictionary<string, Forms.BaseForm>();
 
         public static FormManager Instance { get { return _instance; } }
 
-        public BaseForm ActiveForm(Form parentForm, Panel parentPanel, string formKey)
+        public BaseForm ActiveForm(Form parentForm, Panel parentPanel, string formKey, GridConfig gridConfig, T2SDKWrap t2SDKWrap)
         {
             Forms.BaseForm form = null;
             Type formType = null;
@@ -121,7 +122,7 @@ namespace TradingSystem.Controller
             {
                 if (hasGrid)
                 {
-                    form = LoadForm(parentForm, formType, new object[] { _gridConfig }, json);
+                    form = LoadForm(parentForm, formType, new object[] { gridConfig }, json);
                 }
                 else
                 {
