@@ -4,6 +4,7 @@ using BLL.UFX;
 using Config;
 using Model;
 using Model.strategy;
+using Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,20 +56,31 @@ namespace TradingSystem.Controller
             int retCode = (int)BLLManager.Instance.LoginBLL.Login(user);
             if (retCode == (int)ConnectionCode.Success)
             {
-                BLLManager.Instance.LoginBLL.QueryAccount(new DataHandlerCallback(ParseAccount));
-                BLLManager.Instance.LoginBLL.QueryAssetUnit(new DataHandlerCallback(ParseAssetUnit));
-                BLLManager.Instance.LoginBLL.QueryPortfolio(new DataHandlerCallback(ParsePortfolio));
-
-                _cdEvent.Wait();
-                _productBLL.Create(LoginManager.Instance.Accounts, LoginManager.Instance.Assets, LoginManager.Instance.Portfolios);
-
-                var gridConfig = ConfigManager.Instance.GetGridConfig();
-                MainForm mainForm = new MainForm(gridConfig, this._t2SDKWrap);
-                MainController mainController = new MainController(mainForm, this._t2SDKWrap);
-                Program._s_mainfrmController = mainController;
+                LoginSuccess();
             }
 
             return retCode;
+        }
+
+        private void LoginSuccess()
+        {
+            BLLManager.Instance.LoginBLL.QueryAccount(new DataHandlerCallback(ParseAccount));
+            BLLManager.Instance.LoginBLL.QueryAssetUnit(new DataHandlerCallback(ParseAssetUnit));
+            BLLManager.Instance.LoginBLL.QueryPortfolio(new DataHandlerCallback(ParsePortfolio));
+
+            _cdEvent.Wait();
+            _productBLL.Create(LoginManager.Instance.Accounts, LoginManager.Instance.Assets, LoginManager.Instance.Portfolios);
+
+            ServiceManager.Instance.Start();
+            var gridConfig = ConfigManager.Instance.GetGridConfig();
+            MainForm mainForm = new MainForm(gridConfig, this._t2SDKWrap);
+            MainController mainController = new MainController(mainForm, this._t2SDKWrap);
+            Program._s_mainfrmController = mainController;
+        }
+
+        public void Logout()
+        {
+            ServiceManager.Instance.Stop();
         }
 
         private void ParseAccount(DataParser parser)

@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using TradingSystem.View;
 using log4net.Config;
 using BLL.UFX;
+using Service;
 
 namespace TradingSystem
 {
@@ -70,7 +71,11 @@ namespace TradingSystem
                 Application.Run(_s_mainfrmController.MainForm);
             }
 
+            //realloc the connection and service
+            loginController.Logout();
             t2SDKWrap.Close();
+            t2Subscriber.Close();
+
             glExitApp = true;
         }
 

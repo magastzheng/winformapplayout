@@ -388,6 +388,10 @@
       <Project>{2f5fdd7a-7491-4fa7-9349-47a4289c711a}</Project>
       <Name>Quote</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Service\Service.csproj">
+      <Project>{3b45d476-8ea0-4f34-bd09-e9b89c17467a}</Project>
+      <Name>Service</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Util\Util.csproj">
       <Project>{723db468-9d89-40e8-be82-ddecc927e2cb}</Project>
       <Name>Util</Name>
