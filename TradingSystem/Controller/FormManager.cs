@@ -1,4 +1,5 @@
-﻿using BLL.UFX;
+﻿using BLL;
+using BLL.UFX;
 using Config;
 using Forms;
 using System;
@@ -36,11 +37,12 @@ namespace TradingSystem.Controller
 
         public static FormManager Instance { get { return _instance; } }
 
-        public BaseForm ActiveForm(Form parentForm, Panel parentPanel, string formKey, GridConfig gridConfig, T2SDKWrap t2SDKWrap)
+        public BaseForm ActiveForm(Form parentForm, Panel parentPanel, string formKey, GridConfig gridConfig, BLLManager bLLManager)
         {
             Forms.BaseForm form = null;
             Type formType = null;
             bool hasGrid = false;
+            bool needBLL = false;
             string json = string.Empty;
             if (_childFormMap.ContainsKey(formKey))
             {
@@ -82,18 +84,21 @@ namespace TradingSystem.Controller
                         {
                             formType = typeof(PortfolioForm);
                             hasGrid = true;
+                            needBLL = true;
                         }
                         break;
                     case "fundmanagement":
                         {
                             formType = typeof(ProductForm);
                             hasGrid = true;
+                            needBLL = true;
                         }
                         break;
                     case "assetunitmanagement":
                         {
                             formType = typeof(AssetUnitForm);
                             hasGrid = true;
+                            needBLL = true;
                         }
                         break;
                     case "spottemplate":
@@ -120,7 +125,11 @@ namespace TradingSystem.Controller
 
             if (formType != null && form == null)
             {
-                if (hasGrid)
+                if (needBLL && hasGrid)
+                {
+                    form = LoadForm(parentForm, formType, new object[] { gridConfig, bLLManager }, json);
+                }
+                else if (hasGrid)
                 {
                     form = LoadForm(parentForm, formType, new object[] { gridConfig }, json);
                 }

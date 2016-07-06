@@ -13,7 +13,7 @@ namespace TradingSystem.Controller
     public class MainController
     {
         private MainForm _mainForm;
-        private StrategyBLL2 _strategyBLL;
+        private StrategyBLL _strategyBLL;
         private SecurityBLL _securityBLL;
         private ArbitrageBLL _arbitrageBLL;
         private T2SDKWrap _t2SDKWrap;
@@ -22,7 +22,7 @@ namespace TradingSystem.Controller
             get { return _mainForm; }
         }
 
-        public StrategyBLL2 StrategyBLL
+        public StrategyBLL StrategyBLL
         {
             get { return _strategyBLL; }
         }
@@ -40,7 +40,7 @@ namespace TradingSystem.Controller
         public MainController(MainForm mainForm, T2SDKWrap t2SDKWrap)
         {
             this._t2SDKWrap = t2SDKWrap;
-            this._strategyBLL = new StrategyBLL2(this._t2SDKWrap);
+            this._strategyBLL = new StrategyBLL(this._t2SDKWrap);
             this._securityBLL = new SecurityBLL(this._t2SDKWrap);
             this._arbitrageBLL = new ArbitrageBLL(this._t2SDKWrap);
 

@@ -16,22 +16,23 @@ namespace TradingSystem.Controller
     {
         private LoginForm _loginForm;
         private T2SDKWrap _t2SDKWrap;
-        private LoginBLL2 _loginBLL;
+        //private LoginBLL _loginBLL;
         
         public LoginForm LoginForm
         {
             get { return _loginForm; }
         }
 
-        public T2SDKWrap T2SDKWrap
-        {
-            get { return _t2SDKWrap; }
-        }
+        //public T2SDKWrap T2SDKWrap
+        //{
+        //    get { return _t2SDKWrap; }
+        //}
 
         public LoginController(LoginForm loginForm, T2SDKWrap t2SDKWrap)
         {
             this._t2SDKWrap = t2SDKWrap;
-            this._loginBLL = new LoginBLL2(t2SDKWrap);
+            //this._loginBLL = new LoginBLL(t2SDKWrap);
+            //this._loginBLL
 
             this._loginForm = loginForm;
             this._loginForm.LoginController = this;
@@ -46,14 +47,14 @@ namespace TradingSystem.Controller
                 Password = password
             };
 
-            int retCode = (int)_loginBLL.Login(user);
+            int retCode = (int)BLLManager.Instance.LoginBLL.Login(user);
             if (retCode == (int)ConnectionCode.Success)
             {
-                _loginBLL.QueryAccount(new DataHandlerCallback(ParseAccount));
-                _loginBLL.QueryAssetUnit();
-                _loginBLL.QueryPortfolio();
-                _loginBLL.QueryHolder();
-                _loginBLL.QueryTrading();
+                BLLManager.Instance.LoginBLL.QueryAccount(new DataHandlerCallback(ParseAccount));
+                //BLLManager.Instance.LoginBLL.QueryAssetUnit();
+                //BLLManager.Instance.LoginBLL.QueryPortfolio();
+                //BLLManager.Instance.LoginBLL.QueryHolder();
+                //BLLManager.Instance.LoginBLL.QueryTrading();
 
                 var gridConfig = ConfigManager.Instance.GetGridConfig();
                 MainForm mainForm = new MainForm(gridConfig, this._t2SDKWrap);

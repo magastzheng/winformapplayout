@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.fundGridView = new Controls.GridView.TSDataGridView();
+            this.gridView = new Controls.GridView.TSDataGridView();
             this.panelMain.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.fundGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridView)).BeginInit();
             this.SuspendLayout();
             // 
             // panelTop
@@ -44,21 +44,21 @@
             // 
             // panelMain
             // 
-            this.panelMain.Controls.Add(this.fundGridView);
+            this.panelMain.Controls.Add(this.gridView);
             this.panelMain.Location = new System.Drawing.Point(0, 10);
             this.panelMain.Size = new System.Drawing.Size(1125, 550);
             // 
             // fundGridView
             // 
-            this.fundGridView.AllowUserToAddRows = false;
-            this.fundGridView.AllowUserToDeleteRows = false;
-            this.fundGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.fundGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.fundGridView.Location = new System.Drawing.Point(0, 0);
-            this.fundGridView.Name = "fundGridView";
-            this.fundGridView.RowTemplate.Height = 23;
-            this.fundGridView.Size = new System.Drawing.Size(1125, 550);
-            this.fundGridView.TabIndex = 0;
+            this.gridView.AllowUserToAddRows = false;
+            this.gridView.AllowUserToDeleteRows = false;
+            this.gridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridView.Location = new System.Drawing.Point(0, 0);
+            this.gridView.Name = "fundGridView";
+            this.gridView.RowTemplate.Height = 23;
+            this.gridView.Size = new System.Drawing.Size(1125, 550);
+            this.gridView.TabIndex = 0;
             // 
             // ProductForm
             // 
@@ -66,14 +66,14 @@
             this.ClientSize = new System.Drawing.Size(1125, 570);
             this.Name = "ProductForm";
             this.panelMain.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.fundGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridView)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private Controls.GridView.TSDataGridView fundGridView;
+        private Controls.GridView.TSDataGridView gridView;
 
 
     }

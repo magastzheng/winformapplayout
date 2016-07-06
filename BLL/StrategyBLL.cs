@@ -1,4 +1,5 @@
-﻿using Config;
+﻿using BLL.UFX;
+using Config;
 using hundsun.t2sdk;
 using log4net;
 using Model;
@@ -11,44 +12,41 @@ using System.Threading.Tasks;
 
 namespace BLL
 {
-    public class StrategyEventArgs : EventArgs
-    {
-        public FunctionCode FunctionCode = FunctionCode.Entrust; 
-    }
-
-    public class StrategyBLL:T2SDKBase
+    public class StrategyBLL
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public delegate void CommandTradingUpdate(object sender, StrategyEventArgs e);
-        private CommandTradingUpdate _OnCommandTradingUpdate;
+        private T2SDKWrap _t2SDKWrap;
+        private ReceivedBizMsg _receivedBizMsg;
 
-        public event CommandTradingUpdate OnCommandTradingUpdate
+        public StrategyBLL(T2SDKWrap t2SDKWrap)
         {
-            add
-            {
-                _OnCommandTradingUpdate += value;
-            }
-            remove
-            {
-                _OnCommandTradingUpdate -= value;
-            }
+            _t2SDKWrap = t2SDKWrap;
+            _receivedBizMsg = OnReceivedBizMsg;
+
+            _t2SDKWrap.Register(FunctionCode.QueryTradingInstance, _receivedBizMsg);
+            _t2SDKWrap.Register(FunctionCode.EntrustInstanceBasket, _receivedBizMsg);
+            _t2SDKWrap.Register(FunctionCode.QueryEntrustInstance, _receivedBizMsg);
+            _t2SDKWrap.Register(FunctionCode.QueryDealInstance, _receivedBizMsg);
+            _t2SDKWrap.Register(FunctionCode.WithdrawBasket, _receivedBizMsg);
+            _t2SDKWrap.Register(FunctionCode.QuerySpotTemplate, _receivedBizMsg);
+            _t2SDKWrap.Register(FunctionCode.QuerySpotTemplateStock, _receivedBizMsg);
         }
 
-        //使用委托和事件处理UI更新
-        public StrategyBLL(CT2Configinterface config)
-            :base(config)
-        {
-
-        }
-
-        public ConnectionCode QueryTradingInstance(string userToken)
+        public ConnectionCode QueryTrading()
         {
             FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.QueryTradingInstance);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
+                return ConnectionCode.ErrorNoFunctionCode;
+            }
+
+            string userToken = LoginManager.Instance.LoginUser.Token;
+            if (string.IsNullOrEmpty(userToken))
+            {
                 return ConnectionCode.ErrorLogin;
             }
+
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化
             bizMessage.SetFunction((int)FunctionCode.QueryTradingInstance);
@@ -67,92 +65,779 @@ namespace BLL
                 switch (item.Name)
                 {
                     case "user_token":
-                        packer.AddStr(userToken);
+                        {
+                            packer.AddStr(userToken);
+                        }
                         break;
                     case "account_group_code":
-                        packer.AddStr("");
+                        {
+                            packer.AddStr("");
+                        }
                         break;
                     case "instance_no":
-                        packer.AddInt(0);
+                        {
+                            packer.AddStr("");
+                        }
                         break;
                     case "instance_type":
-                        packer.AddStr("");
+                        {
+                            packer.AddStr("");
+                        }
                         break;
                     case "ext_invest_plan_no_list":
-                        packer.AddStr("");
+                        {
+                            packer.AddStr("");
+                        }
                         break;
                     default:
+                        //if (item.Type == PackFieldType.IntType)
+                        //{
+                        //    packer.AddInt(-1);
+                        //}
+                        //else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                        //{
+                        //    packer.AddStr(item.Name);
+                        //}
+                        //else
+                        //{
+                        //    packer.AddStr(item.Name);
+                        //}
                         break;
                 }
             }
+            packer.EndPack();
+
             unsafe
             {
                 bizMessage.SetContent(packer.GetPackBuf(), packer.GetPackLen());
             }
 
-            int retCode = SendAsync(bizMessage);
+            int retCode = _t2SDKWrap.SendAsync(bizMessage);
             packer.Dispose();
             bizMessage.Dispose();
 
             if (retCode < 0)
             {
-                logger.Error("查询交易实例失败:" + _conn.GetErrorMsg(retCode));
+                logger.Error("查询交易实例失败!");
                 return ConnectionCode.ErrorConn;
             }
 
             return ConnectionCode.Success;
         }
 
-        public ConnectionCode Entrust()
+        public ConnectionCode EntrustBasket()
         {
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.EntrustInstanceBasket);
+            if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
+            {
+                return ConnectionCode.ErrorNoFunctionCode;
+            }
+
+            string userToken = LoginManager.Instance.LoginUser.Token;
+            if (string.IsNullOrEmpty(userToken))
+            {
+                return ConnectionCode.ErrorLogin;
+            }
+
+            CT2BizMessage bizMessage = new CT2BizMessage();
+            //初始化
+            bizMessage.SetFunction((int)FunctionCode.EntrustInstanceBasket);
+            bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
+
+            //业务包
+            CT2Packer packer = new CT2Packer(2);
+            packer.BeginPack();
+            foreach (FieldItem item in functionItem.RequestFields)
+            {
+                packer.AddField(item.Name, item.Type, item.Width, item.Scale);
+            }
+
+            foreach (FieldItem item in functionItem.RequestFields)
+            {
+                switch (item.Name)
+                {
+                    case "user_token":
+                        {
+                            packer.AddStr(userToken);
+                        }
+                        break;
+                    case "batch_no":
+                        {
+                            packer.AddInt(0);
+                        }
+                        break;
+                    case "account_group_code":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "instance_no":
+                        {
+                            packer.AddInt(0);
+                        }
+                        break;
+                    case "market_no":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "stock_code":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "entrust_direction":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "futures_direction":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "convered_flag":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "price_type":
+                        {
+                            packer.AddDouble(0.0f);
+                        }
+                        break;
+                    case "entrust_price":
+                        {
+                            packer.AddDouble(0.0f);
+                        }
+                        break;
+                    case "entrust_amount":
+                        {
+                            packer.AddInt(0);
+                        }
+                        break;
+                    case "limit_entrust_ratio":
+                        {
+                            packer.AddDouble(0.0f);
+                        }
+                        break;
+                    case "extsystem_id":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "third_reff":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    default:
+                        if (item.Type == PackFieldType.IntType)
+                        {
+                            packer.AddInt(-1);
+                        }
+                        else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                        {
+                            packer.AddStr(item.Name);
+                        }
+                        else
+                        {
+                            packer.AddStr(item.Name);
+                        }
+                        break;
+                }
+            }
+            packer.EndPack();
+
+            unsafe
+            {
+                bizMessage.SetContent(packer.GetPackBuf(), packer.GetPackLen());
+            }
+
+            int retCode = _t2SDKWrap.SendAsync(bizMessage);
+            packer.Dispose();
+            bizMessage.Dispose();
+
+            if (retCode < 0)
+            {
+                logger.Error("查询交易实例失败!");
+                return ConnectionCode.ErrorConn;
+            }
+
             return ConnectionCode.Success;
         }
 
-        public ConnectionCode Withdraw()
+        public ConnectionCode QueryEntrust()
         {
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.QueryEntrustInstance);
+            if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
+            {
+                return ConnectionCode.ErrorNoFunctionCode;
+            }
+
+            string userToken = LoginManager.Instance.LoginUser.Token;
+            if (string.IsNullOrEmpty(userToken))
+            {
+                return ConnectionCode.ErrorLogin;
+            }
+
+            CT2BizMessage bizMessage = new CT2BizMessage();
+            //初始化
+            bizMessage.SetFunction((int)FunctionCode.QueryEntrustInstance);
+            bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
+
+            //业务包
+            CT2Packer packer = new CT2Packer(2);
+            packer.BeginPack();
+            foreach (FieldItem item in functionItem.RequestFields)
+            {
+                packer.AddField(item.Name, item.Type, item.Width, item.Scale);
+            }
+
+            foreach (FieldItem item in functionItem.RequestFields)
+            {
+                switch (item.Name)
+                {
+                    case "user_token":
+                        {
+                            packer.AddStr(userToken);
+                        }
+                        break;
+                    case "account_group_code":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "instance_no":
+                        {
+                            packer.AddInt(0);
+                        }
+                        break;
+                    case "ext_invest_plan_no_list":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "batch_no":
+                        {
+                            packer.AddInt(0);
+                        }
+                        break;
+                    case "entrust_no":
+                        {
+                            packer.AddInt(0);
+                        }
+                        break;
+                    case "market_no":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "stock_code":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "entrust_direction":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "futures_direction":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "entrust_state_list":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "extsystem_id":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "third_reff":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "position_str":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "request_num":
+                        {
+                            packer.AddInt(0);
+                        }
+                        break;
+                    default:
+                        if (item.Type == PackFieldType.IntType)
+                        {
+                            packer.AddInt(-1);
+                        }
+                        else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                        {
+                            packer.AddStr(item.Name);
+                        }
+                        else
+                        {
+                            packer.AddStr(item.Name);
+                        }
+                        break;
+                }
+            }
+            packer.EndPack();
+
+            unsafe
+            {
+                bizMessage.SetContent(packer.GetPackBuf(), packer.GetPackLen());
+            }
+
+            int retCode = _t2SDKWrap.SendAsync(bizMessage);
+            packer.Dispose();
+            bizMessage.Dispose();
+
+            if (retCode < 0)
+            {
+                logger.Error("委托实例失败!");
+                return ConnectionCode.ErrorConn;
+            }
+
             return ConnectionCode.Success;
         }
 
-        public override void OnReceivedBizMsg(CT2Connection lpConnection, int hSend, CT2BizMessage lpMsg)
+        public ConnectionCode QueryDeal()
         {
-            logger.Info("OnReceivedBizMsg: 接收业务数据！");
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.QueryDealInstance);
+            if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
+            {
+                return ConnectionCode.ErrorNoFunctionCode;
+            }
 
-            //获取返回码
-            int iRetCode = lpMsg.GetReturnCode();
+            string userToken = LoginManager.Instance.LoginUser.Token;
+            if (string.IsNullOrEmpty(userToken))
+            {
+                return ConnectionCode.ErrorLogin;
+            }
 
-            //获取错误码
-            int iErrorCode = lpMsg.GetErrorNo();
+            CT2BizMessage bizMessage = new CT2BizMessage();
+            //初始化
+            bizMessage.SetFunction((int)FunctionCode.QueryDealInstance);
+            bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
 
-            int iFunction = lpMsg.GetFunction();
+            //业务包
+            CT2Packer packer = new CT2Packer(2);
+            packer.BeginPack();
+            foreach (FieldItem item in functionItem.RequestFields)
+            {
+                packer.AddField(item.Name, item.Type, item.Width, item.Scale);
+            }
 
+            foreach (FieldItem item in functionItem.RequestFields)
+            {
+                switch (item.Name)
+                {
+                    case "user_token":
+                        {
+                            packer.AddStr(userToken);
+                        }
+                        break;
+                    case "account_group_code":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "instance_no":
+                        {
+                            packer.AddInt(0);
+                        }
+                        break;
+                    case "ext_invest_plan_no_list":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "batch_no":
+                        {
+                            packer.AddInt(0);
+                        }
+                        break;
+                    case "entrust_no":
+                        {
+                            packer.AddInt(0);
+                        }
+                        break;
+                    case "market_no":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "stock_code":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "entrust_direction":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "futures_direction":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "extsystem_id":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "third_reff":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "position_str":
+                        {
+                            packer.AddStr("");
+                        }
+                        break;
+                    case "request_num":
+                        {
+                            packer.AddInt(0);
+                        }
+                        break;
+                    default:
+                        if (item.Type == PackFieldType.IntType)
+                        {
+                            packer.AddInt(-1);
+                        }
+                        else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                        {
+                            packer.AddStr(item.Name);
+                        }
+                        else
+                        {
+                            packer.AddStr(item.Name);
+                        }
+                        break;
+                }
+            }
+            packer.EndPack();
+
+            unsafe
+            {
+                bizMessage.SetContent(packer.GetPackBuf(), packer.GetPackLen());
+            }
+
+            int retCode = _t2SDKWrap.SendAsync(bizMessage);
+            packer.Dispose();
+            bizMessage.Dispose();
+
+            if (retCode < 0)
+            {
+                logger.Error("查询成交实例失败!");
+                return ConnectionCode.ErrorConn;
+            }
+
+            return ConnectionCode.Success;
+        }
+
+        public ConnectionCode WithdrawBasket()
+        {
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.WithdrawBasket);
+            if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
+            {
+                return ConnectionCode.ErrorNoFunctionCode;
+            }
+
+            string userToken = LoginManager.Instance.LoginUser.Token;
+            if (string.IsNullOrEmpty(userToken))
+            {
+                return ConnectionCode.ErrorLogin;
+            }
+
+            CT2BizMessage bizMessage = new CT2BizMessage();
+            //初始化
+            bizMessage.SetFunction((int)FunctionCode.WithdrawBasket);
+            bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
+
+            //业务包
+            CT2Packer packer = new CT2Packer(2);
+            packer.BeginPack();
+            foreach (FieldItem item in functionItem.RequestFields)
+            {
+                packer.AddField(item.Name, item.Type, item.Width, item.Scale);
+            }
+
+            foreach (FieldItem item in functionItem.RequestFields)
+            {
+                switch (item.Name)
+                {
+                    case "user_token":
+                        {
+                            packer.AddStr(userToken);
+                        }
+                        break;
+                    case "batch_no":
+                        {
+                            packer.AddInt(0);
+                        }
+                        break;
+                    default:
+                        if (item.Type == PackFieldType.IntType)
+                        {
+                            packer.AddInt(-1);
+                        }
+                        else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                        {
+                            packer.AddStr(item.Name);
+                        }
+                        else
+                        {
+                            packer.AddStr(item.Name);
+                        }
+                        break;
+                }
+            }
+            packer.EndPack();
+
+            unsafe
+            {
+                bizMessage.SetContent(packer.GetPackBuf(), packer.GetPackLen());
+            }
+
+            int retCode = _t2SDKWrap.SendAsync(bizMessage);
+            packer.Dispose();
+            bizMessage.Dispose();
+
+            if (retCode < 0)
+            {
+                logger.Error("撤销委托实例失败!");
+                return ConnectionCode.ErrorConn;
+            }
+
+            return ConnectionCode.Success;
+        }
+
+        public ConnectionCode QueryTemplate()
+        {
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.QuerySpotTemplate);
+            if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
+            {
+                return ConnectionCode.ErrorNoFunctionCode;
+            }
+
+            string userToken = LoginManager.Instance.LoginUser.Token;
+            if (string.IsNullOrEmpty(userToken))
+            {
+                return ConnectionCode.ErrorLogin;
+            }
+
+            CT2BizMessage bizMessage = new CT2BizMessage();
+            //初始化
+            bizMessage.SetFunction((int)FunctionCode.QuerySpotTemplate);
+            bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
+
+            //业务包
+            CT2Packer packer = new CT2Packer(2);
+            packer.BeginPack();
+            foreach (FieldItem item in functionItem.RequestFields)
+            {
+                packer.AddField(item.Name, item.Type, item.Width, item.Scale);
+            }
+
+            foreach (FieldItem item in functionItem.RequestFields)
+            {
+                switch (item.Name)
+                {
+                    case "user_token":
+                        {
+                            packer.AddStr(userToken);
+                        }
+                        break;
+                    case "template_no":
+                        {
+                            packer.AddInt(-1);
+                        }
+                        break;
+                    default:
+                        if (item.Type == PackFieldType.IntType)
+                        {
+                            packer.AddInt(-1);
+                        }
+                        else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                        {
+                            packer.AddStr(item.Name);
+                        }
+                        else
+                        {
+                            packer.AddStr(item.Name);
+                        }
+                        break;
+                }
+            }
+            packer.EndPack();
+
+            unsafe
+            {
+                bizMessage.SetContent(packer.GetPackBuf(), packer.GetPackLen());
+            }
+
+            int retCode = _t2SDKWrap.SendAsync(bizMessage);
+            packer.Dispose();
+            bizMessage.Dispose();
+
+            if (retCode < 0)
+            {
+                logger.Error("查询现货模板信息失败!");
+                return ConnectionCode.ErrorConn;
+            }
+
+            return ConnectionCode.Success;
+        }
+
+        public ConnectionCode QueryTemplateStock(int templateNo)
+        {
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.QuerySpotTemplateStock);
+            if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
+            {
+                return ConnectionCode.ErrorNoFunctionCode;
+            }
+
+            string userToken = LoginManager.Instance.LoginUser.Token;
+            if (string.IsNullOrEmpty(userToken))
+            {
+                return ConnectionCode.ErrorLogin;
+            }
+
+            CT2BizMessage bizMessage = new CT2BizMessage();
+            //初始化
+            bizMessage.SetFunction((int)FunctionCode.QuerySpotTemplateStock);
+            bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
+
+            //业务包
+            CT2Packer packer = new CT2Packer(2);
+            packer.BeginPack();
+            foreach (FieldItem item in functionItem.RequestFields)
+            {
+                packer.AddField(item.Name, item.Type, item.Width, item.Scale);
+            }
+
+            foreach (FieldItem item in functionItem.RequestFields)
+            {
+                switch (item.Name)
+                {
+                    case "user_token":
+                        {
+                            packer.AddStr(userToken);
+                        }
+                        break;
+                    case "template_no":
+                        {
+                            packer.AddInt(templateNo);
+                        }
+                        break;
+                    default:
+                        if (item.Type == PackFieldType.IntType)
+                        {
+                            packer.AddInt(-1);
+                        }
+                        else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                        {
+                            packer.AddStr(item.Name);
+                        }
+                        else
+                        {
+                            packer.AddStr(item.Name);
+                        }
+                        break;
+                }
+            }
+            packer.EndPack();
+
+            unsafe
+            {
+                bizMessage.SetContent(packer.GetPackBuf(), packer.GetPackLen());
+            }
+
+            int retCode = _t2SDKWrap.SendAsync(bizMessage);
+            packer.Dispose();
+            bizMessage.Dispose();
+
+            if (retCode < 0)
+            {
+                logger.Error("查询现货模板信息失败!");
+                return ConnectionCode.ErrorConn;
+            }
+
+            return ConnectionCode.Success;
+        }
+        #region
+
+        public int OnReceivedBizMsg(CT2BizMessage bizMessage)
+        {
+            int iRetCode = bizMessage.GetReturnCode();
+            int iErrorCode = bizMessage.GetErrorNo();
+            int iFunction = bizMessage.GetFunction();
             if (iRetCode != 0)
             {
-                logger.Error("异步接收数据出错：" + lpMsg.GetErrorNo().ToString() + lpMsg.GetErrorInfo());
-            }
-            else
-            {
-                CT2UnPacker unpacker = null;
-                unsafe
-                {
-                    int iLen = 0;
-                    void* lpdata = lpMsg.GetContent(&iLen);
-                    unpacker = new CT2UnPacker(lpdata, (uint)iLen);
-                }
+                string msg = string.Format("异步接收数据出错： {0}, {1}", iErrorCode, bizMessage.GetErrorInfo());
 
-                switch (iFunction)
+                return iRetCode;
+            }
+
+            CT2UnPacker unpacker = null;
+            unsafe
+            {
+                int iLen = 0;
+                void* lpdata = bizMessage.GetContent(&iLen);
+                unpacker = new CT2UnPacker(lpdata, (uint)iLen);
+            }
+
+            if (unpacker != null)
+            {
+                Console.WriteLine("功能号：" + iFunction);
+                _t2SDKWrap.PrintUnPack(unpacker);
+                switch ((FunctionCode)iFunction)
                 {
-                    case (int)FunctionCode.QueryTradingInstance:
+                    case FunctionCode.QueryTradingInstance:
                         {
                             
                         }
                         break;
-                    case (int)FunctionCode.EntrustInstanceBasket:
+                    case FunctionCode.EntrustInstanceBasket:
+                        { 
+                        
+                        }
                         break;
-
-                    case (int)FunctionCode.QueryEntrustInstance:
+                    case FunctionCode.QueryEntrustInstance:
+                        { 
+                            
+                        }
                         break;
+                    case FunctionCode.QueryDealInstance:
+                        { 
+                        
+                        }
+                        break;
+                    case FunctionCode.WithdrawBasket:
+                        { 
+                            
+                        }
+                        break;
+                    case FunctionCode.QuerySpotTemplate:
+                        {
 
-                    case (int)FunctionCode.QueryDealInstance:
+                        }
+                        break;
+                    case FunctionCode.QuerySpotTemplateStock:
+                        {
+
+                        }
                         break;
                     default:
                         break;
@@ -160,8 +845,11 @@ namespace BLL
 
                 unpacker.Dispose();
             }
+            //bizMessage.Dispose();
 
-            lpMsg.Dispose();
+            return (int)ConnectionCode.Success;
         }
+
+        #endregion
     }
 }

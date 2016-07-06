@@ -56,21 +56,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArbitrageBLL.cs" />
+    <Compile Include="BLLManager.cs" />
     <Compile Include="CallbackDataReady.cs" />
     <Compile Include="DataParser.cs" />
     <Compile Include="Entrust\EntrustBLL.cs" />
     <Compile Include="IDataHandler.cs" />
     <Compile Include="IDataReceiver.cs" />
     <Compile Include="IStrategryDataChange.cs" />
-    <Compile Include="LoginBLL2.cs" />
+    <Compile Include="LoginBLL.cs" />
     <Compile Include="SecurityBLL.cs" />
     <Compile Include="SecurityInfo\SecurityInfoBLL.cs" />
-    <Compile Include="StrategyBLL.cs" />
+    <Compile Include="StrategyBLL_extend.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StrategyBLL2.cs" />
+    <Compile Include="StrategyBLL.cs" />
     <Compile Include="Subscriber.cs" />
     <Compile Include="T2SDKCallbackImpl.cs" />
-    <Compile Include="LoginBLL.cs" />
+    <Compile Include="LoginBLL_extend.cs" />
     <Compile Include="T2SDKBase.cs" />
     <Compile Include="TradeCommand\TradeCommandBLL.cs" />
     <Compile Include="TradeCommand\TradeInstanceBLL.cs" />

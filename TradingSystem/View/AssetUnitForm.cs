@@ -1,4 +1,5 @@
-﻿using Config;
+﻿using BLL;
+using Config;
 using Controls.Entity;
 using Controls.GridView;
 using Model.UI;
@@ -16,8 +17,9 @@ namespace TradingSystem.View
     {
         private const string GridId = "assetunitmanagement";
         private GridConfig _gridConfig = null;
+        private LoginBLL _loginBLL = null;
 
-        private SortableBindingList<AssetUnit> _instDataSource = new SortableBindingList<AssetUnit>(new List<AssetUnit>());
+        private SortableBindingList<AssetUnit> _dataSource = new SortableBindingList<AssetUnit>(new List<AssetUnit>());
 
         public AssetUnitForm():
             base()
@@ -25,10 +27,11 @@ namespace TradingSystem.View
             InitializeComponent();
         }
 
-        public AssetUnitForm(GridConfig gridConfig)
+        public AssetUnitForm(GridConfig gridConfig, BLLManager bLLManager)
             : this()
         {
             _gridConfig = gridConfig;
+            _loginBLL = bLLManager.LoginBLL;
 
             this.LoadControl += new FormLoadHandler(Form_LoadControl);
             this.LoadData += new FormLoadHandler(Form_LoadData);
@@ -38,8 +41,10 @@ namespace TradingSystem.View
         {
             //set the monitorGridView
             TSDataGridViewHelper.AddColumns(this.gridView, _gridConfig.GetGid(GridId));
-            Dictionary<string, string> colDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(ClosePositionItem));
+            Dictionary<string, string> colDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(AssetUnit));
             TSDataGridViewHelper.SetDataBinding(this.gridView, colDataMap);
+
+            this.gridView.DataSource = _dataSource;
 
             return true;
         }

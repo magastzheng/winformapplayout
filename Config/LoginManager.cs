@@ -15,6 +15,7 @@ namespace Config
         private User _loginUser;
 
         private List<AccountItem> _accounts = new List<AccountItem>();
+        private List<PortfolioItem> _portfolios = new List<PortfolioItem>();
 
         static LoginManager()
         { 
@@ -42,6 +43,12 @@ namespace Config
             get { return _accounts; }
         }
 
+        public List<PortfolioItem> Portfolios
+        {
+            get { return _portfolios; }
+        }
+
+        #region accounts
         public void AddAccount(AccountItem account)
         {
             bool isExisted = false;
@@ -74,5 +81,43 @@ namespace Config
 
             return account;
         }
+        #endregion
+
+        #region portfolios
+
+        public void AddPortfolio(PortfolioItem portfolio)
+        {
+            bool isExisted = false;
+            foreach (var port in _portfolios)
+            {
+                if (port.CombiNo == portfolio.CombiNo)
+                {
+                    isExisted = true;
+                    break;
+                }
+            }
+
+            if (!isExisted)
+            {
+                _portfolios.Add(portfolio);
+            }
+        }
+
+        public PortfolioItem GetPortfolio(string combiNo)
+        {
+            PortfolioItem portfolio = new PortfolioItem();
+            foreach (var port in _portfolios)
+            {
+                if (port.CombiNo == combiNo)
+                {
+                    portfolio = port;
+                    break;
+                }
+            }
+
+            return portfolio;
+        }
+
+        #endregion
     }
 }

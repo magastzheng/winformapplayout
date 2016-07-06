@@ -2357,7 +2357,7 @@ readonly:
 		{
 		"name": "fundname",
 		"text": "基金名称",
-		"width": 80,
+		"width": 250,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -2365,7 +2365,7 @@ readonly:
 		},{
 		"name": "fundcode",
 		"text": "基金代码",
-		"width": 80,
+		"width": 150,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -2373,7 +2373,7 @@ readonly:
 		},{
 		"name": "accounttype",
 		"text": "产品类型",
-		"width": 80,
+		"width": 150,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -2395,7 +2395,7 @@ readonly:
 		{
 		"name": "fundname",
 		"text": "基金名称",
-		"width": 80,
+		"width": 250,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -2403,7 +2403,7 @@ readonly:
 		},{
 		"name": "fundcode",
 		"text": "基金代码",
-		"width": 80,
+		"width": 150,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -2411,7 +2411,7 @@ readonly:
 		},{
 		"name": "accounttype",
 		"text": "产品类型",
-		"width": 80,
+		"width": 150,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,

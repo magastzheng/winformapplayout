@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Model.Binding;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,25 +9,43 @@ namespace Model.UI
 {
     public class AssetUnit
     {
-        public int AssetUnitId { get; set; }
+        [BindingAttribute("fundname")]
+        public string FundName { get; set; }
 
-        public string AssetUnitCode { get; set; }
+        [BindingAttribute("fundcode")]
+        public string FundCode { get; set; }
 
-        public string AssetUnitName { get; set; }
+        [BindingAttribute("accounttype")]
+        public int AccountType { get; set; }
 
-        public int FundId { get; set; }
+        [BindingAttribute("capitalaccount")]
+        public string CapitalAccount { get; set; }
 
-        //1 正常，2 过期， 3 冻结
-        public int AssetUnitStatus { get; set; }
+        [BindingAttribute("assetno")]
+        public string AssetNo { get; set; }
 
-        //1 允许透支; 2 不允许透支
-        public int CanOverdraft { get; set; }
+        [BindingAttribute("assetname")]
+        public string AssetName { get; set; }
 
-        //1 收益资产; 2 保本资产
-        public int AssetType { get; set; }
+        //public int AssetUnitId { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        //public string AssetUnitCode { get; set; }
 
-        public DateTime ModifiedDate { get; set; }
+        //public string AssetUnitName { get; set; }
+
+        //public int FundId { get; set; }
+
+        ////1 正常，2 过期， 3 冻结
+        //public int AssetUnitStatus { get; set; }
+
+        ////1 允许透支; 2 不允许透支
+        //public int CanOverdraft { get; set; }
+
+        ////1 收益资产; 2 保本资产
+        //public int AssetType { get; set; }
+
+        //public DateTime CreatedDate { get; set; }
+
+        //public DateTime ModifiedDate { get; set; }
     }
 }

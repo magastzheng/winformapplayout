@@ -1,4 +1,5 @@
-﻿using BLL.UFX;
+﻿using BLL;
+using BLL.UFX;
 using Config;
 using DBAccess;
 using Forms;
@@ -61,7 +62,7 @@ namespace TradingSystem.View
                 return;
             }
 
-            Forms.BaseForm form = FormManager.Instance.ActiveForm(this, _panelMain, e.TreeNodeEvent.Name, _gridConfig, _t2SDKWrap);
+            Forms.BaseForm form = FormManager.Instance.ActiveForm(this, _panelMain, e.TreeNodeEvent.Name, _gridConfig, BLLManager.Instance);
 
             //TODO:
         }

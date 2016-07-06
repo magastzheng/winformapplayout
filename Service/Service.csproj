@@ -46,6 +46,7 @@
     <Compile Include="QuoteService.cs" />
     <Compile Include="IService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UFXHeartBeatService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
