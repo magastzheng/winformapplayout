@@ -63,6 +63,7 @@
     <Compile Include="TradingCommandSecurityDAO.cs" />
     <Compile Include="TradingInstanceDAO.cs" />
     <Compile Include="TradingInstanceSecurityDAO.cs" />
+    <Compile Include="Product\UFXPortfolioDAO.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

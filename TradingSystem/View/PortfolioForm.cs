@@ -84,6 +84,13 @@ namespace TradingSystem.View
                     }
                 }
 
+                var asset = LoginManager.Instance.Assets.Find(o => o.AssetNo.Equals(p.AssetNo));
+                if (asset != null)
+                {
+                    portfolio.AssetName = asset.AssetName;
+                    portfolio.CapitalAccount = asset.CapitalAccount;
+                }
+
                 _dataSource.Add(portfolio);
             }
 

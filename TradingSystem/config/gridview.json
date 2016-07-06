@@ -2357,7 +2357,7 @@ readonly:
 		{
 		"name": "fundname",
 		"text": "基金名称",
-		"width": 250,
+		"width": 150,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -2365,7 +2365,7 @@ readonly:
 		},{
 		"name": "fundcode",
 		"text": "基金代码",
-		"width": 150,
+		"width": 100,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -2373,7 +2373,7 @@ readonly:
 		},{
 		"name": "accounttype",
 		"text": "产品类型",
-		"width": 150,
+		"width": 100,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -2382,7 +2382,7 @@ readonly:
 		{
 		"name": "last",
 		"text": "",
-		"width": 80,
+		"width": 5,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -2395,7 +2395,7 @@ readonly:
 		{
 		"name": "fundname",
 		"text": "基金名称",
-		"width": 250,
+		"width": 150,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -2403,7 +2403,7 @@ readonly:
 		},{
 		"name": "fundcode",
 		"text": "基金代码",
-		"width": 150,
+		"width": 100,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -2411,7 +2411,7 @@ readonly:
 		},{
 		"name": "accounttype",
 		"text": "产品类型",
-		"width": 150,
+		"width": 100,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -2435,7 +2435,7 @@ readonly:
 		},{
 		"name": "assetname",
 		"text": "资产单元名称",
-		"width": 80,
+		"width": 150,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -2443,7 +2443,7 @@ readonly:
 		},{
 		"name": "last",
 		"text": "",
-		"width": 80,
+		"width": 5,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -2456,7 +2456,7 @@ readonly:
 		{
 		"name": "fundname",
 		"text": "基金名称",
-		"width": 80,
+		"width": 150,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -2496,7 +2496,7 @@ readonly:
 		},{
 		"name": "assetname",
 		"text": "资产单元名称",
-		"width": 80,
+		"width": 150,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -2512,7 +2512,7 @@ readonly:
 		},{
 		"name": "portfolioname",
 		"text": "组合名称",
-		"width": 80,
+		"width": 150,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -2520,7 +2520,7 @@ readonly:
 		},{
 		"name": "last",
 		"text": "",
-		"width": 80,
+		"width": 5,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,

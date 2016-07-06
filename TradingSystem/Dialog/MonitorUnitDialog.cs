@@ -1,4 +1,5 @@
-﻿using Config;
+﻿using BLL.Product;
+using Config;
 using Controls.Entity;
 using DBAccess;
 using Forms;
@@ -17,7 +18,7 @@ namespace TradingSystem.Dialog
     public partial class MonitorUnitDialog : Forms.BaseFixedForm
     {
         private FuturesContractDAO _fcdbdao = new FuturesContractDAO();
-        //private PortfolioDAO _portdbdao = new PortfolioDAO();
+        private ProductBLL _productBLL = new ProductBLL();
         private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
 
         public MonitorUnitDialog()
@@ -67,29 +68,29 @@ namespace TradingSystem.Dialog
 
         private void LoadPortfolio()
         {
-            //var portfolios = _portdbdao.GetPortfolio("");
-            //if (portfolios == null || portfolios.Count == 0)
-            //    return;
+            var portfolios = _productBLL.GetAll();
+            if (portfolios == null || portfolios.Count == 0)
+                return;
 
-            //ComboOption cbOption = new ComboOption
-            //{
-            //    Items = new List<ComboOptionItem>()
-            //};
+            ComboOption cbOption = new ComboOption
+            {
+                Items = new List<ComboOptionItem>()
+            };
 
-            //foreach (var p in portfolios)
-            //{
-            //    ComboOptionItem item = new ComboOptionItem
-            //    {
-            //        Id = p.PortfolioId.ToString(),
-            //        Data = p,
-            //        Name = string.Format("{0} {1} ({2}-{3})", p.PortfolioId, p.PortfolioName, p.FundId, p.AssetUnitId)
-            //    };
+            foreach (var p in portfolios)
+            {
+                ComboOptionItem item = new ComboOptionItem
+                {
+                    Id = p.PortfolioId.ToString(),
+                    Data = p,
+                    Name = string.Format("{0} {1} ({2}-{3})", p.PortfolioId, p.PortfolioName, p.FundName, p.AssetName)
+                };
 
-            //    cbOption.Items.Add(item);
-            //}
+                cbOption.Items.Add(item);
+            }
 
-            //cbOption.Selected = cbOption.Items[0].Id;
-            //ComboBoxUtil.SetComboBox(this.cbPortfolioId, cbOption);
+            cbOption.Selected = cbOption.Items[0].Id;
+            ComboBoxUtil.SetComboBox(this.cbPortfolioId, cbOption);
         }
 
         private void LoadStockTemplate()

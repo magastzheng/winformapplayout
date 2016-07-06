@@ -67,6 +67,7 @@
     <Compile Include="PackFieldType.cs" />
     <Compile Include="SecurityInfo\SecurityItem.cs" />
     <Compile Include="strategy\AccountItem.cs" />
+    <Compile Include="strategy\AssetItem.cs" />
     <Compile Include="strategy\PortfolioItem.cs" />
     <Compile Include="strategy\TradingInstance.cs" />
     <Compile Include="t2sdk\MarketCode.cs" />

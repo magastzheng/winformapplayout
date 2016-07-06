@@ -1,4 +1,5 @@
 ﻿using BLL;
+using BLL.Product;
 using BLL.UFX;
 using Config;
 using Model;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TradingSystem.View;
 
@@ -16,6 +18,8 @@ namespace TradingSystem.Controller
     {
         private LoginForm _loginForm;
         private T2SDKWrap _t2SDKWrap;
+        private ProductBLL _productBLL;
+        private CountdownEvent _cdEvent = new CountdownEvent(3);
         //private LoginBLL _loginBLL;
         
         public LoginForm LoginForm
@@ -33,6 +37,7 @@ namespace TradingSystem.Controller
             this._t2SDKWrap = t2SDKWrap;
             //this._loginBLL = new LoginBLL(t2SDKWrap);
             //this._loginBLL
+            this._productBLL = new ProductBLL();
 
             this._loginForm = loginForm;
             this._loginForm.LoginController = this;
@@ -51,10 +56,11 @@ namespace TradingSystem.Controller
             if (retCode == (int)ConnectionCode.Success)
             {
                 BLLManager.Instance.LoginBLL.QueryAccount(new DataHandlerCallback(ParseAccount));
-                //BLLManager.Instance.LoginBLL.QueryAssetUnit();
-                //BLLManager.Instance.LoginBLL.QueryPortfolio();
-                //BLLManager.Instance.LoginBLL.QueryHolder();
-                //BLLManager.Instance.LoginBLL.QueryTrading();
+                BLLManager.Instance.LoginBLL.QueryAssetUnit(new DataHandlerCallback(ParseAssetUnit));
+                BLLManager.Instance.LoginBLL.QueryPortfolio(new DataHandlerCallback(ParsePortfolio));
+
+                _cdEvent.Wait();
+                _productBLL.Create(LoginManager.Instance.Accounts, LoginManager.Instance.Assets, LoginManager.Instance.Portfolios);
 
                 var gridConfig = ConfigManager.Instance.GetGridConfig();
                 MainForm mainForm = new MainForm(gridConfig, this._t2SDKWrap);
@@ -81,6 +87,54 @@ namespace TradingSystem.Controller
                 }
                 break;
             }
+
+            _cdEvent.Signal();
+        }
+
+        private void ParseAssetUnit(DataParser parser)
+        {
+            for (int i = 1, count = parser.DataSets.Count; i < count; i++)
+            {
+                var dataSet = parser.DataSets[i];
+                foreach (var dataRow in dataSet.Rows)
+                {
+                    AssetItem asset = new AssetItem();
+                    asset.CapitalAccount = dataRow.Columns["capital_account"].GetStr();
+                    asset.AccountCode = dataRow.Columns["account_code"].GetStr();
+                    asset.AssetNo = dataRow.Columns["asset_no"].GetStr();
+                    asset.AssetName = dataRow.Columns["asset_name"].GetStr();
+
+                    LoginManager.Instance.AddAsset(asset);
+                }
+                break;
+            }
+
+            _cdEvent.Signal();
+        }
+
+        private void ParsePortfolio(DataParser parser)
+        {
+            for (int i = 1, count = parser.DataSets.Count; i < count; i++)
+            {
+                var dataSet = parser.DataSets[i];
+                foreach (var dataRow in dataSet.Rows)
+                {
+                    PortfolioItem p = new PortfolioItem();
+                    p.AccountCode = dataRow.Columns["account_code"].GetStr();
+                    p.AssetNo = dataRow.Columns["asset_no"].GetStr();
+                    p.CombiNo = dataRow.Columns["combi_no"].GetStr();
+                    p.CombiName = dataRow.Columns["combi_name"].GetStr();
+                    p.CapitalAccount = dataRow.Columns["capital_account"].GetStr();
+                    p.MarketNoList = dataRow.Columns["market_no_list"].GetStr();
+                    p.FutuInvestType = dataRow.Columns["futu_invest_type"].GetStr();
+                    p.EntrustDirectionList = dataRow.Columns["entrust_direction_list"].GetStr();
+
+                    LoginManager.Instance.AddPortfolio(p);
+                }
+                break;
+            }
+
+            _cdEvent.Signal();
         }
     }
 }

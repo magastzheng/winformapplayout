@@ -64,6 +64,7 @@
     <Compile Include="IDataReceiver.cs" />
     <Compile Include="IStrategryDataChange.cs" />
     <Compile Include="LoginBLL.cs" />
+    <Compile Include="Product\ProductBLL.cs" />
     <Compile Include="SecurityBLL.cs" />
     <Compile Include="SecurityInfo\SecurityInfoBLL.cs" />
     <Compile Include="StrategyBLL_extend.cs" />

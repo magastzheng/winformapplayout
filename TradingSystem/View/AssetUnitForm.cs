@@ -2,6 +2,7 @@
 using Config;
 using Controls.Entity;
 using Controls.GridView;
+using Model.strategy;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace TradingSystem.View
@@ -18,6 +20,8 @@ namespace TradingSystem.View
         private const string GridId = "assetunitmanagement";
         private GridConfig _gridConfig = null;
         private LoginBLL _loginBLL = null;
+
+        private ManualResetEvent _waitEvent = new ManualResetEvent(false);
 
         private SortableBindingList<AssetUnit> _dataSource = new SortableBindingList<AssetUnit>(new List<AssetUnit>());
 
@@ -51,7 +55,63 @@ namespace TradingSystem.View
 
         private bool Form_LoadData(object sender, object data)
         {
+            _dataSource.Clear();
+
+            var result = _loginBLL.QueryAssetUnit(new DataHandlerCallback(ParseData));
+            if (result != Model.ConnectionCode.Success)
+            {
+                return false;
+            }
+
+            _waitEvent.WaitOne(5000);
+
+            var accounts = LoginManager.Instance.Assets;
+            foreach (var account in accounts)
+            {
+                AssetUnit asset = new AssetUnit
+                {
+                    FundCode = account.AccountCode,
+                    CapitalAccount = account.CapitalAccount,
+                    AssetNo = account.AssetNo,
+                    AssetName = account.AssetName,
+                };
+
+                var fund = LoginManager.Instance.Accounts.Find(o => o.AccountCode.Equals(asset.FundCode));
+                if (fund != null)
+                {
+                    asset.FundName = fund.AccountName;
+                    int temp = -1;
+                    if (int.TryParse(fund.AccountType, out temp))
+                    {
+                        asset.AccountType = temp;
+                    }
+                }
+
+                _dataSource.Add(asset);
+            }
+
             return true;
+        }
+
+        private void ParseData(DataParser parser)
+        {
+            for (int i = 1, count = parser.DataSets.Count; i < count; i++)
+            {
+                var dataSet = parser.DataSets[i];
+                foreach (var dataRow in dataSet.Rows)
+                {
+                    AssetItem asset = new AssetItem();
+                    asset.CapitalAccount = dataRow.Columns["capital_account"].GetStr();
+                    asset.AccountCode = dataRow.Columns["account_code"].GetStr();
+                    asset.AssetNo = dataRow.Columns["asset_no"].GetStr();
+                    asset.AssetName = dataRow.Columns["asset_name"].GetStr();
+
+                    LoginManager.Instance.AddAsset(asset);
+                }
+                break;
+            }
+
+            _waitEvent.Set();
         }
     }
 }
