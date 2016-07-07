@@ -520,5 +520,33 @@ namespace Controls.GridView
         }
 
         #endregion
+
+        #region get current Row and Column index
+
+        public int GetCurrentRowIndex()
+        {
+            if (CurrentRow != null)
+            {
+                return CurrentRow.Index;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        public int GetCurrentColumnIndex()
+        {
+            if (CurrentCell != null)
+            {
+                return CurrentCell.ColumnIndex;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        #endregion
     }
 }

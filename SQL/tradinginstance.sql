@@ -202,11 +202,16 @@ begin
 			,b.MonitorUnitName	
 			,c.TemplateId
 			,c.TemplateName
+			,d.PortfolioId
+			,d.PortfolioCode
+			,d.PortfolioName
 		from tradinginstance a
 		inner join monitorunit b
 		on a.MonitorUnitId = b.MonitorUnitId
 		inner join stocktemplate c
 		on b.StockTemplateId = c.TemplateId
+		inner join ufxportfolio d
+		on b.PortfolioId=d.PortfolioId
 		where a.InstanceId=@InstanceId
 	end
 	else
@@ -228,11 +233,16 @@ begin
 			,b.MonitorUnitName	
 			,c.TemplateId
 			,c.TemplateName
+			,d.PortfolioId
+			,d.PortfolioCode
+			,d.PortfolioName
 		from tradinginstance a
 		inner join monitorunit b
 		on a.MonitorUnitId = b.MonitorUnitId
 		inner join stocktemplate c
 		on b.StockTemplateId = c.TemplateId
+		inner join ufxportfolio d
+		on b.PortfolioId=d.PortfolioId
 	end
 end
 

@@ -18,7 +18,6 @@ using TradingSystem.TradeUtil;
 using Model.Data;
 using BLL.SecurityInfo;
 using BLL.Entrust;
-using BLL.TradingCommand;
 using BLL.TradeCommand;
 
 namespace TradingSystem.View

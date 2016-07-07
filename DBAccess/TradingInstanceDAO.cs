@@ -35,7 +35,7 @@ namespace DBAccess
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
             _dbHelper.AddInParameter(dbCommand, "@InstanceCode", System.Data.DbType.String, securityItem.InstanceCode);
             _dbHelper.AddInParameter(dbCommand, "@MonitorUnitId", System.Data.DbType.Int32, securityItem.MonitorUnitId);
-            _dbHelper.AddInParameter(dbCommand, "@StockDirection", System.Data.DbType.Int32, (int)securityItem.StockPriceType);
+            _dbHelper.AddInParameter(dbCommand, "@StockDirection", System.Data.DbType.Int32, (int)securityItem.StockDirection);
             _dbHelper.AddInParameter(dbCommand, "@FuturesContract", System.Data.DbType.String, securityItem.FuturesContract);
             _dbHelper.AddInParameter(dbCommand, "@FuturesDirection", System.Data.DbType.Int32, (int)securityItem.FuturesDirection);
             _dbHelper.AddInParameter(dbCommand, "@OperationCopies", System.Data.DbType.Int32, securityItem.OperationCopies);
@@ -64,7 +64,7 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, securityItem.InstanceId);
             _dbHelper.AddInParameter(dbCommand, "@InstanceCode", System.Data.DbType.String, securityItem.InstanceCode);
             _dbHelper.AddInParameter(dbCommand, "@MonitorUnitId", System.Data.DbType.Int32, securityItem.MonitorUnitId);
-            _dbHelper.AddInParameter(dbCommand, "@StockDirection", System.Data.DbType.Int32, (int)securityItem.StockPriceType);
+            _dbHelper.AddInParameter(dbCommand, "@StockDirection", System.Data.DbType.Int32, (int)securityItem.StockDirection);
             _dbHelper.AddInParameter(dbCommand, "@FuturesContract", System.Data.DbType.String, securityItem.FuturesContract);
             _dbHelper.AddInParameter(dbCommand, "@FuturesDirection", System.Data.DbType.Int32, (int)securityItem.FuturesDirection);
             _dbHelper.AddInParameter(dbCommand, "@OperationCopies", System.Data.DbType.Int32, securityItem.OperationCopies);
@@ -213,6 +213,9 @@ namespace DBAccess
                     item.MonitorUnitName = (string)reader["MonitorUnitName"];
                     item.TemplateId = (int)reader["TemplateId"];
                     item.TemplateName = (string)reader["TemplateName"];
+                    item.PortfolioId = (int)reader["PortfolioId"];
+                    item.PortfolioCode = (string)reader["PortfolioCode"];
+                    item.PortfolioName = (string)reader["PortfolioName"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {

@@ -17,6 +17,9 @@ using Model.SecurityInfo;
 using TradingSystem.TradeUtil;
 using Util;
 using BLL.SecurityInfo;
+using TradingSystem.Dialog;
+using BLL.Template;
+using BLL.TradeCommand;
 
 namespace TradingSystem.View
 {
@@ -29,9 +32,10 @@ namespace TradingSystem.View
         private GridConfig _gridConfig;
         private TradingInstanceDAO _tradeinstdao = new TradingInstanceDAO();
         private TradingInstanceSecurityDAO _tradeinstsecudao = new TradingInstanceSecurityDAO();
-        private TemplateStockDAO _tempstockdao = new TemplateStockDAO();
-        private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
         private FuturesContractDAO _fcdbdao = new FuturesContractDAO();
+
+        private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
+        private TemplateBLL _templateBLL = new TemplateBLL();
 
         private SortableBindingList<ClosePositionItem> _instDataSource = new SortableBindingList<ClosePositionItem>(new List<ClosePositionItem>());
         private SortableBindingList<ClosePositionSecurityItem> _secuDataSource = new SortableBindingList<ClosePositionSecurityItem>(new List<ClosePositionSecurityItem>());
@@ -104,34 +108,38 @@ namespace TradingSystem.View
         private void LoadSecurity(ClosePositionItem closeItem)
         {
             var secuItems = _tradeinstsecudao.Get(closeItem.InstanceId);
-            var tempstockitems = _tempstockdao.Get(closeItem.TemplateId);
-
-            if (secuItems != null && secuItems.Count > 0)
+            var tempstockitems = _templateBLL.GetTemplate(closeItem.TemplateId);
+            if (secuItems == null || secuItems.Count == 0)
             {
-                foreach (var secuItem in secuItems)
-                {
-                    ClosePositionSecurityItem closeSecuItem = new ClosePositionSecurityItem 
-                    {
-                        Selection = true,
-                        InstanceId = secuItem.InstanceId,
-                        SecuCode = secuItem.SecuCode,
-                        SecuType = secuItem.SecuType,
-                        
-                        HoldingAmount = secuItem.PositionAmount,
-                        AvailableAmount = secuItem.AvailableAmount,
-                    };
-
-                    var secuInfo = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
-                    if (secuInfo != null)
-                    { 
-                        closeSecuItem.SecuName = secuInfo.SecuName;
-                        closeSecuItem.ExchangeCode = secuInfo.ExchangeCode;
-                    }
-
-                    _secuDataSource.Add(closeSecuItem);
-                }
+                return;
             }
 
+            foreach (var secuItem in secuItems)
+            {
+                ClosePositionSecurityItem closeSecuItem = new ClosePositionSecurityItem
+                {
+                    Selection = true,
+                    InstanceId = secuItem.InstanceId,
+                    SecuCode = secuItem.SecuCode,
+                    SecuType = secuItem.SecuType,
+                    PositionType = secuItem.PositionType,
+
+                    HoldingAmount = secuItem.PositionAmount,
+                    AvailableAmount = secuItem.AvailableAmount,
+
+                    PortfolioId = closeItem.PortfolioId,
+                    PortfolioName = closeItem.PortfolioName,
+                };
+
+                var secuInfo = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
+                if (secuInfo != null)
+                {
+                    closeSecuItem.SecuName = secuInfo.SecuName;
+                    closeSecuItem.ExchangeCode = secuInfo.ExchangeCode;
+                }
+
+                _secuDataSource.Add(closeSecuItem);
+            }
         }
 
         private void LoadCloseCommand(ClosePositionItem closeItem)
@@ -192,7 +200,7 @@ namespace TradingSystem.View
             var tradeDirectionOption = ConfigManager.Instance.GetComboConfig().GetComboOption("tradedirection");
             TSDataGridViewHelper.SetDataBinding(this.cmdGridView, "tradedirection", tradeDirectionOption);
 
-            var templates = _tempdbdao.Get(-1);
+            var templates = _templateBLL.GetTemplates();
             if (templates != null && templates.Count > 0)
             {
                 ComboOption tempOption = new ComboOption 
@@ -248,22 +256,27 @@ namespace TradingSystem.View
             _cmdDataSource.Clear();
             
             var tradeInstances = _tradeinstdao.GetCombine(-1);
-            if (tradeInstances != null && tradeInstances.Count > 0)
+            if (tradeInstances == null || tradeInstances.Count == 0)
             {
-                foreach (var instance in tradeInstances)
-                {
-                    ClosePositionItem closeItem = new ClosePositionItem 
-                    {
-                        InstanceId = instance.InstanceId,
-                        InstanceCode = instance.InstanceCode,
-                        MonitorId = instance.MonitorUnitId,
-                        MonitorName = instance.MonitorUnitName,
-                        TemplateId = instance.TemplateId,
-                    };
-
-                    _instDataSource.Add(closeItem);
-                }
+                return false;
             }
+
+            foreach (var instance in tradeInstances)
+            {
+                ClosePositionItem closeItem = new ClosePositionItem
+                {
+                    InstanceId = instance.InstanceId,
+                    InstanceCode = instance.InstanceCode,
+                    MonitorId = instance.MonitorUnitId,
+                    MonitorName = instance.MonitorUnitName,
+                    TemplateId = instance.TemplateId,
+                    PortfolioId = instance.PortfolioId,
+                    PortfolioName = instance.PortfolioName,
+                };
+
+                _instDataSource.Add(closeItem);
+            }
+
             return true;
         }
 
@@ -295,8 +308,17 @@ namespace TradingSystem.View
             
             foreach (var cmdItem in cmdItems)
             {
-                cmdItem.TradeDirection = ((int)EntrustDirection.Sell).ToString();
+                //cmdItem.TradeDirection = ((int)EntrustDirection.Sell).ToString();
                 CloseAll(cmdItem);
+
+                var closeItem = _instDataSource.First(p => p.InstanceId == cmdItem.InstanceId);
+                var closeSecuItems = _secuDataSource.Where(p => p.InstanceId == cmdItem.InstanceId).ToList();
+
+                int result = _tradeCommandBLL.SubmitCloseAll(closeItem, closeSecuItems);
+                if (result < 0)
+                { 
+                    //TODO: fail to submit
+                }
             }
 
             this.cmdGridView.Invalidate();
@@ -305,7 +327,36 @@ namespace TradingSystem.View
 
         private void Button_ChgPosition_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            int rowIndex = this.securityGridView.GetCurrentRowIndex();
+            if (rowIndex < 0)
+            {
+                return;
+            }
+
+            var secuItem = this._secuDataSource[rowIndex];
+            if (secuItem == null)
+            {
+                return;
+            }
+
+            ChangePositionDialog dialog = new ChangePositionDialog();
+            dialog.Owner = this;
+            dialog.StartPosition = FormStartPosition.CenterParent;
+            //dialog.OnLoadFormActived(json);
+            //dialog.Visible = true;
+            dialog.OnLoadControl(dialog, null);
+            dialog.OnLoadData(dialog, secuItem);
+            //dialog.SaveData += new FormLoadHandler(Dialog_SaveData);
+            dialog.ShowDialog();
+
+            if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+                dialog.Dispose();
+            }
+            else
+            {
+                dialog.Dispose();
+            }
         }
 
         private void Button_Submit_Click(object sender, EventArgs e)
@@ -313,51 +364,11 @@ namespace TradingSystem.View
             var cmdItems = _cmdDataSource.Where(p => p.Selection).ToList();
             foreach (var cmdItem in cmdItems)
             {
-                TradingCommandItem tdcmdItem = new TradingCommandItem
-                {
-                    InstanceId = cmdItem.InstanceId,
-                    ECommandType = Model.UI.CommandType.Arbitrage,
-                    //EExecuteType = ExecuteType.OpenPosition,
-                    CommandNum = cmdItem.Copies,
-                    //EStockDirection = Model.Data.EntrustDirection.BuySpot,
-                    //EFuturesDirection = Model.Data.EntrustDirection.SellOpen,
-                    EEntrustStatus = EntrustStatus.NoExecuted,
-                    EDealStatus = DealStatus.NoDeal,
-                    ModifiedTimes = 1
-                };
-
-                EntrustDirection direction = EntrustDirectionUtil.GetEntrustDirection(cmdItem.TradeDirection);
-                switch (direction)
-                {
-                    case EntrustDirection.Buy:
-                        {
-                            tdcmdItem.EExecuteType = ExecuteType.OpenPosition;
-                            tdcmdItem.EStockDirection = EntrustDirection.BuySpot;
-                            tdcmdItem.EFuturesDirection = EntrustDirection.SellOpen;
-                        }
-                        break;
-                    case EntrustDirection.Sell:
-                        {
-                            tdcmdItem.EExecuteType = ExecuteType.ClosePosition;
-                            tdcmdItem.EStockDirection = EntrustDirection.SellSpot;
-                            tdcmdItem.EFuturesDirection = EntrustDirection.BuyClose;
-                        }
-                        break;
-                    case EntrustDirection.AdjustedToBuySell:
-                        {
-                            tdcmdItem.EExecuteType = ExecuteType.AdjustPosition;
-                            tdcmdItem.EStockDirection = EntrustDirection.BuySpot;
-                            tdcmdItem.EFuturesDirection = EntrustDirection.SellOpen;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-
-                var cmdSecuItems = GetSelectCommandSecurities(cmdItem);
-                TradingCommandHelper tradeCommandHelper = new TradingCommandHelper();
-                int total = tradeCommandHelper.Submit(tdcmdItem, cmdSecuItems);
-                if (total == cmdSecuItems.Count)
+                var tdcmdItem = GetTradeCommandItem(cmdItem);
+                var closeItem = _instDataSource.First(p => p.InstanceId.Equals(tdcmdItem.InstanceId));
+                var selectedItems = _secuDataSource.Where(p => p.Selection && p.InstanceId.Equals(tdcmdItem.InstanceId)).ToList();
+                var result = _tradeCommandBLL.SubmitClosePosition(tdcmdItem, closeItem, selectedItems);
+                if (result > 0)
                 {
 
                 }
@@ -404,20 +415,15 @@ namespace TradingSystem.View
                 return;
             }
 
-            var templates = _tempdbdao.Get(instance.TemplateId);
-            StockTemplate template = null;
-            if (templates != null && templates.Count == 1)
-            {
-                template = templates.Single(); 
-            }
-
+            StockTemplate template = _templateBLL.GetTemplate(instance.TemplateId);
+         
             if (template == null)
             {
                 return;
             }
 
             //instance.TemplateId
-            var tempstockitems = _tempstockdao.Get(instance.TemplateId);
+            var tempstockitems = _templateBLL.GetStocks(instance.TemplateId);
             var secuItems = _secuDataSource.Where(p => p.InstanceId == cmdItem.InstanceId);
             if (secuItems == null)
             {
@@ -583,39 +589,56 @@ namespace TradingSystem.View
             }
         }
 
-        private List<CommandSecurityItem> GetSelectCommandSecurities(ClosePositionCmdItem cmdItem)
+        #endregion
+
+        #region
+
+        private TradingCommandItem GetTradeCommandItem(ClosePositionCmdItem closeCmdItem)
         {
-            List<CommandSecurityItem> cmdSecuItems = new List<CommandSecurityItem>();
-
-            var template = _instDataSource.First(p => p.InstanceId == cmdItem.InstanceId);
-
-            var tempStockItems = _tempstockdao.Get(template.TemplateId);
-            foreach (var item in _secuDataSource)
+            TradingCommandItem tdcmdItem = new TradingCommandItem
             {
-                if (item.Selection && item.InstanceId == cmdItem.InstanceId)
-                {
-                    CommandSecurityItem secuItem = new CommandSecurityItem
-                    {
-                        SecuCode = item.SecuCode,
-                        SecuType = item.SecuType,
-                        CommandAmount = item.EntrustAmount,
-                        CommandPrice = item.CommandPrice,
-                        EDirection = (EntrustDirection)item.EntrustDirection,
-                        EntrustStatus = EntrustStatus.NoExecuted
-                    };
+                InstanceId = closeCmdItem.InstanceId,
+                ECommandType = Model.UI.CommandType.Arbitrage,
+                //EExecuteType = ExecuteType.OpenPosition,
+                CommandNum = closeCmdItem.Copies,
+                //EStockDirection = Model.Data.EntrustDirection.BuySpot,
+                //EFuturesDirection = Model.Data.EntrustDirection.SellOpen,
+                EEntrustStatus = EntrustStatus.NoExecuted,
+                EDealStatus = DealStatus.NoDeal,
+                ModifiedTimes = 1
+            };
 
-                    var tempStockItem = tempStockItems.Find(p => p.SecuCode.Equals(secuItem.SecuCode));
-                    if (tempStockItem != null)
+            EntrustDirection direction = EntrustDirectionUtil.GetEntrustDirection(closeCmdItem.TradeDirection);
+            switch (direction)
+            {
+                case EntrustDirection.Buy:
                     {
-                        secuItem.WeightAmount = tempStockItem.Amount;
+                        tdcmdItem.EExecuteType = ExecuteType.OpenPosition;
+                        tdcmdItem.EStockDirection = EntrustDirection.BuySpot;
+                        tdcmdItem.EFuturesDirection = EntrustDirection.SellOpen;
                     }
-
-                    cmdSecuItems.Add(secuItem);
-                }
+                    break;
+                case EntrustDirection.Sell:
+                    {
+                        tdcmdItem.EExecuteType = ExecuteType.ClosePosition;
+                        tdcmdItem.EStockDirection = EntrustDirection.SellSpot;
+                        tdcmdItem.EFuturesDirection = EntrustDirection.BuyClose;
+                    }
+                    break;
+                case EntrustDirection.AdjustedToBuySell:
+                    {
+                        tdcmdItem.EExecuteType = ExecuteType.AdjustPosition;
+                        tdcmdItem.EStockDirection = EntrustDirection.BuySpot;
+                        tdcmdItem.EFuturesDirection = EntrustDirection.SellOpen;
+                    }
+                    break;
+                default:
+                    break;
             }
 
-            return cmdSecuItems;
+            return tdcmdItem;
         }
+
         #endregion
     }
 }

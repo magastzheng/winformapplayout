@@ -25,7 +25,8 @@ namespace BLL.TradeCommand
 
             if (instanceId > 0)
             {
-                var tradeinstSecus = GetTradingInstanceSecurities(instanceId, openItem, secuItems);
+                tradingInstance.InstanceId = instanceId;
+                var tradeinstSecus = GetTradingInstanceSecurities(tradingInstance, openItem, secuItems);
                 if (tradeinstSecus != null && tradeinstSecus.Count > 0)
                 {
                     foreach (var tiItem in tradeinstSecus)
@@ -47,17 +48,30 @@ namespace BLL.TradeCommand
             return _tradeinstdao.Update(tradeInstance);
         }
 
+        public TradingInstance GetInstance(int instanceId)
+        {
+            var instances = _tradeinstdao.GetCombine(instanceId);
+            if (instances != null && instances.Count == 1)
+            {
+                return instances[0];
+            }
+            else
+            {
+                return new TradingInstance();
+            }
+        }
+
         #region
 
-        private List<TradingInstanceSecurity> GetTradingInstanceSecurities(int instanceId, OpenPositionItem openItem, List<OpenPositionSecurityItem> secuItems)
+        private List<TradingInstanceSecurity> GetTradingInstanceSecurities(TradingInstance tradingInstance, OpenPositionItem openItem, List<OpenPositionSecurityItem> secuItems)
         {
             List<TradingInstanceSecurity> tradeInstanceSecuItems = new List<TradingInstanceSecurity>();
             foreach (var item in secuItems)
             {
                 TradingInstanceSecurity tiSecuItem = new TradingInstanceSecurity
                 {
-                    InstanceId = instanceId,
-                    SecuCode = item.SecuCode
+                    InstanceId = tradingInstance.InstanceId,
+                    SecuCode = item.SecuCode,
                 };
 
                 var findItem = SecurityInfoManager.Instance.Get(item.SecuCode);
@@ -73,11 +87,27 @@ namespace BLL.TradeCommand
                         case SecurityType.Stock:
                             {
                                 tiSecuItem.InstructionPreBuy = openItem.Copies * item.WeightAmount;
+                                if (item.DirectionType == Model.Data.EntrustDirection.BuySpot)
+                                {
+                                    tiSecuItem.PositionType = PositionType.StockLong;
+                                }
+                                else if (item.DirectionType == Model.Data.EntrustDirection.SellSpot)
+                                {
+                                    tiSecuItem.PositionType = PositionType.StockShort;
+                                }
                             }
                             break;
                         case SecurityType.Futures:
                             {
                                 tiSecuItem.InstructionPreSell = openItem.Copies * item.WeightAmount;
+                                if (item.DirectionType == Model.Data.EntrustDirection.SellOpen)
+                                {
+                                    tiSecuItem.PositionType = PositionType.FuturesShort;
+                                }
+                                else if (item.DirectionType == Model.Data.EntrustDirection.BuyClose)
+                                {
+                                    tiSecuItem.PositionType = PositionType.FuturesLong;
+                                }
                             }
                             break;
                         default:

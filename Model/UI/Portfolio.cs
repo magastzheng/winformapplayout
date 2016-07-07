@@ -1,4 +1,5 @@
 ﻿using Model.Binding;
+using Model.config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,5 +35,7 @@ namespace Model.UI
         public string PortfolioName { get; set; }
 
         public int PortfolioId { get; set; }
+
+        public PortfolioStatus PortfolioStatus { get; set; }
     }
 }

@@ -170,12 +170,12 @@ namespace Model.UI
         public int InstanceId { get; set; }
 
         //实例编号
-        [BindingAttribute("instanceno")]
-        public string InstanceNo { get; set; }
+        [BindingAttribute("instancecode")]
+        public string InstanceCode { get; set; }
 
         //监控单元
-        [BindingAttribute("monitorunit")]
-        public string MonitorUnit { get; set; }
+        [BindingAttribute("monitorunitname")]
+        public string MonitorUnitName { get; set; }
 
         public int TemplateId { get; set; }
 
@@ -196,5 +196,23 @@ namespace Model.UI
         public DateTime DStartDate { get; set; }
 
         public DateTime DEndDate { get; set; }
+
+        public string SubmitPerson { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+
+        public DateTime ModifiedDate { get; set; }
+
+        public int MonitorUnitId { get; set; }
+
+        public int PortfolioId { get; set; }
+
+        public string PortfolioCode { get; set; }
+
+        public string PortfolioName { get; set; }
+
+        public string FundCode { get; set; }
+
+        public string FundName { get; set; }
     }
 }

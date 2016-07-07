@@ -46,17 +46,19 @@ namespace DBAccess
                 _dbHelper.AddInParameter(dbCommand, "@CommandNum", System.Data.DbType.Int32, cmdItem.CommandNum);
                 _dbHelper.AddInParameter(dbCommand, "@CommandType", System.Data.DbType.Int32, cmdItem.ECommandType);
                 _dbHelper.AddInParameter(dbCommand, "@ExecuteType", System.Data.DbType.Int32, cmdItem.EExecuteType);
-                _dbHelper.AddInParameter(dbCommand, "@StockDirection", System.Data.DbType.String, (int)cmdItem.EStockDirection);
+                _dbHelper.AddInParameter(dbCommand, "@StockDirection", System.Data.DbType.Int32, (int)cmdItem.EStockDirection);
                 _dbHelper.AddInParameter(dbCommand, "@FuturesDirection", System.Data.DbType.Int32, (int)cmdItem.EFuturesDirection);
                 _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)cmdItem.EEntrustStatus);
                 _dbHelper.AddInParameter(dbCommand, "@DealStatus", System.Data.DbType.Int32, (int)cmdItem.EDealStatus);
-
+                _dbHelper.AddInParameter(dbCommand, "@SubmitPerson", System.Data.DbType.String, cmdItem.SubmitPerson);
+                
                 //command time
                 DateTime now = DateTime.Now;
                 //9:15
                 DateTime startDate = new DateTime(now.Year, now.Month, now.Day, 9, 15, 0);
                 //15:15
                 DateTime endDate = new DateTime(now.Year, now.Month, now.Day, 15, 15, 0);
+                _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, now);
                 _dbHelper.AddInParameter(dbCommand, "@StartDate", System.Data.DbType.DateTime, startDate);
                 _dbHelper.AddInParameter(dbCommand, "@EndDate", System.Data.DbType.DateTime, endDate);
 

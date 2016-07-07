@@ -20,38 +20,38 @@
         private void InitializeComponent()
         {
             this.panelTop = new System.Windows.Forms.Panel();
-            this.panelPrice = new System.Windows.Forms.Panel();
-            this.panelBottom = new System.Windows.Forms.Panel();
-            this.panelMain = new System.Windows.Forms.Panel();
             this.lblCaption = new System.Windows.Forms.Label();
-            this.gbSpotPrice = new System.Windows.Forms.GroupBox();
-            this.cbSpotSellPrice = new System.Windows.Forms.ComboBox();
-            this.lblSpotSellPrice = new System.Windows.Forms.Label();
-            this.cbSpotBuyPrice = new System.Windows.Forms.ComboBox();
-            this.lblSpotBuyPrice = new System.Windows.Forms.Label();
-            this.gbFuturesPrice = new System.Windows.Forms.GroupBox();
-            this.cbFuturesSellPrice = new System.Windows.Forms.ComboBox();
-            this.lblFutureSellPrice = new System.Windows.Forms.Label();
-            this.cbFuturesBuyPrice = new System.Windows.Forms.ComboBox();
-            this.lblFuturesBuyPrice = new System.Windows.Forms.Label();
+            this.panelPrice = new System.Windows.Forms.Panel();
+            this.btnSetting = new System.Windows.Forms.Button();
             this.gbpricetype = new System.Windows.Forms.GroupBox();
             this.cbSZExchangePrice = new System.Windows.Forms.ComboBox();
             this.lblSZPrice = new System.Windows.Forms.Label();
             this.cbSHExchangePrice = new System.Windows.Forms.ComboBox();
             this.lblSHPriceType = new System.Windows.Forms.Label();
-            this.btnSetting = new System.Windows.Forms.Button();
-            this.btnUnSelectAll = new System.Windows.Forms.Button();
-            this.btnSelectAll = new System.Windows.Forms.Button();
+            this.gbFuturesPrice = new System.Windows.Forms.GroupBox();
+            this.cbFuturesSellPrice = new System.Windows.Forms.ComboBox();
+            this.lblFutureSellPrice = new System.Windows.Forms.Label();
+            this.cbFuturesBuyPrice = new System.Windows.Forms.ComboBox();
+            this.lblFuturesBuyPrice = new System.Windows.Forms.Label();
+            this.gbSpotPrice = new System.Windows.Forms.GroupBox();
+            this.cbSpotSellPrice = new System.Windows.Forms.ComboBox();
+            this.lblSpotSellPrice = new System.Windows.Forms.Label();
+            this.cbSpotBuyPrice = new System.Windows.Forms.ComboBox();
+            this.lblSpotBuyPrice = new System.Windows.Forms.Label();
+            this.panelBottom = new System.Windows.Forms.Panel();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnConfirm = new System.Windows.Forms.Button();
+            this.btnUnSelectAll = new System.Windows.Forms.Button();
+            this.btnSelectAll = new System.Windows.Forms.Button();
+            this.panelMain = new System.Windows.Forms.Panel();
             this.secuGridView = new Controls.GridView.TSDataGridView();
             this.panelTop.SuspendLayout();
             this.panelPrice.SuspendLayout();
+            this.gbpricetype.SuspendLayout();
+            this.gbFuturesPrice.SuspendLayout();
+            this.gbSpotPrice.SuspendLayout();
             this.panelBottom.SuspendLayout();
             this.panelMain.SuspendLayout();
-            this.gbSpotPrice.SuspendLayout();
-            this.gbFuturesPrice.SuspendLayout();
-            this.gbpricetype.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.secuGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -64,6 +64,15 @@
             this.panelTop.Name = "panelTop";
             this.panelTop.Size = new System.Drawing.Size(1125, 41);
             this.panelTop.TabIndex = 0;
+            // 
+            // lblCaption
+            // 
+            this.lblCaption.AutoSize = true;
+            this.lblCaption.Location = new System.Drawing.Point(35, 13);
+            this.lblCaption.Name = "lblCaption";
+            this.lblCaption.Size = new System.Drawing.Size(53, 12);
+            this.lblCaption.TabIndex = 1;
+            this.lblCaption.Text = "委托撤补";
             // 
             // panelPrice
             // 
@@ -78,37 +87,109 @@
             this.panelPrice.Size = new System.Drawing.Size(1125, 59);
             this.panelPrice.TabIndex = 1;
             // 
-            // panelBottom
+            // btnSetting
             // 
-            this.panelBottom.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelBottom.Controls.Add(this.btnCancel);
-            this.panelBottom.Controls.Add(this.btnConfirm);
-            this.panelBottom.Controls.Add(this.btnUnSelectAll);
-            this.panelBottom.Controls.Add(this.btnSelectAll);
-            this.panelBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelBottom.Location = new System.Drawing.Point(0, 533);
-            this.panelBottom.Name = "panelBottom";
-            this.panelBottom.Size = new System.Drawing.Size(1125, 37);
-            this.panelBottom.TabIndex = 2;
+            this.btnSetting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSetting.Location = new System.Drawing.Point(1019, 18);
+            this.btnSetting.Name = "btnSetting";
+            this.btnSetting.Size = new System.Drawing.Size(75, 23);
+            this.btnSetting.TabIndex = 4;
+            this.btnSetting.Text = "设置";
+            this.btnSetting.UseVisualStyleBackColor = true;
             // 
-            // panelMain
+            // gbpricetype
             // 
-            this.panelMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelMain.Controls.Add(this.secuGridView);
-            this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelMain.Location = new System.Drawing.Point(0, 100);
-            this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(1125, 433);
-            this.panelMain.TabIndex = 3;
+            this.gbpricetype.Controls.Add(this.cbSZExchangePrice);
+            this.gbpricetype.Controls.Add(this.lblSZPrice);
+            this.gbpricetype.Controls.Add(this.cbSHExchangePrice);
+            this.gbpricetype.Controls.Add(this.lblSHPriceType);
+            this.gbpricetype.Location = new System.Drawing.Point(635, 4);
+            this.gbpricetype.Name = "gbpricetype";
+            this.gbpricetype.Size = new System.Drawing.Size(347, 44);
+            this.gbpricetype.TabIndex = 3;
+            this.gbpricetype.TabStop = false;
+            this.gbpricetype.Text = "市价方式";
             // 
-            // lblCaption
+            // cbSZExchangePrice
             // 
-            this.lblCaption.AutoSize = true;
-            this.lblCaption.Location = new System.Drawing.Point(35, 13);
-            this.lblCaption.Name = "lblCaption";
-            this.lblCaption.Size = new System.Drawing.Size(53, 12);
-            this.lblCaption.TabIndex = 1;
-            this.lblCaption.Text = "委托撤补";
+            this.cbSZExchangePrice.FormattingEnabled = true;
+            this.cbSZExchangePrice.Location = new System.Drawing.Point(225, 17);
+            this.cbSZExchangePrice.Name = "cbSZExchangePrice";
+            this.cbSZExchangePrice.Size = new System.Drawing.Size(115, 20);
+            this.cbSZExchangePrice.TabIndex = 7;
+            // 
+            // lblSZPrice
+            // 
+            this.lblSZPrice.AutoSize = true;
+            this.lblSZPrice.Location = new System.Drawing.Point(178, 20);
+            this.lblSZPrice.Name = "lblSZPrice";
+            this.lblSZPrice.Size = new System.Drawing.Size(41, 12);
+            this.lblSZPrice.TabIndex = 6;
+            this.lblSZPrice.Text = "深交所";
+            // 
+            // cbSHExchangePrice
+            // 
+            this.cbSHExchangePrice.FormattingEnabled = true;
+            this.cbSHExchangePrice.Location = new System.Drawing.Point(54, 17);
+            this.cbSHExchangePrice.Name = "cbSHExchangePrice";
+            this.cbSHExchangePrice.Size = new System.Drawing.Size(115, 20);
+            this.cbSHExchangePrice.TabIndex = 5;
+            // 
+            // lblSHPriceType
+            // 
+            this.lblSHPriceType.AutoSize = true;
+            this.lblSHPriceType.Location = new System.Drawing.Point(6, 20);
+            this.lblSHPriceType.Name = "lblSHPriceType";
+            this.lblSHPriceType.Size = new System.Drawing.Size(41, 12);
+            this.lblSHPriceType.TabIndex = 4;
+            this.lblSHPriceType.Text = "上交所";
+            // 
+            // gbFuturesPrice
+            // 
+            this.gbFuturesPrice.Controls.Add(this.cbFuturesSellPrice);
+            this.gbFuturesPrice.Controls.Add(this.lblFutureSellPrice);
+            this.gbFuturesPrice.Controls.Add(this.cbFuturesBuyPrice);
+            this.gbFuturesPrice.Controls.Add(this.lblFuturesBuyPrice);
+            this.gbFuturesPrice.Location = new System.Drawing.Point(323, 4);
+            this.gbFuturesPrice.Name = "gbFuturesPrice";
+            this.gbFuturesPrice.Size = new System.Drawing.Size(306, 44);
+            this.gbFuturesPrice.TabIndex = 2;
+            this.gbFuturesPrice.TabStop = false;
+            this.gbFuturesPrice.Text = "期货";
+            // 
+            // cbFuturesSellPrice
+            // 
+            this.cbFuturesSellPrice.FormattingEnabled = true;
+            this.cbFuturesSellPrice.Location = new System.Drawing.Point(203, 17);
+            this.cbFuturesSellPrice.Name = "cbFuturesSellPrice";
+            this.cbFuturesSellPrice.Size = new System.Drawing.Size(95, 20);
+            this.cbFuturesSellPrice.TabIndex = 7;
+            // 
+            // lblFutureSellPrice
+            // 
+            this.lblFutureSellPrice.AutoSize = true;
+            this.lblFutureSellPrice.Location = new System.Drawing.Point(156, 21);
+            this.lblFutureSellPrice.Name = "lblFutureSellPrice";
+            this.lblFutureSellPrice.Size = new System.Drawing.Size(41, 12);
+            this.lblFutureSellPrice.TabIndex = 6;
+            this.lblFutureSellPrice.Text = "委卖价";
+            // 
+            // cbFuturesBuyPrice
+            // 
+            this.cbFuturesBuyPrice.FormattingEnabled = true;
+            this.cbFuturesBuyPrice.Location = new System.Drawing.Point(54, 17);
+            this.cbFuturesBuyPrice.Name = "cbFuturesBuyPrice";
+            this.cbFuturesBuyPrice.Size = new System.Drawing.Size(95, 20);
+            this.cbFuturesBuyPrice.TabIndex = 5;
+            // 
+            // lblFuturesBuyPrice
+            // 
+            this.lblFuturesBuyPrice.AutoSize = true;
+            this.lblFuturesBuyPrice.Location = new System.Drawing.Point(6, 21);
+            this.lblFuturesBuyPrice.Name = "lblFuturesBuyPrice";
+            this.lblFuturesBuyPrice.Size = new System.Drawing.Size(41, 12);
+            this.lblFuturesBuyPrice.TabIndex = 4;
+            this.lblFuturesBuyPrice.Text = "委买价";
             // 
             // gbSpotPrice
             // 
@@ -158,127 +239,18 @@
             this.lblSpotBuyPrice.TabIndex = 0;
             this.lblSpotBuyPrice.Text = "委买价";
             // 
-            // gbFuturesPrice
+            // panelBottom
             // 
-            this.gbFuturesPrice.Controls.Add(this.cbFuturesSellPrice);
-            this.gbFuturesPrice.Controls.Add(this.lblFutureSellPrice);
-            this.gbFuturesPrice.Controls.Add(this.cbFuturesBuyPrice);
-            this.gbFuturesPrice.Controls.Add(this.lblFuturesBuyPrice);
-            this.gbFuturesPrice.Location = new System.Drawing.Point(323, 4);
-            this.gbFuturesPrice.Name = "gbFuturesPrice";
-            this.gbFuturesPrice.Size = new System.Drawing.Size(306, 44);
-            this.gbFuturesPrice.TabIndex = 2;
-            this.gbFuturesPrice.TabStop = false;
-            this.gbFuturesPrice.Text = "期货";
-            // 
-            // cbFuturesSellPrice
-            // 
-            this.cbFuturesSellPrice.FormattingEnabled = true;
-            this.cbFuturesSellPrice.Location = new System.Drawing.Point(203, 17);
-            this.cbFuturesSellPrice.Name = "cbFuturesSellPrice";
-            this.cbFuturesSellPrice.Size = new System.Drawing.Size(95, 20);
-            this.cbFuturesSellPrice.TabIndex = 7;
-            // 
-            // lblFutureSellPrice
-            // 
-            this.lblFutureSellPrice.AutoSize = true;
-            this.lblFutureSellPrice.Location = new System.Drawing.Point(156, 21);
-            this.lblFutureSellPrice.Name = "lblFutureSellPrice";
-            this.lblFutureSellPrice.Size = new System.Drawing.Size(41, 12);
-            this.lblFutureSellPrice.TabIndex = 6;
-            this.lblFutureSellPrice.Text = "委卖价";
-            // 
-            // cbFuturesBuyPrice
-            // 
-            this.cbFuturesBuyPrice.FormattingEnabled = true;
-            this.cbFuturesBuyPrice.Location = new System.Drawing.Point(54, 17);
-            this.cbFuturesBuyPrice.Name = "cbFuturesBuyPrice";
-            this.cbFuturesBuyPrice.Size = new System.Drawing.Size(95, 20);
-            this.cbFuturesBuyPrice.TabIndex = 5;
-            // 
-            // lblFuturesBuyPrice
-            // 
-            this.lblFuturesBuyPrice.AutoSize = true;
-            this.lblFuturesBuyPrice.Location = new System.Drawing.Point(6, 21);
-            this.lblFuturesBuyPrice.Name = "lblFuturesBuyPrice";
-            this.lblFuturesBuyPrice.Size = new System.Drawing.Size(41, 12);
-            this.lblFuturesBuyPrice.TabIndex = 4;
-            this.lblFuturesBuyPrice.Text = "委买价";
-            // 
-            // gbpricetype
-            // 
-            this.gbpricetype.Controls.Add(this.cbSZExchangePrice);
-            this.gbpricetype.Controls.Add(this.lblSZPrice);
-            this.gbpricetype.Controls.Add(this.cbSHExchangePrice);
-            this.gbpricetype.Controls.Add(this.lblSHPriceType);
-            this.gbpricetype.Location = new System.Drawing.Point(635, 4);
-            this.gbpricetype.Name = "gbpricetype";
-            this.gbpricetype.Size = new System.Drawing.Size(347, 44);
-            this.gbpricetype.TabIndex = 3;
-            this.gbpricetype.TabStop = false;
-            this.gbpricetype.Text = "市价方式";
-            // 
-            // cbSZExchangePrice
-            // 
-            this.cbSZExchangePrice.FormattingEnabled = true;
-            this.cbSZExchangePrice.Location = new System.Drawing.Point(225, 17);
-            this.cbSZExchangePrice.Name = "cbSZExchangePrice";
-            this.cbSZExchangePrice.Size = new System.Drawing.Size(115, 20);
-            this.cbSZExchangePrice.TabIndex = 7;
-            // 
-            // lblSZPrice
-            // 
-            this.lblSZPrice.AutoSize = true;
-            this.lblSZPrice.Location = new System.Drawing.Point(178, 20);
-            this.lblSZPrice.Name = "lblSZPrice";
-            this.lblSZPrice.Size = new System.Drawing.Size(41, 12);
-            this.lblSZPrice.TabIndex = 6;
-            this.lblSZPrice.Text = "深交所";
-            // 
-            // cbSHExchangePrice
-            // 
-            this.cbSHExchangePrice.FormattingEnabled = true;
-            this.cbSHExchangePrice.Location = new System.Drawing.Point(54, 17);
-            this.cbSHExchangePrice.Name = "cbSHExchangePrice";
-            this.cbSHExchangePrice.Size = new System.Drawing.Size(115, 20);
-            this.cbSHExchangePrice.TabIndex = 5;
-            // 
-            // lblSHPriceType
-            // 
-            this.lblSHPriceType.AutoSize = true;
-            this.lblSHPriceType.Location = new System.Drawing.Point(6, 20);
-            this.lblSHPriceType.Name = "lblSHPriceType";
-            this.lblSHPriceType.Size = new System.Drawing.Size(41, 12);
-            this.lblSHPriceType.TabIndex = 4;
-            this.lblSHPriceType.Text = "上交所";
-            // 
-            // btnSetting
-            // 
-            this.btnSetting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSetting.Location = new System.Drawing.Point(1019, 18);
-            this.btnSetting.Name = "btnSetting";
-            this.btnSetting.Size = new System.Drawing.Size(75, 23);
-            this.btnSetting.TabIndex = 4;
-            this.btnSetting.Text = "设置";
-            this.btnSetting.UseVisualStyleBackColor = true;
-            // 
-            // btnUnSelectAll
-            // 
-            this.btnUnSelectAll.Location = new System.Drawing.Point(93, 5);
-            this.btnUnSelectAll.Name = "btnUnSelectAll";
-            this.btnUnSelectAll.Size = new System.Drawing.Size(75, 23);
-            this.btnUnSelectAll.TabIndex = 3;
-            this.btnUnSelectAll.Text = "反选";
-            this.btnUnSelectAll.UseVisualStyleBackColor = true;
-            // 
-            // btnSelectAll
-            // 
-            this.btnSelectAll.Location = new System.Drawing.Point(11, 5);
-            this.btnSelectAll.Name = "btnSelectAll";
-            this.btnSelectAll.Size = new System.Drawing.Size(75, 23);
-            this.btnSelectAll.TabIndex = 2;
-            this.btnSelectAll.Text = "全选";
-            this.btnSelectAll.UseVisualStyleBackColor = true;
+            this.panelBottom.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelBottom.Controls.Add(this.btnCancel);
+            this.panelBottom.Controls.Add(this.btnConfirm);
+            this.panelBottom.Controls.Add(this.btnUnSelectAll);
+            this.panelBottom.Controls.Add(this.btnSelectAll);
+            this.panelBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panelBottom.Location = new System.Drawing.Point(0, 533);
+            this.panelBottom.Name = "panelBottom";
+            this.panelBottom.Size = new System.Drawing.Size(1125, 37);
+            this.panelBottom.TabIndex = 2;
             // 
             // btnCancel
             // 
@@ -300,6 +272,34 @@
             this.btnConfirm.Text = "确定";
             this.btnConfirm.UseVisualStyleBackColor = true;
             // 
+            // btnUnSelectAll
+            // 
+            this.btnUnSelectAll.Location = new System.Drawing.Point(93, 5);
+            this.btnUnSelectAll.Name = "btnUnSelectAll";
+            this.btnUnSelectAll.Size = new System.Drawing.Size(75, 23);
+            this.btnUnSelectAll.TabIndex = 3;
+            this.btnUnSelectAll.Text = "反选";
+            this.btnUnSelectAll.UseVisualStyleBackColor = true;
+            // 
+            // btnSelectAll
+            // 
+            this.btnSelectAll.Location = new System.Drawing.Point(11, 5);
+            this.btnSelectAll.Name = "btnSelectAll";
+            this.btnSelectAll.Size = new System.Drawing.Size(75, 23);
+            this.btnSelectAll.TabIndex = 2;
+            this.btnSelectAll.Text = "全选";
+            this.btnSelectAll.UseVisualStyleBackColor = true;
+            // 
+            // panelMain
+            // 
+            this.panelMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelMain.Controls.Add(this.secuGridView);
+            this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelMain.Location = new System.Drawing.Point(0, 100);
+            this.panelMain.Name = "panelMain";
+            this.panelMain.Size = new System.Drawing.Size(1125, 433);
+            this.panelMain.TabIndex = 3;
+            // 
             // secuGridView
             // 
             this.secuGridView.AllowUserToAddRows = false;
@@ -312,7 +312,7 @@
             this.secuGridView.Size = new System.Drawing.Size(1123, 431);
             this.secuGridView.TabIndex = 0;
             // 
-            // CancelRedoForm
+            // CancelRedoDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.ClientSize = new System.Drawing.Size(1125, 570);
@@ -320,18 +320,19 @@
             this.Controls.Add(this.panelBottom);
             this.Controls.Add(this.panelPrice);
             this.Controls.Add(this.panelTop);
-            this.Name = "CancelRedoForm";
+            this.Name = "CancelRedoDialog";
+            this.Text = "撤补对话框";
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
             this.panelPrice.ResumeLayout(false);
-            this.panelBottom.ResumeLayout(false);
-            this.panelMain.ResumeLayout(false);
-            this.gbSpotPrice.ResumeLayout(false);
-            this.gbSpotPrice.PerformLayout();
-            this.gbFuturesPrice.ResumeLayout(false);
-            this.gbFuturesPrice.PerformLayout();
             this.gbpricetype.ResumeLayout(false);
             this.gbpricetype.PerformLayout();
+            this.gbFuturesPrice.ResumeLayout(false);
+            this.gbFuturesPrice.PerformLayout();
+            this.gbSpotPrice.ResumeLayout(false);
+            this.gbSpotPrice.PerformLayout();
+            this.panelBottom.ResumeLayout(false);
+            this.panelMain.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.secuGridView)).EndInit();
             this.ResumeLayout(false);
 

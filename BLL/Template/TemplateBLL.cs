@@ -34,5 +34,28 @@ namespace BLL.Template
         {
             return _tempdbdao.Delete(template.TemplateId);
         }
+
+        public List<StockTemplate> GetTemplates()
+        {
+            return _tempdbdao.Get(-1);
+        }
+
+        public StockTemplate GetTemplate(int templateId)
+        {
+            var template = _tempdbdao.Get(templateId);
+            if (template != null && template.Count == 1)
+            {
+                return template[0];
+            }
+            else
+            {
+                return new StockTemplate();
+            }
+        }
+
+        public List<TemplateStock> GetStocks(int templateId)
+        {
+            return _stockdbdao.Get(templateId);
+        }
     }
 }

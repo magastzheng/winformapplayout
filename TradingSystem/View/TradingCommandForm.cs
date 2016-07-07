@@ -171,8 +171,8 @@ namespace TradingSystem.View
                 ExecutePerson = "Magast",
                 DispatchPerson = "Youyo",
                 //InstanceId = "1120",
-                InstanceNo = "A110",
-                MonitorUnit = "M10"
+                InstanceCode = "A110",
+                MonitorUnitName = "M10"
             };
             tcItems.Add(item1);
 
@@ -201,8 +201,8 @@ namespace TradingSystem.View
                 ExecutePerson = "Magast",
                 DispatchPerson = "Youyo",
                 //InstanceId = "1120",
-                InstanceNo = "A110",
-                MonitorUnit = "M10"
+                InstanceCode = "A110",
+                MonitorUnitName = "M10"
             };
             tcItems.Add(item2);
 
@@ -241,8 +241,8 @@ namespace TradingSystem.View
                 row.Cells["tc_executeperson"].Value = dataItem.ExecutePerson;
                 row.Cells["tc_dispatchperson"].Value = dataItem.DispatchPerson;
                 row.Cells["tc_instanceid"].Value = dataItem.InstanceId;
-                row.Cells["tc_instanceno"].Value = dataItem.InstanceNo;
-                row.Cells["tc_monitorunit"].Value = dataItem.MonitorUnit;
+                row.Cells["tc_instanceno"].Value = dataItem.InstanceCode;
+                row.Cells["tc_monitorunit"].Value = dataItem.MonitorUnitName;
 
                 SetSelectionRowBackground(this.dataGridViewCmdTrading, rowIndex, isSelected);
             }
@@ -280,8 +280,8 @@ namespace TradingSystem.View
                     item.ExecutePerson = (string)row.Cells["tc_executeperson"].Value;
                     item.DispatchPerson = (string)row.Cells["tc_dispatchperson"].Value;
                     //item.InstanceId = (string)row.Cells["tc_instanceid"].Value;
-                    item.InstanceNo = (string)row.Cells["tc_instanceno"].Value;
-                    item.MonitorUnit = (string)row.Cells["tc_monitorunit"].Value;
+                    item.InstanceCode = (string)row.Cells["tc_instanceno"].Value;
+                    item.MonitorUnitName = (string)row.Cells["tc_monitorunit"].Value;
 
                     selectionItems.Add(item);
                 }

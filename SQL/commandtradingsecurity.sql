@@ -16,6 +16,9 @@ create table tradingcommand(
 	,FuturesDirection	int --12-卖出开仓，13 -买入平仓
 	,EntrustStatus		int	-- 1 - 未执行， 2 - 部分执行， 3- 已完成
 	,DealStatus			int	-- 1 - 未成交， 2 - 部分成交， 3 - 已完成
+	,SubmitPerson		varchar(10) --下达人
+	,CreatedDate		datetime -- 下达指令时间
+	,ModifiedDate		datetime -- 修改时间
 	,StartDate			datetime
 	,EndDate			datetime
 )
@@ -52,6 +55,8 @@ create proc procTradingCommandInsert(
 	,@FuturesDirection	int
 	,@EntrustStatus		int
 	,@DealStatus		int	
+	,@SubmitPerson		varchar(10)
+	,@CreatedDate		datetime
 	,@StartDate			datetime
 	,@EndDate			datetime
 )
@@ -68,7 +73,9 @@ begin
 		,StockDirection		
 		,FuturesDirection	
 		,EntrustStatus		
-		,DealStatus			
+		,DealStatus	
+		,SubmitPerson
+		,CreatedDate	
 		,StartDate			
 		,EndDate			
 	)
@@ -82,7 +89,9 @@ begin
 		,@StockDirection	
 		,@FuturesDirection	
 		,@EntrustStatus		
-		,@DealStatus		
+		,@DealStatus
+		,@SubmitPerson
+		,@CreatedDate	
 		,@StartDate			
 		,@EndDate
 	)
@@ -100,6 +109,7 @@ create proc procTradingCommandUpdateStatus(
 	@CommandId			int
 	,@EntrustStatus		int
 	,@DealStatus		int	
+	,@ModifiedDate		datetime
 )
 as
 begin
@@ -107,6 +117,7 @@ begin
 	set			
 		EntrustStatus		= @EntrustStatus
 		,DealStatus			= @DealStatus
+		,ModifiedDate		= @ModifiedDate
 	where CommandId=@CommandId
 end
 
@@ -118,11 +129,13 @@ go
 create proc procTradingCommandUpdateTargetNum(
 	@CommandId			int
 	,@TargetNum			int
+	,@ModifiedDate		datetime
 )
 as
 begin
 	update tradingcommand
 	set	TargetNum	= @TargetNum
+		,ModifiedDate = @ModifiedDate
 	where CommandId=@CommandId
 end
 
@@ -163,7 +176,10 @@ begin
 			,StockDirection		
 			,FuturesDirection	
 			,EntrustStatus		
-			,DealStatus			
+			,DealStatus	
+			,SubmitPerson
+			,CreatedDate
+			,ModifiedDate		
 			,StartDate			
 			,EndDate			
 		from tradingcommand
@@ -182,10 +198,96 @@ begin
 			,StockDirection		
 			,FuturesDirection	
 			,EntrustStatus		
-			,DealStatus			
+			,DealStatus	
+			,SubmitPerson
+			,CreatedDate
+			,ModifiedDate			
 			,StartDate			
 			,EndDate			
 		from tradingcommand
+	end
+end
+
+go
+if exists (select name from sysobjects where name='procTradingCommandSelectCombine')
+drop proc procTradingCommandSelectCombine
+
+go
+create proc procTradingCommandSelectCombine(
+	@CommandId			int
+)
+as
+begin
+	if @CommandId is not null and @CommandId > 0
+	begin
+		select 
+			a.CommandId			
+			,a.InstanceId	
+			,a.CommandNum
+			,a.TargetNum		
+			,a.ModifiedTimes		
+			,a.CommandType		
+			,a.ExecuteType		
+			,a.StockDirection		
+			,a.FuturesDirection	
+			,a.EntrustStatus		
+			,a.DealStatus
+			,a.SubmitPerson
+			,a.CreatedDate
+			,a.ModifiedDate				
+			,a.StartDate			
+			,a.EndDate	
+			,b.MonitorUnitId
+			,b.InstanceCode
+			,c.PortfolioId
+			,c.MonitorUnitName	
+			,d.PortfolioCode
+			,d.PortfolioName
+			,d.AccountCode
+			,d.AccountName
+		from tradingcommand a
+		inner join tradinginstance b
+		on a.InstanceId = b.InstanceId
+		inner join monitorunit c
+		on b.MonitorUnitId = c.MonitorUnitId
+		inner join ufxportfolio d
+		on c.PortfolioId=d.PortfolioId
+		where CommandId=@CommandId
+	end
+	else
+	begin
+		select 
+			a.CommandId			
+			,a.InstanceId	
+			,a.CommandNum
+			,a.TargetNum		
+			,a.ModifiedTimes		
+			,a.CommandType		
+			,a.ExecuteType		
+			,a.StockDirection		
+			,a.FuturesDirection	
+			,a.EntrustStatus		
+			,a.DealStatus
+			,a.SubmitPerson
+			,a.CreatedDate
+			,a.ModifiedDate				
+			,a.StartDate			
+			,a.EndDate				
+			,b.MonitorUnitId
+			,b.InstanceCode
+			,c.PortfolioId
+			,c.MonitorUnitName	
+			,d.PortfolioCode
+			,d.PortfolioName
+			,d.AccountCode
+			,d.AccountName
+		from tradingcommand a
+		inner join tradinginstance b
+		on a.InstanceId = b.InstanceId
+		inner join monitorunit c
+		on b.MonitorUnitId = c.MonitorUnitId
+		inner join ufxportfolio d
+		on c.PortfolioId=d.PortfolioId
 	end
 end
 --====================================

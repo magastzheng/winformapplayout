@@ -9,8 +9,10 @@ namespace Model.UI
 {
     public enum PositionType
     { 
-        Long = 1,
-        Short = 2,
+        StockLong = 1,
+        StockShort = 2,
+        FuturesLong = 3,
+        FuturesShort = 4,
     }
 
     public class TradingInstanceSecurity

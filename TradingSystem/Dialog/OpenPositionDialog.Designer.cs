@@ -29,34 +29,34 @@
         private void InitializeComponent()
         {
             this.panelTop = new System.Windows.Forms.Panel();
+            this.lblCaption = new System.Windows.Forms.Label();
             this.panelBottom = new System.Windows.Forms.Panel();
             this.panelMain = new System.Windows.Forms.Panel();
-            this.lblCaption = new System.Windows.Forms.Label();
-            this.lblPortfolio = new System.Windows.Forms.Label();
-            this.lblTemplate = new System.Windows.Forms.Label();
-            this.lblFutures = new System.Windows.Forms.Label();
-            this.lblCopies = new System.Windows.Forms.Label();
-            this.lblPoint = new System.Windows.Forms.Label();
-            this.lblInstancCode = new System.Windows.Forms.Label();
-            this.tbPortfolio = new System.Windows.Forms.TextBox();
-            this.tbTemlate = new System.Windows.Forms.TextBox();
-            this.tbFutures = new System.Windows.Forms.TextBox();
-            this.tbCopies = new System.Windows.Forms.TextBox();
-            this.tbBias = new System.Windows.Forms.TextBox();
-            this.lblDate = new System.Windows.Forms.Label();
-            this.lblTime = new System.Windows.Forms.Label();
-            this.lblComment = new System.Windows.Forms.Label();
-            this.tbStartDate = new System.Windows.Forms.TextBox();
-            this.lblDateTo = new System.Windows.Forms.Label();
-            this.tbEndDate = new System.Windows.Forms.TextBox();
+            this.rtbComment = new System.Windows.Forms.RichTextBox();
+            this.ckbInstanceCode = new System.Windows.Forms.CheckBox();
+            this.cbInstanceCode = new System.Windows.Forms.ComboBox();
+            this.lblBaisUnit = new System.Windows.Forms.Label();
+            this.lblCopyUnit = new System.Windows.Forms.Label();
             this.tbEndTime = new System.Windows.Forms.TextBox();
             this.lblTimeTo = new System.Windows.Forms.Label();
             this.tbStartTime = new System.Windows.Forms.TextBox();
-            this.lblCopyUnit = new System.Windows.Forms.Label();
-            this.lblBaisUnit = new System.Windows.Forms.Label();
-            this.cbInstanceCode = new System.Windows.Forms.ComboBox();
-            this.ckbInstanceCode = new System.Windows.Forms.CheckBox();
-            this.rtbComment = new System.Windows.Forms.RichTextBox();
+            this.tbEndDate = new System.Windows.Forms.TextBox();
+            this.lblDateTo = new System.Windows.Forms.Label();
+            this.tbStartDate = new System.Windows.Forms.TextBox();
+            this.lblComment = new System.Windows.Forms.Label();
+            this.lblTime = new System.Windows.Forms.Label();
+            this.lblDate = new System.Windows.Forms.Label();
+            this.tbBias = new System.Windows.Forms.TextBox();
+            this.tbCopies = new System.Windows.Forms.TextBox();
+            this.tbFutures = new System.Windows.Forms.TextBox();
+            this.tbTemlate = new System.Windows.Forms.TextBox();
+            this.tbPortfolio = new System.Windows.Forms.TextBox();
+            this.lblInstancCode = new System.Windows.Forms.Label();
+            this.lblPoint = new System.Windows.Forms.Label();
+            this.lblCopies = new System.Windows.Forms.Label();
+            this.lblFutures = new System.Windows.Forms.Label();
+            this.lblTemplate = new System.Windows.Forms.Label();
+            this.lblPortfolio = new System.Windows.Forms.Label();
             this.panelTop.SuspendLayout();
             this.panelMain.SuspendLayout();
             this.SuspendLayout();
@@ -70,6 +70,15 @@
             this.panelTop.Name = "panelTop";
             this.panelTop.Size = new System.Drawing.Size(526, 52);
             this.panelTop.TabIndex = 0;
+            // 
+            // lblCaption
+            // 
+            this.lblCaption.AutoSize = true;
+            this.lblCaption.Location = new System.Drawing.Point(146, 19);
+            this.lblCaption.Name = "lblCaption";
+            this.lblCaption.Size = new System.Drawing.Size(101, 12);
+            this.lblCaption.TabIndex = 0;
+            this.lblCaption.Text = "期现套利开仓确认";
             // 
             // panelBottom
             // 
@@ -115,157 +124,55 @@
             this.panelMain.Size = new System.Drawing.Size(526, 178);
             this.panelMain.TabIndex = 2;
             // 
-            // lblCaption
+            // rtbComment
             // 
-            this.lblCaption.AutoSize = true;
-            this.lblCaption.Location = new System.Drawing.Point(146, 19);
-            this.lblCaption.Name = "lblCaption";
-            this.lblCaption.Size = new System.Drawing.Size(101, 12);
-            this.lblCaption.TabIndex = 0;
-            this.lblCaption.Text = "期现套利开仓确认";
+            this.rtbComment.Location = new System.Drawing.Point(349, 75);
+            this.rtbComment.Name = "rtbComment";
+            this.rtbComment.Size = new System.Drawing.Size(157, 66);
+            this.rtbComment.TabIndex = 25;
+            this.rtbComment.Text = "";
             // 
-            // lblPortfolio
+            // ckbInstanceCode
             // 
-            this.lblPortfolio.AutoSize = true;
-            this.lblPortfolio.Location = new System.Drawing.Point(40, 15);
-            this.lblPortfolio.Name = "lblPortfolio";
-            this.lblPortfolio.Size = new System.Drawing.Size(59, 12);
-            this.lblPortfolio.TabIndex = 0;
-            this.lblPortfolio.Text = "套利组合:";
+            this.ckbInstanceCode.AutoSize = true;
+            this.ckbInstanceCode.Location = new System.Drawing.Point(287, 150);
+            this.ckbInstanceCode.Name = "ckbInstanceCode";
+            this.ckbInstanceCode.Size = new System.Drawing.Size(120, 16);
+            this.ckbInstanceCode.TabIndex = 24;
+            this.ckbInstanceCode.Text = "手工指定交易实例";
+            this.ckbInstanceCode.UseVisualStyleBackColor = true;
             // 
-            // lblTemplate
+            // cbInstanceCode
             // 
-            this.lblTemplate.AutoSize = true;
-            this.lblTemplate.Location = new System.Drawing.Point(40, 45);
-            this.lblTemplate.Name = "lblTemplate";
-            this.lblTemplate.Size = new System.Drawing.Size(59, 12);
-            this.lblTemplate.TabIndex = 1;
-            this.lblTemplate.Text = "现货模板:";
+            this.cbInstanceCode.FormattingEnabled = true;
+            this.cbInstanceCode.Location = new System.Drawing.Point(105, 147);
+            this.cbInstanceCode.Name = "cbInstanceCode";
+            this.cbInstanceCode.Size = new System.Drawing.Size(175, 20);
+            this.cbInstanceCode.TabIndex = 23;
             // 
-            // lblFutures
+            // lblBaisUnit
             // 
-            this.lblFutures.AutoSize = true;
-            this.lblFutures.Location = new System.Drawing.Point(40, 71);
-            this.lblFutures.Name = "lblFutures";
-            this.lblFutures.Size = new System.Drawing.Size(59, 12);
-            this.lblFutures.TabIndex = 2;
-            this.lblFutures.Text = "期货合约:";
+            this.lblBaisUnit.AutoSize = true;
+            this.lblBaisUnit.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblBaisUnit.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.lblBaisUnit.Location = new System.Drawing.Point(218, 121);
+            this.lblBaisUnit.Name = "lblBaisUnit";
+            this.lblBaisUnit.Padding = new System.Windows.Forms.Padding(3);
+            this.lblBaisUnit.Size = new System.Drawing.Size(25, 20);
+            this.lblBaisUnit.TabIndex = 22;
+            this.lblBaisUnit.Text = "点";
             // 
-            // lblCopies
+            // lblCopyUnit
             // 
-            this.lblCopies.AutoSize = true;
-            this.lblCopies.Location = new System.Drawing.Point(40, 98);
-            this.lblCopies.Name = "lblCopies";
-            this.lblCopies.Size = new System.Drawing.Size(59, 12);
-            this.lblCopies.TabIndex = 3;
-            this.lblCopies.Text = "操作份数:";
-            // 
-            // lblPoint
-            // 
-            this.lblPoint.AutoSize = true;
-            this.lblPoint.Location = new System.Drawing.Point(40, 126);
-            this.lblPoint.Name = "lblPoint";
-            this.lblPoint.Size = new System.Drawing.Size(59, 12);
-            this.lblPoint.TabIndex = 4;
-            this.lblPoint.Text = "基    差:";
-            // 
-            // lblInstancCode
-            // 
-            this.lblInstancCode.AutoSize = true;
-            this.lblInstancCode.Location = new System.Drawing.Point(15, 152);
-            this.lblInstancCode.Name = "lblInstancCode";
-            this.lblInstancCode.Size = new System.Drawing.Size(83, 12);
-            this.lblInstancCode.TabIndex = 5;
-            this.lblInstancCode.Text = "交易实例编号:";
-            // 
-            // tbPortfolio
-            // 
-            this.tbPortfolio.Enabled = false;
-            this.tbPortfolio.Location = new System.Drawing.Point(105, 10);
-            this.tbPortfolio.Name = "tbPortfolio";
-            this.tbPortfolio.Size = new System.Drawing.Size(142, 21);
-            this.tbPortfolio.TabIndex = 6;
-            // 
-            // tbTemlate
-            // 
-            this.tbTemlate.Enabled = false;
-            this.tbTemlate.Location = new System.Drawing.Point(105, 39);
-            this.tbTemlate.Name = "tbTemlate";
-            this.tbTemlate.Size = new System.Drawing.Size(142, 21);
-            this.tbTemlate.TabIndex = 7;
-            // 
-            // tbFutures
-            // 
-            this.tbFutures.Enabled = false;
-            this.tbFutures.Location = new System.Drawing.Point(105, 66);
-            this.tbFutures.Name = "tbFutures";
-            this.tbFutures.Size = new System.Drawing.Size(142, 21);
-            this.tbFutures.TabIndex = 8;
-            // 
-            // tbCopies
-            // 
-            this.tbCopies.Enabled = false;
-            this.tbCopies.Location = new System.Drawing.Point(105, 93);
-            this.tbCopies.Name = "tbCopies";
-            this.tbCopies.Size = new System.Drawing.Size(100, 21);
-            this.tbCopies.TabIndex = 9;
-            // 
-            // tbBias
-            // 
-            this.tbBias.Location = new System.Drawing.Point(105, 120);
-            this.tbBias.Name = "tbBias";
-            this.tbBias.Size = new System.Drawing.Size(107, 21);
-            this.tbBias.TabIndex = 10;
-            // 
-            // lblDate
-            // 
-            this.lblDate.AutoSize = true;
-            this.lblDate.Location = new System.Drawing.Point(286, 15);
-            this.lblDate.Name = "lblDate";
-            this.lblDate.Size = new System.Drawing.Size(59, 12);
-            this.lblDate.TabIndex = 12;
-            this.lblDate.Text = "日    期:";
-            // 
-            // lblTime
-            // 
-            this.lblTime.AutoSize = true;
-            this.lblTime.Location = new System.Drawing.Point(287, 47);
-            this.lblTime.Name = "lblTime";
-            this.lblTime.Size = new System.Drawing.Size(59, 12);
-            this.lblTime.TabIndex = 13;
-            this.lblTime.Text = "时    间:";
-            // 
-            // lblComment
-            // 
-            this.lblComment.AutoSize = true;
-            this.lblComment.Location = new System.Drawing.Point(287, 75);
-            this.lblComment.Name = "lblComment";
-            this.lblComment.Size = new System.Drawing.Size(59, 12);
-            this.lblComment.TabIndex = 14;
-            this.lblComment.Text = "备    注:";
-            // 
-            // tbStartDate
-            // 
-            this.tbStartDate.Location = new System.Drawing.Point(349, 10);
-            this.tbStartDate.Name = "tbStartDate";
-            this.tbStartDate.Size = new System.Drawing.Size(62, 21);
-            this.tbStartDate.TabIndex = 15;
-            // 
-            // lblDateTo
-            // 
-            this.lblDateTo.AutoSize = true;
-            this.lblDateTo.Location = new System.Drawing.Point(420, 19);
-            this.lblDateTo.Name = "lblDateTo";
-            this.lblDateTo.Size = new System.Drawing.Size(11, 12);
-            this.lblDateTo.TabIndex = 16;
-            this.lblDateTo.Text = "~";
-            // 
-            // tbEndDate
-            // 
-            this.tbEndDate.Location = new System.Drawing.Point(444, 10);
-            this.tbEndDate.Name = "tbEndDate";
-            this.tbEndDate.Size = new System.Drawing.Size(62, 21);
-            this.tbEndDate.TabIndex = 17;
+            this.lblCopyUnit.AutoSize = true;
+            this.lblCopyUnit.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblCopyUnit.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.lblCopyUnit.Location = new System.Drawing.Point(210, 94);
+            this.lblCopyUnit.Name = "lblCopyUnit";
+            this.lblCopyUnit.Padding = new System.Windows.Forms.Padding(3);
+            this.lblCopyUnit.Size = new System.Drawing.Size(37, 20);
+            this.lblCopyUnit.TabIndex = 21;
+            this.lblCopyUnit.Text = "套手";
             // 
             // tbEndTime
             // 
@@ -290,55 +197,148 @@
             this.tbStartTime.Size = new System.Drawing.Size(62, 21);
             this.tbStartTime.TabIndex = 18;
             // 
-            // lblCopyUnit
+            // tbEndDate
             // 
-            this.lblCopyUnit.AutoSize = true;
-            this.lblCopyUnit.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblCopyUnit.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.lblCopyUnit.Location = new System.Drawing.Point(210, 94);
-            this.lblCopyUnit.Name = "lblCopyUnit";
-            this.lblCopyUnit.Padding = new System.Windows.Forms.Padding(3);
-            this.lblCopyUnit.Size = new System.Drawing.Size(37, 20);
-            this.lblCopyUnit.TabIndex = 21;
-            this.lblCopyUnit.Text = "套手";
+            this.tbEndDate.Location = new System.Drawing.Point(444, 10);
+            this.tbEndDate.Name = "tbEndDate";
+            this.tbEndDate.Size = new System.Drawing.Size(62, 21);
+            this.tbEndDate.TabIndex = 17;
             // 
-            // lblBaisUnit
+            // lblDateTo
             // 
-            this.lblBaisUnit.AutoSize = true;
-            this.lblBaisUnit.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblBaisUnit.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.lblBaisUnit.Location = new System.Drawing.Point(218, 121);
-            this.lblBaisUnit.Name = "lblBaisUnit";
-            this.lblBaisUnit.Padding = new System.Windows.Forms.Padding(3);
-            this.lblBaisUnit.Size = new System.Drawing.Size(25, 20);
-            this.lblBaisUnit.TabIndex = 22;
-            this.lblBaisUnit.Text = "点";
+            this.lblDateTo.AutoSize = true;
+            this.lblDateTo.Location = new System.Drawing.Point(420, 19);
+            this.lblDateTo.Name = "lblDateTo";
+            this.lblDateTo.Size = new System.Drawing.Size(11, 12);
+            this.lblDateTo.TabIndex = 16;
+            this.lblDateTo.Text = "~";
             // 
-            // cbInstanceCode
+            // tbStartDate
             // 
-            this.cbInstanceCode.FormattingEnabled = true;
-            this.cbInstanceCode.Location = new System.Drawing.Point(105, 147);
-            this.cbInstanceCode.Name = "cbInstanceCode";
-            this.cbInstanceCode.Size = new System.Drawing.Size(175, 20);
-            this.cbInstanceCode.TabIndex = 23;
+            this.tbStartDate.Location = new System.Drawing.Point(349, 10);
+            this.tbStartDate.Name = "tbStartDate";
+            this.tbStartDate.Size = new System.Drawing.Size(62, 21);
+            this.tbStartDate.TabIndex = 15;
             // 
-            // ckbInstanceCode
+            // lblComment
             // 
-            this.ckbInstanceCode.AutoSize = true;
-            this.ckbInstanceCode.Location = new System.Drawing.Point(287, 150);
-            this.ckbInstanceCode.Name = "ckbInstanceCode";
-            this.ckbInstanceCode.Size = new System.Drawing.Size(120, 16);
-            this.ckbInstanceCode.TabIndex = 24;
-            this.ckbInstanceCode.Text = "手工指定交易实例";
-            this.ckbInstanceCode.UseVisualStyleBackColor = true;
+            this.lblComment.AutoSize = true;
+            this.lblComment.Location = new System.Drawing.Point(287, 75);
+            this.lblComment.Name = "lblComment";
+            this.lblComment.Size = new System.Drawing.Size(59, 12);
+            this.lblComment.TabIndex = 14;
+            this.lblComment.Text = "备    注:";
             // 
-            // rtbComment
+            // lblTime
             // 
-            this.rtbComment.Location = new System.Drawing.Point(349, 75);
-            this.rtbComment.Name = "rtbComment";
-            this.rtbComment.Size = new System.Drawing.Size(157, 66);
-            this.rtbComment.TabIndex = 25;
-            this.rtbComment.Text = "";
+            this.lblTime.AutoSize = true;
+            this.lblTime.Location = new System.Drawing.Point(287, 47);
+            this.lblTime.Name = "lblTime";
+            this.lblTime.Size = new System.Drawing.Size(59, 12);
+            this.lblTime.TabIndex = 13;
+            this.lblTime.Text = "时    间:";
+            // 
+            // lblDate
+            // 
+            this.lblDate.AutoSize = true;
+            this.lblDate.Location = new System.Drawing.Point(286, 15);
+            this.lblDate.Name = "lblDate";
+            this.lblDate.Size = new System.Drawing.Size(59, 12);
+            this.lblDate.TabIndex = 12;
+            this.lblDate.Text = "日    期:";
+            // 
+            // tbBias
+            // 
+            this.tbBias.Location = new System.Drawing.Point(105, 120);
+            this.tbBias.Name = "tbBias";
+            this.tbBias.Size = new System.Drawing.Size(107, 21);
+            this.tbBias.TabIndex = 10;
+            // 
+            // tbCopies
+            // 
+            this.tbCopies.Enabled = false;
+            this.tbCopies.Location = new System.Drawing.Point(105, 93);
+            this.tbCopies.Name = "tbCopies";
+            this.tbCopies.Size = new System.Drawing.Size(100, 21);
+            this.tbCopies.TabIndex = 9;
+            // 
+            // tbFutures
+            // 
+            this.tbFutures.Enabled = false;
+            this.tbFutures.Location = new System.Drawing.Point(105, 66);
+            this.tbFutures.Name = "tbFutures";
+            this.tbFutures.Size = new System.Drawing.Size(142, 21);
+            this.tbFutures.TabIndex = 8;
+            // 
+            // tbTemlate
+            // 
+            this.tbTemlate.Enabled = false;
+            this.tbTemlate.Location = new System.Drawing.Point(105, 39);
+            this.tbTemlate.Name = "tbTemlate";
+            this.tbTemlate.Size = new System.Drawing.Size(142, 21);
+            this.tbTemlate.TabIndex = 7;
+            // 
+            // tbPortfolio
+            // 
+            this.tbPortfolio.Enabled = false;
+            this.tbPortfolio.Location = new System.Drawing.Point(105, 10);
+            this.tbPortfolio.Name = "tbPortfolio";
+            this.tbPortfolio.Size = new System.Drawing.Size(142, 21);
+            this.tbPortfolio.TabIndex = 6;
+            // 
+            // lblInstancCode
+            // 
+            this.lblInstancCode.AutoSize = true;
+            this.lblInstancCode.Location = new System.Drawing.Point(15, 152);
+            this.lblInstancCode.Name = "lblInstancCode";
+            this.lblInstancCode.Size = new System.Drawing.Size(83, 12);
+            this.lblInstancCode.TabIndex = 5;
+            this.lblInstancCode.Text = "交易实例编号:";
+            // 
+            // lblPoint
+            // 
+            this.lblPoint.AutoSize = true;
+            this.lblPoint.Location = new System.Drawing.Point(40, 126);
+            this.lblPoint.Name = "lblPoint";
+            this.lblPoint.Size = new System.Drawing.Size(59, 12);
+            this.lblPoint.TabIndex = 4;
+            this.lblPoint.Text = "基    差:";
+            // 
+            // lblCopies
+            // 
+            this.lblCopies.AutoSize = true;
+            this.lblCopies.Location = new System.Drawing.Point(40, 98);
+            this.lblCopies.Name = "lblCopies";
+            this.lblCopies.Size = new System.Drawing.Size(59, 12);
+            this.lblCopies.TabIndex = 3;
+            this.lblCopies.Text = "操作份数:";
+            // 
+            // lblFutures
+            // 
+            this.lblFutures.AutoSize = true;
+            this.lblFutures.Location = new System.Drawing.Point(40, 71);
+            this.lblFutures.Name = "lblFutures";
+            this.lblFutures.Size = new System.Drawing.Size(59, 12);
+            this.lblFutures.TabIndex = 2;
+            this.lblFutures.Text = "期货合约:";
+            // 
+            // lblTemplate
+            // 
+            this.lblTemplate.AutoSize = true;
+            this.lblTemplate.Location = new System.Drawing.Point(40, 45);
+            this.lblTemplate.Name = "lblTemplate";
+            this.lblTemplate.Size = new System.Drawing.Size(59, 12);
+            this.lblTemplate.TabIndex = 1;
+            this.lblTemplate.Text = "现货模板:";
+            // 
+            // lblPortfolio
+            // 
+            this.lblPortfolio.AutoSize = true;
+            this.lblPortfolio.Location = new System.Drawing.Point(40, 15);
+            this.lblPortfolio.Name = "lblPortfolio";
+            this.lblPortfolio.Size = new System.Drawing.Size(59, 12);
+            this.lblPortfolio.TabIndex = 0;
+            this.lblPortfolio.Text = "套利组合:";
             // 
             // OpenPositionDialog
             // 
@@ -348,6 +348,7 @@
             this.Controls.Add(this.panelBottom);
             this.Controls.Add(this.panelTop);
             this.Name = "OpenPositionDialog";
+            this.Text = "期现套利开仓确认";
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
             this.panelMain.ResumeLayout(false);

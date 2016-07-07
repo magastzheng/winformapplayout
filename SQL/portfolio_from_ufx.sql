@@ -13,7 +13,8 @@ create table ufxportfolio
 	AccountName varchar(250),
 	AccountType int, 
 	AssetNo varchar(20),
-	AssetName varchar(250)
+	AssetName varchar(250),
+	PortfolioStatus	int			-- 1 active
 )
 
 go 
@@ -40,7 +41,8 @@ begin
 		AccountName,
 		AccountType,
 		AssetNo,
-		AssetName
+		AssetName,
+		PortfolioStatus
 	)
 	values(
 		@PortfolioCode,
@@ -49,7 +51,8 @@ begin
 		@AccountName,
 		@AccountType,
 		@AssetNo,
-		@AssetName
+		@AssetName,
+		1
 	)
 
 	set @newid = SCOPE_IDENTITY()
@@ -57,11 +60,11 @@ begin
 end
 
 go 
-if exists (select name from sysobjects where name='procUpdateUFXPortfolio')
-drop proc procUpdateUFXPortfolio
+if exists (select name from sysobjects where name='procUpdateUFXPortfolioName')
+drop proc procUpdateUFXPortfolioName
 
 go
-create proc procUpdateUFXPortfolio(
+create proc procUpdateUFXPortfolioName(
 	@PortfolioCode varchar(20),
 	@PortfolioName varchar(250)
 )
@@ -69,6 +72,22 @@ as
 begin
 	update ufxportfolio
 	set PortfolioName = @PortfolioName
+	where PortfolioCode = @PortfolioCode
+end
+
+go 
+if exists (select name from sysobjects where name='procUpdateUFXPortfolioStatus')
+drop proc procUpdateUFXPortfolioStatus
+
+go
+create proc procUpdateUFXPortfolioStatus(
+	@PortfolioCode varchar(20),
+	@PortfolioStatus int
+)
+as
+begin
+	update ufxportfolio
+	set PortfolioStatus = @PortfolioStatus
 	where PortfolioCode = @PortfolioCode
 end
 
@@ -91,7 +110,8 @@ begin
 			AccountName,
 			AccountType,
 			AssetNo,
-			AssetName
+			AssetName,
+			PortfolioStatus
 		from ufxportfolio
 		where PortfolioCode = @PortfolioCode
 	end
@@ -104,7 +124,8 @@ begin
 			AccountName,
 			AccountType,
 			AssetNo,
-			AssetName
+			AssetName,
+			PortfolioStatus
 		from ufxportfolio
 	end
 end

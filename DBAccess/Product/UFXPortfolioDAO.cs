@@ -1,4 +1,5 @@
 ﻿using log4net;
+using Model.config;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,8 @@ namespace DBAccess.Product
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const string SP_Create = "procInsertUFXPortfolio";
-        private const string SP_Modify = "procUpdateUFXPortfolio";
+        private const string SP_ModifyName = "procUpdateUFXPortfolioName";
+        private const string SP_ModifyStatus = "procUpdateUFXPortfolioStatus";
         private const string SP_Get = "procGetUFXPortfolios";
         private const string SP_Delete = "procDeleteUFXPortfolio";
 
@@ -52,12 +54,21 @@ namespace DBAccess.Product
             return id;
         }
 
-        public int Update(Portfolio portfolio)
+        public int UpdateName(Portfolio portfolio)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Modify);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyName);
             _dbHelper.AddInParameter(dbCommand, "@PortfolioCode", System.Data.DbType.String, portfolio.PortfolioNo);
             _dbHelper.AddInParameter(dbCommand, "@PortfolioName", System.Data.DbType.String, portfolio.PortfolioName);
          
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int UpdateName(string portfolioCode, PortfolioStatus portfolioStatus)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyName);
+            _dbHelper.AddInParameter(dbCommand, "@PortfolioCode", System.Data.DbType.String, portfolioCode);
+            _dbHelper.AddInParameter(dbCommand, "@PortfolioStatus", System.Data.DbType.Int32, (int)portfolioStatus);
+
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
@@ -92,7 +103,8 @@ namespace DBAccess.Product
                     item.AccountType = (int)reader["AccountType"];
                     item.AssetNo = (string)reader["AssetNo"];
                     item.AssetName = (string)reader["AssetName"];
-                    
+                    item.PortfolioStatus = (PortfolioStatus)reader["PortfolioStatus"];
+
                     portfolios.Add(item);
                 }
             }

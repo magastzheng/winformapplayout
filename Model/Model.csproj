@@ -49,6 +49,7 @@
     <Compile Include="config\ComboOption.cs" />
     <Compile Include="config\FunctionItem.cs" />
     <Compile Include="config\Label.cs" />
+    <Compile Include="config\PortfolioStatus.cs" />
     <Compile Include="config\PriceType.cs" />
     <Compile Include="config\TDFAPISetting.cs" />
     <Compile Include="ConnectionCode.cs" />

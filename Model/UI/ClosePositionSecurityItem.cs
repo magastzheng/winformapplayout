@@ -88,5 +88,7 @@ namespace Model.UI
         public double LastPrice { get; set; }
 
         public SecurityType SecuType { get; set; }
+
+        public PositionType PositionType { get; set; }
     }
 }

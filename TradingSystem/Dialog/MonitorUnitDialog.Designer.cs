@@ -51,7 +51,7 @@
             this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelTop.Location = new System.Drawing.Point(0, 0);
             this.panelTop.Name = "panelTop";
-            this.panelTop.Size = new System.Drawing.Size(330, 62);
+            this.panelTop.Size = new System.Drawing.Size(475, 62);
             this.panelTop.TabIndex = 0;
             // 
             // lblMonitorUnitId
@@ -104,7 +104,7 @@
             this.tbMonitorUnitId.Enabled = false;
             this.tbMonitorUnitId.Location = new System.Drawing.Point(87, 74);
             this.tbMonitorUnitId.Name = "tbMonitorUnitId";
-            this.tbMonitorUnitId.Size = new System.Drawing.Size(212, 21);
+            this.tbMonitorUnitId.Size = new System.Drawing.Size(362, 21);
             this.tbMonitorUnitId.TabIndex = 7;
             this.tbMonitorUnitId.Text = "0";
             // 
@@ -112,31 +112,31 @@
             // 
             this.tbMonitorUnitName.Location = new System.Drawing.Point(87, 107);
             this.tbMonitorUnitName.Name = "tbMonitorUnitName";
-            this.tbMonitorUnitName.Size = new System.Drawing.Size(212, 21);
+            this.tbMonitorUnitName.Size = new System.Drawing.Size(362, 21);
             this.tbMonitorUnitName.TabIndex = 8;
             // 
             // cbAccountType
             // 
             this.cbAccountType.FormattingEnabled = true;
-            this.cbAccountType.Location = new System.Drawing.Point(87, 146);
+            this.cbAccountType.Location = new System.Drawing.Point(87, 140);
             this.cbAccountType.Name = "cbAccountType";
-            this.cbAccountType.Size = new System.Drawing.Size(212, 20);
+            this.cbAccountType.Size = new System.Drawing.Size(362, 20);
             this.cbAccountType.TabIndex = 9;
             // 
             // cbPortfolioId
             // 
             this.cbPortfolioId.FormattingEnabled = true;
-            this.cbPortfolioId.Location = new System.Drawing.Point(87, 179);
+            this.cbPortfolioId.Location = new System.Drawing.Point(87, 172);
             this.cbPortfolioId.Name = "cbPortfolioId";
-            this.cbPortfolioId.Size = new System.Drawing.Size(212, 20);
+            this.cbPortfolioId.Size = new System.Drawing.Size(362, 20);
             this.cbPortfolioId.TabIndex = 10;
             // 
             // cbStockTemplate
             // 
             this.cbStockTemplate.FormattingEnabled = true;
-            this.cbStockTemplate.Location = new System.Drawing.Point(87, 212);
+            this.cbStockTemplate.Location = new System.Drawing.Point(87, 204);
             this.cbStockTemplate.Name = "cbStockTemplate";
-            this.cbStockTemplate.Size = new System.Drawing.Size(212, 20);
+            this.cbStockTemplate.Size = new System.Drawing.Size(362, 20);
             this.cbStockTemplate.TabIndex = 11;
             // 
             // lblFuturesContract
@@ -154,7 +154,7 @@
             this.lbDropdown.ItemHeight = 12;
             this.lbDropdown.Location = new System.Drawing.Point(87, 268);
             this.lbDropdown.Name = "lbDropdown";
-            this.lbDropdown.Size = new System.Drawing.Size(170, 88);
+            this.lbDropdown.Size = new System.Drawing.Size(178, 88);
             this.lbDropdown.TabIndex = 13;
             // 
             // btnConfirm
@@ -169,7 +169,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(224, 356);
+            this.btnCancel.Location = new System.Drawing.Point(308, 356);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 15;
@@ -179,15 +179,15 @@
             // 
             // acFuturesContracts
             // 
-            this.acFuturesContracts.Location = new System.Drawing.Point(81, 238);
+            this.acFuturesContracts.Location = new System.Drawing.Point(81, 236);
             this.acFuturesContracts.Name = "acFuturesContracts";
-            this.acFuturesContracts.Size = new System.Drawing.Size(188, 33);
+            this.acFuturesContracts.Size = new System.Drawing.Size(275, 33);
             this.acFuturesContracts.TabIndex = 12;
             // 
             // MonitorUnitDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.ClientSize = new System.Drawing.Size(330, 391);
+            this.ClientSize = new System.Drawing.Size(475, 391);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnConfirm);
             this.Controls.Add(this.lbDropdown);
@@ -205,6 +205,7 @@
             this.Controls.Add(this.lblMonitorUnitId);
             this.Controls.Add(this.panelTop);
             this.Name = "MonitorUnitDialog";
+            this.Text = "监控单元";
             this.ResumeLayout(false);
             this.PerformLayout();
 

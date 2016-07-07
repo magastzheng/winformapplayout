@@ -85,7 +85,7 @@ namespace BLL.Product
             int ret = -1;
             foreach (var portfolio in portfolios)
             {
-                ret = _portfoliodao.Update(portfolio);
+                ret = _portfoliodao.UpdateName(portfolio);
             }
 
             return ret;

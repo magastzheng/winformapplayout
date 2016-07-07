@@ -44,7 +44,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "monitorunit",
+		"name": "monitorunitname",
 		"text": "监控单元",
 		"width": 80,
 		"columntype": 0,
@@ -228,7 +228,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "instanceno",
+		"name": "instancecode",
 		"text": "实例编号",
 		"width": 80,
 		"columntype": 0,

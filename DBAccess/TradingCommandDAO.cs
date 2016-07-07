@@ -15,7 +15,8 @@ namespace DBAccess
         private const string SP_Modify = "procTradingCommandUpdateStatus";
         private const string SP_ModifyTargetNum = "procTradingCommandUpdateTargetNum";
         private const string SP_Delete = "procTradingCommandDelete";
-        private const string SP_Get = "procTradingCommandSelect";
+        //private const string SP_Get = "procTradingCommandSelect";
+        private const string SP_Get = "procTradingCommandSelectCombine";
 
         public TradingCommandDAO()
             : base()
@@ -69,6 +70,7 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, cmdItem.CommandId);
             _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)cmdItem.EEntrustStatus);
             _dbHelper.AddInParameter(dbCommand, "@DealStatus", System.Data.DbType.Int32, (int)cmdItem.EDealStatus);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
@@ -78,6 +80,7 @@ namespace DBAccess
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyTargetNum);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, cmdItem.CommandId);
             _dbHelper.AddInParameter(dbCommand, "@TargetNum", System.Data.DbType.Int32, (int)cmdItem.TargetNum);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
             
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
@@ -114,6 +117,25 @@ namespace DBAccess
                     item.EFuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
                     item.EEntrustStatus = (EntrustStatus)reader["EntrustStatus"];
                     item.EDealStatus = (DealStatus)reader["DealStatus"];
+                    item.SubmitPerson = (string)reader["SubmitPerson"];
+                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
+                    item.InstanceCode = (string)reader["InstanceCode"];
+                    item.MonitorUnitName = (string)reader["MonitorUnitName"];
+                    item.PortfolioId = (int)reader["PortfolioId"];
+                    item.PortfolioCode = (string)reader["PortfolioCode"];
+                    item.PortfolioName = (string)reader["PortfolioName"];
+                    item.FundCode = (string)reader["AccountCode"];
+                    item.FundName = (string)reader["AccountName"];
+
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+                    {
+                        item.CreatedDate = (DateTime)reader["CreatedDate"];
+                    }
+
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+                    {
+                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+                    }
 
                     if (reader["StartDate"] != null && reader["StartDate"] != DBNull.Value)
                     {
