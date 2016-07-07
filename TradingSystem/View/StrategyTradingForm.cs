@@ -361,6 +361,14 @@ namespace TradingSystem.View
                         secuItem.CommandCopies = cmdItem.CommandNum;
                         secuItem.TargetCopies = cmdItem.TargetNum;
                         secuItem.TargetAmount = secuItem.TargetCopies * secuItem.WeightAmount;
+                        secuItem.FundCode = cmdItem.FundCode;
+                        secuItem.PortfolioName = cmdItem.PortfolioName;
+
+                        var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode);
+                        if (findItem != null)
+                        {
+                            secuItem.SecuName = findItem.SecuName;
+                        }
 
                         switch (secuItem.EDirection)
                         {

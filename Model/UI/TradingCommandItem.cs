@@ -1,4 +1,5 @@
 ﻿using Model.Binding;
+using Model.config;
 using Model.Data;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace Model.UI
                 string ret = string.Empty;
                 switch (ECommandType)
                 {
-                    case UI.CommandType.Arbitrage:
+                    case config.CommandType.Arbitrage:
                         {
                             ret = "期现套利";
                         }
@@ -48,17 +49,17 @@ namespace Model.UI
                 string ret = string.Empty;
                 switch (EExecuteType)
                 {
-                    case UI.ExecuteType.OpenPosition:
+                    case config.ExecuteType.OpenPosition:
                         {
                             ret = "开仓";
                         }
                         break;
-                    case UI.ExecuteType.ClosePosition:
+                    case config.ExecuteType.ClosePosition:
                         {
                             ret = "平仓";
                         }
                         break;
-                    case UI.ExecuteType.AdjustPosition:
+                    case config.ExecuteType.AdjustPosition:
                         {
                             ret = "调仓";
                         }

@@ -432,6 +432,36 @@ begin
 		and EntrustStatus=@EntrustStatus
 end
 
+go
+if exists (select name from sysobjects where name='procEntrustSecuritySelectAllByEntrustStatus')
+drop proc procEntrustSecuritySelectAllByEntrustStatus
+
+go
+create proc procEntrustSecuritySelectAllByEntrustStatus(
+	@EntrustStatus	int
+)
+as
+begin
+	select SubmitId 
+		,CommandId			
+		,SecuCode			
+		,SecuType			
+		,EntrustAmount	
+		,EntrustPrice		
+		,EntrustDirection	
+		,EntrustStatus
+		,EntrustPriceType
+		,PriceType
+		,EntrustNo
+		,DealStatus
+		,DealAmount
+		,DealTimes
+		,EntrustDate
+		,CreatedDate
+		,ModifiedDate
+	from entrustsecurity
+	where EntrustStatus=@EntrustStatus
+end
 
 go
 if exists (select name from sysobjects where name='procEntrustSecuritySelectCancel')

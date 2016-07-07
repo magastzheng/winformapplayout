@@ -6,7 +6,6 @@ using Model.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
@@ -20,6 +19,7 @@ using BLL.SecurityInfo;
 using TradingSystem.Dialog;
 using BLL.Template;
 using BLL.TradeCommand;
+using Model.config;
 
 namespace TradingSystem.View
 {
@@ -598,7 +598,7 @@ namespace TradingSystem.View
             TradingCommandItem tdcmdItem = new TradingCommandItem
             {
                 InstanceId = closeCmdItem.InstanceId,
-                ECommandType = Model.UI.CommandType.Arbitrage,
+                ECommandType = CommandType.Arbitrage,
                 //EExecuteType = ExecuteType.OpenPosition,
                 CommandNum = closeCmdItem.Copies,
                 //EStockDirection = Model.Data.EntrustDirection.BuySpot,

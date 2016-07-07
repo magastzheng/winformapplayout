@@ -13,6 +13,11 @@ exec procMonitorUnitSelectActive
 
 exec procTradingInstanceSelectCombine
 
+exec procTradingCommandSelect -1
+
+exec procTradingCommandSelectCombine -1
+
+--===================Clear
 truncate table monitorunit
 
 truncate table tradinginstance

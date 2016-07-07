@@ -1,6 +1,7 @@
 ﻿using Config;
 using DBAccess;
 using log4net;
+using Model.config;
 using Model.Data;
 using Model.UI;
 using System;
@@ -45,7 +46,7 @@ namespace BLL.TradeCommand
             TradingCommandItem tccmdItem = new TradingCommandItem 
             {
                 InstanceId = closeItem.InstanceId,
-                ECommandType = Model.UI.CommandType.Arbitrage,
+                ECommandType = CommandType.Arbitrage,
                 EExecuteType = ExecuteType.ClosePosition,
                 EEntrustStatus = EntrustStatus.NoExecuted,
                 EDealStatus = DealStatus.NoDeal,
