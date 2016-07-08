@@ -24,11 +24,15 @@ namespace DBAccess
         private const string SP_DeleteByCommandId = "procEntrustSecurityDeleteByCommandId";
         private const string SP_DeleteByCommandIdEntrustStatus = "procEntrustSecurityDeleteByCommandIdEntrustStatus";
         private const string SP_Get = "procEntrustSecuritySelectAll";
+        private const string SP_GetAllCombine = "procEntrustSecuritySelectAllCombine";
         private const string SP_GetBySubmitId = "procEntrustSecuritySelectBySubmitId";
         private const string SP_GetByCommandId = "procEntrustSecuritySelectByCommandId";
         private const string SP_GetByEntrustStatus = "procEntrustSecuritySelectByEntrustStatus";
         private const string SP_GetCancel = "procEntrustSecuritySelectCancel";
         private const string SP_GetCancelRedo = "procEntrustSecuritySelectCancelRedo";
+
+        //private const string SP_GetEntrustFlow = "procEntrustSecuritySelectEntrustFlow";
+        //private const string SP_GetDealFlow = "procEntrustSecuritySelectDealFlow";
 
         public EntrustSecurityDAO()
             : base()
@@ -173,7 +177,7 @@ namespace DBAccess
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public List<EntrustSecurityItem> Get()
+        public List<EntrustSecurityItem> GetAll()
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
 
@@ -473,5 +477,68 @@ namespace DBAccess
 
             return items;
         }
+
+        #region get combine
+
+        public List<EntrustSecurityCombineItem> GetAllCombine()
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetAllCombine);
+
+            List<EntrustSecurityCombineItem> items = new List<EntrustSecurityCombineItem>();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    EntrustSecurityCombineItem item = new EntrustSecurityCombineItem();
+                    item.SubmitId = (int)reader["SubmitId"];
+                    item.CommandId = (int)reader["CommandId"];
+                    item.SecuCode = (string)reader["SecuCode"];
+                    item.SecuType = (SecurityType)(int)reader["SecuType"];
+                    item.EntrustAmount = (int)reader["EntrustAmount"];
+                    item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
+                    item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
+                    item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+                    item.EntrustPriceType = (EntrustPriceType)reader["EntrustPriceType"];
+                    item.PriceType = (PriceType)reader["PriceType"];
+                    item.EntrustNo = (int)reader["EntrustNo"];
+                    item.DealStatus = (DealStatus)reader["DealStatus"];
+                    item.DealAmount = (int)reader["DealAmount"];
+
+                    if (reader["EntrustDate"] != null && reader["EntrustDate"] != DBNull.Value)
+                    {
+                        item.EntrustDate = (DateTime)reader["EntrustDate"];
+                    }
+
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+                    {
+                        item.CreatedDate = (DateTime)reader["CreatedDate"];
+                    }
+
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+                    {
+                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+                    }
+
+                    item.BatchNo = (int)reader["BatchNo"];
+                    item.InstanceId = (int)reader["InstanceId"];
+                    item.InstanceCode = (string)reader["InstanceCode"];
+                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
+                    item.PortfolioId = (int)reader["PortfolioId"];
+                    item.PortfolioCode = (string)reader["PortfolioCode"];
+                    item.PortfolioName = (string)reader["PortfolioName"];
+                    item.AccountCode = (string)reader["AccountCode"];
+                    item.AccountName = (string)reader["AccountName"];
+
+                    items.Add(item);
+                }
+            }
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return items;
+        }
+
+        #endregion
     }
 }

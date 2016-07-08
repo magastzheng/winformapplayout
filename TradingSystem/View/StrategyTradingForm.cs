@@ -21,6 +21,7 @@ using Util;
 using BLL.SecurityInfo;
 using TradingSystem.Dialog;
 using TradingSystem.TradeUtil;
+using BLL.Entrust;
 
 namespace TradingSystem.View
 {
@@ -38,6 +39,8 @@ namespace TradingSystem.View
         private EntrustCommandDAO _entrustcmddao = new EntrustCommandDAO();
         private EntrustSecurityDAO _entrustsecudao = new EntrustSecurityDAO();
         private EntrustDAO _entrustdao = new EntrustDAO();
+
+        private EntrustBLL _entrustBLL = new EntrustBLL();
 
         private SortableBindingList<TradingCommandItem> _cmdDataSource = new SortableBindingList<TradingCommandItem>(new List<TradingCommandItem>());
         private SortableBindingList<EntrustFlowItem> _efDataSource = new SortableBindingList<EntrustFlowItem>(new List<EntrustFlowItem>());
@@ -583,6 +586,24 @@ namespace TradingSystem.View
                 foreach (var cmdItem in tradingcmds)
                 {
                     _cmdDataSource.Add(cmdItem);
+                }
+            }
+
+            var efItems = _entrustBLL.GetEntrustFlow();
+            if (efItems != null)
+            {
+                foreach (var efItem in efItems)
+                {
+                    _efDataSource.Add(efItem);
+                }
+            }
+
+            var dfItems = _entrustBLL.GetDealFlow();
+            if (dfItems != null)
+            {
+                foreach (var dfItem in dfItems)
+                {
+                    _dfDataSource.Add(dfItem);
                 }
             }
 

@@ -1,4 +1,5 @@
-﻿using DBAccess;
+﻿using BLL.SecurityInfo;
+using DBAccess;
 using Model.config;
 using Model.UI;
 using System;
@@ -14,11 +15,12 @@ namespace BLL.Entrust
         private EntrustCommandDAO _entrustcmddao = new EntrustCommandDAO();
         private EntrustSecurityDAO _entrustsecudao = new EntrustSecurityDAO();
         private EntrustDAO _entrustdao = new EntrustDAO();
-
+       
         public EntrustBLL()
         { 
         }
 
+        #region create
         public int SubmitOne(List<CancelRedoItem> cancelItems)
         {
             var commandIds = cancelItems.Select(p => p.CommandId).Distinct().ToList();
@@ -68,6 +70,10 @@ namespace BLL.Entrust
             return -1;
         }
 
+        #endregion
+
+        #region update
+
         public int Cancel(List<CancelRedoItem> cancelItems)
         {
             int ret = -1;
@@ -95,6 +101,91 @@ namespace BLL.Entrust
 
             return ret;
         }
+
+        #endregion
+
+        #region get/fetch
+
+        public List<EntrustFlowItem> GetEntrustFlow()
+        {
+            List<EntrustFlowItem> efItems = new List<EntrustFlowItem>();
+            var allItems = _entrustsecudao.GetAllCombine();
+            var entrustedNoDealItems = allItems.Where(p =>
+                (p.EntrustStatus == EntrustStatus.Completed || p.EntrustStatus == EntrustStatus.CancelFail || p.EntrustStatus == EntrustStatus.CancelSuccess)
+                && (p.DealStatus != DealStatus.Completed)
+                );
+          
+            foreach (var item in entrustedNoDealItems)
+            {
+                EntrustFlowItem efItem = new EntrustFlowItem 
+                {
+                    CommandNo = item.CommandId,
+                    SecuCode = item.SecuCode,
+                    PriceType = item.PriceType.ToString(),
+                    EntrustStatus = item.EntrustStatus.ToString(),
+                    EntrustAmount = item.EntrustAmount,
+                    EntrustedDate = item.EntrustDate.ToString("yyyy-MM-dd"),
+                    EntrustedTime = item.EntrustDate.ToString("hhmmss"),
+                    EntrustDirection = item.EntrustDirection.ToString(),
+                    EntrustNo = item.EntrustNo,
+                    DealAmount = item.DealAmount,
+                    DealTimes = item.DealTimes,
+                    InstanceId = item.InstanceId,
+                    InstanceNo = item.InstanceCode,
+                    EntrustBatchNo = item.BatchNo,
+                    PortfolioName = item.PortfolioName,
+                    FundName = item.AccountName,
+                };
+
+                var secuInfoItem = SecurityInfoManager.Instance.Get(item.SecuCode, item.SecuType);
+                if (secuInfoItem != null)
+                {
+                    efItem.SecuName = secuInfoItem.SecuName;
+                    efItem.Market = secuInfoItem.ExchangeCode;
+                }
+
+                efItems.Add(efItem);
+            }
+
+            return efItems;               
+        }
+
+        public List<DealFlowItem> GetDealFlow()
+        {
+            List<DealFlowItem> dfItems = new List<DealFlowItem>();
+
+            var allItems = _entrustsecudao.GetAllCombine();
+            var entrustedNoDealItems = allItems.Where(p =>p.DealStatus == DealStatus.Completed);
+
+            foreach (var item in entrustedNoDealItems)
+            {
+                DealFlowItem dfItem = new DealFlowItem
+                {
+                    CommandNo = item.CommandId,
+                    SecuCode = item.SecuCode,
+                    PriceType = item.PriceType.ToString(),
+                    FundNo = item.AccountCode,
+                    FundName = item.AccountName,
+                    PortfolioCode = item.PortfolioCode,
+                    PortfolioName = item.PortfolioName,
+                    EntrustPrice = item.EntrustPrice,
+                    DealAmount = item.DealAmount,
+                    DealTime = item.ModifiedDate.ToString("hhmmss"),
+                    EntrustBatchNo = item.BatchNo.ToString(),
+                    InstanceId = item.InstanceId.ToString(),
+                    InstanceNo = item.InstanceCode,
+                    DealNo = item.EntrustNo.ToString(),
+                };
+
+                dfItems.Add(dfItem);
+            }
+
+            return dfItems;
+        }
+
+        #endregion
+
+        #region private
 
         private int UpdateCommandSecurityEntrustStatus(int submitId, List<CancelRedoItem> cancelItems, EntrustStatus entrustStatus)
         {
@@ -124,5 +215,7 @@ namespace BLL.Entrust
 
             return secuItems;
         }
+
+        #endregion
     }
 }

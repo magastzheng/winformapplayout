@@ -31,3 +31,18 @@ order by SecuCode
 truncate table tradingcommandsecurity
 
 select * from securityinfo
+
+
+select * from entrustcommand
+
+select * from tradingcommand
+
+select a.* from tradingcommand a
+
+select b.* from tradingcommandsecurity b
+
+select c.* from entrustcommand c
+
+select d.* from entrustsecurity d
+
+exec procEntrustSecuritySelectAllCombine

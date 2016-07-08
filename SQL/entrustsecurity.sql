@@ -530,3 +530,118 @@ begin
 		or DealStatus = 2)		--部分成交
 		and EntrustStatus = 4	--已完成委托
 end
+
+go
+
+if exists (select name from sysobjects where name='procEntrustSecuritySelectEntrustFlow')
+drop proc procEntrustSecuritySelectEntrustFlow
+
+go
+create proc procEntrustSecuritySelectEntrustFlow
+as
+begin
+	select SubmitId 
+		,CommandId			
+		,SecuCode			
+		,SecuType			
+		,EntrustAmount	
+		,EntrustPrice		
+		,EntrustDirection	
+		,EntrustStatus
+		,EntrustPriceType
+		,PriceType
+		,EntrustNo
+		,DealStatus
+		,DealAmount
+		,DealTimes
+		,EntrustDate
+		,CreatedDate
+		,ModifiedDate
+	from entrustsecurity
+	where (DealStatus = 1		--未成交
+		or DealStatus = 2)		--部分成交
+		and (EntrustStatus = 4	--已完成委托
+		or EntrustStatus = 10
+		or EntrustStatus = 11 
+		or EntrustStatus = 12
+		or EntrustStatus = 13)
+end
+
+go
+
+if exists (select name from sysobjects where name='procEntrustSecuritySelectDealFlow')
+drop proc procEntrustSecuritySelectDealFlow
+
+go
+create proc procEntrustSecuritySelectDealFlow
+as
+begin
+	select SubmitId 
+		,CommandId			
+		,SecuCode			
+		,SecuType			
+		,EntrustAmount	
+		,EntrustPrice		
+		,EntrustDirection	
+		,EntrustStatus
+		,EntrustPriceType
+		,PriceType
+		,EntrustNo
+		,DealStatus
+		,DealAmount
+		,DealTimes
+		,EntrustDate
+		,CreatedDate
+		,ModifiedDate
+	from entrustsecurity
+	where DealStatus = 3
+end
+
+--===================combine version
+go
+if exists (select name from sysobjects where name='procEntrustSecuritySelectAllCombine')
+drop proc procEntrustSecuritySelectAllCombine
+
+go
+create proc procEntrustSecuritySelectAllCombine
+as
+begin
+	select a.SubmitId 
+		,a.CommandId			
+		,a.SecuCode			
+		,a.SecuType			
+		,a.EntrustAmount	
+		,a.EntrustPrice		
+		,a.EntrustDirection	
+		,a.EntrustStatus
+		,a.EntrustPriceType
+		,a.PriceType
+		,a.EntrustNo
+		,a.DealStatus
+		,a.DealAmount
+		,a.DealTimes
+		,a.EntrustDate
+		,a.CreatedDate
+		,a.ModifiedDate
+		,b.BatchNo
+		,c.InstanceId
+		,d.InstanceCode
+		,d.MonitorUnitId
+		,e.PortfolioId
+		,f.PortfolioCode
+		,f.PortfolioName
+		,f.AccountCode
+		,f.AccountName
+	from entrustsecurity a
+	inner join entrustcommand b
+	on a.CommandId=b.CommandId and a.SubmitId=b.SubmitId
+	inner join tradingcommand c
+	on b.CommandId=c.CommandId
+	inner join tradinginstance d
+	on c.InstanceId=d.InstanceId
+	inner join monitorunit e
+	on d.MonitorUnitId=e.MonitorUnitId
+	inner join ufxportfolio f
+	on e.PortfolioId=f.PortfolioId
+end
+

@@ -80,6 +80,7 @@
     <Compile Include="UI\ClosePositionSecurityItem.cs" />
     <Compile Include="UI\CommandSecurityItem.cs" />
     <Compile Include="UI\DealFlowItem.cs" />
+    <Compile Include="UI\EntrustSecurityCombineItem.cs" />
     <Compile Include="UI\EntrustCommandItem.cs" />
     <Compile Include="UI\EntrustFlowItem.cs" />
     <Compile Include="UI\EntrustItem.cs" />
