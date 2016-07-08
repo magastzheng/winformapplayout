@@ -1,11 +1,6 @@
 ﻿using Model.Binding;
-using Model.config;
-using Model.Data;
+using Model.EnumType;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Model.UI
 {
@@ -28,7 +23,7 @@ namespace Model.UI
                 string ret = string.Empty;
                 switch (ECommandType)
                 {
-                    case config.CommandType.Arbitrage:
+                    case EnumType.CommandType.Arbitrage:
                         {
                             ret = "期现套利";
                         }
@@ -49,17 +44,17 @@ namespace Model.UI
                 string ret = string.Empty;
                 switch (EExecuteType)
                 {
-                    case config.ExecuteType.OpenPosition:
+                    case EnumType.ExecuteType.OpenPosition:
                         {
                             ret = "开仓";
                         }
                         break;
-                    case config.ExecuteType.ClosePosition:
+                    case EnumType.ExecuteType.ClosePosition:
                         {
                             ret = "平仓";
                         }
                         break;
-                    case config.ExecuteType.AdjustPosition:
+                    case EnumType.ExecuteType.AdjustPosition:
                         {
                             ret = "调仓";
                         }

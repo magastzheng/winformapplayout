@@ -1,12 +1,8 @@
 ﻿using BLL;
-using BLL.UFX;
 using Config;
 using Forms;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TradingSystem.View;
 

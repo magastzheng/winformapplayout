@@ -1,12 +1,7 @@
 ﻿using Model.Binding;
-using Model.config;
-using Model.Data;
+using Model.EnumType;
 using Model.SecurityInfo;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Model.UI
 {
@@ -38,7 +33,7 @@ namespace Model.UI
         {
             get 
             {
-                if (ECommandPrice == config.PriceType.None)
+                if (ECommandPrice == EnumType.PriceType.None)
                 {
                     return string.Empty;
                 }
@@ -54,7 +49,7 @@ namespace Model.UI
         {
             get
             {
-                if (EPriceSetting == config.PriceType.None)
+                if (EPriceSetting == EnumType.PriceType.None)
                 {
                     return string.Empty;
                 }

@@ -1,20 +1,8 @@
 ﻿using BLL;
 using BLL.UFX;
 using Config;
-using DBAccess;
-using Forms;
-using Model.UI;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TradingSystem.Controller;
-using Util;
 
 namespace TradingSystem.View
 {

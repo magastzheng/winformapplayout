@@ -5,21 +5,16 @@ using DBAccess;
 using Model.UI;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.Linq;
-using Model.Data;
-using Model;
 using Model.SecurityInfo;
-using TradingSystem.TradeUtil;
 using Util;
 using BLL.SecurityInfo;
 using TradingSystem.Dialog;
 using BLL.Template;
 using BLL.TradeCommand;
 using Model.config;
+using Model.EnumType;
 
 namespace TradingSystem.View
 {

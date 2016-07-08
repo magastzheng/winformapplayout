@@ -6,22 +6,17 @@ using Forms;
 using Model.UI;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.Linq;
 using Model.SecurityInfo;
 using Quote;
-using Model;
 using Model.config;
-using Model.Data;
 using Util;
 using BLL.SecurityInfo;
 using TradingSystem.Dialog;
 using TradingSystem.TradeUtil;
 using BLL.Entrust;
+using Model.EnumType;
 
 namespace TradingSystem.View
 {

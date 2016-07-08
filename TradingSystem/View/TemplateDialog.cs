@@ -1,16 +1,10 @@
 ﻿using Config;
 using DBAccess;
 using Forms;
-using Model;
+using Model.config;
 using Model.UI;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using Util;
 
 namespace TradingSystem.View
 {

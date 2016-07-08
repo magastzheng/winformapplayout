@@ -1,12 +1,9 @@
 ﻿using BLL.SecurityInfo;
 using DBAccess;
+using Model.EnumType;
 using Model.SecurityInfo;
 using Model.UI;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.TradeCommand
 {
@@ -87,11 +84,11 @@ namespace BLL.TradeCommand
                         case SecurityType.Stock:
                             {
                                 tiSecuItem.InstructionPreBuy = openItem.Copies * item.WeightAmount;
-                                if (item.DirectionType == Model.Data.EntrustDirection.BuySpot)
+                                if (item.DirectionType == EntrustDirection.BuySpot)
                                 {
                                     tiSecuItem.PositionType = PositionType.StockLong;
                                 }
-                                else if (item.DirectionType == Model.Data.EntrustDirection.SellSpot)
+                                else if (item.DirectionType == EntrustDirection.SellSpot)
                                 {
                                     tiSecuItem.PositionType = PositionType.StockShort;
                                 }
@@ -100,11 +97,11 @@ namespace BLL.TradeCommand
                         case SecurityType.Futures:
                             {
                                 tiSecuItem.InstructionPreSell = openItem.Copies * item.WeightAmount;
-                                if (item.DirectionType == Model.Data.EntrustDirection.SellOpen)
+                                if (item.DirectionType == EntrustDirection.SellOpen)
                                 {
                                     tiSecuItem.PositionType = PositionType.FuturesShort;
                                 }
-                                else if (item.DirectionType == Model.Data.EntrustDirection.BuyClose)
+                                else if (item.DirectionType == EntrustDirection.BuyClose)
                                 {
                                     tiSecuItem.PositionType = PositionType.FuturesLong;
                                 }

@@ -1,5 +1,6 @@
 ﻿using Model.config;
 using Model.Data;
+using Model.EnumType;
 using Model.SecurityInfo;
 using System;
 using System.Collections.Generic;

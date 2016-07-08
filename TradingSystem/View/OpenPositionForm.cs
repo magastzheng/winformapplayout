@@ -6,19 +6,13 @@ using Model.SecurityInfo;
 using Model.UI;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.Linq;
 using Quote;
 using TradingSystem.Dialog;
-using TradingSystem.TradeUtil;
-using Model.Data;
 using BLL.SecurityInfo;
-using BLL.Entrust;
 using BLL.TradeCommand;
-using Model.config;
+using Model.EnumType;
 
 namespace TradingSystem.View
 {
@@ -188,7 +182,7 @@ namespace TradingSystem.View
                     SecuName = stock.SecuName,
                     WeightAmount = stock.Amount,
                     EntrustAmount = monitorItem.Copies * stock.Amount,
-                    DirectionType = Model.Data.EntrustDirection.BuySpot,
+                    DirectionType = EntrustDirection.BuySpot,
                     SecuType = SecurityType.Stock
                 };
 
@@ -209,7 +203,7 @@ namespace TradingSystem.View
                     SecuName = monitorItem.FuturesContract,
                     WeightAmount = templateItem.FutureCopies,
                     EntrustAmount = monitorItem.Copies * templateItem.FutureCopies,
-                    DirectionType = Model.Data.EntrustDirection.SellOpen,
+                    DirectionType = EntrustDirection.SellOpen,
                     SecuType = SecurityType.Futures
                 };
 
@@ -333,12 +327,12 @@ namespace TradingSystem.View
                                 {
                                     InstanceCode = instanceCode,
                                     MonitorUnitId = openItem.MonitorId,
-                                    StockDirection = Model.Data.EntrustDirection.BuySpot,
+                                    StockDirection = EntrustDirection.BuySpot,
                                     FuturesContract = openItem.FuturesContract,
-                                    FuturesDirection = Model.Data.EntrustDirection.SellOpen,
+                                    FuturesDirection = EntrustDirection.SellOpen,
                                     OperationCopies = openItem.Copies,
-                                    StockPriceType = Model.Data.StockPriceType.NoLimit,
-                                    FuturesPriceType = Model.Data.FuturesPriceType.NoLimit,
+                                    StockPriceType = StockPriceType.NoLimit,
+                                    FuturesPriceType = FuturesPriceType.NoLimit,
                                     Status = 1,
                                     Owner = "111111"
                                 };
@@ -357,8 +351,8 @@ namespace TradingSystem.View
                                     ECommandType = CommandType.Arbitrage,
                                     EExecuteType = ExecuteType.OpenPosition,
                                     CommandNum = openItem.Copies,
-                                    EStockDirection = Model.Data.EntrustDirection.BuySpot,
-                                    EFuturesDirection = Model.Data.EntrustDirection.SellOpen,
+                                    EStockDirection = EntrustDirection.BuySpot,
+                                    EFuturesDirection = EntrustDirection.SellOpen,
                                     EEntrustStatus = EntrustStatus.NoExecuted,
                                     EDealStatus = DealStatus.NoDeal,
                                     ModifiedTimes = 1

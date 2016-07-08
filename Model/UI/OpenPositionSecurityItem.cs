@@ -1,11 +1,6 @@
 ﻿using Model.Binding;
-using Model.Data;
+using Model.EnumType;
 using Model.SecurityInfo;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Model.UI
 {
@@ -48,37 +43,37 @@ namespace Model.UI
                 string ret = string.Empty;
                 switch (DirectionType)
                 {
-                    case Data.EntrustDirection.Buy:
+                    case EnumType.EntrustDirection.Buy:
                         {
                             ret = "买入";
                         }
                         break;
-                    case Data.EntrustDirection.Sell:
+                    case EnumType.EntrustDirection.Sell:
                         {
                             ret = "卖出";
                         }
                         break;
-                    case Data.EntrustDirection.AdjustedToBuySell:
+                    case EnumType.EntrustDirection.AdjustedToBuySell:
                         {
                             ret = "调整到[买卖]";
                         }
                         break;
-                    case Data.EntrustDirection.BuySpot:
+                    case EnumType.EntrustDirection.BuySpot:
                         {
                             ret = "买入";
                         }
                         break;
-                    case Data.EntrustDirection.SellSpot:
+                    case EnumType.EntrustDirection.SellSpot:
                         {
                             ret = "卖出";
                         }
                         break;
-                    case Data.EntrustDirection.SellOpen:
+                    case EnumType.EntrustDirection.SellOpen:
                         {
                             ret = "卖出开仓";
                         }
                         break;
-                    case  Data.EntrustDirection.BuyClose:
+                    case EnumType.EntrustDirection.BuyClose:
                         {
                             ret = "买入平仓";
                         }

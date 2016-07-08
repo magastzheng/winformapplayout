@@ -1,17 +1,12 @@
 ﻿using BLL;
 using Config;
-using hundsun.t2sdk;
 using TradingSystem.Controller;
 using log4net;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TradingSystem.View;
 using log4net.Config;
 using BLL.UFX;
-using Service;
 
 namespace TradingSystem
 {

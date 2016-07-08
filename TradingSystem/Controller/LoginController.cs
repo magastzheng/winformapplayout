@@ -6,12 +6,7 @@ using Config;
 using Model;
 using Model.strategy;
 using Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using TradingSystem.View;
 
 namespace TradingSystem.Controller

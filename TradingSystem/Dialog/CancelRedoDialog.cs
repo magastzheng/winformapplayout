@@ -2,14 +2,9 @@
 using Controls.Entity;
 using Controls.GridView;
 using Forms;
-using Model;
 using Model.UI;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.Linq;
 using DBAccess;
@@ -17,8 +12,8 @@ using Model.config;
 using TradingSystem.TradeUtil;
 using BLL.Entrust;
 using Model.SecurityInfo;
-using Model.Data;
 using BLL.SecurityInfo;
+using Model.EnumType;
 
 namespace TradingSystem.Dialog
 {

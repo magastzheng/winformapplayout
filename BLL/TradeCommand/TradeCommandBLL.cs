@@ -1,14 +1,10 @@
 ﻿using Config;
 using DBAccess;
 using log4net;
-using Model.config;
-using Model.Data;
+using Model.EnumType;
 using Model.UI;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.TradeCommand
 {

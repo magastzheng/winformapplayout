@@ -1,10 +1,6 @@
-﻿using Model;
-using Model.config;
+﻿using Model.config;
+using Model.EnumType;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TradingSystem.TradeUtil
