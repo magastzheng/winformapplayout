@@ -1,17 +1,12 @@
 ﻿using BLL;
+using BLL.UFX.impl;
 using Config;
 using Controls.Entity;
 using Controls.GridView;
 using Model.strategy;
 using Model.UI;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Threading;
-using System.Windows.Forms;
 
 namespace TradingSystem.View
 {

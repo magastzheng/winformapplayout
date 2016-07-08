@@ -69,8 +69,10 @@
     <Compile Include="SecurityInfo\SecurityItem.cs" />
     <Compile Include="strategy\AccountItem.cs" />
     <Compile Include="strategy\AssetItem.cs" />
+    <Compile Include="strategy\HolderItem.cs" />
     <Compile Include="strategy\PortfolioItem.cs" />
     <Compile Include="strategy\TradingInstance.cs" />
+    <Compile Include="strategy\UFXEntrust.cs" />
     <Compile Include="t2sdk\MarketCode.cs" />
     <Compile Include="TradingCommand\TradingCommandItem.cs" />
     <Compile Include="TradingCommand\TradingCommandSecurityItem.cs" />

@@ -36,7 +36,7 @@ namespace TradingSystem.View
         public void LoadData()
         {
             //var retCode = _mainController.StrategyBLL.QueryTrading();
-            var retCode = _mainController.StrategyBLL.QueryTemplate();
+            //var retCode = _mainController.StrategyBLL.QueryTemplate();
             //retCode = _mainController.StrategyBLL.QueryTemplateStock(-1);
             //retCode = _mainController.StrategyBLL.QueryDeal();
             //Console.WriteLine(retCode);

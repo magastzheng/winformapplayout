@@ -1,6 +1,7 @@
 ﻿using BLL;
 using BLL.Product;
 using BLL.UFX;
+using BLL.UFX.impl;
 using Config;
 using Model;
 using Model.strategy;
@@ -20,7 +21,7 @@ namespace TradingSystem.Controller
         private LoginForm _loginForm;
         private T2SDKWrap _t2SDKWrap;
         private ProductBLL _productBLL;
-        private CountdownEvent _cdEvent = new CountdownEvent(3);
+        private CountdownEvent _cdEvent = new CountdownEvent(4);
         //private LoginBLL _loginBLL;
         
         public LoginForm LoginForm
@@ -67,10 +68,12 @@ namespace TradingSystem.Controller
             BLLManager.Instance.LoginBLL.QueryAccount(new DataHandlerCallback(ParseAccount));
             BLLManager.Instance.LoginBLL.QueryAssetUnit(new DataHandlerCallback(ParseAssetUnit));
             BLLManager.Instance.LoginBLL.QueryPortfolio(new DataHandlerCallback(ParsePortfolio));
+            BLLManager.Instance.LoginBLL.QueryHolder(new DataHandlerCallback(ParseHolder));
 
             _cdEvent.Wait();
             _productBLL.Create(LoginManager.Instance.Accounts, LoginManager.Instance.Assets, LoginManager.Instance.Portfolios);
 
+            BLLManager.Instance.Subscriber.Subscribe(LoginManager.Instance.LoginUser);
             ServiceManager.Instance.Start();
             var gridConfig = ConfigManager.Instance.GetGridConfig();
             MainForm mainForm = new MainForm(gridConfig, this._t2SDKWrap);
@@ -142,6 +145,28 @@ namespace TradingSystem.Controller
                     p.EntrustDirectionList = dataRow.Columns["entrust_direction_list"].GetStr();
 
                     LoginManager.Instance.AddPortfolio(p);
+                }
+                break;
+            }
+
+            _cdEvent.Signal();
+        }
+
+        private void ParseHolder(DataParser parser)
+        {
+            for (int i = 1, count = parser.DataSets.Count; i < count; i++)
+            {
+                var dataSet = parser.DataSets[i];
+                foreach (var dataRow in dataSet.Rows)
+                {
+                    HolderItem p = new HolderItem();
+                    p.AccountCode = dataRow.Columns["account_code"].GetStr();
+                    p.AssetNo = dataRow.Columns["asset_no"].GetStr();
+                    p.CombiNo = dataRow.Columns["combi_no"].GetStr();
+                    p.StockHolderId = dataRow.Columns["stockholder_id"].GetStr();
+                    p.MarketNo = dataRow.Columns["market_no"].GetStr();
+
+                    LoginManager.Instance.AddHolder(p);
                 }
                 break;
             }

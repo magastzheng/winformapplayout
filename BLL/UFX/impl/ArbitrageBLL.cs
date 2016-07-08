@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL
+namespace BLL.UFX.impl
 {
     //套利模块
     public class ArbitrageBLL

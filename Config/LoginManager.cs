@@ -17,6 +17,7 @@ namespace Config
         private List<AccountItem> _accounts = new List<AccountItem>();
         private List<AssetItem> _assets = new List<AssetItem>();
         private List<PortfolioItem> _portfolios = new List<PortfolioItem>();
+        private List<HolderItem> _holders = new List<HolderItem>();
 
         static LoginManager()
         { 
@@ -157,6 +158,43 @@ namespace Config
             }
 
             return portfolio;
+        }
+
+        #endregion
+
+        #region holders
+
+        public void AddHolder(HolderItem holder)
+        {
+            bool isExisted = false;
+            foreach (var h in _holders)
+            {
+                if (h.StockHolderId == holder.StockHolderId)
+                {
+                    isExisted = true;
+                    break;
+                }
+            }
+
+            if (!isExisted)
+            {
+                _holders.Add(holder);
+            }
+        }
+
+        public HolderItem GetHolder(string holderId)
+        {
+            HolderItem holder = new HolderItem();
+            foreach (var h in _holders)
+            {
+                if (h.StockHolderId == holderId)
+                {
+                    holder = h;
+                    break;
+                }
+            }
+
+            return holder;
         }
 
         #endregion

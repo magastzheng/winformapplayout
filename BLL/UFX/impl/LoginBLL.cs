@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL
+namespace BLL.UFX.impl
 {
     public class LoginBLL
     {
@@ -487,13 +487,15 @@ namespace BLL
             return ConnectionCode.Success;
         }
 
-        public ConnectionCode QueryHolder()
+        public ConnectionCode QueryHolder(DataHandlerCallback callback)
         {
             FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.QueryHolder);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
                 return ConnectionCode.ErrorLogin;
             }
+
+            AddDataHandler(FunctionCode.QueryHolder, callback);
 
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化

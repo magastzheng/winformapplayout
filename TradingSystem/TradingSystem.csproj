@@ -309,6 +309,9 @@
     <None Include="config\message.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="config\t2sdk-subscriber.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="config\t2sdk.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

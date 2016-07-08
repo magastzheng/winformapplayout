@@ -1,9 +1,6 @@
 ﻿using BLL.UFX;
+using BLL.UFX.impl;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL
 {
@@ -17,6 +14,7 @@ namespace BLL
         private LoginBLL _loginBLL;
         private SecurityBLL _securityBLL;
         private StrategyBLL _strategyBLL;
+        private T2Subscriber _subscriber;
 
         public LoginBLL LoginBLL
         {
@@ -31,6 +29,12 @@ namespace BLL
         public StrategyBLL StrategyBLL
         {
             get { return _strategyBLL; }
+        }
+
+        public T2Subscriber Subscriber
+        {
+            get { return _subscriber; }
+            set { _subscriber = value; }
         }
 
         private BLLManager()

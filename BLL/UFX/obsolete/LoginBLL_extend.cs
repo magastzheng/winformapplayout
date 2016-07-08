@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL
+namespace BLL.UFX.obsolete
 {
    
     public class LoginBLL_extend : T2SDKBase

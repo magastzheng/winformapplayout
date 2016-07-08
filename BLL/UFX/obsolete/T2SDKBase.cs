@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL
+namespace BLL.UFX.obsolete
 {
     public unsafe class T2SDKBase : IDisposable
     {

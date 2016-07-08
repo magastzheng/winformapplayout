@@ -62,6 +62,7 @@ namespace TradingSystem
             }
 
             BLLManager.Instance.Init(t2SDKWrap);
+            BLLManager.Instance.Subscriber = t2Subscriber;
 
             //TODO: subscribe the message after getting login information
             LoginController loginController = new LoginController(new LoginForm(), t2SDKWrap);

@@ -31,7 +31,7 @@ namespace BLL.UFX
         {
             //新建连接
             _config = new CT2Configinterface();
-            int iRet = _config.Load("config/t2sdk.ini");
+            int iRet = _config.Load("config/t2sdk-subscriber.ini");
 
             if (iRet != 0)
             {
