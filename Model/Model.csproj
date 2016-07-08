@@ -49,6 +49,7 @@
     <Compile Include="config\ComboOption.cs" />
     <Compile Include="config\FunctionItem.cs" />
     <Compile Include="config\Label.cs" />
+    <Compile Include="EnumType\EnumTypeConverter\EntrustRequestHelper.cs" />
     <Compile Include="EnumType\PortfolioStatus.cs" />
     <Compile Include="EnumType\PriceType.cs" />
     <Compile Include="config\TDFAPISetting.cs" />

@@ -58,7 +58,6 @@
     <Compile Include="LabelConfig.cs" />
     <Compile Include="LoginManager.cs" />
     <Compile Include="NavbarConfig.cs" />
-    <Compile Include="ParamConverter\EntrustRequestHelper.cs" />
     <Compile Include="TDFAPIConfig.cs" />
     <Compile Include="TerminalConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
