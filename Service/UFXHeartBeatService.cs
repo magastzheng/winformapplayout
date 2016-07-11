@@ -8,7 +8,7 @@ namespace Service
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private int _timeOut = 10000;
+        private int _timeOut = 60 * 1000; //1m
         private Timer _timer;
 
         public UFXHeartBeatService()

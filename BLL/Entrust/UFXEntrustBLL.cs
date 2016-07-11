@@ -51,7 +51,6 @@ namespace BLL.Entrust
                 UFXBasketEntrustRequest request = new UFXBasketEntrustRequest 
                 {
                     StockCode = secuItem.SecuCode,
-                    EntrustDirection = EntrustRequestHelper.GetEntrustDirection(secuItem.EntrustDirection),
                     EntrustPrice = secuItem.EntrustPrice,
                     EntrustAmount = secuItem.EntrustAmount,
                     PriceType = EntrustRequestHelper.GetEntrustPriceType(secuItem.EntrustPriceType),
@@ -62,19 +61,16 @@ namespace BLL.Entrust
                     OptLimitEntrustRatio = 100,
                 };
 
-                if (secuItem.SecuType == Model.SecurityInfo.SecurityType.Futures)
+                if (secuItem.SecuType == Model.SecurityInfo.SecurityType.Stock)
+                {
+                    request.EntrustDirection = EntrustRequestHelper.GetEntrustDirection(secuItem.EntrustDirection);
+                }
+                else if (secuItem.SecuType == Model.SecurityInfo.SecurityType.Futures)
                 {
                     request.FuturesDirection = EntrustRequestHelper.GetEntrustDirection(secuItem.EntrustDirection);
                 }
-                else if (futuItem != null)
-                {
-                    request.FuturesDirection = EntrustRequestHelper.GetEntrustDirection(futuItem.EntrustDirection);
-                }
-                else
-                { 
-                    //do nothing
-                }
 
+                request.FuturesDirection = string.Empty;
                 var secuInfo = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
                 if (secuInfo != null)
                 {
@@ -88,22 +84,22 @@ namespace BLL.Entrust
                     //request.StockHolderId = tradeCommandItem
                 }
 
-                if (portfolio != null)
-                {
-                    request.AssetNo = portfolio.AssetNo;
+                //if (portfolio != null)
+                //{
+                //    request.AssetNo = portfolio.AssetNo;
 
-                    var holder = LoginManager.Instance.GetHolder(request.CombiNo, request.MarketNo);
-                    if (holder != null && !string.IsNullOrEmpty(holder.StockHolderId))
-                    {
-                        request.StockHolderId = holder.StockHolderId;
-                    }
-                }
+                //    var holder = LoginManager.Instance.GetHolder(request.CombiNo, request.MarketNo);
+                //    if (holder != null && !string.IsNullOrEmpty(holder.StockHolderId))
+                //    {
+                //        request.StockHolderId = holder.StockHolderId;
+                //    }
+                //}
 
                 //TODO: fix the futures cannot entrust
-                //if (secuItem.SecuType == Model.SecurityInfo.SecurityType.Stock)
-                //{
+                if (secuItem.SecuType == Model.SecurityInfo.SecurityType.Stock)
+                {
                     ufxRequests.Add(request);
-                //}
+                }
             }
 
             //call ufx
@@ -166,26 +162,80 @@ namespace BLL.Entrust
                 foreach (var dataRow in dataSet.Rows)
                 {
                     UFXBasketEntrustResponse p = new UFXBasketEntrustResponse();
-                    p.BatchNo = dataRow.Columns["batch_no"].GetInt();
-                    p.EntrustNo = dataRow.Columns["entrust_no"].GetInt();
-                    p.RequestOrder = dataRow.Columns["request_order"].GetInt();
-                    p.ExtSystemId = dataRow.Columns["extsystem_id"].GetInt();
-                    p.EntrustFailCode = dataRow.Columns["entrust_fail_code"].GetInt();
-                    p.FailCause = dataRow.Columns["fail_cause"].GetStr();
-                    p.RiskSerialNo = dataRow.Columns["risk_serial_no"].GetInt();
-                    p.MarketNo = dataRow.Columns["market_no"].GetStr();
-                    p.StockCode = dataRow.Columns["stock_code"].GetStr();
-                    p.EntrustDirection = dataRow.Columns["entrust_direction"].GetStr();
-                    p.FuturesDirection = dataRow.Columns["futures_direction"].GetStr();
-                    p.RiskNo = dataRow.Columns["risk_no"].GetInt();
-                    p.RiskType = dataRow.Columns["risk_type"].GetInt();
-                    p.RiskSummary = dataRow.Columns["risk_summary"].GetStr();
-                    p.RiskOperation = dataRow.Columns["risk_operation"].GetStr();
-                    p.RemarkShort = dataRow.Columns["remark_short"].GetStr();
-                    p.RiskThresholdValue = dataRow.Columns["risk_threshold_value"].GetDouble();
-                    p.RiskValue = dataRow.Columns["risk_value"].GetDouble();
+                    if (dataRow.Columns.ContainsKey("batch_no"))
+                    {
+                        p.BatchNo = dataRow.Columns["batch_no"].GetInt();
+                    }
+                    if (dataRow.Columns.ContainsKey("entrust_no"))
+                    {
+                        p.EntrustNo = dataRow.Columns["entrust_no"].GetInt();
+                    }
+                    if (dataRow.Columns.ContainsKey("request_order"))
+                    {
+                        p.RequestOrder = dataRow.Columns["request_order"].GetInt();
+                    }
+                    if (dataRow.Columns.ContainsKey("extsystem_id"))
+                    {
+                        p.ExtSystemId = dataRow.Columns["extsystem_id"].GetInt();
+                    }
+                    if (dataRow.Columns.ContainsKey("entrust_fail_code"))
+                    {
+                        p.EntrustFailCode = dataRow.Columns["entrust_fail_code"].GetInt();
+                    }
+                    if (dataRow.Columns.ContainsKey("fail_cause"))
+                    {
+                        p.FailCause = dataRow.Columns["fail_cause"].GetStr();
+                    }
+                    if (dataRow.Columns.ContainsKey("risk_serial_no"))
+                    {
+                        p.RiskSerialNo = dataRow.Columns["risk_serial_no"].GetInt();
+                    }
+                    if (dataRow.Columns.ContainsKey("market_no"))
+                    {
+                        p.MarketNo = dataRow.Columns["market_no"].GetStr();
+                    }
+                    if (dataRow.Columns.ContainsKey("stock_code"))
+                    {
+                        p.StockCode = dataRow.Columns["stock_code"].GetStr();
+                    }
+                    if (dataRow.Columns.ContainsKey("entrust_direction"))
+                    {
+                        p.EntrustDirection = dataRow.Columns["entrust_direction"].GetStr();
+                    }
+                    if (dataRow.Columns.ContainsKey("futures_direction"))
+                    {
+                        p.FuturesDirection = dataRow.Columns["futures_direction"].GetStr();
+                    }
+                    if (dataRow.Columns.ContainsKey("risk_no"))
+                    {
+                        p.RiskNo = dataRow.Columns["risk_no"].GetInt();
+                    }
+                    if (dataRow.Columns.ContainsKey("risk_type"))
+                    {
+                        p.RiskType = dataRow.Columns["risk_type"].GetInt();
+                    }
+                    if (dataRow.Columns.ContainsKey("risk_summary"))
+                    {
+                        p.RiskSummary = dataRow.Columns["risk_summary"].GetStr();
+                    }
+                    if (dataRow.Columns.ContainsKey("risk_operation"))
+                    {
+                        p.RiskOperation = dataRow.Columns["risk_operation"].GetStr();
+                    }
+                    if (dataRow.Columns.ContainsKey("remark_short"))
+                    {
+                        p.RemarkShort = dataRow.Columns["remark_short"].GetStr();
+                    }
+                    if (dataRow.Columns.ContainsKey("risk_threshold_value"))
+                    {
+                        p.RiskThresholdValue = dataRow.Columns["risk_threshold_value"].GetDouble();
+                    }
+                    if (dataRow.Columns.ContainsKey("risk_value"))
+                    {
+                        p.RiskValue = dataRow.Columns["risk_value"].GetDouble();
+                    }
 
-                    if(submitId == -1)
+                    if (submitId == -1)
                     {
                         submitId = p.ExtSystemId;
                     }
