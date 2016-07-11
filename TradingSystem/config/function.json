@@ -1554,11 +1554,7 @@
 			"require": "N"
 		},{
 			"name": "combi_no",
-			"type": "C8",
-			"require": "N"
-		},{
-			"name": "instance_no",
-			"type": "C128",
+			"type": "C16",
 			"require": "N"
 		},{
 			"name": "stockholder_id",
@@ -1566,7 +1562,7 @@
 			"require": "N"
 		},{
 			"name": "report_seat",
-			"type": "C20",
+			"type": "C6",
 			"require": "N"
 		},{
 			"name": "market_no",
@@ -1594,19 +1590,19 @@
 			"require": "Y"
 		},{
 			"name": "entrust_amount",
-			"type": "N16.2",
+			"type": "N12",
 			"require": "Y"
 		},{
 			"name": "limit_entrust_ratio",
 			"type": "N9.6",
 			"require": "N"
 		},{
-			"name": "max_cancel_ratio",
+			"name": "ftr_limit_entrust_ratio",
 			"type": "N9.6",
 			"require": "N"
 		},{
-			"name": "invest_type",
-			"type": "C1",
+			"name": "opt_limit_entrust_ratio",
+			"type": "N9.6",
 			"require": "N"
 		},{
 			"name": "extsystem_id",
@@ -1620,6 +1616,57 @@
 		"response":[{
 			"name": "batch_no",
 			"type": "N8"
+			},{
+			"name": "entrust_no",
+			"type": "N8"
+			},{
+			"name": "request_order",
+			"type": "N8"
+			},{
+			"name": "extsystem_id",
+			"type": "N8"
+			},{
+			"name": "entrust_fail_code",
+			"type": "N8"
+			},{
+			"name": "fail_cause",
+			"type": "C256"
+			},{
+			"name": "risk_serial_no",
+			"type": "N8"
+			},{
+			"name": "market_no",
+			"type": "C3"
+			},{
+			"name": "stock_code",
+			"type": "C16"
+			},{
+			"name": "entrust_direction",
+			"type": "C3"
+			},{
+			"name": "futures_direction",
+			"type": "C1"
+			},{
+			"name": "risk_no",
+			"type": "N8"
+			},{
+			"name": "risk_type",
+			"type": "N8"
+			},{
+			"name": "risk_summary",
+			"type": "C128"
+			},{
+			"name": "risk_operation",
+			"type": "C1"
+			},{
+			"name": "remark_short",
+			"type": "C128"
+			},{
+			"name": "risk_threshold_value",
+			"type": "N16.5"
+			},{
+			"name": "risk_value",
+			"type": "N16.5"
 			}
 		]
 	},

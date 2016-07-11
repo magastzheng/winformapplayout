@@ -1,6 +1,7 @@
 ﻿using Model;
 using Model.strategy;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Config
 {
@@ -165,7 +166,16 @@ namespace Config
             bool isExisted = false;
             foreach (var h in _holders)
             {
-                if (h.StockHolderId == holder.StockHolderId)
+                //if (h.StockHolderId == holder.StockHolderId)
+                //{
+                //    isExisted = true;
+                //    break;
+                //}
+
+                if (h.AccountCode == holder.AccountCode 
+                    && h.AssetNo == holder.AssetNo 
+                    && h.CombiNo == holder.CombiNo
+                    && h.MarketNo == holder.MarketNo)
                 {
                     isExisted = true;
                     break;
@@ -184,6 +194,24 @@ namespace Config
             foreach (var h in _holders)
             {
                 if (h.StockHolderId == holderId)
+                {
+                    holder = h;
+                    break;
+                }
+            }
+
+            return holder;
+        }
+
+        public HolderItem GetHolder(string combiNo, string marketNo)
+        {
+            HolderItem holder = new HolderItem();
+            var ports = _holders.Where(p => p.CombiNo == combiNo).ToList();
+            var markets = ports.Where(p => p.MarketNo == marketNo).ToList();
+
+            foreach (var h in _holders)
+            {
+                if (h.CombiNo == combiNo && h.MarketNo == marketNo)
                 {
                     holder = h;
                     break;

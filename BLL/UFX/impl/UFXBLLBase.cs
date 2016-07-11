@@ -45,7 +45,7 @@ namespace BLL.UFX.impl
             {
                 DataParser parser = new DataParser();
                 parser.Parse(unpacker);
-                //parser.Output();
+                parser.Output();
                 FunctionCode functionCode = (FunctionCode)iFunction;
                 if (_dataHandlerMap.ContainsKey(functionCode))
                 {

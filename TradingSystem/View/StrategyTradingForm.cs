@@ -852,9 +852,10 @@ namespace TradingSystem.View
                 };
 
                 var entrustSecuItems = GetEntrustSecurityItems(-1, eiItem.CommandNo);
-                int sumbitRet = _entrustdao.Submit(eciItem, entrustSecuItems);
+                //int submitRet = _entrustdao.Submit(eciItem, entrustSecuItems);
+                int submitRet = _entrustBLL.SubmitOne(eciItem, entrustSecuItems);
 
-                if (sumbitRet > 0)
+                if (submitRet > 0)
                 {
                     //success to submit into database
                     submitIds.Add(eciItem.SubmitId);
@@ -909,7 +910,7 @@ namespace TradingSystem.View
                     SecuType = secuItem.SecuType,
                     EntrustAmount = secuItem.ThisEntrustAmount,
                     EntrustPrice = secuItem.EntrustPrice,
-                    EntrustDirection = EntrustDirectionUtil.GetEntrustDirection(secuItem.EntrustDirection),
+                    EntrustDirection = secuItem.EDirection,
                     EntrustStatus = EntrustStatus.SubmitToDB,
                     PriceType = priceType,
                     EntrustDate = DateTime.Now,

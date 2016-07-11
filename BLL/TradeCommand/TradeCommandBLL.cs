@@ -15,7 +15,8 @@ namespace BLL.TradeCommand
         private TradingInstanceDAO _tradeinstdao = new TradingInstanceDAO();
         private CommandDAO _commanddao = new CommandDAO();
         private TemplateStockDAO _tempstockdao = new TemplateStockDAO();
-        private TradingInstanceSecurityDAO _tradeinstsecudbo = new TradingInstanceSecurityDAO();
+        private TradingInstanceSecurityDAO _tradeinstsecudao = new TradingInstanceSecurityDAO();
+        private TradingCommandDAO _tradecommandao = new TradingCommandDAO();
 
         private TradeInstanceBLL _instanceBLL = new TradeInstanceBLL();
 
@@ -23,6 +24,7 @@ namespace BLL.TradeCommand
         { 
         }
 
+        #region submit
         public int Submit(TradingCommandItem cmdItem, List<CommandSecurityItem> secuItems)
         {
             cmdItem.SubmitPerson = LoginManager.Instance.LoginUser.Operator;
@@ -112,6 +114,28 @@ namespace BLL.TradeCommand
             return Submit(tccmdItem, cmdSecuItems);
         }
 
+        #endregion
+
+        public List<TradingCommandItem> GetTradeCommandItems()
+        {
+            return _tradecommandao.Get(-1);
+        }
+
+        public TradingCommandItem GetTradeCommandItem(int commandId)
+        {
+            var items = _tradecommandao.Get(commandId);
+            if (items != null && items.Count == 1)
+            {
+                return items[0];
+            }
+            else
+            {
+                return new TradingCommandItem();
+            }
+        }
+
+        #region private
+
         private List<CommandSecurityItem> GetSelectCommandSecurities(ClosePositionItem closePositionItem, List<ClosePositionSecurityItem> closeSecuItems)
         {
             List<CommandSecurityItem> cmdSecuItems = new List<CommandSecurityItem>();
@@ -141,5 +165,7 @@ namespace BLL.TradeCommand
 
             return cmdSecuItems;
         }
+
+        #endregion
     }
 }

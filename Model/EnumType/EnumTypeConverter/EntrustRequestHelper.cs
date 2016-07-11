@@ -17,6 +17,7 @@ namespace Config.ParamConverter
                     marketNo = "2";
                     break;
                 case "CFFEX":
+                    marketNo = "7";
                     break;
                 default:
                     break;

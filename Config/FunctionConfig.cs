@@ -154,17 +154,30 @@ namespace Config
             fieldItem.Width = fieldConfigItem.Width;
             fieldItem.Scale = fieldConfigItem.Scale;
 
-            if (strReg.IsMatch(fieldType))
+            if (fieldConfigItem.Type == "C")
             {
                 fieldItem.Type = PackFieldType.StringType;
+            }
+            else if (fieldConfigItem.Type == "I")
+            {
+                fieldItem.Type = PackFieldType.IntType;
+            }
+            else if (fieldConfigItem.Type == "F")
+            {
+                fieldItem.Type = PackFieldType.FloatType;
+            }
+            else if (strReg.IsMatch(fieldType))
+            {
+                fieldItem.Type = PackFieldType.StringType;
+            }
+            else if (floatReg.IsMatch(fieldType))
+            {
+                //note the order it should be before integer type
+                fieldItem.Type = PackFieldType.FloatType;
             }
             else if (intReg.IsMatch(fieldType))
             {
                 fieldItem.Type = PackFieldType.IntType;
-            }
-            else if (floatReg.IsMatch(fieldType))
-            {
-                fieldItem.Type = PackFieldType.FloatType;
             }
             else
             {

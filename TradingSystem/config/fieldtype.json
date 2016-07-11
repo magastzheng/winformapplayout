@@ -12,6 +12,12 @@
 		"scale": "4"
 	},
 	{
+		"name": "C6",
+		"type": "S",
+		"width": "6",
+		"scale": "4"
+	},
+	{
 		"name": "C8",
 		"type": "S",
 		"width": "8",
@@ -80,6 +86,17 @@
 		"type": "I",
 		"width": "8",
 		"scale": "4"
+	},{
+		"name": "N12",
+		"type": "F",
+		"width": "12",
+		"scale": "4"
+	},
+	{
+		"name": "N9.6",
+		"type": "F",
+		"width": "9",
+		"scale": "6"
 	},
 	{
 		"name": "N11.4",
@@ -94,9 +111,9 @@
 		"scale": "2"
 	},
 	{
-		"name": "N9.6",
+		"name": "N16.5",
 		"type": "F",
-		"width": "9",
-		"scale": "6"
+		"width": "16",
+		"scale": "5"
 	}
 ]

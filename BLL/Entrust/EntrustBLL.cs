@@ -13,6 +13,7 @@ namespace BLL.Entrust
         private EntrustCommandDAO _entrustcmddao = new EntrustCommandDAO();
         private EntrustSecurityDAO _entrustsecudao = new EntrustSecurityDAO();
         private EntrustDAO _entrustdao = new EntrustDAO();
+        private UFXEntrustBLL _ufxEntrustBLL = new UFXEntrustBLL();
        
         public EntrustBLL()
         { 
@@ -53,7 +54,17 @@ namespace BLL.Entrust
 
         public int SubmitOne(EntrustCommandItem cmdItem, List<EntrustSecurityItem> entrustItems)
         {
-            return _entrustdao.Submit(cmdItem, entrustItems);
+            int ret = _entrustdao.Submit(cmdItem, entrustItems);
+            if (ret > 0)
+            {
+                entrustItems.Where(p => p.CommandId == cmdItem.CommandId)
+                    .ToList()
+                    .ForEach(o => o.SubmitId = cmdItem.SubmitId);
+
+                ret = _ufxEntrustBLL.Submit(cmdItem, entrustItems);
+            }
+            
+            return ret;
         }
 
         public int Submit(List<EntrustCommandItem> cmdItems, List<EntrustSecurityItem> entrustItems)
