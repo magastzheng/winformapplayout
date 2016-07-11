@@ -1,4 +1,5 @@
-﻿using hundsun.mcapi;
+﻿using BLL.UFX.impl;
+using hundsun.mcapi;
 using hundsun.t2sdk;
 using System;
 using System.Runtime.InteropServices;
@@ -26,6 +27,10 @@ namespace BLL.UFX
                 CT2UnPacker lpUnpacker = new CT2UnPacker(lpRecvData.lpFilterData, (uint)lpRecvData.iFilterDataLen);
                 //解包
                 //.....
+                DataParser parser = new DataParser();
+                parser.Parse(lpUnpacker);
+                parser.Output();
+
                 lpUnpacker.Dispose();
             }
 
@@ -34,6 +39,10 @@ namespace BLL.UFX
             {
                 //解包
                 //....
+                DataParser parser = new DataParser();
+                parser.Parse(lpUnpacker1);
+                parser.Output();
+
                 lpUnpacker1.Dispose();
             }
 

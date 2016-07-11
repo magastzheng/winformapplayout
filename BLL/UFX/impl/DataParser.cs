@@ -41,54 +41,31 @@ namespace BLL.UFX.impl
                     for (int t = 0; t < lpUnPack.GetColCount(); t++)
                     {
                         string colName = columnDic[t];
+                        DataValue dataValue = new DataValue();
                         switch (lpUnPack.GetColType(t))
                         {
                             case (sbyte)'I':  //I 整数
                                 {
-                                    DataValue dataValue = new DataValue 
-                                    {
-                                        Type = DataValueType.Int,
-                                        Value = lpUnPack.GetIntByIndex(t)
-                                    };
-
-
-                                    row.Columns.Add(colName, dataValue);
+                                    dataValue.Type = DataValueType.Int;
+                                    dataValue.Value = lpUnPack.GetIntByIndex(t);
                                 }
                                 break;
                             case (sbyte)'C':  //C 
                                 {
-                                    DataValue dataValue = new DataValue
-                                    {
-                                        Type = DataValueType.Char,
-                                        Value = lpUnPack.GetCharByIndex(t)
-                                    };
-
-
-                                    row.Columns.Add(colName, dataValue);
+                                   dataValue.Type = DataValueType.Char;
+                                   dataValue.Value = lpUnPack.GetCharByIndex(t);
                                 }
                                 break;
                             case (sbyte)'S':   //S
                                 {
-                                    DataValue dataValue = new DataValue
-                                    {
-                                        Type = DataValueType.String,
-                                        Value = lpUnPack.GetStrByIndex(t)
-                                    };
-
-
-                                    row.Columns.Add(colName, dataValue);
+                                    dataValue.Type = DataValueType.String;
+                                    dataValue.Value = lpUnPack.GetStrByIndex(t);
                                 }
                                 break;
                             case (sbyte)'F':  //F
                                 {
-                                    DataValue dataValue = new DataValue
-                                    {
-                                        Type = DataValueType.Float,
-                                        Value = lpUnPack.GetDoubleByIndex(t)
-                                    };
-
-
-                                    row.Columns.Add(colName, dataValue);
+                                    dataValue.Type = DataValueType.Float;
+                                    dataValue.Value = lpUnPack.GetDoubleByIndex(t);
                                 }
                                 break;
                             case (sbyte)'R':  //R
@@ -98,6 +75,11 @@ namespace BLL.UFX.impl
                             default:
                                 // 未知数据类型
                                 break;
+                        }
+
+                        if (!row.Columns.ContainsKey(colName))
+                        {
+                            row.Columns.Add(colName, dataValue);
                         }
                     }//end to read all column for each row
 
