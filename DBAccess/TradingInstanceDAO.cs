@@ -13,6 +13,7 @@ namespace DBAccess
         private const string SP_Get = "procTradingInstanceSelect";
         private const string SP_GetByCode = "procTradingInstanceSelectByCode";
         private const string SP_GetCombine = "procTradingInstanceSelectCombine";
+        private const string SP_GetCombineByCode = "procTradingInstanceSelectCombineByCode";
         private const string SP_Exist = "procTradingInstanceExist";
 
         public TradingInstanceDAO()
@@ -232,6 +233,54 @@ namespace DBAccess
             _dbHelper.Close(dbCommand.Connection);
 
             return items;
+        }
+
+        public TradingInstance GetCombineByCode(string instanceCode)
+        {
+            
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCombineByCode);
+            _dbHelper.AddInParameter(dbCommand, "@InstanceCode", System.Data.DbType.String, instanceCode);
+
+            TradingInstance item = new TradingInstance();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    item.InstanceId = (int)reader["InstanceId"];
+                    item.InstanceCode = (string)reader["InstanceCode"];
+                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
+                    item.StockDirection = (EntrustDirection)(int)reader["StockDirection"];
+                    item.FuturesContract = (string)reader["FuturesContract"];
+                    item.FuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
+                    item.OperationCopies = (int)reader["OperationCopies"];
+                    item.StockPriceType = (StockPriceType)reader["StockPriceType"];
+                    item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
+                    item.Status = (int)reader["Status"];
+                    item.Owner = (string)reader["Owner"];
+                    item.MonitorUnitName = (string)reader["MonitorUnitName"];
+                    item.TemplateId = (int)reader["TemplateId"];
+                    item.TemplateName = (string)reader["TemplateName"];
+                    item.PortfolioId = (int)reader["PortfolioId"];
+                    item.PortfolioCode = (string)reader["PortfolioCode"];
+                    item.PortfolioName = (string)reader["PortfolioName"];
+
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+                    {
+                        item.CreatedDate = (DateTime)reader["CreatedDate"];
+                    }
+
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+                    {
+                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+                    }
+                }
+            }
+
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return item;
         }
 
         public int Exist(string instanceCode)

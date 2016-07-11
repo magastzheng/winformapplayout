@@ -26,12 +26,9 @@ namespace TradingSystem.View
         private MonitorUnitDAO _monitordbdao = new MonitorUnitDAO();
         private TemplateStockDAO _stockdbdao = new TemplateStockDAO();
         private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
-        private TradingInstanceDAO _tradeinstdao = new TradingInstanceDAO();
-        private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
 
         private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
         private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
-
 
         private SortableBindingList<OpenPositionItem> _monitorDataSource;
         private SortableBindingList<OpenPositionSecurityItem> _securityDataSource;
@@ -314,7 +311,8 @@ namespace TradingSystem.View
                             string instanceCode = string.Format("{0}-{1}-{2}", openItem.PortfolioId, openItem.TemplateId, DateTime.Now.ToString("yyyyMMdd"));
 
                             int instanceId = -1;
-                            var instance = _tradeinstdao.Get(instanceCode);
+                            //var instance = _tradeinstdao.Get(instanceCode);
+                            var instance = _tradeInstanceBLL.GetInstance(instanceCode);
                             if (instance != null && !string.IsNullOrEmpty(instance.InstanceCode) && instance.InstanceCode.Equals(instanceCode))
                             {
                                 instanceId = instance.InstanceId;

@@ -174,6 +174,51 @@ begin
 end
 
 go
+if exists (select name from sysobjects where name='procTradingInstanceSelectByCode')
+drop proc procTradingInstanceSelectByCode
+
+go
+create proc procTradingInstanceSelectByCode(
+	@InstanceCode varchar(20)
+)
+as
+begin
+	select 
+		InstanceId			
+		,InstanceCode		
+		,MonitorUnitId		
+		,StockDirection		
+		,FuturesContract	
+		,FuturesDirection	
+		,OperationCopies	
+		,StockPriceType		
+		,FuturesPriceType	
+		,Status				
+		,Owner				
+		,CreatedDate		
+		,ModifiedDate		
+	from tradinginstance
+	where InstanceCode=@InstanceCode
+end
+
+go
+if exists (select name from sysobjects where name='procTradingInstanceExist')
+drop proc procTradingInstanceExist
+
+go
+create proc procTradingInstanceExist(
+	@InstanceCode varchar(20)
+)
+as
+begin
+	declare @total int
+	set @total = (select count(InstanceId)		
+					from tradinginstance
+					where InstanceCode=@InstanceCode)
+	return @total
+end
+
+go
 if exists (select name from sysobjects where name='procTradingInstanceSelectCombine')
 drop proc procTradingInstanceSelectCombine
 
@@ -247,46 +292,41 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procTradingInstanceSelectByCode')
-drop proc procTradingInstanceSelectByCode
+if exists (select name from sysobjects where name='procTradingInstanceSelectCombineByCode')
+drop proc procTradingInstanceSelectCombineByCode
 
 go
-create proc procTradingInstanceSelectByCode(
+create proc procTradingInstanceSelectCombineByCode(
 	@InstanceCode varchar(20)
 )
 as
 begin
-	select 
-		InstanceId			
-		,InstanceCode		
-		,MonitorUnitId		
-		,StockDirection		
-		,FuturesContract	
-		,FuturesDirection	
-		,OperationCopies	
-		,StockPriceType		
-		,FuturesPriceType	
-		,Status				
-		,Owner				
-		,CreatedDate		
-		,ModifiedDate		
-	from tradinginstance
-	where InstanceCode=@InstanceCode
-end
-
-go
-if exists (select name from sysobjects where name='procTradingInstanceExist')
-drop proc procTradingInstanceExist
-
-go
-create proc procTradingInstanceExist(
-	@InstanceCode varchar(20)
-)
-as
-begin
-	declare @total int
-	set @total = (select count(InstanceId)		
-					from tradinginstance
-					where InstanceCode=@InstanceCode)
-	return @total
+	select
+			a.InstanceId			
+			,a.InstanceCode		
+			,a.MonitorUnitId		
+			,a.StockDirection		
+			,a.FuturesContract	
+			,a.FuturesDirection	
+			,a.OperationCopies	
+			,a.StockPriceType		
+			,a.FuturesPriceType	
+			,a.Status
+			,a.Owner				
+			,a.CreatedDate		
+			,a.ModifiedDate	
+			,b.MonitorUnitName	
+			,c.TemplateId
+			,c.TemplateName
+			,d.PortfolioId
+			,d.PortfolioCode
+			,d.PortfolioName
+		from tradinginstance a
+		inner join monitorunit b
+		on a.MonitorUnitId = b.MonitorUnitId
+		inner join stocktemplate c
+		on b.StockTemplateId = c.TemplateId
+		inner join ufxportfolio d
+		on b.PortfolioId=d.PortfolioId
+		where a.InstanceCode=@InstanceCode
 end

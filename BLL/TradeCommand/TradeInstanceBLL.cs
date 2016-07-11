@@ -58,6 +58,12 @@ namespace BLL.TradeCommand
             }
         }
 
+        public TradingInstance GetInstance(string instanceCode)
+        {
+            var instance = _tradeinstdao.GetCombineByCode(instanceCode);
+            return instance;
+        }
+
         #region
 
         private List<TradingInstanceSecurity> GetTradingInstanceSecurities(TradingInstance tradingInstance, OpenPositionItem openItem, List<OpenPositionSecurityItem> secuItems)
