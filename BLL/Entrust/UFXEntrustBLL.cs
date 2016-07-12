@@ -54,8 +54,8 @@ namespace BLL.Entrust
                     EntrustPrice = secuItem.EntrustPrice,
                     EntrustAmount = secuItem.EntrustAmount,
                     PriceType = EntrustRequestHelper.GetEntrustPriceType(secuItem.EntrustPriceType),
-                    ExtSystemId = secuItem.SubmitId,
-                    ThirdReff = string.Format("{0};{1}", secuItem.CommandId, secuItem.SubmitId),
+                    ExtSystemId = secuItem.RequestId,
+                    ThirdReff = string.Format("{0};{1};{2}", secuItem.CommandId, secuItem.SubmitId, secuItem.RequestId),
                     LimitEntrustRatio = 100,
                     FutuLimitEntrustRatio = 100,
                     OptLimitEntrustRatio = 100,
@@ -124,15 +124,21 @@ namespace BLL.Entrust
                 //update the status
                 foreach (var responseItem in responsedItems)
                 {
-                    var entrustItem = entrustItems.Find(p => p.Equals(responseItem.StockCode));
+                    var entrustItem = cmdEntrustItems.Find(p => p.RequestId == responseItem.ExtSystemId);
                     if (entrustItem == null)
                     {
                         entrustItem = new EntrustSecurityItem
                         {
                             SubmitId = cmdItem.SubmitId,
                             CommandId = cmdItem.CommandId,
+                            RequestId = responseItem.ExtSystemId,
                             SecuCode = responseItem.StockCode,
+                            EntrustNo = responseItem.EntrustNo,
                         };
+                    }
+                    else
+                    {
+                        entrustItem.EntrustNo = responseItem.EntrustNo;
                     }
                     
                     entrustSecuItems.Add(entrustItem);
@@ -140,7 +146,7 @@ namespace BLL.Entrust
 
                 if (entrustSecuItems.Count > 0)
                 {
-                    ret = _entrustdao.UpdateSecurityEntrustStatus(entrustSecuItems, Model.EnumType.EntrustStatus.Completed);
+                    ret = _entrustdao.UpdateSecurityEntrustNoByRequestId(entrustSecuItems);
 
                     if (entrustSecuItems.Count == cmdEntrustItems.Count)
                     {

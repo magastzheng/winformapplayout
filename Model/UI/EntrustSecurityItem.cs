@@ -12,6 +12,8 @@ namespace Model.UI
 {
     public class EntrustSecurityItem
     {
+        public int RequestId { get; set; }
+
         public int SubmitId { get; set; }
 
         public int CommandId { get; set; }

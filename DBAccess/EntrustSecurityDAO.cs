@@ -12,8 +12,11 @@ namespace DBAccess
         private const string SP_Modify = "procEntrustSecurityUpdate";
         private const string SP_ModifyEntrustStatus = "procEntrustSecurityUpdateEntrustStatus";
         private const string SP_ModifyEntrustNo = "procEntrustSecurityUpdateEntrustNo";
+        private const string SP_ModifyEntrustNoByRequestId = "procEntrustSecurityUpdateEntrustNoByRequestId";
         private const string SP_ModifyEntrustStatusBySubmitId = "procEntrustSecurityUpdateEntrustStatusBySubmitId";
+        private const string SP_ModifyEntrustStatusByRequestId = "procEntrustSecurityUpdateEntrustStatusByRequestId";
         private const string SP_ModifyDeal = "procEntrustSecurityUpdateDeal";
+        private const string SP_ModifyDealByRequestId = "procEntrustSecurityUpdateDealByRequestId";
         private const string SP_ModifyCancel = "procEntrustSecurityUpdateCancel";
         private const string SP_Delete = "procEntrustSecurityDelete";
         private const string SP_DeleteBySubmitId = "procEntrustSecurityDeleteBySubmitId";
@@ -58,7 +61,15 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@EntrustDate", System.Data.DbType.DateTime, item.EntrustDate);
             _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, DateTime.Now);
             
-            return _dbHelper.ExecuteNonQuery(dbCommand);
+            int ret = _dbHelper.ExecuteNonQuery(dbCommand);
+
+            int requestId = -1;
+            if (ret > 0)
+            {
+                requestId = (int)dbCommand.Parameters["@return"].Value;
+            }
+
+            return requestId;
         }
 
         public int Update(EntrustSecurityItem item)
@@ -92,13 +103,25 @@ namespace DBAccess
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public int UpdateEntrustNo(EntrustSecurityItem item)
+        public int UpdateEntrustNo(int submitId, int commandId, string secuCode, int entrustNo)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustStatus);
-            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, item.SubmitId);
-            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, item.CommandId);
-            _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, item.SecuCode);
-            _dbHelper.AddInParameter(dbCommand, "@EntrustNo", System.Data.DbType.Int32, item.EntrustNo);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustNo);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+            _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, secuCode);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustNo", System.Data.DbType.Int32, entrustNo);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+
+            
+        }
+
+        public int UpdateEntrustNoByRequestId(int requestId, int entrustNo)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustNoByRequestId);
+            _dbHelper.AddInParameter(dbCommand, "@RequestId", System.Data.DbType.Int32, requestId);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustNo", System.Data.DbType.Int32, entrustNo);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
@@ -114,6 +137,16 @@ namespace DBAccess
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
+        public int UpdateEntrustStatusByRequestId(int requestId, EntrustStatus entrustStatus)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustStatusByRequestId);
+            _dbHelper.AddInParameter(dbCommand, "@RequestId", System.Data.DbType.Int32, requestId);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)entrustStatus);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
         public int UpdateDeal(EntrustSecurityItem item)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustStatus);
@@ -122,6 +155,17 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, item.SecuCode);
             _dbHelper.AddInParameter(dbCommand, "@DealStatus", System.Data.DbType.Int32, (int)item.DealStatus);
             _dbHelper.AddInParameter(dbCommand, "@DealAmount", System.Data.DbType.Int32, item.DealAmount);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int UpdateDealByRequestId(int requestId, int dealAmount)
+        {
+
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyDealByRequestId);
+            _dbHelper.AddInParameter(dbCommand, "@RequestId", System.Data.DbType.Int32, requestId);
+            _dbHelper.AddInParameter(dbCommand, "@DealAmount", System.Data.DbType.Int32, dealAmount);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
@@ -184,6 +228,7 @@ namespace DBAccess
                 while (reader.Read())
                 {
                     EntrustSecurityItem item = new EntrustSecurityItem();
+                    item.RequestId = (int)reader["RequestId"];
                     item.SubmitId = (int)reader["SubmitId"];
                     item.CommandId = (int)reader["CommandId"];
                     item.SecuCode = (string)reader["SecuCode"];
@@ -234,6 +279,7 @@ namespace DBAccess
                 while (reader.Read())
                 {
                     EntrustSecurityItem item = new EntrustSecurityItem();
+                    item.RequestId = (int)reader["RequestId"];
                     item.SubmitId = (int)reader["SubmitId"];
                     item.CommandId = (int)reader["CommandId"];
                     item.SecuCode = (string)reader["SecuCode"];
@@ -284,6 +330,7 @@ namespace DBAccess
                 while (reader.Read())
                 {
                     EntrustSecurityItem item = new EntrustSecurityItem();
+                    item.RequestId = (int)reader["RequestId"];
                     item.SubmitId = (int)reader["SubmitId"];
                     item.CommandId = (int)reader["CommandId"];
                     item.SecuCode = (string)reader["SecuCode"];
@@ -336,6 +383,7 @@ namespace DBAccess
                 while (reader.Read())
                 {
                     EntrustSecurityItem item = new EntrustSecurityItem();
+                    item.RequestId = (int)reader["RequestId"];
                     item.SubmitId = (int)reader["SubmitId"];
                     item.CommandId = (int)reader["CommandId"];
                     item.SecuCode = (string)reader["SecuCode"];
@@ -386,6 +434,7 @@ namespace DBAccess
                 while (reader.Read())
                 {
                     EntrustSecurityItem item = new EntrustSecurityItem();
+                    item.RequestId = (int)reader["RequestId"];
                     item.SubmitId = (int)reader["SubmitId"];
                     item.CommandId = (int)reader["CommandId"];
                     item.SecuCode = (string)reader["SecuCode"];
@@ -436,6 +485,7 @@ namespace DBAccess
                 while (reader.Read())
                 {
                     EntrustSecurityItem item = new EntrustSecurityItem();
+                    item.RequestId = (int)reader["RequestId"];
                     item.SubmitId = (int)reader["SubmitId"];
                     item.CommandId = (int)reader["CommandId"];
                     item.SecuCode = (string)reader["SecuCode"];
@@ -487,6 +537,7 @@ namespace DBAccess
                 while (reader.Read())
                 {
                     EntrustSecurityCombineItem item = new EntrustSecurityCombineItem();
+                    item.RequestId = (int)reader["RequestId"];
                     item.SubmitId = (int)reader["SubmitId"];
                     item.CommandId = (int)reader["CommandId"];
                     item.SecuCode = (string)reader["SecuCode"];

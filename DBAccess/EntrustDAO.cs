@@ -16,6 +16,7 @@ namespace DBAccess
         private const string SP_ModifyEntrustCommandStatus = "procEntrustCommandUpdateEntrustStatus";
         private const string SP_ModifyEntrustSecurityStatusBySubmitId = "procEntrustSecurityUpdateEntrustStatusBySubmitId";
         private const string SP_ModifySecurityEntrustStatus = "procEntrustSecurityUpdateEntrustStatus";
+        private const string SP_ModifySecurityEntrustNoByRequestId = "procEntrustSecurityUpdateEntrustNoByRequestId";
 
         public EntrustDAO()
             : base()
@@ -80,6 +81,11 @@ namespace DBAccess
 
                         //string newid = string.Empty;
                         ret = dbCommand.ExecuteNonQuery();
+                        if (ret > 0)
+                        {
+                            int requetId = (int)dbCommand.Parameters["@return"].Value;
+                            entrustItem.RequestId = requetId;
+                        }
                     }
                 }
 
@@ -188,6 +194,50 @@ namespace DBAccess
                     _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, item.CommandId);
                     _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, item.SecuCode);
                     _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)entrustStatus);
+                    _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, now);
+
+                    ret = dbCommand.ExecuteNonQuery();
+                }
+
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                //TODO: add log
+                logger.Error(ex);
+                ret = -1;
+                throw;
+            }
+            finally
+            {
+                _dbHelper.Close(dbCommand.Connection);
+                transaction.Dispose();
+            }
+
+            return ret;
+        }
+
+        public int UpdateSecurityEntrustNoByRequestId(List<EntrustSecurityItem> entrustItems)
+        {
+            var dbCommand = _dbHelper.GetCommand();
+            _dbHelper.Open(dbCommand);
+
+            //use transaction to execute
+            DbTransaction transaction = dbCommand.Connection.BeginTransaction();
+            dbCommand.Transaction = transaction;
+            dbCommand.CommandType = System.Data.CommandType.StoredProcedure;
+            int ret = -1;
+            try
+            {
+                DateTime now = DateTime.Now;
+                foreach (var item in entrustItems)
+                {
+                    dbCommand.Parameters.Clear();
+                    dbCommand.CommandText = SP_ModifySecurityEntrustNoByRequestId;
+
+                    _dbHelper.AddInParameter(dbCommand, "@RequestId", System.Data.DbType.Int32, item.RequestId);
+                    _dbHelper.AddInParameter(dbCommand, "@EntrustNo", System.Data.DbType.Int32, item.EntrustNo);
                     _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, now);
 
                     ret = dbCommand.ExecuteNonQuery();

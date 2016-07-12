@@ -5,7 +5,8 @@ if object_id('entrustsecurity') is not null
 drop table entrustsecurity
 
 create table entrustsecurity(
-	SubmitId			int not null
+	RequestId			int identity(1, 1) primary key
+	,SubmitId			int not null
 	,CommandId			int not null
 	,SecuCode			varchar(10) not null
 	,SecuType			int
@@ -49,6 +50,8 @@ create proc procEntrustSecurityInsert(
 )
 as
 begin
+	declare @newid int
+
 	insert into entrustsecurity(
 		SubmitId
 		,CommandId			
@@ -83,7 +86,10 @@ begin
 		,0					--成交次数0
 		,@EntrustDate
 		,@CreatedDate	
-	)		
+	)	
+	
+	set @newid = SCOPE_IDENTITY()
+	return @newid	
 end
 
 go
@@ -168,6 +174,24 @@ begin
 		and SecuCode=@SecuCode
 end
 
+go
+if exists (select name from sysobjects where name='procEntrustSecurityUpdateEntrustNoByRequestId')
+drop proc procEntrustSecurityUpdateEntrustNoByRequestId
+
+go
+create proc procEntrustSecurityUpdateEntrustNoByRequestId(
+	@RequestId			int
+	,@EntrustNo			int
+	,@ModifiedDate		datetime
+)
+as
+begin
+	update entrustsecurity
+	set EntrustNo			= @EntrustNo
+		,EntrustStatus		= 4				--委托成功
+		,ModifiedDate		= @ModifiedDate
+	where RequestId=@RequestId
+end
 
 go
 if exists (select name from sysobjects where name='procEntrustSecurityUpdateEntrustStatusBySubmitId')
@@ -188,6 +212,24 @@ begin
 end
 
 go
+if exists (select name from sysobjects where name='procEntrustSecurityUpdateEntrustStatusByRequestId')
+drop proc procEntrustSecurityUpdateEntrustStatusByRequestId
+
+go
+create proc procEntrustSecurityUpdateEntrustStatusByRequestId(
+	@RequestId		int
+	,@EntrustStatus		int
+	,@ModifiedDate		datetime
+)
+as
+begin
+	update entrustsecurity
+	set EntrustStatus		= @EntrustStatus
+		,ModifiedDate		= @ModifiedDate
+	where RequestId=@RequestId
+end
+
+go
 if exists (select name from sysobjects where name='procEntrustSecurityUpdateDeal')
 drop proc procEntrustSecurityUpdateDeal
 
@@ -196,29 +238,89 @@ create proc procEntrustSecurityUpdateDeal(
 	@SubmitId			int
 	,@CommandId			int
 	,@SecuCode			varchar(10)
-	,@DealStatus		int
 	,@DealAmount		int
 	,@ModifiedDate		datetime
 )
 as
 begin
 	--成交量?
-	declare @DealTimes int
-	set @DealTimes=(select DealTimes 
-					from entrustsecurity
-					where SubmitId=@SubmitId
-					and CommandId=@CommandId 
-					and SecuCode=@SecuCode
-					)
+	declare @TotalTimes int
+	declare @TotalAmount int
+	declare @EntrustAmount int
+	declare @DealStatus int
+	
+	select @TotalTimes=DealTimes
+		,@TotalAmount=DealAmount 
+		,@EntrustAmount=EntrustAmount
+	from entrustsecurity 
+	where SubmitId=@SubmitId
+		and CommandId=@CommandId 
+		and SecuCode=@SecuCode
+
+	set @TotalTimes=@TotalTimes+1
+	set @TotalAmount=@TotalAmount+@DealAmount
+
+	if @TotalAmount=@EntrustAmount
+	begin
+		set @DealStatus=3 --已完成
+	end
+	else
+	begin
+		set @DealStatus=2 --部分完成
+	end
 
 	update entrustsecurity
 	set DealStatus		= @DealStatus
-		,DealAmount		= @DealAmount
-		,DealTimes		= @DealTimes+1
+		,DealAmount		= @TotalAmount
+		,DealTimes		= @TotalTimes
 		,ModifiedDate	= @ModifiedDate
 	where SubmitId=@SubmitId
 		and CommandId=@CommandId 
 		and SecuCode=@SecuCode
+end
+
+go
+if exists (select name from sysobjects where name='procEntrustSecurityUpdateDealByRequestId')
+drop proc procEntrustSecurityUpdateDealByRequestId
+
+go
+create proc procEntrustSecurityUpdateDealByRequestId(
+	@RequestId		int
+	,@DealAmount		int
+	,@ModifiedDate		datetime
+)
+as
+begin
+	--成交量?
+	declare @TotalTimes int
+	declare @TotalAmount int
+	declare @EntrustAmount int
+	declare @DealStatus int
+
+	select @TotalTimes=DealTimes
+		,@TotalAmount=DealAmount 
+		,@EntrustAmount=EntrustAmount
+	from entrustsecurity 
+	where RequestId=@RequestId
+	
+	set @TotalTimes=@TotalTimes+1
+	set @TotalAmount=@TotalAmount+@DealAmount
+
+	if @TotalAmount=@EntrustAmount
+	begin
+		set @DealStatus=3 --已完成
+	end
+	else
+	begin
+		set @DealStatus=2 --部分完成
+	end
+
+	update entrustsecurity
+	set DealStatus		= @DealStatus
+		,DealAmount		= @TotalAmount
+		,DealTimes		= @TotalTimes
+		,ModifiedDate	= @ModifiedDate
+	where RequestId=@RequestId
 end
 
 go
@@ -317,7 +419,8 @@ create proc procEntrustSecuritySelectBySubmitId(
 )
 as
 begin
-	select SubmitId 
+	select RequestId 
+		,SubmitId 
 		,CommandId			
 		,SecuCode			
 		,SecuType			
@@ -348,7 +451,8 @@ create proc procEntrustSecuritySelectByCommandId(
 )
 as
 begin
-	select SubmitId 
+	select RequestId
+		,SubmitId 
 		,CommandId			
 		,SecuCode			
 		,SecuType			
@@ -377,7 +481,8 @@ go
 create proc procEntrustSecuritySelectAll
 as
 begin
-	select SubmitId 
+	select RequestId
+		,SubmitId 
 		,CommandId			
 		,SecuCode			
 		,SecuType			
@@ -409,7 +514,8 @@ create proc procEntrustSecuritySelectByEntrustStatus(
 )
 as
 begin
-	select SubmitId 
+	select RequestId
+		,SubmitId 
 		,CommandId			
 		,SecuCode			
 		,SecuType			
@@ -442,7 +548,8 @@ create proc procEntrustSecuritySelectAllByEntrustStatus(
 )
 as
 begin
-	select SubmitId 
+	select RequestId
+		,SubmitId 
 		,CommandId			
 		,SecuCode			
 		,SecuType			
@@ -473,7 +580,8 @@ create proc procEntrustSecuritySelectCancel(
 )
 as
 begin
-	select SubmitId 
+	select RequestId
+		,SubmitId 
 		,CommandId			
 		,SecuCode			
 		,SecuType			
@@ -508,7 +616,8 @@ create proc procEntrustSecuritySelectCancelRedo(
 )
 as
 begin
-	select SubmitId 
+	select RequestId
+		,SubmitId 
 		,CommandId			
 		,SecuCode			
 		,SecuType			
@@ -540,7 +649,8 @@ go
 create proc procEntrustSecuritySelectEntrustFlow
 as
 begin
-	select SubmitId 
+	select RequestId
+		,SubmitId 
 		,CommandId			
 		,SecuCode			
 		,SecuType			
@@ -576,7 +686,8 @@ go
 create proc procEntrustSecuritySelectDealFlow
 as
 begin
-	select SubmitId 
+	select RequestId
+		,SubmitId 
 		,CommandId			
 		,SecuCode			
 		,SecuType			
@@ -606,7 +717,8 @@ go
 create proc procEntrustSecuritySelectAllCombine
 as
 begin
-	select a.SubmitId 
+	select a.RequestId
+		,a.SubmitId 
 		,a.CommandId			
 		,a.SecuCode			
 		,a.SecuType			
