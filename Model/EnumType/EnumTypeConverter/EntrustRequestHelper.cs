@@ -51,6 +51,32 @@ namespace Config.ParamConverter
             return direction;
         }
 
+        public static string GetFuturesDirection(EntrustDirection eDirection)
+        {
+            string direction = string.Empty;
+
+            switch (eDirection)
+            {
+                case EntrustDirection.SellOpen:
+                    {
+                        //平仓
+                        direction = "1";
+                    }
+                    break;
+                case EntrustDirection.BuyClose:
+                    {
+                        //开仓
+                        direction = "2";
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            return direction;
+        }
+
+
         public static string GetEntrustPriceType(EntrustPriceType eEntrustPriceType)
         {
             string entrustpricetype = string.Empty;

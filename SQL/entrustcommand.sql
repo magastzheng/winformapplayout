@@ -76,6 +76,25 @@ begin
 	where SubmitId=@SubmitId
 end
 
+go
+if exists (select name from sysobjects where name='procEntrustCommandUpdateBatchNo')
+drop proc procEntrustCommandUpdateBatchNo
+
+go
+create proc procEntrustCommandUpdateBatchNo(
+	@SubmitId		int
+	,@BatchNo		int
+	,@EntrustStatus	int
+	,@ModifiedDate	datetime
+)
+as
+begin
+	update entrustcommand
+	set BatchNo		= @BatchNo
+		,EntrustStatus	= @EntrustStatus
+		,ModifiedDate	= @ModifiedDate
+	where SubmitId=@SubmitId
+end
 
 go
 if exists (select name from sysobjects where name='procEntrustCommandUpdateDealStatus')

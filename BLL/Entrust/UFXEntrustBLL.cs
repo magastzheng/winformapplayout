@@ -4,6 +4,7 @@ using BLL.UFX.impl;
 using Config;
 using Config.ParamConverter;
 using DBAccess;
+using log4net;
 using Model.strategy;
 using Model.UI;
 using System;
@@ -17,6 +18,8 @@ namespace BLL.Entrust
 {
     public class UFXEntrustBLL
     {
+        private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private SecurityBLL _securityBLL = null;
         private TradeCommandBLL _tradeCommandBLL = null;
         private EntrustDAO _entrustdao = new EntrustDAO();
@@ -24,6 +27,8 @@ namespace BLL.Entrust
 
         private AutoResetEvent _waitEvent = new AutoResetEvent(false);
         private Dictionary<int, List<UFXBasketEntrustResponse>> _responseMap = new Dictionary<int, List<UFXBasketEntrustResponse>>();
+
+        private int _timeOut = 10 * 1000;
 
         public UFXEntrustBLL()
         {
@@ -64,13 +69,14 @@ namespace BLL.Entrust
                 if (secuItem.SecuType == Model.SecurityInfo.SecurityType.Stock)
                 {
                     request.EntrustDirection = EntrustRequestHelper.GetEntrustDirection(secuItem.EntrustDirection);
+                    request.FuturesDirection = string.Empty;
                 }
                 else if (secuItem.SecuType == Model.SecurityInfo.SecurityType.Futures)
                 {
-                    request.FuturesDirection = EntrustRequestHelper.GetEntrustDirection(secuItem.EntrustDirection);
+                    request.EntrustDirection = EntrustRequestHelper.GetEntrustDirection(secuItem.EntrustDirection);
+                    request.FuturesDirection = EntrustRequestHelper.GetFuturesDirection(secuItem.EntrustDirection);
                 }
 
-                request.FuturesDirection = string.Empty;
                 var secuInfo = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
                 if (secuInfo != null)
                 {
@@ -81,7 +87,6 @@ namespace BLL.Entrust
                 {
                     request.AccountCode = tradeCommandItem.FundCode;
                     request.CombiNo = tradeCommandItem.PortfolioCode;
-                    //request.StockHolderId = tradeCommandItem
                 }
 
                 //if (portfolio != null)
@@ -96,24 +101,28 @@ namespace BLL.Entrust
                 //}
 
                 //TODO: fix the futures cannot entrust
-                if (secuItem.SecuType == Model.SecurityInfo.SecurityType.Stock)
-                {
+                //if (secuItem.SecuType == Model.SecurityInfo.SecurityType.Futures)
+                //{
                     ufxRequests.Add(request);
-                }
+                //}
             }
 
+            Callbacker callbacker = new Callbacker
+            {
+                TokenId = cmdItem.SubmitId,
+                Callback = EntrustBasketCallback,
+            };
             //call ufx
-            var result = _securityBLL.EntrustBasket(ufxRequests, new DataHandlerCallback(EntrustBasketCallback));
-            //
-            _waitEvent.WaitOne();
+            var result = _securityBLL.EntrustBasket(ufxRequests, callbacker);
+            
+            //Wait for the UFX
+            _waitEvent.WaitOne(_timeOut);
             
             List<UFXBasketEntrustResponse> responsedItems = null;
             lock (_responseMap)
             {
                 if (_responseMap.ContainsKey(cmdItem.SubmitId) && _responseMap[cmdItem.SubmitId].Count > 0)
                 {
-                    //ret = _responseMap[cmdItem.SubmitId].Count;
-
                     responsedItems = _responseMap[cmdItem.SubmitId];
                 }
             }
@@ -148,9 +157,25 @@ namespace BLL.Entrust
                 {
                     ret = _entrustdao.UpdateSecurityEntrustNoByRequestId(entrustSecuItems);
 
-                    if (entrustSecuItems.Count == cmdEntrustItems.Count)
+                    var batchNos = responsedItems.Select(p => p.BatchNo).Distinct().ToList();
+                    if (batchNos.Count == 1)
                     {
-                        ret = _entrustcmddao.UpdateEntrustCommandStatus(cmdItem.SubmitId, Model.EnumType.EntrustStatus.Completed);
+                        int batchNo = batchNos[0];
+
+                        if (entrustSecuItems.Count == cmdEntrustItems.Count)
+                        {
+                            ret = _entrustcmddao.UpdateEntrustCommandBatchNo(cmdItem.SubmitId, batchNo, Model.EnumType.EntrustStatus.Completed);
+                        }
+                        else
+                        {
+                            ret = _entrustcmddao.UpdateEntrustCommandBatchNo(cmdItem.SubmitId, batchNo, Model.EnumType.EntrustStatus.PartExecuted);
+                        }
+                    }
+                    else
+                    {
+                        //TODO:
+                        string msg = string.Format("The SubmitId [] was split into several batch no", cmdItem.SubmitId);
+                        logger.Warn(msg);
                     }
                 }
             }
@@ -158,10 +183,9 @@ namespace BLL.Entrust
             return ret;
         }
 
-        private void EntrustBasketCallback(DataParser dataParser)
+        private int EntrustBasketCallback(int tokenId, DataParser dataParser)
         {
             List<UFXBasketEntrustResponse> responseItems = new List<UFXBasketEntrustResponse>();
-            int submitId = -1;
             for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
             {
                 var dataSet = dataParser.DataSets[i];
@@ -241,33 +265,33 @@ namespace BLL.Entrust
                         p.RiskValue = dataRow.Columns["risk_value"].GetDouble();
                     }
 
-                    if (submitId == -1)
-                    {
-                        submitId = p.ExtSystemId;
-                    }
-
                     responseItems.Add(p);
                 }
                 break;
             }
 
-            if(submitId > 0)
+            int ret = -1;
+            if (tokenId > 0)
             {
                 lock (_responseMap)
                 {
-                    if (_responseMap.ContainsKey(submitId))
+                    if (_responseMap.ContainsKey(tokenId))
                     {
-                        _responseMap[submitId].Clear();
-                        _responseMap[submitId].AddRange(responseItems);
+                        _responseMap[tokenId].Clear();
+                        _responseMap[tokenId].AddRange(responseItems);
                     }
                     else
                     {
-                        _responseMap[submitId] = responseItems;
+                        _responseMap[tokenId] = responseItems;
                     }
                 }
+
+                ret = 1;
             }
 
             _waitEvent.Set();
+
+            return ret;
         }
     }
 }

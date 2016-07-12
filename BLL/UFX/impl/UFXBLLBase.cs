@@ -12,7 +12,7 @@ namespace BLL.UFX.impl
 
         protected T2SDKWrap _t2SDKWrap;
         protected ReceivedBizMsg _receivedBizMsg;
-        protected Dictionary<FunctionCode, DataHandlerCallback> _dataHandlerMap = new Dictionary<FunctionCode, DataHandlerCallback>();
+        protected Dictionary<FunctionCode, Callbacker> _dataHandlerMap = new Dictionary<FunctionCode, Callbacker>();
 
         public UFXBLLBase(T2SDKWrap t2SDKWrap)
         {
@@ -49,7 +49,13 @@ namespace BLL.UFX.impl
                 FunctionCode functionCode = (FunctionCode)iFunction;
                 if (_dataHandlerMap.ContainsKey(functionCode))
                 {
-                    _dataHandlerMap[functionCode](parser);
+                    int tokenId = _dataHandlerMap[functionCode].TokenId;
+                    var callback = _dataHandlerMap[functionCode].Callback;
+                    if (callback != null)
+                    {
+                        callback(tokenId, parser);
+                    }
+
                     _dataHandlerMap.Remove(functionCode);
 
                     ret = (int)ConnectionCode.Success;
@@ -79,15 +85,15 @@ namespace BLL.UFX.impl
             _t2SDKWrap.UnRegister(functionCode);
         }
 
-        protected void AddDataHandler(FunctionCode functionCode, DataHandlerCallback callback)
+        protected void AddDataHandler(FunctionCode functionCode, Callbacker callbacker)
         {
             if (!_dataHandlerMap.ContainsKey(functionCode))
             {
-                _dataHandlerMap.Add(functionCode, callback);
+                _dataHandlerMap.Add(functionCode, callbacker);
             }
             else
             {
-                _dataHandlerMap[functionCode] = callback;
+                _dataHandlerMap[functionCode] = callbacker;
             }
         }
 

@@ -13,6 +13,7 @@ namespace DBAccess
         private const string SP_Create = "procEntrustCommandInsert";
         private const string SP_Modify = "procEntrustCommandUpdate";
         private const string SP_ModifyEntrustStatus = "procEntrustCommandUpdateEntrustStatus";
+        private const string SP_ModifyBatchNo = "procEntrustCommandUpdateBatchNo";
         private const string SP_ModifyDealStatus = "procEntrustCommandUpdateDealStatus";
         private const string SP_ModifyCancel = "procEntrustCommandUpdateCancel";
         private const string SP_DeleteBySubmitId = "procEntrustCommandDeleteBySubmitId";
@@ -75,6 +76,17 @@ namespace DBAccess
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustStatus);
             _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
             _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, entrustStatus);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int UpdateEntrustCommandBatchNo(int submitId, int batchNo, EntrustStatus entrustStatus)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyBatchNo);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
+            _dbHelper.AddInParameter(dbCommand, "@BatchNo", System.Data.DbType.Int32, batchNo);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)entrustStatus);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);

@@ -128,23 +128,26 @@ namespace BLL.UFX
             req.AddStr(user.Password);
             req.EndPack();
 
-            CT2UnPacker back = null;
-            int ret = subcribe.SubscribeTopicEx(args, 50000, out back, req);
+            CT2UnPacker unpacker = null;
+            int ret = subcribe.SubscribeTopicEx(args, 50000, out unpacker, req);
             req.Dispose();
 
             if (ret > 0)
             {
-                string msg = string.Format("订阅创建失败: {0}", _conn.GetMCLastError());
-                logger.Error(msg);
+                string msg = string.Format("订阅创建成功: {0}", _conn.GetMCLastError());
+                logger.Info(msg);
                 return ConnectionCode.SuccessSubscribe;
             }
             else
             {
-                if (back != null)
+                if (unpacker != null)
                 {
                     //Show(back);
+                    unpacker.Dispose();
                 }
 
+                string msg = string.Format("订阅创建失败: {0}", _conn.GetMCLastError());
+                logger.Error(msg);
                 return ConnectionCode.ErrorFailSubscribe;
             }
         }
@@ -188,6 +191,7 @@ namespace BLL.UFX
             }
             else
             {
+                Console.WriteLine("订阅 - 返回码：{0}, 错误码： {1}, 功能号： {2}", iRetCode, iErrorCode, iFunction);
                 if (Enum.IsDefined(typeof(FunctionCode), iFunction))
                 {
                     FunctionCode functionCode = (FunctionCode)Enum.ToObject(typeof(FunctionCode), iFunction);

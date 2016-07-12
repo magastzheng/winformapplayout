@@ -22,7 +22,7 @@ namespace BLL.UFX.impl
             RegisterUFX(FunctionCode.QuerySecurityEntrust);
         }
 
-        public ConnectionCode Entrust(List<UFXEntrustRequest> entrustRequests, DataHandlerCallback callback)
+        public ConnectionCode Entrust(List<UFXEntrustRequest> entrustRequests, Callbacker callbacker)
         {
             FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.Entrust);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
@@ -36,7 +36,7 @@ namespace BLL.UFX.impl
                 return ConnectionCode.ErrorLogin;
             }
 
-            AddDataHandler(FunctionCode.Entrust, callback);
+            AddDataHandler(FunctionCode.Entrust, callbacker);
 
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化
@@ -169,7 +169,7 @@ namespace BLL.UFX.impl
             return ConnectionCode.Success;
         }
 
-        public ConnectionCode Withdraw(List<UFXWithdrawRequest> cancelRequests, DataHandlerCallback callback)
+        public ConnectionCode Withdraw(List<UFXWithdrawRequest> cancelRequests, Callbacker callbacker)
         {
             FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.Withdraw);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
@@ -183,7 +183,7 @@ namespace BLL.UFX.impl
                 return ConnectionCode.ErrorLogin;
             }
 
-            AddDataHandler(FunctionCode.Withdraw, callback);
+            AddDataHandler(FunctionCode.Withdraw, callbacker);
 
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化
@@ -251,7 +251,7 @@ namespace BLL.UFX.impl
             return ConnectionCode.Success;
         }
 
-        public ConnectionCode EntrustBasket(List<UFXBasketEntrustRequest> entrustRequests, DataHandlerCallback callback)
+        public ConnectionCode EntrustBasket(List<UFXBasketEntrustRequest> entrustRequests, Callbacker callbacker)
         {
             FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.EntrustBasket);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
@@ -265,7 +265,7 @@ namespace BLL.UFX.impl
                 return ConnectionCode.ErrorLogin;
             }
 
-            AddDataHandler(FunctionCode.EntrustBasket, callback);
+            AddDataHandler(FunctionCode.EntrustBasket, callbacker);
 
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化
@@ -413,7 +413,7 @@ namespace BLL.UFX.impl
             return ConnectionCode.Success;
         }
 
-        public ConnectionCode WithdrawBasket(List<UFXBasketWithdrawRequest> cancelRequests, DataHandlerCallback callback)
+        public ConnectionCode WithdrawBasket(List<UFXBasketWithdrawRequest> cancelRequests, Callbacker callbacker)
         {
             FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.WithdrawBasket);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
@@ -427,7 +427,7 @@ namespace BLL.UFX.impl
                 return ConnectionCode.ErrorLogin;
             }
 
-            AddDataHandler(FunctionCode.WithdrawBasket, callback);
+            AddDataHandler(FunctionCode.WithdrawBasket, callbacker);
 
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化

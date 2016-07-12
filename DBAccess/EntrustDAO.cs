@@ -79,7 +79,8 @@ namespace DBAccess
                         _dbHelper.AddInParameter(dbCommand, "@EntrustDate", System.Data.DbType.DateTime, entrustItem.EntrustDate);
                         _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, DateTime.Now);
 
-                        //string newid = string.Empty;
+                        _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
+
                         ret = dbCommand.ExecuteNonQuery();
                         if (ret > 0)
                         {

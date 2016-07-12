@@ -874,15 +874,6 @@ namespace TradingSystem.View
                 }
             }
 
-            //2.submit into UFX then update the status 
-
-            //listen the callback to notify the entrust/deal status
-            //Update the status
-            foreach (var submitId in submitIds)
-            {
-                _entrustdao.UpdateOneEntrustStatus(submitId, EntrustStatus.Completed);
-            }
-
             //update the UI
             nudCopies.Value = 1;
             this.cmdGridView.Invalidate();
