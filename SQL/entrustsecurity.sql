@@ -17,9 +17,9 @@ create table entrustsecurity(
 	,EntrustPriceType	int			 -- 委托价格类型： 0 - 限价，'a'五档即成剩撤(上交所市价)， 'A'五档即成剩撤(深交所市价)
 	,PriceType			int			 -- 
 	,EntrustNo			int			 --委托之后，服务器返回的委托号
+	,BatchNo			int			 -- 委托后返回的批号ID
 	,DealStatus			int			 -- 1 - 未成交， 2 - 部分成交， 3 - 已完成
 	,DealAmount			int			 -- 成交数量
-	--,BatchId			int			 -- 委托后返回的批号ID
 	,DealTimes			int			 -- 成交次数
 	,EntrustDate		datetime	 -- 委托时间
 	,CreatedDate		datetime
@@ -64,6 +64,7 @@ begin
 		,EntrustPriceType
 		,PriceType
 		,EntrustNo
+		,BatchNo
 		,DealStatus
 		,DealAmount
 		,DealTimes
@@ -81,6 +82,7 @@ begin
 		,@EntrustPriceType
 		,@PriceType
 		,-1					--初始时没有委托序号，只有通过UFX委托完成之后，才会产生
+		,-1					--初始时没有委托批次号
 		,1					--未成交
 		,0					--成交量初始为0
 		,0					--成交次数0
@@ -108,6 +110,7 @@ create proc procEntrustSecurityUpdate(
 	,@EntrustPriceType	int
 	,@PriceType			int
 	,@EntrustNo			int
+	,@BatchNo			int
 	,@EntrustDate		datetime
 	,@ModifiedDate		datetime
 )
@@ -121,6 +124,7 @@ begin
 		,EntrustPriceType	= @EntrustPriceType
 		,PriceType			= @PriceType
 		,EntrustNo			= @EntrustNo
+		,BatchNo			= @BatchNo
 		,EntrustDate		= @EntrustDate
 		,ModifiedDate		= @ModifiedDate
 	where SubmitId=@SubmitId
@@ -152,21 +156,23 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procEntrustSecurityUpdateEntrustNo')
-drop proc procEntrustSecurityUpdateEntrustNo
+if exists (select name from sysobjects where name='procEntrustSecurityUpdateEntrustResponse')
+drop proc procEntrustSecurityUpdateEntrustResponse
 
 go
-create proc procEntrustSecurityUpdateEntrustNo(
+create proc procEntrustSecurityUpdateEntrustResponse(
 	@SubmitId			int
 	,@CommandId			int
 	,@SecuCode			varchar(10)
 	,@EntrustNo			int
+	,@BatchNo			int
 	,@ModifiedDate		datetime
 )
 as
 begin
 	update entrustsecurity
 	set EntrustNo			= @EntrustNo
+		,BatchNo			= @BatchNo
 		,EntrustStatus		= 4				--委托成功
 		,ModifiedDate		= @ModifiedDate
 	where SubmitId=@SubmitId
@@ -175,19 +181,21 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procEntrustSecurityUpdateEntrustNoByRequestId')
-drop proc procEntrustSecurityUpdateEntrustNoByRequestId
+if exists (select name from sysobjects where name='procEntrustSecurityUpdateResponseByRequestId')
+drop proc procEntrustSecurityUpdateResponseByRequestId
 
 go
-create proc procEntrustSecurityUpdateEntrustNoByRequestId(
+create proc procEntrustSecurityUpdateResponseByRequestId(
 	@RequestId			int
 	,@EntrustNo			int
+	,@BatchNo			int
 	,@ModifiedDate		datetime
 )
 as
 begin
 	update entrustsecurity
 	set EntrustNo			= @EntrustNo
+		,BatchNo			= @BatchNo
 		,EntrustStatus		= 4				--委托成功
 		,ModifiedDate		= @ModifiedDate
 	where RequestId=@RequestId
@@ -339,12 +347,8 @@ begin
 	set EntrustStatus	= 10
 		,ModifiedDate	= @ModifiedDate
 	where CommandId=@CommandId 
-		and DealStatus = 1		--未成交
-		and (EntrustStatus = 0	--提交到数据库
-		or EntrustStatus = 1	--提交到UFX
-		or EntrustStatus = 2	--未执行
-		or EntrustStatus = 3	--部分执行
-		or EntrustStatus = 4)	--已完成
+		and (DealStatus = 1 or DealStatus = 2)		--未成交或部分成交
+		and EntrustStatus = 4	--已完成
 end
 
 go
@@ -431,6 +435,7 @@ begin
 		,EntrustPriceType
 		,PriceType
 		,EntrustNo
+		,BatchNo
 		,DealStatus
 		,DealAmount
 		,DealTimes
@@ -463,6 +468,7 @@ begin
 		,EntrustPriceType
 		,PriceType
 		,EntrustNo
+		,BatchNo
 		,DealStatus
 		,DealAmount
 		,DealTimes
@@ -493,6 +499,7 @@ begin
 		,EntrustPriceType
 		,PriceType
 		,EntrustNo
+		,BatchNo
 		,DealStatus
 		,DealAmount
 		,DealTimes
@@ -526,6 +533,7 @@ begin
 		,EntrustPriceType
 		,PriceType
 		,EntrustNo
+		,BatchNo
 		,DealStatus
 		,DealAmount
 		,DealTimes
@@ -560,6 +568,7 @@ begin
 		,EntrustPriceType
 		,PriceType
 		,EntrustNo
+		,BatchNo
 		,DealStatus
 		,DealAmount
 		,DealTimes
@@ -592,6 +601,7 @@ begin
 		,EntrustPriceType
 		,PriceType
 		,EntrustNo
+		,BatchNo
 		,DealStatus
 		,DealAmount
 		,DealTimes
@@ -599,10 +609,8 @@ begin
 		,CreatedDate
 		,ModifiedDate
 	from entrustsecurity
-	where DealStatus = 1		--未成交
-		and EntrustStatus != 10	--撤单
-		and EntrustStatus != 11 --撤单到UFX
-		and EntrustStatus != 12 --撤单成功
+	where (DealStatus = 1 or DealStatus = 2)		--未成交或部分成交
+		and EntrustStatus = 4 --已完成委托
 end
 
 go
@@ -628,6 +636,7 @@ begin
 		,EntrustPriceType
 		,PriceType
 		,EntrustNo
+		,BatchNo
 		,DealStatus
 		,DealAmount
 		,DealTimes
@@ -661,6 +670,7 @@ begin
 		,EntrustPriceType
 		,PriceType
 		,EntrustNo
+		,BatchNo
 		,DealStatus
 		,DealAmount
 		,DealTimes
@@ -698,6 +708,7 @@ begin
 		,EntrustPriceType
 		,PriceType
 		,EntrustNo
+		,BatchNo
 		,DealStatus
 		,DealAmount
 		,DealTimes
@@ -729,13 +740,13 @@ begin
 		,a.EntrustPriceType
 		,a.PriceType
 		,a.EntrustNo
+		,a.BatchNo
 		,a.DealStatus
 		,a.DealAmount
 		,a.DealTimes
 		,a.EntrustDate
 		,a.CreatedDate
 		,a.ModifiedDate
-		,b.BatchNo
 		,c.InstanceId
 		,d.InstanceCode
 		,d.MonitorUnitId
@@ -745,10 +756,10 @@ begin
 		,f.AccountCode
 		,f.AccountName
 	from entrustsecurity a
-	inner join entrustcommand b
-	on a.CommandId=b.CommandId and a.SubmitId=b.SubmitId
+	--inner join entrustcommand b
+	--on a.CommandId=b.CommandId and a.SubmitId=b.SubmitId
 	inner join tradingcommand c
-	on b.CommandId=c.CommandId
+	on a.CommandId=c.CommandId
 	inner join tradinginstance d
 	on c.InstanceId=d.InstanceId
 	inner join monitorunit e

@@ -151,12 +151,8 @@ begin
 	set EntrustStatus	= 10
 		,ModifiedDate	= @ModifiedDate
 	where CommandId=@CommandId
-		and DealStatus = 1		--未成交
-		and (EntrustStatus = 0	--提交到数据库
-		or EntrustStatus = 1	--提交到UFX
-		or EntrustStatus = 2	--未执行
-		or EntrustStatus = 3	--部分执行
-		or EntrustStatus = 4)	--已完成
+		and (DealStatus = 1 or DealStatus = 2)		--未成交
+		and EntrustStatus = 4	--已完成
 end
 
 go
@@ -315,10 +311,8 @@ begin
 		  ,CreatedDate
 		  ,ModifiedDate
 	from entrustcommand
-	where DealStatus=1		--未成交
-		and EntrustStatus != 10	--撤单
-		and EntrustStatus != 11 --撤单到UFX
-		and EntrustStatus != 12 --撤单成功
+	where (DealStatus=1 or DealStatus=2)		--未成交或部分成交
+		and EntrustStatus=4		--仅对已委托完成的撤单
 end
 
 go
@@ -343,5 +337,5 @@ begin
 	from entrustcommand
 	where (DealStatus = 1 		--未成交
 		or DealStatus = 2)		--部分成交
-		and EntrustStatus = 5	--已完成委托
+		and EntrustStatus = 4	--已完成委托
 end

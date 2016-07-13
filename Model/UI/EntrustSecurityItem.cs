@@ -47,5 +47,7 @@ namespace Model.UI
         public DateTime ModifiedDate { get; set; }
 
         public int EntrustNo { get; set; }
+
+        public int BatchNo { get; set; }
     }
 }

@@ -7,25 +7,19 @@ using System;
 
 namespace BLL.UFX.impl
 {
-    public class StrategyBLL
+    public class StrategyBLL : UFXBLLBase
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private T2SDKWrap _t2SDKWrap;
-        private ReceivedBizMsg _receivedBizMsg;
-
         public StrategyBLL(T2SDKWrap t2SDKWrap)
+            : base(t2SDKWrap)
         {
-            _t2SDKWrap = t2SDKWrap;
-            _receivedBizMsg = OnReceivedBizMsg;
-
-            _t2SDKWrap.Register(FunctionCode.QueryTradingInstance, _receivedBizMsg);
-            _t2SDKWrap.Register(FunctionCode.EntrustInstanceBasket, _receivedBizMsg);
-            _t2SDKWrap.Register(FunctionCode.QueryEntrustInstance, _receivedBizMsg);
-            _t2SDKWrap.Register(FunctionCode.QueryDealInstance, _receivedBizMsg);
-            _t2SDKWrap.Register(FunctionCode.WithdrawBasket, _receivedBizMsg);
-            _t2SDKWrap.Register(FunctionCode.QuerySpotTemplate, _receivedBizMsg);
-            _t2SDKWrap.Register(FunctionCode.QuerySpotTemplateStock, _receivedBizMsg);
+            RegisterUFX(FunctionCode.QueryTradingInstance);
+            RegisterUFX(FunctionCode.EntrustInstanceBasket);
+            RegisterUFX(FunctionCode.QueryEntrustInstance);
+            RegisterUFX(FunctionCode.QueryDealInstance);
+            RegisterUFX(FunctionCode.QuerySpotTemplate);
+            RegisterUFX(FunctionCode.QuerySpotTemplateStock);
         }
 
         public ConnectionCode QueryTrading()
@@ -771,80 +765,80 @@ namespace BLL.UFX.impl
 
             return ConnectionCode.Success;
         }
-        #region
+        //#region
 
-        public int OnReceivedBizMsg(CT2BizMessage bizMessage)
-        {
-            int iRetCode = bizMessage.GetReturnCode();
-            int iErrorCode = bizMessage.GetErrorNo();
-            int iFunction = bizMessage.GetFunction();
-            if (iRetCode != 0)
-            {
-                string msg = string.Format("异步接收数据出错： {0}, {1}", iErrorCode, bizMessage.GetErrorInfo());
+        //public int OnReceivedBizMsg(CT2BizMessage bizMessage)
+        //{
+        //    int iRetCode = bizMessage.GetReturnCode();
+        //    int iErrorCode = bizMessage.GetErrorNo();
+        //    int iFunction = bizMessage.GetFunction();
+        //    if (iRetCode != 0)
+        //    {
+        //        string msg = string.Format("异步接收数据出错： {0}, {1}", iErrorCode, bizMessage.GetErrorInfo());
 
-                return iRetCode;
-            }
+        //        return iRetCode;
+        //    }
 
-            CT2UnPacker unpacker = null;
-            unsafe
-            {
-                int iLen = 0;
-                void* lpdata = bizMessage.GetContent(&iLen);
-                unpacker = new CT2UnPacker(lpdata, (uint)iLen);
-            }
+        //    CT2UnPacker unpacker = null;
+        //    unsafe
+        //    {
+        //        int iLen = 0;
+        //        void* lpdata = bizMessage.GetContent(&iLen);
+        //        unpacker = new CT2UnPacker(lpdata, (uint)iLen);
+        //    }
 
-            if (unpacker != null)
-            {
-                Console.WriteLine("功能号：" + iFunction);
-                _t2SDKWrap.PrintUnPack(unpacker);
-                switch ((FunctionCode)iFunction)
-                {
-                    case FunctionCode.QueryTradingInstance:
-                        {
+        //    if (unpacker != null)
+        //    {
+        //        Console.WriteLine("功能号：" + iFunction);
+        //        _t2SDKWrap.PrintUnPack(unpacker);
+        //        switch ((FunctionCode)iFunction)
+        //        {
+        //            case FunctionCode.QueryTradingInstance:
+        //                {
                             
-                        }
-                        break;
-                    case FunctionCode.EntrustInstanceBasket:
-                        { 
+        //                }
+        //                break;
+        //            case FunctionCode.EntrustInstanceBasket:
+        //                { 
                         
-                        }
-                        break;
-                    case FunctionCode.QueryEntrustInstance:
-                        { 
+        //                }
+        //                break;
+        //            case FunctionCode.QueryEntrustInstance:
+        //                { 
                             
-                        }
-                        break;
-                    case FunctionCode.QueryDealInstance:
-                        { 
+        //                }
+        //                break;
+        //            case FunctionCode.QueryDealInstance:
+        //                { 
                         
-                        }
-                        break;
-                    case FunctionCode.WithdrawBasket:
-                        { 
+        //                }
+        //                break;
+        //            case FunctionCode.WithdrawBasket:
+        //                { 
                             
-                        }
-                        break;
-                    case FunctionCode.QuerySpotTemplate:
-                        {
+        //                }
+        //                break;
+        //            case FunctionCode.QuerySpotTemplate:
+        //                {
 
-                        }
-                        break;
-                    case FunctionCode.QuerySpotTemplateStock:
-                        {
+        //                }
+        //                break;
+        //            case FunctionCode.QuerySpotTemplateStock:
+        //                {
 
-                        }
-                        break;
-                    default:
-                        break;
-                }
+        //                }
+        //                break;
+        //            default:
+        //                break;
+        //        }
 
-                unpacker.Dispose();
-            }
-            //bizMessage.Dispose();
+        //        unpacker.Dispose();
+        //    }
+        //    //bizMessage.Dispose();
 
-            return (int)ConnectionCode.Success;
-        }
+        //    return (int)ConnectionCode.Success;
+        //}
 
-        #endregion
+        //#endregion
     }
 }

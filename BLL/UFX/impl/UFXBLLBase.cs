@@ -49,11 +49,11 @@ namespace BLL.UFX.impl
                 FunctionCode functionCode = (FunctionCode)iFunction;
                 if (_dataHandlerMap.ContainsKey(functionCode))
                 {
-                    int tokenId = _dataHandlerMap[functionCode].TokenId;
+                    var token = _dataHandlerMap[functionCode].Token;
                     var callback = _dataHandlerMap[functionCode].Callback;
                     if (callback != null)
                     {
-                        callback(tokenId, parser);
+                        callback(token, parser);
                     }
 
                     _dataHandlerMap.Remove(functionCode);

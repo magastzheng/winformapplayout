@@ -3,7 +3,7 @@ using hundsun.t2sdk;
 using log4net;
 using Model;
 using Model.config;
-using Model.strategy;
+using Model.t2sdk;
 using System.Collections.Generic;
 
 namespace BLL.UFX.impl
@@ -20,6 +20,9 @@ namespace BLL.UFX.impl
             RegisterUFX(FunctionCode.EntrustBasket);
             RegisterUFX(FunctionCode.WithdrawBasket);
             RegisterUFX(FunctionCode.QuerySecurityEntrust);
+            RegisterUFX(FunctionCode.QuerySecurityEntrustHistorical);
+            RegisterUFX(FunctionCode.QuerySecurityDeal);
+            RegisterUFX(FunctionCode.QuerySecurityDealHistorical);
         }
 
         public ConnectionCode Entrust(List<UFXEntrustRequest> entrustRequests, Callbacker callbacker)
@@ -495,9 +498,10 @@ namespace BLL.UFX.impl
             return ConnectionCode.Success;
         }
 
-        public ConnectionCode QueryEntrust()
+        public ConnectionCode QueryEntrust(List<UFXQueryEntrustRequest> requests, Callbacker callbacker)
         {
-            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.QuerySecurityEntrust);
+            FunctionCode functionCode = FunctionCode.QuerySecurityEntrust;
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
                 return ConnectionCode.ErrorNoFunctionCode;
@@ -509,9 +513,11 @@ namespace BLL.UFX.impl
                 return ConnectionCode.ErrorLogin;
             }
 
+            AddDataHandler(functionCode, callbacker);
+
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化
-            bizMessage.SetFunction((int)FunctionCode.QuerySecurityEntrust);
+            bizMessage.SetFunction((int)functionCode);
             bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
 
             //业务包
@@ -630,6 +636,159 @@ namespace BLL.UFX.impl
 
             if (retCode < 0)
             {
+                logger.Error("查询历史委托流水失败!");
+                return ConnectionCode.ErrorConn;
+            }
+
+            return ConnectionCode.Success;
+        }
+
+        public ConnectionCode QueryEntrustHistory(List<UFXQueryHistEntrustRequest> requests, Callbacker callbacker)
+        {
+            FunctionCode functionCode = FunctionCode.QuerySecurityEntrustHistorical;
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
+            if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
+            {
+                return ConnectionCode.ErrorNoFunctionCode;
+            }
+
+            string userToken = LoginManager.Instance.LoginUser.Token;
+            if (string.IsNullOrEmpty(userToken))
+            {
+                return ConnectionCode.ErrorLogin;
+            }
+
+            AddDataHandler(functionCode, callbacker);
+
+            CT2BizMessage bizMessage = new CT2BizMessage();
+            //初始化
+            bizMessage.SetFunction((int)functionCode);
+            bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
+
+            //业务包
+            CT2Packer packer = new CT2Packer(2);
+            packer.BeginPack();
+            foreach (FieldItem item in functionItem.RequestFields)
+            {
+                packer.AddField(item.Name, item.Type, item.Width, item.Scale);
+            }
+
+            foreach (var request in requests)
+            {
+                foreach (FieldItem item in functionItem.RequestFields)
+                {
+                    switch (item.Name)
+                    {
+                        case "user_token":
+                            {
+                                packer.AddStr(userToken);
+                            }
+                            break;
+                        case "start_date":
+                            {
+                                packer.AddInt(request.StartDate);
+                            }
+                            break;
+                        case "end_date":
+                            {
+                                packer.AddInt(request.EndDate);
+                            }
+                            break;
+                        case "batch_no":
+                            {
+                                packer.AddInt(request.BatchNo);
+                            }
+                            break;
+                        case "entrust_no":
+                            {
+                                packer.AddInt(request.EntrustNo);
+                            }
+                            break;
+                        case "account_code":
+                            {
+                                packer.AddStr(request.AccountCode);
+                            }
+                            break;
+                        case "asset_no":
+                            {
+                                packer.AddStr(request.AssetNo);
+                            }
+                            break;
+                        case "combi_no":
+                            {
+                                packer.AddStr(request.CombiNo);
+                            }
+                            break;
+                        case "stockholder_id":
+                            {
+                                packer.AddStr(request.StockHolderId);
+                            }
+                            break;
+                        case "market_no":
+                            {
+                                packer.AddStr(request.MarketNo);
+                            }
+                            break;
+                        case "entrust_direction":
+                            {
+                                packer.AddStr(request.EntrustDirection);
+                            }
+                            break;
+                        case "entrust_state_list":
+                            {
+                                packer.AddStr(request.EntrustStateList);
+                            }
+                            break;
+                        case "extsystem_id":
+                            {
+                                packer.AddInt(request.ExtSystemId);
+                            }
+                            break;
+                        case "third_reff":
+                            {
+                                packer.AddStr(request.ThirdReff);
+                            }
+                            break;
+                        case "position_str":
+                            {
+                                packer.AddStr(request.PositionStr);
+                            }
+                            break;
+                        case "request_num":
+                            {
+                                packer.AddInt(request.RequestNum);
+                            }
+                            break;
+                        default:
+                            if (item.Type == PackFieldType.IntType)
+                            {
+                                packer.AddInt(-1);
+                            }
+                            else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                            {
+                                packer.AddStr(item.Name);
+                            }
+                            else
+                            {
+                                packer.AddStr(item.Name);
+                            }
+                            break;
+                    }
+                }
+            }
+            packer.EndPack();
+
+            unsafe
+            {
+                bizMessage.SetContent(packer.GetPackBuf(), packer.GetPackLen());
+            }
+
+            int retCode = _t2SDKWrap.SendAsync(bizMessage);
+            packer.Dispose();
+            bizMessage.Dispose();
+
+            if (retCode < 0)
+            {
                 logger.Error("撤销委托实例失败!");
                 return ConnectionCode.ErrorConn;
             }
@@ -637,69 +796,300 @@ namespace BLL.UFX.impl
             return ConnectionCode.Success;
         }
 
-        //#region callback
-        //public int OnReceivedBizMsg(CT2BizMessage bizMessage)
-        //{
-        //    int iRetCode = bizMessage.GetReturnCode();
-        //    int iErrorCode = bizMessage.GetErrorNo();
-        //    int iFunction = bizMessage.GetFunction();
-        //    if (iRetCode != 0)
-        //    {
-        //        string msg = string.Format("异步接收数据出错： {0}, {1}", iErrorCode, bizMessage.GetErrorInfo());
+        public ConnectionCode QueryDeal(List<UFXQueryDealRequest> requests, Callbacker callbacker)
+        {
+            FunctionCode functionCode = FunctionCode.QuerySecurityDeal;
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
+            if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
+            {
+                return ConnectionCode.ErrorNoFunctionCode;
+            }
 
-        //        return iRetCode;
-        //    }
+            string userToken = LoginManager.Instance.LoginUser.Token;
+            if (string.IsNullOrEmpty(userToken))
+            {
+                return ConnectionCode.ErrorLogin;
+            }
 
-        //    CT2UnPacker unpacker = null;
-        //    unsafe
-        //    {
-        //        int iLen = 0;
-        //        void* lpdata = bizMessage.GetContent(&iLen);
-        //        unpacker = new CT2UnPacker(lpdata, (uint)iLen);
-        //    }
+            AddDataHandler(functionCode, callbacker);
 
-        //    if (unpacker != null)
-        //    {
-        //        Console.WriteLine("功能号：" + iFunction);
-        //        _t2SDKWrap.PrintUnPack(unpacker);
+            CT2BizMessage bizMessage = new CT2BizMessage();
+            //初始化
+            bizMessage.SetFunction((int)functionCode);
+            bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
 
-        //        switch ((FunctionCode)iFunction)
-        //        {
-        //            case FunctionCode.Entrust:
-        //                { 
-                        
-        //                }
-        //                break;
-        //            case FunctionCode.Withdraw:
-        //                { 
-                            
-        //                }
-        //                break;
-        //            case FunctionCode.EntrustBasket:
-        //                {
+            //业务包
+            CT2Packer packer = new CT2Packer(2);
+            packer.BeginPack();
+            foreach (FieldItem item in functionItem.RequestFields)
+            {
+                packer.AddField(item.Name, item.Type, item.Width, item.Scale);
+            }
 
-        //                }
-        //                break;
-        //            case FunctionCode.WithdrawBasket:
-        //                {
+            foreach (var request in requests)
+            {
+                foreach (FieldItem item in functionItem.RequestFields)
+                {
+                    switch (item.Name)
+                    {
+                        case "user_token":
+                            {
+                                packer.AddStr(userToken);
+                            }
+                            break;
+                        case "account_code":
+                            {
+                                packer.AddStr(request.AccountCode);
+                            }
+                            break;
+                        case "asset_no":
+                            {
+                                packer.AddStr(request.AssetNo);
+                            }
+                            break;
+                        case "combi_no":
+                            {
+                                packer.AddStr(request.CombiNo);
+                            }
+                            break;
+                        case "entrust_no":
+                            {
+                                packer.AddInt(request.EntrustNo);
+                            }
+                            break;
+                        case "deal_no":
+                            {
+                                packer.AddInt(request.DealNo);
+                            }
+                            break;
+                        case "stockholder_id":
+                            {
+                                packer.AddStr(request.StockHolderId);
+                            }
+                            break;
+                        case "market_no":
+                            {
+                                packer.AddStr(request.MarketNo);
+                            }
+                            break;
+                        case "stock_code":
+                            {
+                                packer.AddStr(request.StockCode);
+                            }
+                            break;
+                        case "entrust_direction":
+                            {
+                                packer.AddStr(request.EntrustDirection);
+                            }
+                            break;
+                        case "extsystem_id":
+                            {
+                                packer.AddInt(request.ExtSystemId);
+                            }
+                            break;
+                        case "third_reff":
+                            {
+                                packer.AddStr(request.ThirdReff);
+                            }
+                            break;
+                        case "position_str":
+                            {
+                                packer.AddStr(request.PositionStr);
+                            }
+                            break;
+                        case "request_num":
+                            {
+                                packer.AddInt(request.RequestNum);
+                            }
+                            break;
+                        default:
+                            if (item.Type == PackFieldType.IntType)
+                            {
+                                packer.AddInt(-1);
+                            }
+                            else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                            {
+                                packer.AddStr(item.Name);
+                            }
+                            else
+                            {
+                                packer.AddStr(item.Name);
+                            }
+                            break;
+                    }
+                }
+            }
+            packer.EndPack();
 
-        //                }
-        //                break;
-        //            case FunctionCode.QuerySecurityEntrust:
-        //                {
+            unsafe
+            {
+                bizMessage.SetContent(packer.GetPackBuf(), packer.GetPackLen());
+            }
 
-        //                }
-        //                break;
-        //            default:
-        //                break;
-        //        }
+            int retCode = _t2SDKWrap.SendAsync(bizMessage);
+            packer.Dispose();
+            bizMessage.Dispose();
 
-        //        unpacker.Dispose();
-        //    }
-        //    //bizMessage.Dispose();
+            if (retCode < 0)
+            {
+                logger.Error("查询成交流水失败!");
+                return ConnectionCode.ErrorConn;
+            }
 
-        //    return (int)ConnectionCode.Success;
-        //}
-        //#endregion
+            return ConnectionCode.Success;
+        }
+
+        public ConnectionCode QueryDealHistory(List<UFXQueryHistDealRequest> requests, Callbacker callbacker)
+        {
+            FunctionCode functionCode = FunctionCode.QuerySecurityDealHistorical;
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
+            if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
+            {
+                return ConnectionCode.ErrorNoFunctionCode;
+            }
+
+            string userToken = LoginManager.Instance.LoginUser.Token;
+            if (string.IsNullOrEmpty(userToken))
+            {
+                return ConnectionCode.ErrorLogin;
+            }
+
+            AddDataHandler(functionCode, callbacker);
+
+            CT2BizMessage bizMessage = new CT2BizMessage();
+            //初始化
+            bizMessage.SetFunction((int)functionCode);
+            bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
+
+            //业务包
+            CT2Packer packer = new CT2Packer(2);
+            packer.BeginPack();
+            foreach (FieldItem item in functionItem.RequestFields)
+            {
+                packer.AddField(item.Name, item.Type, item.Width, item.Scale);
+            }
+
+            foreach (var request in requests)
+            {
+                foreach (FieldItem item in functionItem.RequestFields)
+                {
+                    switch (item.Name)
+                    {
+                        case "user_token":
+                            {
+                                packer.AddStr(userToken);
+                            }
+                            break;
+                        case "start_date":
+                            {
+                                packer.AddInt(request.StartDate);
+                            }
+                            break;
+                        case "end_date":
+                            {
+                                packer.AddInt(request.EndDate);
+                            }
+                            break;
+                        case "account_code":
+                            {
+                                packer.AddStr(request.AccountCode);
+                            }
+                            break;
+                        case "asset_no":
+                            {
+                                packer.AddStr(request.AssetNo);
+                            }
+                            break;
+                        case "combi_no":
+                            {
+                                packer.AddStr(request.CombiNo);
+                            }
+                            break;
+                        case "entrust_no":
+                            {
+                                packer.AddInt(request.EntrustNo);
+                            }
+                            break;
+                        case "deal_no":
+                            {
+                                packer.AddInt(request.DealNo);
+                            }
+                            break;
+                        case "stockholder_id":
+                            {
+                                packer.AddStr(request.StockHolderId);
+                            }
+                            break;
+                        case "market_no":
+                            {
+                                packer.AddStr(request.MarketNo);
+                            }
+                            break;
+                        case "stock_code":
+                            {
+                                packer.AddStr(request.StockCode);
+                            }
+                            break;
+                        case "entrust_direction":
+                            {
+                                packer.AddStr(request.EntrustDirection);
+                            }
+                            break;
+                        case "extsystem_id":
+                            {
+                                packer.AddInt(request.ExtSystemId);
+                            }
+                            break;
+                        case "third_reff":
+                            {
+                                packer.AddStr(request.ThirdReff);
+                            }
+                            break;
+                        case "position_str":
+                            {
+                                packer.AddStr(request.PositionStr);
+                            }
+                            break;
+                        case "request_num":
+                            {
+                                packer.AddInt(request.RequestNum);
+                            }
+                            break;
+                        default:
+                            if (item.Type == PackFieldType.IntType)
+                            {
+                                packer.AddInt(-1);
+                            }
+                            else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                            {
+                                packer.AddStr(item.Name);
+                            }
+                            else
+                            {
+                                packer.AddStr(item.Name);
+                            }
+                            break;
+                    }
+                }
+            }
+            packer.EndPack();
+
+            unsafe
+            {
+                bizMessage.SetContent(packer.GetPackBuf(), packer.GetPackLen());
+            }
+
+            int retCode = _t2SDKWrap.SendAsync(bizMessage);
+            packer.Dispose();
+            bizMessage.Dispose();
+
+            if (retCode < 0)
+            {
+                logger.Error("查询历史成交流水失败!");
+                return ConnectionCode.ErrorConn;
+            }
+
+            return ConnectionCode.Success;
+        }
     }
 }

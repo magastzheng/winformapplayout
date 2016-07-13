@@ -16,7 +16,7 @@ namespace DBAccess
         private const string SP_ModifyEntrustCommandStatus = "procEntrustCommandUpdateEntrustStatus";
         private const string SP_ModifyEntrustSecurityStatusBySubmitId = "procEntrustSecurityUpdateEntrustStatusBySubmitId";
         private const string SP_ModifySecurityEntrustStatus = "procEntrustSecurityUpdateEntrustStatus";
-        private const string SP_ModifySecurityEntrustNoByRequestId = "procEntrustSecurityUpdateEntrustNoByRequestId";
+        private const string SP_ModifySecurityEntrustResponseByRequestId = "procEntrustSecurityUpdateResponseByRequestId";
 
         public EntrustDAO()
             : base()
@@ -219,7 +219,7 @@ namespace DBAccess
             return ret;
         }
 
-        public int UpdateSecurityEntrustNoByRequestId(List<EntrustSecurityItem> entrustItems)
+        public int UpdateSecurityEntrustResponseByRequestId(List<EntrustSecurityItem> entrustItems)
         {
             var dbCommand = _dbHelper.GetCommand();
             _dbHelper.Open(dbCommand);
@@ -235,10 +235,11 @@ namespace DBAccess
                 foreach (var item in entrustItems)
                 {
                     dbCommand.Parameters.Clear();
-                    dbCommand.CommandText = SP_ModifySecurityEntrustNoByRequestId;
+                    dbCommand.CommandText = SP_ModifySecurityEntrustResponseByRequestId;
 
                     _dbHelper.AddInParameter(dbCommand, "@RequestId", System.Data.DbType.Int32, item.RequestId);
                     _dbHelper.AddInParameter(dbCommand, "@EntrustNo", System.Data.DbType.Int32, item.EntrustNo);
+                    _dbHelper.AddInParameter(dbCommand, "@BatchNo", System.Data.DbType.Int32, item.BatchNo);
                     _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, now);
 
                     ret = dbCommand.ExecuteNonQuery();

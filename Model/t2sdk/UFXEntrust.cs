@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.strategy
+namespace Model.t2sdk
 {
     public class UFXEntrustRequest
     {
-        public string UserToken { get; set; }
+        //public string UserToken { get; set; }
 
         public int BatchNo { get; set; }
 
@@ -50,14 +50,14 @@ namespace Model.strategy
 
     public class UFXWithdrawRequest
     {
-        public string UserToken { get; set; }
+        //public string UserToken { get; set; }
 
         public int EntrustNo { get; set; }
     }
 
     public class UFXBasketEntrustRequest
     {
-        public string UserToken { get; set;}
+        //public string UserToken { get; set;}
 
         public string AccountCode { get; set; }
 
@@ -137,7 +137,7 @@ namespace Model.strategy
 
     public class UFXBasketWithdrawRequest
     {
-        public string UserToken { get; set; }
+        //public string UserToken { get; set; }
 
         public int BatchNo { get; set; }
     }

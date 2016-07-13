@@ -11,8 +11,8 @@ namespace DBAccess
         private const string SP_Create = "procEntrustSecurityInsert";
         private const string SP_Modify = "procEntrustSecurityUpdate";
         private const string SP_ModifyEntrustStatus = "procEntrustSecurityUpdateEntrustStatus";
-        private const string SP_ModifyEntrustNo = "procEntrustSecurityUpdateEntrustNo";
-        private const string SP_ModifyEntrustNoByRequestId = "procEntrustSecurityUpdateEntrustNoByRequestId";
+        private const string SP_ModifyEntrustResponse = "procEntrustSecurityUpdateEntrustResponse";
+        private const string SP_ModifyEntrustResponseByRequestId = "procEntrustSecurityUpdateResponseByRequestId";
         private const string SP_ModifyEntrustStatusBySubmitId = "procEntrustSecurityUpdateEntrustStatusBySubmitId";
         private const string SP_ModifyEntrustStatusByRequestId = "procEntrustSecurityUpdateEntrustStatusByRequestId";
         private const string SP_ModifyDeal = "procEntrustSecurityUpdateDeal";
@@ -84,7 +84,8 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)item.EntrustStatus);
             _dbHelper.AddInParameter(dbCommand, "@EntrustPriceType", System.Data.DbType.Int32, (int)item.EntrustPriceType);
             _dbHelper.AddInParameter(dbCommand, "@PriceType", System.Data.DbType.Int32, (int)item.PriceType);
-            _dbHelper.AddInParameter(dbCommand, "@EntrustNo", System.Data.DbType.Int32, (int)item.EntrustNo);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustNo", System.Data.DbType.Int32, item.EntrustNo);
+            _dbHelper.AddInParameter(dbCommand, "@BatchNo", System.Data.DbType.Int32, item.BatchNo);
             _dbHelper.AddInParameter(dbCommand, "@EntrustDate", System.Data.DbType.DateTime, item.EntrustDate);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
@@ -103,13 +104,14 @@ namespace DBAccess
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public int UpdateEntrustNo(int submitId, int commandId, string secuCode, int entrustNo)
+        public int UpdateEntrustResponse(int submitId, int commandId, string secuCode, int entrustNo, int batchNo)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustNo);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustResponse);
             _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
             _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, secuCode);
             _dbHelper.AddInParameter(dbCommand, "@EntrustNo", System.Data.DbType.Int32, entrustNo);
+            _dbHelper.AddInParameter(dbCommand, "@BatchNo", System.Data.DbType.Int32, batchNo);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
@@ -117,11 +119,12 @@ namespace DBAccess
             
         }
 
-        public int UpdateEntrustNoByRequestId(int requestId, int entrustNo)
+        public int UpdateEntrustNoByRequestId(int requestId, int entrustNo, int batchNo)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustNoByRequestId);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustResponseByRequestId);
             _dbHelper.AddInParameter(dbCommand, "@RequestId", System.Data.DbType.Int32, requestId);
             _dbHelper.AddInParameter(dbCommand, "@EntrustNo", System.Data.DbType.Int32, entrustNo);
+            _dbHelper.AddInParameter(dbCommand, "@BatchNo", System.Data.DbType.Int32, batchNo);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
@@ -240,6 +243,7 @@ namespace DBAccess
                     item.EntrustPriceType = (EntrustPriceType)reader["EntrustPriceType"];
                     item.PriceType = (PriceType)reader["PriceType"];
                     item.EntrustNo = (int)reader["EntrustNo"];
+                    item.BatchNo = (int)reader["BatchNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
 
@@ -291,6 +295,7 @@ namespace DBAccess
                     item.EntrustPriceType = (EntrustPriceType)reader["EntrustPriceType"];
                     item.PriceType = (PriceType)reader["PriceType"];
                     item.EntrustNo = (int)reader["EntrustNo"];
+                    item.BatchNo = (int)reader["BatchNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
 
@@ -342,6 +347,7 @@ namespace DBAccess
                     item.EntrustPriceType = (EntrustPriceType)reader["EntrustPriceType"];
                     item.PriceType = (PriceType)reader["PriceType"];
                     item.EntrustNo = (int)reader["EntrustNo"];
+                    item.BatchNo = (int)reader["BatchNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
 
@@ -395,6 +401,7 @@ namespace DBAccess
                     item.EntrustPriceType = (EntrustPriceType)reader["EntrustPriceType"];
                     item.PriceType = (PriceType)reader["PriceType"];
                     item.EntrustNo = (int)reader["EntrustNo"];
+                    item.BatchNo = (int)reader["BatchNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
 
@@ -446,6 +453,7 @@ namespace DBAccess
                     item.EntrustPriceType = (EntrustPriceType)reader["EntrustPriceType"];
                     item.PriceType = (PriceType)reader["PriceType"];
                     item.EntrustNo = (int)reader["EntrustNo"];
+                    item.BatchNo = (int)reader["BatchNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
 
@@ -497,6 +505,7 @@ namespace DBAccess
                     item.EntrustPriceType = (EntrustPriceType)reader["EntrustPriceType"];
                     item.PriceType = (PriceType)reader["PriceType"];
                     item.EntrustNo = (int)reader["EntrustNo"];
+                    item.BatchNo = (int)reader["BatchNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.DealAmount = (int)reader["DealAmount"];
 

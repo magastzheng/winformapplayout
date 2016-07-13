@@ -81,6 +81,49 @@ namespace BLL.Entrust
 
         #endregion
 
+        #region cancel
+
+        public int CancelOne(TradingCommandItem cmdItem)
+        {
+            int ret = -1;
+
+            var entrustCmdItems = _entrustcmddao.GetCancel(cmdItem.CommandId);
+            if (entrustCmdItems == null || entrustCmdItems.Count == 0)
+            {
+                return -1;
+            }
+
+            var entrustSecuItems = _entrustsecudao.GetCancel(cmdItem.CommandId);
+            if (entrustSecuItems == null || entrustSecuItems.Count == 0)
+            {
+                return ret;
+            }
+
+            foreach (var entrustCmdItem in entrustCmdItems)
+            {
+                var entrustSecuCancelItems = entrustSecuItems.Where(p => p.SubmitId == entrustCmdItem.SubmitId).ToList();
+                if (entrustSecuCancelItems != null && entrustSecuCancelItems.Count > 0)
+                {
+                    //set the status as EntrustStatus.CancelToDB in database
+                    _entrustdao.UpdateOneEntrustStatus(entrustCmdItem.SubmitId, EntrustStatus.CancelToDB);
+
+                    ret = _ufxEntrustBLL.Cancel(entrustCmdItem, entrustSecuCancelItems);
+                    if (ret > 0)
+                    {
+                        _entrustdao.UpdateOneEntrustStatus(entrustCmdItem.SubmitId, EntrustStatus.CancelSuccess);
+                    }
+                    else
+                    {
+                        _entrustdao.UpdateOneEntrustStatus(entrustCmdItem.SubmitId, EntrustStatus.CancelFail);
+                    }
+                }
+            }
+
+            return ret;
+        }
+
+        #endregion
+
         #region update
 
         public int Cancel(List<CancelRedoItem> cancelItems)
