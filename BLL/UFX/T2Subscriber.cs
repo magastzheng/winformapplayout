@@ -166,17 +166,17 @@ namespace BLL.UFX
 
         public override void OnReceivedBiz(CT2Connection lpConnection, int hSend, string lppStr, CT2UnPacker lppUnPacker, int nResult)
         {
-            throw new NotImplementedException();
+            logger.Info("OnReceivedBiz:成功触发回调接收数据！");
         }
 
         public override void OnReceivedBizEx(CT2Connection lpConnection, int hSend, CT2RespondData lpRetData, string lppStr, CT2UnPacker lppUnPacker, int nResult)
         {
-            throw new NotImplementedException();
+            logger.Info("OnReceivedBizEx:成功触发回调接收数据！");
         }
 
         public override void OnReceivedBizMsg(CT2Connection lpConnection, int hSend, CT2BizMessage lpMsg)
         {
-            logger.Info("OnReceivedBizMsg: 成功建立安全连接！");
+            logger.Info("OnReceivedBizMsg: 成功触发回调接收数据！");
             //获取返回码
             int iRetCode = lpMsg.GetReturnCode();
 

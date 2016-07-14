@@ -1,6 +1,7 @@
 ﻿using Config;
 using Controls.Entity;
 using Controls.GridView;
+using Model.Binding.BindingUtil;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace ControlsTest
             GridConfig gridConfig = ConfigManager.Instance.GetGridConfig();
             HSGrid hsGrid = gridConfig.GetGid("templatestock");
             TSDataGridViewHelper.AddColumns(this.tsDataGridView1, hsGrid);
-            Dictionary<string, string> colFieldMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(TemplateStock));
+            Dictionary<string, string> colFieldMap = GridViewBindingHelper.GetPropertyBinding(typeof(TemplateStock));
             TSDataGridViewHelper.SetDataBinding(this.tsDataGridView1, colFieldMap);
             var stocks = GenerateData(hsGrid);
             _tempStocks = new SortableBindingList<TemplateStock>(stocks);

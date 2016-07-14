@@ -1,3 +1,5 @@
+use tradingsystem
+
 select * from ufxportfolio
 
 select * from monitorunit
@@ -5,6 +7,10 @@ select * from monitorunit
 select * from tradinginstancesecurity
 
 select * from tradinginstance
+
+select * from entrustcommand
+
+select * from entrustsecurity
 
 update tradinginstance
 set StockDirection=10

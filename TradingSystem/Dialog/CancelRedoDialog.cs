@@ -14,6 +14,7 @@ using BLL.Entrust;
 using Model.SecurityInfo;
 using BLL.SecurityInfo;
 using Model.EnumType;
+using Model.Binding.BindingUtil;
 
 namespace TradingSystem.Dialog
 {
@@ -140,7 +141,7 @@ namespace TradingSystem.Dialog
         {
             //Load Command Trading
             TSDataGridViewHelper.AddColumns(this.secuGridView, _gridConfig.GetGid(GridCancelRedoId));
-            Dictionary<string, string> gridColDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(CancelRedoItem));
+            Dictionary<string, string> gridColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(CancelRedoItem));
             TSDataGridViewHelper.SetDataBinding(this.secuGridView, gridColDataMap);
             this.secuGridView.DataSource = _secuDataSource;
 

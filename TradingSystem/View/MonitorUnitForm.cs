@@ -2,6 +2,7 @@
 using Controls.Entity;
 using Controls.GridView;
 using DBAccess;
+using Model.Binding.BindingUtil;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -64,7 +65,7 @@ namespace TradingSystem.View
         private void Form_Load(object sender, EventArgs e)
         {
             TSDataGridViewHelper.AddColumns(this.dataGridView, _gridConfig.GetGid(GridId));
-            Dictionary<string, string> colDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(MonitorUnit));
+            Dictionary<string, string> colDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(MonitorUnit));
             TSDataGridViewHelper.SetDataBinding(this.dataGridView, colDataMap);
         }
 

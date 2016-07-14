@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Controls.GridView
+namespace Model.Binding.BindingUtil
 {
-    public static class TSDGVColumnBindingHelper
+    public static class GridViewBindingHelper
     {
         /// <summary>
         /// Get the DataGridView column databinding mapping [columnname, datafieldname]

@@ -2,8 +2,10 @@
 using hundsun.t2sdk;
 using log4net;
 using Model;
+using Model.Binding.BindingUtil;
 using Model.config;
 using Model.t2sdk;
+using System;
 using System.Collections.Generic;
 
 namespace BLL.UFX.impl
@@ -528,99 +530,80 @@ namespace BLL.UFX.impl
                 packer.AddField(item.Name, item.Type, item.Width, item.Scale);
             }
 
-            foreach (FieldItem item in functionItem.RequestFields)
+            var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXQueryEntrustRequest>();
+            foreach (var request in requests)
             {
-                switch (item.Name)
+                foreach (FieldItem item in functionItem.RequestFields)
                 {
-                    case "user_token":
-                        {
-                            packer.AddStr(userToken);
-                        }
-                        break;
-                    case "batch_no":
-                        {
-                            packer.AddInt(2317379);
-                        }
-                        break;
-                    case "entrust_no":
-                        {
-                            packer.AddInt(-1);
-                        }
-                        break;
-                    case "account_code":
-                        {
-                            packer.AddStr("");
-                        }
-                        break;
-                    case "asset_no":
-                        {
-                            packer.AddStr("");
-                        }
-                        break;
-                    case "combi_no":
-                        {
-                            packer.AddStr("");
-                        }
-                        break;
-                    case "stockholder_id":
-                        {
-                            packer.AddStr("");
-                        }
-                        break;
-                    case "market_no":
-                        {
-                            packer.AddStr("");
-                        }
-                        break;
-                    case "stock_code":
-                        {
-                            packer.AddStr("");
-                        }
-                        break;
-                    case "entrust_direction":
-                        {
-                            packer.AddStr("");
-                        }
-                        break;
-                    case "entrust_state_list":
-                        {
-                            packer.AddStr("");
-                        }
-                        break;
-                    case "extsystem_id":
-                        {
-                            packer.AddInt(-1);
-                        }
-                        break;
-                    case "third_reff":
-                        {
-                            packer.AddStr("");
-                        }
-                        break;
-                    case "position_str":
-                        {
-                            packer.AddStr("");
-                        }
-                        break;
-                    case "request_num":
-                        {
-                            packer.AddInt(1000);
-                        }
-                        break;
-                    default:
+                    if (dataFieldMap.ContainsKey(item.Name))
+                    {
+                        var dataField = dataFieldMap[item.Name];
+                        Type type = request.GetType();
+                        object obj = type.GetProperty(dataField.Name).GetValue(request);
                         if (item.Type == PackFieldType.IntType)
                         {
-                            packer.AddInt(-1);
+                            if (obj != null)
+                            {
+                                packer.AddInt((int)obj);
+                            }
+                            else
+                            {
+                                packer.AddInt(-1);
+                            }
                         }
-                        else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                        else if (item.Type == PackFieldType.FloatType)
                         {
-                            packer.AddStr(item.Name);
+                            if (obj != null)
+                            {
+                                packer.AddDouble((double)obj);
+                            }
+                            else
+                            {
+                                packer.AddDouble(0f);
+                            }
+                        }
+                        else if (item.Type == PackFieldType.StringType)
+                        {
+                            if (obj != null)
+                            {
+                                packer.AddStr(obj.ToString());
+                            }
+                            else
+                            {
+                                packer.AddStr("");
+                            }
                         }
                         else
                         {
-                            packer.AddStr(item.Name);
+                            packer.AddStr("");
                         }
-                        break;
+
+                    }
+                    else
+                    {
+                        switch (item.Name)
+                        {
+                            case "user_token":
+                                {
+                                    packer.AddStr(userToken);
+                                }
+                                break;
+                            default:
+                                if (item.Type == PackFieldType.IntType)
+                                {
+                                    packer.AddInt(-1);
+                                }
+                                else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                                {
+                                    packer.AddStr(item.Name);
+                                }
+                                else
+                                {
+                                    packer.AddStr(item.Name);
+                                }
+                                break;
+                        }
+                    }
                 }
             }
             packer.EndPack();

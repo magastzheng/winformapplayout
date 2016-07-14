@@ -13,6 +13,7 @@ using TradingSystem.Dialog;
 using BLL.SecurityInfo;
 using BLL.TradeCommand;
 using Model.EnumType;
+using Model.Binding.BindingUtil;
 
 namespace TradingSystem.View
 {
@@ -105,12 +106,12 @@ namespace TradingSystem.View
         {
             //set the monitorGridView
             TSDataGridViewHelper.AddColumns(this.monitorGridView, _gridConfig.GetGid(MonitorGridId));
-            Dictionary<string, string> monitorColDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(OpenPositionItem));
+            Dictionary<string, string> monitorColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(OpenPositionItem));
             TSDataGridViewHelper.SetDataBinding(this.monitorGridView, monitorColDataMap);           
 
             //set the securityGridView
             TSDataGridViewHelper.AddColumns(this.securityGridView, _gridConfig.GetGid(SecurityGridId));
-            Dictionary<string, string> securityColDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(OpenPositionSecurityItem));
+            Dictionary<string, string> securityColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(OpenPositionSecurityItem));
             TSDataGridViewHelper.SetDataBinding(this.securityGridView, securityColDataMap);
 
             //Load bottom button

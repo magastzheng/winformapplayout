@@ -15,6 +15,7 @@ using BLL.Template;
 using BLL.TradeCommand;
 using Model.config;
 using Model.EnumType;
+using Model.Binding.BindingUtil;
 
 namespace TradingSystem.View
 {
@@ -168,17 +169,17 @@ namespace TradingSystem.View
         {
             //set the monitorGridView
             TSDataGridViewHelper.AddColumns(this.closeGridView, _gridConfig.GetGid(GridCloseId));
-            Dictionary<string, string> closeColDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(ClosePositionItem));
+            Dictionary<string, string> closeColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(ClosePositionItem));
             TSDataGridViewHelper.SetDataBinding(this.closeGridView, closeColDataMap);
 
             //set the securityGridView
             TSDataGridViewHelper.AddColumns(this.securityGridView, _gridConfig.GetGid(GridSecurityId));
-            Dictionary<string, string> securityColDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(ClosePositionSecurityItem));
+            Dictionary<string, string> securityColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(ClosePositionSecurityItem));
             TSDataGridViewHelper.SetDataBinding(this.securityGridView, securityColDataMap);
 
             //set the command gridview
             TSDataGridViewHelper.AddColumns(this.cmdGridView, _gridConfig.GetGid(GridCloseCmdId));
-            Dictionary<string, string> cmdColDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(ClosePositionCmdItem));
+            Dictionary<string, string> cmdColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(ClosePositionCmdItem));
             TSDataGridViewHelper.SetDataBinding(this.cmdGridView, cmdColDataMap);
 
             this.closeGridView.DataSource = _instDataSource;

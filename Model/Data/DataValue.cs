@@ -36,6 +36,10 @@ namespace Model.Data
                 //}
                 return (int)Value;
             }
+            else if (Type == DataValueType.Float)
+            {
+                return Convert.ToInt32(Value);
+            }
             else
             {
                 return -1;
@@ -51,6 +55,10 @@ namespace Model.Data
                 //    return temp;
                 //}
                 //return 0.0f;
+                return (double)Value;
+            }
+            else if (Type == DataValueType.Int)
+            {
                 return (double)Value;
             }
             return 0.0f;

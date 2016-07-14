@@ -17,6 +17,7 @@ using TradingSystem.Dialog;
 using TradingSystem.TradeUtil;
 using BLL.Entrust;
 using Model.EnumType;
+using Model.Binding.BindingUtil;
 
 namespace TradingSystem.View
 {
@@ -447,27 +448,27 @@ namespace TradingSystem.View
         {
             //Load Command Trading
             TSDataGridViewHelper.AddColumns(this.cmdGridView, _gridConfig.GetGid(GridCmdTradingId));
-            Dictionary<string, string> cmdColDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(TradingCommandItem));
+            Dictionary<string, string> cmdColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(TradingCommandItem));
             TSDataGridViewHelper.SetDataBinding(this.cmdGridView, cmdColDataMap);           
 
             //Load EntrustFlow gridview
             TSDataGridViewHelper.AddColumns(this.efGridView, _gridConfig.GetGid(GridEntrustFlowId));
-            Dictionary<string, string> efColDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(EntrustFlowItem));
+            Dictionary<string, string> efColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(EntrustFlowItem));
             TSDataGridViewHelper.SetDataBinding(this.efGridView, efColDataMap);
 
             //Load DealFlow gridview
             TSDataGridViewHelper.AddColumns(this.dfGridView, _gridConfig.GetGid(GridDealFlowId));
-            Dictionary<string, string> dfColDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(DealFlowItem));
+            Dictionary<string, string> dfColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(DealFlowItem));
             TSDataGridViewHelper.SetDataBinding(this.dfGridView, dfColDataMap);
 
             //Load Security gridview
             TSDataGridViewHelper.AddColumns(this.securityGridView, _gridConfig.GetGid(GridCmdSecurityId));
-            Dictionary<string, string> secuColDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(CommandSecurityItem));
+            Dictionary<string, string> secuColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(CommandSecurityItem));
             TSDataGridViewHelper.SetDataBinding(this.securityGridView, secuColDataMap);
 
             //Load Entrust gridview
             TSDataGridViewHelper.AddColumns(this.bsGridView, _gridConfig.GetGid(GridBuySellId));
-            Dictionary<string, string> bsColDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(EntrustItem));
+            Dictionary<string, string> bsColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(EntrustItem));
             TSDataGridViewHelper.SetDataBinding(this.bsGridView, bsColDataMap); 
 
             //Load combobox
@@ -603,6 +604,9 @@ namespace TradingSystem.View
                     _dfDataSource.Add(dfItem);
                 }
             }
+
+            UFXQueryEntrustBLL queryBll = new UFXQueryEntrustBLL();
+            var test = queryBll.QueryToday();
 
             return true;
         }

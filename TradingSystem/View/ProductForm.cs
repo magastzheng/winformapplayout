@@ -3,6 +3,7 @@ using BLL.UFX.impl;
 using Config;
 using Controls.Entity;
 using Controls.GridView;
+using Model.Binding.BindingUtil;
 using Model.strategy;
 using Model.UI;
 using System.Collections.Generic;
@@ -40,7 +41,7 @@ namespace TradingSystem.View
         {
             //set the monitorGridView
             TSDataGridViewHelper.AddColumns(this.gridView, _gridConfig.GetGid(GridId));
-            Dictionary<string, string> colDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(Fund));
+            Dictionary<string, string> colDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(Fund));
             TSDataGridViewHelper.SetDataBinding(this.gridView, colDataMap);
 
             this.gridView.DataSource = _dataSource;

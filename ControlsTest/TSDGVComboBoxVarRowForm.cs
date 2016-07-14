@@ -1,6 +1,7 @@
 ﻿using Controls.Entity;
 using Controls.GridView;
 using Model.Binding;
+using Model.Binding.BindingUtil;
 using Model.config;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace ControlsTest
         {
             HSGrid hsGrid = GetGridConfig();
             TSDataGridViewHelper.AddColumns(this.tsDataGridView1, hsGrid);
-            Dictionary<string, string> columnMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(CBRowItem));
+            Dictionary<string, string> columnMap = GridViewBindingHelper.GetPropertyBinding(typeof(CBRowItem));
             TSDataGridViewHelper.SetDataBinding(this.tsDataGridView1, columnMap);
             this.tsDataGridView1.DataSource = _dataSource;
 

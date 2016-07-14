@@ -81,7 +81,6 @@
       <DependentUpon>TSDataGridView.cs</DependentUpon>
     </Compile>
     <Compile Include="GridView\TSDataGridViewHelper.cs" />
-    <Compile Include="GridView\TSDGVColumnBindingHelper.cs" />
     <Compile Include="NavBar\TreeViewHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NavBar\TreeViewEvent.cs" />

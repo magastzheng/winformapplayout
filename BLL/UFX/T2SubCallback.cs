@@ -29,8 +29,10 @@ namespace BLL.UFX
                 //.....
                 DataParser parser = new DataParser();
                 parser.Parse(lpUnpacker);
-                parser.Output();
 
+                Console.WriteLine("====推送=====过滤字段部分=====开始");
+                parser.Output();
+                Console.WriteLine("====推送=====过滤字段部分=====结束");
                 lpUnpacker.Dispose();
             }
 
@@ -41,8 +43,9 @@ namespace BLL.UFX
                 //....
                 DataParser parser = new DataParser();
                 parser.Parse(lpUnpacker1);
+                Console.WriteLine("====推送*****数据部分=====开始");
                 parser.Output();
-
+                Console.WriteLine("====推送*****数据部分=====结束");
                 lpUnpacker1.Dispose();
             }
 
@@ -51,7 +54,7 @@ namespace BLL.UFX
 
         public override void OnRecvTickMsg(CT2SubscribeInterface lpSub, int subscribeIndex, string TickMsgInfo)
         {
-            
+            Console.WriteLine("T2SubCallback.OnRecvTickMsg");
         }
     }
 }

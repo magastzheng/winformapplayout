@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using Util;
 using System.Linq;
 using BLL.Template;
+using Model.Binding.BindingUtil;
 
 namespace TradingSystem.View
 {
@@ -90,12 +91,12 @@ namespace TradingSystem.View
         {
             //set the monitorGridView
             TSDataGridViewHelper.AddColumns(this.tempGridView, _gridConfig.GetGid(GridTemplate));
-            Dictionary<string, string> tempColDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(StockTemplate));
+            Dictionary<string, string> tempColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(StockTemplate));
             TSDataGridViewHelper.SetDataBinding(this.tempGridView, tempColDataMap);
 
             //set the securityGridView
             TSDataGridViewHelper.AddColumns(this.secuGridView, _gridConfig.GetGid(GridStock));
-            Dictionary<string, string> securityColDataMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(TemplateStock));
+            Dictionary<string, string> securityColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(TemplateStock));
             TSDataGridViewHelper.SetDataBinding(this.secuGridView, securityColDataMap);
 
             this.tempGridView.DataSource = _tempDataSource;
@@ -789,7 +790,7 @@ namespace TradingSystem.View
             var gridColumns = hsGrid.Columns;
 
             //标签与属性名映射表
-            var attFieldMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(TemplateStock));
+            var attFieldMap = GridViewBindingHelper.GetPropertyBinding(typeof(TemplateStock));
             
             //实体类标签名与Excel DataTable DataRow.Columns中列索引映射表
             Dictionary<string, int> fieldNameColumnIndexMap = new Dictionary<string, int>();
@@ -936,7 +937,7 @@ namespace TradingSystem.View
 
             table.ColumnIndex = excelNameColumnIndexMap;
 
-            var attFieldMap = TSDGVColumnBindingHelper.GetPropertyBinding(typeof(TemplateStock));
+            var attFieldMap = GridViewBindingHelper.GetPropertyBinding(typeof(TemplateStock));
             foreach (var tempStock in tempStocks)
             {
                 Model.Data.DataRow dataRow = new Model.Data.DataRow 
