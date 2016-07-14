@@ -11,6 +11,7 @@ namespace DBAccess
         private const string SP_Create = "procTradingCommandInsert";
         private const string SP_Modify = "procTradingCommandUpdateStatus";
         private const string SP_ModifyTargetNum = "procTradingCommandUpdateTargetNum";
+        private const string SP_ModifyTargetNumBySumbitId = "procTradingCommandUpdateTargetNumBySubmitId";
         private const string SP_Delete = "procTradingCommandDelete";
         //private const string SP_Get = "procTradingCommandSelect";
         private const string SP_Get = "procTradingCommandSelectCombine";
@@ -79,6 +80,16 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@TargetNum", System.Data.DbType.Int32, (int)cmdItem.TargetNum);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
             
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int UpdateTargetNumBySubmitId(int submitId, int commandId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyTargetNumBySumbitId);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 

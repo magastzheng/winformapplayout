@@ -5,8 +5,11 @@ using Config;
 using Config.ParamConverter;
 using DBAccess;
 using log4net;
+using Model.Binding.BindingUtil;
+using Model.Data;
 using Model.t2sdk;
 using Model.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -21,6 +24,7 @@ namespace BLL.Entrust
         private TradeCommandBLL _tradeCommandBLL = null;
         private EntrustDAO _entrustdao = new EntrustDAO();
         private EntrustCommandDAO _entrustcmddao = new EntrustCommandDAO();
+        private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
 
         private int _timeOut = 10 * 1000;
 
@@ -83,22 +87,7 @@ namespace BLL.Entrust
                     request.CombiNo = tradeCommandItem.PortfolioCode;
                 }
 
-                //if (portfolio != null)
-                //{
-                //    request.AssetNo = portfolio.AssetNo;
-
-                //    var holder = LoginManager.Instance.GetHolder(request.CombiNo, request.MarketNo);
-                //    if (holder != null && !string.IsNullOrEmpty(holder.StockHolderId))
-                //    {
-                //        request.StockHolderId = holder.StockHolderId;
-                //    }
-                //}
-
-                //TODO: fix the futures cannot entrust
-                //if (secuItem.SecuType == Model.SecurityInfo.SecurityType.Futures)
-                //{
-                    ufxRequests.Add(request);
-                //}
+                ufxRequests.Add(request);
             }
 
             Callbacker callbacker = new Callbacker
@@ -158,88 +147,16 @@ namespace BLL.Entrust
         private int EntrustBasketCallback(CallbackToken token, DataParser dataParser)
         {
             List<UFXBasketEntrustResponse> responseItems = new List<UFXBasketEntrustResponse>();
+            var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXBasketEntrustResponse>();
             for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
             {
                 var dataSet = dataParser.DataSets[i];
                 foreach (var dataRow in dataSet.Rows)
                 {
                     UFXBasketEntrustResponse p = new UFXBasketEntrustResponse();
-                    if (dataRow.Columns.ContainsKey("batch_no"))
-                    {
-                        p.BatchNo = dataRow.Columns["batch_no"].GetInt();
-                    }
-                    if (dataRow.Columns.ContainsKey("entrust_no"))
-                    {
-                        p.EntrustNo = dataRow.Columns["entrust_no"].GetInt();
-                    }
-                    if (dataRow.Columns.ContainsKey("request_order"))
-                    {
-                        p.RequestOrder = dataRow.Columns["request_order"].GetInt();
-                    }
-                    if (dataRow.Columns.ContainsKey("extsystem_id"))
-                    {
-                        p.ExtSystemId = dataRow.Columns["extsystem_id"].GetInt();
-                    }
-                    if (dataRow.Columns.ContainsKey("entrust_fail_code"))
-                    {
-                        p.EntrustFailCode = dataRow.Columns["entrust_fail_code"].GetInt();
-                    }
-                    if (dataRow.Columns.ContainsKey("fail_cause"))
-                    {
-                        p.FailCause = dataRow.Columns["fail_cause"].GetStr();
-                    }
-                    if (dataRow.Columns.ContainsKey("risk_serial_no"))
-                    {
-                        p.RiskSerialNo = dataRow.Columns["risk_serial_no"].GetInt();
-                    }
-                    if (dataRow.Columns.ContainsKey("market_no"))
-                    {
-                        p.MarketNo = dataRow.Columns["market_no"].GetStr();
-                    }
-                    if (dataRow.Columns.ContainsKey("stock_code"))
-                    {
-                        p.StockCode = dataRow.Columns["stock_code"].GetStr();
-                    }
-                    if (dataRow.Columns.ContainsKey("entrust_direction"))
-                    {
-                        p.EntrustDirection = dataRow.Columns["entrust_direction"].GetStr();
-                    }
-                    if (dataRow.Columns.ContainsKey("futures_direction"))
-                    {
-                        p.FuturesDirection = dataRow.Columns["futures_direction"].GetStr();
-                    }
-                    if (dataRow.Columns.ContainsKey("risk_no"))
-                    {
-                        p.RiskNo = dataRow.Columns["risk_no"].GetInt();
-                    }
-                    if (dataRow.Columns.ContainsKey("risk_type"))
-                    {
-                        p.RiskType = dataRow.Columns["risk_type"].GetInt();
-                    }
-                    if (dataRow.Columns.ContainsKey("risk_summary"))
-                    {
-                        p.RiskSummary = dataRow.Columns["risk_summary"].GetStr();
-                    }
-                    if (dataRow.Columns.ContainsKey("risk_operation"))
-                    {
-                        p.RiskOperation = dataRow.Columns["risk_operation"].GetStr();
-                    }
-                    if (dataRow.Columns.ContainsKey("remark_short"))
-                    {
-                        p.RemarkShort = dataRow.Columns["remark_short"].GetStr();
-                    }
-                    if (dataRow.Columns.ContainsKey("risk_threshold_value"))
-                    {
-                        p.RiskThresholdValue = dataRow.Columns["risk_threshold_value"].GetDouble();
-                    }
-                    if (dataRow.Columns.ContainsKey("risk_value"))
-                    {
-                        p.RiskValue = dataRow.Columns["risk_value"].GetDouble();
-                    }
-
+                    UFXDataSetHelper.SetValue<UFXBasketEntrustResponse>(ref p, dataRow.Columns, dataFieldMap);
                     responseItems.Add(p);
                 }
-                break;
             }
 
             int ret = -1;
@@ -281,34 +198,14 @@ namespace BLL.Entrust
         {
             List<UFXBasketWithdrawResponse> responseItems = new List<UFXBasketWithdrawResponse>();
 
+            var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXBasketWithdrawResponse>();
             for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
             {
                 var dataSet = dataParser.DataSets[i];
                 foreach (var dataRow in dataSet.Rows)
                 {
                     UFXBasketWithdrawResponse p = new UFXBasketWithdrawResponse();
-
-                    if (dataRow.Columns.ContainsKey("entrust_no"))
-                    {
-                        p.EntrustNo = dataRow.Columns["entrust_no"].GetInt();
-                    }
-                    if (dataRow.Columns.ContainsKey("market_no"))
-                    {
-                        p.MarketNo = dataRow.Columns["market_no"].GetStr();
-                    }
-                    if (dataRow.Columns.ContainsKey("stock_code"))
-                    {
-                        p.StockCode = dataRow.Columns["stock_code"].GetStr();
-                    }
-                    if (dataRow.Columns.ContainsKey("success_flag"))
-                    {
-                        p.SuccessFlag = dataRow.Columns["success_flag"].GetInt();
-                    }
-                    if (dataRow.Columns.ContainsKey("fail_cause"))
-                    {
-                        p.FailCause = dataRow.Columns["fail_cause"].GetStr();
-                    }
-
+                    UFXDataSetHelper.SetValue<UFXBasketWithdrawResponse>(ref p, dataRow.Columns, dataFieldMap);
                     responseItems.Add(p);
                 }
             }
@@ -332,6 +229,7 @@ namespace BLL.Entrust
 
                 ret = _entrustdao.UpdateSecurityEntrustStatus(entrustSecuItems, Model.EnumType.EntrustStatus.CancelSuccess);
                 ret = _entrustcmddao.UpdateEntrustCommandStatus(token.SubmitId, Model.EnumType.EntrustStatus.CancelSuccess);
+                ret = _tradecmddao.UpdateTargetNumBySubmitId(token.SubmitId, token.CommandId);
             }
 
            

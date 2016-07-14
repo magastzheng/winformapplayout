@@ -63,7 +63,7 @@ namespace BLL.Entrust
                 foreach (var dataRow in dataSet.Rows)
                 {
                     UFXQueryEntrustResponse p = new UFXQueryEntrustResponse();
-                    SetValue(ref p, dataRow.Columns, dataFieldMap);
+                    UFXDataSetHelper.SetValue<UFXQueryEntrustResponse>(ref p, dataRow.Columns, dataFieldMap);
                     responseItems.Add(p);
                 }
             }
@@ -71,42 +71,6 @@ namespace BLL.Entrust
             _waitEvent.Set();
 
             return responseItems.Count();
-        }
-
-        private void SetValue(ref UFXQueryEntrustResponse p, Dictionary<string, DataValue> columns, Dictionary<string, UFXDataField> dataFieldMap)
-        {
-            foreach (var column in columns)
-            {
-                if (dataFieldMap.ContainsKey(column.Key))
-                {
-                    var dataField = dataFieldMap[column.Key];
-                    Type type = p.GetType();
-                    switch (dataField.ValueType)
-                    {
-                        case Model.Data.DataValueType.Int:
-                            {
-                                var val = column.Value.GetInt();
-                                type.GetProperty(dataField.Name).SetValue(p, val);
-                            }
-                            break;
-                        case Model.Data.DataValueType.Float:
-                            {
-                                var val = column.Value.GetDouble();
-                                type.GetProperty(dataField.Name).SetValue(p, val);
-                            }
-                            break;
-                        case Model.Data.DataValueType.String:
-                            {
-                                var val = column.Value.GetStr();
-                                type.GetProperty(dataField.Name).SetValue(p, val);
-                            }
-                            break;
-                        default:
-                            type.GetProperty(dataField.Name).SetValue(p, column.Value.Value);
-                            break;
-                    }
-                }
-            }
         }
     }
 }

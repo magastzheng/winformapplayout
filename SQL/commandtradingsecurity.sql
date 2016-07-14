@@ -140,6 +140,38 @@ begin
 end
 
 go
+if exists (select name from sysobjects where name='procTradingCommandUpdateTargetNumBySubmitId')
+drop proc procTradingCommandUpdateTargetNumBySubmitId
+
+go
+create proc procTradingCommandUpdateTargetNumBySubmitId(
+	@CommandId			int
+	,@SubmitId			int
+	,@ModifiedDate		datetime
+)
+as
+begin
+	declare @TotalTargetNum int
+	declare @ThisTargetNum int
+	--
+	set @TotalTargetNum=(select TargetNum from tradingcommand where CommandId=@CommandId)
+	--从entrustcommand中获取本次委托份数
+	set @ThisTargetNum=(select Copies from entrustcommand where SubmitId=@SubmitId and EntrustStatus=12)
+
+	set @TotalTargetNum=@TotalTargetNum-@ThisTargetNum
+
+	if @TotalTargetNum < 0
+	begin
+		set @TotalTargetNum=0
+	end
+
+	update tradingcommand
+	set	TargetNum	= @TotalTargetNum
+		,ModifiedDate = @ModifiedDate
+	where CommandId=@CommandId
+end
+
+go
 if exists (select name from sysobjects where name='procTradingCommandDelete')
 drop proc procTradingCommandDelete
 

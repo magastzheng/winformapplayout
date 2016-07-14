@@ -15,7 +15,7 @@ namespace QuoteTest
         public void Test_QuoteCenter_Query()
         {
             List<string> secuCodes = new List<string>() { "000001", "600000"};
-            QuoteCenter.Instance.Query(secuCodes);
+            QuoteCenter.Instance.Query(secuCodes, new List<Model.EnumType.PriceType>() { Model.EnumType.PriceType.Sell1});
 
             var data = QuoteCenter.Instance.Quote;
         }

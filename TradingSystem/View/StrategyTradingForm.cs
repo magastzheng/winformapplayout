@@ -99,7 +99,6 @@ namespace TradingSystem.View
 
         private void ToolStripButton_Command_Cancel(object sender, EventArgs e)
         {
-            //
             var selectCmdItems = _cmdDataSource.Where(p => p.Selection);
             if (selectCmdItems != null && selectCmdItems.Count() > 0)
             {
@@ -783,7 +782,9 @@ namespace TradingSystem.View
                 secuList.Add(findItem);
             }
 
-            QuoteCenter.Instance.Query(secuList);
+            List<PriceType> priceTypes = new List<PriceType>() { spotBuyPrice, spotSellPrice, futureBuyPrice, futureSellPrice };
+
+            QuoteCenter.Instance.Query(secuList, priceTypes);
             foreach (var secuItem in _secuDataSource)
             {
                 var targetItem = secuList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
@@ -793,8 +794,34 @@ namespace TradingSystem.View
                 secuItem.LimitDownPrice = marketData.LowLimitPrice;
                 secuItem.SuspensionFlag = marketData.SuspendFlag.ToString();
 
-                //TODO: use the setting price
-                secuItem.EntrustPrice = marketData.CurrentPrice;
+                switch (secuItem.SecuType)
+                {
+                    case SecurityType.Stock:
+                        {
+
+                            if (secuItem.EDirection == EntrustDirection.BuySpot)
+                            {
+                                secuItem.EntrustPrice = GetPrice(spotBuyPrice, marketData);
+                            }
+                            else if (secuItem.EDirection == EntrustDirection.SellSpot)
+                            {
+                                secuItem.EntrustPrice = GetPrice(spotSellPrice, marketData);
+                            }
+                        }
+                        break;
+                    case SecurityType.Futures:
+                        {
+                            if (secuItem.EDirection == EntrustDirection.SellOpen)
+                            {
+                                secuItem.EntrustPrice = GetPrice(futureSellPrice, marketData);
+                            }
+                            else if (secuItem.EDirection == EntrustDirection.BuyClose)
+                            {
+                                secuItem.EntrustPrice = GetPrice(futureBuyPrice, marketData);
+                            }
+                        }
+                        break;
+                }
             }
 
             //refresh UI
@@ -823,6 +850,12 @@ namespace TradingSystem.View
                     MessageBox.Show(this, "请确保委托指令中包含有效证券！", "警告", MessageBoxButtons.OK);
                     return;
                 }
+            }
+
+            if (!ValidateEntrust())
+            {
+                MessageBox.Show(this, "请设置委托的证券数量和价格，证券数量需为正值，价格不能为零且需在最高最低价之间！", "警告", MessageBoxButtons.OK);
+                return;
             }
 
             //submit each entrust item and each security in the entrustitem
@@ -975,6 +1008,89 @@ namespace TradingSystem.View
             }
 
             return true;
+        }
+
+        private bool ValidateEntrust()
+        {
+            var entrustSecuItems = _secuDataSource.Where(p => p.Selection).ToList();
+            if (entrustSecuItems == null || entrustSecuItems.Count == 0)
+            {
+                //TODO: show message
+                MessageBox.Show(this, "请选择要委托的证券！", "警告", MessageBoxButtons.OK);
+                return false;
+            }
+
+            foreach (var entrustSecuItem in entrustSecuItems)
+            {
+                if (entrustSecuItem.EntrustedAmount <= 0
+                    || entrustSecuItem.EntrustPrice < entrustSecuItem.LimitDownPrice
+                    || entrustSecuItem.EntrustPrice > entrustSecuItem.LimitUpPrice
+                    || entrustSecuItem.EntrustPrice <= 0.00001)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private double GetPrice(PriceType priceType, MarketData marketData)
+        {
+            double price = 0f;
+            switch (priceType)
+            { 
+                case PriceType.Last:
+                case PriceType.Arbitrary:
+                case PriceType.Assign:
+                case PriceType.Automatic:
+                    price = marketData.CurrentPrice;
+                    break;
+                case PriceType.Sell1:
+                    price = marketData.SellPrice1;
+                    break;
+                case PriceType.Sell2:
+                    price = marketData.SellPrice2;
+                    break;
+                case PriceType.Sell3:
+                    price = marketData.SellPrice3;
+                    break;
+                case PriceType.Sell4:
+                    price = marketData.SellPrice4;
+                    break;
+                case PriceType.Sell5:
+                case PriceType.Sell6:
+                case PriceType.Sell7:
+                case PriceType.Sell8:
+                case PriceType.Sell9:
+                case PriceType.Sell10:
+                    price = marketData.SellPrice5;
+                    break;
+                case PriceType.Buy1:
+                    price = marketData.BuyPrice1;
+                    break;
+                case PriceType.Buy2:
+                    price = marketData.BuyPrice2;
+                    break;
+                case PriceType.Buy3:
+                    price = marketData.BuyPrice3;
+                    break;
+                case PriceType.Buy4:
+                    price = marketData.BuyPrice4;
+                    break;
+                case PriceType.Buy5:
+                case PriceType.Buy6:
+                case PriceType.Buy7:
+                case PriceType.Buy8:
+                case PriceType.Buy9:
+                case PriceType.Buy10:
+                    price = marketData.BuyPrice5;
+                    break;
+                default:
+                    price = marketData.CurrentPrice;
+                    break;
+            }
+
+            return price;
         }
 
         #endregion

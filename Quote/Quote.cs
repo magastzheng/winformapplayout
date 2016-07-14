@@ -1,4 +1,5 @@
 ﻿using DBAccess;
+using Model.EnumType;
 using Model.SecurityInfo;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,33 @@ namespace Quote
     public class QueryHelper
     {
         public static List<string> AllFields = new List<string>() { "rt_last", "rt_amt", "rt_susp_flag", "rt_trade_status", "rt_high_limit", "rt_low_limit", "rt_upward_vol", "rt_downward_vol"};//, "rt_ask1", "rt_ask2", "rt_ask3", "rt_ask4", "rt_ask5", "rt_ask6", "rt_ask7", "rt_ask8", "rt_ask9", "rt_ask10", "rt_bid1", "rt_bid2", "rt_bid3", "rt_bid4", "rt_bid5", "rt_bid6", "rt_bid7", "rt_bid8", "rt_bid9", "rt_bid10" };
+        private static Dictionary<PriceType, string> PriceTypeMap = new Dictionary<PriceType, string>() 
+        {
+            {PriceType.Market, "rt_last"},
+            {PriceType.Last, "rt_last"},
+            {PriceType.Automatic, "rt_last"},
+            {PriceType.Sell1, "rt_ask1"},
+            {PriceType.Sell2, "rt_ask2"},
+            {PriceType.Sell3, "rt_ask3"},
+            {PriceType.Sell4, "rt_ask4"},
+            {PriceType.Sell5, "rt_ask5"},
+            {PriceType.Sell6, "rt_ask5"},
+            {PriceType.Sell7, "rt_ask5"},
+            {PriceType.Sell8, "rt_ask5"},
+            {PriceType.Sell9, "rt_ask5"},
+            {PriceType.Sell10, "rt_ask5"},
+            {PriceType.Buy1, "rt_bid1"},
+            {PriceType.Buy2, "rt_bid2"},
+            {PriceType.Buy3, "rt_bid3"},
+            {PriceType.Buy4, "rt_bid4"},
+            {PriceType.Buy5, "rt_bid5"},
+            {PriceType.Buy6, "rt_bid5"},
+            {PriceType.Buy7, "rt_bid5"},
+            {PriceType.Buy8, "rt_bid5"},
+            {PriceType.Buy9, "rt_bid5"},
+            {PriceType.Buy10, "rt_bid5"},
+        };
+        
         private SecurityInfoDAO _dbdao = new SecurityInfoDAO();
         //private List<string> _fields = new List<string>() { "rt_last", "rt_amt", "rt_trade_status", "rt_high_limit", "rt_low_limit", "rt_upward_vol", "rt_downward_vol", "rt_ask1", "rt_ask2", "rt_ask3", "rt_ask4", "rt_ask5", "rt_ask6", "rt_ask7", "rt_ask8", "rt_ask9", "rt_ask10", "rt_bid1", "rt_bid2", "rt_bid3", "rt_bid4", "rt_bid5", "rt_bid6", "rt_bid7", "rt_bid8", "rt_bid9", "rt_bid10" };
 
@@ -42,6 +70,23 @@ namespace Quote
         //{
         //    return _fields;
         //}
+
+        public List<string> GetPriceFields(List<PriceType> priceTypes)
+        {
+            List<string> fields = new List<string>();
+            foreach (var priceType in priceTypes)
+            {
+                if (PriceTypeMap.ContainsKey(priceType))
+                {
+                    if (!fields.Contains(PriceTypeMap[priceType]))
+                    {
+                        fields.Add(PriceTypeMap[priceType]);
+                    }
+                }
+            }
+
+            return fields;
+        }
 
         public List<string> GetSecuCode()
         {
@@ -216,11 +261,28 @@ namespace Quote
             }
         }
 
-        public void Query(List<string> secuCodes)
-        { 
+        public void Query(List<string> secuCodes, List<PriceType> priceTypes)
+        {
             QueryHelper queryHelper = new QueryHelper();
             List<string> windCodes = queryHelper.GetSecuCode(secuCodes);
-            List<string> fields = new List<string> { "rt_last" };
+            //List<string> fields = new List<string> { "rt_last" };
+            List<string> fields = queryHelper.GetPriceFields(priceTypes);
+            Dictionary<string, string> optionMap = new Dictionary<string, string>();
+            Dictionary<string, int> fieldIndexMap = QueryHelper.GetFieldIndex(fields);
+
+            WindData wd = WindAPIWrap.Instance.SyncRequestData(windCodes, fields, optionMap);
+            if (wd != null)
+            {
+                FillData(wd, fieldIndexMap);
+            }
+        }
+
+        public void Query(List<SecurityItem> secuItems, List<PriceType> priceTypes)
+        { 
+            QueryHelper queryHelper = new QueryHelper();
+            List<string> windCodes = queryHelper.GetSecuCode(secuItems);
+            //List<string> fields = new List<string> { "rt_last" };
+            List<string> fields = queryHelper.GetPriceFields(priceTypes);
             Dictionary<string, string> optionMap = new Dictionary<string,string>();
             Dictionary<string, int> fieldIndexMap = QueryHelper.GetFieldIndex(fields);
 
