@@ -52,6 +52,7 @@ namespace TradingSystem
 
             if (conRet != Model.ConnectionCode.Success)
             {
+                t2SDKWrap.Close();
                 glExitApp = true;
                 return;
             }
