@@ -1,6 +1,8 @@
 ﻿using TradingSystem.Controller;
 using System;
 using System.Windows.Forms;
+using Model;
+using Config;
 
 namespace TradingSystem.View
 {
@@ -40,19 +42,18 @@ namespace TradingSystem.View
             Console.WriteLine("user: " + userName + " " + "Password: " + password);
 
             var retCode = _loginController.Login(userName, password);
-            //if (retCode == (int)ConnectionCode.Success)
-            //{
-            this._isExit = false;
-            this.Close();
-            //}
-            //else
-            //{
-            //    WarnForm warnForm = new WarnForm();
-            //    warnForm.Owner = this;
-            //    //warnForm.Show();
-            //    warnForm.ShowDialog();
-            //    warnForm.UpdateText(ConfigManager.Instance.GetLabelConfig().GetErrorMessage(retCode));
-            //}
+            if (retCode == (int)ConnectionCode.Success)
+            {
+                this._isExit = false;
+                this.Close();
+            }
+            else
+            {
+                WarnForm warnForm = new WarnForm();
+                warnForm.Owner = this;
+                warnForm.UpdateText(ConfigManager.Instance.GetLabelConfig().GetErrorMessage(retCode));
+                warnForm.ShowDialog();
+            }
         }
 
         public void Exit()

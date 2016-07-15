@@ -18,6 +18,7 @@ using TradingSystem.TradeUtil;
 using BLL.Entrust;
 using Model.EnumType;
 using Model.Binding.BindingUtil;
+using BLL.UFX.impl;
 
 namespace TradingSystem.View
 {
@@ -573,39 +574,12 @@ namespace TradingSystem.View
         #region Load data
         private bool Form_LoadData(object sender, object data)
         {
-            Clear();
+            //Clear();
             
             //Load data here
-            
-            var tradingcmds = _tradecmddao.Get(-1);
-            if (tradingcmds != null)
-            {
-                foreach (var cmdItem in tradingcmds)
-                {
-                    _cmdDataSource.Add(cmdItem);
-                }
-            }
-
-            var efItems = _entrustBLL.GetEntrustFlow();
-            if (efItems != null)
-            {
-                foreach (var efItem in efItems)
-                {
-                    _efDataSource.Add(efItem);
-                }
-            }
-
-            var dfItems = _entrustBLL.GetDealFlow();
-            if (dfItems != null)
-            {
-                foreach (var dfItem in dfItems)
-                {
-                    _dfDataSource.Add(dfItem);
-                }
-            }
-
-            UFXQueryEntrustBLL queryBll = new UFXQueryEntrustBLL();
-            var test = queryBll.QueryToday();
+            LoadDataTradeCommand();
+            LoadDataEntrustFlow();
+            LoadDataDealFlow();
 
             return true;
         }
@@ -619,6 +593,92 @@ namespace TradingSystem.View
             _dfDataSource.Clear();
         }
 
+        private bool LoadDataTradeCommand()
+        {
+            _cmdDataSource.Clear();
+            _secuDataSource.Clear();
+            _eiDataSource.Clear();
+
+            var tradingcmds = _tradecmddao.Get(-1);
+            if (tradingcmds != null)
+            {
+                foreach (var cmdItem in tradingcmds)
+                {
+                    _cmdDataSource.Add(cmdItem);
+                }
+            }
+
+            return true;
+        }
+
+        private bool LoadDataEntrustFlow()
+        {
+            //var efItems = _entrustBLL.GetEntrustFlow();
+            //if (efItems != null)
+            //{
+            //    foreach (var efItem in efItems)
+            //    {
+            //        _efDataSource.Add(efItem);
+            //    }
+            //}
+
+            UFXQueryEntrustBLL queryBll = new UFXQueryEntrustBLL();
+            var test = queryBll.QueryToday(new CallerCallback(LoadDataEntrustFlow2));
+
+            return true;
+        }
+
+        private bool LoadDataDealFlow()
+        {
+            //var dfItems = _entrustBLL.GetDealFlow();
+            //if (dfItems != null)
+            //{
+            //    foreach (var dfItem in dfItems)
+            //    {
+            //        _dfDataSource.Add(dfItem);
+            //    }
+            //}
+
+            UFXQueryDealBLL queryDealBll = new UFXQueryDealBLL();
+            var test = queryDealBll.QueryToday(new CallerCallback(LoadDataDealFlow2));
+
+            return true;
+        }
+
+        private int LoadDataDealFlow2(CallerToken token, object data)
+        {
+            if (data == null || !(data is List<DealFlowItem>))
+                return -1;
+            var dfItems = data as List<DealFlowItem>;
+
+            this.BeginInvoke(new Action(() =>
+            {
+                _efDataSource.Clear();
+
+                dfItems.ForEach(p => _dfDataSource.Add(p));
+
+                this.efGridView.Invalidate();
+            }), null);
+            return 1;
+        }
+        
+        private int LoadDataEntrustFlow2(CallerToken token, object data)
+        {
+            if (data == null || !(data is List<EntrustFlowItem>))
+                return -1;
+            var efItems = data as List<EntrustFlowItem>;
+            
+            this.BeginInvoke(new Action(()=>
+            {
+                _efDataSource.Clear();
+
+                efItems.ForEach(p => _efDataSource.Add(p));
+
+                this.efGridView.Invalidate();
+            }), null);
+            return 1;
+        }
+
         #endregion
 
         #region toolstrip refresh click event handler
@@ -626,11 +686,13 @@ namespace TradingSystem.View
         private void ToolStripButton_DealFlow_Refresh(object sender, EventArgs e)
         {
             //TODO: load the dealflow security
+            LoadDataDealFlow();
         }
 
         private void ToolStripButton_EntrustFlow_Refresh(object sender, EventArgs e)
         {
             //TODO: load the entrustflow security
+            LoadDataEntrustFlow();
         }
 
         private void ToolStripButton_Command_Refresh(object sender, EventArgs e)
@@ -1022,7 +1084,7 @@ namespace TradingSystem.View
 
             foreach (var entrustSecuItem in entrustSecuItems)
             {
-                if (entrustSecuItem.EntrustedAmount <= 0
+                if (entrustSecuItem.ThisEntrustAmount <= 0
                     || entrustSecuItem.EntrustPrice < entrustSecuItem.LimitDownPrice
                     || entrustSecuItem.EntrustPrice > entrustSecuItem.LimitUpPrice
                     || entrustSecuItem.EntrustPrice <= 0.00001)

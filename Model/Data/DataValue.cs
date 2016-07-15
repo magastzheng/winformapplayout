@@ -40,6 +40,10 @@ namespace Model.Data
             {
                 return Convert.ToInt32(Value);
             }
+            else if (Type == DataValueType.String)
+            {
+                return Convert.ToInt32(Value);
+            }
             else
             {
                 return -1;

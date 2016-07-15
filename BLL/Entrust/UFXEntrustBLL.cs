@@ -92,7 +92,7 @@ namespace BLL.Entrust
 
             Callbacker callbacker = new Callbacker
             {
-                Token = new CallbackToken
+                Token = new CallerToken
                 {
                     SubmitId = cmdItem.SubmitId,
                     CommandId = cmdItem.CommandId,
@@ -125,7 +125,7 @@ namespace BLL.Entrust
 
             Callbacker callbacker = new Callbacker
             {
-                Token = new CallbackToken
+                Token = new CallerToken
                 {
                     SubmitId = cmdItem.SubmitId,
                     CommandId = cmdItem.CommandId,
@@ -144,7 +144,7 @@ namespace BLL.Entrust
             return ret;
         }
 
-        private int EntrustBasketCallback(CallbackToken token, DataParser dataParser)
+        private int EntrustBasketCallback(CallerToken token, DataParser dataParser)
         {
             List<UFXBasketEntrustResponse> responseItems = new List<UFXBasketEntrustResponse>();
             var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXBasketEntrustResponse>();
@@ -194,7 +194,7 @@ namespace BLL.Entrust
             return ret;
         }
 
-        private int WithdrawBasketCallback(CallbackToken token, DataParser dataParser)
+        private int WithdrawBasketCallback(CallerToken token, DataParser dataParser)
         {
             List<UFXBasketWithdrawResponse> responseItems = new List<UFXBasketWithdrawResponse>();
 

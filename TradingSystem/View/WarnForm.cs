@@ -8,6 +8,8 @@ namespace TradingSystem.View
         public WarnForm()
         {
             InitializeComponent();
+
+            //this.rtBoxMessage.Text = "登录失败";
         }
 
         #region
@@ -15,7 +17,8 @@ namespace TradingSystem.View
         public void UpdateText(string text)
         {
             //this.BeginInvoke(new OnUpdateText(UpdateRichTextBox), text);
-            UpdateRichTextBox(text);
+            //UpdateRichTextBox(text);
+            this.rtBoxMessage.Text = text;
             //this.Invoke(new Action<string>(
             //        delegate(string message) {
             //            try
@@ -31,7 +34,7 @@ namespace TradingSystem.View
 
         private void UpdateRichTextBox(string message)
         {
-            this.rtBoxMessage.Text = message;
+            //this.rtBoxMessage.Text = message;
         }
         #endregion
 

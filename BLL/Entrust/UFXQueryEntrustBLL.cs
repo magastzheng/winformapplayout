@@ -26,7 +26,7 @@ namespace BLL.Entrust
             this._securityBLL = BLLManager.Instance.SecurityBLL;
         }
 
-        public List<EntrustFlowItem> QueryToday()
+        public List<EntrustFlowItem> QueryToday(CallerCallback callback)
         {
             List<UFXQueryEntrustRequest> requests = new List<UFXQueryEntrustRequest>();
             UFXQueryEntrustRequest request = new UFXQueryEntrustRequest();
@@ -36,10 +36,11 @@ namespace BLL.Entrust
 
             Callbacker callbacker = new Callbacker
             {
-                Token = new CallbackToken
+                Token = new CallerToken
                 {
                     SubmitId = 11111,
                     CommandId = 22222,
+                    Caller = callback,
                 },
 
                 Callback = QueryToday,
@@ -47,12 +48,12 @@ namespace BLL.Entrust
 
             var result = _securityBLL.QueryEntrust(requests, callbacker);
 
-            _waitEvent.WaitOne(30 * 1000);
+            //_waitEvent.WaitOne(30 * 1000);
 
             return null;
         }
 
-        private int QueryToday(CallbackToken token, DataParser dataParser)
+        private int QueryToday(CallerToken token, DataParser dataParser)
         {
             List<UFXQueryEntrustResponse> responseItems = new List<UFXQueryEntrustResponse>();
 
@@ -68,7 +69,40 @@ namespace BLL.Entrust
                 }
             }
 
-            _waitEvent.Set();
+            if (token.Caller != null)
+            {
+                var entrustFlowItems = new List<EntrustFlowItem>();
+                foreach (var responseItem in responseItems)
+                {
+                    EntrustFlowItem efItem = new EntrustFlowItem 
+                    { 
+                        CommandNo = token.CommandId,
+                        Market = responseItem.MarketNo,
+                        SecuCode = responseItem.StockCode,
+                        EntrustDirection = responseItem.EntrustDirection,
+                        PriceType = responseItem.PriceType,
+                        EntrustPrice = responseItem.EntrustPrice,
+                        EntrustAmount = responseItem.EntrustAmount,
+                        EntrustStatus = responseItem.EntrustState,
+                        DealAmount = responseItem.DealAmount,
+                        DealMoney = responseItem.DealBalance,
+                        DealTimes = responseItem.DealTimes,
+                        EntrustedDate = string.Format("{0}",responseItem.EntrustDate),
+                        FirstDealDate = string.Format("{0}", responseItem.FirstDealTime),
+                        EntrustedTime = string.Format("{0}", responseItem.EntrustTime),
+                        EntrustBatchNo = responseItem.BatchNo,
+                        EntrustNo = responseItem.EntrustNo,
+                        DeclareSeat = responseItem.ReportSeat,
+                        DeclareNo = Convert.ToInt32(responseItem.ReportNo),
+                    };
+
+                    entrustFlowItems.Add(efItem);
+                }
+
+                token.Caller(token, entrustFlowItems);
+            }
+
+            //_waitEvent.Set();
 
             return responseItems.Count();
         }

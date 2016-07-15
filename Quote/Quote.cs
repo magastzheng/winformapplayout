@@ -85,6 +85,15 @@ namespace Quote
                 }
             }
 
+            //add the necessary fields
+            foreach (var field in AllFields)
+            {
+                if (!fields.Contains(field))
+                {
+                    fields.Add(field);
+                }
+            }
+
             return fields;
         }
 
