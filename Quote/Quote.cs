@@ -374,19 +374,19 @@ namespace Quote
                                     marketData.CurrentPrice = dval;
                                     break;
                                 case "rt_ask1":
-                                    marketData.BuyPrice1 = dval;
+                                    marketData.SellPrice1 = dval;
                                     break;
                                 case "rt_ask2":
-                                    marketData.BuyPrice2 = dval;
+                                    marketData.SellPrice2 = dval;
                                     break;
                                 case "rt_ask3":
-                                    marketData.BuyPrice3 = dval;
+                                    marketData.SellPrice3 = dval;
                                     break;
                                 case "rt_ask4":
-                                    marketData.BuyPrice4 = dval;
+                                    marketData.SellPrice4 = dval;
                                     break;
                                 case "rt_ask5":
-                                    marketData.BuyPrice5 = dval;
+                                    marketData.SellPrice5 = dval;
                                     break;
                                 case "rt_ask6":
                                     break;
@@ -399,34 +399,34 @@ namespace Quote
                                 case "rt_ask10":
                                     break;
                                 case "rt_bid1":
-                                    marketData.SellPrice1 = dval;
+                                    marketData.BuyPrice1 = dval;
                                     break;
                                 case "rt_bid2":
-                                    marketData.SellPrice2 = dval;
+                                    marketData.BuyPrice2 = dval;
                                     break;
                                 case "rt_bid3":
-                                    marketData.SellPrice3 = dval;
+                                    marketData.BuyPrice3 = dval;
                                     break;
                                 case "rt_bid4":
-                                    marketData.SellPrice4 = dval;
+                                    marketData.BuyPrice4 = dval;
                                     break;
                                 case "rt_bid5":
-                                    marketData.SellPrice5 = dval;
+                                    marketData.BuyPrice5 = dval;
                                     break;
                                 case "rt_upward_vol":
-                                    marketData.BuyAmount = (int)dval;
+                                    marketData.BuyAmount = Convert.ToInt32(dval);
                                     break;
                                 case "rt_downward_vol":
-                                    marketData.SellAmount = (int)dval;
+                                    marketData.SellAmount = Convert.ToInt32(dval);
                                     break;
                                 case "rt_susp_flag":
                                     {
-                                        marketData.SuspendFlag = QueryHelper.GetSuspendFlag((int)dval);
+                                        marketData.SuspendFlag = QueryHelper.GetSuspendFlag(Convert.ToInt32(dval));
                                     }
                                     break;
                                 case "rt_trade_status":
                                     {
-                                        marketData.TradingStatus = QueryHelper.GetTradingStatus((int)dval);
+                                        marketData.TradingStatus = QueryHelper.GetTradingStatus(Convert.ToInt32(dval));
                                     }
                                     break;
                                 case "rt_high_limit":
