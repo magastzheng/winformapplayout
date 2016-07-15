@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Util;
 
 namespace BLL.Entrust
 {
@@ -43,7 +44,7 @@ namespace BLL.Entrust
                     Caller = callback,
                 },
 
-                Callback = QueryToday,
+                Callback = QueryDataHandler,
             };
 
             var result = _securityBLL.QueryEntrust(requests, callbacker);
@@ -53,7 +54,34 @@ namespace BLL.Entrust
             return null;
         }
 
-        private int QueryToday(CallerToken token, DataParser dataParser)
+        public int QueryHistory(DateTime startDate, DateTime endDate, CallerCallback callback)
+        {
+            List<UFXQueryHistEntrustRequest> requests = new List<UFXQueryHistEntrustRequest>();
+            UFXQueryHistEntrustRequest request = new UFXQueryHistEntrustRequest();
+            request.StartDate = DateUtil.GetIntDate(startDate);
+            request.EndDate = DateUtil.GetIntDate(endDate);
+            request.CombiNo = "30";
+
+            requests.Add(request);
+
+            Callbacker callbacker = new Callbacker
+            {
+                Token = new CallerToken
+                {
+                    SubmitId = 333333,
+                    CommandId = 444444,
+                    Caller = callback,
+                },
+
+                Callback = QueryDataHandler,
+            };
+
+            var result = _securityBLL.QueryEntrustHistory(requests, callbacker);
+
+            return 1;
+        }
+
+        private int QueryDataHandler(CallerToken token, DataParser dataParser)
         {
             List<UFXQueryEntrustResponse> responseItems = new List<UFXQueryEntrustResponse>();
 

@@ -31,6 +31,7 @@ namespace BLL.Entrust
 
             //TODO: adjust the EntrustAmount
             List<EntrustSecurityItem> entrustItems = new List<EntrustSecurityItem>();
+            DateTime now = DateTime.Now;
             foreach (var cancelItem in cancelItems)
             {
                 EntrustSecurityItem item = new EntrustSecurityItem
@@ -43,7 +44,7 @@ namespace BLL.Entrust
                     EntrustDirection = cancelItem.EntrustDirection,
                     EntrustPriceType = cancelItem.EEntrustPriceType,
                     PriceType = cancelItem.EPriceSetting,
-                    EntrustDate = DateTime.Now,
+                    EntrustDate = now,
                 };
 
                 entrustItems.Add(item);
@@ -73,7 +74,7 @@ namespace BLL.Entrust
             foreach (var cmdItem in cmdItems)
             {
                 var cmdSecuItems = entrustItems.Where(p => p.CommandId == cmdItem.CommandId).ToList();
-                ret = _entrustdao.Submit(cmdItem, cmdSecuItems);
+                ret = SubmitOne(cmdItem, cmdSecuItems);
             }
 
             return -1;

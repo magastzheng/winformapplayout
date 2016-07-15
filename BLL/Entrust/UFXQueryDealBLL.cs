@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Util;
 
 namespace BLL.Entrust
 {
@@ -40,7 +41,7 @@ namespace BLL.Entrust
                     Caller = callback,
                 },
 
-                Callback = QueryToday,
+                Callback = QueryDataHandler,
             };
 
             var result = _securityBLL.QueryDeal(requests, callbacker);
@@ -48,7 +49,34 @@ namespace BLL.Entrust
             return 1;
         }
 
-        private int QueryToday(CallerToken token, DataParser dataParser)
+        public int QueryHistory(DateTime startDate, DateTime endDate, CallerCallback callback)
+        {
+            List<UFXQueryHistDealRequest> requests = new List<UFXQueryHistDealRequest>();
+            UFXQueryHistDealRequest request = new UFXQueryHistDealRequest();
+            request.StartDate = DateUtil.GetIntDate(startDate);
+            request.EndDate = DateUtil.GetIntDate(endDate);
+            request.CombiNo = "30";
+
+            requests.Add(request);
+
+            Callbacker callbacker = new Callbacker
+            {
+                Token = new CallerToken
+                {
+                    SubmitId = 333333,
+                    CommandId = 444444,
+                    Caller = callback,
+                },
+
+                Callback = QueryDataHandler,
+            };
+
+            var result = _securityBLL.QueryDealHistory(requests, callbacker);
+
+            return 1;
+        }
+
+        private int QueryDataHandler(CallerToken token, DataParser dataParser)
         {
             List<UFXQueryDealResponse> responseItems = new List<UFXQueryDealResponse>();
 
@@ -90,8 +118,6 @@ namespace BLL.Entrust
 
                 token.Caller(token, dealFlowItems);
             }
-
-            //_waitEvent.Set();
 
             return responseItems.Count();
         }
