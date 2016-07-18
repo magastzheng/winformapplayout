@@ -87,5 +87,139 @@ namespace Config.ParamConverter
 
             return entrustpricetype;
         }
+
+        public static string GenerateThirdReff(int commandId, int submitId, int requestId)
+        {
+            return string.Format("{0};{1};{2}", commandId, submitId, requestId);
+        }
+
+        public static string GetExchangeCode(string marketNo)
+        {
+            string exchangeCode = string.Empty;
+
+            switch (marketNo)
+            { 
+                case "1":
+                    exchangeCode = "SSE";
+                    break;
+                case "2":
+                    exchangeCode = "SZSE";
+                    break;
+                case "7":
+                    exchangeCode = "CFFEX";
+                    break;
+                default:
+                    break;
+            }
+
+            return exchangeCode;
+        }
+
+        public static EntrustDirection GetEntrustDirectionType(string directionCode, string exchangeCode)
+        {
+            EntrustDirection direction = EntrustDirection.None;
+
+            switch (directionCode)
+            {
+                case "1":
+                    {
+                        if (exchangeCode.Equals("SSE") || exchangeCode.Equals("SZSE"))
+                        {
+                            direction = EntrustDirection.BuySpot;
+                        }
+                        else if (exchangeCode.Equals("CFFEX"))
+                        {
+                            direction = EntrustDirection.SellOpen;
+                        }
+                    }
+                    break;
+                case "2":
+                    {
+                        if (exchangeCode.Equals("SSE") || exchangeCode.Equals("SZSE"))
+                        {
+                            direction = EntrustDirection.SellSpot;
+                        }
+                        else if (exchangeCode.Equals("CFFEX"))
+                        {
+                            direction = EntrustDirection.BuyClose;
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            return direction;
+        }
+
+        public static EntrustStatus GetEntrustStatusType(string statusCode)
+        {
+            EntrustStatus status = EntrustStatus.NoExecuted;
+
+            return status;
+        }
+
+        public static bool ParseThirdReff(string thirdReff, out int commandId, out int submitId, out int requestId)
+        {
+            bool ret = false;
+
+            if (string.IsNullOrEmpty(thirdReff))
+            {
+                commandId = -1;
+                submitId = -1;
+                requestId = -1;
+
+                return ret;
+            }
+
+            var parts = thirdReff.Split(';');
+            if (parts.Length == 3)
+            {
+                int temp = -1;
+                if (int.TryParse(parts[0], out temp))
+                {
+                    commandId = temp;
+                }
+                else
+                {
+                    commandId = -1;
+                }
+
+                if (int.TryParse(parts[1], out temp))
+                {
+                    submitId = temp;
+                }
+                else
+                {
+                    submitId = -1;
+                }
+
+                if (int.TryParse(parts[2], out temp))
+                {
+                    requestId = temp;
+                }
+                else
+                {
+                    requestId = -1;
+                }
+
+                if(commandId == -1 || submitId == -1 || requestId == -1)
+                {
+                    ret = false;
+                }
+                else
+                {
+                    ret = true;
+                }
+            }
+            else
+            {
+                commandId = -1;
+                submitId = -1;
+                requestId = -1;
+            }
+
+            return ret;
+        }
     }
 }

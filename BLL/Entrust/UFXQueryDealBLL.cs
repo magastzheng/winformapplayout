@@ -41,7 +41,7 @@ namespace BLL.Entrust
                     Caller = callback,
                 },
 
-                Callback = QueryDataHandler,
+                DataHandler = QueryDataHandler,
             };
 
             var result = _securityBLL.QueryDeal(requests, callbacker);
@@ -68,7 +68,7 @@ namespace BLL.Entrust
                     Caller = callback,
                 },
 
-                Callback = QueryDataHandler,
+                DataHandler = QueryDataHandler,
             };
 
             var result = _securityBLL.QueryDealHistory(requests, callbacker);

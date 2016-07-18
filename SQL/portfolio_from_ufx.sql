@@ -9,7 +9,7 @@ create table ufxportfolio
 	PortfolioId int identity(1, 1) primary key,
 	PortfolioCode varchar(20) not null,
 	PortfolioName varchar(250) not null,
-	AccountCode varchar(20),
+	AccountCode varchar(32),
 	AccountName varchar(250),
 	AccountType int, 
 	AssetNo varchar(20),

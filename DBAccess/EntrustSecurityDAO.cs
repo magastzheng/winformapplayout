@@ -115,8 +115,6 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
-
-            
         }
 
         public int UpdateEntrustNoByRequestId(int requestId, int entrustNo, int batchNo)
@@ -150,25 +148,28 @@ namespace DBAccess
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public int UpdateDeal(EntrustSecurityItem item)
+        public int UpdateDeal(int submitId, int commandId, string secuCode, int dealAmount, double dealBalance, double dealFee)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustStatus);
-            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, item.SubmitId);
-            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, item.CommandId);
-            _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, item.SecuCode);
-            _dbHelper.AddInParameter(dbCommand, "@DealStatus", System.Data.DbType.Int32, (int)item.DealStatus);
-            _dbHelper.AddInParameter(dbCommand, "@DealAmount", System.Data.DbType.Int32, item.DealAmount);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyDeal);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+            _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, secuCode);
+            _dbHelper.AddInParameter(dbCommand, "@DealAmount", System.Data.DbType.Int32, dealAmount);
+            _dbHelper.AddInParameter(dbCommand, "@DealBalance", System.Data.DbType.Decimal, dealBalance);
+            _dbHelper.AddInParameter(dbCommand, "@DealFee", System.Data.DbType.Decimal, dealFee);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public int UpdateDealByRequestId(int requestId, int dealAmount)
+        public int UpdateDealByRequestId(int requestId, int dealAmount, double dealBalance, double dealFee)
         {
 
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyDealByRequestId);
             _dbHelper.AddInParameter(dbCommand, "@RequestId", System.Data.DbType.Int32, requestId);
             _dbHelper.AddInParameter(dbCommand, "@DealAmount", System.Data.DbType.Int32, dealAmount);
+            _dbHelper.AddInParameter(dbCommand, "@DealBalance", System.Data.DbType.Decimal, dealBalance);
+            _dbHelper.AddInParameter(dbCommand, "@DealFee", System.Data.DbType.Decimal, dealFee);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
@@ -245,7 +246,9 @@ namespace DBAccess
                     item.EntrustNo = (int)reader["EntrustNo"];
                     item.BatchNo = (int)reader["BatchNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
-                    item.DealAmount = (int)reader["DealAmount"];
+                    item.TotalDealAmount = (int)reader["TotalDealAmount"];
+                    item.TotalDealBalance = (double)(decimal)reader["TotalDealBalance"];
+                    item.TotalDealFee = (double)(decimal)reader["TotalDealFee"];
 
                     if (reader["EntrustDate"] != null && reader["EntrustDate"] != DBNull.Value)
                     {
@@ -297,7 +300,9 @@ namespace DBAccess
                     item.EntrustNo = (int)reader["EntrustNo"];
                     item.BatchNo = (int)reader["BatchNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
-                    item.DealAmount = (int)reader["DealAmount"];
+                    item.TotalDealAmount = (int)reader["TotalDealAmount"];
+                    item.TotalDealBalance = (double)(decimal)reader["TotalDealBalance"];
+                    item.TotalDealFee = (double)(decimal)reader["TotalDealFee"];
 
                     if (reader["EntrustDate"] != null && reader["EntrustDate"] != DBNull.Value)
                     {
@@ -349,7 +354,9 @@ namespace DBAccess
                     item.EntrustNo = (int)reader["EntrustNo"];
                     item.BatchNo = (int)reader["BatchNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
-                    item.DealAmount = (int)reader["DealAmount"];
+                    item.TotalDealAmount = (int)reader["TotalDealAmount"];
+                    item.TotalDealBalance = (double)(decimal)reader["TotalDealBalance"];
+                    item.TotalDealFee = (double)(decimal)reader["TotalDealFee"];
 
                     if (reader["EntrustDate"] != null && reader["EntrustDate"] != DBNull.Value)
                     {
@@ -403,7 +410,9 @@ namespace DBAccess
                     item.EntrustNo = (int)reader["EntrustNo"];
                     item.BatchNo = (int)reader["BatchNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
-                    item.DealAmount = (int)reader["DealAmount"];
+                    item.TotalDealAmount = (int)reader["TotalDealAmount"];
+                    item.TotalDealBalance = (double)(decimal)reader["TotalDealBalance"];
+                    item.TotalDealFee = (double)(decimal)reader["TotalDealFee"];
 
                     if (reader["EntrustDate"] != null && reader["EntrustDate"] != DBNull.Value)
                     {
@@ -455,7 +464,9 @@ namespace DBAccess
                     item.EntrustNo = (int)reader["EntrustNo"];
                     item.BatchNo = (int)reader["BatchNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
-                    item.DealAmount = (int)reader["DealAmount"];
+                    item.TotalDealAmount = (int)reader["TotalDealAmount"];
+                    item.TotalDealBalance = (double)(decimal)reader["TotalDealBalance"];
+                    item.TotalDealFee = (double)(decimal)reader["TotalDealFee"];
 
                     if (reader["EntrustDate"] != null && reader["EntrustDate"] != DBNull.Value)
                     {
@@ -507,7 +518,9 @@ namespace DBAccess
                     item.EntrustNo = (int)reader["EntrustNo"];
                     item.BatchNo = (int)reader["BatchNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
-                    item.DealAmount = (int)reader["DealAmount"];
+                    item.TotalDealAmount = (int)reader["TotalDealAmount"];
+                    item.TotalDealBalance = (double)(decimal)reader["TotalDealBalance"];
+                    item.TotalDealFee = (double)(decimal)reader["TotalDealFee"];
 
                     if (reader["EntrustDate"] != null && reader["EntrustDate"] != DBNull.Value)
                     {
@@ -559,7 +572,9 @@ namespace DBAccess
                     item.PriceType = (PriceType)reader["PriceType"];
                     item.EntrustNo = (int)reader["EntrustNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
-                    item.DealAmount = (int)reader["DealAmount"];
+                    item.TotalDealAmount = (int)reader["TotalDealAmount"];
+                    item.TotalDealBalance = (double)(decimal)reader["TotalDealBalance"];
+                    item.TotalDealFee = (double)(decimal)reader["TotalDealFee"];
 
                     if (reader["EntrustDate"] != null && reader["EntrustDate"] != DBNull.Value)
                     {

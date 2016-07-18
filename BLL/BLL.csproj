@@ -55,6 +55,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entrust\subscriber\UFXEntrustCompletedBLL.cs" />
+    <Compile Include="Entrust\subscriber\UFXEntrustDealBLL.cs" />
+    <Compile Include="Entrust\subscriber\UFXWithdrawCompletedBLL.cs" />
+    <Compile Include="Entrust\UFXBasketEntrustBLL.cs" />
+    <Compile Include="Entrust\UFXBasketWithdrawBLL.cs" />
     <Compile Include="Entrust\UFXDataSetHelper.cs" />
     <Compile Include="Entrust\UFXEntrustBLL.cs" />
     <Compile Include="Entrust\UFXQueryDealBLL.cs" />
@@ -62,6 +67,7 @@
     <Compile Include="UFX\impl\ArbitrageBLL.cs" />
     <Compile Include="UFX\BLLManager.cs" />
     <Compile Include="UFX\impl\UFXBLLBase.cs" />
+    <Compile Include="UFX\impl\UFXDataHandlerCallback.cs" />
     <Compile Include="UFX\obsolete\CallbackDataReady.cs" />
     <Compile Include="UFX\impl\DataParser.cs" />
     <Compile Include="Entrust\EntrustBLL.cs" />

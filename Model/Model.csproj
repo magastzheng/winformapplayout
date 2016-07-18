@@ -79,6 +79,7 @@
     <Compile Include="t2sdk\UFXEntrust.cs" />
     <Compile Include="t2sdk\MarketCode.cs" />
     <Compile Include="t2sdk\UFXQuery.cs" />
+    <Compile Include="t2sdk\UFXSubscriber.cs" />
     <Compile Include="TradingCommand\TradingCommandItem.cs" />
     <Compile Include="TradingCommand\TradingCommandSecurityItem.cs" />
     <Compile Include="UI\CancelRedoItem.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="UI\ClosePositionSecurityItem.cs" />
     <Compile Include="UI\CommandSecurityItem.cs" />
     <Compile Include="UI\DealFlowItem.cs" />
+    <Compile Include="UI\DealSecurityItem.cs" />
     <Compile Include="UI\EntrustSecurityCombineItem.cs" />
     <Compile Include="UI\EntrustCommandItem.cs" />
     <Compile Include="UI\EntrustFlowItem.cs" />

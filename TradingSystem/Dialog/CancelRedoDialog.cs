@@ -228,9 +228,9 @@ namespace TradingSystem.Dialog
                             ECommandPrice = p.PriceType,
                             ReportPrice = p.EntrustPrice,
                             EOriginPriceType = p.EntrustPriceType,
-                            LeftAmount = p.EntrustAmount - p.DealAmount,
+                            LeftAmount = p.EntrustAmount - p.TotalDealAmount,
                             ReportAmount = p.EntrustAmount,
-                            DealAmount = p.DealAmount,
+                            DealAmount = p.TotalDealAmount,
                             EntrustDate = p.EntrustDate,
                             SubmitId = p.SubmitId,
                         };

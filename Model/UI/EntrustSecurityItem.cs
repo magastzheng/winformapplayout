@@ -36,7 +36,11 @@ namespace Model.UI
 
         public PriceType PriceType { get; set; }
 
-        public int DealAmount { get; set; }
+        public int TotalDealAmount { get; set; }
+
+        public double TotalDealBalance { get; set; }
+
+        public double TotalDealFee { get; set; }
 
         public int DealTimes { get; set; }
 

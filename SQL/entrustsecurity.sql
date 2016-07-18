@@ -19,7 +19,9 @@ create table entrustsecurity(
 	,EntrustNo			int			 --委托之后，服务器返回的委托号
 	,BatchNo			int			 -- 委托后返回的批号ID
 	,DealStatus			int			 -- 1 - 未成交， 2 - 部分成交， 3 - 已完成
-	,DealAmount			int			 -- 成交数量
+	,TotalDealAmount	int			 -- 累计成交数量
+	,TotalDealBalance	numeric(20, 4) --累计成交金额
+	,TotalDealFee		numeric(20, 4) --累计费用
 	,DealTimes			int			 -- 成交次数
 	,EntrustDate		datetime	 -- 委托时间
 	,CreatedDate		datetime
@@ -66,7 +68,9 @@ begin
 		,EntrustNo
 		,BatchNo
 		,DealStatus
-		,DealAmount
+		,TotalDealAmount
+		,TotalDealBalance
+		,TotalDealFee
 		,DealTimes
 		,EntrustDate
 		,CreatedDate
@@ -85,6 +89,8 @@ begin
 		,-1					--初始时没有委托批次号
 		,1					--未成交
 		,0					--成交量初始为0
+		,0.0				--累计成交金额初始为0
+		,0.0				--累计成交费用初始为0
 		,0					--成交次数0
 		,@EntrustDate
 		,@CreatedDate	
@@ -247,6 +253,8 @@ create proc procEntrustSecurityUpdateDeal(
 	,@CommandId			int
 	,@SecuCode			varchar(10)
 	,@DealAmount		int
+	,@DealBalance		numeric(20, 4)
+	,@DealFee			numeric(20, 4)
 	,@ModifiedDate		datetime
 )
 as
@@ -255,10 +263,14 @@ begin
 	declare @TotalTimes int
 	declare @TotalAmount int
 	declare @EntrustAmount int
+	declare @TotalBalance numeric(20, 4)
+	declare @TotalFee numeric(20, 4)
 	declare @DealStatus int
 	
 	select @TotalTimes=DealTimes
-		,@TotalAmount=DealAmount 
+		,@TotalAmount=TotalDealAmount 
+		,@TotalBalance=TotalDealBalance
+		,@TotalFee=TotalDealFee
 		,@EntrustAmount=EntrustAmount
 	from entrustsecurity 
 	where SubmitId=@SubmitId
@@ -267,6 +279,8 @@ begin
 
 	set @TotalTimes=@TotalTimes+1
 	set @TotalAmount=@TotalAmount+@DealAmount
+	set @TotalBalance=@TotalBalance+@DealBalance
+	set @TotalFee=@TotalFee+@DealFee
 
 	if @TotalAmount=@EntrustAmount
 	begin
@@ -278,10 +292,12 @@ begin
 	end
 
 	update entrustsecurity
-	set DealStatus		= @DealStatus
-		,DealAmount		= @TotalAmount
-		,DealTimes		= @TotalTimes
-		,ModifiedDate	= @ModifiedDate
+	set DealStatus			= @DealStatus
+		,TotalDealAmount	= @TotalAmount
+		,TotalDealBalance	= @TotalBalance
+		,TotalDealFee		= @TotalFee
+		,DealTimes			= @TotalTimes
+		,ModifiedDate		= @ModifiedDate
 	where SubmitId=@SubmitId
 		and CommandId=@CommandId 
 		and SecuCode=@SecuCode
@@ -293,8 +309,10 @@ drop proc procEntrustSecurityUpdateDealByRequestId
 
 go
 create proc procEntrustSecurityUpdateDealByRequestId(
-	@RequestId		int
+	@RequestId			int
 	,@DealAmount		int
+	,@DealBalance		numeric(20, 4)
+	,@DealFee			numeric(20, 4)
 	,@ModifiedDate		datetime
 )
 as
@@ -303,16 +321,22 @@ begin
 	declare @TotalTimes int
 	declare @TotalAmount int
 	declare @EntrustAmount int
+	declare @TotalBalance numeric(20, 4)
+	declare @TotalFee numeric(20, 4)
 	declare @DealStatus int
 
 	select @TotalTimes=DealTimes
-		,@TotalAmount=DealAmount 
+		,@TotalAmount=TotalDealAmount 
+		,@TotalBalance=TotalDealBalance
+		,@TotalFee=TotalDealFee
 		,@EntrustAmount=EntrustAmount
 	from entrustsecurity 
 	where RequestId=@RequestId
-	
+
 	set @TotalTimes=@TotalTimes+1
 	set @TotalAmount=@TotalAmount+@DealAmount
+	set @TotalBalance=@TotalBalance+@DealBalance
+	set @TotalFee=@TotalFee+@DealFee
 
 	if @TotalAmount=@EntrustAmount
 	begin
@@ -324,10 +348,12 @@ begin
 	end
 
 	update entrustsecurity
-	set DealStatus		= @DealStatus
-		,DealAmount		= @TotalAmount
-		,DealTimes		= @TotalTimes
-		,ModifiedDate	= @ModifiedDate
+	set DealStatus			= @DealStatus
+		,TotalDealAmount	= @TotalAmount
+		,TotalDealBalance	= @TotalBalance
+		,TotalDealFee		= @TotalFee
+		,DealTimes			= @TotalTimes
+		,ModifiedDate		= @ModifiedDate
 	where RequestId=@RequestId
 end
 
@@ -437,7 +463,9 @@ begin
 		,EntrustNo
 		,BatchNo
 		,DealStatus
-		,DealAmount
+		,TotalDealAmount
+		,TotalDealBalance
+		,TotalDealFee
 		,DealTimes
 		,EntrustDate
 		,CreatedDate
@@ -470,7 +498,9 @@ begin
 		,EntrustNo
 		,BatchNo
 		,DealStatus
-		,DealAmount
+		,TotalDealAmount
+		,TotalDealBalance
+		,TotalDealFee
 		,DealTimes
 		,EntrustDate
 		,CreatedDate
@@ -501,7 +531,9 @@ begin
 		,EntrustNo
 		,BatchNo
 		,DealStatus
-		,DealAmount
+		,TotalDealAmount
+		,TotalDealBalance
+		,TotalDealFee
 		,DealTimes
 		,EntrustDate
 		,CreatedDate
@@ -535,7 +567,9 @@ begin
 		,EntrustNo
 		,BatchNo
 		,DealStatus
-		,DealAmount
+		,TotalDealAmount
+		,TotalDealBalance
+		,TotalDealFee
 		,DealTimes
 		,EntrustDate
 		,CreatedDate
@@ -570,7 +604,9 @@ begin
 		,EntrustNo
 		,BatchNo
 		,DealStatus
-		,DealAmount
+		,TotalDealAmount
+		,TotalDealBalance
+		,TotalDealFee
 		,DealTimes
 		,EntrustDate
 		,CreatedDate
@@ -603,7 +639,9 @@ begin
 		,EntrustNo
 		,BatchNo
 		,DealStatus
-		,DealAmount
+		,TotalDealAmount
+		,TotalDealBalance
+		,TotalDealFee
 		,DealTimes
 		,EntrustDate
 		,CreatedDate
@@ -638,7 +676,9 @@ begin
 		,EntrustNo
 		,BatchNo
 		,DealStatus
-		,DealAmount
+		,TotalDealAmount
+		,TotalDealBalance
+		,TotalDealFee
 		,DealTimes
 		,EntrustDate
 		,CreatedDate
@@ -672,7 +712,9 @@ begin
 		,EntrustNo
 		,BatchNo
 		,DealStatus
-		,DealAmount
+		,TotalDealAmount
+		,TotalDealBalance
+		,TotalDealFee
 		,DealTimes
 		,EntrustDate
 		,CreatedDate
@@ -710,7 +752,9 @@ begin
 		,EntrustNo
 		,BatchNo
 		,DealStatus
-		,DealAmount
+		,TotalDealAmount
+		,TotalDealBalance
+		,TotalDealFee
 		,DealTimes
 		,EntrustDate
 		,CreatedDate
@@ -742,7 +786,9 @@ begin
 		,a.EntrustNo
 		,a.BatchNo
 		,a.DealStatus
-		,a.DealAmount
+		,a.TotalDealAmount
+		,a.TotalDealBalance
+		,a.TotalDealFee
 		,a.DealTimes
 		,a.EntrustDate
 		,a.CreatedDate

@@ -6,17 +6,14 @@ using Config.ParamConverter;
 using DBAccess;
 using log4net;
 using Model.Binding.BindingUtil;
-using Model.Data;
 using Model.t2sdk;
 using Model.UI;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 namespace BLL.Entrust
 {
-    public class UFXEntrustBLL
+    public class UFXBasketEntrustBLL
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -24,17 +21,13 @@ namespace BLL.Entrust
         private TradeCommandBLL _tradeCommandBLL = null;
         private EntrustDAO _entrustdao = new EntrustDAO();
         private EntrustCommandDAO _entrustcmddao = new EntrustCommandDAO();
-        private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
 
-        private int _timeOut = 10 * 1000;
-
-        public UFXEntrustBLL()
+        public UFXBasketEntrustBLL()
         {
             _securityBLL = BLLManager.Instance.SecurityBLL;
-            _tradeCommandBLL = new TradeCommandBLL();
         }
 
-        public int Submit(EntrustCommandItem cmdItem, List<EntrustSecurityItem> entrustItems)
+        public int Submit(EntrustCommandItem cmdItem, List<EntrustSecurityItem> entrustItems, CallerCallback callerCallback)
         {
             int ret = -1;
 
@@ -51,7 +44,7 @@ namespace BLL.Entrust
             var futuItem = cmdEntrustItems.Find(p => p.SecuType == Model.SecurityInfo.SecurityType.Futures);
             foreach (var secuItem in cmdEntrustItems)
             {
-                UFXBasketEntrustRequest request = new UFXBasketEntrustRequest 
+                UFXBasketEntrustRequest request = new UFXBasketEntrustRequest
                 {
                     StockCode = secuItem.SecuCode,
                     EntrustPrice = secuItem.EntrustPrice,
@@ -96,9 +89,10 @@ namespace BLL.Entrust
                 {
                     SubmitId = cmdItem.SubmitId,
                     CommandId = cmdItem.CommandId,
+                    Caller = callerCallback,
                 },
 
-                DataHandler = EntrustBasketCallback,
+                DataHandler = EntrustDataHandler,
             };
 
             var result = _securityBLL.EntrustBasket(ufxRequests, callbacker);
@@ -107,44 +101,11 @@ namespace BLL.Entrust
             {
                 ret = 1;
             }
-            
-            return ret;
-        }
-
-        public int Cancel(EntrustCommandItem cmdItem, List<EntrustSecurityItem> entrustItems)
-        {
-            int ret = -1;
-
-            UFXBasketWithdrawRequest request = new UFXBasketWithdrawRequest 
-            {
-                BatchNo = cmdItem.BatchNo,   
-            };
-
-            List<UFXBasketWithdrawRequest> requests = new List<UFXBasketWithdrawRequest>();
-            requests.Add(request);
-
-            Callbacker callbacker = new Callbacker
-            {
-                Token = new CallerToken
-                {
-                    SubmitId = cmdItem.SubmitId,
-                    CommandId = cmdItem.CommandId,
-                },
-
-                DataHandler = WithdrawBasketCallback,
-            };
-
-            var result = _securityBLL.WithdrawBasket(requests, callbacker);
-
-            if (result == Model.ConnectionCode.Success)
-            {
-                ret = 1;
-            }
 
             return ret;
         }
 
-        private int EntrustBasketCallback(CallerToken token, DataParser dataParser)
+        private int EntrustDataHandler(CallerToken token, DataParser dataParser)
         {
             List<UFXBasketEntrustResponse> responseItems = new List<UFXBasketEntrustResponse>();
             var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXBasketEntrustResponse>();
@@ -191,48 +152,11 @@ namespace BLL.Entrust
                 logger.Warn(msg);
             }
 
-            return ret;
-        }
-
-        private int WithdrawBasketCallback(CallerToken token, DataParser dataParser)
-        {
-            List<UFXBasketWithdrawResponse> responseItems = new List<UFXBasketWithdrawResponse>();
-
-            var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXBasketWithdrawResponse>();
-            for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
+            if (token.Caller != null)
             {
-                var dataSet = dataParser.DataSets[i];
-                foreach (var dataRow in dataSet.Rows)
-                {
-                    UFXBasketWithdrawResponse p = new UFXBasketWithdrawResponse();
-                    UFXDataSetHelper.SetValue<UFXBasketWithdrawResponse>(ref p, dataRow.Columns, dataFieldMap);
-                    responseItems.Add(p);
-                }
+                token.Caller(token, entrustSecuItems);
             }
 
-            int ret = -1;
-            if (token.SubmitId > 0)
-            {
-                List<EntrustSecurityItem> entrustSecuItems = new List<EntrustSecurityItem>();
-                foreach (var responseItem in responseItems)
-                {
-                    var entrustItem = new EntrustSecurityItem
-                    {
-                        SubmitId = token.SubmitId,
-                        CommandId = token.CommandId,
-                        SecuCode = responseItem.StockCode,
-                        EntrustNo = responseItem.EntrustNo,
-                    };
-
-                    entrustSecuItems.Add(entrustItem);
-                }
-
-                ret = _entrustdao.UpdateSecurityEntrustStatus(entrustSecuItems, Model.EnumType.EntrustStatus.CancelSuccess);
-                ret = _entrustcmddao.UpdateEntrustCommandStatus(token.SubmitId, Model.EnumType.EntrustStatus.CancelSuccess);
-                ret = _tradecmddao.UpdateTargetNumBySubmitId(token.SubmitId, token.CommandId);
-            }
-
-           
             return ret;
         }
     }

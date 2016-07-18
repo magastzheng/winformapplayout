@@ -55,7 +55,7 @@ namespace BLL.UFX.impl
                 {
                     var callbacker = GetDataHandler(functionCode);
                     var token = callbacker.Token;
-                    var callback = callbacker.Callback;
+                    var callback = callbacker.DataHandler;
                     if (callback != null)
                     {
                         callback(token, parser);

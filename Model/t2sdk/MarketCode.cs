@@ -44,6 +44,33 @@ namespace Model.t2sdk
         Purchase = 12,
     }
 
+    public enum EntrustState
+    { 
+        NoReport = '1',
+        WaitReport = '2',
+        Reporting = '3',
+        Reported = '4',
+        //废单
+        Scrap = '5',
+
+        PartDone = '6',
+        Done = '7',
+        PartCancel = '8',
+        CancelDone = '9',
+        WaitCancel = 'a',
+
+        //未审批
+        NotApproved = 'b',
+        ApprovalReject = 'c',
+        NotApprovedCancel = 'd',
+        NotCancel = 'A',
+        WaitCancel2 = 'B',
+        Canceling = 'C',
+        CancelReg = 'D',
+        CancelScrap = 'E',
+        CancelDone2 = 'F',
+    }
+
     //开平仓
     public enum OpenPositionDirection
     { 
