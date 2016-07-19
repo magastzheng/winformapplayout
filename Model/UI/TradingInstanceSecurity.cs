@@ -27,10 +27,26 @@ namespace Model.UI
 
         public int PositionAmount { get; set; }
 
-        public int AvailableAmount { get; set; }
+        //public int AvailableAmount { get; set; }
 
         public int InstructionPreBuy { get; set; }
 
         public int InstructionPreSell { get; set; }
+
+        public double BuyBalance { get; set; }
+
+        public double SellBalance { get; set; }
+
+        public double DealFee { get; set; }
+
+        public int BuyToday { get; set; }
+
+        public int SellToday { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+
+        public DateTime ModifiedDate { get; set; }
+
+        public DateTime LastDate { get; set; }
     }
 }

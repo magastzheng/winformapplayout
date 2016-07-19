@@ -1,4 +1,5 @@
-﻿using BLL.UFX.impl;
+﻿using BLL.TradeCommand;
+using BLL.UFX.impl;
 using Config.ParamConverter;
 using DBAccess;
 using log4net;
@@ -15,6 +16,7 @@ namespace BLL.Entrust.subscriber
 
         private EntrustSecurityDAO _entrustsecudao = new EntrustSecurityDAO();
         private DealSecurityDAO _dealsecudao = new DealSecurityDAO();
+        private TradeInstanceSecurityBLL _tradeInstanceSecuBLL = new TradeInstanceSecurityBLL();
 
         public UFXEntrustDealBLL()
         { 
@@ -54,6 +56,9 @@ namespace BLL.Entrust.subscriber
                        //TODO: save into database
                         var dealItem = Convert(responseItem);
                         _dealsecudao.Create(dealItem);
+
+                        //Update the TradingInstanceSecurity
+                        _tradeInstanceSecuBLL.UpdateToday(dealItem.EntrustDirection, commandId, dealItem.SecuCode, dealItem.DealAmount, dealItem.DealBalance, dealItem.DealFee);
                     }
                     else
                     { 

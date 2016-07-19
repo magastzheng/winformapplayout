@@ -121,7 +121,7 @@ namespace TradingSystem.View
                     PositionType = secuItem.PositionType,
 
                     HoldingAmount = secuItem.PositionAmount,
-                    AvailableAmount = secuItem.AvailableAmount,
+                    AvailableAmount = secuItem.PositionAmount - secuItem.BuyToday,
 
                     PortfolioId = closeItem.PortfolioId,
                     PortfolioName = closeItem.PortfolioName,
@@ -250,8 +250,8 @@ namespace TradingSystem.View
             _instDataSource.Clear();
             _secuDataSource.Clear();
             _cmdDataSource.Clear();
-            
-            var tradeInstances = _tradeinstdao.GetCombine(-1);
+
+            var tradeInstances = _tradeinstdao.GetCombineAll();
             if (tradeInstances == null || tradeInstances.Count == 0)
             {
                 return false;

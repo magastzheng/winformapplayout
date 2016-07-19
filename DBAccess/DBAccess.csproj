@@ -60,6 +60,7 @@
     <Compile Include="SecurityInfoDAO.cs" />
     <Compile Include="StockTemplateDAO.cs" />
     <Compile Include="TemplateStockDAO.cs" />
+    <Compile Include="TradeInstance\TradeInstanceDAO.cs" />
     <Compile Include="TradingCommandDAO.cs" />
     <Compile Include="TradingCommandSecurityDAO.cs" />
     <Compile Include="TradingInstanceDAO.cs" />

@@ -18,8 +18,6 @@ namespace BLL.TradeCommand
         private TradingInstanceSecurityDAO _tradeinstsecudao = new TradingInstanceSecurityDAO();
         private TradingCommandDAO _tradecommandao = new TradingCommandDAO();
 
-        private TradeInstanceBLL _instanceBLL = new TradeInstanceBLL();
-
         public TradeCommandBLL()
         { 
         }
@@ -40,7 +38,7 @@ namespace BLL.TradeCommand
 
         public int SubmitCloseAll(ClosePositionItem closeItem, List<ClosePositionSecurityItem> closeSecuItems)
         {
-            var instance = _instanceBLL.GetInstance(closeItem.InstanceId);
+            var instance = _tradeinstdao.GetCombine(closeItem.InstanceId);
             TradingCommandItem tccmdItem = new TradingCommandItem 
             {
                 InstanceId = closeItem.InstanceId,
@@ -118,20 +116,12 @@ namespace BLL.TradeCommand
 
         public List<TradingCommandItem> GetTradeCommandItems()
         {
-            return _tradecommandao.Get(-1);
+            return _tradecommandao.GetAll();
         }
 
         public TradingCommandItem GetTradeCommandItem(int commandId)
         {
-            var items = _tradecommandao.Get(commandId);
-            if (items != null && items.Count == 1)
-            {
-                return items[0];
-            }
-            else
-            {
-                return new TradingCommandItem();
-            }
+            return _tradecommandao.Get(commandId);
         }
 
         #region private

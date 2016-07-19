@@ -599,7 +599,7 @@ namespace TradingSystem.View
             _secuDataSource.Clear();
             _eiDataSource.Clear();
 
-            var tradingcmds = _tradecmddao.Get(-1);
+            var tradingcmds = _tradecmddao.GetAll();
             if (tradingcmds != null)
             {
                 foreach (var cmdItem in tradingcmds)

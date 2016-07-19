@@ -67,6 +67,7 @@
     <Compile Include="Entrust\UFXEntrustBLL.cs" />
     <Compile Include="Entrust\UFXQueryDealBLL.cs" />
     <Compile Include="Entrust\UFXQueryEntrustBLL.cs" />
+    <Compile Include="TradeCommand\TradeInstanceSecurityBLL.cs" />
     <Compile Include="UFX\impl\ArbitrageBLL.cs" />
     <Compile Include="UFX\BLLManager.cs" />
     <Compile Include="UFX\impl\UFXBLLBase.cs" />

@@ -1,5 +1,6 @@
 ﻿using BLL.SecurityInfo;
 using DBAccess;
+using DBAccess.TradeInstance;
 using Model.EnumType;
 using Model.SecurityInfo;
 using Model.UI;
@@ -11,51 +12,35 @@ namespace BLL.TradeCommand
     {
         private TradingInstanceDAO _tradeinstdao = new TradingInstanceDAO();
         private TradingInstanceSecurityDAO _tradeinstsecudao = new TradingInstanceSecurityDAO();
+        private TradeInstanceDAO _tradeinstancedao = new TradeInstanceDAO();
 
         public TradeInstanceBLL()
         { 
         }
 
-        public int Create(TradingInstance tradingInstance, OpenPositionItem openItem, List<OpenPositionSecurityItem> secuItems)
+        public int Create(TradingInstance tradeInstance, OpenPositionItem openItem, List<OpenPositionSecurityItem> secuItems)
         {
-            int instanceId = _tradeinstdao.Create(tradingInstance);
-
-            if (instanceId > 0)
+            var tradeinstSecus = GetTradingInstanceSecurities(tradeInstance, openItem, secuItems);
+            int ret = _tradeinstancedao.Create(tradeInstance, tradeinstSecus);
+            if (ret > 0)
             {
-                tradingInstance.InstanceId = instanceId;
-                var tradeinstSecus = GetTradingInstanceSecurities(tradingInstance, openItem, secuItems);
-                if (tradeinstSecus != null && tradeinstSecus.Count > 0)
-                {
-                    foreach (var tiItem in tradeinstSecus)
-                    {
-                        string rowid = _tradeinstsecudao.Create(tiItem);
-                        if (string.IsNullOrEmpty(rowid))
-                        {
-                            //TODO: find to store the ....
-                        }
-                    }
-                }
+                return tradeInstance.InstanceId;
             }
-
-            return instanceId;
+            else
+            {
+                return -1;
+            }
         }
 
-        public int Update(TradingInstance tradeInstance)
+        public int Update(TradingInstance tradeInstance, OpenPositionItem openItem, List<OpenPositionSecurityItem> secuItems)
         {
-            return _tradeinstdao.Update(tradeInstance);
+            var tradeinstSecus = GetTradingInstanceSecurities(tradeInstance, openItem, secuItems);
+            return _tradeinstancedao.Update(tradeInstance, tradeinstSecus);
         }
 
         public TradingInstance GetInstance(int instanceId)
         {
-            var instances = _tradeinstdao.GetCombine(instanceId);
-            if (instances != null && instances.Count == 1)
-            {
-                return instances[0];
-            }
-            else
-            {
-                return new TradingInstance();
-            }
+            return _tradeinstdao.GetCombine(instanceId);
         }
 
         public TradingInstance GetInstance(string instanceCode)

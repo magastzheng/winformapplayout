@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using TradingSystem.View;
 using log4net.Config;
 using BLL.UFX;
+using BLL.TradeCommand;
 
 namespace TradingSystem
 {
@@ -39,6 +40,10 @@ namespace TradingSystem
 
             var buttonConfig = ConfigManager.Instance.GetButtonConfig();
 
+            //清算交易实例
+            var tradeInstanceSecuBLL = new TradeInstanceSecurityBLL();
+            tradeInstanceSecuBLL.SettlePosition();
+
             T2SDKWrap t2SDKWrap = new T2SDKWrap();
             var conRet = t2SDKWrap.Connect();
             if (conRet != Model.ConnectionCode.Success)
@@ -59,6 +64,8 @@ namespace TradingSystem
 
             BLLManager.Instance.Init(t2SDKWrap);
             BLLManager.Instance.Subscriber = t2Subscriber;
+
+            //WindAPIWrap.Instance
 
             //TODO: subscribe the message after getting login information
             LoginController loginController = new LoginController(new LoginForm(), t2SDKWrap);

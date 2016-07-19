@@ -83,7 +83,7 @@ namespace TradingSystem.Dialog
             this.tbEndTime.Text = endDate.ToString("hhmmss");
 
             //Initialize the instancecode
-            var instances = _tradeinstdao.GetCombine(-1);
+            var instances = _tradeinstdao.GetCombineAll();
             var targetInstances = instances.Where(p => p.MonitorUnitId == openItem.MonitorId && p.TemplateId == openItem.TemplateId).ToList();
             if (targetInstances != null && targetInstances.Count > 0)
             {

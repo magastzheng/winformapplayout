@@ -1,4 +1,5 @@
-﻿using BLL.UFX.impl;
+﻿using BLL.Product;
+using BLL.UFX.impl;
 using log4net;
 using Model.Binding.BindingUtil;
 using Model.Data;
@@ -20,6 +21,7 @@ namespace BLL.Entrust
 
         private SecurityBLL _securityBLL = null;
         //private TradeCommandBLL _tradeCommandBLL = null;
+        private ProductBLL _productBLL = new ProductBLL();
         private AutoResetEvent _waitEvent = new AutoResetEvent(false);
 
         public UFXQueryEntrustBLL()
@@ -30,10 +32,16 @@ namespace BLL.Entrust
         public List<EntrustFlowItem> QueryToday(CallerCallback callback)
         {
             List<UFXQueryEntrustRequest> requests = new List<UFXQueryEntrustRequest>();
-            UFXQueryEntrustRequest request = new UFXQueryEntrustRequest();
-            request.RequestNum = 10000;
-            request.CombiNo = "30";
-            requests.Add(request);
+
+            var portfolios = _productBLL.GetAll();
+            foreach (var portfolio in portfolios)
+            {
+
+                UFXQueryEntrustRequest request = new UFXQueryEntrustRequest();
+                request.RequestNum = 10000;
+                request.CombiNo = portfolio.PortfolioNo;
+                requests.Add(request);
+            }
 
             Callbacker callbacker = new Callbacker
             {
@@ -57,12 +65,19 @@ namespace BLL.Entrust
         public int QueryHistory(DateTime startDate, DateTime endDate, CallerCallback callback)
         {
             List<UFXQueryHistEntrustRequest> requests = new List<UFXQueryHistEntrustRequest>();
-            UFXQueryHistEntrustRequest request = new UFXQueryHistEntrustRequest();
-            request.StartDate = DateUtil.GetIntDate(startDate);
-            request.EndDate = DateUtil.GetIntDate(endDate);
-            request.CombiNo = "30";
 
-            requests.Add(request);
+            int intStart = DateUtil.GetIntDate(startDate);
+            int intEnd = DateUtil.GetIntDate(endDate);
+            var portfolios = _productBLL.GetAll();
+            foreach (var portfolio in portfolios)
+            {
+                UFXQueryHistEntrustRequest request = new UFXQueryHistEntrustRequest();
+                request.StartDate = intStart;
+                request.EndDate = intEnd;
+                request.CombiNo = portfolio.PortfolioNo;
+
+                requests.Add(request);
+            }
 
             Callbacker callbacker = new Callbacker
             {

@@ -318,7 +318,8 @@ namespace TradingSystem.View
                             {
                                 instanceId = instance.InstanceId;
                                 instance.OperationCopies += openItem.Copies;
-                                _tradeInstanceBLL.Update(instance);
+                                var secuItems = _securityDataSource.Where(p => p.MonitorId == openItem.MonitorId).ToList();
+                                _tradeInstanceBLL.Update(instance, openItem, secuItems);
                             }
                             else
                             {

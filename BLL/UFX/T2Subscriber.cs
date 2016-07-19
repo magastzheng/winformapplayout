@@ -53,12 +53,15 @@ namespace BLL.UFX
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                string msg = e.Message;
+                logger.Error(msg);
+                Console.WriteLine(msg);
             }
             if (iRet != 0)
             {
                 string msg = string.Format("连接失败: {0}, {1}", iRet, _conn.GetErrorMsg(iRet));
                 logger.Error(msg);
+                Console.WriteLine(msg);
                 return ConnectionCode.ErrorConn;
             }
             else

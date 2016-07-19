@@ -101,11 +101,71 @@ namespace DBAccess
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public List<TradingCommandItem> Get(int commandId)
+        public TradingCommandItem Get(int commandId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
+
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+            TradingCommandItem item = new TradingCommandItem();
+
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    item.CommandId = (int)reader["CommandId"];
+                    item.InstanceId = (int)reader["InstanceId"];
+                    item.CommandNum = (int)reader["CommandNum"];
+                    item.TargetNum = (int)reader["TargetNum"];
+                    item.ModifiedTimes = (int)reader["ModifiedTimes"];
+                    item.ECommandType = (CommandType)reader["CommandType"];
+                    item.EExecuteType = (ExecuteType)reader["ExecuteType"];
+                    item.EStockDirection = (EntrustDirection)(int)reader["StockDirection"];
+                    item.EFuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
+                    item.EEntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+                    item.EDealStatus = (DealStatus)reader["DealStatus"];
+                    item.SubmitPerson = (string)reader["SubmitPerson"];
+                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
+                    item.InstanceCode = (string)reader["InstanceCode"];
+                    item.MonitorUnitName = (string)reader["MonitorUnitName"];
+                    item.PortfolioId = (int)reader["PortfolioId"];
+                    item.PortfolioCode = (string)reader["PortfolioCode"];
+                    item.PortfolioName = (string)reader["PortfolioName"];
+                    item.FundCode = (string)reader["AccountCode"];
+                    item.FundName = (string)reader["AccountName"];
+
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+                    {
+                        item.CreatedDate = (DateTime)reader["CreatedDate"];
+                    }
+
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+                    {
+                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+                    }
+
+                    if (reader["StartDate"] != null && reader["StartDate"] != DBNull.Value)
+                    {
+                        item.DStartDate = (DateTime)reader["StartDate"];
+                    }
+
+                    if (reader["EndDate"] != null && reader["EndDate"] != DBNull.Value)
+                    {
+                        item.DEndDate = (DateTime)reader["EndDate"];
+                    }
+                }
+            }
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return item;
+        }
+
+        public List<TradingCommandItem> GetAll()
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
             
-            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, -1);
 
             List<TradingCommandItem> items = new List<TradingCommandItem>();
             var reader = _dbHelper.ExecuteReader(dbCommand);

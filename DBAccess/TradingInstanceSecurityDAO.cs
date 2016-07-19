@@ -8,9 +8,12 @@ namespace DBAccess
     public class TradingInstanceSecurityDAO: BaseDAO
     {
         private const string SP_Create = "procTradingInstanceSecurityInsert";
-        private const string SP_ModifyPosition = "procTradingInstanceSecurityUpdatePosition";
+        private const string SP_ModifyBuyToday = "procTradingInstanceSecurityBuyToday";
+        private const string SP_ModifySellToday = "procTradingInstanceSecuritySellToday";
+        private const string SP_ModifyPreTrade = "procTradingInstanceSecurityInstructionPreTrade";
         private const string SP_Delete = "procTradingInstanceSecurityDelete";
         private const string SP_Get = "procTradingInstanceSecuritySelect";
+        private const string SP_Settle = "procTradingInstanceSecuritySettle";
 
         public TradingInstanceSecurityDAO()
             : base()
@@ -47,13 +50,37 @@ namespace DBAccess
             return rowId;
         }
 
-        public int UpdatePosition(TradingInstanceSecurity securityItem)
+        public int UpdateBuyToday(TradingInstanceSecurity securityItem)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyPosition);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyBuyToday);
             _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, securityItem.InstanceId);
             _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, securityItem.SecuCode);
-            _dbHelper.AddInParameter(dbCommand, "@PositionAmount", System.Data.DbType.Int32, securityItem.PositionAmount);
-            _dbHelper.AddInParameter(dbCommand, "@AvailableAmount", System.Data.DbType.Int32, securityItem.AvailableAmount);
+            _dbHelper.AddInParameter(dbCommand, "@BuyAmount", System.Data.DbType.Int32, securityItem.BuyToday);
+            _dbHelper.AddInParameter(dbCommand, "@BuyBalance", System.Data.DbType.Decimal, securityItem.BuyBalance);
+            _dbHelper.AddInParameter(dbCommand, "@DealFee", System.Data.DbType.Decimal, securityItem.DealFee);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int UpdateSellToday(TradingInstanceSecurity securityItem)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifySellToday);
+            _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, securityItem.InstanceId);
+            _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, securityItem.SecuCode);
+            _dbHelper.AddInParameter(dbCommand, "@SellAmount", System.Data.DbType.Int32, securityItem.SellToday);
+            _dbHelper.AddInParameter(dbCommand, "@SellBalance", System.Data.DbType.Decimal, securityItem.SellBalance);
+            _dbHelper.AddInParameter(dbCommand, "@DealFee", System.Data.DbType.Decimal, securityItem.DealFee);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int UpdatePreTrade(TradingInstanceSecurity securityItem)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyPreTrade);
+            _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, securityItem.InstanceId);
+            _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, securityItem.SecuCode);
+            _dbHelper.AddInParameter(dbCommand, "@InstructionPreBuy", System.Data.DbType.Int32, securityItem.InstructionPreBuy);
+            _dbHelper.AddInParameter(dbCommand, "@InstructionPreSell", System.Data.DbType.Int32, securityItem.InstructionPreSell);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
@@ -100,10 +127,17 @@ namespace DBAccess
                         item.PositionAmount = (int)reader["PositionAmount"];
                     }
 
-                    if (reader["AvailableAmount"] != null && reader["AvailableAmount"] != DBNull.Value)
+                    item.BuyBalance = (double)(decimal)reader["BuyBalance"];
+                    item.SellBalance = (double)(decimal)reader["SellBalance"];
+                    item.DealFee = (double)(decimal)reader["DealFee"];
+                    item.BuyToday = (int)reader["BuyToday"];
+                    item.SellToday = (int)reader["SellToday"];
+                    item.CreatedDate = (DateTime)reader["CreatedDate"];
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
                     {
-                        item.AvailableAmount = (int)reader["AvailableAmount"];
+                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
                     }
+                    item.LastDate = (DateTime)reader["LastDate"];
 
                     items.Add(item);
                 }
@@ -112,6 +146,13 @@ namespace DBAccess
             _dbHelper.Close(dbCommand.Connection);
 
             return items;
+        }
+
+        public int Settle()
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Settle);
+           
+            return _dbHelper.ExecuteNonQuery(dbCommand);
         }
     }
 }
