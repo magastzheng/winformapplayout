@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace BLL.Entrust.subscriber
 {
-    public class UFXWithdrawCompletedBLL
+    public class UFXWithdrawCompletedBLL : IUFXSubsriberBLLBase
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

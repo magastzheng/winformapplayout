@@ -7,6 +7,18 @@ using System.Threading.Tasks;
 
 namespace Model.t2sdk
 {
+    public class UFXFilterResponse
+    {
+        [UFXDataAttribute("msgtype")]
+        public string MsgType { get; set; }
+
+        [UFXDataAttribute("market_no")]
+        public string MarketNo { get; set; }
+
+        [UFXDataAttribute("operator_no")]
+        public string OperatorNo { get; set; }
+    }
+
     /// <summary>
     /// msgtype="a"
     /// </summary>

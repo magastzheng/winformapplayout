@@ -55,8 +55,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entrust\subscriber\IUFXSubsriberBLLBase.cs" />
     <Compile Include="Entrust\subscriber\UFXEntrustCompletedBLL.cs" />
     <Compile Include="Entrust\subscriber\UFXEntrustDealBLL.cs" />
+    <Compile Include="Entrust\subscriber\UFXFilterBLL.cs" />
+    <Compile Include="Entrust\subscriber\UFXSubscriberBLLFactory.cs" />
     <Compile Include="Entrust\subscriber\UFXWithdrawCompletedBLL.cs" />
     <Compile Include="Entrust\UFXBasketEntrustBLL.cs" />
     <Compile Include="Entrust\UFXBasketWithdrawBLL.cs" />

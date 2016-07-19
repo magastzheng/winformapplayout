@@ -18,6 +18,7 @@ namespace TradingSystem.View
         public CancelRedoForm2(GridConfig gridConfig)
             :this()
         {
+            _gridConfig = gridConfig;
         }
 
         private void CancelRedoForm_Load(object sender, System.EventArgs e)

@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace BLL.Entrust.subscriber
 {
-    public class UFXEntrustDealBLL
+    public class UFXEntrustDealBLL : IUFXSubsriberBLLBase
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

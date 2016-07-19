@@ -1,6 +1,8 @@
-﻿using BLL.UFX.impl;
+﻿using BLL.Entrust.subscriber;
+using BLL.UFX.impl;
 using hundsun.mcapi;
 using hundsun.t2sdk;
+using Model.t2sdk;
 using System;
 using System.Runtime.InteropServices;
 
@@ -9,6 +11,13 @@ namespace BLL.UFX
     //订阅回调
     public unsafe class T2SubCallback : CT2SubCallbackInterface
     {
+        private UFXFilterBLL _filterBLL = new UFXFilterBLL();
+
+        public T2SubCallback()
+        { 
+        
+        }
+
         public override void OnReceived(CT2SubscribeInterface lpSub, int subscribeIndex, void* lpData, int nLength, tagSubscribeRecvData lpRecvData)
         {
             //收到主推数据 - 开始
@@ -21,6 +30,7 @@ namespace BLL.UFX
                 }
             }
 
+            PushMessageType messageType = PushMessageType.None;
             //过滤字段部分
             if (lpRecvData.iFilterDataLen > 0)
             {
@@ -30,12 +40,16 @@ namespace BLL.UFX
                 DataParser parser = new DataParser();
                 parser.Parse(lpUnpacker);
 
+
                 Console.WriteLine("====推送=====过滤字段部分=====开始");
                 parser.Output();
                 Console.WriteLine("====推送=====过滤字段部分=====结束");
                 lpUnpacker.Dispose();
+
+                messageType = _filterBLL.GetMessageType(parser);
             }
 
+            IUFXSubsriberBLLBase subscriberBLL = UFXSubscriberBLLFactory.Create(messageType);
             CT2UnPacker lpUnpacker1 = new CT2UnPacker((void*)lpData, (uint)nLength);
             if(lpUnpacker1 != null)
             {
@@ -47,6 +61,11 @@ namespace BLL.UFX
                 parser.Output();
                 Console.WriteLine("====推送*****数据部分=====结束");
                 lpUnpacker1.Dispose();
+
+                if (subscriberBLL != null)
+                {
+                    subscriberBLL.Handle(parser);
+                }
             }
 
             //收到主推数据 - 结束

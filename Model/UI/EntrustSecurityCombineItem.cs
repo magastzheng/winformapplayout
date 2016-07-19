@@ -8,8 +8,6 @@ namespace Model.UI
 {
     public class EntrustSecurityCombineItem : EntrustSecurityItem
     {
-        public int BatchNo { get; set;}
-
         public int InstanceId { get; set; }
 
         public string InstanceCode { get; set; }

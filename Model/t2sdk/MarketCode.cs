@@ -44,6 +44,7 @@ namespace Model.t2sdk
         Purchase = 12,
     }
 
+    //委托状态
     public enum EntrustState
     { 
         NoReport = '1',
@@ -107,5 +108,32 @@ namespace Model.t2sdk
 
         //自定义
         public static string Custom = "Z";
+    }
+
+    //消息推送类型
+    public enum PushMessageType
+    { 
+        None,
+
+        //委托下达
+        EntrustCommit = 'a', 
+
+        //委托确认
+        EntrustConfirm = 'b',
+
+        //委托废单
+        EntrustScrap = 'c',
+
+        //委托撤单
+        EntrustWithdraw = 'd',
+
+        //委托撤成
+        EntrustWithdrawDone = 'e',
+
+        //委托撤废
+        EntrustWithdrawWaste = 'f',
+
+        //委托成交
+        EntrustDeal = 'g',
     }
 }
