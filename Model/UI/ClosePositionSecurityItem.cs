@@ -1,4 +1,5 @@
 ﻿using Model.Binding;
+using Model.EnumType;
 using Model.SecurityInfo;
 using System;
 using System.Collections.Generic;
@@ -79,7 +80,13 @@ namespace Model.UI
         public double TargetWeight { get; set; }
 
         [BindingAttribute("entrustdirection")]
-        public int EntrustDirection { get; set; }
+        public int EntrustDirection 
+        {
+            get 
+            {
+                return (int)EDirection;
+            }
+        }
 
         [BindingAttribute("commandprice")]
         public double CommandPrice { get; set; }
@@ -90,5 +97,7 @@ namespace Model.UI
         public SecurityType SecuType { get; set; }
 
         public PositionType PositionType { get; set; }
+
+        public EntrustDirection EDirection { get; set; }
     }
 }

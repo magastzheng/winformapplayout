@@ -342,7 +342,7 @@ namespace TradingSystem.View
             //dialog.Visible = true;
             dialog.OnLoadControl(dialog, null);
             dialog.OnLoadData(dialog, secuItem);
-            //dialog.SaveData += new FormLoadHandler(Dialog_SaveData);
+            dialog.SaveData += new FormLoadHandler(Dialog_SaveData);
             dialog.ShowDialog();
 
             if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
@@ -353,6 +353,43 @@ namespace TradingSystem.View
             {
                 dialog.Dispose();
             }
+        }
+
+        private bool Dialog_SaveData(object sender, object data)
+        {
+            if (data == null || !(data is ClosePositionSecurityItem[]))
+                return false;
+            var itemArr = data as ClosePositionSecurityItem[];
+            if (itemArr.Length != 2)
+                return false;
+
+            var outItem = itemArr[0];
+            var inItem = itemArr[1];
+
+            TradingCommandItem tdcmdItem = new TradingCommandItem
+            {
+                InstanceId = outItem.InstanceId,
+                ECommandType = CommandType.Arbitrage,
+                EExecuteType = ExecuteType.AdjustPosition,
+                CommandNum = 1,
+                EEntrustStatus = EntrustStatus.NoExecuted,
+                EDealStatus = DealStatus.NoDeal,
+                ModifiedTimes = 1
+            };
+
+            if (outItem.SecuType == SecurityType.Stock)
+            {
+                tdcmdItem.EStockDirection = outItem.EDirection;
+            }
+            else if (outItem.SecuType == SecurityType.Futures)
+            {
+                tdcmdItem.EFuturesDirection = outItem.EDirection;
+            }
+
+            selectedItems = new List<ClosePositionSecurityItem>() { outItem, inItem};
+            var result = _tradeCommandBLL.SubmitClosePosition(tdcmdItem, closeItem, selectedItems);
+
+            return true;
         }
 
         private void Button_Submit_Click(object sender, EventArgs e)
@@ -450,12 +487,12 @@ namespace TradingSystem.View
                         {
                             if (secuItem.SecuType == SecurityType.Stock)
                             {
-                                secuItem.EntrustDirection = (int)EntrustDirection.BuySpot;
+                                secuItem.EDirection = EntrustDirection.BuySpot;
                                 secuItem.EntrustAmount = weightAmount * copies;
                             }
                             else if (secuItem.SecuType == SecurityType.Futures)
                             {
-                                secuItem.EntrustDirection = (int)EntrustDirection.SellOpen;
+                                secuItem.EDirection = EntrustDirection.SellOpen;
                                 secuItem.EntrustAmount = template.FutureCopies * copies;
                             }
                             else
@@ -468,7 +505,7 @@ namespace TradingSystem.View
                         {
                             if (secuItem.SecuType == SecurityType.Stock)
                             {
-                                secuItem.EntrustDirection = (int)EntrustDirection.SellSpot;
+                                secuItem.EDirection = EntrustDirection.SellSpot;
 
                                 if (secuItem.AvailableAmount >= weightAmount * copies)
                                 {
@@ -481,7 +518,7 @@ namespace TradingSystem.View
                             }
                             else if (secuItem.SecuType == SecurityType.Futures)
                             {
-                                secuItem.EntrustDirection = (int)EntrustDirection.BuyClose;
+                                secuItem.EDirection = EntrustDirection.BuyClose;
                                 if (secuItem.AvailableAmount >= template.FutureCopies * copies)
                                 {
                                     secuItem.EntrustAmount = template.FutureCopies * copies;
@@ -503,7 +540,7 @@ namespace TradingSystem.View
                             {
                                 if (weightAmount == 0)
                                 {
-                                    secuItem.EntrustDirection = (int)EntrustDirection.SellSpot;
+                                    secuItem.EDirection = EntrustDirection.SellSpot;
                                     secuItem.EntrustAmount = secuItem.AvailableAmount;
                                 }
                                 else
@@ -511,12 +548,12 @@ namespace TradingSystem.View
                                     int rest = secuItem.HoldingAmount - weightAmount * copies;
                                     if (rest > 0)
                                     {
-                                        secuItem.EntrustDirection = (int)EntrustDirection.SellSpot;
+                                        secuItem.EDirection = EntrustDirection.SellSpot;
                                         secuItem.EntrustAmount = rest;
                                     }
                                     else
                                     {
-                                        secuItem.EntrustDirection = (int)EntrustDirection.BuySpot;
+                                        secuItem.EDirection = EntrustDirection.BuySpot;
                                         secuItem.EntrustAmount = 0 - rest;
                                     }
                                 }
@@ -526,12 +563,12 @@ namespace TradingSystem.View
                                 int rest = secuItem.HoldingAmount - template.FutureCopies * copies;
                                 if (rest > 0)
                                 {
-                                    secuItem.EntrustDirection = (int)EntrustDirection.BuyClose;
+                                    secuItem.EDirection = EntrustDirection.BuyClose;
                                     secuItem.EntrustAmount = rest;
                                 }
                                 else
                                 {
-                                    secuItem.EntrustDirection = (int)EntrustDirection.SellSpot;
+                                    secuItem.EDirection = EntrustDirection.SellSpot;
                                     secuItem.EntrustAmount = 0 - rest;
                                 }
                             }
@@ -569,13 +606,13 @@ namespace TradingSystem.View
                 {
                     case SecurityType.Stock:
                         {
-                            secuItem.EntrustDirection = (int)EntrustDirection.SellSpot;
+                            secuItem.EDirection = EntrustDirection.SellSpot;
                             secuItem.EntrustAmount = secuItem.AvailableAmount;
                         }
                         break;
                     case SecurityType.Futures:
                         {
-                            secuItem.EntrustDirection = (int)EntrustDirection.BuyClose;
+                            secuItem.EDirection = EntrustDirection.BuyClose;
                             secuItem.EntrustAmount = secuItem.AvailableAmount;
                         }
                         break;
