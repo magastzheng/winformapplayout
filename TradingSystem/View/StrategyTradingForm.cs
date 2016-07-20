@@ -147,7 +147,7 @@ namespace TradingSystem.View
 
         private bool Dialog_CancelRedoDialog_SaveData(object sender, object data)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         private void ToolStripButton_Command_CancelAdd(object sender, EventArgs e)

@@ -273,7 +273,7 @@ namespace TradingSystem.View
             this.btnConfirm.Size = new System.Drawing.Size(75, 23);
             this.btnConfirm.TabIndex = 24;
             this.btnConfirm.Text = "确定";
-            this.btnConfirm.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnConfirm.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
             this.btnConfirm.UseVisualStyleBackColor = true;
             this.btnConfirm.Click += new System.EventHandler(this.Button_Confirm_Click);
             // 

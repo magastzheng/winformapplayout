@@ -11,18 +11,6 @@
                 "parentid": "strategytrading",
                 "isexpansed": false,
                 "children": []
-            },{
-                "id": "entrustflow",
-                "title": "委托流水",
-                "parentid": "strategytrading",
-                "isexpansed": false,
-                "children": []
-            },{
-                "id": "dealflow",
-                "title": "成交流水",
-                "parentid": "strategytrading",
-                "isexpansed": false,
-                "children": []
             }
         ]
     },{
@@ -98,13 +86,6 @@
                 "isexpansed": false,
                 "children": []
            },
-           {
-                "id": "currenttemplate",
-                "title": "现货模板",
-                "parentid": "templatemanager",
-                "isexpansed": false,
-                "children": []
-            },
             {
                 "id": "historytemplate",
                 "title": "历史模板",

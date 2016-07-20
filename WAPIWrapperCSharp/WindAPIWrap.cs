@@ -1,4 +1,5 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,6 +7,8 @@ namespace WAPIWrapperCSharp
 {
     public class WindAPIWrap : IDisposable
     {
+        private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly static WindAPIWrap _instance = new WindAPIWrap();
         private WindAPI _windAPI = new WindAPI();
 
@@ -13,15 +16,25 @@ namespace WAPIWrapperCSharp
 
         private WindAPIWrap()
         {
+        }
+
+        public int Start()
+        {
             int ret = _windAPI.start("", "", 5000);
             if (ret == 0)
             {
-                Console.WriteLine("Login success!");
+                string msg = "WindAPI启动成功!";
+                Console.WriteLine(msg);
+                logger.Info(msg);
             }
             else
             {
-                Console.WriteLine("Login fail!");
+                string msg = "WindAPI启动失败!";
+                Console.WriteLine(msg);
+                logger.Info(msg);
             }
+
+            return ret;
         }
 
         private void Callback(ulong reqId, WindData wd)
