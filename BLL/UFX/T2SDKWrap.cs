@@ -42,7 +42,7 @@ namespace BLL.UFX
 
             if (iRet != 0)
             {
-                string msg = "读取连接配置对象失败！";
+                string msg = "读取[config/t2sdk.ini]连接配置对象失败！";
                 logger.Error(msg);
                 return ConnectionCode.ErrorReadConf;
             }
@@ -53,7 +53,7 @@ namespace BLL.UFX
             iRet = _conn.Create2BizMsg(this);
             if (iRet != 0)
             {
-                string msg = string.Format("连接对象初始化失败: {0}, {1}", iRet, _conn.GetErrorMsg(iRet));
+                string msg = string.Format("一般交易业务连接对象初始化失败: {0}, {1}", iRet, _conn.GetErrorMsg(iRet));
                 logger.Error(msg);
                 return ConnectionCode.ErrorInitConn;
             }
@@ -68,13 +68,13 @@ namespace BLL.UFX
             }
             if (iRet != 0)
             {
-                string msg = string.Format("连接失败: {0}, {1}", iRet, _conn.GetErrorMsg(iRet));
+                string msg = string.Format("一般交易业务连接失败: {0}, {1}", iRet, _conn.GetErrorMsg(iRet));
                 logger.Error(msg);
                 return ConnectionCode.ErrorConn;
             }
             else
             {
-                string msg = "连接成功";
+                string msg = "一般交易业务连接成功";
                 logger.Info(msg);
             }
 
@@ -120,7 +120,7 @@ namespace BLL.UFX
             int iRet = _conn.SendBizMsg(message, 1);
             if (iRet < 0)
             {
-                string msg = string.Format("异步发送数据失败！ 错误码：{0}, 错误消息：{1}", iRet, _conn.GetErrorMsg(iRet));
+                string msg = string.Format("一般交易业务异步发送数据失败！ 错误码：{0}, 错误消息：{1}", iRet, _conn.GetErrorMsg(iRet));
                 logger.Error(msg);
                 return iRet;
             }
@@ -133,7 +133,7 @@ namespace BLL.UFX
             int iRet = _conn.SendBizMsg(message, 0);
             if (iRet < 0)
             {
-                string msg = string.Format("同步发送数据失败！ 错误码：{0}, 错误消息：{1}", iRet, _conn.GetErrorMsg(iRet));
+                string msg = string.Format("一般交易业务同步发送数据失败！ 错误码：{0}, 错误消息：{1}", iRet, _conn.GetErrorMsg(iRet));
                 logger.Error(msg);
                 return iRet;
             }
@@ -142,7 +142,7 @@ namespace BLL.UFX
             int retCode = _conn.RecvBizMsg(iRet, out bizMessage, (int)_timeOut, 1);
             if (retCode < 0)
             {
-                string msg = "同步接收出错: " + _conn.GetErrorMsg(retCode);
+                string msg = "一般交易业务同步接收出错: " + _conn.GetErrorMsg(retCode);
                 logger.Error(msg);
                 return (int)ConnectionCode.ErrorSendMsg;
             }
@@ -157,14 +157,14 @@ namespace BLL.UFX
                 }
                 else
                 {
-                    string msg = string.Format("异步接收数据回调函数找不到 - 功能号：{0}", iFunction);
+                    string msg = string.Format("一般交易业务异步接收数据回调函数找不到 - 功能号：{0}", iFunction);
                     logger.Error(msg);
                     return (int)ConnectionCode.ErrorNoCallback;
                 }
             }
             else
             {
-                string msg = string.Format("为支持的功能号：{0}", iFunction);
+                string msg = string.Format("一般交易业务未支持的功能号：{0}", iFunction);
                 logger.Error(msg);
                 return (int)ConnectionCode.ErrorNoFunctionCode;
             }

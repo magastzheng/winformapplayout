@@ -13,6 +13,8 @@ namespace BLL.Entrust
         private EntrustCommandDAO _entrustcmddao = new EntrustCommandDAO();
         private EntrustSecurityDAO _entrustsecudao = new EntrustSecurityDAO();
         private EntrustDAO _entrustdao = new EntrustDAO();
+        private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
+
         private UFXEntrustBLL _ufxEntrustBLL = new UFXEntrustBLL();
        
         public EntrustBLL()
@@ -100,6 +102,7 @@ namespace BLL.Entrust
                 return ret;
             }
 
+            int copies = 0;
             foreach (var entrustCmdItem in entrustCmdItems)
             {
                 var entrustSecuCancelItems = entrustSecuItems.Where(p => p.SubmitId == entrustCmdItem.SubmitId).ToList();
@@ -111,6 +114,7 @@ namespace BLL.Entrust
                     ret = _ufxEntrustBLL.Cancel(entrustCmdItem, entrustSecuCancelItems);
                     if (ret > 0)
                     {
+                        copies += entrustCmdItem.Copies;
                         _entrustdao.UpdateOneEntrustStatus(entrustCmdItem.SubmitId, EntrustStatus.CancelSuccess);
                     }
                     else
@@ -118,6 +122,13 @@ namespace BLL.Entrust
                         _entrustdao.UpdateOneEntrustStatus(entrustCmdItem.SubmitId, EntrustStatus.CancelFail);
                     }
                 }
+            }
+
+            //Update the tradingcommand table TargetNum
+            if (copies > 0)
+            {
+                cmdItem.TargetNum -= copies;
+                ret = _tradecmddao.UpdateTargetNum(cmdItem);
             }
 
             return ret;
@@ -234,6 +245,19 @@ namespace BLL.Entrust
             }
 
             return dfItems;
+        }
+
+        public List<EntrustSecurityItem> GetEntrustSecurityItems(List<TradingCommandItem> cmdItems)
+        {
+            var entrustSecuItems = new List<EntrustSecurityItem>();
+
+            foreach (var cmdItem in cmdItems)
+            {
+                var cmdSecuItems = _entrustsecudao.GetByCommandId(cmdItem.CommandId);
+                entrustSecuItems.AddRange(cmdSecuItems);
+            }
+
+            return entrustSecuItems;
         }
 
         #endregion

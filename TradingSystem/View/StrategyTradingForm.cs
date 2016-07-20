@@ -19,6 +19,7 @@ using BLL.Entrust;
 using Model.EnumType;
 using Model.Binding.BindingUtil;
 using BLL.UFX.impl;
+using BLL.TradeCommand;
 
 namespace TradingSystem.View
 {
@@ -38,6 +39,7 @@ namespace TradingSystem.View
         private EntrustDAO _entrustdao = new EntrustDAO();
 
         private EntrustBLL _entrustBLL = new EntrustBLL();
+        private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
 
         private SortableBindingList<TradingCommandItem> _cmdDataSource = new SortableBindingList<TradingCommandItem>(new List<TradingCommandItem>());
         private SortableBindingList<EntrustFlowItem> _efDataSource = new SortableBindingList<EntrustFlowItem>(new List<EntrustFlowItem>());
@@ -113,54 +115,6 @@ namespace TradingSystem.View
         private void GridView_Command_Cancel(TradingCommandItem cmdItem)
         {
             int retCancel = _entrustBLL.CancelOne(cmdItem);
-
-            //int retCancel = _entrustsecudao.UpdateCancel(cmdItem.CommandId);
-            //if (retCancel <= 0)
-            //{
-            //    //TODO: fail to cancel
-            //}
-            //else
-            //{
-            //    retCancel = _entrustcmddao.UpdateCancel(cmdItem.CommandId);
-            //}
-
-            //var cancelCmdItems = _entrustcmddao.GetByEntrustStatus(cmdItem.CommandId, EntrustStatus.CancelToDB);
-            //if (cancelCmdItems != null && cancelCmdItems.Count() > 0)
-            //{
-            //    cancelCmdItems.ForEach(p =>
-            //    {
-            //        //TODO: call UFX to cancel
-            //        //.....
-
-            //        //Update the EntrustStatus in db table
-            //        var cancelSecuItems = _entrustsecudao.GetByEntrustStatus(p.SubmitId, p.CommandId, EntrustStatus.CancelToDB);
-            //        if (cancelSecuItems != null && cancelSecuItems.Count() > 0)
-            //        {
-            //            cancelSecuItems.ForEach(s =>
-            //            {
-            //                _entrustsecudao.UpdateEntrustStatus(s, EntrustStatus.CancelToUFX);
-            //            });
-            //        }
-
-            //        _entrustdao.UpdateOneEntrustStatus(p.SubmitId, EntrustStatus.CancelToUFX);
-            //        //TODO: callback from UFX to update the CancelStatus to Fail or Success
-
-            //        //Change the status to CancelSuccess after UFX callback/response
-            //        cancelSecuItems = _entrustsecudao.GetByEntrustStatus(p.SubmitId, p.CommandId, EntrustStatus.CancelToUFX);
-            //        if (cancelSecuItems != null && cancelSecuItems.Count() > 0)
-            //        {
-            //            cancelSecuItems.ForEach(s =>
-            //            {
-            //                _entrustsecudao.UpdateEntrustStatus(s, EntrustStatus.CancelSuccess);
-            //            });
-            //        }
-            //        _entrustdao.UpdateOneEntrustStatus(p.SubmitId, EntrustStatus.CancelSuccess);
-
-            //        //Update the tradingcommand table TargetNum
-            //        cmdItem.TargetNum -= p.Copies;
-            //        _tradecmddao.UpdateTargetNum(cmdItem);
-            //    });
-            //}
 
             this.cmdGridView.Invalidate();
         }
@@ -602,8 +556,43 @@ namespace TradingSystem.View
             var tradingcmds = _tradecmddao.GetAll();
             if (tradingcmds != null)
             {
+                var tradeSecuItems = _tradeCommandBLL.GetCommandSecurityItems(tradingcmds);
+                var entrustSecuItems = _entrustBLL.GetEntrustSecurityItems(tradingcmds);
+
                 foreach (var cmdItem in tradingcmds)
                 {
+                    var cmdSecuItems = tradeSecuItems.Where(p => p.CommandId == cmdItem.CommandId).ToList();
+                    var cmdEntrustSecuItems = entrustSecuItems.Where(p => p.CommandId == cmdItem.CommandId).ToList();
+
+                    var totalLongCmdAmount = tradeSecuItems.Where(p => p.SecuType == SecurityType.Stock)
+                                            .ToList()
+                                            .Sum(o => o.CommandAmount);
+                    var totalLongEntrustAmount = cmdEntrustSecuItems.Where(p => p.SecuType == SecurityType.Stock && p.EntrustStatus == EntrustStatus.Completed)
+                                             .ToList()
+                                             .Sum(o => o.EntrustAmount);
+                    var totalLongDealAmount = cmdEntrustSecuItems.Where(p => p.SecuType == SecurityType.Stock && (p.DealStatus == DealStatus.Completed || p.DealStatus == DealStatus.PartDeal))
+                                            .ToList()
+                                            .Sum(o => o.TotalDealAmount);
+                    var totalShortCmdAmount = tradeSecuItems.Where(p => p.SecuType == SecurityType.Futures)
+                                                .ToList()
+                                                .Sum(o => o.CommandAmount);
+                    var totalShortEntrustAmount = cmdEntrustSecuItems.Where(p => p.SecuType == SecurityType.Futures && p.EntrustStatus == EntrustStatus.Completed)
+                                                  .ToList()
+                                                  .Sum(o => o.EntrustAmount);
+                    var totalShortDealAmount = cmdEntrustSecuItems.Where(p => p.SecuType == SecurityType.Futures && (p.DealStatus == DealStatus.Completed || p.DealStatus == DealStatus.PartDeal))
+                                                .ToList()
+                                                .Sum(o => o.TotalDealAmount);
+
+                    double longEntrustRatio = totalLongEntrustAmount / (totalLongCmdAmount * cmdItem.CommandNum);
+                    double longDealRatio = totalLongDealAmount / (totalLongCmdAmount * cmdItem.CommandNum);
+                    double shortEntrustRatio = totalShortEntrustAmount / (totalShortCmdAmount * cmdItem.CommandNum);
+                    double shortDealRatio = totalShortDealAmount / (totalShortCmdAmount * cmdItem.CommandNum);
+
+                    cmdItem.LongMoreThan = longEntrustRatio;
+                    cmdItem.BearMoreThan = shortEntrustRatio;
+                    cmdItem.LongRatio = longDealRatio;
+                    cmdItem.BearRatio = shortDealRatio;
+
                     _cmdDataSource.Add(cmdItem);
                 }
             }

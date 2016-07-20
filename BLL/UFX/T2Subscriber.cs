@@ -31,7 +31,7 @@ namespace BLL.UFX
 
             if (iRet != 0)
             {
-                string msg = "读取连接配置对象失败！";
+                string msg = "主推业务读取[config/t2sdk-subscriber.ini]连接配置对象失败！";
                 logger.Error(msg);
                 return ConnectionCode.ErrorReadConf;
             }
@@ -42,7 +42,7 @@ namespace BLL.UFX
             iRet = _conn.Create2BizMsg(this);
             if (iRet != 0)
             {
-                string msg = string.Format("连接对象初始化失败: {0}, {1}", iRet, _conn.GetErrorMsg(iRet));
+                string msg = string.Format("主推业务连接对象初始化失败: {0}, {1}", iRet, _conn.GetErrorMsg(iRet));
                 logger.Error(msg);
                 return ConnectionCode.ErrorInitConn;
             }
@@ -59,14 +59,14 @@ namespace BLL.UFX
             }
             if (iRet != 0)
             {
-                string msg = string.Format("连接失败: {0}, {1}", iRet, _conn.GetErrorMsg(iRet));
+                string msg = string.Format("主推业务连接失败: {0}, {1}", iRet, _conn.GetErrorMsg(iRet));
                 logger.Error(msg);
                 Console.WriteLine(msg);
                 return ConnectionCode.ErrorConn;
             }
             else
             {
-                string msg = "连接成功";
+                string msg = "主推业务连接成功";
                 logger.Info(msg);
             }
 
@@ -112,8 +112,8 @@ namespace BLL.UFX
             callback = new T2SubCallback();
             subcribe = _conn.NewSubscriber(callback, "ufx_subscribe", (int)_timeOut, 2000, 100);
             if (subcribe == null)
-            { 
-                string msg = string.Format("订阅创建失败: {0}", _conn.GetMCLastError());
+            {
+                string msg = string.Format("主推业务订阅创建失败: {0}", _conn.GetMCLastError());
                 logger.Error(msg);
                 return ConnectionCode.ErrorFailSubscribe;
             }
@@ -137,7 +137,7 @@ namespace BLL.UFX
 
             if (ret > 0)
             {
-                string msg = string.Format("订阅创建成功: {0}", _conn.GetMCLastError());
+                string msg = string.Format("主推业务订阅创建成功: {0}", _conn.GetMCLastError());
                 logger.Info(msg);
                 return ConnectionCode.SuccessSubscribe;
             }
@@ -149,7 +149,7 @@ namespace BLL.UFX
                     unpacker.Dispose();
                 }
 
-                string msg = string.Format("订阅创建失败: {0}", _conn.GetMCLastError());
+                string msg = string.Format("主推业务订阅创建失败: {0}", _conn.GetMCLastError());
                 logger.Error(msg);
                 return ConnectionCode.ErrorFailSubscribe;
             }
@@ -194,7 +194,7 @@ namespace BLL.UFX
             }
             else
             {
-                Console.WriteLine("订阅 - 返回码：{0}, 错误码： {1}, 功能号： {2}", iRetCode, iErrorCode, iFunction);
+                Console.WriteLine("主推业务订阅 - 返回码：{0}, 错误码： {1}, 功能号： {2}", iRetCode, iErrorCode, iFunction);
                 if (Enum.IsDefined(typeof(FunctionCode), iFunction))
                 {
                     FunctionCode functionCode = (FunctionCode)Enum.ToObject(typeof(FunctionCode), iFunction);

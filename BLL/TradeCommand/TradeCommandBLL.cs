@@ -17,6 +17,7 @@ namespace BLL.TradeCommand
         private TemplateStockDAO _tempstockdao = new TemplateStockDAO();
         private TradingInstanceSecurityDAO _tradeinstsecudao = new TradingInstanceSecurityDAO();
         private TradingCommandDAO _tradecommandao = new TradingCommandDAO();
+        private TradingCommandSecurityDAO _tradecmdsecudao = new TradingCommandSecurityDAO();
 
         public TradeCommandBLL()
         { 
@@ -122,6 +123,19 @@ namespace BLL.TradeCommand
         public TradingCommandItem GetTradeCommandItem(int commandId)
         {
             return _tradecommandao.Get(commandId);
+        }
+
+        public List<CommandSecurityItem> GetCommandSecurityItems(List<TradingCommandItem> cmdItems)
+        {
+            var cmdSecuItems = new List<CommandSecurityItem>();
+
+            foreach (var cmdItem in cmdItems)
+            {
+                var secuItems = _tradecmdsecudao.Get(cmdItem.CommandId);
+                cmdSecuItems.AddRange(secuItems);
+            }
+
+            return cmdSecuItems;
         }
 
         #region private

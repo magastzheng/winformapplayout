@@ -386,8 +386,8 @@ namespace TradingSystem.View
                 tdcmdItem.EFuturesDirection = outItem.EDirection;
             }
 
-            selectedItems = new List<ClosePositionSecurityItem>() { outItem, inItem};
-            var result = _tradeCommandBLL.SubmitClosePosition(tdcmdItem, closeItem, selectedItems);
+            var selectedItems = new List<ClosePositionSecurityItem>() { outItem, inItem};
+            //var result = _tradeCommandBLL.SubmitClosePosition(tdcmdItem, closeItem, selectedItems);
 
             return true;
         }
