@@ -31,31 +31,51 @@ namespace BLL.Entrust
 
         public List<EntrustFlowItem> QueryToday(CallerCallback callback)
         {
-            List<UFXQueryEntrustRequest> requests = new List<UFXQueryEntrustRequest>();
+            //List<UFXQueryEntrustRequest> requests = new List<UFXQueryEntrustRequest>();
 
             var portfolios = _productBLL.GetAll();
+            //foreach (var portfolio in portfolios)
+            //{
+
+            //    UFXQueryEntrustRequest request = new UFXQueryEntrustRequest();
+            //    //request.RequestNum = 9000;
+            //    request.CombiNo = portfolio.PortfolioNo;
+            //    requests.Add(request);
+            //}
+            //UFXQueryEntrustRequest request = new UFXQueryEntrustRequest();
+            //request.AccountCode = "850010";
+            //request.CombiNo = "30";
+            //requests.Add(request);
+
+            //UFXQueryEntrustRequest request2 = new UFXQueryEntrustRequest();
+            //request2.AccountCode = "851001";
+            //request2.CombiNo = "11000002";
+            //requests.Add(request2);
+
             foreach (var portfolio in portfolios)
             {
+                List<UFXQueryEntrustRequest> requests = new List<UFXQueryEntrustRequest>();
 
                 UFXQueryEntrustRequest request = new UFXQueryEntrustRequest();
-                request.RequestNum = 10000;
+                //request.RequestNum = 9000;
                 request.CombiNo = portfolio.PortfolioNo;
                 requests.Add(request);
-            }
 
-            Callbacker callbacker = new Callbacker
-            {
-                Token = new CallerToken
+                Callbacker callbacker = new Callbacker
                 {
-                    SubmitId = 11111,
-                    CommandId = 22222,
-                    Caller = callback,
-                },
+                    Token = new CallerToken
+                    {
+                        SubmitId = 11111,
+                        CommandId = 22222,
+                        Caller = callback,
+                    },
 
-                DataHandler = QueryDataHandler,
-            };
+                    DataHandler = QueryDataHandler,
+                };
 
-            var result = _securityBLL.QueryEntrust(requests, callbacker);
+                var result = _securityBLL.QueryEntrust(requests, callbacker);
+            }
+           
 
             //_waitEvent.WaitOne(30 * 1000);
 
@@ -99,16 +119,19 @@ namespace BLL.Entrust
         private int QueryDataHandler(CallerToken token, DataParser dataParser)
         {
             List<UFXQueryEntrustResponse> responseItems = new List<UFXQueryEntrustResponse>();
-
-            var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXQueryEntrustResponse>();
-            for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
+            var errorResponse = UFXErrorHandler.Handle(dataParser);
+            if (errorResponse.ErrorCode == 0)
             {
-                var dataSet = dataParser.DataSets[i];
-                foreach (var dataRow in dataSet.Rows)
+                var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXQueryEntrustResponse>();
+                for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
                 {
-                    UFXQueryEntrustResponse p = new UFXQueryEntrustResponse();
-                    UFXDataSetHelper.SetValue<UFXQueryEntrustResponse>(ref p, dataRow.Columns, dataFieldMap);
-                    responseItems.Add(p);
+                    var dataSet = dataParser.DataSets[i];
+                    foreach (var dataRow in dataSet.Rows)
+                    {
+                        UFXQueryEntrustResponse p = new UFXQueryEntrustResponse();
+                        UFXDataSetHelper.SetValue<UFXQueryEntrustResponse>(ref p, dataRow.Columns, dataFieldMap);
+                        responseItems.Add(p);
+                    }
                 }
             }
 
@@ -142,7 +165,7 @@ namespace BLL.Entrust
                     entrustFlowItems.Add(efItem);
                 }
 
-                token.Caller(token, entrustFlowItems);
+                token.Caller(token, entrustFlowItems, errorResponse);
             }
 
             //_waitEvent.Set();

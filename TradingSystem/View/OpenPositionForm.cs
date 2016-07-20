@@ -288,6 +288,9 @@ namespace TradingSystem.View
                         foreach (var index in selectedList)
                         {
                             var openItem = _monitorDataSource[index];
+                            string instanceCode = string.Format("{0}-{1}-{2}", openItem.PortfolioId, openItem.TemplateId, DateTime.Now.ToString("yyyyMMdd"));
+
+                            openItem.InstanceCode = instanceCode;
 
                             //Open the dialog
                             OpenPositionDialog dialog = new OpenPositionDialog();
@@ -308,8 +311,6 @@ namespace TradingSystem.View
                             {
                                 dialog.Dispose();
                             }
-
-                            string instanceCode = string.Format("{0}-{1}-{2}", openItem.PortfolioId, openItem.TemplateId, DateTime.Now.ToString("yyyyMMdd"));
 
                             int instanceId = -1;
                             //var instance = _tradeinstdao.Get(instanceCode);

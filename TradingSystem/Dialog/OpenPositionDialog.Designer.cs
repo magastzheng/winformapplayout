@@ -57,7 +57,10 @@
             this.lblFutures = new System.Windows.Forms.Label();
             this.lblTemplate = new System.Windows.Forms.Label();
             this.lblPortfolio = new System.Windows.Forms.Label();
+            this.btnConfirm = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
             this.panelTop.SuspendLayout();
+            this.panelBottom.SuspendLayout();
             this.panelMain.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -83,6 +86,8 @@
             // panelBottom
             // 
             this.panelBottom.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelBottom.Controls.Add(this.btnCancel);
+            this.panelBottom.Controls.Add(this.btnConfirm);
             this.panelBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panelBottom.Location = new System.Drawing.Point(0, 230);
             this.panelBottom.Name = "panelBottom";
@@ -340,6 +345,24 @@
             this.lblPortfolio.TabIndex = 0;
             this.lblPortfolio.Text = "套利组合:";
             // 
+            // btnConfirm
+            // 
+            this.btnConfirm.Location = new System.Drawing.Point(308, 11);
+            this.btnConfirm.Name = "btnConfirm";
+            this.btnConfirm.Size = new System.Drawing.Size(75, 23);
+            this.btnConfirm.TabIndex = 0;
+            this.btnConfirm.Text = "确认";
+            this.btnConfirm.UseVisualStyleBackColor = true;
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.Location = new System.Drawing.Point(404, 11);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.TabIndex = 1;
+            this.btnCancel.Text = "取消";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            // 
             // OpenPositionDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -351,6 +374,7 @@
             this.Text = "期现套利开仓确认";
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
+            this.panelBottom.ResumeLayout(false);
             this.panelMain.ResumeLayout(false);
             this.panelMain.PerformLayout();
             this.ResumeLayout(false);
@@ -388,5 +412,7 @@
         private System.Windows.Forms.Label lblTemplate;
         private System.Windows.Forms.Label lblPortfolio;
         private System.Windows.Forms.RichTextBox rtbComment;
+        private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.Button btnConfirm;
     }
 }

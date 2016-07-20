@@ -147,6 +147,8 @@ namespace BLL.Entrust
 
         private int EntrustBasketCallback(CallerToken token, DataParser dataParser)
         {
+            var errorResponse = UFXErrorHandler.Handle(dataParser);
+
             List<UFXBasketEntrustResponse> responseItems = new List<UFXBasketEntrustResponse>();
             var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXBasketEntrustResponse>();
             for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
@@ -192,11 +194,23 @@ namespace BLL.Entrust
                 logger.Warn(msg);
             }
 
+            if (token.Caller != null)
+            {
+                token.Caller(token, entrustSecuItems, errorResponse);
+            }
+
+            if (token.WaitEvent != null)
+            {
+                token.WaitEvent.Set();
+            }
+
             return ret;
         }
 
         private int WithdrawBasketCallback(CallerToken token, DataParser dataParser)
         {
+            var errorResponse = UFXErrorHandler.Handle(dataParser);
+
             List<UFXBasketWithdrawResponse> responseItems = new List<UFXBasketWithdrawResponse>();
 
             var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXBasketWithdrawResponse>();
@@ -211,10 +225,11 @@ namespace BLL.Entrust
                 }
             }
 
+            List<EntrustSecurityItem> entrustSecuItems = new List<EntrustSecurityItem>();
+
             int ret = -1;
             if (token.SubmitId > 0)
             {
-                List<EntrustSecurityItem> entrustSecuItems = new List<EntrustSecurityItem>();
                 foreach (var responseItem in responseItems)
                 {
                     var entrustItem = new EntrustSecurityItem
@@ -233,9 +248,18 @@ namespace BLL.Entrust
                 ret = _tradecmddao.UpdateTargetNumBySubmitId(token.SubmitId, token.CommandId);
             }
 
-            token.WaitEvent.Set();
-           
+            if (token.Caller != null)
+            {
+                token.Caller(token, entrustSecuItems, errorResponse);
+            }
+
+            if (token.WaitEvent != null)
+            {
+                token.WaitEvent.Set();
+            }
+
             return ret;
         }
+    
     }
 }

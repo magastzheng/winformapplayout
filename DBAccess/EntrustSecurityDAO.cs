@@ -330,7 +330,7 @@ namespace DBAccess
 
         public List<EntrustSecurityItem> GetByCommandId(int commandId)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetByCommandId);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
 
             List<EntrustSecurityItem> items = new List<EntrustSecurityItem>();

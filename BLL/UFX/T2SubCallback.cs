@@ -50,21 +50,24 @@ namespace BLL.UFX
             }
 
             IUFXSubsriberBLLBase subscriberBLL = UFXSubscriberBLLFactory.Create(messageType);
-            CT2UnPacker lpUnpacker1 = new CT2UnPacker((void*)lpData, (uint)nLength);
-            if(lpUnpacker1 != null)
+            if (nLength > 0)
             {
-                //解包
-                //....
-                DataParser parser = new DataParser();
-                parser.Parse(lpUnpacker1);
-                Console.WriteLine("====推送*****数据部分=====开始");
-                parser.Output();
-                Console.WriteLine("====推送*****数据部分=====结束");
-                lpUnpacker1.Dispose();
-
-                if (subscriberBLL != null)
+                CT2UnPacker lpUnpacker1 = new CT2UnPacker((void*)lpData, (uint)nLength);
+                if (lpUnpacker1 != null)
                 {
-                    subscriberBLL.Handle(parser);
+                    //解包
+                    //....
+                    DataParser parser = new DataParser();
+                    parser.Parse(lpUnpacker1);
+                    Console.WriteLine("====推送*****数据部分=====开始");
+                    parser.Output();
+                    Console.WriteLine("====推送*****数据部分=====结束");
+                    lpUnpacker1.Dispose();
+
+                    if (subscriberBLL != null)
+                    {
+                        subscriberBLL.Handle(parser);
+                    }
                 }
             }
 

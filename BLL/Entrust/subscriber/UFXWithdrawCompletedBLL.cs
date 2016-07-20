@@ -20,7 +20,7 @@ namespace BLL.Entrust.subscriber
             var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXWithdrawCompletedResponse>();
             
             //TODO:
-            for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
+            for (int i = 0, count = dataParser.DataSets.Count; i < count; i++)
             {
                 var dataSet = dataParser.DataSets[i];
                 foreach (var dataRow in dataSet.Rows)

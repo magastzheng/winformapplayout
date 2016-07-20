@@ -53,5 +53,7 @@ namespace Model.UI
 
         [BindingAttribute("stocknumbers")]
         public int StockNumbers { get; set; }
+
+        public string InstanceCode { get; set; }
     }
 }

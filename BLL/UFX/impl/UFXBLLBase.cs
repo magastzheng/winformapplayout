@@ -94,7 +94,7 @@ namespace BLL.UFX.impl
 
         protected void AddDataHandler(FunctionCode functionCode, Callbacker callbacker)
         {
-            if (!_dataHandlerMap.ContainsKey(functionCode))
+            if (_dataHandlerMap.ContainsKey(functionCode))
             {
                 if (!_dataHandlerMap[functionCode].Contains(callbacker))
                 {
@@ -164,7 +164,14 @@ namespace BLL.UFX.impl
             packer.BeginPack();
             foreach (FieldItem item in functionItem.RequestFields)
             {
-                packer.AddField(item.Name, item.Type, item.Width, item.Scale);
+                if (item.Name.Equals("entrust_amount"))
+                {
+                    packer.AddField(item.Name, PackFieldType.FloatType, item.Width, item.Scale);
+                }
+                else
+                {
+                    packer.AddField(item.Name, item.Type, item.Width, item.Scale);
+                }
             }
 
             var dataFieldMap = UFXDataBindingHelper.GetProperty<T>();
@@ -212,7 +219,20 @@ namespace BLL.UFX.impl
             var dataField = dataFieldMap[fieldItem.Name];
             Type type = request.GetType();
             object obj = type.GetProperty(dataField.Name).GetValue(request);
-            if (fieldItem.Type == PackFieldType.IntType)
+            if (fieldItem.Name.Equals("entrust_amount"))
+            {
+                if (obj != null)
+                {
+                    packer.AddDouble((double)(int)obj);
+                    //packer.AddInt((int)obj);
+                }
+                else
+                {
+                    packer.AddDouble(0f);
+                    //packer.AddInt(0);
+                }
+            }
+            else if (fieldItem.Type == PackFieldType.IntType)
             {
                 if (obj != null)
                 {

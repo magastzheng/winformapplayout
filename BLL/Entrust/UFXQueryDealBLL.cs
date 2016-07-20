@@ -79,7 +79,7 @@ namespace BLL.Entrust
         private int QueryDataHandler(CallerToken token, DataParser dataParser)
         {
             List<UFXQueryDealResponse> responseItems = new List<UFXQueryDealResponse>();
-
+            var errorResponse = UFXErrorHandler.Handle(dataParser);
             var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXQueryDealResponse>();
             for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
             {
@@ -116,7 +116,7 @@ namespace BLL.Entrust
                     dealFlowItems.Add(efItem);
                 }
 
-                token.Caller(token, dealFlowItems);
+                token.Caller(token, dealFlowItems,  errorResponse);
             }
 
             return responseItems.Count();

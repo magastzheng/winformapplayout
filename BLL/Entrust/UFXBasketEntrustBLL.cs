@@ -107,6 +107,8 @@ namespace BLL.Entrust
 
         private int EntrustDataHandler(CallerToken token, DataParser dataParser)
         {
+            var errorResponse = UFXErrorHandler.Handle(dataParser);
+
             List<UFXBasketEntrustResponse> responseItems = new List<UFXBasketEntrustResponse>();
             var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXBasketEntrustResponse>();
             for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
@@ -154,7 +156,7 @@ namespace BLL.Entrust
 
             if (token.Caller != null)
             {
-                token.Caller(token, entrustSecuItems);
+                token.Caller(token, entrustSecuItems, errorResponse);
             }
 
             return ret;

@@ -15,6 +15,7 @@ using Model.SecurityInfo;
 using BLL.SecurityInfo;
 using Model.EnumType;
 using Model.Binding.BindingUtil;
+using Quote;
 
 namespace TradingSystem.Dialog
 {
@@ -101,9 +102,30 @@ namespace TradingSystem.Dialog
             }
 
             var stockItems = _secuDataSource.Where(p => p.EntrustDirection == direction && p.SecuType == secuType).ToList();
-            stockItems.ForEach(p => { p.EPriceSetting = priceType; });
+            if (stockItems.Count > 0)
+            {
+                stockItems.ForEach(p => { p.EPriceSetting = priceType; });
 
-            //TODO: update the price by setting
+                //TODO: update the price by setting
+
+                //query the price and set it
+                List<SecurityItem> secuList = new List<SecurityItem>();
+                var uniqueSecuItems = _secuDataSource.GroupBy(p => p.SecuCode).Select(p => p.First());
+                foreach (var secuItem in uniqueSecuItems)
+                {
+                    var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
+                    secuList.Add(findItem);
+                }
+
+                List<PriceType> priceTypes = new List<PriceType>() { priceType };
+                QuoteCenter.Instance.Query(secuList, priceTypes);
+                foreach (var secuItem in stockItems)
+                {
+                    var targetItem = secuList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
+                    var marketData = QuoteCenter.Instance.GetMarketData(targetItem);
+                    secuItem.EntrustPrice = QuotePriceHelper.GetPrice(priceType, marketData);
+                }
+            }
 
             this.secuGridView.Invalidate();
         }
@@ -315,11 +337,18 @@ namespace TradingSystem.Dialog
             PriceType futureSellPrice = PriceTypeHelper.GetPriceType(this.cbFuturesSellPrice);
 
             var selectItems = _secuDataSource.Where(p => p.Selection).ToList();
-            var submitIds = selectItems.Select(p => p.SubmitId).ToList();
-            foreach (var submitId in submitIds)
+            
+            //var submitIds = selectItems.Select(p => p.SubmitId).Distinct().ToList();
+            //foreach (var submitId in submitIds)
+            //{
+            //    var oneCancelRedoItem = selectItems.Where(p => p.SubmitId == submitId).ToList();
+            //    Submit(oneCancelRedoItem);
+            //}
+
+            var commandIds = selectItems.Select(p => p.CommandId).Distinct().ToList();
+            foreach (var commandId in commandIds)
             {
-                var oneCancelRedoItem = selectItems.Where(p => p.SubmitId == submitId).ToList();
-                //CancelRedo(submitId, oneCancelRedoItem);
+                var oneCancelRedoItem = selectItems.Where(p => p.CommandId == commandId).ToList();
                 Submit(oneCancelRedoItem);
             }
 

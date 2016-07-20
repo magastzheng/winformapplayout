@@ -6,12 +6,14 @@ using System.Windows.Forms;
 using System.Linq;
 using Forms;
 using Model.config;
+using BLL.TradeCommand;
 
 namespace TradingSystem.Dialog
 {
     public partial class OpenPositionDialog : Forms.BaseFixedForm
     {
-        private TradingInstanceDAO _tradeinstdao = new TradingInstanceDAO();
+        //private TradingInstanceDAO _tradeinstdao = new TradingInstanceDAO();
+        private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
 
         public OpenPositionDialog()
         {
@@ -21,6 +23,8 @@ namespace TradingSystem.Dialog
             this.LoadData += new FormLoadHandler(Form_LoadData);
 
             this.ckbInstanceCode.CheckedChanged += new EventHandler(CheckBox_InstanceCode_CheckedChanged);
+            this.btnCancel.Click += new EventHandler(Button_Cancel_Click);
+            this.btnConfirm.Click += new EventHandler(Button_Confirm_Click);
         }
 
         private void CheckBox_InstanceCode_CheckedChanged(object sender, EventArgs e)
@@ -83,15 +87,24 @@ namespace TradingSystem.Dialog
             this.tbEndTime.Text = endDate.ToString("hhmmss");
 
             //Initialize the instancecode
-            var instances = _tradeinstdao.GetCombineAll();
+            var instances = _tradeInstanceBLL.GetAllInstance();
             var targetInstances = instances.Where(p => p.MonitorUnitId == openItem.MonitorId && p.TemplateId == openItem.TemplateId).ToList();
+            
+            ComboOption comboOption = new ComboOption
+            {
+                Items = new List<ComboOptionItem>()
+            };
+
+            ComboOptionItem currentItem = new ComboOptionItem
+            {
+                Id = openItem.InstanceCode,
+                Name = openItem.InstanceCode
+            };
+
+            comboOption.Items.Add(currentItem);
+
             if (targetInstances != null && targetInstances.Count > 0)
             {
-                ComboOption comboOption = new ComboOption 
-                {
-                    Items = new List<ComboOptionItem>()
-                };
-
                 foreach (var instance in targetInstances)
                 {
                     ComboOptionItem item = new ComboOptionItem 
@@ -107,6 +120,20 @@ namespace TradingSystem.Dialog
                 ComboBoxUtil.SetComboBox(this.cbInstanceCode, comboOption);
             }
             return true;
+        }
+
+        #endregion
+
+        #region button click event handler
+
+        private void Button_Confirm_Click(object sender, EventArgs e)
+        {
+            DialogResult = System.Windows.Forms.DialogResult.OK;
+        }
+
+        private void Button_Cancel_Click(object sender, EventArgs e)
+        {
+            DialogResult = System.Windows.Forms.DialogResult.Cancel;
         }
 
         #endregion

@@ -648,7 +648,8 @@ begin
 		,CreatedDate
 		,ModifiedDate
 	from entrustsecurity
-	where (DealStatus = 1 or DealStatus = 2)		--未成交或部分成交
+	where CommandId = @CommandId 
+		and (DealStatus = 1 or DealStatus = 2)		--未成交或部分成交
 		and EntrustStatus = 4 --已完成委托
 end
 
@@ -686,7 +687,8 @@ begin
 		,CreatedDate
 		,ModifiedDate
 	from entrustsecurity
-	where (DealStatus = 1		--未成交
+	where CommandId = @CommandId 
+		and (DealStatus = 1		--未成交
 		or DealStatus = 2)		--部分成交
 		and EntrustStatus = 12	--已完成委托
 end

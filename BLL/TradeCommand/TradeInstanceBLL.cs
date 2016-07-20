@@ -10,7 +10,7 @@ namespace BLL.TradeCommand
 {
     public class TradeInstanceBLL
     {
-        private TradingInstanceDAO _tradeinstdao = new TradingInstanceDAO();
+        private TradingInstanceDAO _tradinginstancedao = new TradingInstanceDAO();
         private TradingInstanceSecurityDAO _tradeinstsecudao = new TradingInstanceSecurityDAO();
         private TradeInstanceDAO _tradeinstancedao = new TradeInstanceDAO();
 
@@ -45,13 +45,18 @@ namespace BLL.TradeCommand
 
         public TradingInstance GetInstance(int instanceId)
         {
-            return _tradeinstdao.GetCombine(instanceId);
+            return _tradinginstancedao.GetCombine(instanceId);
         }
 
         public TradingInstance GetInstance(string instanceCode)
         {
-            var instance = _tradeinstdao.GetCombineByCode(instanceCode);
+            var instance = _tradinginstancedao.GetCombineByCode(instanceCode);
             return instance;
+        }
+
+        public List<TradingInstance> GetAllInstance()
+        {
+            return _tradinginstancedao.GetCombineAll();
         }
 
         #region

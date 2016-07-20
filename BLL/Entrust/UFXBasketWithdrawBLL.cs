@@ -70,6 +70,8 @@ namespace BLL.Entrust
         {
             List<UFXBasketWithdrawResponse> responseItems = new List<UFXBasketWithdrawResponse>();
 
+            var errorResponse = UFXErrorHandler.Handle(dataParser);
+
             var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXBasketWithdrawResponse>();
             for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
             {
@@ -105,7 +107,7 @@ namespace BLL.Entrust
 
                 if (token.Caller != null)
                 {
-                    token.Caller(token, entrustSecuItems);
+                    token.Caller(token, entrustSecuItems, errorResponse);
                 }
             }
 

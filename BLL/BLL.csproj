@@ -65,6 +65,7 @@
     <Compile Include="Entrust\UFXBasketWithdrawBLL.cs" />
     <Compile Include="Entrust\UFXDataSetHelper.cs" />
     <Compile Include="Entrust\UFXEntrustBLL.cs" />
+    <Compile Include="Entrust\UFXErrorHandler.cs" />
     <Compile Include="Entrust\UFXQueryDealBLL.cs" />
     <Compile Include="Entrust\UFXQueryEntrustBLL.cs" />
     <Compile Include="TradeCommand\TradeInstanceSecurityBLL.cs" />

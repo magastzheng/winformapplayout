@@ -88,7 +88,7 @@
 		"scale": "4"
 	},{
 		"name": "N12",
-		"type": "F",
+		"type": "I",
 		"width": "12",
 		"scale": "4"
 	},

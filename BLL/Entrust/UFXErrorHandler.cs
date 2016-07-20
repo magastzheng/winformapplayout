@@ -1,0 +1,58 @@
+﻿using BLL.UFX.impl;
+using Model.t2sdk;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BLL.Entrust
+{
+    public class UFXErrorHandler
+    {
+        public static UFXErrorResponse Handle(DataParser dataParser)
+        {
+            UFXErrorResponse errorResponse = new UFXErrorResponse();
+            if (dataParser.DataSets.Count == 0)
+            {
+                return errorResponse;
+            }
+
+            var dataSet = dataParser.DataSets[0];
+            if (dataSet.Rows.Count == 0)
+            {
+                return errorResponse;
+            }
+
+            var row = dataSet.Rows[0];
+            foreach (var column in row.Columns)
+            {
+                switch (column.Key)
+                {
+                    case "ErrorCode":
+                        {
+                            errorResponse.ErrorCode = column.Value.GetInt();
+                        }
+                        break;
+                    case "ErrorMsg":
+                        {
+                            errorResponse.ErrorMessage = column.Value.GetStr();
+                        }
+                        break;
+                    case "MsgDetail":
+                        {
+                            errorResponse.MessageDetail = column.Value.GetStr();
+                        }
+                        break;
+                    case "DataCount":
+                        {
+                            errorResponse.DataCount = column.Value.GetInt();
+                        }
+                        break;
+                }
+            }
+
+            return errorResponse;
+        }
+    }
+}

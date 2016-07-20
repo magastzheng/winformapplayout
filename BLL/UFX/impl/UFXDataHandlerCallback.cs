@@ -22,7 +22,21 @@ namespace BLL.UFX.impl
     /// <param name="token"></param>
     /// <param name="data"></param>
     /// <returns></returns>
-    public delegate int CallerCallback(CallerToken token, object data);
+    public delegate int CallerCallback(CallerToken token, object data, UFXErrorResponse errorResponse);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class UFXErrorResponse
+    {
+        public int ErrorCode { get; set; }
+
+        public string ErrorMessage { get; set; }
+
+        public string MessageDetail { get; set; }
+
+        public int DataCount { get; set; }
+    }
 
     /// <summary>
     /// The CallerToken can save the input information. Then the callback can use the information to finish

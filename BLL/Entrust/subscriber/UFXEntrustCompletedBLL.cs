@@ -18,7 +18,7 @@ namespace BLL.Entrust.subscriber
         {
             List<UFXEntrustCompletedResponse> responseItems = new List<UFXEntrustCompletedResponse>();
             var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXEntrustCompletedResponse>();
-            for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
+            for (int i = 0, count = dataParser.DataSets.Count; i < count; i++)
             {
                 var dataSet = dataParser.DataSets[i];
                 foreach (var dataRow in dataSet.Rows)

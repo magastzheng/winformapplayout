@@ -38,20 +38,29 @@ namespace BLL.Entrust
             //TODO: adjust the EntrustAmount
             List<EntrustSecurityItem> entrustItems = new List<EntrustSecurityItem>();
             DateTime now = DateTime.Now;
-            foreach (var cancelItem in cancelItems)
+
+            //merge the same security in with the same commandId
+            var uniqueSecuCodes = cancelItems.Select(p => p.SecuCode).Distinct().ToList();
+            foreach (var secuCode in uniqueSecuCodes)
             {
                 EntrustSecurityItem item = new EntrustSecurityItem
                 {
-                    CommandId = cancelItem.CommandId,
-                    SecuCode = cancelItem.SecuCode,
-                    SecuType = cancelItem.SecuType,
-                    EntrustAmount = cancelItem.LeftAmount,
-                    EntrustPrice = cancelItem.EntrustPrice,
-                    EntrustDirection = cancelItem.EntrustDirection,
-                    EntrustPriceType = cancelItem.EEntrustPriceType,
-                    PriceType = cancelItem.EPriceSetting,
+                    CommandId = commandId,
+                    SecuCode = secuCode,
                     EntrustDate = now,
                 };
+
+                var originSecuItems = cancelItems.Where(p => p.SecuCode.Equals(secuCode)).ToList();
+                if (originSecuItems != null && originSecuItems.Count > 0)
+                {
+                    item.SecuType = originSecuItems[0].SecuType;
+                    item.EntrustPrice = originSecuItems[0].EntrustPrice;
+                    item.EntrustDirection = originSecuItems[0].EntrustDirection;
+                    item.EntrustPriceType = originSecuItems[0].EEntrustPriceType;
+                    item.PriceType = originSecuItems[0].EPriceSetting;
+
+                    item.EntrustAmount = originSecuItems.Sum(o => o.LeftAmount);
+                }
 
                 entrustItems.Add(item);
             }

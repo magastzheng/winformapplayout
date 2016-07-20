@@ -124,6 +124,7 @@ namespace DBAccess.TradeInstance
                 //delete all old one
                 dbCommand.CommandText = SP_ModifyTradeInstance;
 
+                _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.String, tradeInstance.InstanceId);
                 _dbHelper.AddInParameter(dbCommand, "@InstanceCode", System.Data.DbType.String, tradeInstance.InstanceCode);
                 _dbHelper.AddInParameter(dbCommand, "@MonitorUnitId", System.Data.DbType.Int32, tradeInstance.MonitorUnitId);
                 _dbHelper.AddInParameter(dbCommand, "@StockDirection", System.Data.DbType.Int32, (int)tradeInstance.StockDirection);
@@ -134,22 +135,19 @@ namespace DBAccess.TradeInstance
                 _dbHelper.AddInParameter(dbCommand, "@FuturesPriceType", System.Data.DbType.Int32, (int)tradeInstance.FuturesPriceType);
                 _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, 1);
                 _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.String, tradeInstance.Owner);
-                _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, DateTime.Now);
-
-                _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
+                _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
                 ret = dbCommand.ExecuteNonQuery();
                 int instanceId = -1;
                 if (ret > 0)
                 {
-                    instanceId = tradeInstance.InstanceId;
-
+                    
                     foreach (var tradeSecuItem in tradeSecuItems)
                     {
                         dbCommand.Parameters.Clear();
                         dbCommand.CommandText = SP_ModifyTradeInstanceSecurityPreTrade;
 
-                        _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, instanceId);
+                        _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, tradeInstance.InstanceId);
                         _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, tradeSecuItem.SecuCode);
                         _dbHelper.AddInParameter(dbCommand, "@InstructionPreBuy", System.Data.DbType.Int32, tradeSecuItem.InstructionPreBuy);
                         _dbHelper.AddInParameter(dbCommand, "@InstructionPreSell", System.Data.DbType.Int32, tradeSecuItem.InstructionPreSell);

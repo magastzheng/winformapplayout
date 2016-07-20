@@ -25,15 +25,6 @@ namespace Model.Data
         {
             if (Type == DataValueType.Int)
             {
-                //int temp = 0;
-                //if (int.TryParse((string)Value, out temp))
-                //{
-                //    return temp;
-                //}
-                //else
-                //{
-                //    return 0;
-                //}
                 return (int)Value;
             }
             else if (Type == DataValueType.Float)
@@ -42,28 +33,48 @@ namespace Model.Data
             }
             else if (Type == DataValueType.String)
             {
-                return Convert.ToInt32(Value);
+                int temp;
+                bool ret = int.TryParse(Value.ToString(), out temp);
+                if(ret)
+                {
+                    return temp;
+                }
+                else
+                {
+                    double dTemp;
+                    ret = double.TryParse(Value.ToString(), out dTemp);
+                    if (ret)
+                    {
+                        return (int)dTemp;
+                    }
+                }
+
+                return 0;
             }
             else
             {
-                return -1;
+                return 0;
             }
         }
         public double GetDouble() 
         {
             if (Type == DataValueType.Float)
             {
-                //double temp = 0.0f;
-                //if (double.TryParse((string)Value, out temp))
-                //{
-                //    return temp;
-                //}
-                //return 0.0f;
                 return (double)Value;
             }
             else if (Type == DataValueType.Int)
             {
                 return (double)Value;
+            }
+            else if (Type == DataValueType.String)
+            {
+                double temp = 0.0f;
+                if (double.TryParse(Value.ToString(), out temp))
+                {
+                    return temp;
+                }
+
+                return 0.0f;
             }
             return 0.0f;
         }
