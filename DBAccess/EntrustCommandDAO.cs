@@ -24,7 +24,7 @@ namespace DBAccess
         private const string SP_GetByCommandId = "procEntrustCommandSelectByCommandId";
         private const string SP_GetByCommandIdEntrustStatus = "procEntrustCommandSelectByCommandIdEntrustStatus";
         private const string SP_GetCancel = "procEntrustCommandSelectCancel";
-        private const string SP_GetCancelRedo = "procEntrustCommandSelectCancelRedo";
+        private const string SP_GetCancelCompletedRedo = "procEntrustCommandSelectCancelCompletedRedo";
 
         public EntrustCommandDAO()
             : base()
@@ -369,7 +369,7 @@ namespace DBAccess
 
         public List<EntrustCommandItem> GetCancelRedo(int commandId)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCancelRedo);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCancelCompletedRedo);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
 
             List<EntrustCommandItem> items = new List<EntrustCommandItem>();

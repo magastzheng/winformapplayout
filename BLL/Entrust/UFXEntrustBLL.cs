@@ -129,13 +129,14 @@ namespace BLL.Entrust
                 {
                     SubmitId = cmdItem.SubmitId,
                     CommandId = cmdItem.CommandId,
+                    WaitEvent = new AutoResetEvent(false),
                 },
 
                 DataHandler = WithdrawBasketCallback,
             };
 
             var result = _securityBLL.WithdrawBasket(requests, callbacker);
-
+            callbacker.Token.WaitEvent.WaitOne(30 * 1000);
             if (result == Model.ConnectionCode.Success)
             {
                 ret = 1;
@@ -232,6 +233,7 @@ namespace BLL.Entrust
                 ret = _tradecmddao.UpdateTargetNumBySubmitId(token.SubmitId, token.CommandId);
             }
 
+            token.WaitEvent.Set();
            
             return ret;
         }

@@ -127,10 +127,20 @@ namespace TradingSystem.View
                 return;
             }
 
+            List<TradingCommandItem> successCancelItems = new List<TradingCommandItem>();
+            foreach(var cmdItem in selectCmdItems)
+            {
+                int retCancel = _entrustBLL.CancelOne(cmdItem);
+                if (retCancel > 0)
+                {
+                    successCancelItems.Add(cmdItem);
+                }
+            }
+
             var form = new CancelRedoDialog(_gridConfig);
             form.Owner = this;
             form.OnLoadControl(form, null);
-            form.OnLoadData(form, selectCmdItems);
+            form.OnLoadData(form, successCancelItems);
             form.SaveData += new FormLoadHandler(Dialog_CancelRedoDialog_SaveData);
             form.ShowDialog();
         }
@@ -951,12 +961,12 @@ namespace TradingSystem.View
                     submitIds.Add(eciItem.SubmitId);
 
                     //update the TargetNum
-                    cmdItem.TargetNum = targetNum;
-                    int targetNumFlag = _tradecmddao.UpdateTargetNum(cmdItem);
-                    if (targetNumFlag <= 0)
-                    {
-                        //TODO: failed to update TargetNum
-                    }
+                    //cmdItem.TargetNum = targetNum;
+                    //int targetNumFlag = _tradecmddao.UpdateTargetNum(cmdItem.CommandId, targetNum);
+                    //if (targetNumFlag <= 0)
+                    //{
+                    //    //TODO: failed to update TargetNum
+                    //}
                 }
                 else
                 { 

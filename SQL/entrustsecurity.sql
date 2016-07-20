@@ -625,6 +625,7 @@ create proc procEntrustSecuritySelectCancel(
 )
 as
 begin
+	--获取委托后可以撤单的证券
 	select RequestId
 		,SubmitId 
 		,CommandId			
@@ -653,15 +654,16 @@ end
 
 go
 
-if exists (select name from sysobjects where name='procEntrustSecuritySelectCancelRedo')
-drop proc procEntrustSecuritySelectCancelRedo
+if exists (select name from sysobjects where name='procEntrustSecuritySelectCancelCompletedRedo')
+drop proc procEntrustSecuritySelectCancelCompletedRedo
 
 go
-create proc procEntrustSecuritySelectCancelRedo(
+create proc procEntrustSecuritySelectCancelCompletedRedo(
 	@CommandId int
 )
 as
 begin
+	--获取撤单成功并可以重新委托的证券
 	select RequestId
 		,SubmitId 
 		,CommandId			
@@ -686,7 +688,7 @@ begin
 	from entrustsecurity
 	where (DealStatus = 1		--未成交
 		or DealStatus = 2)		--部分成交
-		and EntrustStatus = 4	--已完成委托
+		and EntrustStatus = 12	--已完成委托
 end
 
 go

@@ -26,9 +26,13 @@ namespace BLL.Entrust
         {
             var commandIds = cancelItems.Select(p => p.CommandId).Distinct().ToList();
             var commandId = commandIds.First();
+
+            var entrustCmdItems = _entrustcmddao.GetCancelRedo(commandId);
+            int copies = entrustCmdItems.Sum(p => p.Copies);
             EntrustCommandItem cmdItem = new EntrustCommandItem 
             {
                 CommandId = commandId,
+                Copies = copies,
             };
 
             //TODO: adjust the EntrustAmount
@@ -58,6 +62,7 @@ namespace BLL.Entrust
         public int SubmitOne(EntrustCommandItem cmdItem, List<EntrustSecurityItem> entrustItems)
         {
             int ret = _entrustdao.Submit(cmdItem, entrustItems);
+
             if (ret > 0)
             {
                 entrustItems.Where(p => p.CommandId == cmdItem.CommandId)
@@ -65,6 +70,14 @@ namespace BLL.Entrust
                     .ForEach(o => o.SubmitId = cmdItem.SubmitId);
 
                 ret = _ufxEntrustBLL.Submit(cmdItem, entrustItems);
+            }
+
+            //更新交易指令中目标份数
+            if (ret > 0)
+            {
+                var tradeCmdItem = _tradecmddao.Get(cmdItem.CommandId);
+                int targetNum = tradeCmdItem.TargetNum + cmdItem.Copies;
+                ret = _tradecmddao.UpdateTargetNum(cmdItem.CommandId, targetNum);
             }
             
             return ret;
@@ -128,7 +141,7 @@ namespace BLL.Entrust
             if (copies > 0)
             {
                 cmdItem.TargetNum -= copies;
-                ret = _tradecmddao.UpdateTargetNum(cmdItem);
+                ret = _tradecmddao.UpdateTargetNum(cmdItem.CommandId, cmdItem.TargetNum);
             }
 
             return ret;
@@ -138,33 +151,33 @@ namespace BLL.Entrust
 
         #region update
 
-        public int Cancel(List<CancelRedoItem> cancelItems)
-        {
-            int ret = -1;
-            var submitIds = cancelItems.Select(p => p.SubmitId).ToList();
-            foreach (var submitId in submitIds)
-            { 
-                var matchItems = cancelItems.Where(p => p.SubmitId == submitId).ToList();
+        //public int Cancel(List<CancelRedoItem> cancelItems)
+        //{
+        //    int ret = -1;
+        //    var submitIds = cancelItems.Select(p => p.SubmitId).ToList();
+        //    foreach (var submitId in submitIds)
+        //    { 
+        //        var matchItems = cancelItems.Where(p => p.SubmitId == submitId).ToList();
 
-                ret = UpdateCommandSecurityEntrustStatus(submitId, matchItems, EntrustStatus.CancelToDB);
-            }
+        //        ret = UpdateCommandSecurityEntrustStatus(submitId, matchItems, EntrustStatus.CancelToDB);
+        //    }
 
-            return ret;
-        }
+        //    return ret;
+        //}
 
-        public int CancelSuccess(List<CancelRedoItem> cancelItems)
-        {
-            int ret = -1;
-            var submitIds = cancelItems.Select(p => p.SubmitId).ToList();
-            foreach (var submitId in submitIds)
-            {
-                var matchItems = cancelItems.Where(p => p.SubmitId == submitId).ToList();
+        //public int CancelSuccess(List<CancelRedoItem> cancelItems)
+        //{
+        //    int ret = -1;
+        //    var submitIds = cancelItems.Select(p => p.SubmitId).ToList();
+        //    foreach (var submitId in submitIds)
+        //    {
+        //        var matchItems = cancelItems.Where(p => p.SubmitId == submitId).ToList();
 
-                ret = UpdateCommandSecurityEntrustStatus(submitId, matchItems, EntrustStatus.CancelSuccess);
-            }
+        //        ret = UpdateCommandSecurityEntrustStatus(submitId, matchItems, EntrustStatus.CancelSuccess);
+        //    }
 
-            return ret;
-        }
+        //    return ret;
+        //}
 
         #endregion
 
@@ -264,34 +277,34 @@ namespace BLL.Entrust
 
         #region private
 
-        private int UpdateCommandSecurityEntrustStatus(int submitId, List<CancelRedoItem> cancelItems, EntrustStatus entrustStatus)
-        {
-            int ret = -1;
-            var matchItems = cancelItems.Where(p => p.SubmitId == submitId).ToList();
-            var entrustSecuItems = GetEntrustSecurityItems(matchItems);
+        //private int UpdateCommandSecurityEntrustStatus(int submitId, List<CancelRedoItem> cancelItems, EntrustStatus entrustStatus)
+        //{
+        //    int ret = -1;
+        //    var matchItems = cancelItems.Where(p => p.SubmitId == submitId).ToList();
+        //    var entrustSecuItems = GetEntrustSecurityItems(matchItems);
 
-            ret = _entrustdao.UpdateCommandSecurityEntrustStatus(submitId, entrustSecuItems, entrustStatus);
-            return ret;
-        }
+        //    ret = _entrustdao.UpdateCommandSecurityEntrustStatus(submitId, entrustSecuItems, entrustStatus);
+        //    return ret;
+        //}
 
-        private List<EntrustSecurityItem> GetEntrustSecurityItems(List<CancelRedoItem> cancelItems)
-        {
-            List<EntrustSecurityItem> secuItems = new List<EntrustSecurityItem>();
-            foreach (var cancelItem in cancelItems)
-            {
-                EntrustSecurityItem item = new EntrustSecurityItem
-                {
-                    CommandId = cancelItem.CommandId,
-                    SubmitId = cancelItem.SubmitId,
-                    SecuCode = cancelItem.SecuCode,
-                    SecuType = cancelItem.SecuType,
-                };
+        //private List<EntrustSecurityItem> GetEntrustSecurityItems(List<CancelRedoItem> cancelItems)
+        //{
+        //    List<EntrustSecurityItem> secuItems = new List<EntrustSecurityItem>();
+        //    foreach (var cancelItem in cancelItems)
+        //    {
+        //        EntrustSecurityItem item = new EntrustSecurityItem
+        //        {
+        //            CommandId = cancelItem.CommandId,
+        //            SubmitId = cancelItem.SubmitId,
+        //            SecuCode = cancelItem.SecuCode,
+        //            SecuType = cancelItem.SecuType,
+        //        };
 
-                secuItems.Add(item);
-            }
+        //        secuItems.Add(item);
+        //    }
 
-            return secuItems;
-        }
+        //    return secuItems;
+        //}
 
         #endregion
     }

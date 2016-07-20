@@ -316,11 +316,11 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procEntrustCommandSelectCancelRedo')
-drop proc procEntrustCommandSelectCancelRedo
+if exists (select name from sysobjects where name='procEntrustCommandSelectCancelCompletedRedo')
+drop proc procEntrustCommandSelectCancelCompletedRedo
 
 go
-create proc procEntrustCommandSelectCancelRedo(
+create proc procEntrustCommandSelectCancelCompletedRedo(
 	@CommandId int
 )
 as
@@ -337,5 +337,5 @@ begin
 	from entrustcommand
 	where (DealStatus = 1 		--未成交
 		or DealStatus = 2)		--部分成交
-		and EntrustStatus = 4	--已完成委托
+		and EntrustStatus = 12	--已完成撤销
 end

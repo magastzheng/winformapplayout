@@ -219,7 +219,7 @@ namespace TradingSystem.Dialog
                         CancelRedoItem cancelRedoItem = new CancelRedoItem {
                             Selection = true,
                             CommandId = cmdItem.CommandId,
-                            EntrustAmount = p.EntrustAmount,
+                            //EntrustAmount = p.EntrustAmount,
                             EntrustDirection = p.EntrustDirection,
                             EntrustPrice = p.EntrustPrice,
                             SecuCode = p.SecuCode,
@@ -234,6 +234,15 @@ namespace TradingSystem.Dialog
                             EntrustDate = p.EntrustDate,
                             SubmitId = p.SubmitId,
                         };
+
+                        cancelRedoItem.EntrustAmount = cancelRedoItem.LeftAmount;
+                        if (cancelRedoItem.SecuType == Model.SecurityInfo.SecurityType.Stock)
+                        {
+                            if (cancelRedoItem.LeftAmount % 100 != 0)
+                            {
+                                cancelRedoItem.EntrustAmount = 100 * (int)Math.Round((double)(cancelRedoItem.LeftAmount / 100));
+                            }
+                        }
 
                         var secuInfo = SecurityInfoManager.Instance.Get(p.SecuCode, p.SecuType);
                         if (secuInfo != null)
@@ -310,9 +319,11 @@ namespace TradingSystem.Dialog
             foreach (var submitId in submitIds)
             {
                 var oneCancelRedoItem = selectItems.Where(p => p.SubmitId == submitId).ToList();
-                CancelRedo(submitId, oneCancelRedoItem);
+                //CancelRedo(submitId, oneCancelRedoItem);
                 Submit(oneCancelRedoItem);
             }
+
+            DialogResult = System.Windows.Forms.DialogResult.OK;
         }
 
         private void Button_Cancel_Click(object sender, EventArgs e)
@@ -324,24 +335,24 @@ namespace TradingSystem.Dialog
 
         #region
 
-        private void CancelRedo(int submitId, List<CancelRedoItem> cancelRedoItems)
-        {
-            //var submitId = cancelRedoItems.Select(p => p.SubmitId).Single();
-            //if (submitId <= 0)
-            //{
-            //    //TODO: fail to get the submitId
-            //    return;
-            //}
-            //set the cancel status
-            int ret = _entrustBLL.Cancel(cancelRedoItems);
+        //private void CancelRedo(int submitId, List<CancelRedoItem> cancelRedoItems)
+        //{
+        //    //var submitId = cancelRedoItems.Select(p => p.SubmitId).Single();
+        //    //if (submitId <= 0)
+        //    //{
+        //    //    //TODO: fail to get the submitId
+        //    //    return;
+        //    //}
+        //    //set the cancel status
+        //    //int ret = _entrustBLL.Cancel(cancelRedoItems);
             
-            //Call the UFX to cancel
+        //    //Call the UFX to cancel
 
-            //Update the EntrustCommand
-            //_entrustBLL.Submit(
+        //    //Update the EntrustCommand
+        //    //_entrustBLL.Submit(
 
-            ret = _entrustBLL.CancelSuccess(cancelRedoItems);
-        }
+        //    //ret = _entrustBLL.CancelSuccess(cancelRedoItems);
+        //}
 
         private void Submit(List<CancelRedoItem> cancelRedoItems)
         {
