@@ -21,6 +21,8 @@ namespace BLL.TradeCommand
         { 
         }
 
+        #region settle position 
+
         /// <summary>
         /// 清算：将所有LastDate不是今天的持仓并入持仓，并将BuyToday, SellToday重置为0
         /// </summary>
@@ -53,6 +55,17 @@ namespace BLL.TradeCommand
 
             return ret;
         }
+
+        #endregion
+
+        #region get security of instance
+
+        public List<TradingInstanceSecurity> Get(int instanceId)
+        {
+            return _tradeinstsecudao.Get(instanceId);
+        }
+
+        #endregion
 
         #region update the BuyToday, SellToday data
 

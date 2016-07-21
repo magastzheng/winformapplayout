@@ -29,6 +29,7 @@ namespace DBAccess
         private const string SP_GetByEntrustStatus = "procEntrustSecuritySelectByEntrustStatus";
         private const string SP_GetCancel = "procEntrustSecuritySelectCancel";
         private const string SP_GetCancelCompletedRedo = "procEntrustSecuritySelectCancelCompletedRedo";
+        private const string SP_GetCancelCompletedRedoBySubmitId = "procEntrustSecuritySelectCancelCompletedRedoBySubmitId";
 
         //private const string SP_GetEntrustFlow = "procEntrustSecuritySelectEntrustFlow";
         //private const string SP_GetDealFlow = "procEntrustSecuritySelectDealFlow";
@@ -546,6 +547,59 @@ namespace DBAccess
             return items;
         }
 
+        public List<EntrustSecurityItem> GetCancelRedoBySubmitId(int submitId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCancelCompletedRedoBySubmitId);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
+
+            List<EntrustSecurityItem> items = new List<EntrustSecurityItem>();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    EntrustSecurityItem item = new EntrustSecurityItem();
+                    item.RequestId = (int)reader["RequestId"];
+                    item.SubmitId = (int)reader["SubmitId"];
+                    item.CommandId = (int)reader["CommandId"];
+                    item.SecuCode = (string)reader["SecuCode"];
+                    item.SecuType = (SecurityType)(int)reader["SecuType"];
+                    item.EntrustAmount = (int)reader["EntrustAmount"];
+                    item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
+                    item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
+                    item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+                    item.EntrustPriceType = (EntrustPriceType)reader["EntrustPriceType"];
+                    item.PriceType = (PriceType)reader["PriceType"];
+                    item.EntrustNo = (int)reader["EntrustNo"];
+                    item.BatchNo = (int)reader["BatchNo"];
+                    item.DealStatus = (DealStatus)reader["DealStatus"];
+                    item.TotalDealAmount = (int)reader["TotalDealAmount"];
+                    item.TotalDealBalance = (double)(decimal)reader["TotalDealBalance"];
+                    item.TotalDealFee = (double)(decimal)reader["TotalDealFee"];
+
+                    if (reader["EntrustDate"] != null && reader["EntrustDate"] != DBNull.Value)
+                    {
+                        item.EntrustDate = (DateTime)reader["EntrustDate"];
+                    }
+
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+                    {
+                        item.CreatedDate = (DateTime)reader["CreatedDate"];
+                    }
+
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+                    {
+                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+                    }
+
+                    items.Add(item);
+                }
+            }
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return items;
+        }
         #region get combine
 
         public List<EntrustSecurityCombineItem> GetAllCombine()

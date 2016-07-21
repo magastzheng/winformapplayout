@@ -26,12 +26,12 @@ namespace TradingSystem.View
         private const string GridCloseCmdId = "closepositioncmd";
 
         private GridConfig _gridConfig;
-        private TradingInstanceDAO _tradeinstdao = new TradingInstanceDAO();
-        private TradingInstanceSecurityDAO _tradeinstsecudao = new TradingInstanceSecurityDAO();
         private FuturesContractDAO _fcdbdao = new FuturesContractDAO();
 
         private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
         private TemplateBLL _templateBLL = new TemplateBLL();
+        private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
+        private TradeInstanceSecurityBLL _tradeInstanceSecuBLL = new TradeInstanceSecurityBLL();
 
         private SortableBindingList<ClosePositionItem> _instDataSource = new SortableBindingList<ClosePositionItem>(new List<ClosePositionItem>());
         private SortableBindingList<ClosePositionSecurityItem> _secuDataSource = new SortableBindingList<ClosePositionSecurityItem>(new List<ClosePositionSecurityItem>());
@@ -103,7 +103,7 @@ namespace TradingSystem.View
 
         private void LoadSecurity(ClosePositionItem closeItem)
         {
-            var secuItems = _tradeinstsecudao.Get(closeItem.InstanceId);
+            var secuItems = _tradeInstanceSecuBLL.Get(closeItem.InstanceId);
             var tempstockitems = _templateBLL.GetTemplate(closeItem.TemplateId);
             if (secuItems == null || secuItems.Count == 0)
             {
@@ -152,14 +152,14 @@ namespace TradingSystem.View
 
             if (_secuDataSource != null && _secuDataSource.Count > 0)
             {
-                var futuresItem = _secuDataSource.First(p => p.InstanceId == closeItem.InstanceId && p.SecuType == Model.SecurityInfo.SecurityType.Futures);
+                var futuresItem = _secuDataSource.ToList()
+                                    .Find(p => p.InstanceId == closeItem.InstanceId && p.SecuType == Model.SecurityInfo.SecurityType.Futures);
                 if (futuresItem != null)
                 {
                     cmdItem.FuturesContract = futuresItem.SecuCode;
+                    _cmdDataSource.Add(cmdItem);
                 }
             }
-
-            _cmdDataSource.Add(cmdItem);
         }
 
         #endregion
@@ -251,7 +251,7 @@ namespace TradingSystem.View
             _secuDataSource.Clear();
             _cmdDataSource.Clear();
 
-            var tradeInstances = _tradeinstdao.GetCombineAll();
+            var tradeInstances = _tradeInstanceBLL.GetAllInstance();
             if (tradeInstances == null || tradeInstances.Count == 0)
             {
                 return false;
@@ -355,6 +355,14 @@ namespace TradingSystem.View
             }
         }
 
+        /// <summary>
+        /// Callback when click Confirm button
+        /// </summary>
+        /// <param name="sender">The dialog instance.</param>
+        /// <param name="data">An array of ClosePositionSecurityItem with 2 elements. The first one is new item and the second
+        /// one is old item.
+        /// </param>
+        /// <returns></returns>
         private bool Dialog_SaveData(object sender, object data)
         {
             if (data == null || !(data is ClosePositionSecurityItem[]))
@@ -363,12 +371,12 @@ namespace TradingSystem.View
             if (itemArr.Length != 2)
                 return false;
 
-            var outItem = itemArr[0];
-            var inItem = itemArr[1];
+            var newItem = itemArr[0];
+            var originItem = itemArr[1];
 
             TradingCommandItem tdcmdItem = new TradingCommandItem
             {
-                InstanceId = outItem.InstanceId,
+                InstanceId = newItem.InstanceId,
                 ECommandType = CommandType.Arbitrage,
                 EExecuteType = ExecuteType.AdjustPosition,
                 CommandNum = 1,
@@ -377,19 +385,27 @@ namespace TradingSystem.View
                 ModifiedTimes = 1
             };
 
-            if (outItem.SecuType == SecurityType.Stock)
+            if (newItem.SecuType == SecurityType.Stock)
             {
-                tdcmdItem.EStockDirection = outItem.EDirection;
+                tdcmdItem.EStockDirection = newItem.EDirection;
             }
-            else if (outItem.SecuType == SecurityType.Futures)
+            else if (newItem.SecuType == SecurityType.Futures)
             {
-                tdcmdItem.EFuturesDirection = outItem.EDirection;
+                tdcmdItem.EFuturesDirection = newItem.EDirection;
             }
 
-            var selectedItems = new List<ClosePositionSecurityItem>() { outItem, inItem};
-            //var result = _tradeCommandBLL.SubmitClosePosition(tdcmdItem, closeItem, selectedItems);
+            var selectCloseItem = _instDataSource.ToList().Find(p => p.InstanceId == tdcmdItem.InstanceId);
+            if (selectCloseItem != null)
+            {
+                var selectedItems = new List<ClosePositionSecurityItem>() { newItem, originItem };
+                var result = _tradeCommandBLL.SubmitClosePosition(tdcmdItem, selectCloseItem, selectedItems);
 
-            return true;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private void Button_Submit_Click(object sender, EventArgs e)
@@ -398,7 +414,7 @@ namespace TradingSystem.View
             foreach (var cmdItem in cmdItems)
             {
                 var tdcmdItem = GetTradeCommandItem(cmdItem);
-                var closeItem = _instDataSource.First(p => p.InstanceId.Equals(tdcmdItem.InstanceId));
+                var closeItem = _instDataSource.ToList().Find(p => p.InstanceId.Equals(tdcmdItem.InstanceId));
                 var selectedItems = _secuDataSource.Where(p => p.Selection && p.InstanceId.Equals(tdcmdItem.InstanceId)).ToList();
                 var result = _tradeCommandBLL.SubmitClosePosition(tdcmdItem, closeItem, selectedItems);
                 if (result > 0)

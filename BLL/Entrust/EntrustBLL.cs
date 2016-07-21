@@ -1,9 +1,11 @@
 ﻿using BLL.SecurityInfo;
+using BLL.UFX.impl;
 using DBAccess;
 using Model.EnumType;
 using Model.UI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace BLL.Entrust
@@ -16,24 +18,16 @@ namespace BLL.Entrust
         private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
 
         private UFXEntrustBLL _ufxEntrustBLL = new UFXEntrustBLL();
+        private UFXBasketWithdrawBLL _ufxBasketWithdrawBLL = new UFXBasketWithdrawBLL();
        
         public EntrustBLL()
         { 
         }
 
         #region create
-        public int SubmitOne(List<CancelRedoItem> cancelItems)
+        public int SubmitOne(List<EntrustCommandItem> oldCmdItems, List<CancelRedoItem> cancelItems)
         {
-            var commandIds = cancelItems.Select(p => p.CommandId).Distinct().ToList();
-            var commandId = commandIds.First();
-
-            var entrustCmdItems = _entrustcmddao.GetCancelRedo(commandId);
-            int copies = entrustCmdItems.Sum(p => p.Copies);
-            EntrustCommandItem cmdItem = new EntrustCommandItem 
-            {
-                CommandId = commandId,
-                Copies = copies,
-            };
+            EntrustCommandItem cmdItem = MergeEntrustCommandItem(oldCmdItems);
 
             //TODO: adjust the EntrustAmount
             List<EntrustSecurityItem> entrustItems = new List<EntrustSecurityItem>();
@@ -45,7 +39,7 @@ namespace BLL.Entrust
             {
                 EntrustSecurityItem item = new EntrustSecurityItem
                 {
-                    CommandId = commandId,
+                    CommandId = cmdItem.CommandId,
                     SecuCode = secuCode,
                     EntrustDate = now,
                 };
@@ -108,20 +102,20 @@ namespace BLL.Entrust
 
         #region cancel
 
-        public int CancelOne(TradingCommandItem cmdItem)
+        public List<EntrustCommandItem> CancelOne(TradingCommandItem cmdItem, CallerCallback callerCallback)
         {
-            int ret = -1;
+            List<EntrustCommandItem> cancelEntrustCmdItems = new List<EntrustCommandItem>();
 
             var entrustCmdItems = _entrustcmddao.GetCancel(cmdItem.CommandId);
             if (entrustCmdItems == null || entrustCmdItems.Count == 0)
             {
-                return -1;
+                return cancelEntrustCmdItems;
             }
 
             var entrustSecuItems = _entrustsecudao.GetCancel(cmdItem.CommandId);
             if (entrustSecuItems == null || entrustSecuItems.Count == 0)
             {
-                return ret;
+                return cancelEntrustCmdItems;
             }
 
             int copies = 0;
@@ -133,11 +127,13 @@ namespace BLL.Entrust
                     //set the status as EntrustStatus.CancelToDB in database
                     _entrustdao.UpdateOneEntrustStatus(entrustCmdItem.SubmitId, EntrustStatus.CancelToDB);
 
-                    ret = _ufxEntrustBLL.Cancel(entrustCmdItem, entrustSecuCancelItems);
+                    int ret = _ufxBasketWithdrawBLL.Cancel(entrustCmdItem, entrustSecuCancelItems, callerCallback);
                     if (ret > 0)
                     {
                         copies += entrustCmdItem.Copies;
                         _entrustdao.UpdateOneEntrustStatus(entrustCmdItem.SubmitId, EntrustStatus.CancelSuccess);
+
+                        cancelEntrustCmdItems.Add(entrustCmdItem);
                     }
                     else
                     {
@@ -150,10 +146,10 @@ namespace BLL.Entrust
             if (copies > 0)
             {
                 cmdItem.TargetNum -= copies;
-                ret = _tradecmddao.UpdateTargetNum(cmdItem.CommandId, cmdItem.TargetNum);
+                int ret = _tradecmddao.UpdateTargetNum(cmdItem.CommandId, cmdItem.TargetNum);
             }
 
-            return ret;
+            return cancelEntrustCmdItems;
         }
 
         #endregion
@@ -314,6 +310,20 @@ namespace BLL.Entrust
 
         //    return secuItems;
         //}
+
+        private EntrustCommandItem MergeEntrustCommandItem(List<EntrustCommandItem> oldCmdItems)
+        {
+            Debug.Assert(oldCmdItems.Select(p => p.CommandId).Distinct().Count() == 1, "撤销的委托指令不是同一指令号");
+            var commandId = oldCmdItems.Select(p => p.CommandId).Distinct().Single();
+            var copies = oldCmdItems.Where(p => p.CommandId == commandId).Select(o => o.Copies).Sum();
+            EntrustCommandItem cmdItem = new EntrustCommandItem
+            {
+                CommandId = commandId,
+                Copies = copies,
+            };
+
+            return cmdItem;
+        }
 
         #endregion
     }

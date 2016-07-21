@@ -26,29 +26,29 @@
             this.btnConfirm = new System.Windows.Forms.Button();
             this.panelMain = new System.Windows.Forms.Panel();
             this.gbChangIn = new System.Windows.Forms.GroupBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.lbSecuIn = new System.Windows.Forms.ListBox();
+            this.tbInAmount = new System.Windows.Forms.TextBox();
+            this.tbInPrice = new System.Windows.Forms.TextBox();
             this.cbInDirection = new System.Windows.Forms.ComboBox();
             this.cbStopFlag = new System.Windows.Forms.ComboBox();
+            this.acSecuIn = new Controls.AutoComplete();
             this.lblInAmount = new System.Windows.Forms.Label();
             this.lblInPrice = new System.Windows.Forms.Label();
             this.lblInDirection = new System.Windows.Forms.Label();
             this.lblStopFlag = new System.Windows.Forms.Label();
             this.lblSecuCode2 = new System.Windows.Forms.Label();
             this.gbChangeOut = new System.Windows.Forms.GroupBox();
+            this.lbSecuOut = new System.Windows.Forms.ListBox();
             this.tbOutAmount = new System.Windows.Forms.TextBox();
             this.tbOutPrice = new System.Windows.Forms.TextBox();
             this.cbOutDirection = new System.Windows.Forms.ComboBox();
             this.cbLongShort = new System.Windows.Forms.ComboBox();
+            this.acSecuOut = new Controls.AutoComplete();
             this.lblOutAmount = new System.Windows.Forms.Label();
             this.lblOutPrice = new System.Windows.Forms.Label();
             this.lblOutDirection = new System.Windows.Forms.Label();
             this.lblLongShort = new System.Windows.Forms.Label();
             this.lblSecuCode1 = new System.Windows.Forms.Label();
-            this.lbSecuOut = new System.Windows.Forms.ListBox();
-            this.lbSecuIn = new System.Windows.Forms.ListBox();
-            this.acSecuIn = new Controls.AutoComplete();
-            this.acSecuOut = new Controls.AutoComplete();
             this.topPanel.SuspendLayout();
             this.bottomPanel.SuspendLayout();
             this.panelMain.SuspendLayout();
@@ -117,8 +117,8 @@
             // gbChangIn
             // 
             this.gbChangIn.Controls.Add(this.lbSecuIn);
-            this.gbChangIn.Controls.Add(this.textBox1);
-            this.gbChangIn.Controls.Add(this.textBox2);
+            this.gbChangIn.Controls.Add(this.tbInAmount);
+            this.gbChangIn.Controls.Add(this.tbInPrice);
             this.gbChangIn.Controls.Add(this.cbInDirection);
             this.gbChangIn.Controls.Add(this.cbStopFlag);
             this.gbChangIn.Controls.Add(this.acSecuIn);
@@ -134,21 +134,31 @@
             this.gbChangIn.TabStop = false;
             this.gbChangIn.Text = "调入";
             // 
-            // textBox1
+            // lbSecuIn
             // 
-            this.textBox1.Location = new System.Drawing.Point(103, 219);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(168, 21);
-            this.textBox1.TabIndex = 19;
-            this.textBox1.Text = "0";
+            this.lbSecuIn.FormattingEnabled = true;
+            this.lbSecuIn.ItemHeight = 12;
+            this.lbSecuIn.Location = new System.Drawing.Point(103, 62);
+            this.lbSecuIn.Name = "lbSecuIn";
+            this.lbSecuIn.Size = new System.Drawing.Size(151, 88);
+            this.lbSecuIn.TabIndex = 20;
+            this.lbSecuIn.Visible = false;
             // 
-            // textBox2
+            // tbInAmount
             // 
-            this.textBox2.Location = new System.Drawing.Point(103, 174);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(168, 21);
-            this.textBox2.TabIndex = 18;
-            this.textBox2.Text = "0";
+            this.tbInAmount.Location = new System.Drawing.Point(103, 219);
+            this.tbInAmount.Name = "tbInAmount";
+            this.tbInAmount.Size = new System.Drawing.Size(168, 21);
+            this.tbInAmount.TabIndex = 19;
+            this.tbInAmount.Text = "0";
+            // 
+            // tbInPrice
+            // 
+            this.tbInPrice.Location = new System.Drawing.Point(103, 174);
+            this.tbInPrice.Name = "tbInPrice";
+            this.tbInPrice.Size = new System.Drawing.Size(168, 21);
+            this.tbInPrice.TabIndex = 18;
+            this.tbInPrice.Text = "0";
             // 
             // cbInDirection
             // 
@@ -167,6 +177,13 @@
             this.cbStopFlag.Name = "cbStopFlag";
             this.cbStopFlag.Size = new System.Drawing.Size(168, 20);
             this.cbStopFlag.TabIndex = 16;
+            // 
+            // acSecuIn
+            // 
+            this.acSecuIn.Location = new System.Drawing.Point(94, 31);
+            this.acSecuIn.Name = "acSecuIn";
+            this.acSecuIn.Size = new System.Drawing.Size(188, 31);
+            this.acSecuIn.TabIndex = 15;
             // 
             // lblInAmount
             // 
@@ -233,6 +250,16 @@
             this.gbChangeOut.TabStop = false;
             this.gbChangeOut.Text = "调出";
             // 
+            // lbSecuOut
+            // 
+            this.lbSecuOut.FormattingEnabled = true;
+            this.lbSecuOut.ItemHeight = 12;
+            this.lbSecuOut.Location = new System.Drawing.Point(99, 59);
+            this.lbSecuOut.Name = "lbSecuOut";
+            this.lbSecuOut.Size = new System.Drawing.Size(151, 88);
+            this.lbSecuOut.TabIndex = 10;
+            this.lbSecuOut.Visible = false;
+            // 
             // tbOutAmount
             // 
             this.tbOutAmount.Location = new System.Drawing.Point(99, 216);
@@ -266,6 +293,14 @@
             this.cbLongShort.Name = "cbLongShort";
             this.cbLongShort.Size = new System.Drawing.Size(168, 20);
             this.cbLongShort.TabIndex = 6;
+            // 
+            // acSecuOut
+            // 
+            this.acSecuOut.Enabled = false;
+            this.acSecuOut.Location = new System.Drawing.Point(90, 28);
+            this.acSecuOut.Name = "acSecuOut";
+            this.acSecuOut.Size = new System.Drawing.Size(188, 31);
+            this.acSecuOut.TabIndex = 5;
             // 
             // lblOutAmount
             // 
@@ -312,41 +347,6 @@
             this.lblSecuCode1.TabIndex = 0;
             this.lblSecuCode1.Text = "证券代码：";
             // 
-            // lbSecuOut
-            // 
-            this.lbSecuOut.FormattingEnabled = true;
-            this.lbSecuOut.ItemHeight = 12;
-            this.lbSecuOut.Location = new System.Drawing.Point(99, 59);
-            this.lbSecuOut.Name = "lbSecuOut";
-            this.lbSecuOut.Size = new System.Drawing.Size(151, 88);
-            this.lbSecuOut.TabIndex = 10;
-            this.lbSecuOut.Visible = false;
-            // 
-            // lbSecuIn
-            // 
-            this.lbSecuIn.FormattingEnabled = true;
-            this.lbSecuIn.ItemHeight = 12;
-            this.lbSecuIn.Location = new System.Drawing.Point(103, 62);
-            this.lbSecuIn.Name = "lbSecuIn";
-            this.lbSecuIn.Size = new System.Drawing.Size(151, 88);
-            this.lbSecuIn.TabIndex = 20;
-            this.lbSecuIn.Visible = false;
-            // 
-            // acSecuIn
-            // 
-            this.acSecuIn.Location = new System.Drawing.Point(94, 31);
-            this.acSecuIn.Name = "acSecuIn";
-            this.acSecuIn.Size = new System.Drawing.Size(188, 31);
-            this.acSecuIn.TabIndex = 15;
-            // 
-            // acSecuOut
-            // 
-            this.acSecuOut.Enabled = false;
-            this.acSecuOut.Location = new System.Drawing.Point(90, 28);
-            this.acSecuOut.Name = "acSecuOut";
-            this.acSecuOut.Size = new System.Drawing.Size(188, 31);
-            this.acSecuOut.TabIndex = 5;
-            // 
             // ChangePositionDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -378,8 +378,8 @@
         private System.Windows.Forms.Panel panelMain;
         private System.Windows.Forms.GroupBox gbChangIn;
         private System.Windows.Forms.GroupBox gbChangeOut;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox tbInAmount;
+        private System.Windows.Forms.TextBox tbInPrice;
         private System.Windows.Forms.ComboBox cbInDirection;
         private System.Windows.Forms.ComboBox cbStopFlag;
         private Controls.AutoComplete acSecuIn;

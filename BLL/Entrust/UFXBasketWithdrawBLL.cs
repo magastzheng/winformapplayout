@@ -22,7 +22,12 @@ namespace BLL.Entrust
         private EntrustDAO _entrustdao = new EntrustDAO();
         private EntrustCommandDAO _entrustcmddao = new EntrustCommandDAO();
         private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
+
         private int _timeOut = 30 * 1000;
+
+        private readonly object _locker = new object();
+        private Dictionary<int, List<UFXBasketWithdrawResponse>> _responseDataMap = new Dictionary<int, List<UFXBasketWithdrawResponse>>();
+        private Dictionary<int, UFXErrorResponse> _responseErrorMap = new Dictionary<int, UFXErrorResponse>();
 
         public UFXBasketWithdrawBLL()
         {
@@ -55,12 +60,32 @@ namespace BLL.Entrust
             };
 
             var result = _securityBLL.WithdrawBasket(requests, callbacker);
-
-            callbacker.Token.WaitEvent.WaitOne(_timeOut);
-
             if (result == Model.ConnectionCode.Success)
             {
-                ret = 1;
+                if (callbacker.Token.WaitEvent.WaitOne(_timeOut))
+                {
+                    List<UFXBasketWithdrawResponse> responseItems = null;
+                    UFXErrorResponse errorResponse = null;
+                    lock (_locker)
+                    {
+                        if (_responseDataMap.ContainsKey(cmdItem.SubmitId))
+                        {
+                            responseItems = _responseDataMap[cmdItem.SubmitId];
+                            _responseDataMap.Remove(cmdItem.SubmitId);
+                        }
+                        if (_responseErrorMap.ContainsKey(cmdItem.SubmitId))
+                        {
+                            errorResponse = _responseErrorMap[cmdItem.SubmitId];
+                            _responseErrorMap.Remove(cmdItem.SubmitId);
+                        }
+                    }
+
+                    return callerCallback(callbacker.Token, responseItems, errorResponse);
+                }
+                else
+                {
+                    ret = -1;
+                }
             }
 
             return ret;
@@ -72,15 +97,18 @@ namespace BLL.Entrust
 
             var errorResponse = UFXErrorHandler.Handle(dataParser);
 
-            var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXBasketWithdrawResponse>();
-            for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
+            if (dataParser.DataSets.Count > 1)
             {
-                var dataSet = dataParser.DataSets[i];
-                foreach (var dataRow in dataSet.Rows)
+                var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXBasketWithdrawResponse>();
+                for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
                 {
-                    UFXBasketWithdrawResponse p = new UFXBasketWithdrawResponse();
-                    UFXDataSetHelper.SetValue<UFXBasketWithdrawResponse>(ref p, dataRow.Columns, dataFieldMap);
-                    responseItems.Add(p);
+                    var dataSet = dataParser.DataSets[i];
+                    foreach (var dataRow in dataSet.Rows)
+                    {
+                        UFXBasketWithdrawResponse p = new UFXBasketWithdrawResponse();
+                        UFXDataSetHelper.SetValue<UFXBasketWithdrawResponse>(ref p, dataRow.Columns, dataFieldMap);
+                        responseItems.Add(p);
+                    }
                 }
             }
 
@@ -101,13 +129,17 @@ namespace BLL.Entrust
                     entrustSecuItems.Add(entrustItem);
                 }
 
-                ret = _entrustdao.UpdateSecurityEntrustStatus(entrustSecuItems, Model.EnumType.EntrustStatus.CancelSuccess);
-                ret = _entrustcmddao.UpdateEntrustCommandStatus(token.SubmitId, Model.EnumType.EntrustStatus.CancelSuccess);
-                ret = _tradecmddao.UpdateTargetNumBySubmitId(token.SubmitId, token.CommandId);
-
-                if (token.Caller != null)
+                if (entrustSecuItems.Count > 0)
                 {
-                    token.Caller(token, entrustSecuItems, errorResponse);
+                    ret = _entrustdao.UpdateSecurityEntrustStatus(entrustSecuItems, Model.EnumType.EntrustStatus.CancelSuccess);
+                    ret = _entrustcmddao.UpdateEntrustCommandStatus(token.SubmitId, Model.EnumType.EntrustStatus.CancelSuccess);
+                    ret = _tradecmddao.UpdateTargetNumBySubmitId(token.SubmitId, token.CommandId);
+                }
+
+                lock (_locker)
+                {
+                    _responseDataMap[token.SubmitId] = responseItems;
+                    _responseErrorMap[token.SubmitId] = errorResponse;
                 }
             }
 

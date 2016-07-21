@@ -28,7 +28,7 @@ namespace TradingSystem.Dialog
         private EntrustBLL _entrustBLL = new EntrustBLL();
 
         private SortableBindingList<CancelRedoItem> _secuDataSource = new SortableBindingList<CancelRedoItem>(new List<CancelRedoItem>());
-        private List<TradingCommandItem> _tradeCommandItems = new List<TradingCommandItem>();
+        private List<EntrustCommandItem> _entrustCommandItems = new List<EntrustCommandItem>();
 
         GridConfig _gridConfig;
 
@@ -216,7 +216,7 @@ namespace TradingSystem.Dialog
                 return false;
             }
 
-            if (!(data is List<TradingCommandItem>))
+            if (!(data is List<EntrustCommandItem>))
             {
                 return false;
             }
@@ -230,10 +230,10 @@ namespace TradingSystem.Dialog
             EntrustPriceType szPriceType = EntrustPriceTypeHelper.GetPriceType(this.cbSZExchangePrice);
 
             _secuDataSource.Clear();
-            _tradeCommandItems = data as List<TradingCommandItem>;
-            foreach (var cmdItem in _tradeCommandItems)
+            _entrustCommandItems = data as List<EntrustCommandItem>;
+            foreach (var cmdItem in _entrustCommandItems)
             { 
-                var entrustSecuItems = _entrustsecudao.GetCancelRedo(cmdItem.CommandId);
+                var entrustSecuItems = _entrustsecudao.GetCancelRedoBySubmitId(cmdItem.SubmitId);
                 if (entrustSecuItems != null && entrustSecuItems.Count() > 0)
                 {
                     foreach (var p in entrustSecuItems)
@@ -246,7 +246,7 @@ namespace TradingSystem.Dialog
                             EntrustPrice = p.EntrustPrice,
                             SecuCode = p.SecuCode,
                             SecuType = p.SecuType,
-                            EntrustNo = p.SubmitId,
+                            EntrustNo = p.EntrustNo,
                             ECommandPrice = p.PriceType,
                             ReportPrice = p.EntrustPrice,
                             EOriginPriceType = p.EntrustPriceType,
@@ -255,6 +255,7 @@ namespace TradingSystem.Dialog
                             DealAmount = p.TotalDealAmount,
                             EntrustDate = p.EntrustDate,
                             SubmitId = p.SubmitId,
+                            EntrustBatchNo = p.BatchNo,
                         };
 
                         cancelRedoItem.EntrustAmount = cancelRedoItem.LeftAmount;
@@ -338,18 +339,12 @@ namespace TradingSystem.Dialog
 
             var selectItems = _secuDataSource.Where(p => p.Selection).ToList();
             
-            //var submitIds = selectItems.Select(p => p.SubmitId).Distinct().ToList();
-            //foreach (var submitId in submitIds)
-            //{
-            //    var oneCancelRedoItem = selectItems.Where(p => p.SubmitId == submitId).ToList();
-            //    Submit(oneCancelRedoItem);
-            //}
-
             var commandIds = selectItems.Select(p => p.CommandId).Distinct().ToList();
             foreach (var commandId in commandIds)
             {
+                var oneEntrustCmdItems = _entrustCommandItems.Where(p => p.CommandId == commandId).ToList();
                 var oneCancelRedoItem = selectItems.Where(p => p.CommandId == commandId).ToList();
-                Submit(oneCancelRedoItem);
+                Submit(oneEntrustCmdItems, oneCancelRedoItem);
             }
 
             DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -383,9 +378,9 @@ namespace TradingSystem.Dialog
         //    //ret = _entrustBLL.CancelSuccess(cancelRedoItems);
         //}
 
-        private void Submit(List<CancelRedoItem> cancelRedoItems)
+        private void Submit(List<EntrustCommandItem> entrustCmdItems, List<CancelRedoItem> cancelRedoItems)
         {
-            var ret = _entrustBLL.SubmitOne(cancelRedoItems);
+            var ret = _entrustBLL.SubmitOne(entrustCmdItems, cancelRedoItems);
         }
 
         #endregion

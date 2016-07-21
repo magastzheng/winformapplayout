@@ -54,5 +54,10 @@ namespace BLL.Entrust
 
             return errorResponse;
         }
+
+        public static bool Success(int errorCode)
+        {
+            return errorCode == 0;
+        }
     }
 }

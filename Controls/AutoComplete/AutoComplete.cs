@@ -8,11 +8,15 @@ namespace Controls
 {
     //public delegate void ChangeTitle(string title);
 
+    public delegate void SelectChangedItemHandler(object sender, AutoItem data);
+
     public partial class AutoComplete : UserControl
     {
         //public event ChangeTitle 
         //private AutoItem _currentItem;
         //public AutoItem CurrentItem { get { return _currentItem; } }
+
+        public event SelectChangedItemHandler SelectChangedItem;
 
         private AutoItemManager _dataManager;
         public IList<AutoItem> AutoDataSource
@@ -176,6 +180,11 @@ namespace Controls
 
             //光标点位到最后
             this.tbInputId.Select(tbInputId.Text.Length, 1);
+
+            if (SelectChangedItem != null)
+            {
+                SelectChangedItem(this, item);
+            }
         }
 
         #endregion

@@ -230,22 +230,25 @@ namespace BLL.Entrust
             int ret = -1;
             if (token.SubmitId > 0)
             {
-                foreach (var responseItem in responseItems)
+                if (UFXErrorHandler.Success(errorResponse.ErrorCode))
                 {
-                    var entrustItem = new EntrustSecurityItem
+                    foreach (var responseItem in responseItems)
                     {
-                        SubmitId = token.SubmitId,
-                        CommandId = token.CommandId,
-                        SecuCode = responseItem.StockCode,
-                        EntrustNo = responseItem.EntrustNo,
-                    };
+                        var entrustItem = new EntrustSecurityItem
+                        {
+                            SubmitId = token.SubmitId,
+                            CommandId = token.CommandId,
+                            SecuCode = responseItem.StockCode,
+                            EntrustNo = responseItem.EntrustNo,
+                        };
 
-                    entrustSecuItems.Add(entrustItem);
+                        entrustSecuItems.Add(entrustItem);
+                    }
+
+                    ret = _entrustdao.UpdateSecurityEntrustStatus(entrustSecuItems, Model.EnumType.EntrustStatus.CancelSuccess);
+                    ret = _entrustcmddao.UpdateEntrustCommandStatus(token.SubmitId, Model.EnumType.EntrustStatus.CancelSuccess);
+                    ret = _tradecmddao.UpdateTargetNumBySubmitId(token.SubmitId, token.CommandId);
                 }
-
-                ret = _entrustdao.UpdateSecurityEntrustStatus(entrustSecuItems, Model.EnumType.EntrustStatus.CancelSuccess);
-                ret = _entrustcmddao.UpdateEntrustCommandStatus(token.SubmitId, Model.EnumType.EntrustStatus.CancelSuccess);
-                ret = _tradecmddao.UpdateTargetNumBySubmitId(token.SubmitId, token.CommandId);
             }
 
             if (token.Caller != null)

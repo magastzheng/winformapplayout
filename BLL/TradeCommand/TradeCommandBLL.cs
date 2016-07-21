@@ -145,7 +145,7 @@ namespace BLL.TradeCommand
             List<CommandSecurityItem> cmdSecuItems = new List<CommandSecurityItem>();
 
             var tempStockItems = _tempstockdao.Get(closePositionItem.TemplateId);
-            var selectedSecuItems = closeSecuItems.Where(p => p.Selection && p.InstanceId.Equals(closePositionItem.InstanceId)).ToList();
+            var selectedSecuItems = closeSecuItems.Where(p => p.InstanceId.Equals(closePositionItem.InstanceId)).ToList();
             foreach (var item in selectedSecuItems)
             {
                 CommandSecurityItem secuItem = new CommandSecurityItem

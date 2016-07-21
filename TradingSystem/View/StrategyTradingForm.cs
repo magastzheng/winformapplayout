@@ -114,7 +114,7 @@ namespace TradingSystem.View
 
         private void GridView_Command_Cancel(TradingCommandItem cmdItem)
         {
-            int retCancel = _entrustBLL.CancelOne(cmdItem);
+            var cancelEntrustCmdItems = _entrustBLL.CancelOne(cmdItem, new CallerCallback(CancelOneCallback));
 
             this.cmdGridView.Invalidate();
         }
@@ -128,19 +128,21 @@ namespace TradingSystem.View
             }
 
             List<TradingCommandItem> successCancelItems = new List<TradingCommandItem>();
+            List<EntrustCommandItem> successCancelEntrustCmdItems = new List<EntrustCommandItem>();
             foreach(var cmdItem in selectCmdItems)
             {
-                int retCancel = _entrustBLL.CancelOne(cmdItem);
-                if (retCancel > 0)
+                var cancelEntrustCmdItems = _entrustBLL.CancelOne(cmdItem, new CallerCallback(CancelOneCallback));
+                if (cancelEntrustCmdItems.Count > 0)
                 {
                     successCancelItems.Add(cmdItem);
+                    successCancelEntrustCmdItems.AddRange(cancelEntrustCmdItems);
                 }
             }
 
             var form = new CancelRedoDialog(_gridConfig);
             form.Owner = this;
             form.OnLoadControl(form, null);
-            form.OnLoadData(form, successCancelItems);
+            form.OnLoadData(form, successCancelEntrustCmdItems);
             form.SaveData += new FormLoadHandler(Dialog_CancelRedoDialog_SaveData);
             form.ShowDialog();
         }
@@ -184,6 +186,20 @@ namespace TradingSystem.View
                     secuItem.EntrustPrice = 0.0f;
                     secuItem.ThisEntrustAmount = 0;
                 }
+            }
+        }
+
+        private int CancelOneCallback(CallerToken token, object data, UFXErrorResponse errorResponse)
+        {
+            if (UFXErrorHandler.Success(errorResponse.ErrorCode))
+            {
+                return 1;
+            }
+            else
+            {
+                string msg = string.Format("撤销指令号 [{0}] 提价序号 [{1}] 失败！", token.CommandId, token.SubmitId);
+                MessageBox.Show(this, msg, "警告", MessageBoxButtons.OK);
+                return -1;
             }
         }
 
@@ -574,7 +590,7 @@ namespace TradingSystem.View
                     var cmdSecuItems = tradeSecuItems.Where(p => p.CommandId == cmdItem.CommandId).ToList();
                     var cmdEntrustSecuItems = entrustSecuItems.Where(p => p.CommandId == cmdItem.CommandId).ToList();
 
-                    var totalLongCmdAmount = tradeSecuItems.Where(p => p.SecuType == SecurityType.Stock)
+                    var totalLongCmdAmount = cmdSecuItems.Where(p => p.SecuType == SecurityType.Stock)
                                             .ToList()
                                             .Sum(o => o.CommandAmount);
                     var totalLongEntrustAmount = cmdEntrustSecuItems.Where(p => p.SecuType == SecurityType.Stock && p.EntrustStatus == EntrustStatus.Completed)
@@ -583,7 +599,7 @@ namespace TradingSystem.View
                     var totalLongDealAmount = cmdEntrustSecuItems.Where(p => p.SecuType == SecurityType.Stock && (p.DealStatus == DealStatus.Completed || p.DealStatus == DealStatus.PartDeal))
                                             .ToList()
                                             .Sum(o => o.TotalDealAmount);
-                    var totalShortCmdAmount = tradeSecuItems.Where(p => p.SecuType == SecurityType.Futures)
+                    var totalShortCmdAmount = cmdSecuItems.Where(p => p.SecuType == SecurityType.Futures)
                                                 .ToList()
                                                 .Sum(o => o.CommandAmount);
                     var totalShortEntrustAmount = cmdEntrustSecuItems.Where(p => p.SecuType == SecurityType.Futures && p.EntrustStatus == EntrustStatus.Completed)
@@ -593,10 +609,10 @@ namespace TradingSystem.View
                                                 .ToList()
                                                 .Sum(o => o.TotalDealAmount);
 
-                    double longEntrustRatio = totalLongEntrustAmount / (totalLongCmdAmount * cmdItem.CommandNum);
-                    double longDealRatio = totalLongDealAmount / (totalLongCmdAmount * cmdItem.CommandNum);
-                    double shortEntrustRatio = totalShortEntrustAmount / (totalShortCmdAmount * cmdItem.CommandNum);
-                    double shortDealRatio = totalShortDealAmount / (totalShortCmdAmount * cmdItem.CommandNum);
+                    double longEntrustRatio = GetRatio(totalLongEntrustAmount, totalLongCmdAmount);
+                    double longDealRatio = GetRatio(totalLongDealAmount, totalLongCmdAmount);
+                    double shortEntrustRatio = GetRatio(totalShortEntrustAmount, totalShortCmdAmount);
+                    double shortDealRatio = GetRatio(totalShortDealAmount, totalShortCmdAmount);
 
                     cmdItem.LongMoreThan = longEntrustRatio;
                     cmdItem.BearMoreThan = shortEntrustRatio;
@@ -610,6 +626,16 @@ namespace TradingSystem.View
             return true;
         }
 
+        private double GetRatio(int eachOne, int total)
+        {
+            if (total > 0)
+            {
+                return (double)(eachOne) / total;
+            }
+
+            return 0.0f;
+        }
+
         private bool LoadDataEntrustFlow()
         {
             //var efItems = _entrustBLL.GetEntrustFlow();
@@ -620,6 +646,7 @@ namespace TradingSystem.View
             //        _efDataSource.Add(efItem);
             //    }
             //}
+            _efDataSource.Clear();
 
             UFXQueryEntrustBLL queryBll = new UFXQueryEntrustBLL();
             var test = queryBll.QueryToday(new CallerCallback(LoadDataEntrustFlow2));
@@ -638,7 +665,7 @@ namespace TradingSystem.View
             //    }
             //}
 
-            _efDataSource.Clear();
+            _dfDataSource.Clear();
 
             UFXQueryDealBLL queryDealBll = new UFXQueryDealBLL();
             var test = queryDealBll.QueryToday(new CallerCallback(LoadDataDealFlow2));
@@ -654,8 +681,6 @@ namespace TradingSystem.View
 
             this.BeginInvoke(new Action(() =>
             {
-                _efDataSource.Clear();
-
                 dfItems.ForEach(p => _dfDataSource.Add(p));
 
                 this.efGridView.Invalidate();
@@ -783,54 +808,62 @@ namespace TradingSystem.View
                     //selCmdItems[0].TargetNum = eiItem.Copies;
                     int thisCopies = eiItem.Copies;
                     int targetNum = selCmdItem.TargetNum + eiItem.Copies;
+                    var secuItems = _secuDataSource.Where(p => p.CommandId == eiItem.CommandNo).ToList();
+                    foreach (var secuItem in secuItems)
+                    {
+                        secuItem.TargetCopies = targetNum;
+                        if (secuItem.WeightAmount > 0)
+                        {
+                            secuItem.TargetAmount = secuItem.TargetCopies * secuItem.WeightAmount;
+                            secuItem.ThisEntrustAmount = thisCopies * secuItem.WeightAmount;
+                            secuItem.WaitAmount = secuItem.TargetCopies * secuItem.WeightAmount;
+                        }
+                        else
+                        {
+                            secuItem.TargetAmount = secuItem.TargetCopies;
+                            secuItem.ThisEntrustAmount = thisCopies;
+                            secuItem.WaitAmount = secuItem.TargetCopies;
+                        }
 
-                    _secuDataSource.Where(p => p.CommandId == eiItem.CommandNo)
-                        .ToList()
-                        .ForEach(p => {
-                            p.TargetCopies = targetNum;
-                            p.TargetAmount = p.TargetCopies * p.WeightAmount;
-                            p.ThisEntrustAmount = thisCopies * p.WeightAmount;
-                            p.WaitAmount = p.TargetCopies * p.WeightAmount;
-
-                            var direction = EntrustDirectionUtil.GetEntrustDirection(p.EntrustDirection);
-                            switch (direction)
-                            {
-                                case EntrustDirection.BuySpot:
+                        var direction = EntrustDirectionUtil.GetEntrustDirection(secuItem.EntrustDirection);
+                        switch (direction)
+                        {
+                            case EntrustDirection.BuySpot:
+                                {
+                                    if (secuItem.SecuType == SecurityType.Stock)
                                     {
-                                        if (p.SecuType == SecurityType.Stock)
-                                        {
-                                            p.EPriceType = spotBuyPrice;
-                                        }
+                                        secuItem.EPriceType = spotBuyPrice;
                                     }
-                                    break;
-                                case EntrustDirection.SellSpot:
+                                }
+                                break;
+                            case EntrustDirection.SellSpot:
+                                {
+                                    if (secuItem.SecuType == SecurityType.Stock)
                                     {
-                                        if (p.SecuType == SecurityType.Stock)
-                                        {
-                                            p.EPriceType = spotSellPrice;
-                                        }
+                                        secuItem.EPriceType = spotSellPrice;
                                     }
-                                    break;
-                                case EntrustDirection.SellOpen:
+                                }
+                                break;
+                            case EntrustDirection.SellOpen:
+                                {
+                                    if (secuItem.SecuType == SecurityType.Futures)
                                     {
-                                        if (p.SecuType == SecurityType.Futures)
-                                        {
-                                            p.EPriceType = futureSellPrice;
-                                        }
+                                        secuItem.EPriceType = futureSellPrice;
                                     }
-                                    break;
-                                case EntrustDirection.BuyClose:
+                                }
+                                break;
+                            case EntrustDirection.BuyClose:
+                                {
+                                    if (secuItem.SecuType == SecurityType.Futures)
                                     {
-                                        if (p.SecuType == SecurityType.Futures)
-                                        {
-                                            p.EPriceType = futureBuyPrice;
-                                        } 
+                                        secuItem.EPriceType = futureBuyPrice;
                                     }
-                                    break;
-                                default:
-                                    break;
-                            }
-                        });
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                 }
             }
 
