@@ -1,5 +1,6 @@
 ﻿using DBAccess;
 using Model.EnumType;
+using Model.Quote;
 using Model.SecurityInfo;
 using System;
 using System.Collections.Generic;

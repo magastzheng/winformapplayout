@@ -1,5 +1,6 @@
 ﻿using Model.Binding;
 using Model.EnumType;
+using Model.EnumType.EnumTypeConverter;
 using Model.SecurityInfo;
 using System;
 
@@ -26,21 +27,17 @@ namespace Model.UI
         public string SecuName { get; set; }
 
         [BindingAttribute("entrustdirection")]
-        public EntrustDirection EntrustDirection { get; set; }
+        public string EntrustDirection
+        {
+            get { return EnumTypeDisplayHelper.GetEntrustDirection(EDirection); }
+        }
 
         [BindingAttribute("commandprice")]
         public string CommandPrice
         {
             get 
             {
-                if (ECommandPrice == EnumType.PriceType.None)
-                {
-                    return string.Empty;
-                }
-                else
-                {
-                    return ECommandPrice.ToString();
-                }
+                return EnumTypeDisplayHelper.GetPriceType(ECommandPrice);
             }
         }
 
@@ -49,14 +46,7 @@ namespace Model.UI
         {
             get
             {
-                if (EPriceSetting == EnumType.PriceType.None)
-                {
-                    return string.Empty;
-                }
-                else
-                {
-                    return EPriceSetting.ToString();
-                }
+                return EnumTypeDisplayHelper.GetPriceType(EPriceSetting);
             }
         }
 
@@ -65,7 +55,7 @@ namespace Model.UI
         {
             get
             {
-                return EEntrustPriceType.ToString();
+                return EnumTypeDisplayHelper.GetEntrustPriceType(EEntrustPriceType);
             }
         }
 
@@ -93,7 +83,7 @@ namespace Model.UI
         {
             get 
             {
-                return EOriginPriceType.ToString();
+                return EnumTypeDisplayHelper.GetEntrustPriceType(EOriginPriceType);
             }
         }
 
@@ -167,6 +157,8 @@ namespace Model.UI
         public DateTime EntrustDate { get; set; }
 
         public int SubmitId { get; set; }
+
+        public EntrustDirection EDirection { get; set; }
 
         public PriceType EPriceSetting { get; set; }
 

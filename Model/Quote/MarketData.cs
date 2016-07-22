@@ -1,5 +1,5 @@
 ﻿
-namespace Quote
+namespace Model.Quote
 {
     public enum SuspendFlag
     { 

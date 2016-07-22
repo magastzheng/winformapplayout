@@ -146,7 +146,8 @@ namespace Config
         {
             if (!fieldDict.ContainsKey(fieldType))
             {
-                logger.Info("Cannot read the FieldType in FunctionConfig.SetFieldAttribute().");
+                string msg = string.Format("Cannot read the FieldType=[{0}] in FunctionConfig.SetFieldAttribute().", fieldType);
+                logger.Info(msg);
                 return;
             }
 

@@ -1,5 +1,6 @@
 ﻿using Model.Binding;
 using Model.EnumType;
+using Model.EnumType.EnumTypeConverter;
 using Model.SecurityInfo;
 
 namespace Model.UI
@@ -33,56 +34,14 @@ namespace Model.UI
         [BindingAttribute("commandmoney")]
         public double CommandMoney { get; set; }
 
-        public EntrustDirection DirectionType { get; set; }
+        public EntrustDirection EDirection { get; set; }
 
         [BindingAttribute("entrustdirection")]
         public string EntrustDirection
         {
             get
             {
-                string ret = string.Empty;
-                switch (DirectionType)
-                {
-                    case EnumType.EntrustDirection.Buy:
-                        {
-                            ret = "买入";
-                        }
-                        break;
-                    case EnumType.EntrustDirection.Sell:
-                        {
-                            ret = "卖出";
-                        }
-                        break;
-                    case EnumType.EntrustDirection.AdjustedToBuySell:
-                        {
-                            ret = "调整到[买卖]";
-                        }
-                        break;
-                    case EnumType.EntrustDirection.BuySpot:
-                        {
-                            ret = "买入";
-                        }
-                        break;
-                    case EnumType.EntrustDirection.SellSpot:
-                        {
-                            ret = "卖出";
-                        }
-                        break;
-                    case EnumType.EntrustDirection.SellOpen:
-                        {
-                            ret = "卖出开仓";
-                        }
-                        break;
-                    case EnumType.EntrustDirection.BuyClose:
-                        {
-                            ret = "买入平仓";
-                        }
-                        break;
-                    default:
-                        break;
-                }
-
-                return ret;
+                return EnumTypeDisplayHelper.GetEntrustDirection(EDirection);
             }
         }
 

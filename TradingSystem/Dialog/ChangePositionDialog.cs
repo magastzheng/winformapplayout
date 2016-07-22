@@ -10,6 +10,7 @@ using System.Linq;
 using Quote;
 using Model.SecurityInfo;
 using System;
+using Model.Quote;
 
 namespace TradingSystem.Dialog
 {

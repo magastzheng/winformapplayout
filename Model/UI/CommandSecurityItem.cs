@@ -1,5 +1,7 @@
 ﻿using Model.Binding;
 using Model.EnumType;
+using Model.EnumType.EnumTypeConverter;
+using Model.Quote;
 using Model.SecurityInfo;
 
 namespace Model.UI
@@ -43,7 +45,7 @@ namespace Model.UI
         [BindingAttribute("entrustdirection")]
         public string EntrustDirection 
         {
-            get { return EDirection.ToString(); }
+            get { return EnumTypeDisplayHelper.GetEntrustDirection(EDirection); }
         }
 
         //已委托数量
@@ -54,7 +56,7 @@ namespace Model.UI
         [BindingAttribute("pricetype")]
         public string PriceType
         {
-            get { return EPriceType.ToString(); }
+            get { return EnumTypeDisplayHelper.GetPriceType(EPriceType); }
         }
 
         //委托价格
@@ -79,7 +81,10 @@ namespace Model.UI
 
         //停牌标志
         [BindingAttribute("suspensionflag")]
-        public string SuspensionFlag  { get; set; }
+        public string SuspensionFlag
+        {
+            get { return EnumQuoteHelper.GetSuspendFlag(ESuspendFlag); }
+        }
 
         //目标份数
         [BindingAttribute("targetcopies")]
@@ -110,5 +115,7 @@ namespace Model.UI
         public int WeightAmount { get; set; }
 
         public EntrustStatus EntrustStatus { get; set; }
+
+        public SuspendFlag ESuspendFlag { get; set; }
     }
 }

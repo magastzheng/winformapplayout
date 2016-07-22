@@ -1,5 +1,6 @@
 ﻿using Model.Binding;
 using Model.EnumType;
+using Model.EnumType.EnumTypeConverter;
 using Model.SecurityInfo;
 using System;
 using System.Collections.Generic;
@@ -33,19 +34,7 @@ namespace Model.UI
         {
             get
             {
-                string ret = string.Empty;
-                switch (SecuType)
-                {
-                    case SecurityType.Stock:
-                        ret = "多头";
-                        break;
-                    case SecurityType.Futures:
-                        ret = "空头";
-                        break;
-                    default:
-                        break;
-                }
-                return ret;
+                return EnumTypeDisplayHelper.GetLongShort(SecuType);
             }
         }
 
@@ -80,11 +69,11 @@ namespace Model.UI
         public double TargetWeight { get; set; }
 
         [BindingAttribute("entrustdirection")]
-        public int EntrustDirection 
+        public string EntrustDirection 
         {
             get 
             {
-                return (int)EDirection;
+                return EnumTypeDisplayHelper.GetEntrustDirection(EDirection);
             }
         }
 

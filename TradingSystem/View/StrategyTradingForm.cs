@@ -886,7 +886,7 @@ namespace TradingSystem.View
 
                 secuItem.LimitUpPrice = marketData.HighLimitPrice;
                 secuItem.LimitDownPrice = marketData.LowLimitPrice;
-                secuItem.SuspensionFlag = marketData.SuspendFlag.ToString();
+                secuItem.ESuspendFlag = marketData.SuspendFlag;
 
                 switch (secuItem.SecuType)
                 {

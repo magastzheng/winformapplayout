@@ -53,6 +53,7 @@
     <Compile Include="config\FunctionItem.cs" />
     <Compile Include="config\Label.cs" />
     <Compile Include="EnumType\EnumTypeConverter\EntrustRequestHelper.cs" />
+    <Compile Include="EnumType\EnumTypeConverter\EnumTypeDisplayHelper.cs" />
     <Compile Include="EnumType\PortfolioStatus.cs" />
     <Compile Include="EnumType\PriceType.cs" />
     <Compile Include="config\TDFAPISetting.cs" />
@@ -70,6 +71,8 @@
     <Compile Include="config\FunctionConfigItem.cs" />
     <Compile Include="PackageType.cs" />
     <Compile Include="PackFieldType.cs" />
+    <Compile Include="Quote\EnumQuoteHelper.cs" />
+    <Compile Include="Quote\MarketData.cs" />
     <Compile Include="SecurityInfo\SecurityItem.cs" />
     <Compile Include="strategy\AccountItem.cs" />
     <Compile Include="strategy\AssetItem.cs" />

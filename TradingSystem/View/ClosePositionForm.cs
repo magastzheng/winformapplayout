@@ -37,6 +37,8 @@ namespace TradingSystem.View
         private SortableBindingList<ClosePositionSecurityItem> _secuDataSource = new SortableBindingList<ClosePositionSecurityItem>(new List<ClosePositionSecurityItem>());
         private SortableBindingList<ClosePositionCmdItem> _cmdDataSource = new SortableBindingList<ClosePositionCmdItem>(new List<ClosePositionCmdItem>());
 
+        private ExecuteType _execType = ExecuteType.ClosePosition;
+
         public ClosePositionForm()
             :base()
         {
@@ -282,6 +284,7 @@ namespace TradingSystem.View
 
         private void Button_Calc_Click(object sender, EventArgs e)
         {
+            _execType = ExecuteType.ClosePosition;
             var cmdItems = _cmdDataSource.Where(p => p.Selection).ToList();
             if (!ValidateCopies(cmdItems))
             {
@@ -300,6 +303,7 @@ namespace TradingSystem.View
 
         private void Button_CloseAll_Click(object sender, EventArgs e)
         {
+            _execType = ExecuteType.ClosePosition;
             var cmdItems = _cmdDataSource.Where(p => p.Selection).ToList();
             
             foreach (var cmdItem in cmdItems)
@@ -307,14 +311,14 @@ namespace TradingSystem.View
                 //cmdItem.TradeDirection = ((int)EntrustDirection.Sell).ToString();
                 CloseAll(cmdItem);
 
-                var closeItem = _instDataSource.First(p => p.InstanceId == cmdItem.InstanceId);
-                var closeSecuItems = _secuDataSource.Where(p => p.InstanceId == cmdItem.InstanceId).ToList();
+                //var closeItem = _instDataSource.First(p => p.InstanceId == cmdItem.InstanceId);
+                //var closeSecuItems = _secuDataSource.Where(p => p.InstanceId == cmdItem.InstanceId).ToList();
 
-                int result = _tradeCommandBLL.SubmitCloseAll(closeItem, closeSecuItems);
-                if (result < 0)
-                { 
-                    //TODO: fail to submit
-                }
+                //int result = _tradeCommandBLL.SubmitCloseAll(closeItem, closeSecuItems);
+                //if (result < 0)
+                //{ 
+                //    //TODO: fail to submit
+                //}
             }
 
             this.cmdGridView.Invalidate();
@@ -335,6 +339,12 @@ namespace TradingSystem.View
                 return;
             }
 
+            if (secuItem.EntrustAmount > 0)
+            {
+                MessageBox.Show(this, "委托数量不为0，不能换仓！", "错误", MessageBoxButtons.OK);
+                return;
+            }
+
             ChangePositionDialog dialog = new ChangePositionDialog();
             dialog.Owner = this;
             dialog.StartPosition = FormStartPosition.CenterParent;
@@ -347,6 +357,7 @@ namespace TradingSystem.View
 
             if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
             {
+                _execType = ExecuteType.AdjustPosition;
                 dialog.Dispose();
             }
             else
@@ -374,38 +385,25 @@ namespace TradingSystem.View
             var newItem = itemArr[0];
             var originItem = itemArr[1];
 
-            TradingCommandItem tdcmdItem = new TradingCommandItem
+            var addItem = _secuDataSource.ToList().Find(p => p.SecuCode.Equals(newItem.SecuCode));
+            if (addItem != null)
             {
-                InstanceId = newItem.InstanceId,
-                ECommandType = CommandType.Arbitrage,
-                EExecuteType = ExecuteType.AdjustPosition,
-                CommandNum = 1,
-                EEntrustStatus = EntrustStatus.NoExecuted,
-                EDealStatus = DealStatus.NoDeal,
-                ModifiedTimes = 1
-            };
-
-            if (newItem.SecuType == SecurityType.Stock)
-            {
-                tdcmdItem.EStockDirection = newItem.EDirection;
-            }
-            else if (newItem.SecuType == SecurityType.Futures)
-            {
-                tdcmdItem.EFuturesDirection = newItem.EDirection;
-            }
-
-            var selectCloseItem = _instDataSource.ToList().Find(p => p.InstanceId == tdcmdItem.InstanceId);
-            if (selectCloseItem != null)
-            {
-                var selectedItems = new List<ClosePositionSecurityItem>() { newItem, originItem };
-                var result = _tradeCommandBLL.SubmitClosePosition(tdcmdItem, selectCloseItem, selectedItems);
-
-                return true;
+                addItem.EntrustAmount = newItem.EntrustAmount;
+                addItem.EDirection = newItem.EDirection;
             }
             else
             {
-                return false;
+                _secuDataSource.Add(newItem);
             }
+
+            var oldItem = _secuDataSource.ToList().Find(p => p.SecuCode.Equals(originItem.SecuCode));
+            if (oldItem != null)
+            {
+                oldItem.EntrustAmount = originItem.EntrustAmount;
+                oldItem.EDirection = originItem.EDirection;
+            }
+
+            return true;
         }
 
         private void Button_Submit_Click(object sender, EventArgs e)
@@ -415,7 +413,7 @@ namespace TradingSystem.View
             {
                 var tdcmdItem = GetTradeCommandItem(cmdItem);
                 var closeItem = _instDataSource.ToList().Find(p => p.InstanceId.Equals(tdcmdItem.InstanceId));
-                var selectedItems = _secuDataSource.Where(p => p.Selection && p.InstanceId.Equals(tdcmdItem.InstanceId)).ToList();
+                var selectedItems = _secuDataSource.Where(p => p.Selection && p.EntrustAmount > 0 && p.InstanceId.Equals(tdcmdItem.InstanceId)).ToList();
                 var result = _tradeCommandBLL.SubmitClosePosition(tdcmdItem, closeItem, selectedItems);
                 if (result > 0)
                 {
@@ -618,18 +616,17 @@ namespace TradingSystem.View
             //TODO: handle those 
             foreach (var secuItem in secuItems)
             {
+                secuItem.EntrustAmount = secuItem.AvailableAmount;
                 switch (secuItem.SecuType)
                 {
                     case SecurityType.Stock:
                         {
                             secuItem.EDirection = EntrustDirection.SellSpot;
-                            secuItem.EntrustAmount = secuItem.AvailableAmount;
                         }
                         break;
                     case SecurityType.Futures:
                         {
                             secuItem.EDirection = EntrustDirection.BuyClose;
-                            secuItem.EntrustAmount = secuItem.AvailableAmount;
                         }
                         break;
                     default:
@@ -648,7 +645,7 @@ namespace TradingSystem.View
             {
                 InstanceId = closeCmdItem.InstanceId,
                 ECommandType = CommandType.Arbitrage,
-                //EExecuteType = ExecuteType.OpenPosition,
+                EExecuteType = _execType,
                 CommandNum = closeCmdItem.Copies,
                 //EStockDirection = Model.Data.EntrustDirection.BuySpot,
                 //EFuturesDirection = Model.Data.EntrustDirection.SellOpen,

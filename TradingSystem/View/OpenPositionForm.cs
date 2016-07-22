@@ -180,7 +180,7 @@ namespace TradingSystem.View
                     SecuName = stock.SecuName,
                     WeightAmount = stock.Amount,
                     EntrustAmount = monitorItem.Copies * stock.Amount,
-                    DirectionType = EntrustDirection.BuySpot,
+                    EDirection = EntrustDirection.BuySpot,
                     SecuType = SecurityType.Stock
                 };
 
@@ -201,7 +201,7 @@ namespace TradingSystem.View
                     SecuName = monitorItem.FuturesContract,
                     WeightAmount = templateItem.FutureCopies,
                     EntrustAmount = monitorItem.Copies * templateItem.FutureCopies,
-                    DirectionType = EntrustDirection.SellOpen,
+                    EDirection = EntrustDirection.SellOpen,
                     SecuType = SecurityType.Futures
                 };
 

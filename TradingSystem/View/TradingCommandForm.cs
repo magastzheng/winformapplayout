@@ -406,7 +406,7 @@ namespace TradingSystem.View
                 DealAmount = 200,
                 TargetAmount = 250,
                 WaitAmount = 50,
-                SuspensionFlag = "Up",
+                //SuspensionFlag = "Up",
                 TargetCopies = 5,
                 LimitUpPrice = 15.0,
                 LimitDownPrice = 10.5,
@@ -430,7 +430,7 @@ namespace TradingSystem.View
                 DealAmount = 200,
                 TargetAmount = 250,
                 WaitAmount = 50,
-                SuspensionFlag = "Up",
+                //SuspensionFlag = "Up",
                 TargetCopies = 5,
                 LimitUpPrice = 15.0,
                 LimitDownPrice = 10.5,
@@ -503,7 +503,7 @@ namespace TradingSystem.View
                     item.DealAmount = (int)row.Cells["cs_dealamount"].Value;
                     item.TargetAmount = (int)row.Cells["cs_targetamount"].Value;
                     item.WaitAmount = (int)row.Cells["cs_waitamount"].Value;
-                    item.SuspensionFlag = (string)row.Cells["cs_suspensionflag"].Value;
+                    //item.SuspensionFlag = (string)row.Cells["cs_suspensionflag"].Value;
                     item.TargetCopies = (int)row.Cells["cs_targetcopies"].Value;
                     item.CommandCopies = (int)row.Cells["cs_commandcopies"].Value;
                     item.LimitUpPrice = (double)row.Cells["cs_limitupprice"].Value;

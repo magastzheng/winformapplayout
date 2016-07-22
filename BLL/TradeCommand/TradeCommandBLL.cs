@@ -154,7 +154,7 @@ namespace BLL.TradeCommand
                     SecuType = item.SecuType,
                     CommandAmount = item.EntrustAmount,
                     CommandPrice = item.CommandPrice,
-                    EDirection = (EntrustDirection)item.EntrustDirection,
+                    EDirection = item.EDirection,
                     EntrustStatus = EntrustStatus.NoExecuted
                 };
 

@@ -66,7 +66,7 @@
 		},
 		{
 			"name": "version_no",
-			"type": "c32"
+			"type": "C32"
 		}
 		]
 	},
@@ -869,17 +869,10 @@
 			"name": "currency_code",
 			"type": "C3",
 			"require": "N"
-		},{
-			"name": "money_type",
-			"type": "C3",
-			"require": "N"
 		}],
 		"response":[{
 			"name": "account_code",
 			"type": "C32"
-			},{
-			"name": "money_type",
-			"type": "C3"
 			},{
 			"name": "currency_code",
 			"type": "C3"
@@ -890,9 +883,6 @@
 			"name": "nav",
 			"type": "N9.3"
 			},{
-			"name": "last_nav",
-			"type": "N8.4"
-			},{
 			"name": "yesterday_nav",
 			"type": "N9.3"
 			},{
@@ -900,9 +890,6 @@
 			"type": "N16.2"
 			},{
 			"name": "begin_balance",
-			"type": "N16.2"
-			},{
-			"name": "deposit_balance",
 			"type": "N16.2"
 			},{
 			"name": "futu_deposit_balance",
@@ -933,12 +920,6 @@
 			"type": "N16.2"
 			},{
 			"name": "fund_net_share",
-			"type": "N16.2"
-			},{
-			"name": "ofund_share",
-			"type": "N16.2"
-			},{
-			"name": "ofund_net_asset",
 			"type": "N16.2"
 			},{
 			"name": "payable_balance",
@@ -1571,7 +1552,7 @@
 			},
 			{
 				"name": "entrust_state_list",
-				"type": "C500",
+				"type": "C512",
 				"require": "N"
 			},
 			{
@@ -1586,7 +1567,7 @@
 			},
 			{
 				"name": "position_str",
-				"type": "C100",
+				"type": "C32",
 				"require": "N"
 			},
 			{
@@ -1613,7 +1594,7 @@
 				"type": "N10"
 			},{
 				"name": "operator_no",
-				"type": "C18"
+				"type": "C16"
 			},{
 				"name": "batch_no",
 				"type": "N8"
@@ -1688,7 +1669,7 @@
 				"type": "C255"
 			},{
 				"name": "position_str",
-				"type": "C100"
+				"type": "C32"
 			}
 		]
 	},{
@@ -1758,7 +1739,7 @@
 			},
 			{
 				"name": "position_str",
-				"type": "C100",
+				"type": "C32",
 				"require": "N"
 			},
 			{
@@ -1785,7 +1766,7 @@
 				"type": "N10"
 			},{
 				"name": "operator_no",
-				"type": "C18"
+				"type": "C16"
 			},{
 				"name": "batch_no",
 				"type": "N8"
@@ -1860,7 +1841,7 @@
 				"type": "C255"
 			},{
 				"name": "position_str",
-				"type": "C100"
+				"type": "C32"
 			}
 		]
 	},
@@ -1951,16 +1932,60 @@
 	},
 	{
 		"code": 91011,
-		"name_en": "",
-		"name_zh": "",
+		"name_en": "func_am_share_transfer_ent",
+		"name_zh": "股转做市委托",
 		"param": [{
-			"name": "",
-			"type": "",
-			"require": ""
+			"name": "user_token",
+			"type": "C512",
+			"require": "Y"
+		},{
+			"name": "account_code",
+			"type": "C32",
+			"require": "N"
+		},{
+			"name": "asset_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "combi_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "stockholder_id",
+			"type": "C20",
+			"require": "N"
+		},{
+			"name": "report_seat",
+			"type": "C6",
+			"require": "N"
+		},{
+			"name": "stock_code",
+			"type": "C16",
+			"require": "Y"
+		},{
+			"name": "buy_price",
+			"type": "N11.4",
+			"require": "N"
+		},{
+			"name": "buy_amount",
+			"type": "N12",
+			"require": "N"
+		},{
+			"name": "sell_price",
+			"type": "N11.4",
+			"require": "N"
+		},{
+			"name": "sell_amount",
+			"type": "N12",
+			"require": "N"
+		},{
+			"name": "third_reff",
+			"type": "C256",
+			"require": "N"
 		}],
 		"response":[{
-			"name": "",
-			"type": ""
+			"name": "batch_no",
+			"type": "N8"
 		}]
 	},
 	{

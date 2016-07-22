@@ -1,5 +1,6 @@
 ﻿using Model.Binding;
 using Model.EnumType;
+using Model.EnumType.EnumTypeConverter;
 using System;
 
 namespace Model.UI
@@ -41,29 +42,7 @@ namespace Model.UI
         {
             get
             {
-                string ret = string.Empty;
-                switch (EExecuteType)
-                {
-                    case EnumType.ExecuteType.OpenPosition:
-                        {
-                            ret = "开仓";
-                        }
-                        break;
-                    case EnumType.ExecuteType.ClosePosition:
-                        {
-                            ret = "平仓";
-                        }
-                        break;
-                    case EnumType.ExecuteType.AdjustPosition:
-                        {
-                            ret = "调仓";
-                        }
-                        break;
-                    default:
-                        break;
-                }
-
-                return ret;
+                return EnumTypeDisplayHelper.GetExecuteType(EExecuteType);
             }
         }
 

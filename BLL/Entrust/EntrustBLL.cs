@@ -49,7 +49,7 @@ namespace BLL.Entrust
                 {
                     item.SecuType = originSecuItems[0].SecuType;
                     item.EntrustPrice = originSecuItems[0].EntrustPrice;
-                    item.EntrustDirection = originSecuItems[0].EntrustDirection;
+                    item.EntrustDirection = originSecuItems[0].EDirection;
                     item.EntrustPriceType = originSecuItems[0].EEntrustPriceType;
                     item.PriceType = originSecuItems[0].EPriceSetting;
 

@@ -87,10 +87,25 @@
 		"width": "8",
 		"scale": "4"
 	},{
+		"name": "N10",
+		"type": "I",
+		"width": "10",
+		"scale": "4"
+	},{
 		"name": "N12",
 		"type": "I",
 		"width": "12",
 		"scale": "4"
+	},{
+		"name": "N16",
+		"type": "I",
+		"width": "16",
+		"scale": "4"
+	},{
+		"name": "N9.3",
+		"type": "F",
+		"width": "9",
+		"scale": "3"
 	},
 	{
 		"name": "N9.6",
@@ -103,6 +118,11 @@
 		"type": "F",
 		"width": "11",
 		"scale": "4"
+	},{
+		"name": "N15.8",
+		"type": "F",
+		"width": "15",
+		"scale": "8"
 	},
 	{
 		"name": "N16.2",
@@ -111,9 +131,21 @@
 		"scale": "2"
 	},
 	{
+		"name": "N16.4",
+		"type": "F",
+		"width": "16",
+		"scale": "4"
+	},
+	{
 		"name": "N16.5",
 		"type": "F",
 		"width": "16",
 		"scale": "5"
+	},
+	{
+		"name": "N16.8",
+		"type": "F",
+		"width": "16",
+		"scale": "8"
 	}
 ]

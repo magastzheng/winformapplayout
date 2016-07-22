@@ -79,6 +79,10 @@ namespace TradingSystem.Controller
         public void Logout()
         {
             ServiceManager.Instance.Stop();
+            if (LoginManager.Instance.LoginUser != null && !string.IsNullOrEmpty(LoginManager.Instance.LoginUser.Token))
+            {
+                BLLManager.Instance.LoginBLL.Logout();
+            }
         }
 
         private void ParseAccount(DataParser parser)

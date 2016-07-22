@@ -101,7 +101,7 @@ namespace TradingSystem.Dialog
                     break;
             }
 
-            var stockItems = _secuDataSource.Where(p => p.EntrustDirection == direction && p.SecuType == secuType).ToList();
+            var stockItems = _secuDataSource.Where(p => p.EDirection == direction && p.SecuType == secuType).ToList();
             if (stockItems.Count > 0)
             {
                 stockItems.ForEach(p => { p.EPriceSetting = priceType; });
@@ -242,7 +242,7 @@ namespace TradingSystem.Dialog
                             Selection = true,
                             CommandId = cmdItem.CommandId,
                             //EntrustAmount = p.EntrustAmount,
-                            EntrustDirection = p.EntrustDirection,
+                            //EntrustDirection = p.EntrustDirection,
                             EntrustPrice = p.EntrustPrice,
                             SecuCode = p.SecuCode,
                             SecuType = p.SecuType,
@@ -286,19 +286,19 @@ namespace TradingSystem.Dialog
                             cancelRedoItem.EEntrustPriceType = shPriceType;
                         }
 
-                        if (cancelRedoItem.SecuType == SecurityType.Stock && cancelRedoItem.EntrustDirection == EntrustDirection.BuySpot)
+                        if (cancelRedoItem.SecuType == SecurityType.Stock && cancelRedoItem.EDirection == EntrustDirection.BuySpot)
                         {
                             cancelRedoItem.EPriceSetting = spotBuyPrice;
                         }
-                        else if (cancelRedoItem.SecuType == SecurityType.Stock && cancelRedoItem.EntrustDirection == EntrustDirection.BuySpot)
+                        else if (cancelRedoItem.SecuType == SecurityType.Stock && cancelRedoItem.EDirection == EntrustDirection.BuySpot)
                         {
                             cancelRedoItem.EPriceSetting = spotSellPrice;
                         }
-                        else if (cancelRedoItem.SecuType == SecurityType.Futures && cancelRedoItem.EntrustDirection == EntrustDirection.SellOpen)
+                        else if (cancelRedoItem.SecuType == SecurityType.Futures && cancelRedoItem.EDirection == EntrustDirection.SellOpen)
                         {
                             cancelRedoItem.EPriceSetting = futureSellPrice;
                         }
-                        else if (cancelRedoItem.SecuType == SecurityType.Futures && cancelRedoItem.EntrustDirection == EntrustDirection.BuyClose)
+                        else if (cancelRedoItem.SecuType == SecurityType.Futures && cancelRedoItem.EDirection == EntrustDirection.BuyClose)
                         {
                             cancelRedoItem.EPriceSetting = futureBuyPrice;
                         }

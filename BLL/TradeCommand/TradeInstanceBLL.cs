@@ -85,11 +85,11 @@ namespace BLL.TradeCommand
                         case SecurityType.Stock:
                             {
                                 tiSecuItem.InstructionPreBuy = openItem.Copies * item.WeightAmount;
-                                if (item.DirectionType == EntrustDirection.BuySpot)
+                                if (item.EDirection == EntrustDirection.BuySpot)
                                 {
                                     tiSecuItem.PositionType = PositionType.StockLong;
                                 }
-                                else if (item.DirectionType == EntrustDirection.SellSpot)
+                                else if (item.EDirection == EntrustDirection.SellSpot)
                                 {
                                     tiSecuItem.PositionType = PositionType.StockShort;
                                 }
@@ -98,11 +98,11 @@ namespace BLL.TradeCommand
                         case SecurityType.Futures:
                             {
                                 tiSecuItem.InstructionPreSell = openItem.Copies * item.WeightAmount;
-                                if (item.DirectionType == EntrustDirection.SellOpen)
+                                if (item.EDirection == EntrustDirection.SellOpen)
                                 {
                                     tiSecuItem.PositionType = PositionType.FuturesShort;
                                 }
-                                else if (item.DirectionType == EntrustDirection.BuyClose)
+                                else if (item.EDirection == EntrustDirection.BuyClose)
                                 {
                                     tiSecuItem.PositionType = PositionType.FuturesLong;
                                 }
