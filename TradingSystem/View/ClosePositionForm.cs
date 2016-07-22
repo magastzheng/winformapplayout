@@ -388,11 +388,13 @@ namespace TradingSystem.View
             var addItem = _secuDataSource.ToList().Find(p => p.SecuCode.Equals(newItem.SecuCode));
             if (addItem != null)
             {
+                addItem.Selection = true;
                 addItem.EntrustAmount = newItem.EntrustAmount;
                 addItem.EDirection = newItem.EDirection;
             }
             else
             {
+                newItem.Selection = true;
                 _secuDataSource.Add(newItem);
             }
 
@@ -401,6 +403,11 @@ namespace TradingSystem.View
             {
                 oldItem.EntrustAmount = originItem.EntrustAmount;
                 oldItem.EDirection = originItem.EDirection;
+
+                if (!oldItem.Selection)
+                {
+                    oldItem.Selection = true;
+                }
             }
 
             return true;
@@ -412,6 +419,21 @@ namespace TradingSystem.View
             foreach (var cmdItem in cmdItems)
             {
                 var tdcmdItem = GetTradeCommandItem(cmdItem);
+                var futureItems = _secuDataSource.Where(p => p.Selection && p.InstanceId == cmdItem.InstanceId && p.SecuType == SecurityType.Futures).ToList();
+                if (futureItems != null && futureItems.Count > 0)
+                {
+                    var minFutuAmount = futureItems.Select(p => p.EntrustAmount).Min();
+                    //TODO:settingweight
+                    if (minFutuAmount > 0)
+                    {
+                        tdcmdItem.CommandNum = minFutuAmount;
+                    }
+                }
+                else
+                {
+                    tdcmdItem.CommandNum = 1;
+                }
+
                 var closeItem = _instDataSource.ToList().Find(p => p.InstanceId.Equals(tdcmdItem.InstanceId));
                 var selectedItems = _secuDataSource.Where(p => p.Selection && p.EntrustAmount > 0 && p.InstanceId.Equals(tdcmdItem.InstanceId)).ToList();
                 var result = _tradeCommandBLL.SubmitClosePosition(tdcmdItem, closeItem, selectedItems);
@@ -646,7 +668,7 @@ namespace TradingSystem.View
                 InstanceId = closeCmdItem.InstanceId,
                 ECommandType = CommandType.Arbitrage,
                 EExecuteType = _execType,
-                CommandNum = closeCmdItem.Copies,
+                //CommandNum = closeCmdItem.Copies,
                 //EStockDirection = Model.Data.EntrustDirection.BuySpot,
                 //EFuturesDirection = Model.Data.EntrustDirection.SellOpen,
                 EEntrustStatus = EntrustStatus.NoExecuted,

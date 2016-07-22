@@ -808,21 +808,57 @@ namespace TradingSystem.View
                     //selCmdItems[0].TargetNum = eiItem.Copies;
                     int thisCopies = eiItem.Copies;
                     int targetNum = selCmdItem.TargetNum + eiItem.Copies;
+                    if (targetNum > selCmdItem.CommandNum)
+                    {
+                        targetNum = selCmdItem.CommandNum;
+                        thisCopies = targetNum - selCmdItem.TargetNum;   
+                    }
+
                     var secuItems = _secuDataSource.Where(p => p.CommandId == eiItem.CommandNo).ToList();
                     foreach (var secuItem in secuItems)
                     {
                         secuItem.TargetCopies = targetNum;
+                        int targetAmount = 0;
+                        int thisEntrustAmount = 0;
+                        int waitAmount = 0;
                         if (secuItem.WeightAmount > 0)
                         {
-                            secuItem.TargetAmount = secuItem.TargetCopies * secuItem.WeightAmount;
-                            secuItem.ThisEntrustAmount = thisCopies * secuItem.WeightAmount;
-                            secuItem.WaitAmount = secuItem.TargetCopies * secuItem.WeightAmount;
+                            targetAmount = targetNum * secuItem.WeightAmount;
+                            thisEntrustAmount = thisCopies * secuItem.WeightAmount;
+                            waitAmount = targetNum * secuItem.WeightAmount;
                         }
                         else
                         {
-                            secuItem.TargetAmount = secuItem.TargetCopies;
-                            secuItem.ThisEntrustAmount = thisCopies;
-                            secuItem.WaitAmount = secuItem.TargetCopies;
+                            targetAmount = secuItem.TargetCopies;
+                            thisEntrustAmount = thisCopies;
+                            waitAmount = secuItem.TargetCopies;
+                        }
+
+                        if (thisEntrustAmount + secuItem.TargetAmount <= secuItem.CommandAmount)
+                        {
+                            secuItem.ThisEntrustAmount = thisEntrustAmount;
+                        }
+                        else
+                        {
+                            secuItem.ThisEntrustAmount = secuItem.CommandAmount - secuItem.TargetAmount;
+                        }
+
+                        if (waitAmount <= secuItem.CommandAmount)
+                        {
+                            secuItem.WaitAmount = waitAmount;
+                        }
+                        else
+                        {
+                            secuItem.WaitAmount = secuItem.CommandAmount;
+                        }
+
+                        if (targetAmount <= secuItem.CommandAmount)
+                        {
+                            secuItem.TargetAmount = targetAmount;
+                        }
+                        else
+                        {
+                            secuItem.TargetAmount = secuItem.CommandAmount;
                         }
 
                         var direction = EntrustDirectionUtil.GetEntrustDirection(secuItem.EntrustDirection);
@@ -1079,7 +1115,7 @@ namespace TradingSystem.View
         {
             int copies = (int)nudCopies.Value;
 
-            if (copies > 0)
+            if (copies >= 0)
             {
                 _eiDataSource.Where(p => p.Selection).ToList().ForEach(p => p.Copies = copies);
             }
@@ -1088,18 +1124,22 @@ namespace TradingSystem.View
                 foreach (var eiItem in _eiDataSource)
                 {
                     var cmdItem = _cmdDataSource.Single(p => p.Selection && p.CommandId == eiItem.CommandNo);
-                    if (cmdItem != null && cmdItem.CommandNum < eiItem.Copies)
+                    if (cmdItem == null)
                     {
                         return false;
                     }
+                    //if (cmdItem != null && cmdItem.CommandNum < eiItem.Copies)
+                    //{
+                    //    return false;
+                    //}
                 }
             }
 
-            var selItems = _eiDataSource.Where(p => p.Selection && p.Copies == 0).ToList();
-            if (selItems != null && selItems.Count > 0)
-            {
-                return false;
-            }
+            //var selItems = _eiDataSource.Where(p => p.Selection && p.Copies == 0).ToList();
+            //if (selItems != null && selItems.Count > 0)
+            //{
+            //    return false;
+            //}
 
             return true;
         }

@@ -14,6 +14,7 @@ namespace TradingSystem.Dialog
     {
         //private TradingInstanceDAO _tradeinstdao = new TradingInstanceDAO();
         private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
+        private OpenPositionItem _originOpenItem = null;
 
         public OpenPositionDialog()
         {
@@ -68,13 +69,15 @@ namespace TradingSystem.Dialog
                 return false;
             if (!(data is OpenPositionItem))
                 return false;
-            var openItem = data as OpenPositionItem;
+            _originOpenItem = data as OpenPositionItem;
+            if (_originOpenItem == null)
+                return false;
 
             //
-            this.tbPortfolio.Text = openItem.PortfolioName;
-            this.tbTemlate.Text = string.Format("{0}-{1}", openItem.TemplateId, openItem.TemplateName);
-            this.tbFutures.Text = openItem.FuturesContract;
-            this.tbCopies.Text = string.Format("{0}", openItem.Copies);
+            this.tbPortfolio.Text = _originOpenItem.PortfolioName;
+            this.tbTemlate.Text = string.Format("{0}-{1}", _originOpenItem.TemplateId, _originOpenItem.TemplateName);
+            this.tbFutures.Text = _originOpenItem.FuturesContract;
+            this.tbCopies.Text = string.Format("{0}", _originOpenItem.Copies);
             this.tbCopies.Enabled = false;
             this.tbBias.Text = "0";
 
@@ -88,7 +91,7 @@ namespace TradingSystem.Dialog
 
             //Initialize the instancecode
             var instances = _tradeInstanceBLL.GetAllInstance();
-            var targetInstances = instances.Where(p => p.MonitorUnitId == openItem.MonitorId && p.TemplateId == openItem.TemplateId).ToList();
+            var targetInstances = instances.Where(p => p.MonitorUnitId == _originOpenItem.MonitorId && p.TemplateId == _originOpenItem.TemplateId).ToList();
             
             ComboOption comboOption = new ComboOption
             {
@@ -97,8 +100,8 @@ namespace TradingSystem.Dialog
 
             ComboOptionItem currentItem = new ComboOptionItem
             {
-                Id = openItem.InstanceCode,
-                Name = openItem.InstanceCode
+                Id = _originOpenItem.InstanceCode,
+                Name = _originOpenItem.InstanceCode
             };
 
             comboOption.Items.Add(currentItem);
@@ -128,12 +131,66 @@ namespace TradingSystem.Dialog
 
         private void Button_Confirm_Click(object sender, EventArgs e)
         {
-            DialogResult = System.Windows.Forms.DialogResult.OK;
+            var openItem = GetOutputData();
+            if (!Validate(openItem))
+            {
+                MessageBox.Show(this, "交易实例编号不能为空！", "错误", MessageBoxButtons.OK);
+                return;
+            }
+
+            if (OnSave(this, openItem))
+            {
+                DialogResult = System.Windows.Forms.DialogResult.OK;
+            }
         }
 
         private void Button_Cancel_Click(object sender, EventArgs e)
         {
             DialogResult = System.Windows.Forms.DialogResult.Cancel;
+        }
+
+        private OpenPositionItem GetOutputData()
+        {
+            OpenPositionItem openItem = new OpenPositionItem
+            {
+                MonitorId = _originOpenItem.MonitorId,
+                MonitorName = _originOpenItem.MonitorName,
+                PortfolioId = _originOpenItem.PortfolioId,
+                PortfolioName = _originOpenItem.PortfolioName,
+                TemplateId = _originOpenItem.TemplateId,
+                TemplateName = _originOpenItem.TemplateName,
+                Copies = _originOpenItem.Copies,
+            };
+
+            if (this.ckbInstanceCode.Checked)
+            {
+                var selectItem = (ComboOptionItem)this.cbInstanceCode.SelectedItem;
+                if (selectItem != null)
+                {
+                    openItem.InstanceCode = selectItem.Name;
+                }
+            }
+            else
+            {
+                openItem.InstanceCode = _originOpenItem.InstanceCode;
+            }
+
+            return openItem;
+        }
+
+        private bool Validate(OpenPositionItem openItem)
+        {
+            if (openItem == null)
+            {
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(openItem.InstanceCode))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         #endregion
