@@ -14,7 +14,7 @@ using Model.Quote;
 
 namespace TradingSystem.Dialog
 {
-    public partial class ChangePositionDialog : Forms.BaseFixedForm
+    public partial class ChangePositionDialog : Forms.BaseDialog
     {
         private ClosePositionSecurityItem _originItem;
         private List<SecurityItem> _secuInfoList = null;

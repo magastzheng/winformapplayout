@@ -14,7 +14,7 @@ namespace TradingSystem.View
         Modify = 1,
     }
 
-    public partial class PortfolioSecurityDialog : Forms.BaseFixedForm
+    public partial class PortfolioSecurityDialog : Forms.BaseDialog
     {
         private int _templateId = -1;
         private IList<AutoItem> _dataSource = new List<AutoItem>();

@@ -1,6 +1,6 @@
 ﻿namespace Forms
 {
-    partial class BaseFixedForm
+    partial class BaseDialog
     {
         /// <summary>
         /// Required designer variable.

@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace TradingSystem.Dialog
 {
-    public partial class MonitorUnitDialog : Forms.BaseFixedForm
+    public partial class MonitorUnitDialog : Forms.BaseDialog
     {
         private FuturesContractDAO _fcdbdao = new FuturesContractDAO();
         private ProductBLL _productBLL = new ProductBLL();

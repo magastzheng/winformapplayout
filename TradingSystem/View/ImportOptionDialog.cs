@@ -9,7 +9,7 @@ namespace TradingSystem.View
         Append = 1,
     }
 
-    public partial class ImportOptionDialog : Forms.BaseFixedForm
+    public partial class ImportOptionDialog : Forms.BaseDialog
     {
         private ImportType _importType = ImportType.Replace;
         public ImportType ImportType { get { return _importType; } }

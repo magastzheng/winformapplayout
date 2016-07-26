@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace TradingSystem.View
 {
-    public partial class TemplateDialog : Forms.BaseFixedForm
+    public partial class TemplateDialog : Forms.BaseDialog
     {
         private StockTemplateDAO _dbdao = new StockTemplateDAO();
         public TemplateDialog()

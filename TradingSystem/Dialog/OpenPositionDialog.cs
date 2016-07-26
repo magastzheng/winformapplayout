@@ -10,7 +10,7 @@ using BLL.TradeCommand;
 
 namespace TradingSystem.Dialog
 {
-    public partial class OpenPositionDialog : Forms.BaseFixedForm
+    public partial class OpenPositionDialog : Forms.BaseDialog
     {
         //private TradingInstanceDAO _tradeinstdao = new TradingInstanceDAO();
         private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();

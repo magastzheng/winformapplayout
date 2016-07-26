@@ -1,9 +1,9 @@
 ﻿
 namespace Forms
 {
-    public partial class BaseFixedForm : Forms.BaseForm
+    public partial class BaseDialog : Forms.BaseForm
     {
-        public BaseFixedForm()
+        public BaseDialog()
         {
             InitializeComponent();
         }

@@ -42,11 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseFixedForm.cs">
+    <Compile Include="BaseDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BaseFixedForm.Designer.cs">
-      <DependentUpon>BaseFixedForm.cs</DependentUpon>
+    <Compile Include="BaseDialog.Designer.cs">
+      <DependentUpon>BaseDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="BaseForm.cs">
       <SubType>Form</SubType>
@@ -68,8 +68,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="BaseFixedForm.resx">
-      <DependentUpon>BaseFixedForm.cs</DependentUpon>
+    <EmbeddedResource Include="BaseDialog.resx">
+      <DependentUpon>BaseDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="BaseForm.resx">
       <DependentUpon>BaseForm.cs</DependentUpon>

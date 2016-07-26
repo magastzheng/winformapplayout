@@ -19,7 +19,7 @@ using Quote;
 
 namespace TradingSystem.Dialog
 {
-    public partial class CancelRedoDialog : Forms.BaseFixedForm
+    public partial class CancelRedoDialog : Forms.BaseDialog
     {
         private const string GridCancelRedoId = "entrustcanceladd";
 
