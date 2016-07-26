@@ -15,6 +15,7 @@ namespace TradingSystem.Dialog
         //private TradingInstanceDAO _tradeinstdao = new TradingInstanceDAO();
         private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
         private OpenPositionItem _originOpenItem = null;
+        private OpenPositionItem _newOpenItem = null;
 
         public OpenPositionDialog()
         {
@@ -98,14 +99,17 @@ namespace TradingSystem.Dialog
                 Items = new List<ComboOptionItem>()
             };
 
-            ComboOptionItem currentItem = new ComboOptionItem
+            if (targetInstances == null || targetInstances.Find(p => p.InstanceCode.Equals(_originOpenItem.InstanceCode)) == null)
             {
-                Id = _originOpenItem.InstanceCode,
-                Name = _originOpenItem.InstanceCode
-            };
+                ComboOptionItem currentItem = new ComboOptionItem
+                {
+                    Id = _originOpenItem.InstanceCode,
+                    Name = _originOpenItem.InstanceCode
+                };
 
-            comboOption.Items.Add(currentItem);
-
+                comboOption.Items.Add(currentItem);
+            }
+            
             if (targetInstances != null && targetInstances.Count > 0)
             {
                 foreach (var instance in targetInstances)
@@ -118,10 +122,11 @@ namespace TradingSystem.Dialog
 
                     comboOption.Items.Add(item);
                 }
-
-                comboOption.Selected = comboOption.Items[0].Id;
-                ComboBoxUtil.SetComboBox(this.cbInstanceCode, comboOption);
             }
+
+            ComboBoxUtil.SetComboBox(this.cbInstanceCode, comboOption);
+            ComboBoxUtil.SetComboBoxSelect(this.cbInstanceCode, _originOpenItem.InstanceCode);
+
             return true;
         }
 
@@ -131,17 +136,14 @@ namespace TradingSystem.Dialog
 
         private void Button_Confirm_Click(object sender, EventArgs e)
         {
-            var openItem = GetOutputData();
-            if (!Validate(openItem))
+            UpdateNewItem();
+            if (!Validate(_newOpenItem))
             {
                 MessageBox.Show(this, "交易实例编号不能为空！", "错误", MessageBoxButtons.OK);
                 return;
             }
 
-            if (OnSave(this, openItem))
-            {
-                DialogResult = System.Windows.Forms.DialogResult.OK;
-            }
+            DialogResult = System.Windows.Forms.DialogResult.OK;
         }
 
         private void Button_Cancel_Click(object sender, EventArgs e)
@@ -149,9 +151,9 @@ namespace TradingSystem.Dialog
             DialogResult = System.Windows.Forms.DialogResult.Cancel;
         }
 
-        private OpenPositionItem GetOutputData()
+        private void UpdateNewItem()
         {
-            OpenPositionItem openItem = new OpenPositionItem
+            _newOpenItem = new OpenPositionItem
             {
                 MonitorId = _originOpenItem.MonitorId,
                 MonitorName = _originOpenItem.MonitorName,
@@ -160,6 +162,8 @@ namespace TradingSystem.Dialog
                 TemplateId = _originOpenItem.TemplateId,
                 TemplateName = _originOpenItem.TemplateName,
                 Copies = _originOpenItem.Copies,
+                FuturesContract = _originOpenItem.FuturesContract,
+
             };
 
             if (this.ckbInstanceCode.Checked)
@@ -167,15 +171,13 @@ namespace TradingSystem.Dialog
                 var selectItem = (ComboOptionItem)this.cbInstanceCode.SelectedItem;
                 if (selectItem != null)
                 {
-                    openItem.InstanceCode = selectItem.Name;
+                    _newOpenItem.InstanceCode = selectItem.Name;
                 }
             }
             else
             {
-                openItem.InstanceCode = _originOpenItem.InstanceCode;
+                _newOpenItem.InstanceCode = _originOpenItem.InstanceCode;
             }
-
-            return openItem;
         }
 
         private bool Validate(OpenPositionItem openItem)
@@ -191,6 +193,15 @@ namespace TradingSystem.Dialog
             }
 
             return true;
+        }
+
+        #endregion
+
+        #region Get output data
+
+        public override object GetData()
+        {
+            return _newOpenItem;
         }
 
         #endregion

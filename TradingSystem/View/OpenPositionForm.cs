@@ -288,59 +288,43 @@ namespace TradingSystem.View
                         foreach (var index in selectedList)
                         {
                             var openItem = _monitorDataSource[index];
-                            string instanceCode = string.Format("{0}-{1}-{2}", openItem.PortfolioId, openItem.TemplateId, DateTime.Now.ToString("yyyyMMdd"));
-
-                            openItem.InstanceCode = instanceCode;
-
-                            //Open the dialog
-                            OpenPositionDialog dialog = new OpenPositionDialog();
-                            dialog.Owner = this;
-                            dialog.StartPosition = FormStartPosition.CenterParent;
-                            //dialog.OnLoadFormActived(json);
-                            //dialog.Visible = true;
-                            dialog.OnLoadControl(dialog, null);
-                            dialog.OnLoadData(dialog, openItem);
-                            //dialog.SaveData += new FormLoadHandler(Dialog_SaveData);
-                            dialog.ShowDialog();
-
-                            if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
-                            {
-                                dialog.Dispose();
-                            }
-                            else
-                            {
-                                dialog.Dispose();
+                            var newOpenItem = GetSubmitItem(openItem);
+                            if (newOpenItem == null)
+                            { 
+                                string msg = string.Format("对监控单元[{0}]下达指令失败", openItem.MonitorName);
+                                MessageBox.Show(this, msg, "失败", MessageBoxButtons.OK);
+                                continue;
                             }
 
                             int instanceId = -1;
-                            //var instance = _tradeinstdao.Get(instanceCode);
+                            string instanceCode = newOpenItem.InstanceCode;
                             var instance = _tradeInstanceBLL.GetInstance(instanceCode);
                             if (instance != null && !string.IsNullOrEmpty(instance.InstanceCode) && instance.InstanceCode.Equals(instanceCode))
                             {
                                 instanceId = instance.InstanceId;
-                                instance.OperationCopies += openItem.Copies;
-                                var secuItems = _securityDataSource.Where(p => p.MonitorId == openItem.MonitorId).ToList();
-                                _tradeInstanceBLL.Update(instance, openItem, secuItems);
+                                instance.OperationCopies += newOpenItem.Copies;
+                                var secuItems = _securityDataSource.Where(p => p.MonitorId == newOpenItem.MonitorId).ToList();
+                                _tradeInstanceBLL.Update(instance, newOpenItem, secuItems);
                             }
                             else
                             {
                                 TradingInstance tradeInstance = new TradingInstance
                                 {
                                     InstanceCode = instanceCode,
-                                    MonitorUnitId = openItem.MonitorId,
+                                    MonitorUnitId = newOpenItem.MonitorId,
                                     StockDirection = EntrustDirection.BuySpot,
-                                    FuturesContract = openItem.FuturesContract,
+                                    FuturesContract = newOpenItem.FuturesContract,
                                     FuturesDirection = EntrustDirection.SellOpen,
-                                    OperationCopies = openItem.Copies,
+                                    OperationCopies = newOpenItem.Copies,
                                     StockPriceType = StockPriceType.NoLimit,
                                     FuturesPriceType = FuturesPriceType.NoLimit,
                                     Status = 1,
                                     Owner = "111111"
                                 };
 
-                                var secuItems = _securityDataSource.Where(p => p.MonitorId == openItem.MonitorId).ToList();
+                                var secuItems = _securityDataSource.Where(p => p.MonitorId == newOpenItem.MonitorId).ToList();
 
-                                instanceId = _tradeInstanceBLL.Create(tradeInstance, openItem, secuItems);
+                                instanceId = _tradeInstanceBLL.Create(tradeInstance, newOpenItem, secuItems);
                             }
 
                             if (instanceId > 0)
@@ -351,7 +335,7 @@ namespace TradingSystem.View
                                     InstanceId = instanceId,
                                     ECommandType = CommandType.Arbitrage,
                                     EExecuteType = ExecuteType.OpenPosition,
-                                    CommandNum = openItem.Copies,
+                                    CommandNum = newOpenItem.Copies,
                                     EStockDirection = EntrustDirection.BuySpot,
                                     EFuturesDirection = EntrustDirection.SellOpen,
                                     EEntrustStatus = EntrustStatus.NoExecuted,
@@ -359,7 +343,7 @@ namespace TradingSystem.View
                                     ModifiedTimes = 1
                                 };
 
-                                var cmdSecuItems = GetSelectCommandSecurities(openItem, -1);
+                                var cmdSecuItems = GetSelectCommandSecurities(newOpenItem, -1);
 
                                 int ret = _tradeCommandBLL.Submit(cmdItem, cmdSecuItems);
 
@@ -383,6 +367,34 @@ namespace TradingSystem.View
                 default:
                     break;
             }
+        }
+
+        public OpenPositionItem GetSubmitItem(OpenPositionItem openItem)
+        {
+            string instanceCode = string.Format("{0}-{1}-{2}", openItem.PortfolioId, openItem.TemplateId, DateTime.Now.ToString("yyyyMMdd"));
+
+            openItem.InstanceCode = instanceCode;
+
+            OpenPositionItem newOpenItem = null;
+
+            //Open the dialog
+            OpenPositionDialog dialog = new OpenPositionDialog();
+            dialog.Owner = this;
+            dialog.StartPosition = FormStartPosition.CenterParent;
+            dialog.OnLoadControl(dialog, null);
+            dialog.OnLoadData(dialog, openItem);
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                newOpenItem = (OpenPositionItem)dialog.GetData();
+                dialog.Dispose();
+            }
+            else
+            {
+                newOpenItem = null;
+                dialog.Dispose();
+            }
+
+            return newOpenItem;
         }
 
         private List<CommandSecurityItem> GetSelectCommandSecurities(OpenPositionItem openItem, int commandId)

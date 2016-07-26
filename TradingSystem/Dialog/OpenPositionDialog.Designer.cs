@@ -31,6 +31,8 @@
             this.panelTop = new System.Windows.Forms.Panel();
             this.lblCaption = new System.Windows.Forms.Label();
             this.panelBottom = new System.Windows.Forms.Panel();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.btnConfirm = new System.Windows.Forms.Button();
             this.panelMain = new System.Windows.Forms.Panel();
             this.rtbComment = new System.Windows.Forms.RichTextBox();
             this.ckbInstanceCode = new System.Windows.Forms.CheckBox();
@@ -57,8 +59,6 @@
             this.lblFutures = new System.Windows.Forms.Label();
             this.lblTemplate = new System.Windows.Forms.Label();
             this.lblPortfolio = new System.Windows.Forms.Label();
-            this.btnConfirm = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
             this.panelTop.SuspendLayout();
             this.panelBottom.SuspendLayout();
             this.panelMain.SuspendLayout();
@@ -93,6 +93,24 @@
             this.panelBottom.Name = "panelBottom";
             this.panelBottom.Size = new System.Drawing.Size(526, 47);
             this.panelBottom.TabIndex = 1;
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.Location = new System.Drawing.Point(404, 11);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.TabIndex = 1;
+            this.btnCancel.Text = "取消";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            // 
+            // btnConfirm
+            // 
+            this.btnConfirm.Location = new System.Drawing.Point(308, 11);
+            this.btnConfirm.Name = "btnConfirm";
+            this.btnConfirm.Size = new System.Drawing.Size(75, 23);
+            this.btnConfirm.TabIndex = 0;
+            this.btnConfirm.Text = "确认";
+            this.btnConfirm.UseVisualStyleBackColor = true;
             // 
             // panelMain
             // 
@@ -344,24 +362,6 @@
             this.lblPortfolio.Size = new System.Drawing.Size(59, 12);
             this.lblPortfolio.TabIndex = 0;
             this.lblPortfolio.Text = "套利组合:";
-            // 
-            // btnConfirm
-            // 
-            this.btnConfirm.Location = new System.Drawing.Point(308, 11);
-            this.btnConfirm.Name = "btnConfirm";
-            this.btnConfirm.Size = new System.Drawing.Size(75, 23);
-            this.btnConfirm.TabIndex = 0;
-            this.btnConfirm.Text = "确认";
-            this.btnConfirm.UseVisualStyleBackColor = true;
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Location = new System.Drawing.Point(404, 11);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 1;
-            this.btnCancel.Text = "取消";
-            this.btnCancel.UseVisualStyleBackColor = true;
             // 
             // OpenPositionDialog
             // 

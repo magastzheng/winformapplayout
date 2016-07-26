@@ -7,5 +7,10 @@ namespace Forms
         {
             InitializeComponent();
         }
+
+        public virtual object GetData()
+        {
+            return null;
+        }
     }
 }
