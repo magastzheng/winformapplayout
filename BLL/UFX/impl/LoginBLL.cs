@@ -13,22 +13,22 @@ namespace BLL.UFX.impl
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private T2SDKWrap _t2SDKWrap;
-        private ReceivedBizMsg _receivedBizMsg;
+        //private ReceivedBizMsg _receivedBizMsg;
         private Dictionary<FunctionCode, DataHandlerCallback> _dataHandlerMap = new Dictionary<FunctionCode, DataHandlerCallback>();
 
         public LoginBLL(T2SDKWrap t2SDKWrap)
         {
             _t2SDKWrap = t2SDKWrap;
-            _receivedBizMsg = OnReceivedBizMsg;
-            _t2SDKWrap.Register(FunctionCode.Login, _receivedBizMsg);
-            _t2SDKWrap.Register(FunctionCode.Logout, _receivedBizMsg);
-            _t2SDKWrap.Register(FunctionCode.HeartBeat, _receivedBizMsg);
-            _t2SDKWrap.Register(FunctionCode.QuerymemoryData, _receivedBizMsg);
-            _t2SDKWrap.Register(FunctionCode.QueryAccount, _receivedBizMsg);
-            _t2SDKWrap.Register(FunctionCode.QueryAssetUnit, _receivedBizMsg);
-            _t2SDKWrap.Register(FunctionCode.QueryPortfolio, _receivedBizMsg);
-            _t2SDKWrap.Register(FunctionCode.QueryTradingInstance, _receivedBizMsg);
-            _t2SDKWrap.Register(FunctionCode.QueryHolder, _receivedBizMsg);
+            //_receivedBizMsg = HandleReceivedBizMsg;
+            _t2SDKWrap.Register(FunctionCode.Login, new DataHandlerCallback(HandlData));
+            _t2SDKWrap.Register(FunctionCode.Logout, new DataHandlerCallback(HandlData));
+            _t2SDKWrap.Register(FunctionCode.HeartBeat, new DataHandlerCallback(HandlData));
+            _t2SDKWrap.Register(FunctionCode.QuerymemoryData, new DataHandlerCallback(HandlData));
+            _t2SDKWrap.Register(FunctionCode.QueryAccount, new DataHandlerCallback(HandlData));
+            _t2SDKWrap.Register(FunctionCode.QueryAssetUnit, new DataHandlerCallback(HandlData));
+            _t2SDKWrap.Register(FunctionCode.QueryPortfolio, new DataHandlerCallback(HandlData));
+            _t2SDKWrap.Register(FunctionCode.QueryTradingInstance, new DataHandlerCallback(HandlData));
+            _t2SDKWrap.Register(FunctionCode.QueryHolder, new DataHandlerCallback(HandlData));
         }
 
         public ConnectionCode Login(User user)
@@ -647,89 +647,68 @@ namespace BLL.UFX.impl
             return ConnectionCode.Success;
         }
 
-        public int OnReceivedBizMsg(CT2BizMessage bizMessage)
+        public int HandlData(DataParser parser)
         {
-            int iRetCode = bizMessage.GetReturnCode();
-            int iErrorCode = bizMessage.GetErrorNo();
-            int iFunction = bizMessage.GetFunction();
-            if (iRetCode != 0)
+            int ret = -1;
+            FunctionCode functionCode = (FunctionCode)parser.FunctionCode;
+            if (_dataHandlerMap.ContainsKey(functionCode))
             {
-                string msg = string.Format("同步接收数据出错： {0}, {1}", iErrorCode, bizMessage.GetErrorInfo());
-                Console.WriteLine(msg);
-                return iRetCode;
-            }
+                _dataHandlerMap[functionCode](parser);
+                _dataHandlerMap.Remove(functionCode);
 
-            CT2UnPacker unpacker = null;
-            unsafe
-            {
-                int iLen = 0;
-                void* lpdata = bizMessage.GetContent(&iLen);
-                unpacker = new CT2UnPacker(lpdata, (uint)iLen);
+                ret = 1;
             }
-
-            if (unpacker != null)
+            else
             {
-                Console.WriteLine("功能号：" + iFunction);
-                //_t2SDKWrap.PrintUnPack(unpacker);
-                //_t2SDKWrap.PrintUnPack(unpacker);
-                DataParser parser = new DataParser();
-                parser.Parse(unpacker);
-                parser.Output();
-                FunctionCode functionCode = (FunctionCode)iFunction;
-                if (_dataHandlerMap.ContainsKey(functionCode))
+                switch (functionCode)
                 {
-                    _dataHandlerMap[functionCode](parser);
-                    _dataHandlerMap.Remove(functionCode);
-                }
-                else
-                {
-                    switch (functionCode)
-                    {
-                        case FunctionCode.Login:
+                    case FunctionCode.Login:
+                        {
+                            string token = string.Empty;
+                            if (parser.DataSets[1].Rows[0].Columns.ContainsKey("user_token"))
                             {
-                                var token = unpacker.GetStr("user_token");
-                                if (!string.IsNullOrEmpty(token))
-                                {
-                                    LoginManager.Instance.LoginUser.Token = token;
-                                }
-                                else
-                                {
-                                    return (int)ConnectionCode.ErrorLogin;
-                                }
+                                token = parser.DataSets[1].Rows[0].Columns["user_token"].GetStr();
                             }
-                            break;
-                        case FunctionCode.Logout:
-                            break;
-                        case FunctionCode.HeartBeat:
-                            break;
-                        case FunctionCode.QuerymemoryData:
-                            break;
-                        case FunctionCode.QueryAccount:
+
+                            if (!string.IsNullOrEmpty(token))
                             {
-                                if (_dataHandlerMap.ContainsKey(FunctionCode.QueryAccount))
-                                {
-                                    _dataHandlerMap[FunctionCode.QueryAccount](parser);
-
-                                    _dataHandlerMap.Remove(FunctionCode.QueryAccount);
-                                }
+                                LoginManager.Instance.LoginUser.Token = token;
+                                ret = (int)ConnectionCode.Success;
                             }
-                            break;
-                        case FunctionCode.QueryAssetUnit:
-                            break;
-                        case FunctionCode.QueryPortfolio:
-                            break;
-                        case FunctionCode.QueryHolder:
-                            break;
-                        default:
-                            break;
-                    }
-                }
+                            else
+                            {
+                                return (int)ConnectionCode.ErrorLogin;
+                            }
+                        }
+                        break;
+                    case FunctionCode.Logout:
+                        break;
+                    case FunctionCode.HeartBeat:
+                        break;
+                    case FunctionCode.QuerymemoryData:
+                        break;
+                    case FunctionCode.QueryAccount:
+                        {
+                            if (_dataHandlerMap.ContainsKey(FunctionCode.QueryAccount))
+                            {
+                                _dataHandlerMap[FunctionCode.QueryAccount](parser);
 
-                unpacker.Dispose();
+                                _dataHandlerMap.Remove(FunctionCode.QueryAccount);
+                            }
+                        }
+                        break;
+                    case FunctionCode.QueryAssetUnit:
+                        break;
+                    case FunctionCode.QueryPortfolio:
+                        break;
+                    case FunctionCode.QueryHolder:
+                        break;
+                    default:
+                        break;
+                }
             }
-            //bizMessage.Dispose();
 
-            return (int)ConnectionCode.Success;
+            return ret;
         }
 
         #region private method

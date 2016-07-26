@@ -1,5 +1,6 @@
 ﻿using BLL.SecurityInfo;
 using BLL.TradeCommand;
+using BLL.UFX;
 using BLL.UFX.impl;
 using Config;
 using Config.ParamConverter;
@@ -147,7 +148,7 @@ namespace BLL.Entrust
 
         private int EntrustBasketCallback(CallerToken token, DataParser dataParser)
         {
-            var errorResponse = UFXErrorHandler.Handle(dataParser);
+            var errorResponse = T2ErrorHandler.Handle(dataParser);
 
             List<UFXBasketEntrustResponse> responseItems = new List<UFXBasketEntrustResponse>();
             var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXBasketEntrustResponse>();
@@ -209,7 +210,7 @@ namespace BLL.Entrust
 
         private int WithdrawBasketCallback(CallerToken token, DataParser dataParser)
         {
-            var errorResponse = UFXErrorHandler.Handle(dataParser);
+            var errorResponse = T2ErrorHandler.Handle(dataParser);
 
             List<UFXBasketWithdrawResponse> responseItems = new List<UFXBasketWithdrawResponse>();
 
@@ -230,7 +231,7 @@ namespace BLL.Entrust
             int ret = -1;
             if (token.SubmitId > 0)
             {
-                if (UFXErrorHandler.Success(errorResponse.ErrorCode))
+                if (T2ErrorHandler.Success(errorResponse.ErrorCode))
                 {
                     foreach (var responseItem in responseItems)
                     {

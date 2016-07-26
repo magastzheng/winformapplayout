@@ -1,4 +1,5 @@
-﻿using BLL.UFX.impl;
+﻿using BLL.UFX;
+using BLL.UFX.impl;
 using log4net;
 using Model.Binding.BindingUtil;
 using Model.t2sdk;
@@ -79,7 +80,7 @@ namespace BLL.Entrust
         private int QueryDataHandler(CallerToken token, DataParser dataParser)
         {
             List<UFXQueryDealResponse> responseItems = new List<UFXQueryDealResponse>();
-            var errorResponse = UFXErrorHandler.Handle(dataParser);
+            var errorResponse = T2ErrorHandler.Handle(dataParser);
             var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXQueryDealResponse>();
             for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
             {

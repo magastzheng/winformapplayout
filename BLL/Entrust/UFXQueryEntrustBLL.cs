@@ -1,4 +1,5 @@
 ﻿using BLL.Product;
+using BLL.UFX;
 using BLL.UFX.impl;
 using log4net;
 using Model.Binding.BindingUtil;
@@ -119,7 +120,7 @@ namespace BLL.Entrust
         private int QueryDataHandler(CallerToken token, DataParser dataParser)
         {
             List<UFXQueryEntrustResponse> responseItems = new List<UFXQueryEntrustResponse>();
-            var errorResponse = UFXErrorHandler.Handle(dataParser);
+            var errorResponse = T2ErrorHandler.Handle(dataParser);
             if (errorResponse.ErrorCode == 0)
             {
                 var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXQueryEntrustResponse>();

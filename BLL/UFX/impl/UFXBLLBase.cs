@@ -14,77 +14,44 @@ namespace BLL.UFX.impl
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         protected T2SDKWrap _t2SDKWrap;
-        protected ReceivedBizMsg _receivedBizMsg;
+        protected DataHandlerCallback _dataHandler;
         protected Dictionary<FunctionCode, Queue<Callbacker>> _dataHandlerMap = new Dictionary<FunctionCode, Queue<Callbacker>>();
 
         public UFXBLLBase(T2SDKWrap t2SDKWrap)
         {
             _t2SDKWrap = t2SDKWrap;
-            _receivedBizMsg = OnReceivedBizMsg;
+            _dataHandler = HandlData;
         }
 
-        public int OnReceivedBizMsg(CT2BizMessage bizMessage)
+        public int HandlData(DataParser parser)
         {
-            int iRetCode = bizMessage.GetReturnCode();
-            int iErrorCode = bizMessage.GetErrorNo();
-            int iFunction = bizMessage.GetFunction();
-            if (iRetCode != 0)
+            FunctionCode functionCode = (FunctionCode)parser.FunctionCode;
+            if (_dataHandlerMap.ContainsKey(functionCode))
             {
-                string msg = string.Format("同步接收数据出错： {0}, {1}", iErrorCode, bizMessage.GetErrorInfo());
-                Console.WriteLine(msg);
-                logger.Error(msg);
-                return iRetCode;
-            }
-
-            CT2UnPacker unpacker = null;
-            unsafe
-            {
-                int iLen = 0;
-                void* lpdata = bizMessage.GetContent(&iLen);
-                unpacker = new CT2UnPacker(lpdata, (uint)iLen);
-            }
-
-            int ret = (int)ConnectionCode.ErrorConn;
-            if (unpacker != null)
-            {
-                DataParser parser = new DataParser();
-                parser.Parse(unpacker);
-                parser.Output();
-                FunctionCode functionCode = (FunctionCode)iFunction;
-                if (_dataHandlerMap.ContainsKey(functionCode))
+                var callbacker = GetDataHandler(functionCode);
+                var token = callbacker.Token;
+                var callback = callbacker.DataHandler;
+                if (callback != null)
                 {
-                    var callbacker = GetDataHandler(functionCode);
-                    var token = callbacker.Token;
-                    var callback = callbacker.DataHandler;
-                    if (callback != null)
-                    {
-                        callback(token, parser);
-                    }
+                    callback(token, parser);
+                }
 
-                    ret = (int)ConnectionCode.Success;
-                }
-                else
-                {
-                    ret = (int)ConnectionCode.ErrorNoCallback;
-                    string msg = string.Format("提交UFX请求时，未注册功能号[{0}]的回调方法！", iFunction);
-                    logger.Error(msg);
-                }
+                return 1;
             }
             else
             {
-                ret = (int)ConnectionCode.ErrorFailContent;
-                string msg = string.Format("提交UFX请求回调中，功能号[{0}]数据获取失败！", iFunction);
+                string msg = string.Format("提交UFX请求时，未注册功能号[{0}]的回调方法！", functionCode);
                 logger.Error(msg);
-            }
 
-            return ret;
+                return -1;
+            }
         }
 
         #region protect method
 
         protected void RegisterUFX(FunctionCode functionCode)
         {
-            _t2SDKWrap.Register(functionCode, _receivedBizMsg);
+            _t2SDKWrap.Register(functionCode, _dataHandler);
         }
 
         protected void UnRegisterUFX(FunctionCode functionCode)

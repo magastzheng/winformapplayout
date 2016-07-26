@@ -1,4 +1,5 @@
-﻿using BLL.UFX.impl;
+﻿using BLL.UFX;
+using BLL.UFX.impl;
 using DBAccess;
 using log4net;
 using Model.Binding.BindingUtil;
@@ -95,7 +96,7 @@ namespace BLL.Entrust
         {
             List<UFXBasketWithdrawResponse> responseItems = new List<UFXBasketWithdrawResponse>();
 
-            var errorResponse = UFXErrorHandler.Handle(dataParser);
+            var errorResponse = T2ErrorHandler.Handle(dataParser);
 
             if (dataParser.DataSets.Count > 1)
             {

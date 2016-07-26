@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL.Entrust
+namespace BLL.UFX
 {
-    public class UFXErrorHandler
+    public class T2ErrorHandler
     {
         public static UFXErrorResponse Handle(DataParser dataParser)
         {

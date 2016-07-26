@@ -188,38 +188,20 @@ namespace TradingSystem.View
             this.securityGridView.DataSource = _secuDataSource;
             this.cmdGridView.DataSource = _cmdDataSource;
 
-            LoadCommandComboBoxOption();
+            LoadTradeDirectionOption();
+            LoadFuturesContractOption();
 
             return true;
         }
 
-        private void LoadCommandComboBoxOption()
+        private void LoadTradeDirectionOption()
         {
             var tradeDirectionOption = ConfigManager.Instance.GetComboConfig().GetComboOption("tradedirection");
             TSDataGridViewHelper.SetDataBinding(this.cmdGridView, "tradedirection", tradeDirectionOption);
+        }
 
-            var templates = _templateBLL.GetTemplates();
-            if (templates != null && templates.Count > 0)
-            {
-                ComboOption tempOption = new ComboOption 
-                {
-                    Items = new List<ComboOptionItem>(),
-                };
-
-                foreach (var temp in templates)
-                {
-                    ComboOptionItem option = new ComboOptionItem 
-                    {
-                        Id = temp.TemplateId.ToString(),
-                        Name = string.Format("{0} {1}",temp.TemplateId, temp.TemplateName)
-                    };
-
-                    tempOption.Items.Add(option);
-                }
-
-                TSDataGridViewHelper.SetDataBinding(this.cmdGridView, "spottemplate", tempOption);
-            }
-
+        private void LoadFuturesContractOption()
+        {
             var futures = _fcdbdao.Get("");
             if (futures != null && futures.Count > 0)
             {
@@ -230,7 +212,7 @@ namespace TradingSystem.View
 
                 foreach (var future in futures)
                 {
-                    ComboOptionItem option = new ComboOptionItem 
+                    ComboOptionItem option = new ComboOptionItem
                     {
                         Id = future.Code,
                         Name = future.Code
@@ -243,6 +225,32 @@ namespace TradingSystem.View
             }
         }
 
+        private void LoadTemplateOption()
+        {
+            //binding the template
+            var templates = _templateBLL.GetTemplates();
+            if (templates != null && templates.Count > 0)
+            {
+                ComboOption tempOption = new ComboOption
+                {
+                    Items = new List<ComboOptionItem>(),
+                };
+
+                foreach (var temp in templates)
+                {
+                    ComboOptionItem option = new ComboOptionItem
+                    {
+                        Id = temp.TemplateId.ToString(),
+                        Name = string.Format("{0} {1}", temp.TemplateId, temp.TemplateName)
+                    };
+
+                    tempOption.Items.Add(option);
+                }
+
+                TSDataGridViewHelper.SetDataBinding(this.cmdGridView, "spottemplate", tempOption);
+            }
+        }
+
         #endregion
 
         #region load data
@@ -252,6 +260,8 @@ namespace TradingSystem.View
             _instDataSource.Clear();
             _secuDataSource.Clear();
             _cmdDataSource.Clear();
+
+            LoadTemplateOption();
 
             var tradeInstances = _tradeInstanceBLL.GetAllInstance();
             if (tradeInstances == null || tradeInstances.Count == 0)

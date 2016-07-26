@@ -1,12 +1,20 @@
-﻿using hundsun.t2sdk;
+﻿using BLL.UFX.impl;
+using hundsun.t2sdk;
 using log4net;
 using Model;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BLL.UFX
 {
     public delegate int ReceivedBizMsg(CT2BizMessage lpMsg);
+
+    public enum SendType
+    { 
+        Sync = 0,
+        Async = 1,
+    }
 
     public unsafe class T2SDKWrap : CT2CallbackInterface
     {
@@ -16,7 +24,7 @@ namespace BLL.UFX
         protected CT2Connection _conn = null;
         protected uint _timeOut = 10000;
         protected bool _isInit = false;
-        private Dictionary<FunctionCode, ReceivedBizMsg> _bizCallbackMap = new Dictionary<FunctionCode, ReceivedBizMsg>();
+        private Dictionary<FunctionCode, DataHandlerCallback> _dataHandlerMap = new Dictionary<FunctionCode, DataHandlerCallback>();
 
         public bool IsInit 
         { 
@@ -95,29 +103,29 @@ namespace BLL.UFX
             }
         }
 
-        public void Register(FunctionCode functionCode, ReceivedBizMsg receiver)
+        public void Register(FunctionCode functionCode, DataHandlerCallback receiver)
         {
-            if (!_bizCallbackMap.ContainsKey(functionCode))
+            if (!_dataHandlerMap.ContainsKey(functionCode))
             {
-                _bizCallbackMap[functionCode] = receiver;
+                _dataHandlerMap[functionCode] = receiver;
             }
             else
             {
-                _bizCallbackMap[functionCode] = receiver;
+                _dataHandlerMap[functionCode] = receiver;
             }
         }
 
         public void UnRegister(FunctionCode functionCode)
         {
-            if(!_bizCallbackMap.ContainsKey(functionCode))
+            if (!_dataHandlerMap.ContainsKey(functionCode))
             {
-                _bizCallbackMap.Remove(functionCode);
+                _dataHandlerMap.Remove(functionCode);
             }
         }
 
         public int SendAsync(CT2BizMessage message)
         {
-            int iRet = _conn.SendBizMsg(message, 1);
+            int iRet = _conn.SendBizMsg(message, (int)SendType.Async);
             if (iRet < 0)
             {
                 string msg = string.Format("一般交易业务异步发送数据失败！ 错误码：{0}, 错误消息：{1}", iRet, _conn.GetErrorMsg(iRet));
@@ -130,7 +138,7 @@ namespace BLL.UFX
 
         public int SendSync(CT2BizMessage message)
         {
-            int iRet = _conn.SendBizMsg(message, 0);
+            int iRet = _conn.SendBizMsg(message, (int)SendType.Sync);
             if (iRet < 0)
             {
                 string msg = string.Format("一般交易业务同步发送数据失败！ 错误码：{0}, 错误消息：{1}", iRet, _conn.GetErrorMsg(iRet));
@@ -150,17 +158,7 @@ namespace BLL.UFX
             int iFunction = bizMessage.GetFunction();
             if (Enum.IsDefined(typeof(FunctionCode), iFunction))
             {
-                FunctionCode functionCode = (FunctionCode)Enum.ToObject(typeof(FunctionCode), iFunction);
-                if (_bizCallbackMap.ContainsKey(functionCode) && _bizCallbackMap[functionCode] != null)
-                {
-                    retCode = _bizCallbackMap[functionCode](bizMessage);
-                }
-                else
-                {
-                    string msg = string.Format("一般交易业务异步接收数据回调函数找不到 - 功能号：{0}", iFunction);
-                    logger.Error(msg);
-                    return (int)ConnectionCode.ErrorNoCallback;
-                }
+                return HandleReceivedBizMsg(SendType.Sync, bizMessage);
             }
             else
             {
@@ -300,25 +298,7 @@ namespace BLL.UFX
             }
             else
             {
-                if (Enum.IsDefined(typeof(FunctionCode), iFunction))
-                {
-                    FunctionCode functionCode = (FunctionCode)Enum.ToObject(typeof(FunctionCode), iFunction);
-                    if (_bizCallbackMap.ContainsKey(functionCode) && _bizCallbackMap[functionCode] != null)
-                    {
-                        _bizCallbackMap[functionCode](lpMsg);
-                    }
-                    else
-                    {
-                        string msg = string.Format("异步接收数据回调函数找不到 - 功能号：{0}", iFunction);
-                        logger.Error(msg);
-                    }
-                }
-                else
-                {
-                    string msg = string.Format("为支持的功能号：{0}", iFunction);
-                    logger.Error(msg);
-                    //throw new NotSupportedException(msg);
-                }
+                HandleReceivedBizMsg(SendType.Async, lpMsg);
             }
         }
 
@@ -357,6 +337,83 @@ namespace BLL.UFX
             _config = null;
             _conn = null;
         }
+        #endregion
+
+        #region private
+
+        private int HandleReceivedBizMsg(SendType sendType, CT2BizMessage bizMessage)
+        {
+            int iRetCode = bizMessage.GetReturnCode();
+            int iErrorCode = bizMessage.GetErrorNo();
+            int iFunction = bizMessage.GetFunction();
+            if (iRetCode != 0)
+            {
+                string msg = string.Format("同步接收数据出错： {0}, {1}", iErrorCode, bizMessage.GetErrorInfo());
+                Console.WriteLine(msg);
+                logger.Error(msg);
+                return iRetCode;
+            }
+
+            CT2UnPacker unpacker = null;
+            unsafe
+            {
+                int iLen = 0;
+                void* lpdata = bizMessage.GetContent(&iLen);
+                unpacker = new CT2UnPacker(lpdata, (uint)iLen);
+            }
+
+            int ret = (int)ConnectionCode.ErrorConn;
+            if (unpacker == null)
+            {
+                ret = (int)ConnectionCode.ErrorFailContent;
+                string msg = string.Format("提交UFX请求回调中，功能号[{0}]数据获取失败！", iFunction);
+                logger.Error(msg);
+
+                return ret;
+            }
+
+            DataParser parser = new DataParser();
+            parser.FunctionCode = iFunction;
+            parser.Parse(unpacker);
+            unpacker.Dispose();
+            
+            //parser.Output();
+
+            FunctionCode functionCode = (FunctionCode)iFunction;
+            if (!_dataHandlerMap.ContainsKey(functionCode))
+            {
+                ret = (int)ConnectionCode.ErrorNoCallback;
+                string msg = string.Format("提交UFX请求时，未注册功能号[{0}]的回调方法！", iFunction);
+                logger.Error(msg);
+
+                return ret;
+            }
+
+            var dataHandler = _dataHandlerMap[functionCode];
+            if (dataHandler == null)
+            {
+                ret = (int)ConnectionCode.ErrorNoCallback;
+                string msg = string.Format("提交UFX请求时，未注册功能号[{0}]的回调方法！", iFunction);
+                logger.Error(msg);
+
+                return ret;
+            }
+
+            if (sendType == SendType.Sync)
+            {
+                dataHandler(parser);
+            }
+            else
+            {
+                Task task = new Task(() => dataHandler(parser));
+                task.Start();
+            }
+
+            ret = (int)ConnectionCode.Success;
+
+            return ret;
+        }
+
         #endregion
     }
 }

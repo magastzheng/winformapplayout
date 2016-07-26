@@ -85,7 +85,7 @@ namespace TradingSystem.Controller
             }
         }
 
-        private void ParseAccount(DataParser parser)
+        private int ParseAccount(DataParser parser)
         {
             for (int i = 1, count = parser.DataSets.Count; i < count; i++)
             {
@@ -103,9 +103,11 @@ namespace TradingSystem.Controller
             }
 
             _cdEvent.Signal();
+
+            return 1;
         }
 
-        private void ParseAssetUnit(DataParser parser)
+        private int ParseAssetUnit(DataParser parser)
         {
             for (int i = 1, count = parser.DataSets.Count; i < count; i++)
             {
@@ -124,9 +126,11 @@ namespace TradingSystem.Controller
             }
 
             _cdEvent.Signal();
+
+            return 1;
         }
 
-        private void ParsePortfolio(DataParser parser)
+        private int ParsePortfolio(DataParser parser)
         {
             for (int i = 1, count = parser.DataSets.Count; i < count; i++)
             {
@@ -149,9 +153,11 @@ namespace TradingSystem.Controller
             }
 
             _cdEvent.Signal();
+
+            return 1;
         }
 
-        private void ParseHolder(DataParser parser)
+        private int ParseHolder(DataParser parser)
         {
             for (int i = 1, count = parser.DataSets.Count; i < count; i++)
             {
@@ -171,6 +177,8 @@ namespace TradingSystem.Controller
             }
 
             _cdEvent.Signal();
+
+            return 1;
         }
     }
 }

@@ -15,6 +15,8 @@ namespace BLL.UFX.impl
             get { return _dataSets; }
         }
 
+        public int FunctionCode { get; set; } 
+
         public void Parse(CT2UnPacker lpUnPack)
         {
             for (int i = 0; i < lpUnPack.GetDatasetCount(); i++)
@@ -91,33 +93,6 @@ namespace BLL.UFX.impl
 
                 _dataSets.Add(dataSet);
             }
-
-            /*
-            while (lpUnPack.IsEOF() != 1)
-            {
-                for (int i = 0; i < lpUnPack.GetColCount(); i++)
-                {
-                    String colName = lpUnPack.GetColName(i);
-                    sbyte colType = lpUnPack.GetColType(i);
-                    if (!colType.Equals('R'))
-                    {
-                        String colValue = lpUnPack.GetStrByIndex(i);
-                        Console.WriteLine("{0}：{1}", colName, colValue);
-                    }
-                    else
-                    {
-                        int colLength = 0;
-                        unsafe
-                        {
-                            void* colValue = (char*)lpUnPack.GetRawByIndex(i, &colLength);
-                            string str = String.Format("{0}:[{1}]({2})", colName, Marshal.PtrToStringAuto(new IntPtr(colValue)), colLength);
-                        }
-                    }
-                }
-                lpUnPack.Next();
-            }
-            */
-
         }
 
         public void Output()

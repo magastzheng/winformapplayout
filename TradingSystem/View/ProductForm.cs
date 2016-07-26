@@ -82,7 +82,7 @@ namespace TradingSystem.View
             return true;
         }
 
-        private void ParseAccount(DataParser parser)
+        private int ParseAccount(DataParser parser)
         {
             for (int i = 1, count = parser.DataSets.Count; i < count; i++)
             {
@@ -100,6 +100,8 @@ namespace TradingSystem.View
             }
 
             _waitEvent.Set();
+
+            return 1;
         }
     }
 }

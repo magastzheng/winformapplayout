@@ -21,8 +21,8 @@ namespace BLL.UFX.impl
             _t2SDKWrap = t2SDKWrap;
             _receivedBizMsg = OnReceivedBizMsg;
 
-            _t2SDKWrap.Register(FunctionCode.QueryTradingInstance1, _receivedBizMsg);
-            _t2SDKWrap.Register(FunctionCode.QueryMonitorItem, _receivedBizMsg);
+            //_t2SDKWrap.Register(FunctionCode.QueryTradingInstance1, _receivedBizMsg);
+            //_t2SDKWrap.Register(FunctionCode.QueryMonitorItem, _receivedBizMsg);
             //_t2SDKWrap.Register(FunctionCode.EntrustInstanceBasket, _receivedBizMsg);
             //_t2SDKWrap.Register(FunctionCode.QueryEntrustInstance, _receivedBizMsg);
         }

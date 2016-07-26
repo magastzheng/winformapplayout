@@ -93,7 +93,7 @@ namespace TradingSystem.View
             return true;
         }
 
-        private void ParseData(DataParser parser)
+        private int ParseData(DataParser parser)
         {
             for (int i = 1, count = parser.DataSets.Count; i < count; i++)
             {
@@ -116,6 +116,8 @@ namespace TradingSystem.View
             }
 
             _waitEvent.Set();
+
+            return 1;
         }
     }
 }

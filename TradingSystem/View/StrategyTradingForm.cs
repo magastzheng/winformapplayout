@@ -20,6 +20,7 @@ using Model.EnumType;
 using Model.Binding.BindingUtil;
 using BLL.UFX.impl;
 using BLL.TradeCommand;
+using BLL.UFX;
 
 namespace TradingSystem.View
 {
@@ -191,7 +192,7 @@ namespace TradingSystem.View
 
         private int CancelOneCallback(CallerToken token, object data, UFXErrorResponse errorResponse)
         {
-            if (UFXErrorHandler.Success(errorResponse.ErrorCode))
+            if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
                 return 1;
             }

@@ -1,5 +1,6 @@
 ﻿using BLL.SecurityInfo;
 using BLL.TradeCommand;
+using BLL.UFX;
 using BLL.UFX.impl;
 using Config;
 using Config.ParamConverter;
@@ -107,7 +108,7 @@ namespace BLL.Entrust
 
         private int EntrustDataHandler(CallerToken token, DataParser dataParser)
         {
-            var errorResponse = UFXErrorHandler.Handle(dataParser);
+            var errorResponse = T2ErrorHandler.Handle(dataParser);
 
             List<UFXBasketEntrustResponse> responseItems = new List<UFXBasketEntrustResponse>();
             var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXBasketEntrustResponse>();
