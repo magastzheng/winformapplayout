@@ -74,6 +74,7 @@
     <Compile Include="Quote\EnumQuoteHelper.cs" />
     <Compile Include="Quote\MarketData.cs" />
     <Compile Include="SecurityInfo\SecurityItem.cs" />
+    <Compile Include="SecurityInfo\SecurityItemHelper.cs" />
     <Compile Include="strategy\AccountItem.cs" />
     <Compile Include="strategy\AssetItem.cs" />
     <Compile Include="strategy\HolderItem.cs" />

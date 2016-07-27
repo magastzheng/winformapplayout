@@ -31,7 +31,7 @@ namespace TradingSystem.TradeUtil
             secuCode = secuCode.Trim();
             if (secuCode.StartsWith("IF") || secuCode.StartsWith("IH") || secuCode.StartsWith("IC"))
             {
-                return "CFFEX";
+                return Exchange.CFFEX;
             }
             else
             {
@@ -40,11 +40,11 @@ namespace TradingSystem.TradeUtil
                 {
                     if (temp > 0 && temp <= 399999)
                     {
-                        return "SZSE";
+                        return Exchange.SZSE;
                     }
                     else if (temp >= 60000 && temp <= 699999)
                     {
-                        return "SSE";
+                        return Exchange.SHSE;
                     }
                 }
             }

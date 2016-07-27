@@ -3,11 +3,6 @@ using Model.EnumType;
 using Model.EnumType.EnumTypeConverter;
 using Model.Quote;
 using Model.SecurityInfo;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Model.UI
 {
@@ -25,10 +20,11 @@ namespace Model.UI
         [BindingAttribute("secuname")]
         public string SecuName { get; set; }
 
-        public string ExchangeCode { get; set; }
-
         [BindingAttribute("exchange")]
-        public string Exchange { get { return ExchangeCode; } }
+        public string Exchange
+        {
+            get { return SecurityItemHelper.GetExchange(ExchangeCode); }
+        }
 
         [BindingAttribute("longshort")]
         public string LongShort
@@ -86,6 +82,8 @@ namespace Model.UI
 
         [BindingAttribute("lastprice")]
         public double LastPrice { get; set; }
+
+        public string ExchangeCode { get; set; }
 
         public SecurityType SecuType { get; set; }
 
