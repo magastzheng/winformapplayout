@@ -60,5 +60,29 @@ namespace Model.Quote
 
             return flag;
         }
+
+        public static string GetLimitUpDownFlag(LimitUpDownFlag limitUpDownFlag)
+        {
+            string limitUpDown = string.Empty;
+            switch (limitUpDownFlag)
+            {
+                case LimitUpDownFlag.Suspend:
+                    limitUpDown = "停牌";
+                    break;
+                case LimitUpDownFlag.Normal:
+                    limitUpDown = "正常";
+                    break;
+                case LimitUpDownFlag.LimitUp:
+                    limitUpDown = "涨停";
+                    break;
+                case LimitUpDownFlag.LimitDown:
+                    limitUpDown = "跌停";
+                    break;
+                default:
+                    break;
+            }
+
+            return limitUpDown;
+        }
     }
 }

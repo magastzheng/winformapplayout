@@ -1,6 +1,7 @@
 ﻿using Model.Binding;
 using Model.EnumType;
 using Model.EnumType.EnumTypeConverter;
+using Model.Quote;
 using Model.SecurityInfo;
 using System;
 using System.Collections.Generic;
@@ -59,8 +60,11 @@ namespace Model.UI
         [BindingAttribute("commandmoney")]
         public double CommandMoney { get; set; }
 
-        [BindingAttribute("limitmove")]
-        public int LimitMove { get; set; }
+        [BindingAttribute("limitupdown")]
+        public string LimitUpOrDown
+        {
+            get { return EnumQuoteHelper.GetLimitUpDownFlag(ELimitUpDownFlag); }
+        }
 
         [BindingAttribute("holdingweight")]
         public double HoldingWeight { get; set; }
@@ -88,5 +92,7 @@ namespace Model.UI
         public PositionType PositionType { get; set; }
 
         public EntrustDirection EDirection { get; set; }
+
+        public LimitUpDownFlag ELimitUpDownFlag { get; set; }
     }
 }

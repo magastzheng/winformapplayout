@@ -1,4 +1,5 @@
-﻿using Model.EnumType;
+﻿using Calculation;
+using Model.EnumType;
 using Model.Quote;
 
 namespace TradingSystem.TradeUtil
@@ -62,6 +63,28 @@ namespace TradingSystem.TradeUtil
             }
 
             return price;
+        }
+
+        public static LimitUpDownFlag GetLimitUpDownFlag(double current, double downPrice, double upPrice)
+        {
+            if (FloatUtil.IsZero(current))
+            {
+                return LimitUpDownFlag.Suspend;
+            }
+
+            var flag = LimitUpDownFlag.Normal;
+            int retDown = FloatUtil.Compare(current, downPrice);
+            int retUp = FloatUtil.Compare(current, upPrice);
+            if (retDown == 0)
+            {
+                flag = LimitUpDownFlag.LimitDown;
+            }
+            else if (retUp == 0)
+            {
+                flag = LimitUpDownFlag.LimitUp;
+            }
+
+            return flag;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Model.Binding;
 using Model.EnumType;
 using Model.EnumType.EnumTypeConverter;
+using Model.Quote;
 using Model.SecurityInfo;
 
 namespace Model.UI
@@ -55,14 +56,24 @@ namespace Model.UI
         public int SellAmount { get; set; }
 
         [BindingAttribute("suspensionflag")]
-        public int SuspensionFlag { get; set; }
+        public string SuspensionFlag
+        {
+            get { return EnumQuoteHelper.GetSuspendFlag(ESuspendFlag); }
+        }
 
         [BindingAttribute("replacestatus")]
         public int ReplaceStatus { get; set; }
 
-        [BindingAttribute("limitmove")]
-        public int LimitMove { get; set; }
+        [BindingAttribute("limitupdown")]
+        public string LimitUpOrDown
+        {
+            get { return EnumQuoteHelper.GetLimitUpDownFlag(ELimitUpDownFlag); }
+        }
 
         public SecurityType SecuType { get; set; }
+
+        public SuspendFlag ESuspendFlag { get; set; }
+
+        public LimitUpDownFlag ELimitUpDownFlag { get; set; }
     }
 }

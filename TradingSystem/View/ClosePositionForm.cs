@@ -16,6 +16,8 @@ using BLL.TradeCommand;
 using Model.config;
 using Model.EnumType;
 using Model.Binding.BindingUtil;
+using Quote;
+using TradingSystem.TradeUtil;
 
 namespace TradingSystem.View
 {
@@ -307,6 +309,9 @@ namespace TradingSystem.View
                 CalculateInstance(cmdItem);
             }
 
+            //询价
+            QueryQuote();
+
             this.cmdGridView.Invalidate();
             this.securityGridView.Invalidate();
         }
@@ -373,6 +378,32 @@ namespace TradingSystem.View
             else
             {
                 dialog.Dispose();
+            }
+        }
+
+        private void QueryQuote()
+        {
+            var uniqueSecuItems = _secuDataSource.GroupBy(p => p.SecuCode).Select(p => p.First());
+
+            List<SecurityItem> secuList = new List<SecurityItem>();
+            foreach (var secuItem in uniqueSecuItems)
+            {
+                var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
+                if (findItem != null)
+                {
+                    secuList.Add(findItem);
+                }
+            }
+
+            QuoteCenter.Instance.Query(secuList);
+            foreach (var secuItem in _secuDataSource)
+            {
+                var targetItem = secuList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
+                var marketData = QuoteCenter.Instance.GetMarketData(targetItem);
+                secuItem.LastPrice = marketData.CurrentPrice;
+                secuItem.CommandMoney = secuItem.LastPrice * secuItem.EntrustAmount;
+                //secuItem.ESuspendFlag = marketData.SuspendFlag;
+                secuItem.ELimitUpDownFlag = QuotePriceHelper.GetLimitUpDownFlag(marketData.CurrentPrice, marketData.LowLimitPrice, marketData.HighLimitPrice);
             }
         }
 

@@ -14,6 +14,7 @@ using BLL.SecurityInfo;
 using BLL.TradeCommand;
 using Model.EnumType;
 using Model.Binding.BindingUtil;
+using TradingSystem.TradeUtil;
 
 namespace TradingSystem.View
 {
@@ -254,118 +255,127 @@ namespace TradingSystem.View
             {
                 case "Refresh":
                     {
-                        List<SecurityItem> secuList = new List<SecurityItem>();
-                        foreach (var secuItem in _securityDataSource)
-                        {
-                            var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
-                            if (findItem != null)
-                            {
-                                var addedItem = secuList.Find(p => p.SecuCode.Equals(findItem.SecuCode) && p.SecuType == findItem.SecuType);
-                                if (addedItem == null)
-                                {
-                                    secuList.Add(findItem);
-                                }
-                            }
-                        }
-                        
-                        QuoteCenter.Instance.Query(secuList);
-                        foreach (var secuItem in _securityDataSource)
-                        {
-                            var targetItem = secuList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
-                            var marketData = QuoteCenter.Instance.GetMarketData(targetItem);
-                            secuItem.LastPrice = marketData.CurrentPrice;
-                            secuItem.CommandMoney = secuItem.LastPrice * secuItem.EntrustAmount;
-                            secuItem.BuyAmount = marketData.BuyAmount;
-                            secuItem.SellAmount = marketData.SellAmount;
-                        }
+                        QueryQuote();
 
                         this.securityGridView.Invalidate();    
                     }
                     break;
                 case "GiveOrder":
                     {
-                        List<int> selectedList = TSDataGridViewHelper.GetSelectRowIndex(this.monitorGridView);
-                        foreach (var index in selectedList)
-                        {
-                            var openItem = _monitorDataSource[index];
-                            var newOpenItem = GetSubmitItem(openItem);
-                            if (newOpenItem == null)
-                            { 
-                                string msg = string.Format("对监控单元[{0}]下达指令失败", openItem.MonitorName);
-                                MessageBox.Show(this, msg, "失败", MessageBoxButtons.OK);
-                                continue;
-                            }
-
-                            int instanceId = -1;
-                            string instanceCode = newOpenItem.InstanceCode;
-                            var instance = _tradeInstanceBLL.GetInstance(instanceCode);
-                            if (instance != null && !string.IsNullOrEmpty(instance.InstanceCode) && instance.InstanceCode.Equals(instanceCode))
-                            {
-                                instanceId = instance.InstanceId;
-                                instance.OperationCopies += newOpenItem.Copies;
-                                var secuItems = _securityDataSource.Where(p => p.MonitorId == newOpenItem.MonitorId).ToList();
-                                _tradeInstanceBLL.Update(instance, newOpenItem, secuItems);
-                            }
-                            else
-                            {
-                                TradingInstance tradeInstance = new TradingInstance
-                                {
-                                    InstanceCode = instanceCode,
-                                    MonitorUnitId = newOpenItem.MonitorId,
-                                    StockDirection = EntrustDirection.BuySpot,
-                                    FuturesContract = newOpenItem.FuturesContract,
-                                    FuturesDirection = EntrustDirection.SellOpen,
-                                    OperationCopies = newOpenItem.Copies,
-                                    StockPriceType = StockPriceType.NoLimit,
-                                    FuturesPriceType = FuturesPriceType.NoLimit,
-                                    Status = 1,
-                                    Owner = "111111"
-                                };
-
-                                var secuItems = _securityDataSource.Where(p => p.MonitorId == newOpenItem.MonitorId).ToList();
-
-                                instanceId = _tradeInstanceBLL.Create(tradeInstance, newOpenItem, secuItems);
-                            }
-
-                            if (instanceId > 0)
-                            {
-                                //success! Will send generate TradingCommand
-                                TradingCommandItem cmdItem = new TradingCommandItem 
-                                {
-                                    InstanceId = instanceId,
-                                    ECommandType = CommandType.Arbitrage,
-                                    EExecuteType = ExecuteType.OpenPosition,
-                                    CommandNum = newOpenItem.Copies,
-                                    EStockDirection = EntrustDirection.BuySpot,
-                                    EFuturesDirection = EntrustDirection.SellOpen,
-                                    EEntrustStatus = EntrustStatus.NoExecuted,
-                                    EDealStatus = DealStatus.NoDeal,
-                                    ModifiedTimes = 1
-                                };
-
-                                var cmdSecuItems = GetSelectCommandSecurities(newOpenItem, -1);
-
-                                int ret = _tradeCommandBLL.Submit(cmdItem, cmdSecuItems);
-
-                                if (ret > 0)
-                                {
-                                    //Success
-                                }
-                                else
-                                { 
-                                    //Some item fail
-                                }
-                            }
-                            else
-                            {
-                                //TODO: error message
-                            }
-                        }
-
+                        GiveOrder();
                     }
                     break;
                 default:
                     break;
+            }
+        }
+
+        private void QueryQuote()
+        {
+            var uniqueSecuItems = _securityDataSource.GroupBy(p => p.SecuCode).Select(p => p.First());
+            List<SecurityItem> secuList = new List<SecurityItem>();
+            foreach (var secuItem in uniqueSecuItems)
+            {
+                var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
+                if (findItem != null)
+                {
+                    secuList.Add(findItem);
+                }
+            }
+
+            QuoteCenter.Instance.Query(secuList);
+            foreach (var secuItem in _securityDataSource)
+            {
+                var targetItem = secuList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
+                var marketData = QuoteCenter.Instance.GetMarketData(targetItem);
+                secuItem.LastPrice = marketData.CurrentPrice;
+                secuItem.CommandMoney = secuItem.LastPrice * secuItem.EntrustAmount;
+                secuItem.BuyAmount = marketData.BuyAmount;
+                secuItem.SellAmount = marketData.SellAmount;
+                secuItem.ESuspendFlag = marketData.SuspendFlag;
+                secuItem.ELimitUpDownFlag = QuotePriceHelper.GetLimitUpDownFlag(marketData.CurrentPrice, marketData.LowLimitPrice, marketData.HighLimitPrice);
+            }
+        }
+
+        private void GiveOrder()
+        {
+            List<int> selectedList = TSDataGridViewHelper.GetSelectRowIndex(this.monitorGridView);
+            foreach (var index in selectedList)
+            {
+                var openItem = _monitorDataSource[index];
+                var newOpenItem = GetSubmitItem(openItem);
+                if (newOpenItem == null)
+                {
+                    string msg = string.Format("对监控单元[{0}]下达指令失败", openItem.MonitorName);
+                    MessageBox.Show(this, msg, "失败", MessageBoxButtons.OK);
+                    continue;
+                }
+
+                int instanceId = -1;
+                string instanceCode = newOpenItem.InstanceCode;
+                var instance = _tradeInstanceBLL.GetInstance(instanceCode);
+                if (instance != null && !string.IsNullOrEmpty(instance.InstanceCode) && instance.InstanceCode.Equals(instanceCode))
+                {
+                    instanceId = instance.InstanceId;
+                    instance.OperationCopies += newOpenItem.Copies;
+                    var secuItems = _securityDataSource.Where(p => p.MonitorId == newOpenItem.MonitorId).ToList();
+                    _tradeInstanceBLL.Update(instance, newOpenItem, secuItems);
+                }
+                else
+                {
+                    TradingInstance tradeInstance = new TradingInstance
+                    {
+                        InstanceCode = instanceCode,
+                        MonitorUnitId = newOpenItem.MonitorId,
+                        StockDirection = EntrustDirection.BuySpot,
+                        FuturesContract = newOpenItem.FuturesContract,
+                        FuturesDirection = EntrustDirection.SellOpen,
+                        OperationCopies = newOpenItem.Copies,
+                        StockPriceType = StockPriceType.NoLimit,
+                        FuturesPriceType = FuturesPriceType.NoLimit,
+                        Status = 1,
+                    };
+
+                    tradeInstance.Owner = LoginManager.Instance.LoginUser.Operator;
+
+                    var secuItems = _securityDataSource.Where(p => p.MonitorId == newOpenItem.MonitorId).ToList();
+
+                    instanceId = _tradeInstanceBLL.Create(tradeInstance, newOpenItem, secuItems);
+                }
+
+                if (instanceId > 0)
+                {
+                    //success! Will send generate TradingCommand
+                    TradingCommandItem cmdItem = new TradingCommandItem
+                    {
+                        InstanceId = instanceId,
+                        ECommandType = CommandType.Arbitrage,
+                        EExecuteType = ExecuteType.OpenPosition,
+                        CommandNum = newOpenItem.Copies,
+                        EStockDirection = EntrustDirection.BuySpot,
+                        EFuturesDirection = EntrustDirection.SellOpen,
+                        EEntrustStatus = EntrustStatus.NoExecuted,
+                        EDealStatus = DealStatus.NoDeal,
+                        ModifiedTimes = 1
+                    };
+
+                    var cmdSecuItems = GetSelectCommandSecurities(newOpenItem, -1);
+
+                    int ret = _tradeCommandBLL.Submit(cmdItem, cmdSecuItems);
+
+                    if (ret > 0)
+                    {
+                        //Success
+                    }
+                    else
+                    {
+                        //Some item fail
+                    }
+                }
+                else
+                {
+                    //TODO: error message
+                }
             }
         }
 

@@ -410,7 +410,7 @@ namespace TradingSystem.View
                 TargetCopies = 5,
                 LimitUpPrice = 15.0,
                 LimitDownPrice = 10.5,
-                LimitUpOrDown = "Up"
+                //LimitUpOrDown = "Up"
             };
             CommandSecurityItem item2 = new CommandSecurityItem
             {
@@ -434,7 +434,7 @@ namespace TradingSystem.View
                 TargetCopies = 5,
                 LimitUpPrice = 15.0,
                 LimitDownPrice = 10.5,
-                LimitUpOrDown = "Up"
+                //LimitUpOrDown = "Up"
             };
 
             csItems.Add(item1);
@@ -472,7 +472,7 @@ namespace TradingSystem.View
                 row.Cells["cs_commandcopies"].Value = dataItem.CommandCopies;
                 row.Cells["cs_limitupprice"].Value = dataItem.LimitUpPrice;
                 row.Cells["cs_limitdownprice"].Value = dataItem.LimitDownPrice;
-                row.Cells["cs_limitupdown"].Value = dataItem.LimitUpOrDown;
+                //row.Cells["cs_limitupdown"].Value = dataItem.LimitUpOrDown;
 
                 SetSelectionRowBackground(this.dataGridViewCmdSecurity, rowIndex, isSelected);
             }
@@ -508,7 +508,7 @@ namespace TradingSystem.View
                     item.CommandCopies = (int)row.Cells["cs_commandcopies"].Value;
                     item.LimitUpPrice = (double)row.Cells["cs_limitupprice"].Value;
                     item.LimitDownPrice = (double)row.Cells["cs_limitdownprice"].Value;
-                    item.LimitUpOrDown = (string)row.Cells["cs_limitupdown"].Value;
+                    //item.LimitUpOrDown = (string)row.Cells["cs_limitupdown"].Value;
 
                     selectionItems.Add(item);
                 }

@@ -14,6 +14,13 @@ namespace Model.SecurityInfo
         Futures = 3,
     }
 
+    public struct Exchange
+    {
+        public const string SHSE = "SSE";
+        public const string SZSE = "SZSE";
+        public const string CFFEX = "CFFEX";
+    }
+
     public class SecurityItem
     {
         public string SecuCode { get; set; }

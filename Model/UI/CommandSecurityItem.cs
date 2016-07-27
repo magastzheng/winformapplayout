@@ -104,7 +104,10 @@ namespace Model.UI
 
         //涨跌停
         [BindingAttribute("limitupdown")]
-        public string LimitUpOrDown { get; set; }
+        public string LimitUpOrDownget
+        { 
+            get { return EnumQuoteHelper.GetLimitUpDownFlag(ELimitUpDownFlag); } 
+        }
 
         public EntrustDirection EDirection { get; set; }
 
@@ -117,5 +120,7 @@ namespace Model.UI
         public EntrustStatus EntrustStatus { get; set; }
 
         public SuspendFlag ESuspendFlag { get; set; }
+
+        public LimitUpDownFlag ELimitUpDownFlag { get; set; }
     }
 }

@@ -87,27 +87,27 @@ namespace Model.t2sdk
     }
 
     //交易实例类型
-    public class TradingInstanceType
+    public struct TradingInstanceType
     {
         //股指期货期现套利
-        public static string StockIndexFutures = "A";
+        public const string StockIndexFutures = "A";
         //股指期货跨期套利
-        public static string CrossPeriodArbitrageOfStockIndexFutures = "B";
+        public const string CrossPeriodArbitrageOfStockIndexFutures = "B";
 
         //EFT套利
-        public static string EFTArbitrage = "C";
+        public const string EFTArbitrage = "C";
 
         //国债期货期现套利
-        public static string TreasuryFuturesArbitrage = "D";
+        public const string TreasuryFuturesArbitrage = "D";
 
         //国债期货跨期套利
-        public static string CrossPeriodArbitrageOfTreasuryBondFutures = "E";
+        public const string CrossPeriodArbitrageOfTreasuryBondFutures = "E";
 
         //个股期权套利
-        public static string StockOptionArbitrage = "F";
+        public const string StockOptionArbitrage = "F";
 
         //自定义
-        public static string Custom = "Z";
+        public const string Custom = "Z";
     }
 
     //消息推送类型

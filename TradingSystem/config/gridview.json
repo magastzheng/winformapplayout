@@ -1996,7 +1996,7 @@ readonly:
 		"text": "停牌标记",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 3,
 		"visible": 1,
 		"readonly": 1
 		},{
@@ -2008,11 +2008,11 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "limitmove",
+		"name": "limitupdown",
 		"text": "涨跌停",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 3,
 		"visible": 1,
 		"readonly": 1
 		},{
@@ -2218,11 +2218,11 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "limitmove",
+		"name": "limitupdown",
 		"text": "涨跌停",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 3,
 		"visible": 1,
 		"readonly": 1
 		},{

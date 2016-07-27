@@ -58,6 +58,14 @@ namespace Model.Quote
 
     }
 
+    public enum LimitUpDownFlag
+    { 
+        Suspend = -1,
+        Normal = 0,
+        LimitUp = 1,
+        LimitDown = 2,
+    }
+
     public class MarketData
     {
         public string InstrumentID;
