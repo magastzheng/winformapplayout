@@ -82,6 +82,7 @@
     <Compile Include="strategy\TradingInstance.cs" />
     <Compile Include="t2sdk\UFXEntrust.cs" />
     <Compile Include="t2sdk\MarketCode.cs" />
+    <Compile Include="t2sdk\UFXHolding.cs" />
     <Compile Include="t2sdk\UFXQuery.cs" />
     <Compile Include="t2sdk\UFXSubscriber.cs" />
     <Compile Include="TradingCommand\TradingCommandItem.cs" />

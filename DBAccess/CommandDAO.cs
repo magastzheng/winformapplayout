@@ -81,7 +81,7 @@ namespace DBAccess
                         _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, secuItem.CommandId);
                         _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, secuItem.SecuCode);
                         _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, (int)secuItem.SecuType);
-                        _dbHelper.AddInParameter(dbCommand, "@WeightAmount", System.Data.DbType.Int32, secuItem.WeightAmount);
+                        //_dbHelper.AddInParameter(dbCommand, "@WeightAmount", System.Data.DbType.Int32, secuItem.WeightAmount);
                         _dbHelper.AddInParameter(dbCommand, "@CommandAmount", System.Data.DbType.Int32, secuItem.CommandAmount);
                         _dbHelper.AddInParameter(dbCommand, "@CommandDirection", System.Data.DbType.Int32, (int)secuItem.EDirection);
                         _dbHelper.AddInParameter(dbCommand, "@CommandPrice", System.Data.DbType.Double, secuItem.CommandPrice);

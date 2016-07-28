@@ -100,11 +100,11 @@ namespace BLL.TradeCommand
                 //    secuItem.CommandAmount = availItem.AvailableAmount;
                 //}
 
-                var tempStockItem = tempStockItems.Find(p => p.SecuCode.Equals(secuItem.SecuCode));
-                if (tempStockItem != null)
-                {
-                    secuItem.WeightAmount = tempStockItem.Amount;
-                }
+                //var tempStockItem = tempStockItems.Find(p => p.SecuCode.Equals(secuItem.SecuCode));
+                //if (tempStockItem != null)
+                //{
+                //    secuItem.WeightAmount = tempStockItem.Amount;
+                //}
 
                 cmdSecuItems.Add(secuItem);
             }
@@ -158,11 +158,11 @@ namespace BLL.TradeCommand
                     EntrustStatus = EntrustStatus.NoExecuted
                 };
 
-                var tempStockItem = tempStockItems.Find(p => p.SecuCode.Equals(secuItem.SecuCode));
-                if (tempStockItem != null)
-                {
-                    secuItem.WeightAmount = tempStockItem.Amount;
-                }
+                //var tempStockItem = tempStockItems.Find(p => p.SecuCode.Equals(secuItem.SecuCode));
+                //if (tempStockItem != null)
+                //{
+                //    secuItem.WeightAmount = tempStockItem.Amount;
+                //}
 
                 cmdSecuItems.Add(secuItem);
             }

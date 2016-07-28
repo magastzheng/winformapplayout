@@ -18,6 +18,8 @@ using Model.EnumType;
 using Model.Binding.BindingUtil;
 using Quote;
 using TradingSystem.TradeUtil;
+using BLL.Entrust;
+using System.Diagnostics;
 
 namespace TradingSystem.View
 {
@@ -287,9 +289,19 @@ namespace TradingSystem.View
                 _instDataSource.Add(closeItem);
             }
 
+            LoadHolding();
+
             return true;
         }
 
+        private void LoadHolding()
+        {
+            //UFXQueryHoldingBLL holdingBLL = new UFXQueryHoldingBLL();
+            UFXQueryMultipleHoldingBLL holdingBLL = new UFXQueryMultipleHoldingBLL();
+            holdingBLL.Query();
+
+            Debug.WriteLine("Only test for the holding!");
+        }
         #endregion
 
         #region Button Click Event

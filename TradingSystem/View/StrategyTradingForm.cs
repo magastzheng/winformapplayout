@@ -41,6 +41,7 @@ namespace TradingSystem.View
 
         private EntrustBLL _entrustBLL = new EntrustBLL();
         private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
+        private TradeCommandSecurityBLL _tradeCommandSecuBLL = new TradeCommandSecurityBLL();
 
         private SortableBindingList<TradingCommandItem> _cmdDataSource = new SortableBindingList<TradingCommandItem>(new List<TradingCommandItem>());
         private SortableBindingList<EntrustFlowItem> _efDataSource = new SortableBindingList<EntrustFlowItem>(new List<EntrustFlowItem>());
@@ -175,14 +176,15 @@ namespace TradingSystem.View
             var secuItems = _secuDataSource.Where(p => p.CommandId == cmdItem.CommandId);
             if (secuItems != null && secuItems.Count() > 0)
             {
-
+                int weightAmount = 0;
                 foreach (var secuItem in secuItems)
                 {
+                    weightAmount = secuItem.CommandAmount / cmdItem.CommandNum;
                     secuItem.Selection = true;
                     secuItem.CommandCopies = cmdItem.CommandNum;
                     secuItem.TargetCopies = cmdItem.TargetNum;
-                    secuItem.TargetAmount = secuItem.TargetCopies * secuItem.WeightAmount;
-                    secuItem.WaitAmount = secuItem.TargetCopies * secuItem.WeightAmount;
+                    secuItem.TargetAmount = secuItem.TargetCopies * weightAmount;
+                    secuItem.WaitAmount = secuItem.TargetCopies * weightAmount;
                     secuItem.EPriceType = PriceType.None;
                     secuItem.EntrustPrice = 0.0f;
                     secuItem.ThisEntrustAmount = 0;
@@ -334,54 +336,23 @@ namespace TradingSystem.View
             var secuItems = _secuDataSource.Where(p => p.CommandId == cmdItem.CommandId);
             if (secuItems == null || secuItems.Count() == 0)
             {
-                secuItems = _tradecmdsecudao.Get(cmdItem.CommandId);
-                if (secuItems != null)
-                {
-                    foreach (var secuItem in secuItems)
-                    {
-                        secuItem.Selection = true;
-                        secuItem.CommandCopies = cmdItem.CommandNum;
-                        secuItem.TargetCopies = cmdItem.TargetNum;
-                        secuItem.TargetAmount = secuItem.TargetCopies * secuItem.WeightAmount;
-                        secuItem.FundCode = cmdItem.FundCode;
-                        secuItem.PortfolioName = cmdItem.PortfolioName;
+                secuItems = _tradeCommandSecuBLL.GetCommandSecurityItems(cmdItem);
+               
+                secuItems.Where(p => p.EDirection == EntrustDirection.BuySpot)
+                    .ToList()
+                    .ForEach(o => o.EPriceType = spotBuyPrice);
+                secuItems.Where(p => p.EDirection == EntrustDirection.SellSpot)
+                    .ToList()
+                    .ForEach(o => o.EPriceType = spotSellPrice);
+                secuItems.Where(p => p.EDirection == EntrustDirection.SellOpen)
+                    .ToList()
+                    .ForEach(o => o.EPriceType = futuSellPrice);
+                secuItems.Where(p => p.EDirection == EntrustDirection.BuyClose)
+                    .ToList()
+                    .ForEach(o => o.EPriceType = futuBuyPrice);
 
-                        var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode);
-                        if (findItem != null)
-                        {
-                            secuItem.SecuName = findItem.SecuName;
-                        }
-
-                        switch (secuItem.EDirection)
-                        {
-                            case EntrustDirection.BuySpot:
-                                {
-                                    secuItem.EPriceType = spotBuyPrice;
-                                }
-                                break;
-                            case EntrustDirection.SellSpot:
-                                {
-                                    secuItem.EPriceType = spotSellPrice;
-                                }
-                                break;
-                            case EntrustDirection.SellOpen:
-                                {
-                                    secuItem.EPriceType = futuSellPrice;
-                                }
-                                break;
-                            case EntrustDirection.BuyClose:
-                                {
-                                    secuItem.EPriceType = futuBuyPrice;
-                                }
-                                break;
-                            default:
-                                break;
-                        }
-
-
-                        _secuDataSource.Add(secuItem);
-                    }
-                }
+                secuItems.ToList()
+                    .ForEach(p => _secuDataSource.Add(p));
             }
 
             //Add into buy/sell grid view
@@ -922,17 +893,20 @@ namespace TradingSystem.View
             }
 
             var secuItems = _secuDataSource.Where(p => p.CommandId == eiItem.CommandNo).ToList();
+            int weightAmount = 0;
             foreach (var secuItem in secuItems)
             {
+                weightAmount = secuItem.CommandAmount / selCmdItem.CommandNum;
+
                 secuItem.TargetCopies = targetNum;
                 int targetAmount = 0;
                 int thisEntrustAmount = 0;
                 int waitAmount = 0;
-                if (secuItem.WeightAmount > 0)
+                if (weightAmount > 0)
                 {
-                    targetAmount = targetNum * secuItem.WeightAmount;
-                    thisEntrustAmount = thisCopies * secuItem.WeightAmount;
-                    waitAmount = targetNum * secuItem.WeightAmount;
+                    targetAmount = targetNum * weightAmount;
+                    thisEntrustAmount = thisCopies * weightAmount;
+                    waitAmount = targetNum * weightAmount;
                 }
                 else
                 {
@@ -1106,11 +1080,11 @@ namespace TradingSystem.View
 
                 if (exchangeCode.Equals(Exchange.SHSE))
                 {
-                    entrustSecurityItem.EntrustPriceType = EntrustPriceType.FifthIsLeftOffSZ;
+                    entrustSecurityItem.EntrustPriceType = EntrustPriceType.FifthIsLeftOffSH;
                 }
                 else if (exchangeCode.Equals(Exchange.SZSE))
                 {
-                    entrustSecurityItem.EntrustPriceType = EntrustPriceType.FifthIsLeftOffSH;
+                    entrustSecurityItem.EntrustPriceType = EntrustPriceType.FifthIsLeftOffSZ;
                 }
                 else if (exchangeCode.Equals(Exchange.CFFEX))
                 {

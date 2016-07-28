@@ -37,7 +37,14 @@ namespace Config
 
         public FunctionItem GetFunctionItem(FunctionCode code)
         {
-            return functionItemDict[(int)code];
+            int key = (int)code;
+            if (!functionItemDict.ContainsKey(key))
+            {
+                string msg = string.Format("The function code [{0}] is not supported in configuration file /config/function.json.", key);
+                throw new KeyNotFoundException("");
+            }
+
+            return functionItemDict[key];
         }
 
         //public FunctionConfigItem GetFunctionItem(int code) 

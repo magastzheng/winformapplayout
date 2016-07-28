@@ -263,6 +263,188 @@
 		]
 	},
 	{
+		"code": 31001,
+		"name_en": "func_am_unitstk_qry",
+		"name_zh": "证券持仓查询",
+		"param": [{
+			"name": "user_token",
+			"type": "C512",
+			"require": "Y"
+		},{
+			"name": "account_code",
+			"type": "C32",
+			"require": "N"
+		},{
+			"name": "asset_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "combi_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "market_no",
+			"type": "C3",
+			"require": "N"
+		},{
+			"name": "stock_code",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "stockholder_id",
+			"type": "C20",
+			"require": "N"
+		},{
+			"name": "hold_seat",
+			"type": "C6",
+			"require": "N"
+		}],
+		"response":[{
+			"name": "account_code",
+			"type": "C32"
+			},{
+			"name": "asset_no",
+			"type": "C16"
+			},{
+			"name": "combi_no",
+			"type": "C8"
+			},{
+			"name": "market_no",
+			"type": "C3"
+			},{
+			"name": "stock_code",
+			"type": "C16"
+			},{
+			"name": "stockholder_id",
+			"type": "C20"
+			},{
+			"name": "hold_seat",
+			"type": "C6"
+			},{
+			"name": "invest_type",
+			"type": "C1"
+			},{
+			"name": "current_amount",
+			"type": "N16"
+			},{
+			"name": "enable_amount",
+			"type": "N16"
+			},{
+			"name": "begin_const",
+			"type": "N16.2"
+			},{
+			"name": "current_cost",
+			"type": "N16.2"
+			},{
+			"name": "pre_buy_amount",
+			"type": "N16"
+			},{
+			"name": "pre_sell_amount",
+			"type": "N16"
+			},{
+			"name": "pre_buy_balance",
+			"type": "N16.2"
+			},{
+			"name": "pre_sell_balance",
+			"type": "N16.2"
+			},{
+			"name": "today_buy_amount",
+			"type": "N16"
+			},{
+			"name": "today_sell_amount",
+			"type": "N16"
+			},{
+			"name": "today_buy_balance",
+			"type": "N16.2"
+			},{
+			"name": "today_sell_balance",
+			"type": "N16.2"
+			},{
+			"name": "today_buy_fee",
+			"type": "N16.2"
+			},{
+			"name": "today_sell_fee",
+			"type": "N16.2"
+			}
+		]
+	},
+	{
+		"code": 31005,
+		"name_en": "func_am_comb_unitstk_qry",
+		"name_zh": "多业务持仓查询",
+		"param": [{
+			"name": "user_token",
+			"type": "C512",
+			"require": "Y"
+		},{
+			"name": "account_code",
+			"type": "C32",
+			"require": "N"
+		},{
+			"name": "asset_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "combi_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "market_no",
+			"type": "C3",
+			"require": "N"
+		},{
+			"name": "stock_code",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "stockholder_id",
+			"type": "C20",
+			"require": "N"
+		},{
+			"name": "hold_seat",
+			"type": "C6",
+			"require": "N"
+		}],
+		"response":[{
+			"name": "account_code",
+			"type": "C32"
+			},{
+			"name": "asset_no",
+			"type": "C16"
+			},{
+			"name": "combi_no",
+			"type": "C8"
+			},{
+			"name": "market_no",
+			"type": "C3"
+			},{
+			"name": "stock_code",
+			"type": "C16"
+			},{
+			"name": "stockholder_id",
+			"type": "C20"
+			},{
+			"name": "hold_seat",
+			"type": "C6"
+			},{
+			"name": "position_flag",
+			"type": "C1"
+			},{
+			"name": "invest_type",
+			"type": "C1"
+			},{
+			"name": "current_amount",
+			"type": "N16"
+			},{
+			"name": "enable_amount",
+			"type": "N16"
+			},{
+			"name": "current_cost",
+			"type": "N16.2"
+			}
+		]
+	},
+	{
 		"code": 32001,
 		"name_en": "func_am_entrust_qry",
 		"name_zh": "证券委托查询",

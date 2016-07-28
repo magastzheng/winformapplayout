@@ -115,7 +115,7 @@ namespace Model.UI
 
         public SecurityType SecuType { get; set; }
 
-        public int WeightAmount { get; set; }
+        //public int WeightAmount { get; set; }
 
         public EntrustStatus EntrustStatus { get; set; }
 

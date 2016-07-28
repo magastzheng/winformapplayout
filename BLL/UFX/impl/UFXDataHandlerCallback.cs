@@ -48,6 +48,10 @@ namespace BLL.UFX.impl
 
         public int CommandId { get; set; }
 
+        public object InArgs { get; set; }
+
+        public object OutArgs { get; set; }
+
         public EventWaitHandle WaitEvent { get; set; }
 
         public CallerCallback Caller { get; set; }

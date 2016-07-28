@@ -419,7 +419,7 @@ namespace TradingSystem.View
                         CommandId = commandId,
                         SecuCode = item.SecuCode,
                         SecuType = item.SecuType,
-                        WeightAmount = item.WeightAmount,
+                        //WeightAmount = item.WeightAmount,
                         CommandAmount = item.EntrustAmount,
                         CommandPrice = item.CommandPrice,
                         EntrustStatus = EntrustStatus.NoExecuted

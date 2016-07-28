@@ -30,7 +30,6 @@ create table tradingcommandsecurity(
 	CommandId			int not null
 	,SecuCode			varchar(10) not null
 	,SecuType			int
-	,WeightAmount		int
 	,CommandAmount		int
 	,CommandDirection	int			 --10 - 买入股票， 11 - 卖出股票， 12 - 卖出开仓， 13 - 买入平仓
 	,EntrustedAmount	int
@@ -334,7 +333,6 @@ create proc procTradingCommandSecurityInsert(
 	@CommandId			int 
 	,@SecuCode			varchar(10) 
 	,@SecuType			int
-	,@WeightAmount		int
 	,@CommandAmount		int
 	,@CommandDirection	int
 	,@CommandPrice		numeric(20, 4) --如果不限价，则价格设置为0
@@ -344,8 +342,7 @@ begin
 	insert into tradingcommandsecurity(
 		CommandId			
 		,SecuCode			
-		,SecuType
-		,WeightAmount			
+		,SecuType		
 		,CommandAmount	
 		,CommandDirection	
 		,EntrustedAmount	
@@ -354,8 +351,7 @@ begin
 	)values(
 		@CommandId			
 		,@SecuCode			
-		,@SecuType
-		,@WeightAmount		
+		,@SecuType	
 		,@CommandAmount	
 		,@CommandDirection	
 		,0	
@@ -414,7 +410,6 @@ begin
 		CommandId		
 		,SecuCode		
 		,SecuType	
-		,WeightAmount	
 		,CommandAmount
 		,CommandDirection		
 		,EntrustedAmount

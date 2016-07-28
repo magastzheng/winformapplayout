@@ -25,6 +25,8 @@ namespace BLL.UFX.impl
             RegisterUFX(FunctionCode.QuerySecurityEntrustHistorical);
             RegisterUFX(FunctionCode.QuerySecurityDeal);
             RegisterUFX(FunctionCode.QuerySecurityDealHistorical);
+            RegisterUFX(FunctionCode.QuerySecurityHolding);
+            RegisterUFX(FunctionCode.QueryMultipleHolding);
         }
 
         public ConnectionCode Entrust(List<UFXEntrustRequest> requests, Callbacker callbacker)
@@ -65,6 +67,16 @@ namespace BLL.UFX.impl
         public ConnectionCode QueryDealHistory(List<UFXQueryHistDealRequest> requests, Callbacker callbacker)
         {
             return Submit<UFXQueryHistDealRequest>(FunctionCode.QuerySecurityDealHistorical, requests, callbacker);
+        }
+
+        public ConnectionCode QueryHolding(List<UFXHoldingRequest> requests, Callbacker callbacker)
+        {
+            return Submit<UFXHoldingRequest>(FunctionCode.QuerySecurityHolding, requests, callbacker);
+        }
+
+        public ConnectionCode QueryMultipleHolding(List<UFXHoldingRequest> requests, Callbacker callbacker)
+        {
+            return Submit<UFXHoldingRequest>(FunctionCode.QueryMultipleHolding, requests, callbacker);
         }
     }
 }
