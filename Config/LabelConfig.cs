@@ -28,13 +28,10 @@ namespace Config
             string text = string.Empty;
             if (_labels.ContainsKey("errors"))
             {
-                foreach (var label in _labels["errors"])
+                var label = _labels["errors"].Find(p => p.Id == id);
+                if (label != null)
                 {
-                    if (label.Id == id)
-                    {
-                        text = label.Message;
-                        break;
-                    }
+                    text = label.Message;
                 }
             }
 

@@ -26,13 +26,10 @@ namespace Config
         public ImportSheet GetSheet(string id)
         {
             ImportSheet targetSheet = new ImportSheet();
-            foreach (ImportSheet sheet in _importSheet)
+            var target = _importSheet.Find(p => p.Id.Equals(id));
+            if (target != null)
             {
-                if (id == sheet.Id)
-                {
-                    targetSheet = sheet;
-                    break;
-                }
+                targetSheet = target;
             }
 
             return targetSheet;

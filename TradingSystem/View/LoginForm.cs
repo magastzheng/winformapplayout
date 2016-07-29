@@ -18,7 +18,30 @@ namespace TradingSystem.View
         public LoginForm()
         {
             InitializeComponent();
+
+            this.cbOperatorNo.KeyPress += new KeyPressEventHandler(ComboBox_OperatorNo_KeyPress);
+            this.tbOperatorPwd.KeyDown += new KeyEventHandler(TextBox_OperatorPwd_KeyDown);
         }
+
+        #region keypress, keydown
+
+        private void ComboBox_OperatorNo_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '\r')
+            {
+                this.tbOperatorPwd.Focus();
+            }
+        }
+
+        private void TextBox_OperatorPwd_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                ButtonLogin_Click(null, null);
+            }
+        }
+
+        #endregion
 
         private void ButtonCancel_Click(object sender, System.EventArgs e)
         {
@@ -37,9 +60,19 @@ namespace TradingSystem.View
 
         public void Login()
         {
-            string userName = this.cmbOperatorNo.Text;
+            string userName = this.cbOperatorNo.Text;
             string password = this.tbOperatorPwd.Text;
             Console.WriteLine("user: " + userName + " " + "Password: " + password);
+
+            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
+            {
+                WarnForm warnForm = new WarnForm();
+                warnForm.Owner = this;
+                warnForm.UpdateText(ConfigManager.Instance.GetLabelConfig().GetErrorMessage(-5));
+                warnForm.ShowDialog();
+
+                return;
+            }
 
             var retCode = _loginController.Login(userName, password);
             if (retCode == (int)ConnectionCode.Success)

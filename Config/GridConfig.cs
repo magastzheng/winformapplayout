@@ -31,15 +31,12 @@ namespace Config
         public HSGrid GetGid(string name)
         {
             HSGrid targetGrid = new HSGrid();
-            foreach (HSGrid grid in _grids)
+            var target = _grids.Find(p => p.Grid.Equals(name));
+            if (target != null)
             {
-                if (name == grid.Grid)
-                { 
-                    targetGrid = grid;
-                    break;
-                }
+                targetGrid = target;
             }
-
+            
             return targetGrid;
         }
     }

@@ -41,12 +41,21 @@ namespace BLL.TradeCommand
                 secuItem.PortfolioName = cmdItem.PortfolioName;
 
                 var entrustedItems = entrustSecuItems.Where(p => p.SecuCode.Equals(secuItem.SecuCode)
-                    && p.SecuCode.Equals(secuItem.SecuType)
+                    && p.SecuType == secuItem.SecuType
                     && p.EntrustStatus == Model.EnumType.EntrustStatus.Completed)
                     .ToList();
                 if (entrustedItems.Count > 0)
                 {
                     secuItem.EntrustedAmount = entrustedItems.Sum(p => p.EntrustAmount);
+                }
+
+                var dealItems = entrustSecuItems.Where(p => p.SecuCode.Equals(secuItem.SecuCode)
+                    && p.SecuType == secuItem.SecuType
+                    && (p.DealStatus == Model.EnumType.DealStatus.PartDeal || p.DealStatus == Model.EnumType.DealStatus.Completed))
+                    .ToList();
+                if (dealItems.Count > 0)
+                {
+                    secuItem.DealAmount = dealItems.Sum(p => p.TotalDealAmount);
                 }
 
                 var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode);

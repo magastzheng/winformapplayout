@@ -28,14 +28,10 @@ namespace Config
         public ComboOption GetComboOption(string name)
         {
             ComboOption comboOption = new ComboOption();
-
-            foreach(var option in _buySellOption)
+            var target = _buySellOption.Find(p => p.Name.Equals(name));
+            if (target != null)
             {
-                if (option.Name == name)
-                {
-                    comboOption = option;
-                    break;
-                }
+                comboOption = target;
             }
 
             return comboOption;

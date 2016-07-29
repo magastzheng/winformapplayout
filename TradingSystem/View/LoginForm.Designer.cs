@@ -30,7 +30,7 @@
         {
             this.lblOperatorNo = new System.Windows.Forms.Label();
             this.lblOperatorPwd = new System.Windows.Forms.Label();
-            this.cmbOperatorNo = new System.Windows.Forms.ComboBox();
+            this.cbOperatorNo = new System.Windows.Forms.ComboBox();
             this.tbOperatorPwd = new System.Windows.Forms.TextBox();
             this.btnLogin = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -54,13 +54,13 @@
             this.lblOperatorPwd.TabIndex = 1;
             this.lblOperatorPwd.Text = "操作员密码";
             // 
-            // cmbOperatorNo
+            // cbOperatorNo
             // 
-            this.cmbOperatorNo.FormattingEnabled = true;
-            this.cmbOperatorNo.Location = new System.Drawing.Point(200, 77);
-            this.cmbOperatorNo.Name = "cmbOperatorNo";
-            this.cmbOperatorNo.Size = new System.Drawing.Size(121, 20);
-            this.cmbOperatorNo.TabIndex = 2;
+            this.cbOperatorNo.FormattingEnabled = true;
+            this.cbOperatorNo.Location = new System.Drawing.Point(200, 77);
+            this.cbOperatorNo.Name = "cbOperatorNo";
+            this.cbOperatorNo.Size = new System.Drawing.Size(121, 20);
+            this.cbOperatorNo.TabIndex = 2;
             // 
             // tbOperatorPwd
             // 
@@ -78,7 +78,7 @@
             this.btnLogin.TabIndex = 4;
             this.btnLogin.Text = "登录";
             this.btnLogin.UseVisualStyleBackColor = true;
-            this.btnLogin.Click += new System.EventHandler(ButtonLogin_Click);
+            this.btnLogin.Click += new System.EventHandler(this.ButtonLogin_Click);
             // 
             // btnCancel
             // 
@@ -88,7 +88,7 @@
             this.btnCancel.TabIndex = 5;
             this.btnCancel.Text = "取消";
             this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(ButtonCancel_Click);
+            this.btnCancel.Click += new System.EventHandler(this.ButtonCancel_Click);
             // 
             // LoginForm
             // 
@@ -98,14 +98,13 @@
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.tbOperatorPwd);
-            this.Controls.Add(this.cmbOperatorNo);
+            this.Controls.Add(this.cbOperatorNo);
             this.Controls.Add(this.lblOperatorPwd);
             this.Controls.Add(this.lblOperatorNo);
             this.Name = "LoginForm";
-            this.Text = "登录";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(LoginForm_FormClosing);
-
+            this.Text = "登录";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LoginForm_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -115,7 +114,7 @@
 
         private System.Windows.Forms.Label lblOperatorNo;
         private System.Windows.Forms.Label lblOperatorPwd;
-        private System.Windows.Forms.ComboBox cmbOperatorNo;
+        private System.Windows.Forms.ComboBox cbOperatorNo;
         private System.Windows.Forms.TextBox tbOperatorPwd;
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Button btnCancel;

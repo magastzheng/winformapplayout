@@ -29,14 +29,10 @@ namespace Config
         public ButtonGroup GetButtonGroup(string name)
         {
             ButtonGroup buttonGroup = new ButtonGroup();
-
-            foreach(var bg in _buttons)
+            var target = _buttons.Find(p => p.Id.Equals(name));
+            if (target != null)
             {
-                if (bg.Id == name)
-                {
-                    buttonGroup = bg;
-                    break;
-                }
+                buttonGroup = target;
             }
 
             return buttonGroup;
