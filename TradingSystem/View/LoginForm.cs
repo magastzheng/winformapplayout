@@ -19,6 +19,8 @@ namespace TradingSystem.View
         {
             InitializeComponent();
 
+            this.MaximizeBox = false;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.cbOperatorNo.KeyPress += new KeyPressEventHandler(ComboBox_OperatorNo_KeyPress);
             this.tbOperatorPwd.KeyDown += new KeyEventHandler(TextBox_OperatorPwd_KeyDown);
         }

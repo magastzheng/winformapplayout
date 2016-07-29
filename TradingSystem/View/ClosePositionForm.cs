@@ -468,6 +468,12 @@ namespace TradingSystem.View
 
         private void Button_Submit_Click(object sender, EventArgs e)
         {
+            if (!ValidateEntrustSecurities())
+            {
+                MessageBox.Show(this, "证券未勾选或勾选证券均未设置委托数量", "警告", MessageBoxButtons.OK);
+                return;
+            }
+
             var cmdItems = _cmdDataSource.Where(p => p.Selection).ToList();
             foreach (var cmdItem in cmdItems)
             {
@@ -710,6 +716,22 @@ namespace TradingSystem.View
             }
         }
 
+        private bool ValidateEntrustSecurities()
+        {
+            var selectedItems = _secuDataSource.Where(p => p.Selection).ToList();
+            if (selectedItems.Count == 0)
+            {
+                return false;
+            }
+            
+            selectedItems = selectedItems.Where(p => p.EntrustAmount == 0).ToList();
+            if (selectedItems.Count > 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
         #endregion
 
         #region

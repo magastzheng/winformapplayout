@@ -2320,7 +2320,7 @@ readonly:
 		},{
 		"name": "tradedirection",
 		"text": "买卖方向",
-		"width": 80,
+		"width": 160,
 		"columntype": 3,
 		"valuetype": 0,
 		"visible": 1,
