@@ -49,6 +49,8 @@ namespace TradingSystem.View
         private SortableBindingList<ClosePositionSecurityItem> _secuDataSource = new SortableBindingList<ClosePositionSecurityItem>(new List<ClosePositionSecurityItem>());
         private SortableBindingList<ClosePositionCmdItem> _cmdDataSource = new SortableBindingList<ClosePositionCmdItem>(new List<ClosePositionCmdItem>());
 
+        private Dictionary<int, string> _instanceFuturesMap = new Dictionary<int, string>();
+
         private CloseDialogType _dialogType = CloseDialogType.CloseAll;
 
         public ClosePositionForm()
@@ -108,6 +110,11 @@ namespace TradingSystem.View
                                 _cmdDataSource.Remove(cmdItem);
                             }
                         }
+
+                        if (_instanceFuturesMap.ContainsKey(closeItem.InstanceId))
+                        {
+                            _instanceFuturesMap.Remove(closeItem.InstanceId);
+                        }
                     }
                     break;
                 default:
@@ -126,29 +133,7 @@ namespace TradingSystem.View
 
             foreach (var secuItem in secuItems)
             {
-                ClosePositionSecurityItem closeSecuItem = new ClosePositionSecurityItem
-                {
-                    Selection = true,
-                    InstanceId = secuItem.InstanceId,
-                    SecuCode = secuItem.SecuCode,
-                    SecuType = secuItem.SecuType,
-                    PositionType = secuItem.PositionType,
-
-                    HoldingAmount = secuItem.PositionAmount,
-                    AvailableAmount = secuItem.PositionAmount - secuItem.BuyToday,
-
-                    PortfolioId = closeItem.PortfolioId,
-                    PortfolioName = closeItem.PortfolioName,
-                };
-
-                var secuInfo = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
-                if (secuInfo != null)
-                {
-                    closeSecuItem.SecuName = secuInfo.SecuName;
-                    closeSecuItem.ExchangeCode = secuInfo.ExchangeCode;
-                }
-
-                _secuDataSource.Add(closeSecuItem);
+                AddSecurity(secuItem, closeItem);
             }
         }
 
@@ -271,6 +256,7 @@ namespace TradingSystem.View
             _instDataSource.Clear();
             _secuDataSource.Clear();
             _cmdDataSource.Clear();
+            _instanceFuturesMap.Clear();
 
             LoadTemplateOption();
 
@@ -549,42 +535,77 @@ namespace TradingSystem.View
             int copies = cmdItem.Copies;
             EntrustDirection direction = EntrustDirectionUtil.GetEntrustDirection(cmdItem.TradeDirection);
             
-            var instance = _instDataSource.Single(p => p.InstanceId == cmdItem.InstanceId);
-            if (instance == null)
+            var closeItem = _instDataSource.Single(p => p.InstanceId == cmdItem.InstanceId);
+            if (closeItem == null)
             {
                 return;
             }
 
-            StockTemplate template = _templateBLL.GetTemplate(instance.TemplateId);
+            StockTemplate template = _templateBLL.GetTemplate(closeItem.TemplateId);
          
             if (template == null)
             {
                 return;
             }
 
-            //instance.TemplateId
-            var tempstockitems = _templateBLL.GetStocks(instance.TemplateId);
-            var secuItems = _secuDataSource.Where(p => p.InstanceId == cmdItem.InstanceId);
+            var secuItems = _secuDataSource.Where(p => p.InstanceId == cmdItem.InstanceId).ToList();
             if (secuItems == null)
             {
                 return;
             }
 
+            //可以在指令处改变期货合约，如果做出了改变，计算之后，结果会反映到证券列表中
+            var oldFutureId = closeItem.FuturesContract;
+            var newFutureId = cmdItem.FuturesContract;
+            if (_instanceFuturesMap.ContainsKey(cmdItem.InstanceId))
+            {
+                oldFutureId = _instanceFuturesMap[cmdItem.InstanceId];
+            }
+
+            _instanceFuturesMap[closeItem.InstanceId] = newFutureId;
+
+            //根据指令设置添加或删除期货合约
+            if (!oldFutureId.Equals(closeItem.FuturesContract) && !oldFutureId.Equals(newFutureId))
+            {
+                var oldFuturesContract = secuItems.Find(p => p.SecuCode.Equals(oldFutureId) && p.SecuType == SecurityType.Futures);
+                if (oldFuturesContract != null)
+                {
+                    //secuItems.ToList().Remove(oldFuturesContract);
+                    _secuDataSource.Remove(oldFuturesContract);
+                }
+
+                AddSecurity(newFutureId, SecurityType.Futures, closeItem);
+            }
+            else if (!oldFutureId.Equals(newFutureId))
+            {
+                AddSecurity(newFutureId, SecurityType.Futures, closeItem);
+            }
+
+            //获取模板中的股票
+            var tempstockitems = _templateBLL.GetStocks(closeItem.TemplateId);
+
             //TODO: handle each case
             //Buy: only buy those securities in template with price
             //Sell: only buy those securities in template with available holding
             //Adjusted: both buy and sell 
-
+            secuItems = _secuDataSource.Where(p => p.InstanceId == cmdItem.InstanceId).ToList();
             var includedTemplates = from p in secuItems
                                     where tempstockitems.Find(o => o.SecuCode.Equals(p.SecuCode)) != null
                                     select p;
 
             var includedList = includedTemplates.ToList();
 
-            var futureContract = secuItems.ToList().Find(p => p.SecuCode.Equals(instance.FuturesContract));
-            if (futureContract != null)
+            //original futures contract
+            //var futureContract = secuItems.Find(p => p.SecuCode.Equals(closeItem.FuturesContract));
+            //if (futureContract != null)
+            //{
+            //    includedList.Add(futureContract);
+            //}
+
+            var newFutureContract = secuItems.Find(p => p.SecuCode.Equals(newFutureId));
+            if (newFutureContract != null)
             {
-                includedList.Add(futureContract);
+                includedList.Add(newFutureContract);
             }
 
             //TODO: How to handle the futures
@@ -628,7 +649,16 @@ namespace TradingSystem.View
                     break;
                 case EntrustDirection.Sell:
                     {
-                        includedList.ForEach(p =>
+                        var zeroAmountList = includedList.Where(p => p.AvailableAmount == 0).ToList();
+                        var notZeroAmountList = includedList.Except(zeroAmountList).ToList();
+
+                        zeroAmountList.ForEach(p => {
+                            p.Selection = false;
+                            p.EntrustAmount = 0;
+                            p.EDirection = EntrustDirection.None;
+                        });
+
+                        notZeroAmountList.ForEach(p =>
                         {
                             var tempsecuItem = tempstockitems.Find(o => o.SecuCode.Equals(p.SecuCode));
                             int weightAmount = 0;
@@ -678,8 +708,6 @@ namespace TradingSystem.View
                     break;
                 case EntrustDirection.AdjustedToBuySell:
                     {
-                        //var includedZero = includedList.Where(p => p.HoldingAmount == 0).ToList();
-
                         includedList.ForEach(p => {
                             var tempsecuItem = tempstockitems.Find(o => o.SecuCode.Equals(p.SecuCode));
                             int weightAmount = 0;
@@ -748,125 +776,6 @@ namespace TradingSystem.View
                     }
                     break;
             }
-
-            //foreach (var secuItem in secuItems)
-            //{
-            //    if (!secuItem.Selection)
-            //    {
-            //        secuItem.EntrustAmount = 0;
-            //        //TODO: set the EntrustDirection as empty
-            //        continue;
-            //    }
-
-            //    var tempsecuItem = tempstockitems.Find(p => p.SecuCode.Equals(secuItem.SecuCode));
-
-            //    int weightAmount = 0;
-            //    if (tempsecuItem != null)
-            //    {
-            //        weightAmount = tempsecuItem.Amount;
-            //    }
-
-            //    switch (direction)
-            //    {
-            //        case EntrustDirection.Buy:
-            //            {
-            //                if (secuItem.SecuType == SecurityType.Stock)
-            //                {
-            //                    secuItem.EDirection = EntrustDirection.BuySpot;
-            //                    secuItem.EntrustAmount = weightAmount * copies;
-            //                }
-            //                else if (secuItem.SecuType == SecurityType.Futures)
-            //                {
-            //                    secuItem.EDirection = EntrustDirection.SellOpen;
-            //                    secuItem.EntrustAmount = template.FutureCopies * copies;
-            //                }
-            //                else
-            //                {
-            //                    //Nothing to do
-            //                }
-            //            }
-            //            break;
-            //        case EntrustDirection.Sell:
-            //            {
-            //                if (secuItem.SecuType == SecurityType.Stock)
-            //                {
-            //                    secuItem.EDirection = EntrustDirection.SellSpot;
-
-            //                    if (secuItem.AvailableAmount >= weightAmount * copies)
-            //                    {
-            //                        secuItem.EntrustAmount = weightAmount * copies;
-            //                    }
-            //                    else
-            //                    {
-            //                        secuItem.EntrustAmount = secuItem.AvailableAmount;
-            //                    }
-            //                }
-            //                else if (secuItem.SecuType == SecurityType.Futures)
-            //                {
-            //                    secuItem.EDirection = EntrustDirection.BuyClose;
-            //                    if (secuItem.AvailableAmount >= template.FutureCopies * copies)
-            //                    {
-            //                        secuItem.EntrustAmount = template.FutureCopies * copies;
-            //                    }
-            //                    else
-            //                    {
-            //                        secuItem.EntrustAmount = secuItem.AvailableAmount;
-            //                    }
-            //                }
-            //                else
-            //                {
-            //                    //Nothing to do
-            //                }
-            //            }
-            //            break;
-            //        case EntrustDirection.AdjustedToBuySell:
-            //            {
-            //                if (secuItem.SecuType == SecurityType.Stock)
-            //                {
-            //                    if (weightAmount == 0)
-            //                    {
-            //                        secuItem.EDirection = EntrustDirection.SellSpot;
-            //                        secuItem.EntrustAmount = secuItem.AvailableAmount;
-            //                    }
-            //                    else
-            //                    {
-            //                        int rest = secuItem.HoldingAmount - weightAmount * copies;
-            //                        if (rest > 0)
-            //                        {
-            //                            secuItem.EDirection = EntrustDirection.SellSpot;
-            //                            secuItem.EntrustAmount = rest;
-            //                        }
-            //                        else
-            //                        {
-            //                            secuItem.EDirection = EntrustDirection.BuySpot;
-            //                            secuItem.EntrustAmount = 0 - rest;
-            //                        }
-            //                    }
-            //                }
-            //                else if (secuItem.SecuType == SecurityType.Futures)
-            //                {
-            //                    int rest = secuItem.HoldingAmount - template.FutureCopies * copies;
-            //                    if (rest > 0)
-            //                    {
-            //                        secuItem.EDirection = EntrustDirection.BuyClose;
-            //                        secuItem.EntrustAmount = rest;
-            //                    }
-            //                    else
-            //                    {
-            //                        secuItem.EDirection = EntrustDirection.SellSpot;
-            //                        secuItem.EntrustAmount = 0 - rest;
-            //                    }
-            //                }
-            //                else
-            //                {
-            //                    //Nothing to do
-            //                }
-            //            }
-            //            break;
-            //        default:
-            //            break;
-            //    }
-            //}
         }
 
         private void CloseAll(ClosePositionCmdItem cmdItem)
@@ -947,6 +856,75 @@ namespace TradingSystem.View
                 return true;
             }
         }
+        #endregion
+
+        #region add security
+
+        private void AddSecurity(TradingInstanceSecurity secuItem, ClosePositionItem closeItem)
+        {
+            ClosePositionSecurityItem closeSecuItem = new ClosePositionSecurityItem
+            {
+                Selection = true,
+                InstanceId = secuItem.InstanceId,
+                SecuCode = secuItem.SecuCode,
+                SecuType = secuItem.SecuType,
+                PositionType = secuItem.PositionType,
+
+                HoldingAmount = secuItem.PositionAmount,
+                AvailableAmount = secuItem.PositionAmount - secuItem.BuyToday,
+
+                PortfolioId = closeItem.PortfolioId,
+                PortfolioName = closeItem.PortfolioName,
+            };
+
+            var secuInfo = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
+            if (secuInfo != null)
+            {
+                closeSecuItem.SecuName = secuInfo.SecuName;
+                closeSecuItem.ExchangeCode = secuInfo.ExchangeCode;
+            }
+
+            _secuDataSource.Add(closeSecuItem);
+        }
+
+        private void AddSecurity(string secuCode, SecurityType secuType, ClosePositionItem closeItem)
+        {
+            ClosePositionSecurityItem closeSecuItem = new ClosePositionSecurityItem
+            {
+                Selection = true,
+                InstanceId = closeItem.InstanceId,
+                SecuCode = secuCode,
+                SecuType = secuType,
+                HoldingAmount = 0,
+                AvailableAmount = 0,
+                PortfolioId = closeItem.PortfolioId,
+                PortfolioName = closeItem.PortfolioName,
+            };
+
+            if (secuType == SecurityType.Stock)
+            {
+                closeSecuItem.PositionType = PositionType.StockLong;
+            }
+            else if (secuType == SecurityType.Futures)
+            {
+                closeSecuItem.PositionType = PositionType.FuturesShort;
+            }
+            else
+            {
+                //do nothing
+            }
+
+            var secuInfo = SecurityInfoManager.Instance.Get(secuCode, secuType);
+            if (secuInfo != null)
+            {
+                closeSecuItem.SecuName = secuInfo.SecuName;
+                closeSecuItem.ExchangeCode = secuInfo.ExchangeCode;
+            }
+
+            _secuDataSource.Add(closeSecuItem);
+        }
+
+
         #endregion
 
         #region
