@@ -20,9 +20,17 @@ using Quote;
 using TradingSystem.TradeUtil;
 using BLL.Entrust;
 using System.Diagnostics;
+using System.Text;
 
 namespace TradingSystem.View
 {
+    public enum CloseDialogType
+    {
+        CloseAll = 1,
+        ChangePosition = 2,
+        AddSecurity = 3,
+    }
+
     public partial class ClosePositionForm : Forms.DefaultForm
     {
         private const string GridCloseId = "closeposition";
@@ -41,7 +49,7 @@ namespace TradingSystem.View
         private SortableBindingList<ClosePositionSecurityItem> _secuDataSource = new SortableBindingList<ClosePositionSecurityItem>(new List<ClosePositionSecurityItem>());
         private SortableBindingList<ClosePositionCmdItem> _cmdDataSource = new SortableBindingList<ClosePositionCmdItem>(new List<ClosePositionCmdItem>());
 
-        private ExecuteType _execType = ExecuteType.ClosePosition;
+        private CloseDialogType _dialogType = CloseDialogType.CloseAll;
 
         public ClosePositionForm()
             :base()
@@ -150,10 +158,9 @@ namespace TradingSystem.View
             {
                 InstanceId = closeItem.InstanceId,
                 InstanceCode = closeItem.InstanceCode,
-                Selection = true,
                 SpotTemplate = closeItem.TemplateId.ToString(),
                 MonitorName = closeItem.MonitorName,
-                TradeDirection = ((int)EntrustDirection.Buy).ToString()
+                TradeDirection = ((int)EntrustDirection.Buy).ToString(),
             };
 
             if (_secuDataSource != null && _secuDataSource.Count > 0)
@@ -284,6 +291,7 @@ namespace TradingSystem.View
                     TemplateId = instance.TemplateId,
                     PortfolioId = instance.PortfolioId,
                     PortfolioName = instance.PortfolioName,
+                    FuturesContract = instance.FuturesContract,
                 };
 
                 _instDataSource.Add(closeItem);
@@ -308,8 +316,9 @@ namespace TradingSystem.View
 
         private void Button_Calc_Click(object sender, EventArgs e)
         {
-            _execType = ExecuteType.ClosePosition;
-            var cmdItems = _cmdDataSource.Where(p => p.Selection).ToList();
+            //_execType = ExecuteType.ClosePosition;
+            //var cmdItems = _cmdDataSource.Where(p => p.Selection).ToList();
+            var cmdItems = _cmdDataSource.ToList();
             if (!ValidateCopies(cmdItems))
             {
                 MessageBox.Show(this, "请输入有效的操作份数！", "错误", MessageBoxButtons.OK);
@@ -330,8 +339,8 @@ namespace TradingSystem.View
 
         private void Button_CloseAll_Click(object sender, EventArgs e)
         {
-            _execType = ExecuteType.ClosePosition;
-            var cmdItems = _cmdDataSource.Where(p => p.Selection).ToList();
+            _dialogType = CloseDialogType.CloseAll;
+            var cmdItems = _cmdDataSource.ToList();
             
             foreach (var cmdItem in cmdItems)
             {
@@ -384,7 +393,7 @@ namespace TradingSystem.View
 
             if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
             {
-                _execType = ExecuteType.AdjustPosition;
+                _dialogType = CloseDialogType.ChangePosition;
                 dialog.Dispose();
             }
             else
@@ -468,13 +477,16 @@ namespace TradingSystem.View
 
         private void Button_Submit_Click(object sender, EventArgs e)
         {
-            if (!ValidateEntrustSecurities())
+            var cmdItems = _cmdDataSource.ToList();
+
+            string outMsg;
+            if (!ValidateEntrustSecurities(cmdItems, out outMsg))
             {
-                MessageBox.Show(this, "证券未勾选或勾选证券均未设置委托数量", "警告", MessageBoxButtons.OK);
+                string msg = string.Format("证券未勾选或勾选证券均未设置委托数量, 交易实例为: {0}", outMsg);
+                MessageBox.Show(this, msg, "警告", MessageBoxButtons.OK);
                 return;
             }
 
-            var cmdItems = _cmdDataSource.Where(p => p.Selection).ToList();
             foreach (var cmdItem in cmdItems)
             {
                 var tdcmdItem = GetTradeCommandItem(cmdItem);
@@ -558,125 +570,303 @@ namespace TradingSystem.View
                 return;
             }
 
-            //TODO: handle those 
-            foreach (var secuItem in secuItems)
+            //TODO: handle each case
+            //Buy: only buy those securities in template with price
+            //Sell: only buy those securities in template with available holding
+            //Adjusted: both buy and sell 
+
+            var includedTemplates = from p in secuItems
+                                    where tempstockitems.Find(o => o.SecuCode.Equals(p.SecuCode)) != null
+                                    select p;
+
+            var includedList = includedTemplates.ToList();
+
+            var futureContract = secuItems.ToList().Find(p => p.SecuCode.Equals(instance.FuturesContract));
+            if (futureContract != null)
             {
-                if (!secuItem.Selection)
-                {
-                    secuItem.EntrustAmount = 0;
-                    //TODO: set the EntrustDirection as empty
-                    continue;
-                }
+                includedList.Add(futureContract);
+            }
 
-                var tempsecuItem = tempstockitems.Find(p => p.SecuCode.Equals(secuItem.SecuCode));
+            //TODO: How to handle the futures
+            var excludedList = secuItems.Except(includedList).ToList();
 
-                int weightAmount = 0;
-                if (tempsecuItem != null)
-                {
-                    weightAmount = tempsecuItem.Amount;
-                }
+            switch (direction)
+            {
+                case EntrustDirection.Buy:
+                    {
+                        includedList.ForEach(p => {
+                            var tempsecuItem = tempstockitems.Find(o => o.SecuCode.Equals(p.SecuCode));
 
-                switch (direction)
-                {
-                    case EntrustDirection.Buy:
-                        {
-                            if (secuItem.SecuType == SecurityType.Stock)
+                            int weightAmount = 0;
+                            if (tempsecuItem != null)
                             {
-                                secuItem.EDirection = EntrustDirection.BuySpot;
-                                secuItem.EntrustAmount = weightAmount * copies;
+                                weightAmount = tempsecuItem.Amount;
                             }
-                            else if (secuItem.SecuType == SecurityType.Futures)
+
+                            if (p.SecuType == SecurityType.Stock)
                             {
-                                secuItem.EDirection = EntrustDirection.SellOpen;
-                                secuItem.EntrustAmount = template.FutureCopies * copies;
+                                p.EDirection = EntrustDirection.BuySpot;
+                                p.EntrustAmount = weightAmount * copies;
+                            }
+                            else if (p.SecuType == SecurityType.Futures)
+                            {
+                                p.EDirection = EntrustDirection.SellOpen;
+                                p.EntrustAmount = template.FutureCopies * copies;
                             }
                             else
                             {
                                 //Nothing to do
                             }
-                        }
-                        break;
-                    case EntrustDirection.Sell:
-                        {
-                            if (secuItem.SecuType == SecurityType.Stock)
-                            {
-                                secuItem.EDirection = EntrustDirection.SellSpot;
+                        });
 
-                                if (secuItem.AvailableAmount >= weightAmount * copies)
+                        excludedList.ForEach(p => { 
+                            p.Selection = false;
+                            p.EntrustAmount = 0;
+                            p.EDirection = EntrustDirection.None;
+                        });
+                    }
+                    break;
+                case EntrustDirection.Sell:
+                    {
+                        includedList.ForEach(p =>
+                        {
+                            var tempsecuItem = tempstockitems.Find(o => o.SecuCode.Equals(p.SecuCode));
+                            int weightAmount = 0;
+                            if (tempsecuItem != null)
+                            {
+                                weightAmount = tempsecuItem.Amount;
+                            }
+
+                            if (p.SecuType == SecurityType.Stock)
+                            {
+                                p.EDirection = EntrustDirection.SellSpot;
+
+                                if (p.AvailableAmount >= weightAmount * copies)
                                 {
-                                    secuItem.EntrustAmount = weightAmount * copies;
+                                    p.EntrustAmount = weightAmount * copies;
                                 }
                                 else
                                 {
-                                    secuItem.EntrustAmount = secuItem.AvailableAmount;
+                                    p.EntrustAmount = p.AvailableAmount;
                                 }
                             }
-                            else if (secuItem.SecuType == SecurityType.Futures)
+                            else if (p.SecuType == SecurityType.Futures)
                             {
-                                secuItem.EDirection = EntrustDirection.BuyClose;
-                                if (secuItem.AvailableAmount >= template.FutureCopies * copies)
+                                p.EDirection = EntrustDirection.BuyClose;
+                                if (p.AvailableAmount >= template.FutureCopies * copies)
                                 {
-                                    secuItem.EntrustAmount = template.FutureCopies * copies;
+                                    p.EntrustAmount = template.FutureCopies * copies;
                                 }
                                 else
                                 {
-                                    secuItem.EntrustAmount = secuItem.AvailableAmount;
+                                    p.EntrustAmount = p.AvailableAmount;
                                 }
                             }
                             else
                             {
                                 //Nothing to do
                             }
-                        }
-                        break;
-                    case EntrustDirection.AdjustedToBuySell:
+                        });
+
+                        excludedList.ForEach(p =>
                         {
-                            if (secuItem.SecuType == SecurityType.Stock)
+                            p.Selection = false;
+                            p.EntrustAmount = 0;
+                            p.EDirection = EntrustDirection.None;
+                        });
+                    }
+                    break;
+                case EntrustDirection.AdjustedToBuySell:
+                    {
+                        //var includedZero = includedList.Where(p => p.HoldingAmount == 0).ToList();
+
+                        includedList.ForEach(p => {
+                            var tempsecuItem = tempstockitems.Find(o => o.SecuCode.Equals(p.SecuCode));
+                            int weightAmount = 0;
+                            if (tempsecuItem != null)
                             {
-                                if (weightAmount == 0)
-                                {
-                                    secuItem.EDirection = EntrustDirection.SellSpot;
-                                    secuItem.EntrustAmount = secuItem.AvailableAmount;
-                                }
-                                else
-                                {
-                                    int rest = secuItem.HoldingAmount - weightAmount * copies;
-                                    if (rest > 0)
-                                    {
-                                        secuItem.EDirection = EntrustDirection.SellSpot;
-                                        secuItem.EntrustAmount = rest;
-                                    }
-                                    else
-                                    {
-                                        secuItem.EDirection = EntrustDirection.BuySpot;
-                                        secuItem.EntrustAmount = 0 - rest;
-                                    }
-                                }
+                                weightAmount = tempsecuItem.Amount;
                             }
-                            else if (secuItem.SecuType == SecurityType.Futures)
+
+                            if (p.SecuType == SecurityType.Stock)
                             {
-                                int rest = secuItem.HoldingAmount - template.FutureCopies * copies;
+                                int rest = p.HoldingAmount - weightAmount * copies;
                                 if (rest > 0)
                                 {
-                                    secuItem.EDirection = EntrustDirection.BuyClose;
-                                    secuItem.EntrustAmount = rest;
+                                    p.EDirection = EntrustDirection.SellSpot;
+                                    p.EntrustAmount = rest;
                                 }
                                 else
                                 {
-                                    secuItem.EDirection = EntrustDirection.SellSpot;
-                                    secuItem.EntrustAmount = 0 - rest;
+                                    p.EDirection = EntrustDirection.BuySpot;
+                                    p.EntrustAmount = 0 - rest;
+                                }
+                            }
+                            else if (p.SecuType == SecurityType.Futures)
+                            {
+                                int rest = p.HoldingAmount - template.FutureCopies * copies;
+                                if (rest > 0)
+                                {
+                                    p.EDirection = EntrustDirection.BuyClose;
+                                    p.EntrustAmount = rest;
+                                }
+                                else
+                                {
+                                    p.EDirection = EntrustDirection.SellSpot;
+                                    p.EntrustAmount = 0 - rest;
+                                }
+                            }
+                            else
+                            { 
+                                
+                            }
+
+                        });
+
+                        excludedList.ForEach(p =>
+                        {
+                            if (p.AvailableAmount > 0)
+                            {
+                                p.Selection = true;
+                                p.EntrustAmount = p.AvailableAmount;
+                                if (p.SecuType == SecurityType.Stock)
+                                {
+                                    p.EDirection = EntrustDirection.SellSpot;
+                                }
+                                else if (p.SecuType == SecurityType.Futures)
+                                {
+                                    p.EDirection = EntrustDirection.BuyClose;
                                 }
                             }
                             else
                             {
-                                //Nothing to do
+                                p.Selection = false;
+                                p.EntrustAmount = 0;
+                                p.EDirection = EntrustDirection.None;
                             }
-                        }
-                        break;
-                    default:
-                        break;
-                }
+                        });
+                    }
+                    break;
             }
+
+            //foreach (var secuItem in secuItems)
+            //{
+            //    if (!secuItem.Selection)
+            //    {
+            //        secuItem.EntrustAmount = 0;
+            //        //TODO: set the EntrustDirection as empty
+            //        continue;
+            //    }
+
+            //    var tempsecuItem = tempstockitems.Find(p => p.SecuCode.Equals(secuItem.SecuCode));
+
+            //    int weightAmount = 0;
+            //    if (tempsecuItem != null)
+            //    {
+            //        weightAmount = tempsecuItem.Amount;
+            //    }
+
+            //    switch (direction)
+            //    {
+            //        case EntrustDirection.Buy:
+            //            {
+            //                if (secuItem.SecuType == SecurityType.Stock)
+            //                {
+            //                    secuItem.EDirection = EntrustDirection.BuySpot;
+            //                    secuItem.EntrustAmount = weightAmount * copies;
+            //                }
+            //                else if (secuItem.SecuType == SecurityType.Futures)
+            //                {
+            //                    secuItem.EDirection = EntrustDirection.SellOpen;
+            //                    secuItem.EntrustAmount = template.FutureCopies * copies;
+            //                }
+            //                else
+            //                {
+            //                    //Nothing to do
+            //                }
+            //            }
+            //            break;
+            //        case EntrustDirection.Sell:
+            //            {
+            //                if (secuItem.SecuType == SecurityType.Stock)
+            //                {
+            //                    secuItem.EDirection = EntrustDirection.SellSpot;
+
+            //                    if (secuItem.AvailableAmount >= weightAmount * copies)
+            //                    {
+            //                        secuItem.EntrustAmount = weightAmount * copies;
+            //                    }
+            //                    else
+            //                    {
+            //                        secuItem.EntrustAmount = secuItem.AvailableAmount;
+            //                    }
+            //                }
+            //                else if (secuItem.SecuType == SecurityType.Futures)
+            //                {
+            //                    secuItem.EDirection = EntrustDirection.BuyClose;
+            //                    if (secuItem.AvailableAmount >= template.FutureCopies * copies)
+            //                    {
+            //                        secuItem.EntrustAmount = template.FutureCopies * copies;
+            //                    }
+            //                    else
+            //                    {
+            //                        secuItem.EntrustAmount = secuItem.AvailableAmount;
+            //                    }
+            //                }
+            //                else
+            //                {
+            //                    //Nothing to do
+            //                }
+            //            }
+            //            break;
+            //        case EntrustDirection.AdjustedToBuySell:
+            //            {
+            //                if (secuItem.SecuType == SecurityType.Stock)
+            //                {
+            //                    if (weightAmount == 0)
+            //                    {
+            //                        secuItem.EDirection = EntrustDirection.SellSpot;
+            //                        secuItem.EntrustAmount = secuItem.AvailableAmount;
+            //                    }
+            //                    else
+            //                    {
+            //                        int rest = secuItem.HoldingAmount - weightAmount * copies;
+            //                        if (rest > 0)
+            //                        {
+            //                            secuItem.EDirection = EntrustDirection.SellSpot;
+            //                            secuItem.EntrustAmount = rest;
+            //                        }
+            //                        else
+            //                        {
+            //                            secuItem.EDirection = EntrustDirection.BuySpot;
+            //                            secuItem.EntrustAmount = 0 - rest;
+            //                        }
+            //                    }
+            //                }
+            //                else if (secuItem.SecuType == SecurityType.Futures)
+            //                {
+            //                    int rest = secuItem.HoldingAmount - template.FutureCopies * copies;
+            //                    if (rest > 0)
+            //                    {
+            //                        secuItem.EDirection = EntrustDirection.BuyClose;
+            //                        secuItem.EntrustAmount = rest;
+            //                    }
+            //                    else
+            //                    {
+            //                        secuItem.EDirection = EntrustDirection.SellSpot;
+            //                        secuItem.EntrustAmount = 0 - rest;
+            //                    }
+            //                }
+            //                else
+            //                {
+            //                    //Nothing to do
+            //                }
+            //            }
+            //            break;
+            //        default:
+            //            break;
+            //    }
+            //}
         }
 
         private void CloseAll(ClosePositionCmdItem cmdItem)
@@ -716,21 +906,46 @@ namespace TradingSystem.View
             }
         }
 
-        private bool ValidateEntrustSecurities()
+        private bool ValidateEntrustSecurities(List<ClosePositionCmdItem> closeCmdItems, out string msg)
         {
-            var selectedItems = _secuDataSource.Where(p => p.Selection).ToList();
-            if (selectedItems.Count == 0)
+            msg = string.Empty;
+            List<ClosePositionCmdItem> invalidItems = new List<ClosePositionCmdItem>();
+
+            foreach (var cmdItem in closeCmdItems)
             {
-                return false;
-            }
-            
-            selectedItems = selectedItems.Where(p => p.EntrustAmount == 0).ToList();
-            if (selectedItems.Count > 0)
-            {
-                return false;
+                var selectedItems = _secuDataSource.Where(p => p.Selection && p.InstanceId == cmdItem.InstanceId).ToList();
+                if (selectedItems.Count > 0)
+                {
+                    //选中的委托数量不能为0
+                    selectedItems = selectedItems.Where(p => p.EntrustAmount == 0).ToList();
+                    if (selectedItems.Count > 0)
+                    {
+                        invalidItems.Add(cmdItem);
+                    }
+                }
+                else
+                {
+                    invalidItems.Add(cmdItem);
+                }
             }
 
-            return true;
+            if (invalidItems.Count > 0)
+            {
+                StringBuilder sb = new StringBuilder();
+                invalidItems.ForEach(p => {
+                    sb.Append("|");
+                    sb.Append(p.InstanceCode);
+                });
+                sb.Append("|");
+
+                msg = sb.ToString();
+
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
         #endregion
 
@@ -742,7 +957,6 @@ namespace TradingSystem.View
             {
                 InstanceId = closeCmdItem.InstanceId,
                 ECommandType = CommandType.Arbitrage,
-                EExecuteType = _execType,
                 //CommandNum = closeCmdItem.Copies,
                 //EStockDirection = Model.Data.EntrustDirection.BuySpot,
                 //EFuturesDirection = Model.Data.EntrustDirection.SellOpen,
@@ -777,6 +991,15 @@ namespace TradingSystem.View
                     break;
                 default:
                     break;
+            }
+
+            if (_dialogType == CloseDialogType.CloseAll)
+            {
+                tdcmdItem.EExecuteType = ExecuteType.ClosePosition;
+            }
+            else if (_dialogType == CloseDialogType.ChangePosition)
+            {
+                tdcmdItem.EExecuteType = ExecuteType.AdjustPosition;
             }
 
             return tdcmdItem;

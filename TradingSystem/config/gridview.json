@@ -2278,14 +2278,6 @@ readonly:
 },{
 	"grid": "closepositioncmd",
 	"columns": [{
-		"name": "selection",
-		"text": "选择",
-		"width": 80,
-		"columntype": 1,
-		"valuetype": 0,
-		"visible": 1,
-		"readonly": 0
-		},{
 		"name": "copies",
 		"text": "份数",
 		"width": 40,

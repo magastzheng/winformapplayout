@@ -9,9 +9,6 @@ namespace Model.UI
 {
     public class ClosePositionCmdItem
     {
-        [BindingAttribute("selection")]
-        public bool Selection { get; set; }
-
         [BindingAttribute("copies")]
         public int Copies { get; set; }
 

@@ -44,5 +44,7 @@ namespace Model.UI
 
         [BindingAttribute("monitorid")]
         public int MonitorId { get; set; }
+
+        public string FuturesContract { get; set; }
     }
 }
