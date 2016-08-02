@@ -381,6 +381,8 @@ namespace TradingSystem.View
             {
                 _dialogType = CloseDialogType.ChangePosition;
                 dialog.Dispose();
+
+                this.securityGridView.Invalidate();
             }
             else
             {
@@ -740,7 +742,7 @@ namespace TradingSystem.View
                                 }
                                 else
                                 {
-                                    p.EDirection = EntrustDirection.SellSpot;
+                                    p.EDirection = EntrustDirection.SellOpen;
                                     p.EntrustAmount = 0 - rest;
                                 }
                             }

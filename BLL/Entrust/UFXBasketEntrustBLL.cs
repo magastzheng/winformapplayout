@@ -11,6 +11,7 @@ using Model.t2sdk;
 using Model.UI;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace BLL.Entrust
 {
@@ -26,6 +27,7 @@ namespace BLL.Entrust
         public UFXBasketEntrustBLL()
         {
             _securityBLL = BLLManager.Instance.SecurityBLL;
+            _tradeCommandBLL = new TradeCommandBLL();
         }
 
         public int Submit(EntrustCommandItem cmdItem, List<EntrustSecurityItem> entrustItems, CallerCallback callerCallback)
@@ -91,6 +93,7 @@ namespace BLL.Entrust
                     SubmitId = cmdItem.SubmitId,
                     CommandId = cmdItem.CommandId,
                     Caller = callerCallback,
+                    WaitEvent = new AutoResetEvent(false),
                 },
 
                 DataHandler = EntrustDataHandler,
@@ -100,7 +103,12 @@ namespace BLL.Entrust
 
             if (result == Model.ConnectionCode.Success)
             {
-                ret = 1;
+                callbacker.Token.WaitEvent.WaitOne();
+                var errorResponse = callbacker.Token.OutArgs as UFXErrorResponse;
+                if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
+                {
+                    ret = 1;
+                }
             }
 
             return ret;
@@ -109,7 +117,8 @@ namespace BLL.Entrust
         private int EntrustDataHandler(CallerToken token, DataParser dataParser)
         {
             var errorResponse = T2ErrorHandler.Handle(dataParser);
-
+            token.OutArgs = errorResponse;
+            
             List<UFXBasketEntrustResponse> responseItems = new List<UFXBasketEntrustResponse>();
             var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXBasketEntrustResponse>();
             for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
@@ -134,6 +143,8 @@ namespace BLL.Entrust
                     SecuCode = responseItem.StockCode,
                     EntrustNo = responseItem.EntrustNo,
                     BatchNo = responseItem.BatchNo,
+                    EntrustFailCode = responseItem.EntrustFailCode,
+                    EntrustFailCause = responseItem.FailCause,
                 };
 
                 entrustSecuItems.Add(entrustItem);
@@ -141,15 +152,21 @@ namespace BLL.Entrust
 
             ret = _entrustdao.UpdateSecurityEntrustResponseByRequestId(entrustSecuItems);
 
-            var batchNos = responseItems.Select(p => p.BatchNo).Distinct().ToList();
-            if (batchNos.Count == 1)
+            if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
-                int batchNo = batchNos[0];
+                int batchNo = 0;
+                var batchNos = responseItems.Select(p => p.BatchNo).Distinct().ToList();
+                if (batchNos.Count == 1)
+                {
+                    batchNo = batchNos[0];
+                }
 
-                ret = _entrustcmddao.UpdateEntrustCommandBatchNo(token.SubmitId, batchNo, Model.EnumType.EntrustStatus.Completed);
+                ret = _entrustcmddao.UpdateEntrustCommandBatchNo(token.SubmitId, batchNo, Model.EnumType.EntrustStatus.Completed, errorResponse.ErrorCode, errorResponse.ErrorMessage);
             }
             else
             {
+                ret = _entrustcmddao.UpdateEntrustCommandBatchNo(token.SubmitId, 0, Model.EnumType.EntrustStatus.EntrustFailed, errorResponse.ErrorCode, errorResponse.ErrorMessage);
+
                 //TODO:
                 string msg = string.Format("The SubmitId [{0}] was split into several batch no", token.SubmitId);
                 logger.Warn(msg);
@@ -158,6 +175,11 @@ namespace BLL.Entrust
             if (token.Caller != null)
             {
                 token.Caller(token, entrustSecuItems, errorResponse);
+            }
+
+            if (token.WaitEvent != null)
+            {
+                token.WaitEvent.Set();
             }
 
             return ret;

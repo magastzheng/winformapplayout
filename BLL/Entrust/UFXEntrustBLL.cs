@@ -184,6 +184,8 @@ namespace BLL.Entrust
                         SecuCode = responseItem.StockCode,
                         EntrustNo = responseItem.EntrustNo,
                         BatchNo = responseItem.BatchNo,
+                        EntrustFailCode = responseItem.EntrustFailCode,
+                        EntrustFailCause = responseItem.FailCause,
                     };
 
                     entrustSecuItems.Add(entrustItem);
@@ -205,7 +207,7 @@ namespace BLL.Entrust
                 {
                     int batchNo = batchNos[0];
 
-                    ret = _entrustcmddao.UpdateEntrustCommandBatchNo(token.SubmitId, batchNo, Model.EnumType.EntrustStatus.Completed);
+                    ret = _entrustcmddao.UpdateEntrustCommandBatchNo(token.SubmitId, batchNo, Model.EnumType.EntrustStatus.Completed, errorResponse.ErrorCode, errorResponse.ErrorMessage);
                 }
                 else
                 {

@@ -17,7 +17,8 @@ namespace BLL.Entrust
         private EntrustDAO _entrustdao = new EntrustDAO();
         private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
 
-        private UFXEntrustBLL _ufxEntrustBLL = new UFXEntrustBLL();
+        //private UFXEntrustBLL _ufxEntrustBLL = new UFXEntrustBLL();
+        private UFXBasketEntrustBLL _ufxBasketEntrustBLL = new UFXBasketEntrustBLL();
         private UFXBasketWithdrawBLL _ufxBasketWithdrawBLL = new UFXBasketWithdrawBLL();
        
         public EntrustBLL()
@@ -54,9 +55,9 @@ namespace BLL.Entrust
                     item.PriceType = originSecuItems[0].EPriceSetting;
 
                     item.EntrustAmount = originSecuItems.Sum(o => o.LeftAmount);
-                }
 
-                entrustItems.Add(item);
+                    entrustItems.Add(item);
+                }
             }
 
             return SubmitOne(cmdItem, entrustItems);
@@ -72,7 +73,8 @@ namespace BLL.Entrust
                     .ToList()
                     .ForEach(o => o.SubmitId = cmdItem.SubmitId);
 
-                ret = _ufxEntrustBLL.Submit(cmdItem, entrustItems);
+                //ret = _ufxEntrustBLL.Submit(cmdItem, entrustItems);
+                ret = _ufxBasketEntrustBLL.Submit(cmdItem, entrustItems, null);
             }
 
             //更新交易指令中目标份数

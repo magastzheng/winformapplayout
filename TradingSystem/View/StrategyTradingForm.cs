@@ -765,6 +765,12 @@ namespace TradingSystem.View
                 return;
             }
 
+            if (_secuDataSource.Count == 0)
+            {
+                MessageBox.Show(this, "没有需要委托的证券！", "警告", MessageBoxButtons.OK);
+                return;
+            }
+
             //Get the price type
             PriceType spotBuyPrice = PriceTypeHelper.GetPriceType(this.cbSpotBuyPrice);
             PriceType spotSellPrice = PriceTypeHelper.GetPriceType(this.cbSpotSellPrice);

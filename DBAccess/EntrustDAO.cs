@@ -241,6 +241,8 @@ namespace DBAccess
                     _dbHelper.AddInParameter(dbCommand, "@EntrustNo", System.Data.DbType.Int32, item.EntrustNo);
                     _dbHelper.AddInParameter(dbCommand, "@BatchNo", System.Data.DbType.Int32, item.BatchNo);
                     _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, now);
+                    _dbHelper.AddInParameter(dbCommand, "@EntrustFailCode", System.Data.DbType.Int32, item.EntrustFailCode);
+                    _dbHelper.AddInParameter(dbCommand, "@EntrustFailCause", System.Data.DbType.String, item.EntrustFailCause);
 
                     ret = dbCommand.ExecuteNonQuery();
                 }

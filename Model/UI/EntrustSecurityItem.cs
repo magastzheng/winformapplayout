@@ -53,5 +53,9 @@ namespace Model.UI
         public int EntrustNo { get; set; }
 
         public int BatchNo { get; set; }
+
+        public int EntrustFailCode { get; set; }
+
+        public string EntrustFailCause { get; set; }
     }
 }

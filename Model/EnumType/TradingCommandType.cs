@@ -16,16 +16,20 @@ namespace Model.EnumType
 
     public enum EntrustStatus
     {
+
         SubmitToDB = 0,     //提交到数据库
         SubmitToUFX = 1,    //提交到UFX
         NoExecuted = 2,     //未执行
         PartExecuted = 3,   //部分执行
         Completed = 4,      //已完成
+        
 
         CancelToDB = 10,    //撤单
         CancelToUFX = 11,   //撤单到UFX
         CancelSuccess = 12, //撤单成功 
-        CancelFail = 13,    //撤单失败
+
+        EntrustFailed = -4,  //委托失败
+        CancelFail = -12,    //撤单失败
     }
 
     public enum DealStatus

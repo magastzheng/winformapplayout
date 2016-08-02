@@ -105,7 +105,7 @@ namespace DBAccess
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public int UpdateEntrustResponse(int submitId, int commandId, string secuCode, int entrustNo, int batchNo)
+        public int UpdateEntrustResponse(int submitId, int commandId, string secuCode, int entrustNo, int batchNo, int entrustFailCode, string entrustFailCause)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustResponse);
             _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
@@ -114,17 +114,21 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@EntrustNo", System.Data.DbType.Int32, entrustNo);
             _dbHelper.AddInParameter(dbCommand, "@BatchNo", System.Data.DbType.Int32, batchNo);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustFailCode", System.Data.DbType.Int32, entrustFailCode);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustFailCause", System.Data.DbType.String, entrustFailCause);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public int UpdateEntrustNoByRequestId(int requestId, int entrustNo, int batchNo)
+        public int UpdateEntrustNoByRequestId(int requestId, int entrustNo, int batchNo, int entrustFailCode, string entrustFailCause)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustResponseByRequestId);
             _dbHelper.AddInParameter(dbCommand, "@RequestId", System.Data.DbType.Int32, requestId);
             _dbHelper.AddInParameter(dbCommand, "@EntrustNo", System.Data.DbType.Int32, entrustNo);
             _dbHelper.AddInParameter(dbCommand, "@BatchNo", System.Data.DbType.Int32, batchNo);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustFailCode", System.Data.DbType.Int32, entrustFailCode);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustFailCause", System.Data.DbType.String, entrustFailCause);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
@@ -266,6 +270,16 @@ namespace DBAccess
                         item.ModifiedDate = (DateTime)reader["ModifiedDate"];
                     }
 
+                    if (reader["EntrustFailCode"] != null && reader["EntrustFailCode"] != DBNull.Value)
+                    {
+                        item.EntrustFailCode = (int)reader["EntrustFailCode"];
+                    }
+
+                    if (reader["EntrustFailCause"] != null && reader["EntrustFailCause"] != DBNull.Value)
+                    {
+                        item.EntrustFailCause = (string)reader["EntrustFailCause"];
+                    }
+
                     items.Add(item);
                 }
             }
@@ -320,6 +334,16 @@ namespace DBAccess
                         item.ModifiedDate = (DateTime)reader["ModifiedDate"];
                     }
 
+                    if (reader["EntrustFailCode"] != null && reader["EntrustFailCode"] != DBNull.Value)
+                    {
+                        item.EntrustFailCode = (int)reader["EntrustFailCode"];
+                    }
+
+                    if (reader["EntrustFailCause"] != null && reader["EntrustFailCause"] != DBNull.Value)
+                    {
+                        item.EntrustFailCause = (string)reader["EntrustFailCause"];
+                    }
+
                     items.Add(item);
                 }
             }
@@ -372,6 +396,16 @@ namespace DBAccess
                     if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
                     {
                         item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+                    }
+
+                    if (reader["EntrustFailCode"] != null && reader["EntrustFailCode"] != DBNull.Value)
+                    {
+                        item.EntrustFailCode = (int)reader["EntrustFailCode"];
+                    }
+
+                    if (reader["EntrustFailCause"] != null && reader["EntrustFailCause"] != DBNull.Value)
+                    {
+                        item.EntrustFailCause = (string)reader["EntrustFailCause"];
                     }
 
                     items.Add(item);
@@ -430,6 +464,16 @@ namespace DBAccess
                         item.ModifiedDate = (DateTime)reader["ModifiedDate"];
                     }
 
+                    if (reader["EntrustFailCode"] != null && reader["EntrustFailCode"] != DBNull.Value)
+                    {
+                        item.EntrustFailCode = (int)reader["EntrustFailCode"];
+                    }
+
+                    if (reader["EntrustFailCause"] != null && reader["EntrustFailCause"] != DBNull.Value)
+                    {
+                        item.EntrustFailCause = (string)reader["EntrustFailCause"];
+                    }
+
                     items.Add(item);
                 }
             }
@@ -482,6 +526,16 @@ namespace DBAccess
                     if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
                     {
                         item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+                    }
+
+                    if (reader["EntrustFailCode"] != null && reader["EntrustFailCode"] != DBNull.Value)
+                    {
+                        item.EntrustFailCode = (int)reader["EntrustFailCode"];
+                    }
+
+                    if (reader["EntrustFailCause"] != null && reader["EntrustFailCause"] != DBNull.Value)
+                    {
+                        item.EntrustFailCause = (string)reader["EntrustFailCause"];
                     }
 
                     items.Add(item);
@@ -538,6 +592,16 @@ namespace DBAccess
                         item.ModifiedDate = (DateTime)reader["ModifiedDate"];
                     }
 
+                    if (reader["EntrustFailCode"] != null && reader["EntrustFailCode"] != DBNull.Value)
+                    {
+                        item.EntrustFailCode = (int)reader["EntrustFailCode"];
+                    }
+
+                    if (reader["EntrustFailCause"] != null && reader["EntrustFailCause"] != DBNull.Value)
+                    {
+                        item.EntrustFailCause = (string)reader["EntrustFailCause"];
+                    }
+
                     items.Add(item);
                 }
             }
@@ -592,6 +656,16 @@ namespace DBAccess
                         item.ModifiedDate = (DateTime)reader["ModifiedDate"];
                     }
 
+                    if (reader["EntrustFailCode"] != null && reader["EntrustFailCode"] != DBNull.Value)
+                    {
+                        item.EntrustFailCode = (int)reader["EntrustFailCode"];
+                    }
+
+                    if (reader["EntrustFailCause"] != null && reader["EntrustFailCause"] != DBNull.Value)
+                    {
+                        item.EntrustFailCause = (string)reader["EntrustFailCause"];
+                    }
+
                     items.Add(item);
                 }
             }
@@ -643,6 +717,16 @@ namespace DBAccess
                     if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
                     {
                         item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+                    }
+
+                    if (reader["EntrustFailCode"] != null && reader["EntrustFailCode"] != DBNull.Value)
+                    {
+                        item.EntrustFailCode = (int)reader["EntrustFailCode"];
+                    }
+
+                    if (reader["EntrustFailCause"] != null && reader["EntrustFailCause"] != DBNull.Value)
+                    {
+                        item.EntrustFailCause = (string)reader["EntrustFailCause"];
                     }
 
                     item.BatchNo = (int)reader["BatchNo"];

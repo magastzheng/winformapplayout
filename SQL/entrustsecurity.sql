@@ -26,6 +26,8 @@ create table entrustsecurity(
 	,EntrustDate		datetime	 -- 委托时间
 	,CreatedDate		datetime
 	,ModifiedDate		datetime
+	,EntrustFailCode	int			 --委托失败代码
+	,EntrustFailCause	varchar(128) --委托失败原因
 )
 
 --====================================
@@ -74,6 +76,8 @@ begin
 		,DealTimes
 		,EntrustDate
 		,CreatedDate
+		,EntrustFailCode
+		,EntrustFailCause
 	)values(
 		@SubmitId
 		,@CommandId			
@@ -93,7 +97,9 @@ begin
 		,0.0				--累计成交费用初始为0
 		,0					--成交次数0
 		,@EntrustDate
-		,@CreatedDate	
+		,@CreatedDate
+		,0
+		,NULL
 	)	
 	
 	set @newid = SCOPE_IDENTITY()
@@ -173,17 +179,38 @@ create proc procEntrustSecurityUpdateEntrustResponse(
 	,@EntrustNo			int
 	,@BatchNo			int
 	,@ModifiedDate		datetime
+	,@EntrustFailCode	int
+	,@EntrustFailCause	varchar(128)
 )
 as
 begin
-	update entrustsecurity
-	set EntrustNo			= @EntrustNo
-		,BatchNo			= @BatchNo
-		,EntrustStatus		= 4				--委托成功
-		,ModifiedDate		= @ModifiedDate
-	where SubmitId=@SubmitId
-		and CommandId=@CommandId 
-		and SecuCode=@SecuCode
+	--没有错误表示成功
+	if @EntrustFailCode = 0
+	begin
+		update entrustsecurity
+		set EntrustNo			= @EntrustNo
+			,BatchNo			= @BatchNo
+			,EntrustStatus		= 4				--委托成功
+			,ModifiedDate		= @ModifiedDate
+			,EntrustFailCode	= @EntrustFailCode
+			,EntrustFailCause	= @EntrustFailCause
+		where SubmitId=@SubmitId
+			and CommandId=@CommandId 
+			and SecuCode=@SecuCode
+	end
+	else
+	begin
+		update entrustsecurity
+		set EntrustNo			= @EntrustNo
+			,BatchNo			= @BatchNo
+			,EntrustStatus		= -4				--委托失败
+			,ModifiedDate		= @ModifiedDate
+			,EntrustFailCode	= @EntrustFailCode
+			,EntrustFailCause	= @EntrustFailCause
+		where SubmitId=@SubmitId
+			and CommandId=@CommandId 
+			and SecuCode=@SecuCode
+	end
 end
 
 go
@@ -196,15 +223,34 @@ create proc procEntrustSecurityUpdateResponseByRequestId(
 	,@EntrustNo			int
 	,@BatchNo			int
 	,@ModifiedDate		datetime
+	,@EntrustFailCode	int
+	,@EntrustFailCause	varchar(128)
 )
 as
 begin
-	update entrustsecurity
-	set EntrustNo			= @EntrustNo
-		,BatchNo			= @BatchNo
-		,EntrustStatus		= 4				--委托成功
-		,ModifiedDate		= @ModifiedDate
-	where RequestId=@RequestId
+	--没有错误表示成功
+	if @EntrustFailCode = 0
+	begin
+		update entrustsecurity
+		set EntrustNo			= @EntrustNo
+			,BatchNo			= @BatchNo
+			,EntrustStatus		= 4				--委托成功
+			,ModifiedDate		= @ModifiedDate
+			,EntrustFailCode	= @EntrustFailCode
+			,EntrustFailCause	= @EntrustFailCause
+		where RequestId=@RequestId
+	end
+	else
+	begin
+		update entrustsecurity
+		set EntrustNo			= @EntrustNo
+			,BatchNo			= @BatchNo
+			,EntrustStatus		= -4				--委托失败
+			,ModifiedDate		= @ModifiedDate
+			,EntrustFailCode	= @EntrustFailCode
+			,EntrustFailCause	= @EntrustFailCause
+		where RequestId=@RequestId
+	end
 end
 
 go
@@ -470,6 +516,8 @@ begin
 		,EntrustDate
 		,CreatedDate
 		,ModifiedDate
+		,EntrustFailCode
+		,EntrustFailCause
 	from entrustsecurity
 	where SubmitId = @SubmitId
 end
@@ -505,6 +553,8 @@ begin
 		,EntrustDate
 		,CreatedDate
 		,ModifiedDate
+		,EntrustFailCode
+		,EntrustFailCause
 	from entrustsecurity
 	where CommandId = @CommandId
 end
@@ -538,6 +588,8 @@ begin
 		,EntrustDate
 		,CreatedDate
 		,ModifiedDate
+		,EntrustFailCode
+		,EntrustFailCause
 	from entrustsecurity
 end
 
@@ -574,6 +626,8 @@ begin
 		,EntrustDate
 		,CreatedDate
 		,ModifiedDate
+		,EntrustFailCode
+		,EntrustFailCause
 	from entrustsecurity
 	where SubmitId=@SubmitId 
 		and CommandId=@CommandId
@@ -611,6 +665,8 @@ begin
 		,EntrustDate
 		,CreatedDate
 		,ModifiedDate
+		,EntrustFailCode
+		,EntrustFailCause
 	from entrustsecurity
 	where EntrustStatus=@EntrustStatus
 end
@@ -647,6 +703,8 @@ begin
 		,EntrustDate
 		,CreatedDate
 		,ModifiedDate
+		,EntrustFailCode
+		,EntrustFailCause
 	from entrustsecurity
 	where CommandId = @CommandId 
 		and (DealStatus = 1 or DealStatus = 2)		--未成交或部分成交
@@ -686,6 +744,8 @@ begin
 		,EntrustDate
 		,CreatedDate
 		,ModifiedDate
+		,EntrustFailCode
+		,EntrustFailCause
 	from entrustsecurity
 	where CommandId = @CommandId 
 		and (DealStatus = 1		--未成交
@@ -726,6 +786,8 @@ begin
 		,EntrustDate
 		,CreatedDate
 		,ModifiedDate
+		,EntrustFailCode
+		,EntrustFailCause
 	from entrustsecurity
 	where SubmitId = @SubmitId 
 		and (DealStatus = 1		--未成交
@@ -763,6 +825,8 @@ begin
 		,EntrustDate
 		,CreatedDate
 		,ModifiedDate
+		,EntrustFailCode
+		,EntrustFailCause
 	from entrustsecurity
 	where (DealStatus = 1		--未成交
 		or DealStatus = 2)		--部分成交
@@ -803,6 +867,8 @@ begin
 		,EntrustDate
 		,CreatedDate
 		,ModifiedDate
+		,EntrustFailCode
+		,EntrustFailCause
 	from entrustsecurity
 	where DealStatus = 3
 end
@@ -837,6 +903,8 @@ begin
 		,a.EntrustDate
 		,a.CreatedDate
 		,a.ModifiedDate
+		,a.EntrustFailCode
+		,a.EntrustFailCause
 		,c.InstanceId
 		,d.InstanceCode
 		,d.MonitorUnitId

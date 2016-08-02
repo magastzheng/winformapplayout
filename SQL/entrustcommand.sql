@@ -14,6 +14,8 @@ create table entrustcommand(
 	,DealStatus		int
 	,CreatedDate	datetime
 	,ModifiedDate	datetime
+	,EntrustFailCode	int			--委托错误码
+	,EntrustFailCause	varchar(128) --委托失败原因
 )
 
 go
@@ -37,6 +39,8 @@ begin
 		,EntrustStatus
 		,DealStatus
 		,CreatedDate
+		,EntrustFailCode
+		,EntrustFailCause
 	)
 	values(
 		@CommandId
@@ -46,6 +50,8 @@ begin
 		,0
 		,1
 		,@CreatedDate
+		,0
+		,NULL
 	)
 
 	set @newid = SCOPE_IDENTITY()
@@ -64,6 +70,8 @@ create proc procEntrustCommandUpdate(
 	,@EntrustStatus	int
 	,@DealStatus	int
 	,@ModifiedDate	datetime
+	,@EntrustFailCode int
+	,@EntrustFailCause varchar(128)
 )
 as
 begin
@@ -73,6 +81,8 @@ begin
 		,EntrustStatus	= @EntrustStatus
 		,DealStatus		= @DealStatus
 		,ModifiedDate	= @ModifiedDate
+		,EntrustFailCode = @EntrustFailCode
+		,EntrustFailCause = @EntrustFailCause
 	where SubmitId=@SubmitId
 end
 
@@ -86,6 +96,8 @@ create proc procEntrustCommandUpdateBatchNo(
 	,@BatchNo		int
 	,@EntrustStatus	int
 	,@ModifiedDate	datetime
+	,@EntrustFailCode	int
+	,@EntrustFailCause varchar(128)
 )
 as
 begin
@@ -93,6 +105,8 @@ begin
 	set BatchNo		= @BatchNo
 		,EntrustStatus	= @EntrustStatus
 		,ModifiedDate	= @ModifiedDate
+		,EntrustFailCode = @EntrustFailCode
+		,EntrustFailCause = @EntrustFailCause
 	where SubmitId=@SubmitId
 end
 
@@ -217,6 +231,8 @@ begin
 		  ,DealStatus
 		  ,CreatedDate
 		  ,ModifiedDate
+		  ,EntrustFailCode
+		  ,EntrustFailCause
 	from entrustcommand
 	where SubmitId=@SubmitId
 end
@@ -240,6 +256,8 @@ begin
 		  ,DealStatus
 		  ,CreatedDate
 		  ,ModifiedDate
+		  ,EntrustFailCode
+		  ,EntrustFailCause
 	from entrustcommand
 	where CommandId=@CommandId
 end
@@ -262,6 +280,8 @@ begin
 		  ,DealStatus
 		  ,CreatedDate
 		  ,ModifiedDate
+		  ,EntrustFailCode
+		  ,EntrustFailCause
 	from entrustcommand
 end
 
@@ -286,6 +306,8 @@ begin
 		  ,DealStatus
 		  ,CreatedDate
 		  ,ModifiedDate
+		  ,EntrustFailCode
+		  ,EntrustFailCause
 	from entrustcommand
 	where CommandId = @CommandId 
 		and EntrustStatus=@EntrustStatus
@@ -310,6 +332,8 @@ begin
 		  ,DealStatus
 		  ,CreatedDate
 		  ,ModifiedDate
+		  ,EntrustFailCode
+		  ,EntrustFailCause
 	from entrustcommand
 	where CommandId = @CommandId 
 		and (DealStatus=1 or DealStatus=2)		--未成交或部分成交
@@ -335,6 +359,8 @@ begin
 		  ,DealStatus
 		  ,CreatedDate
 		  ,ModifiedDate
+		  ,EntrustFailCode
+		  ,EntrustFailCause
 	from entrustcommand
 	where CommandId = @CommandId 
 		and (DealStatus = 1 		--未成交
