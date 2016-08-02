@@ -921,13 +921,13 @@ namespace TradingSystem.View
                     waitAmount = secuItem.TargetCopies;
                 }
 
-                if (thisEntrustAmount + secuItem.TargetAmount <= secuItem.CommandAmount)
+                if (thisEntrustAmount + secuItem.EntrustedAmount <= secuItem.CommandAmount)
                 {
                     secuItem.ThisEntrustAmount = thisEntrustAmount;
                 }
                 else
                 {
-                    secuItem.ThisEntrustAmount = secuItem.CommandAmount - secuItem.TargetAmount;
+                    secuItem.ThisEntrustAmount = secuItem.CommandAmount - secuItem.EntrustedAmount;
                 }
 
                 if (waitAmount <= secuItem.CommandAmount)
