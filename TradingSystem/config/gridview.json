@@ -441,7 +441,7 @@ readonly:
 	{
 		"name": "selection",
 		"text": "选择",
-		"width": 80,
+		"width": 60,
 		"columntype": 1,
 		"valuetype": 0,
 		"visible": 1,
@@ -481,7 +481,7 @@ readonly:
 		},{
 		"name": "portfolioname",
 		"text": "组合名称",
-		"width": 160,
+		"width": 80,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,

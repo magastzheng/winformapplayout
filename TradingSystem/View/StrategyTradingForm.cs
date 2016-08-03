@@ -356,6 +356,9 @@ namespace TradingSystem.View
                     .ForEach(p => _secuDataSource.Add(p));
             }
 
+            //询价
+            QueryQuote(spotBuyPrice, spotSellPrice, futuBuyPrice, futuSellPrice);
+
             //Add into buy/sell grid view
             var entrustItems = _eiDataSource.Where(p => p.CommandNo == cmdItem.CommandId);
             if (entrustItems == null || entrustItems.Count() == 0)
@@ -710,6 +713,15 @@ namespace TradingSystem.View
                 GridView_Command_Select(cmdItem);
             }
 
+            ////Get the price type
+            //PriceType spotBuyPrice = PriceTypeHelper.GetPriceType(this.cbSpotBuyPrice);
+            //PriceType spotSellPrice = PriceTypeHelper.GetPriceType(this.cbSpotSellPrice);
+            //PriceType futureBuyPrice = PriceTypeHelper.GetPriceType(this.cbFuturesBuyPrice);
+            //PriceType futureSellPrice = PriceTypeHelper.GetPriceType(this.cbFuturesSellPrice);
+
+            ////询价
+            //QueryQuote(spotBuyPrice, spotSellPrice, futureBuyPrice, futureSellPrice);
+
             this.cmdGridView.InvalidateColumn(0);
             this.securityGridView.InvalidateColumn(0);
             this.bsGridView.InvalidateColumn(0);
@@ -854,7 +866,6 @@ namespace TradingSystem.View
                 };
 
                 var entrustSecuItems = GetEntrustSecurityItems(-1, eiItem.CommandNo);
-                //int submitRet = _entrustdao.Submit(eciItem, entrustSecuItems);
                 var bllResponse = _entrustBLL.SubmitOne(eciItem, entrustSecuItems);
 
                 if (BLLResponse.Success(bllResponse))
@@ -862,17 +873,13 @@ namespace TradingSystem.View
                     //success to submit into database
                     submitIds.Add(eciItem.SubmitId);
 
-                    //update the TargetNum
-                    //cmdItem.TargetNum = targetNum;
-                    //int targetNumFlag = _tradecmddao.UpdateTargetNum(cmdItem.CommandId, targetNum);
-                    //if (targetNumFlag <= 0)
-                    //{
-                    //    //TODO: failed to update TargetNum
-                    //}
+                    //TODO: update the targetnum in UI
                 }
                 else
                 { 
                     //Fail to submit into database
+                    string msg = string.Format("委托指令[{0}]失败: {1}", eiItem.CommandNo, bllResponse.Message);
+                    MessageBox.Show(this, msg, "错误", MessageBoxButtons.OK);
                 }
             }
 
