@@ -130,20 +130,7 @@ namespace Controls
             //this._title = "NavBarItem";
             this.BackColor = Color.FromArgb(214, 233, 247);
             this._button.Height = _titleHeight;
-            this._button.Click += new EventHandler(
-                    delegate(object sender, EventArgs e)
-                    {
-                        IsSelected = true;
-                        _owner.SelectedIndex = _barIndex;
-
-                        if (_barState == TSNavBarItemState.Collapse)
-                            BarState = TSNavBarItemState.Expand;
-                        else
-                            BarState = TSNavBarItemState.Collapse;
-
-                        SetBarState(_barState);
-                    }
-                );
+            this._button.Click += new EventHandler(BarItem_Click);
             this._tsTreeView.Top = this.Top + this._button.Height;
         }
 
@@ -151,6 +138,11 @@ namespace Controls
             : this()
         {
             _owner = owner;
+        }
+
+        public void ExpandDefaultBar(int barIndex)
+        {
+            ClickBarItem(barIndex);
         }
 
         public void SetTreeViewHeihgt()
@@ -217,6 +209,24 @@ namespace Controls
         private void TreeView_ItemClick(object sender, TreeViewItemArgs e)
         {
             _owner.TreeView_ItemClick(sender, e);
+        }
+
+        private void BarItem_Click(object sender, EventArgs e)
+        {
+            ClickBarItem(_barIndex);
+        }
+
+        private void ClickBarItem(int barIndex)
+        {
+            IsSelected = true;
+            _owner.SelectedIndex = barIndex;
+
+            if (_barState == TSNavBarItemState.Collapse)
+                BarState = TSNavBarItemState.Expand;
+            else
+                BarState = TSNavBarItemState.Collapse;
+
+            SetBarState(_barState);
         }
     }
 }
