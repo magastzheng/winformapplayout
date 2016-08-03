@@ -21,6 +21,7 @@ using Model.Binding.BindingUtil;
 using BLL.UFX.impl;
 using BLL.TradeCommand;
 using BLL.UFX;
+using Model.BLL;
 
 namespace TradingSystem.View
 {
@@ -854,9 +855,9 @@ namespace TradingSystem.View
 
                 var entrustSecuItems = GetEntrustSecurityItems(-1, eiItem.CommandNo);
                 //int submitRet = _entrustdao.Submit(eciItem, entrustSecuItems);
-                int submitRet = _entrustBLL.SubmitOne(eciItem, entrustSecuItems);
+                var bllResponse = _entrustBLL.SubmitOne(eciItem, entrustSecuItems);
 
-                if (submitRet > 0)
+                if (BLLResponse.Success(bllResponse))
                 {
                     //success to submit into database
                     submitIds.Add(eciItem.SubmitId);
@@ -921,6 +922,16 @@ namespace TradingSystem.View
                     waitAmount = secuItem.TargetCopies;
                 }
 
+                if (secuItem.EDirection == EntrustDirection.BuySpot && secuItem.SecuType == SecurityType.Stock)
+                {
+                    if (thisEntrustAmount % 100 != 0)
+                    {
+                        thisEntrustAmount = (int)Math.Ceiling(thisEntrustAmount / 100.0) * 100;
+                        targetAmount = secuItem.TargetAmount + thisEntrustAmount;
+                        waitAmount = secuItem.WaitAmount + thisEntrustAmount;
+                    }
+                }
+
                 if (thisEntrustAmount + secuItem.EntrustedAmount <= secuItem.CommandAmount)
                 {
                     secuItem.ThisEntrustAmount = thisEntrustAmount;
@@ -948,8 +959,7 @@ namespace TradingSystem.View
                     secuItem.TargetAmount = secuItem.CommandAmount;
                 }
 
-                var direction = EntrustDirectionUtil.GetEntrustDirection(secuItem.EntrustDirection);
-                switch (direction)
+                switch (secuItem.EDirection)
                 {
                     case EntrustDirection.BuySpot:
                         {

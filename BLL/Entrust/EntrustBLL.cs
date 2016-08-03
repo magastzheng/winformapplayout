@@ -1,6 +1,8 @@
 ﻿using BLL.SecurityInfo;
 using BLL.UFX.impl;
 using DBAccess;
+using Model;
+using Model.BLL;
 using Model.EnumType;
 using Model.UI;
 using System;
@@ -26,7 +28,7 @@ namespace BLL.Entrust
         }
 
         #region create
-        public int SubmitOne(List<EntrustCommandItem> oldCmdItems, List<CancelRedoItem> cancelItems)
+        public BLLResponse SubmitOne(List<EntrustCommandItem> oldCmdItems, List<CancelRedoItem> cancelItems)
         {
             EntrustCommandItem cmdItem = MergeEntrustCommandItem(oldCmdItems);
 
@@ -63,41 +65,55 @@ namespace BLL.Entrust
             return SubmitOne(cmdItem, entrustItems);
         }
 
-        public int SubmitOne(EntrustCommandItem cmdItem, List<EntrustSecurityItem> entrustItems)
+        public BLLResponse SubmitOne(EntrustCommandItem cmdItem, List<EntrustSecurityItem> entrustItems)
         {
             int ret = _entrustdao.Submit(cmdItem, entrustItems);
-
-            if (ret > 0)
+            if (ret <= 0)
             {
-                entrustItems.Where(p => p.CommandId == cmdItem.CommandId)
-                    .ToList()
-                    .ForEach(o => o.SubmitId = cmdItem.SubmitId);
-
-                //ret = _ufxEntrustBLL.Submit(cmdItem, entrustItems);
-                ret = _ufxBasketEntrustBLL.Submit(cmdItem, entrustItems, null);
+                return new BLLResponse(ConnectionCode.DBInsertFail, "Fail to sumbit into database");
             }
+
+            entrustItems.Where(p => p.CommandId == cmdItem.CommandId)
+                .ToList()
+                .ForEach(o => o.SubmitId = cmdItem.SubmitId);
+
+            //ret = _ufxEntrustBLL.Submit(cmdItem, entrustItems);
+            var bllResponse = _ufxBasketEntrustBLL.Submit(cmdItem, entrustItems, null);
 
             //更新交易指令中目标份数
-            if (ret > 0)
+            if (bllResponse.Code != Model.ConnectionCode.SuccessEntrust)
             {
-                var tradeCmdItem = _tradecmddao.Get(cmdItem.CommandId);
-                int targetNum = tradeCmdItem.TargetNum + cmdItem.Copies;
-                ret = _tradecmddao.UpdateTargetNum(cmdItem.CommandId, targetNum);
+                return bllResponse;
             }
-            
-            return ret;
+
+            var tradeCmdItem = _tradecmddao.Get(cmdItem.CommandId);
+            int targetNum = tradeCmdItem.TargetNum + cmdItem.Copies;
+
+            ret = _tradecmddao.UpdateTargetNum(cmdItem.CommandId, targetNum);
+            if (ret <= 0)
+            {
+                bllResponse.Code = ConnectionCode.DBUpdateFail;
+                bllResponse.Message = "Fail to update TradeCommand TargetNum";
+            }
+
+            return bllResponse;
         }
 
-        public int Submit(List<EntrustCommandItem> cmdItems, List<EntrustSecurityItem> entrustItems)
+        public BLLResponse Submit(List<EntrustCommandItem> cmdItems, List<EntrustSecurityItem> entrustItems)
         {
-            int ret = -1;
+            BLLResponse bllResponse = new BLLResponse();
             foreach (var cmdItem in cmdItems)
             {
                 var cmdSecuItems = entrustItems.Where(p => p.CommandId == cmdItem.CommandId).ToList();
-                ret = SubmitOne(cmdItem, cmdSecuItems);
+                var tempResponse = SubmitOne(cmdItem, cmdSecuItems);
+                if (tempResponse.Code != ConnectionCode.SuccessEntrust)
+                {
+                    bllResponse.Code = tempResponse.Code;
+                    bllResponse.Message = tempResponse.Message;
+                }
             }
 
-            return -1;
+            return bllResponse;
         }
 
         #endregion

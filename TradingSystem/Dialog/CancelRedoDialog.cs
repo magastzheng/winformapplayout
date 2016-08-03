@@ -17,6 +17,7 @@ using Model.EnumType;
 using Model.Binding.BindingUtil;
 using Quote;
 using System.Text;
+using Model.BLL;
 
 namespace TradingSystem.Dialog
 {
@@ -441,6 +442,12 @@ namespace TradingSystem.Dialog
         private void Submit(List<EntrustCommandItem> entrustCmdItems, List<CancelRedoItem> cancelRedoItems)
         {
             var ret = _entrustBLL.SubmitOne(entrustCmdItems, cancelRedoItems);
+            if (!BLLResponse.Success(ret))
+            { 
+                int submitId = cancelRedoItems.Select(p => p.SubmitId).Distinct().Single();
+                string msg = string.Format("委托失败, 提交号：[{0}]!", submitId);
+                MessageBox.Show(this, msg, "错误", MessageBoxButtons.OK);
+            }
         }
 
         #endregion

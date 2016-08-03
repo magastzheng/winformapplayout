@@ -48,6 +48,7 @@
     <Compile Include="Binding\BindingUtil\UFXDataBindingHelper.cs" />
     <Compile Include="Binding\IntBoolConverter.cs" />
     <Compile Include="Binding\UFXDataAttribute.cs" />
+    <Compile Include="BLL\BLLResponse.cs" />
     <Compile Include="config\Benchmark.cs" />
     <Compile Include="config\ComboOption.cs" />
     <Compile Include="config\FunctionItem.cs" />

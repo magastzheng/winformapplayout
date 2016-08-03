@@ -6,7 +6,9 @@ using Config;
 using Config.ParamConverter;
 using DBAccess;
 using log4net;
+using Model;
 using Model.Binding.BindingUtil;
+using Model.BLL;
 using Model.t2sdk;
 using Model.UI;
 using System.Collections.Generic;
@@ -30,14 +32,12 @@ namespace BLL.Entrust
             _tradeCommandBLL = new TradeCommandBLL();
         }
 
-        public int Submit(EntrustCommandItem cmdItem, List<EntrustSecurityItem> entrustItems, CallerCallback callerCallback)
+        public BLLResponse Submit(EntrustCommandItem cmdItem, List<EntrustSecurityItem> entrustItems, CallerCallback callerCallback)
         {
-            int ret = -1;
-
             var cmdEntrustItems = entrustItems.Where(p => p.CommandId == cmdItem.CommandId && p.SubmitId == cmdItem.SubmitId).ToList();
             if (cmdEntrustItems == null || cmdEntrustItems.Count == 0)
             {
-                return ret;
+                return new BLLResponse(ConnectionCode.EmptyEntrustItem, "Empty EntrustCommandItem or EntrustSecurityItem.");
             }
             var tradeCommandItem = _tradeCommandBLL.GetTradeCommandItem(cmdItem.CommandId);
             var portfolio = LoginManager.Instance.GetPortfolio(tradeCommandItem.PortfolioCode);
@@ -101,17 +101,29 @@ namespace BLL.Entrust
 
             var result = _securityBLL.EntrustBasket(ufxRequests, callbacker);
 
+            BLLResponse bllResponse = new BLLResponse();
             if (result == Model.ConnectionCode.Success)
             {
                 callbacker.Token.WaitEvent.WaitOne();
                 var errorResponse = callbacker.Token.OutArgs as UFXErrorResponse;
                 if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
                 {
-                    ret = 1;
+                    bllResponse.Code = ConnectionCode.SuccessEntrust;
+                    bllResponse.Message = "Success Entrust";
+                }
+                else
+                {
+                    bllResponse.Code = ConnectionCode.FailEntrust;
+                    bllResponse.Message = "Fail Entrust: " + errorResponse.ErrorMessage;
                 }
             }
+            else
+            {
+                bllResponse.Code = result;
+                bllResponse.Message = "Fail to submit in ufx.";
+            }
 
-            return ret;
+            return bllResponse;
         }
 
         private int EntrustDataHandler(CallerToken token, DataParser dataParser)
