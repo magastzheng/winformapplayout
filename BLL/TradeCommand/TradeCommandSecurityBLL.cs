@@ -33,20 +33,29 @@ namespace BLL.TradeCommand
             {
                 weightAmount = secuItem.CommandAmount / cmdItem.CommandNum;
 
-                secuItem.Selection = true;
-                secuItem.CommandCopies = cmdItem.CommandNum;
-                secuItem.TargetCopies = cmdItem.TargetNum;
-                secuItem.TargetAmount = secuItem.TargetCopies * weightAmount;
-                secuItem.FundCode = cmdItem.FundCode;
-                secuItem.PortfolioName = cmdItem.PortfolioName;
-
+                CommandSecurityItem csItem = new CommandSecurityItem 
+                {
+                    Selection = true,
+                    CommandId = secuItem.CommandId,
+                    SecuCode = secuItem.SecuCode,
+                    SecuType = secuItem.SecuType,
+                    CommandAmount = secuItem.CommandAmount,
+                    CommandPrice = secuItem.CommandPrice,
+                    EDirection = secuItem.EDirection,
+                    CommandCopies = cmdItem.CommandNum,
+                    TargetCopies = cmdItem.TargetNum,
+                    TargetAmount = cmdItem.TargetNum * weightAmount,
+                    FundCode = cmdItem.FundCode,
+                    PortfolioName = cmdItem.PortfolioName,
+                };
+                
                 var entrustedItems = entrustSecuItems.Where(p => p.SecuCode.Equals(secuItem.SecuCode)
                     && p.SecuType == secuItem.SecuType
                     && p.EntrustStatus == Model.EnumType.EntrustStatus.Completed)
                     .ToList();
                 if (entrustedItems.Count > 0)
                 {
-                    secuItem.EntrustedAmount = entrustedItems.Sum(p => p.EntrustAmount);
+                    csItem.EntrustedAmount = entrustedItems.Sum(p => p.EntrustAmount);
                 }
 
                 var dealItems = entrustSecuItems.Where(p => p.SecuCode.Equals(secuItem.SecuCode)
@@ -55,16 +64,16 @@ namespace BLL.TradeCommand
                     .ToList();
                 if (dealItems.Count > 0)
                 {
-                    secuItem.DealAmount = dealItems.Sum(p => p.TotalDealAmount);
+                    csItem.DealAmount = dealItems.Sum(p => p.TotalDealAmount);
                 }
 
                 var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode);
                 if (findItem != null)
                 {
-                    secuItem.SecuName = findItem.SecuName;
+                    csItem.SecuName = findItem.SecuName;
                 }
 
-                finalSecuItems.Add(secuItem);
+                finalSecuItems.Add(csItem);
             }
 
             return finalSecuItems;

@@ -1,4 +1,5 @@
 ﻿
+using Model.Database;
 using Model.EnumType;
 using Model.UI;
 using System;
@@ -28,7 +29,7 @@ namespace DBAccess
             
         }
 
-        public int Create(TradingCommandItem cmdItem)
+        public int Create(TradeCommand cmdItem)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
             _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, cmdItem.InstanceId);
@@ -62,7 +63,7 @@ namespace DBAccess
             return commandId;
         }
 
-        public int Update(TradingCommandItem cmdItem)
+        public int Update(TradeCommand cmdItem)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Modify);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, cmdItem.CommandId);
@@ -101,12 +102,12 @@ namespace DBAccess
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public TradingCommandItem Get(int commandId)
+        public TradeCommand Get(int commandId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
 
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
-            TradingCommandItem item = new TradingCommandItem();
+            TradeCommand item = new TradeCommand();
 
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
@@ -131,8 +132,8 @@ namespace DBAccess
                     item.PortfolioId = (int)reader["PortfolioId"];
                     item.PortfolioCode = (string)reader["PortfolioCode"];
                     item.PortfolioName = (string)reader["PortfolioName"];
-                    item.FundCode = (string)reader["AccountCode"];
-                    item.FundName = (string)reader["AccountName"];
+                    item.AccountCode = (string)reader["AccountCode"];
+                    item.AccountName = (string)reader["AccountName"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {
@@ -161,19 +162,19 @@ namespace DBAccess
             return item;
         }
 
-        public List<TradingCommandItem> GetAll()
+        public List<TradeCommand> GetAll()
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
             
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, -1);
 
-            List<TradingCommandItem> items = new List<TradingCommandItem>();
+            List<TradeCommand> items = new List<TradeCommand>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    TradingCommandItem item = new TradingCommandItem();
+                    TradeCommand item = new TradeCommand();
                     item.CommandId = (int)reader["CommandId"];
                     item.InstanceId = (int)reader["InstanceId"];
                     item.CommandNum = (int)reader["CommandNum"];
@@ -192,8 +193,8 @@ namespace DBAccess
                     item.PortfolioId = (int)reader["PortfolioId"];
                     item.PortfolioCode = (string)reader["PortfolioCode"];
                     item.PortfolioName = (string)reader["PortfolioName"];
-                    item.FundCode = (string)reader["AccountCode"];
-                    item.FundName = (string)reader["AccountName"];
+                    item.AccountCode = (string)reader["AccountCode"];
+                    item.AccountName = (string)reader["AccountName"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {

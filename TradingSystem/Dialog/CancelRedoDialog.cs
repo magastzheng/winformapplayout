@@ -243,6 +243,7 @@ namespace TradingSystem.Dialog
                             CommandId = cmdItem.CommandId,
                             //EntrustAmount = p.EntrustAmount,
                             //EntrustDirection = p.EntrustDirection,
+                            EDirection = p.EntrustDirection,
                             EntrustPrice = p.EntrustPrice,
                             SecuCode = p.SecuCode,
                             SecuType = p.SecuType,
@@ -259,7 +260,7 @@ namespace TradingSystem.Dialog
                         };
 
                         cancelRedoItem.EntrustAmount = cancelRedoItem.LeftAmount;
-                        if (cancelRedoItem.SecuType == Model.SecurityInfo.SecurityType.Stock)
+                        if (cancelRedoItem.SecuType == Model.SecurityInfo.SecurityType.Stock && cancelRedoItem.EDirection == EntrustDirection.BuySpot)
                         {
                             if (cancelRedoItem.LeftAmount % 100 != 0)
                             {
@@ -284,6 +285,10 @@ namespace TradingSystem.Dialog
                         else if (cancelRedoItem.ExchangeCode.Equals("SSE"))
                         {
                             cancelRedoItem.EEntrustPriceType = shPriceType;
+                        }
+                        else
+                        {
+                            cancelRedoItem.EEntrustPriceType = cancelRedoItem.EOriginPriceType;
                         }
 
                         if (cancelRedoItem.SecuType == SecurityType.Stock && cancelRedoItem.EDirection == EntrustDirection.BuySpot)

@@ -15,6 +15,7 @@ using BLL.TradeCommand;
 using Model.EnumType;
 using Model.Binding.BindingUtil;
 using TradingSystem.TradeUtil;
+using Model.Database;
 
 namespace TradingSystem.View
 {
@@ -346,7 +347,7 @@ namespace TradingSystem.View
                 if (instanceId > 0)
                 {
                     //success! Will send generate TradingCommand
-                    TradingCommandItem cmdItem = new TradingCommandItem
+                    TradeCommand cmdItem = new TradeCommand
                     {
                         InstanceId = instanceId,
                         ECommandType = CommandType.Arbitrage,
@@ -407,19 +408,18 @@ namespace TradingSystem.View
             return newOpenItem;
         }
 
-        private List<CommandSecurityItem> GetSelectCommandSecurities(OpenPositionItem openItem, int commandId)
+        private List<TradeCommandSecurity> GetSelectCommandSecurities(OpenPositionItem openItem, int commandId)
         {
-            List<CommandSecurityItem> cmdSecuItems = new List<CommandSecurityItem>();
+            List<TradeCommandSecurity> cmdSecuItems = new List<TradeCommandSecurity>();
             foreach (var item in _securityDataSource)
             {
                 if (item.Selection && item.MonitorId == openItem.MonitorId)
                 {
-                    CommandSecurityItem secuItem = new CommandSecurityItem 
+                    TradeCommandSecurity secuItem = new TradeCommandSecurity 
                     {
                         CommandId = commandId,
                         SecuCode = item.SecuCode,
                         SecuType = item.SecuType,
-                        //WeightAmount = item.WeightAmount,
                         CommandAmount = item.EntrustAmount,
                         CommandPrice = item.CommandPrice,
                         EntrustStatus = EntrustStatus.NoExecuted

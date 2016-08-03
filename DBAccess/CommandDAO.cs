@@ -1,4 +1,5 @@
 ﻿using log4net;
+using Model.Database;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace DBAccess
             
         }
 
-        public int Create(TradingCommandItem cmdItem, List<CommandSecurityItem> secuItems)
+        public int Create(TradeCommand cmdItem, List<TradeCommandSecurity> secuItems)
         {
             var dbCommand = _dbHelper.GetCommand();
             _dbHelper.Open(_dbHelper.Connection);

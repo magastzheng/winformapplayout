@@ -551,7 +551,7 @@ namespace TradingSystem.View
             _secuDataSource.Clear();
             _eiDataSource.Clear();
 
-            var tradingcmds = _tradecmddao.GetAll();
+            var tradingcmds = _tradeCommandBLL.GetTradeCommandItems();
             if (tradingcmds != null)
             {
                 var tradeSecuItems = _tradeCommandBLL.GetCommandSecurityItems(tradingcmds);

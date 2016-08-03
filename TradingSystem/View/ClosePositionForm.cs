@@ -21,6 +21,7 @@ using TradingSystem.TradeUtil;
 using BLL.Entrust;
 using System.Diagnostics;
 using System.Text;
+using Model.Database;
 
 namespace TradingSystem.View
 {
@@ -931,9 +932,9 @@ namespace TradingSystem.View
 
         #region
 
-        private TradingCommandItem GetTradeCommandItem(ClosePositionCmdItem closeCmdItem)
+        private TradeCommand GetTradeCommandItem(ClosePositionCmdItem closeCmdItem)
         {
-            TradingCommandItem tdcmdItem = new TradingCommandItem
+            TradeCommand tdcmdItem = new TradeCommand
             {
                 InstanceId = closeCmdItem.InstanceId,
                 ECommandType = CommandType.Arbitrage,

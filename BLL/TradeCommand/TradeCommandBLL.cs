@@ -1,6 +1,7 @@
 ﻿using Config;
 using DBAccess;
 using log4net;
+using Model.Database;
 using Model.EnumType;
 using Model.UI;
 using System.Collections.Generic;
@@ -24,13 +25,13 @@ namespace BLL.TradeCommand
         }
 
         #region submit
-        public int Submit(TradingCommandItem cmdItem, List<CommandSecurityItem> secuItems)
+        public int Submit(Model.Database.TradeCommand cmdItem, List<TradeCommandSecurity> secuItems)
         {
             cmdItem.SubmitPerson = LoginManager.Instance.LoginUser.Operator;
             return _commanddao.Create(cmdItem, secuItems);
         }
 
-        public int SubmitClosePosition(TradingCommandItem cmdItem, ClosePositionItem closePositionItem, List<ClosePositionSecurityItem> closeSecuItems)
+        public int SubmitClosePosition(Model.Database.TradeCommand cmdItem, ClosePositionItem closePositionItem, List<ClosePositionSecurityItem> closeSecuItems)
         {
             var secuItems = GetSelectCommandSecurities(closePositionItem, closeSecuItems);
 
@@ -40,7 +41,7 @@ namespace BLL.TradeCommand
         public int SubmitCloseAll(ClosePositionItem closeItem, List<ClosePositionSecurityItem> closeSecuItems)
         {
             var instance = _tradeinstdao.GetCombine(closeItem.InstanceId);
-            TradingCommandItem tccmdItem = new TradingCommandItem 
+            var tccmdItem = new Model.Database.TradeCommand
             {
                 InstanceId = closeItem.InstanceId,
                 ECommandType = CommandType.Arbitrage,
@@ -71,11 +72,11 @@ namespace BLL.TradeCommand
             //var tradeinstSecuItems = _tradeinstsecudbo.Get(closeItem.InstanceId);
             var tempStockItems = _tempstockdao.Get(closeItem.TemplateId);
 
-            List<CommandSecurityItem> cmdSecuItems = new List<CommandSecurityItem>();
+            List<TradeCommandSecurity> cmdSecuItems = new List<TradeCommandSecurity>();
 
             foreach (var item in closeSecuItems)
             {
-                CommandSecurityItem secuItem = new CommandSecurityItem
+                TradeCommandSecurity secuItem = new TradeCommandSecurity
                 {
                     SecuCode = item.SecuCode,
                     SecuType = item.SecuType,
@@ -115,40 +116,53 @@ namespace BLL.TradeCommand
 
         #endregion
 
+        #region get/fetch
+
         public List<TradingCommandItem> GetTradeCommandItems()
         {
-            return _tradecommandao.GetAll();
+            var uiCommands = new List<TradingCommandItem>();
+            var tradeCommands = _tradecommandao.GetAll();
+            foreach (var tradeCommand in tradeCommands)
+            {
+                var uiCommand = BuildUICommand(tradeCommand);
+                uiCommands.Add(uiCommand);
+            }
+            return uiCommands;
         }
 
         public TradingCommandItem GetTradeCommandItem(int commandId)
         {
-            return _tradecommandao.Get(commandId);
+            var tradeCommand = _tradecommandao.Get(commandId);
+            return BuildUICommand(tradeCommand);
         }
 
-        public List<CommandSecurityItem> GetCommandSecurityItems(List<TradingCommandItem> cmdItems)
+        public List<TradeCommandSecurity> GetCommandSecurityItems(List<TradingCommandItem> cmdItems)
         {
-            var cmdSecuItems = new List<CommandSecurityItem>();
+            var cmdSecuItems = new List<TradeCommandSecurity>();
 
             foreach (var cmdItem in cmdItems)
             {
                 var secuItems = _tradecmdsecudao.Get(cmdItem.CommandId);
+                
                 cmdSecuItems.AddRange(secuItems);
             }
 
             return cmdSecuItems;
         }
 
+        #endregion
+
         #region private
 
-        private List<CommandSecurityItem> GetSelectCommandSecurities(ClosePositionItem closePositionItem, List<ClosePositionSecurityItem> closeSecuItems)
+        private List<TradeCommandSecurity> GetSelectCommandSecurities(ClosePositionItem closePositionItem, List<ClosePositionSecurityItem> closeSecuItems)
         {
-            List<CommandSecurityItem> cmdSecuItems = new List<CommandSecurityItem>();
+            List<TradeCommandSecurity> cmdSecuItems = new List<TradeCommandSecurity>();
 
             var tempStockItems = _tempstockdao.Get(closePositionItem.TemplateId);
             var selectedSecuItems = closeSecuItems.Where(p => p.InstanceId.Equals(closePositionItem.InstanceId)).ToList();
             foreach (var item in selectedSecuItems)
             {
-                CommandSecurityItem secuItem = new CommandSecurityItem
+                TradeCommandSecurity secuItem = new TradeCommandSecurity
                 {
                     SecuCode = item.SecuCode,
                     SecuType = item.SecuType,
@@ -170,6 +184,38 @@ namespace BLL.TradeCommand
             return cmdSecuItems;
         }
 
+        private TradingCommandItem BuildUICommand(Model.Database.TradeCommand tradeCommand)
+        {
+            var uiCommand = new TradingCommandItem
+            {
+                CommandId = tradeCommand.CommandId,
+                InstanceId = tradeCommand.InstanceId,
+                CommandNum = tradeCommand.CommandNum,
+                TargetNum = tradeCommand.TargetNum,
+                ModifiedTimes = tradeCommand.ModifiedTimes,
+                ECommandType = tradeCommand.ECommandType,
+                EExecuteType = tradeCommand.EExecuteType,
+                EStockDirection = tradeCommand.EStockDirection,
+                EFuturesDirection = tradeCommand.EFuturesDirection,
+                EEntrustStatus = tradeCommand.EEntrustStatus,
+                EDealStatus = tradeCommand.EDealStatus,
+                SubmitPerson = tradeCommand.SubmitPerson,
+                CreatedDate = tradeCommand.CreatedDate,
+                ModifiedDate = tradeCommand.ModifiedDate,
+                DStartDate = tradeCommand.DStartDate,
+                DEndDate = tradeCommand.DEndDate,
+                MonitorUnitId = tradeCommand.MonitorUnitId,
+                MonitorUnitName = tradeCommand.MonitorUnitName,
+                InstanceCode = tradeCommand.InstanceCode,
+                PortfolioId = tradeCommand.PortfolioId,
+                PortfolioCode = tradeCommand.PortfolioCode,
+                PortfolioName = tradeCommand.PortfolioName,
+                FundCode = tradeCommand.AccountCode,
+                FundName = tradeCommand.AccountName,
+            };
+
+            return uiCommand;
+        }
         #endregion
     }
 }

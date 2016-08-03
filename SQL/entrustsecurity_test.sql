@@ -2,6 +2,8 @@ use tradingsystem
 
 select * from tradingcommand
 
+select * from tradingcommandsecurity
+
 select * from entrustcommand
 
 select * from entrustsecurity

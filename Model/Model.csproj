@@ -52,6 +52,8 @@
     <Compile Include="config\ComboOption.cs" />
     <Compile Include="config\FunctionItem.cs" />
     <Compile Include="config\Label.cs" />
+    <Compile Include="Database\TradeCommand.cs" />
+    <Compile Include="Database\TradeCommandSecurity.cs" />
     <Compile Include="EnumType\EnumTypeConverter\EntrustRequestHelper.cs" />
     <Compile Include="EnumType\EnumTypeConverter\EnumTypeDisplayHelper.cs" />
     <Compile Include="EnumType\PortfolioStatus.cs" />
