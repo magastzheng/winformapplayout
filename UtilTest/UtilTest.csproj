@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DateUtilTest.cs" />
+    <Compile Include="EntrustPriceTypeTest.cs" />
     <Compile Include="ExcelUtilTest.cs" />
     <Compile Include="JsonUtilTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

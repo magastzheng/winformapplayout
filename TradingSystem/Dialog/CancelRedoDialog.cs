@@ -16,6 +16,7 @@ using BLL.SecurityInfo;
 using Model.EnumType;
 using Model.Binding.BindingUtil;
 using Quote;
+using System.Text;
 
 namespace TradingSystem.Dialog
 {
@@ -336,6 +337,13 @@ namespace TradingSystem.Dialog
 
         private void Button_Confirm_Click(object sender, EventArgs e)
         {
+            string outMsg = string.Empty;
+            if (!ValidateEntrustSecurities(_entrustCommandItems, out outMsg))
+            {
+                string msg = string.Format("证券未勾选或勾选证券均未设置委托数量, [交易指令;提交号]为: {0}", outMsg);
+                MessageBox.Show(this, msg, "警告", MessageBoxButtons.OK);
+                return;
+            }
             //Get the price type
             PriceType spotBuyPrice = PriceTypeHelper.GetPriceType(this.cbSpotBuyPrice);
             PriceType spotSellPrice = PriceTypeHelper.GetPriceType(this.cbSpotSellPrice);
@@ -364,6 +372,51 @@ namespace TradingSystem.Dialog
 
         #region
 
+        private bool ValidateEntrustSecurities(List<EntrustCommandItem> cmdItems, out string msg)
+        {
+            msg = string.Empty;
+            List<EntrustCommandItem> invalidItems = new List<EntrustCommandItem>();
+
+            foreach (var cmdItem in cmdItems)
+            {
+                var selectedItems = _secuDataSource.Where(p => p.Selection && p.CommandId == cmdItem.CommandId && p.SubmitId == cmdItem.SubmitId).ToList();
+                if (selectedItems.Count > 0)
+                {
+                    //选中的委托数量不能为0
+                    selectedItems = selectedItems.Where(p => p.EntrustAmount == 0).ToList();
+                    if (selectedItems.Count > 0)
+                    {
+                        invalidItems.Add(cmdItem);
+                    }
+                }
+                else
+                {
+                    invalidItems.Add(cmdItem);
+                }
+            }
+
+            if (invalidItems.Count > 0)
+            {
+                StringBuilder sb = new StringBuilder();
+                invalidItems.ForEach(p =>
+                {
+                    sb.Append("|");
+                    sb.Append(p.CommandId);
+                    sb.Append(";");
+                    sb.Append(p.SubmitId);
+                });
+                sb.Append("|");
+
+                msg = sb.ToString();
+
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
         //private void CancelRedo(int submitId, List<CancelRedoItem> cancelRedoItems)
         //{
         //    //var submitId = cancelRedoItems.Select(p => p.SubmitId).Single();
@@ -383,6 +436,8 @@ namespace TradingSystem.Dialog
         //    //ret = _entrustBLL.CancelSuccess(cancelRedoItems);
         //}
 
+
+        //TODO: validate before submit
         private void Submit(List<EntrustCommandItem> entrustCmdItems, List<CancelRedoItem> cancelRedoItems)
         {
             var ret = _entrustBLL.SubmitOne(entrustCmdItems, cancelRedoItems);

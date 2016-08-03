@@ -259,21 +259,9 @@
 	]},
 	{
 		"name": "shanghaiexchangepricetype",
-		"selected": "shpt1",
+		"selected": "shpt4",
 		"items":[
 			{
-				"id": "shpt1",
-				"code": "H",
-				"name": "意向申报"
-			},{
-				"id": "shpt2",
-				"code": "I",
-				"name": "定价申报"
-			},{
-				"id": "shpt3",
-				"code": "J",
-				"name": "成交申报"
-			},{
 				"id": "shpt4",
 				"code": "a",
 				"name": "五档即成剩撤"
@@ -307,18 +295,6 @@
 				"id": "szpt5",
 				"code": "F",
 				"name": "全额成或撤"
-			},{
-				"id": "szpt6",
-				"code": "H",
-				"name": "意向申报"
-			},{
-				"id": "szpt7",
-				"code": "I",
-				"name": "定价申报"
-			},{
-				"id": "szpt8",
-				"code": "J",
-				"name": "成交申报"
 			}
 		]
 	},{
