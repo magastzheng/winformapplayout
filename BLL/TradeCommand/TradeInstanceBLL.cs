@@ -70,13 +70,14 @@ namespace BLL.TradeCommand
                 {
                     InstanceId = tradingInstance.InstanceId,
                     SecuCode = item.SecuCode,
+                    SecuType = item.SecuType
                 };
 
-                var findItem = SecurityInfoManager.Instance.Get(item.SecuCode);
-                if (findItem != null)
-                {
-                    tiSecuItem.SecuType = findItem.SecuType;
-                }
+                //var findItem = SecurityInfoManager.Instance.Get(item.SecuCode);
+                //if (findItem != null)
+                //{
+                //    tiSecuItem.SecuType = findItem.SecuType;
+                //}
 
                 if (item.Selection)
                 {

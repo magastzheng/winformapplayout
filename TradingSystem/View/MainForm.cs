@@ -41,7 +41,8 @@ namespace TradingSystem.View
                     tsNavBarItem.TreeView.NodeExpandedImage = _imageList.Images[1];
                 }
 
-                _navBarContainer.SwitchBarState(1);
+                //_navBarContainer.SwitchBarState(1);
+                _navBarContainer.ExpandDefaultBar(1);
                 FormManager.Instance.ActiveForm(this, _panelMain, "open", _gridConfig, BLLManager.Instance);
             }
         }

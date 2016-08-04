@@ -81,6 +81,14 @@ namespace Controls
             get { return Bottom - Margin.Bottom - Padding.Bottom; }
         }
 
+        public void ExpandDefaultBar(int index)
+        {
+            if (index >= 0 && index < this._navBarItems.Count)
+            {
+                this._navBarItems[index].ExpandDefaultBar(index);
+            }
+        }
+
         public void SwitchBarState(int index)
         {
             for (int i = 0, count = this._navBarItems.Count; i < count; i++)

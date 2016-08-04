@@ -50,10 +50,10 @@ namespace Model.UI
         public double LastPrice { get; set; }
 
         [BindingAttribute("buyamount")]
-        public int BuyAmount { get; set; }
+        public long BuyAmount { get; set; }
 
         [BindingAttribute("sellamount")]
-        public int SellAmount { get; set; }
+        public long SellAmount { get; set; }
 
         [BindingAttribute("suspensionflag")]
         public string SuspensionFlag

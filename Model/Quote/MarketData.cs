@@ -93,10 +93,10 @@ namespace Model.Quote
         public double SellPrice5;
 
         //外盘
-        public int BuyAmount;
+        public long BuyAmount;
 
         //内盘
-        public int SellAmount;
+        public long SellAmount;
 
         public SuspendFlag SuspendFlag;
 

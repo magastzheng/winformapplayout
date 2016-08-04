@@ -424,10 +424,10 @@ namespace Quote
                                     marketData.BuyPrice5 = dval;
                                     break;
                                 case "rt_upward_vol":
-                                    marketData.BuyAmount = Convert.ToInt32(dval);
+                                    marketData.BuyAmount = Convert.ToInt64(dval);
                                     break;
                                 case "rt_downward_vol":
-                                    marketData.SellAmount = Convert.ToInt32(dval);
+                                    marketData.SellAmount = Convert.ToInt64(dval);
                                     break;
                                 case "rt_susp_flag":
                                     {

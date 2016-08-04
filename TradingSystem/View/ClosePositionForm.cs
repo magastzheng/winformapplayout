@@ -126,15 +126,27 @@ namespace TradingSystem.View
         private void LoadSecurity(ClosePositionItem closeItem)
         {
             var secuItems = _tradeInstanceSecuBLL.Get(closeItem.InstanceId);
-            var tempstockitems = _templateBLL.GetTemplate(closeItem.TemplateId);
-            if (secuItems == null || secuItems.Count == 0)
+            var tempstockitems = _templateBLL.GetStocks(closeItem.TemplateId);
+            if (secuItems != null)
             {
-                return;
+                foreach (var secuItem in secuItems)
+                {
+                    AddSecurity(secuItem, closeItem);
+                }
             }
 
-            foreach (var secuItem in secuItems)
+            if(tempstockitems != null)
             {
-                AddSecurity(secuItem, closeItem);
+                var noIncludedStocks = from p in tempstockitems
+                                       where secuItems.Find(o => o.SecuCode.Equals(p.SecuCode)) == null
+                                       select p;
+
+                var noIncludedList = noIncludedStocks.ToList();
+                //AddSecurity();
+                foreach (var stockItem in noIncludedList)
+                {
+                    AddSecurity(stockItem, closeItem);
+                }
             }
         }
 
@@ -927,6 +939,42 @@ namespace TradingSystem.View
             _secuDataSource.Add(closeSecuItem);
         }
 
+        private void AddSecurity(TemplateStock stock, ClosePositionItem closeItem)
+        {
+            ClosePositionSecurityItem closeSecuItem = new ClosePositionSecurityItem
+            {
+                Selection = true,
+                InstanceId = closeItem.InstanceId,
+                SecuCode = stock.SecuCode,
+                HoldingAmount = 0,
+                AvailableAmount = 0,
+                PortfolioId = closeItem.PortfolioId,
+                PortfolioName = closeItem.PortfolioName,
+            };
+
+            var secuInfo = SecurityInfoManager.Instance.Get(closeSecuItem.SecuCode);
+            if (secuInfo != null)
+            {
+                closeSecuItem.SecuName = secuInfo.SecuName;
+                closeSecuItem.SecuType = secuInfo.SecuType;
+                closeSecuItem.ExchangeCode = secuInfo.ExchangeCode;
+            }
+
+            if (closeSecuItem.SecuType == SecurityType.Stock)
+            {
+                closeSecuItem.PositionType = PositionType.StockLong;
+            }
+            else if (closeSecuItem.SecuType == SecurityType.Futures)
+            {
+                closeSecuItem.PositionType = PositionType.FuturesShort;
+            }
+            else
+            {
+                //do nothing
+            }
+
+            _secuDataSource.Add(closeSecuItem);
+        }
 
         #endregion
 
