@@ -69,6 +69,7 @@
     <Compile Include="Frontend\FuturesContractBLL.cs" />
     <Compile Include="Frontend\QueryBLL.cs" />
     <Compile Include="Frontend\WithdrawBLL.cs" />
+    <Compile Include="Template\MonitorUnitBLL.cs" />
     <Compile Include="TradeCommand\TradeCommandSecurityBLL.cs" />
     <Compile Include="UFX\T2ErrorHandler.cs" />
     <Compile Include="Entrust\UFXQueryDealBLL.cs" />

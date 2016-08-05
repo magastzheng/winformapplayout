@@ -1,4 +1,5 @@
-﻿using BLL.Product;
+﻿using BLL.Frontend;
+using BLL.Product;
 using Config;
 using Controls.Entity;
 using DBAccess;
@@ -13,7 +14,8 @@ namespace TradingSystem.Dialog
 {
     public partial class MonitorUnitDialog : Forms.BaseDialog
     {
-        private FuturesContractDAO _fcdbdao = new FuturesContractDAO();
+        //private FuturesContractDAO _fcdbdao = new FuturesContractDAO();
+        private FuturesContractBLL _futureBLL = new FuturesContractBLL();
         private ProductBLL _productBLL = new ProductBLL();
         private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
 
@@ -33,7 +35,7 @@ namespace TradingSystem.Dialog
         {
             //FuturesContracts
             acFuturesContracts.SetDropdownList(lbDropdown);
-            List<FuturesContract> itemList = _fcdbdao.Get("");
+            List<FuturesContract> itemList = _futureBLL.GetAll();
             IList<AutoItem> dataSource = new List<AutoItem>();
             foreach (var fcItem in itemList)
             {

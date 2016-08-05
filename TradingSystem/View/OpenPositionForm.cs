@@ -27,13 +27,11 @@ namespace TradingSystem.View
         private const string BottomMenuId = "openposition";
 
         private GridConfig _gridConfig;
-        private MonitorUnitDAO _monitordbdao = new MonitorUnitDAO();
-        private TemplateStockDAO _stockdbdao = new TemplateStockDAO();
-        //private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
-
+        
         private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
         private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
         private TemplateBLL _templateBLL = new TemplateBLL();
+        private MonitorUnitBLL _monitorUnitBLL = new MonitorUnitBLL();
 
         private SortableBindingList<OpenPositionItem> _monitorDataSource;
         private SortableBindingList<OpenPositionSecurityItem> _securityDataSource;
@@ -133,7 +131,7 @@ namespace TradingSystem.View
         private bool Form_LoadData(object sender, object data)
         {
             //Load the data of open posoition
-            List<OpenPositionItem> monitorList = _monitordbdao.GetActive();
+            List<OpenPositionItem> monitorList = _monitorUnitBLL.GetActive();
             _monitorDataSource = new SortableBindingList<OpenPositionItem>(monitorList);
             this.monitorGridView.DataSource = _monitorDataSource;
 
