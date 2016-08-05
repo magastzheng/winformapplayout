@@ -197,9 +197,7 @@ namespace BLL.Entrust
                 {
                     var cmdItem = token.InArgs as EntrustCommandItem;
 
-                    var tradeCmdItem = _tradecmddao.Get(cmdItem.CommandId);
-                    int targetNum = tradeCmdItem.TargetNum + cmdItem.Copies;
-                    ret = _tradecmddao.UpdateTargetNum(cmdItem.CommandId, targetNum);
+                    ret = _tradecmddao.UpdateTargetNum(cmdItem.CommandId, cmdItem.Copies);
                 }
 
                 var batchNos = responseItems.Select(p => p.BatchNo).Distinct().ToList();

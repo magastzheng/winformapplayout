@@ -15,7 +15,8 @@ namespace Model
         //200~299 database
 
         //300~500 business success
-        SuccessEntrust = 300,
+        //SuccessEntrust = 300,
+        //SuccessWithdraw = 301,
 
         //-1 ~ -199 basic UFX connect error code
         ErrorReadConf = -1,
@@ -38,5 +39,6 @@ namespace Model
         EmptyEntrustItem = -300,
         FailEntrust = -301,
         FailSubmit = -302,
+        FailWithdraw = -303,
     }
 }

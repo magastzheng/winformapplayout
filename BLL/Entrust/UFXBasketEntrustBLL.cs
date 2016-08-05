@@ -108,7 +108,7 @@ namespace BLL.Entrust
                 var errorResponse = callbacker.Token.OutArgs as UFXErrorResponse;
                 if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
                 {
-                    bllResponse.Code = ConnectionCode.SuccessEntrust;
+                    bllResponse.Code = ConnectionCode.Success;
                     bllResponse.Message = "Success Entrust";
                 }
                 else

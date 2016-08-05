@@ -79,21 +79,14 @@ namespace BLL.Entrust
 
             //ret = _ufxEntrustBLL.Submit(cmdItem, entrustItems);
             var bllResponse = _ufxBasketEntrustBLL.Submit(cmdItem, entrustItems, null);
-
-            //更新交易指令中目标份数
-            if (bllResponse.Code != Model.ConnectionCode.SuccessEntrust)
+            if (BLLResponse.Success(bllResponse))
             {
-                return bllResponse;
-            }
-
-            var tradeCmdItem = _tradecmddao.Get(cmdItem.CommandId);
-            int targetNum = tradeCmdItem.TargetNum + cmdItem.Copies;
-
-            ret = _tradecmddao.UpdateTargetNum(cmdItem.CommandId, targetNum);
-            if (ret <= 0)
-            {
-                bllResponse.Code = ConnectionCode.DBUpdateFail;
-                bllResponse.Message = "Fail to update TradeCommand TargetNum";
+                ret = _tradecmddao.UpdateTargetNum(cmdItem.CommandId, cmdItem.Copies);
+                if (ret <= 0)
+                {
+                    bllResponse.Code = ConnectionCode.DBUpdateFail;
+                    bllResponse.Message = "Fail to update the TargetNum after entrusting success!";
+                }
             }
 
             return bllResponse;
@@ -106,7 +99,7 @@ namespace BLL.Entrust
             {
                 var cmdSecuItems = entrustItems.Where(p => p.CommandId == cmdItem.CommandId).ToList();
                 var tempResponse = SubmitOne(cmdItem, cmdSecuItems);
-                if (tempResponse.Code != ConnectionCode.SuccessEntrust)
+                if (BLLResponse.Success(tempResponse))
                 {
                     bllResponse.Code = tempResponse.Code;
                     bllResponse.Message = tempResponse.Message;
@@ -145,8 +138,8 @@ namespace BLL.Entrust
                     //set the status as EntrustStatus.CancelToDB in database
                     _entrustdao.UpdateOneEntrustStatus(entrustCmdItem.SubmitId, EntrustStatus.CancelToDB);
 
-                    int ret = _ufxBasketWithdrawBLL.Cancel(entrustCmdItem, entrustSecuCancelItems, callerCallback);
-                    if (ret > 0)
+                    var bllResponse = _ufxBasketWithdrawBLL.Cancel(entrustCmdItem, entrustSecuCancelItems, callerCallback);
+                    if (BLLResponse.Success(bllResponse))
                     {
                         copies += entrustCmdItem.Copies;
                         _entrustdao.UpdateOneEntrustStatus(entrustCmdItem.SubmitId, EntrustStatus.CancelSuccess);
@@ -163,8 +156,8 @@ namespace BLL.Entrust
             //Update the tradingcommand table TargetNum
             if (copies > 0)
             {
-                cmdItem.TargetNum -= copies;
-                int ret = _tradecmddao.UpdateTargetNum(cmdItem.CommandId, cmdItem.TargetNum);
+                copies = 0 - copies;
+                int ret = _tradecmddao.UpdateTargetNum(cmdItem.CommandId, copies);
             }
 
             return cancelEntrustCmdItems;

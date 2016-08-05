@@ -3,6 +3,7 @@ using BLL.UFX.impl;
 using DBAccess;
 using log4net;
 using Model.Binding.BindingUtil;
+using Model.BLL;
 using Model.t2sdk;
 using Model.UI;
 using System;
@@ -35,9 +36,9 @@ namespace BLL.Entrust
             _securityBLL = BLLManager.Instance.SecurityBLL;
         }
 
-        public int Cancel(EntrustCommandItem cmdItem, List<EntrustSecurityItem> entrustItems, CallerCallback callerCallback)
+        public BLLResponse Cancel(EntrustCommandItem cmdItem, List<EntrustSecurityItem> entrustItems, CallerCallback callerCallback)
         {
-            int ret = -1;
+            BLLResponse bllResponse = new BLLResponse();
 
             UFXBasketWithdrawRequest request = new UFXBasketWithdrawRequest
             {
@@ -65,31 +66,32 @@ namespace BLL.Entrust
             {
                 if (callbacker.Token.WaitEvent.WaitOne(_timeOut))
                 {
-                    List<UFXBasketWithdrawResponse> responseItems = null;
-                    UFXErrorResponse errorResponse = null;
-                    lock (_locker)
+                    var errorResponse = callbacker.Token.OutArgs as UFXErrorResponse;
+                    if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
                     {
-                        if (_responseDataMap.ContainsKey(cmdItem.SubmitId))
-                        {
-                            responseItems = _responseDataMap[cmdItem.SubmitId];
-                            _responseDataMap.Remove(cmdItem.SubmitId);
-                        }
-                        if (_responseErrorMap.ContainsKey(cmdItem.SubmitId))
-                        {
-                            errorResponse = _responseErrorMap[cmdItem.SubmitId];
-                            _responseErrorMap.Remove(cmdItem.SubmitId);
-                        }
+                        bllResponse.Code = Model.ConnectionCode.Success;
+                        bllResponse.Message = "Success Withdraw";
                     }
-
-                    return callerCallback(callbacker.Token, responseItems, errorResponse);
+                    else
+                    {
+                        bllResponse.Code = Model.ConnectionCode.FailWithdraw;
+                        bllResponse.Message = errorResponse.ErrorMessage;
+                    }
+                    
                 }
                 else
                 {
-                    ret = -1;
+                    bllResponse.Code = Model.ConnectionCode.FailSubmit;
+                    bllResponse.Message = "Fail to submit the basket withdraw to UFX!";
                 }
             }
+            else
+            {
+                bllResponse.Code = Model.ConnectionCode.FailSubmit;
+                bllResponse.Message = "Fail to submit the basket withdraw to UFX!";
+            }
 
-            return ret;
+            return bllResponse;
         }
 
         private int WithdrawDataHandler(CallerToken token, DataParser dataParser)
@@ -97,6 +99,7 @@ namespace BLL.Entrust
             List<UFXBasketWithdrawResponse> responseItems = new List<UFXBasketWithdrawResponse>();
 
             var errorResponse = T2ErrorHandler.Handle(dataParser);
+            token.OutArgs = errorResponse;
 
             if (dataParser.DataSets.Count > 1)
             {
@@ -114,9 +117,9 @@ namespace BLL.Entrust
             }
 
             int ret = -1;
+            List<EntrustSecurityItem> entrustSecuItems = new List<EntrustSecurityItem>();
             if (token.SubmitId > 0)
             {
-                List<EntrustSecurityItem> entrustSecuItems = new List<EntrustSecurityItem>();
                 foreach (var responseItem in responseItems)
                 {
                     var entrustItem = new EntrustSecurityItem
@@ -136,12 +139,11 @@ namespace BLL.Entrust
                     ret = _entrustcmddao.UpdateEntrustCommandStatus(token.SubmitId, Model.EnumType.EntrustStatus.CancelSuccess);
                     ret = _tradecmddao.UpdateTargetNumBySubmitId(token.SubmitId, token.CommandId);
                 }
+            }
 
-                lock (_locker)
-                {
-                    _responseDataMap[token.SubmitId] = responseItems;
-                    _responseErrorMap[token.SubmitId] = errorResponse;
-                }
+            if (token.Caller != null)
+            {
+                token.Caller(token, entrustSecuItems, errorResponse);
             }
 
             if (token.WaitEvent != null)

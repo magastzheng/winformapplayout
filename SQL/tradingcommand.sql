@@ -113,13 +113,17 @@ drop proc procTradingCommandUpdateTargetNum
 go
 create proc procTradingCommandUpdateTargetNum(
 	@CommandId			int
-	,@TargetNum			int
+	,@Copies			int
 	,@ModifiedDate		datetime
 )
 as
 begin
+	
+	declare @TargetNum int
+	set @TargetNum = (select TargetNum from tradingcommand where CommandId=@CommandId)
+
 	update tradingcommand
-	set	TargetNum	= @TargetNum
+	set	TargetNum	= @TargetNum+@Copies
 		,ModifiedDate = @ModifiedDate
 	where CommandId=@CommandId
 end

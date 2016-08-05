@@ -74,11 +74,11 @@ namespace DBAccess
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public int UpdateTargetNum(int commandId, int targetNum)
+        public int UpdateTargetNum(int commandId, int copies)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyTargetNum);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
-            _dbHelper.AddInParameter(dbCommand, "@TargetNum", System.Data.DbType.Int32, targetNum);
+            _dbHelper.AddInParameter(dbCommand, "@Copies", System.Data.DbType.Int32, copies);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
             
             return _dbHelper.ExecuteNonQuery(dbCommand);

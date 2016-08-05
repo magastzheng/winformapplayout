@@ -30,7 +30,7 @@ namespace Model.BLL
 
         public static bool Success(BLLResponse response)
         {
-            return response.Code == ConnectionCode.Success || response.Code == ConnectionCode.SuccessEntrust;
+            return response.Code == ConnectionCode.Success;
         }
     }
 }

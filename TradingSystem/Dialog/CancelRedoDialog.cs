@@ -441,11 +441,11 @@ namespace TradingSystem.Dialog
         //TODO: validate before submit
         private void Submit(List<EntrustCommandItem> entrustCmdItems, List<CancelRedoItem> cancelRedoItems)
         {
-            var ret = _entrustBLL.SubmitOne(entrustCmdItems, cancelRedoItems);
-            if (!BLLResponse.Success(ret))
+            var response = _entrustBLL.SubmitOne(entrustCmdItems, cancelRedoItems);
+            if (!BLLResponse.Success(response))
             { 
                 int submitId = cancelRedoItems.Select(p => p.SubmitId).Distinct().Single();
-                string msg = string.Format("委托失败, 提交号：[{0}]!", submitId);
+                string msg = string.Format("委托失败, 提交号：[{0}], 失败原因：{1}!", submitId, response.Message);
                 MessageBox.Show(this, msg, "错误", MessageBoxButtons.OK);
             }
         }
