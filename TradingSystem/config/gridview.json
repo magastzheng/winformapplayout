@@ -626,12 +626,11 @@ readonly:
 	]
 },{
 	"grid": "buysell",
-	"columns": [
-	{
-		"name": "selection",
-		"text": "选择",
+	"columns": [{
+		"name": "copies",
+		"text": "份数",
 		"width": 40,
-		"columntype": 1,
+		"columntype": 4,
 		"valuetype": 0,
 		"visible": 1,
 		"readonly": 0
@@ -643,14 +642,6 @@ readonly:
 		"valuetype": 0,
 		"visible": 1,
 		"readonly": 1
-		},{
-		"name": "copies",
-		"text": "份数",
-		"width": 40,
-		"columntype": 4,
-		"valuetype": 0,
-		"visible": 1,
-		"readonly": 0
 		},{
 		"name": "last",
 		"text": "",

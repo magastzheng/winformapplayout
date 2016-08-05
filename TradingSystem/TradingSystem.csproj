@@ -176,12 +176,6 @@
     <Compile Include="View\StockTemplateForm.Designer.cs">
       <DependentUpon>StockTemplateForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\StrategyTradingForm_old.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\StrategyTradingForm_old.Designer.cs">
-      <DependentUpon>StrategyTradingForm_old.cs</DependentUpon>
-    </Compile>
     <Compile Include="View\StrategyTradingForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -193,12 +187,6 @@
     </Compile>
     <Compile Include="View\TemplateDialog.Designer.cs">
       <DependentUpon>TemplateDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="View\TradingCommandForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\TradingCommandForm.Designer.cs">
-      <DependentUpon>TradingCommandForm.cs</DependentUpon>
     </Compile>
     <Compile Include="View\TradingForm.cs">
       <SubType>Form</SubType>
@@ -276,17 +264,11 @@
     <EmbeddedResource Include="View\StockTemplateForm.resx">
       <DependentUpon>StockTemplateForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\StrategyTradingForm_old.resx">
-      <DependentUpon>StrategyTradingForm_old.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="View\StrategyTradingForm.resx">
       <DependentUpon>StrategyTradingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\TemplateDialog.resx">
       <DependentUpon>TemplateDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="View\TradingCommandForm.resx">
-      <DependentUpon>TradingCommandForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\WarnForm.resx">
       <DependentUpon>WarnForm.cs</DependentUpon>

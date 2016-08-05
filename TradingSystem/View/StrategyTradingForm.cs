@@ -366,7 +366,6 @@ namespace TradingSystem.View
                 var entrustItem = new EntrustItem
                 {
                     CommandNo = cmdItem.CommandId,
-                    Selection = true
                 };
 
                 _eiDataSource.Add(entrustItem);
@@ -809,7 +808,7 @@ namespace TradingSystem.View
         {
             //TODO:
             //Check the entrust security items of entrust item. Make sure there is security item selected
-            var selectedEntrustItems = _eiDataSource.Where(p => p.Selection).ToList();
+            var selectedEntrustItems = _eiDataSource.ToList();
             if (selectedEntrustItems == null || selectedEntrustItems.Count == 0)
             {
                 //TODO: show message
@@ -1131,7 +1130,7 @@ namespace TradingSystem.View
 
             if (copies >= 0)
             {
-                _eiDataSource.Where(p => p.Selection).ToList().ForEach(p => p.Copies = copies);
+                _eiDataSource.ToList().ForEach(p => p.Copies = copies);
             }
             else
             {

@@ -9,9 +9,6 @@ namespace Model.UI
 {
     public class EntrustItem
     {
-        [BindingAttribute("selection")]
-        public bool Selection { get; set; }
-
         [BindingAttribute("commandno")]
         public int CommandNo { get; set; }
 

@@ -12,6 +12,12 @@ select * from entrustcommand
 
 select * from entrustsecurity
 
+select * from tradingcommand
+
+update tradingcommand
+set TargetNum=1
+where CommandId=1
+
 update tradinginstance
 set StockDirection=10
 
@@ -37,3 +43,7 @@ truncate table tradingcommandsecurity
 truncate table entrustcommand
 
 truncate table entrustsecurity
+
+declare @dt datetime
+set @dt=getdate()
+exec procTradingCommandUpdateTargetNum 1, -1, @dt

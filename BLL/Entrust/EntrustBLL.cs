@@ -154,11 +154,11 @@ namespace BLL.Entrust
             }
 
             //Update the tradingcommand table TargetNum
-            if (copies > 0)
-            {
-                copies = 0 - copies;
-                int ret = _tradecmddao.UpdateTargetNum(cmdItem.CommandId, copies);
-            }
+            //if (copies > 0)
+            //{
+            //    copies = 0 - copies;
+            //    int ret = _tradecmddao.UpdateTargetNum(cmdItem.CommandId, copies);
+            //}
 
             return cancelEntrustCmdItems;
         }

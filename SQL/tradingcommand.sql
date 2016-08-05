@@ -113,7 +113,7 @@ drop proc procTradingCommandUpdateTargetNum
 go
 create proc procTradingCommandUpdateTargetNum(
 	@CommandId			int
-	,@Copies			int
+	,@Copies			int		-- positive integer means ADD; negative integer means reduce
 	,@ModifiedDate		datetime
 )
 as
