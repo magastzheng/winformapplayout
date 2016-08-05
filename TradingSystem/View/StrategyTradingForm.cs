@@ -34,14 +34,10 @@ namespace TradingSystem.View
         private const string GridCmdSecurityId = "cmdsecurity";
         private const string GridBuySellId = "buysell";
 
-        //private TradingInstanceDAO _tradeInstdao = new TradingInstanceDAO();
-        private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
-        private TradingCommandSecurityDAO _tradecmdsecudao = new TradingCommandSecurityDAO();
-        private EntrustCommandDAO _entrustcmddao = new EntrustCommandDAO();
-        private EntrustSecurityDAO _entrustsecudao = new EntrustSecurityDAO();
-        private EntrustDAO _entrustdao = new EntrustDAO();
-
         private EntrustBLL _entrustBLL = new EntrustBLL();
+        private WithdrawBLL _withdrawBLL = new WithdrawBLL();
+        private QueryBLL _queryBLL = new QueryBLL();
+
         private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
         private TradeCommandSecurityBLL _tradeCommandSecuBLL = new TradeCommandSecurityBLL();
 
@@ -118,7 +114,7 @@ namespace TradingSystem.View
 
         private void GridView_Command_Cancel(TradingCommandItem cmdItem)
         {
-            var cancelEntrustCmdItems = _entrustBLL.CancelOne(cmdItem, new CallerCallback(CancelOneCallback));
+            var cancelEntrustCmdItems = _withdrawBLL.CancelOne(cmdItem, new CallerCallback(CancelOneCallback));
 
             this.cmdGridView.Invalidate();
         }
@@ -135,7 +131,7 @@ namespace TradingSystem.View
             List<EntrustCommandItem> successCancelEntrustCmdItems = new List<EntrustCommandItem>();
             foreach(var cmdItem in selectCmdItems)
             {
-                var cancelEntrustCmdItems = _entrustBLL.CancelOne(cmdItem, new CallerCallback(CancelOneCallback));
+                var cancelEntrustCmdItems = _withdrawBLL.CancelOne(cmdItem, new CallerCallback(CancelOneCallback));
                 if (cancelEntrustCmdItems.Count > 0)
                 {
                     successCancelItems.Add(cmdItem);
@@ -559,7 +555,7 @@ namespace TradingSystem.View
             if (tradingcmds != null)
             {
                 var tradeSecuItems = _tradeCommandBLL.GetCommandSecurityItems(tradingcmds);
-                var entrustSecuItems = _entrustBLL.GetEntrustSecurityItems(tradingcmds);
+                var entrustSecuItems = _queryBLL.GetEntrustSecurityItems(tradingcmds);
 
                 foreach (var cmdItem in tradingcmds)
                 {

@@ -1,7 +1,6 @@
 ﻿using Config;
 using Controls.Entity;
 using Controls.GridView;
-using DBAccess;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -22,6 +21,7 @@ using BLL.Entrust;
 using System.Diagnostics;
 using System.Text;
 using Model.Database;
+using BLL.Frontend;
 
 namespace TradingSystem.View
 {
@@ -39,8 +39,8 @@ namespace TradingSystem.View
         private const string GridCloseCmdId = "closepositioncmd";
 
         private GridConfig _gridConfig;
-        private FuturesContractDAO _fcdbdao = new FuturesContractDAO();
 
+        private FuturesContractBLL _futuresBLL = new FuturesContractBLL();
         private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
         private TemplateBLL _templateBLL = new TemplateBLL();
         private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
@@ -211,7 +211,7 @@ namespace TradingSystem.View
 
         private void LoadFuturesContractOption()
         {
-            var futures = _fcdbdao.Get("");
+            var futures = _futuresBLL.GetAll();
             if (futures != null && futures.Count > 0)
             {
                 ComboOption futuresOption = new ComboOption

@@ -66,6 +66,8 @@
     <Compile Include="Entrust\UFXDataSetHelper.cs" />
     <Compile Include="Entrust\UFXQueryHoldingBLL.cs" />
     <Compile Include="Entrust\UFXQueryMultipleHoldingBLL.cs" />
+    <Compile Include="Frontend\FuturesContractBLL.cs" />
+    <Compile Include="Frontend\QueryBLL.cs" />
     <Compile Include="Frontend\WithdrawBLL.cs" />
     <Compile Include="TradeCommand\TradeCommandSecurityBLL.cs" />
     <Compile Include="UFX\T2ErrorHandler.cs" />
