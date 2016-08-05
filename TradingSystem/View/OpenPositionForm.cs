@@ -16,6 +16,7 @@ using Model.EnumType;
 using Model.Binding.BindingUtil;
 using TradingSystem.TradeUtil;
 using Model.Database;
+using BLL.Template;
 
 namespace TradingSystem.View
 {
@@ -28,10 +29,11 @@ namespace TradingSystem.View
         private GridConfig _gridConfig;
         private MonitorUnitDAO _monitordbdao = new MonitorUnitDAO();
         private TemplateStockDAO _stockdbdao = new TemplateStockDAO();
-        private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
+        //private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
 
         private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
         private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
+        private TemplateBLL _templateBLL = new TemplateBLL();
 
         private SortableBindingList<OpenPositionItem> _monitorDataSource;
         private SortableBindingList<OpenPositionSecurityItem> _securityDataSource;
@@ -168,7 +170,7 @@ namespace TradingSystem.View
 
         public void LoadSecurityData(OpenPositionItem monitorItem)
         {
-            List<TemplateStock> stocks = _stockdbdao.Get(monitorItem.TemplateId);
+            List<TemplateStock> stocks = _templateBLL.GetStocks(monitorItem.TemplateId);
             List<OpenPositionSecurityItem> secuItems = new List<OpenPositionSecurityItem>();
 
             foreach (var stock in stocks)
@@ -189,10 +191,9 @@ namespace TradingSystem.View
                 _securityDataSource.Add(secuItem);
             }
 
-            var templateItems = _tempdbdao.Get(monitorItem.TemplateId);
-            if (templateItems != null && templateItems.Count == 1)
+            var templateItem = _templateBLL.GetTemplate(monitorItem.TemplateId);
+            if (templateItem != null)
             {
-                var templateItem = templateItems[0];
                 //Load the future
                 OpenPositionSecurityItem futureItem = new OpenPositionSecurityItem
                 {
