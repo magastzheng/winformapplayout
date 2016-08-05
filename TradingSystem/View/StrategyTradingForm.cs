@@ -22,6 +22,7 @@ using BLL.UFX.impl;
 using BLL.TradeCommand;
 using BLL.UFX;
 using Model.BLL;
+using BLL.Frontend;
 
 namespace TradingSystem.View
 {

@@ -15,7 +15,7 @@ select * from entrustsecurity
 select * from tradingcommand
 
 update tradingcommand
-set TargetNum=1
+set TargetNum=0
 where CommandId=1
 
 update tradinginstance

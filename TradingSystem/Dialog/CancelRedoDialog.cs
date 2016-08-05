@@ -18,6 +18,7 @@ using Model.Binding.BindingUtil;
 using Quote;
 using System.Text;
 using Model.BLL;
+using BLL.Frontend;
 
 namespace TradingSystem.Dialog
 {
@@ -25,9 +26,8 @@ namespace TradingSystem.Dialog
     {
         private const string GridCancelRedoId = "entrustcanceladd";
 
-        private EntrustCommandDAO _entrustcmddao = new EntrustCommandDAO();
-        private EntrustSecurityDAO _entrustsecudao = new EntrustSecurityDAO();
         private EntrustBLL _entrustBLL = new EntrustBLL();
+        private WithdrawBLL _withdrawBLL = new WithdrawBLL();
 
         private SortableBindingList<CancelRedoItem> _secuDataSource = new SortableBindingList<CancelRedoItem>(new List<CancelRedoItem>());
         private List<EntrustCommandItem> _entrustCommandItems = new List<EntrustCommandItem>();
@@ -234,84 +234,44 @@ namespace TradingSystem.Dialog
             _secuDataSource.Clear();
             _entrustCommandItems = data as List<EntrustCommandItem>;
             foreach (var cmdItem in _entrustCommandItems)
-            { 
-                var entrustSecuItems = _entrustsecudao.GetCancelRedoBySubmitId(cmdItem.SubmitId);
-                if (entrustSecuItems != null && entrustSecuItems.Count() > 0)
+            {
+                var cancelSecuItems = _withdrawBLL.GetCancelRedoBySubmitId(cmdItem);
+                if (cancelSecuItems == null)
+                    continue;
+
+                foreach (var cancelRedoItem in cancelSecuItems)
                 {
-                    foreach (var p in entrustSecuItems)
+                    if (cancelRedoItem.ExchangeCode.Equals("SZSE"))
                     {
-                        CancelRedoItem cancelRedoItem = new CancelRedoItem {
-                            Selection = true,
-                            CommandId = cmdItem.CommandId,
-                            //EntrustAmount = p.EntrustAmount,
-                            //EntrustDirection = p.EntrustDirection,
-                            EDirection = p.EntrustDirection,
-                            EntrustPrice = p.EntrustPrice,
-                            SecuCode = p.SecuCode,
-                            SecuType = p.SecuType,
-                            EntrustNo = p.EntrustNo,
-                            ECommandPrice = p.PriceType,
-                            ReportPrice = p.EntrustPrice,
-                            EOriginPriceType = p.EntrustPriceType,
-                            LeftAmount = p.EntrustAmount - p.TotalDealAmount,
-                            ReportAmount = p.EntrustAmount,
-                            DealAmount = p.TotalDealAmount,
-                            EntrustDate = p.EntrustDate,
-                            SubmitId = p.SubmitId,
-                            EntrustBatchNo = p.BatchNo,
-                        };
-
-                        cancelRedoItem.EntrustAmount = cancelRedoItem.LeftAmount;
-                        if (cancelRedoItem.SecuType == Model.SecurityInfo.SecurityType.Stock && cancelRedoItem.EDirection == EntrustDirection.BuySpot)
-                        {
-                            if (cancelRedoItem.LeftAmount % 100 != 0)
-                            {
-                                cancelRedoItem.EntrustAmount = 100 * (int)Math.Round((double)(cancelRedoItem.LeftAmount / 100));
-                            }
-                        }
-
-                        var secuInfo = SecurityInfoManager.Instance.Get(p.SecuCode, p.SecuType);
-                        if (secuInfo != null)
-                        {
-                            cancelRedoItem.ExchangeCode = secuInfo.ExchangeCode;
-                        }
-                        else
-                        {
-                            cancelRedoItem.ExchangeCode = SecurityInfoHelper.GetExchangeCode(p.SecuCode);
-                        }
-
-                        if (cancelRedoItem.ExchangeCode.Equals("SZSE"))
-                        {
-                            cancelRedoItem.EEntrustPriceType = szPriceType;
-                        }
-                        else if (cancelRedoItem.ExchangeCode.Equals("SSE"))
-                        {
-                            cancelRedoItem.EEntrustPriceType = shPriceType;
-                        }
-                        else
-                        {
-                            cancelRedoItem.EEntrustPriceType = cancelRedoItem.EOriginPriceType;
-                        }
-
-                        if (cancelRedoItem.SecuType == SecurityType.Stock && cancelRedoItem.EDirection == EntrustDirection.BuySpot)
-                        {
-                            cancelRedoItem.EPriceSetting = spotBuyPrice;
-                        }
-                        else if (cancelRedoItem.SecuType == SecurityType.Stock && cancelRedoItem.EDirection == EntrustDirection.BuySpot)
-                        {
-                            cancelRedoItem.EPriceSetting = spotSellPrice;
-                        }
-                        else if (cancelRedoItem.SecuType == SecurityType.Futures && cancelRedoItem.EDirection == EntrustDirection.SellOpen)
-                        {
-                            cancelRedoItem.EPriceSetting = futureSellPrice;
-                        }
-                        else if (cancelRedoItem.SecuType == SecurityType.Futures && cancelRedoItem.EDirection == EntrustDirection.BuyClose)
-                        {
-                            cancelRedoItem.EPriceSetting = futureBuyPrice;
-                        }
-
-                        _secuDataSource.Add(cancelRedoItem);
+                        cancelRedoItem.EEntrustPriceType = szPriceType;
                     }
+                    else if (cancelRedoItem.ExchangeCode.Equals("SSE"))
+                    {
+                        cancelRedoItem.EEntrustPriceType = shPriceType;
+                    }
+                    else
+                    {
+                        cancelRedoItem.EEntrustPriceType = cancelRedoItem.EOriginPriceType;
+                    }
+
+                    if (cancelRedoItem.SecuType == SecurityType.Stock && cancelRedoItem.EDirection == EntrustDirection.BuySpot)
+                    {
+                        cancelRedoItem.EPriceSetting = spotBuyPrice;
+                    }
+                    else if (cancelRedoItem.SecuType == SecurityType.Stock && cancelRedoItem.EDirection == EntrustDirection.BuySpot)
+                    {
+                        cancelRedoItem.EPriceSetting = spotSellPrice;
+                    }
+                    else if (cancelRedoItem.SecuType == SecurityType.Futures && cancelRedoItem.EDirection == EntrustDirection.SellOpen)
+                    {
+                        cancelRedoItem.EPriceSetting = futureSellPrice;
+                    }
+                    else if (cancelRedoItem.SecuType == SecurityType.Futures && cancelRedoItem.EDirection == EntrustDirection.BuyClose)
+                    {
+                        cancelRedoItem.EPriceSetting = futureBuyPrice;
+                    }
+
+                    _secuDataSource.Add(cancelRedoItem);
                 }
             }
 

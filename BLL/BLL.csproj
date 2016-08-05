@@ -66,6 +66,7 @@
     <Compile Include="Entrust\UFXDataSetHelper.cs" />
     <Compile Include="Entrust\UFXQueryHoldingBLL.cs" />
     <Compile Include="Entrust\UFXQueryMultipleHoldingBLL.cs" />
+    <Compile Include="Frontend\WithdrawBLL.cs" />
     <Compile Include="TradeCommand\TradeCommandSecurityBLL.cs" />
     <Compile Include="UFX\T2ErrorHandler.cs" />
     <Compile Include="Entrust\UFXQueryDealBLL.cs" />
@@ -77,7 +78,7 @@
     <Compile Include="UFX\impl\UFXDataHandlerCallback.cs" />
     <Compile Include="UFX\obsolete\CallbackDataReady.cs" />
     <Compile Include="UFX\impl\DataParser.cs" />
-    <Compile Include="Entrust\EntrustBLL.cs" />
+    <Compile Include="Frontend\EntrustBLL.cs" />
     <Compile Include="UFX\impl\IDataHandler.cs" />
     <Compile Include="UFX\obsolete\IDataReceiver.cs" />
     <Compile Include="UFX\obsolete\IStrategryDataChange.cs" />

@@ -1,4 +1,5 @@
-﻿using BLL.SecurityInfo;
+﻿using BLL.Entrust;
+using BLL.SecurityInfo;
 using BLL.UFX.impl;
 using DBAccess;
 using Model;
@@ -10,7 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace BLL.Entrust
+namespace BLL.Frontend
 {
     public class EntrustBLL
     {
