@@ -319,9 +319,13 @@ namespace Quote
                 var fields = new List<string>() { field };
                 var fieldIndexMap = QueryHelper.GetFieldIndex(fields);
                 var wd = WindAPIWrap.Instance.SyncRequestData(windCodes, fields, optionMap);
-                if (wd != null)
+                if (wd != null && wd.errorCode == 0)
                 {
                     FillData(wd, fieldIndexMap);
+                }
+                else
+                { 
+                    //TODO: report the error
                 }
             }
         }

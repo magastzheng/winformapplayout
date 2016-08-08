@@ -18,7 +18,27 @@ namespace BLL.Template
 
         public List<OpenPositionItem> GetActive()
         {
-            return _monitorunitdao.GetActive();
+            var monitorItems = _monitorunitdao.GetActive();
+            List<OpenPositionItem> openItems = new List<OpenPositionItem>();
+
+            foreach (var monitorItem in monitorItems)
+            {
+                OpenPositionItem openItem = new OpenPositionItem 
+                {
+                    TemplateId = monitorItem.StockTemplateId,
+                    TemplateName = monitorItem.StockTemplateName,
+                    MonitorId = monitorItem.MonitorUnitId,
+                    MonitorName = monitorItem.MonitorUnitName,
+                    PortfolioId = monitorItem.PortfolioId,
+                    PortfolioName = monitorItem.PortfolioName,
+                    FuturesContract = monitorItem.BearContract,
+                    Copies = 1,
+                };
+
+                openItems.Add(openItem);
+            }
+
+            return openItems;
         }
     }
 }

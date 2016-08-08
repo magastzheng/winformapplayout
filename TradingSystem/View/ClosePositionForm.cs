@@ -159,6 +159,7 @@ namespace TradingSystem.View
                 SpotTemplate = closeItem.TemplateId.ToString(),
                 MonitorName = closeItem.MonitorName,
                 TradeDirection = ((int)EntrustDirection.Buy).ToString(),
+                Copies = 1,
             };
 
             if (_secuDataSource != null && _secuDataSource.Count > 0)
@@ -291,6 +292,8 @@ namespace TradingSystem.View
                     PortfolioId = instance.PortfolioId,
                     PortfolioName = instance.PortfolioName,
                     FuturesContract = instance.FuturesContract,
+                    PortfolioCode = instance.PortfolioCode,
+                    TemplateName = instance.TemplateName,
                 };
 
                 _instDataSource.Add(closeItem);
@@ -485,6 +488,11 @@ namespace TradingSystem.View
             {
                 string msg = string.Format("证券未勾选或勾选证券均未设置委托数量, 交易实例为: {0}", outMsg);
                 MessageBox.Show(this, msg, "警告", MessageBoxButtons.OK);
+                return;
+            }
+
+            if (!GetConfirmItems(cmdItems))
+            {
                 return;
             }
 
@@ -841,8 +849,8 @@ namespace TradingSystem.View
                 if (selectedItems.Count > 0)
                 {
                     //选中的委托数量不能为0
-                    selectedItems = selectedItems.Where(p => p.EntrustAmount == 0).ToList();
-                    if (selectedItems.Count > 0)
+                    selectedItems = selectedItems.Where(p => p.EntrustAmount > 0).ToList();
+                    if (selectedItems.Count == 0)
                     {
                         invalidItems.Add(cmdItem);
                     }
@@ -871,6 +879,86 @@ namespace TradingSystem.View
                 return true;
             }
         }
+        #endregion
+
+        #region get confirm submitted items
+
+        private bool GetConfirmItems(List<ClosePositionCmdItem> cmdItems)
+        {
+            List<ClosePositionInstanceItem> instItems = new List<ClosePositionInstanceItem>();
+            foreach (var cmdItem in cmdItems)
+            {
+                ClosePositionInstanceItem instItem = new ClosePositionInstanceItem 
+                {
+                    InstanceCode = cmdItem.InstanceCode,
+                    Copies = cmdItem.Copies,
+                    FuturesList = new List<string>(),
+                };
+
+                var closeItem = _instDataSource.ToList().Find(p => p.InstanceId == cmdItem.InstanceId);
+                if (closeItem != null)
+                {
+                    instItem.TemplateId = closeItem.TemplateId;
+                    instItem.TemplateName = closeItem.TemplateName;
+                    instItem.PortfolioCode = closeItem.PortfolioCode;
+                    instItem.PortfolioName = closeItem.PortfolioName;
+                }
+
+                var instSecuItems = _secuDataSource.Where(p => p.Selection && p.InstanceId == cmdItem.InstanceId)
+                    .ToList();
+
+                var futures = instSecuItems.Where(p => p.SecuType == SecurityType.Futures)
+                    .ToList();
+                foreach (var future in futures)
+                {
+                    if (!instItem.FuturesList.Contains(future.SecuCode))
+                    {
+                        instItem.FuturesList.Add(future.SecuCode);
+                    }
+                }
+
+                var spotBuyMktVal = instSecuItems.Where(p => p.SecuType == SecurityType.Stock
+                    && p.EDirection == EntrustDirection.BuySpot)
+                    .Sum(o => o.CommandMoney);
+                instItem.SpotBuyMktVal = spotBuyMktVal;
+
+                var spotSellMktVal = instSecuItems.Where(p => p.SecuType == SecurityType.Stock
+                    && p.EDirection == EntrustDirection.SellSpot)
+                    .Sum(o => o.CommandMoney);
+                instItem.SpotSellMktVal = spotSellMktVal;
+
+                var futuBuyMktVal = instSecuItems.Where(p => p.SecuType == SecurityType.Futures
+                    && p.EDirection == EntrustDirection.BuyClose)
+                    .Sum(o => o.CommandMoney);
+                instItem.FutuBuyMktVal = futuBuyMktVal;
+
+                var futuSellMktVal = instSecuItems.Where(p => p.SecuType == SecurityType.Futures
+                    && p.EDirection == EntrustDirection.SellOpen)
+                    .Sum(o => o.CommandMoney);
+                instItem.FutuSellMktVal = futuSellMktVal;
+
+                instItems.Add(instItem);
+            }
+
+            bool ret = false;
+            ClosePositionDialog dialog = new ClosePositionDialog(_gridConfig);
+            dialog.Owner = this;
+            dialog.StartPosition = FormStartPosition.CenterParent;
+            dialog.OnLoadControl(dialog, null);
+            dialog.OnLoadData(dialog, instItems);
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                dialog.Dispose();
+                ret = true;
+            }
+            else
+            {
+                dialog.Dispose();
+            }
+
+            return ret;
+        }
+
         #endregion
 
         #region add security

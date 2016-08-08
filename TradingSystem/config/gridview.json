@@ -2511,6 +2511,98 @@ readonly:
 		}
 	]
 },{
+	"grid": "closepositioninstance",
+	"columns": [{
+		"name": "portfoliodisplay",
+		"text": "套利组合",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "templatedisplay",
+		"text": "现货模板",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "futurescontract",
+		"text": "期货合约",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "copies",
+		"text": "操作份数",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "point",
+		"text": "基差",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "instancecode",
+		"text": "交易实例",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "futubuymktval",
+		"text": "期货买市值",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "futusellmktval",
+		"text": "期货卖市值",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "spotbuymktval",
+		"text": "现货买市值",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "spotsellmktval",
+		"text": "现货卖市值",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "last",
+		"text": "",
+		"width": 5,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},{
 	"grid": "",
 	"columns": [
 	{

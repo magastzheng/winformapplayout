@@ -188,9 +188,9 @@ namespace DBAccess
             return monitorUnits;
         }
 
-        public List<OpenPositionItem> GetActive()
+        public List<MonitorUnit> GetActive()
         {
-            List<OpenPositionItem> activeItems = new List<OpenPositionItem>();
+            List<MonitorUnit> activeItems = new List<MonitorUnit>();
 
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetActive);
 
@@ -199,14 +199,16 @@ namespace DBAccess
             {
                 while (reader.Read())
                 {
-                    OpenPositionItem item = new OpenPositionItem();
-                    item.MonitorId = (int)reader["MonitorUnitId"];
-                    item.MonitorName = (string)reader["MonitorUnitName"];
+                    MonitorUnit item = new MonitorUnit();
+                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
+                    item.MonitorUnitName = (string)reader["MonitorUnitName"];
+                    item.AccountType = (int)reader["AccountType"];
                     item.PortfolioId = (int)reader["PortfolioId"];
                     item.PortfolioName = (string)reader["PortfolioName"];
-                    item.TemplateId = (int)reader["StockTemplateId"];
-                    item.TemplateName = (string)reader["TemplateName"];
-                    item.FuturesContract = (string)reader["BearContract"];
+                    item.BearContract = (string)reader["BearContract"];
+                    item.StockTemplateId = (int)reader["StockTemplateId"];
+                    item.StockTemplateName = (string)reader["TemplateName"];
+                    item.Owner = (string)reader["Owner"];
 
                     activeItems.Add(item);
                 }

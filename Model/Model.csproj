@@ -92,6 +92,7 @@
     <Compile Include="TradingCommand\TradingCommandSecurityItem.cs" />
     <Compile Include="UI\CancelRedoItem.cs" />
     <Compile Include="UI\ClosePositionCmdItem.cs" />
+    <Compile Include="UI\ClosePositionInstanceItem.cs" />
     <Compile Include="UI\ClosePositionItem.cs" />
     <Compile Include="UI\ClosePositionSecurityItem.cs" />
     <Compile Include="UI\CommandSecurityItem.cs" />

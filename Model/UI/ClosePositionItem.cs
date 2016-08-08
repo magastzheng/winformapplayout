@@ -46,5 +46,9 @@ namespace Model.UI
         public int MonitorId { get; set; }
 
         public string FuturesContract { get; set; }
+
+        public string PortfolioCode { get; set; }
+
+        public string TemplateName { get; set; }
     }
 }

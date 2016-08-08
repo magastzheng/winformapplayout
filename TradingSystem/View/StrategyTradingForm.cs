@@ -902,6 +902,11 @@ namespace TradingSystem.View
                 thisCopies = targetNum - selCmdItem.TargetNum;
             }
 
+            if (thisCopies <= 0)
+            {
+                return;
+            }
+
             var secuItems = _secuDataSource.Where(p => p.CommandId == eiItem.CommandNo).ToList();
             int weightAmount = 0;
             foreach (var secuItem in secuItems)

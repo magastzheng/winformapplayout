@@ -36,13 +36,13 @@
             this.closeBottomPanel = new System.Windows.Forms.Panel();
             this.securityGridView = new Controls.GridView.TSDataGridView();
             this.panelCmdBotton = new System.Windows.Forms.Panel();
+            this.nudCopies = new System.Windows.Forms.NumericUpDown();
             this.btnSubmit = new System.Windows.Forms.Button();
             this.btnChgPosition = new System.Windows.Forms.Button();
             this.btnCloseAll = new System.Windows.Forms.Button();
             this.btnCalc = new System.Windows.Forms.Button();
             this.lblCopies = new System.Windows.Forms.Label();
             this.cmdGridView = new Controls.GridView.TSDataGridView();
-            this.nudCopies = new System.Windows.Forms.NumericUpDown();
             this.panelTop.SuspendLayout();
             this.panelBottom.SuspendLayout();
             this.panelMain.SuspendLayout();
@@ -54,8 +54,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.closeGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.securityGridView)).BeginInit();
             this.panelCmdBotton.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.cmdGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudCopies)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmdGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // panelTop
@@ -164,6 +164,23 @@
             this.panelCmdBotton.Size = new System.Drawing.Size(1125, 36);
             this.panelCmdBotton.TabIndex = 0;
             // 
+            // nudCopies
+            // 
+            this.nudCopies.Location = new System.Drawing.Point(77, 8);
+            this.nudCopies.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudCopies.Name = "nudCopies";
+            this.nudCopies.Size = new System.Drawing.Size(61, 21);
+            this.nudCopies.TabIndex = 6;
+            this.nudCopies.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
             // btnSubmit
             // 
             this.btnSubmit.Location = new System.Drawing.Point(402, 8);
@@ -221,13 +238,6 @@
             this.cmdGridView.Size = new System.Drawing.Size(1125, 156);
             this.cmdGridView.TabIndex = 1;
             // 
-            // nudCopies
-            // 
-            this.nudCopies.Location = new System.Drawing.Point(77, 8);
-            this.nudCopies.Name = "nudCopies";
-            this.nudCopies.Size = new System.Drawing.Size(61, 21);
-            this.nudCopies.TabIndex = 6;
-            // 
             // ClosePositionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -247,8 +257,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.securityGridView)).EndInit();
             this.panelCmdBotton.ResumeLayout(false);
             this.panelCmdBotton.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.cmdGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudCopies)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmdGridView)).EndInit();
             this.ResumeLayout(false);
 
         }

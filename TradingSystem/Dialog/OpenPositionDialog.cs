@@ -173,6 +173,14 @@ namespace TradingSystem.Dialog
                 {
                     _newOpenItem.InstanceCode = selectItem.Name;
                 }
+                else if (!string.IsNullOrEmpty(this.cbInstanceCode.Text))
+                {
+                    _newOpenItem.InstanceCode = this.cbInstanceCode.Text.Trim();
+                }
+                else
+                { 
+                    //do nothing
+                }
             }
             else
             {
