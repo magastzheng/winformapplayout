@@ -19,12 +19,16 @@ namespace BLL.Frontend
         private EntrustSecurityDAO _entrustsecudao = new EntrustSecurityDAO();
         private EntrustCommandDAO _entrustcmddao = new EntrustCommandDAO();
         private EntrustDAO _entrustdao = new EntrustDAO();
+        private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
 
         private UFXBasketWithdrawBLL _ufxBasketWithdrawBLL = new UFXBasketWithdrawBLL();
+        private UFXWithdrawBLL _ufxWithdrawBLL = new UFXWithdrawBLL();
 
         public WithdrawBLL()
         { 
         }
+
+        #region cancel
 
         public List<EntrustCommandItem> CancelOne(TradingCommandItem cmdItem, CallerCallback callerCallback)
         {
@@ -76,6 +80,79 @@ namespace BLL.Frontend
             return cancelEntrustCmdItems;
         }
 
+        public List<CancelRedoItem> CancelSecuItem(EntrustCommandItem cmdItem, List<CancelRedoItem> cancelItems, CallerCallback callerCallback)
+        {
+            List<CancelRedoItem> cancelSecuItems = new List<CancelRedoItem>();
+
+            var entrustedSecuItems = ConvertToEntrustSecuItems(cancelItems);
+
+            //set the status as EntrustStatus.CancelToDB in database
+            int ret = _entrustdao.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelToDB);
+            if (ret <= 0)
+            {
+                return cancelSecuItems;
+            }
+
+            var bllResponse = _ufxWithdrawBLL.Cancel(cmdItem, entrustedSecuItems, callerCallback);
+            if (BLLResponse.Success(bllResponse))
+            {
+                //int copies = cmdItem.Copies;
+                //_entrustdao.UpdateOneEntrustStatus(cmdItem.SubmitId, EntrustStatus.CancelSuccess);
+
+                cancelSecuItems.AddRange(cancelItems);
+            }
+            else
+            {
+                ret = _entrustdao.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelFail);
+            }
+
+            return cancelSecuItems;
+        }
+
+        #endregion
+
+        #region get/fetch
+
+        public List<EntrustCommandItem> GetEntrustedCmdItems(TradingCommandItem cmdItem)
+        {
+            return _entrustcmddao.GetCancel(cmdItem.CommandId);
+        }
+
+        //public List<EntrustSecurityItem> GetEntrustedSecuItems(TradingCommandItem cmdItem)
+        //{
+        //    var entrustCmdItems = _entrustcmddao.GetCancel(cmdItem.CommandId);
+        //    if (entrustCmdItems == null || entrustCmdItems.Count == 0)
+        //    {
+        //        return new List<EntrustSecurityItem>();;
+        //    }
+
+        //    return _entrustsecudao.GetCancel(cmdItem.CommandId);
+        //}
+
+        public List<CancelRedoItem> GetEnrustedSecuItems(EntrustCommandItem cmdItem)
+        {
+            var entrustSecuItems = _entrustsecudao.GetCancelBySumbitId(cmdItem.SubmitId);
+            var cancelItemList = new List<CancelRedoItem>();
+            if (entrustSecuItems == null)
+            {
+                return cancelItemList;
+            }
+
+            var tradeCommand = _tradecmddao.Get(cmdItem.CommandId);
+            if (tradeCommand == null)
+            {
+                return cancelItemList;
+            }
+
+            foreach (var p in entrustSecuItems)
+            {
+                var cancelRedoItem = Convert(p, tradeCommand);
+                cancelItemList.Add(cancelRedoItem);
+            }
+
+            return cancelItemList;
+        }
+
         public List<CancelRedoItem> GetCancelRedoBySubmitId(EntrustCommandItem cmdItem)
         {
             var entrustSecuItems = _entrustsecudao.GetCancelRedoBySubmitId(cmdItem.SubmitId);
@@ -84,53 +161,103 @@ namespace BLL.Frontend
             {
                 return cancelItemList;
             }
+
+            var tradeCommand = _tradecmddao.Get(cmdItem.CommandId);
+            if (tradeCommand == null)
+            {
+                return cancelItemList;
+            }
+
             foreach (var p in entrustSecuItems)
             {
-                CancelRedoItem cancelRedoItem = new CancelRedoItem
-                {
-                    Selection = true,
-                    CommandId = cmdItem.CommandId,
-                    //EntrustAmount = p.EntrustAmount,
-                    //EntrustDirection = p.EntrustDirection,
-                    EDirection = p.EntrustDirection,
-                    EntrustPrice = p.EntrustPrice,
-                    SecuCode = p.SecuCode,
-                    SecuType = p.SecuType,
-                    EntrustNo = p.EntrustNo,
-                    ECommandPrice = p.PriceType,
-                    ReportPrice = p.EntrustPrice,
-                    EOriginPriceType = p.EntrustPriceType,
-                    LeftAmount = p.EntrustAmount - p.TotalDealAmount,
-                    ReportAmount = p.EntrustAmount,
-                    DealAmount = p.TotalDealAmount,
-                    EntrustDate = p.EntrustDate,
-                    SubmitId = p.SubmitId,
-                    EntrustBatchNo = p.BatchNo,
-                };
-
-                cancelRedoItem.EntrustAmount = cancelRedoItem.LeftAmount;
-                if (cancelRedoItem.SecuType == Model.SecurityInfo.SecurityType.Stock && cancelRedoItem.EDirection == EntrustDirection.BuySpot)
-                {
-                    if (cancelRedoItem.LeftAmount % 100 != 0)
-                    {
-                        cancelRedoItem.EntrustAmount = 100 * (int)Math.Round((double)(cancelRedoItem.LeftAmount / 100));
-                    }
-                }
-
-                var secuInfo = SecurityInfoManager.Instance.Get(p.SecuCode, p.SecuType);
-                if (secuInfo != null)
-                {
-                    cancelRedoItem.ExchangeCode = secuInfo.ExchangeCode;
-                }
-                else
-                {
-                    cancelRedoItem.ExchangeCode = SecurityItemHelper.GetExchangeCode(p.SecuCode);
-                }
-
+                var cancelRedoItem = Convert(p, tradeCommand);
+               
                 cancelItemList.Add(cancelRedoItem);
             }
 
             return cancelItemList;
+        }
+
+        #endregion
+
+        private List<EntrustSecurityItem> ConvertToEntrustSecuItems(List<CancelRedoItem> cancelItems)
+        {
+            var entrustedSecuItems = new List<EntrustSecurityItem>();
+            foreach (var cancelItem in cancelItems)
+            {
+                var entrustItem = ConvertBack(cancelItem);
+                entrustedSecuItems.Add(entrustItem);
+            }
+
+            return entrustedSecuItems;
+        }
+
+        private CancelRedoItem Convert(EntrustSecurityItem p, Model.Database.TradeCommand tradeCommand)
+        {
+            CancelRedoItem cancelRedoItem = new CancelRedoItem
+            {
+                Selection = true,
+                CommandId = tradeCommand.CommandId,
+                EDirection = p.EntrustDirection,
+                EntrustPrice = p.EntrustPrice,
+                SecuCode = p.SecuCode,
+                SecuType = p.SecuType,
+                EntrustNo = p.EntrustNo,
+                ECommandPrice = p.PriceType,
+                ReportPrice = p.EntrustPrice,
+                EOriginPriceType = p.EntrustPriceType,
+                LeftAmount = p.EntrustAmount - p.TotalDealAmount,
+                ReportAmount = p.EntrustAmount,
+                DealAmount = p.TotalDealAmount,
+                EntrustDate = p.EntrustDate,
+                SubmitId = p.SubmitId,
+                EntrustBatchNo = p.BatchNo,
+                PortfolioName = tradeCommand.PortfolioName,
+                FundName = tradeCommand.AccountName,
+            };
+
+            cancelRedoItem.EntrustAmount = cancelRedoItem.LeftAmount;
+            if (cancelRedoItem.SecuType == Model.SecurityInfo.SecurityType.Stock && cancelRedoItem.EDirection == EntrustDirection.BuySpot)
+            {
+                if (cancelRedoItem.LeftAmount % 100 != 0)
+                {
+                    cancelRedoItem.EntrustAmount = 100 * (int)Math.Round((double)(cancelRedoItem.LeftAmount / 100));
+                }
+            }
+
+            var secuInfo = SecurityInfoManager.Instance.Get(p.SecuCode, p.SecuType);
+            if (secuInfo != null)
+            {
+                cancelRedoItem.SecuName = secuInfo.SecuName;
+                cancelRedoItem.ExchangeCode = secuInfo.ExchangeCode;
+            }
+            else
+            {
+                cancelRedoItem.ExchangeCode = SecurityItemHelper.GetExchangeCode(p.SecuCode);
+            }
+
+            return cancelRedoItem;
+        }
+
+        private EntrustSecurityItem ConvertBack(CancelRedoItem cancelItem)
+        {
+            var entrustItem = new EntrustSecurityItem 
+            {
+                CommandId = cancelItem.CommandId,
+                SubmitId = cancelItem.SubmitId,
+                SecuCode = cancelItem.SecuCode,
+                SecuType = cancelItem.SecuType,
+                EntrustNo = cancelItem.EntrustNo,
+                BatchNo = cancelItem.EntrustBatchNo,
+                PriceType = cancelItem.ECommandPrice,
+                EntrustPriceType = cancelItem.EEntrustPriceType,
+                EntrustDirection = cancelItem.EDirection,
+                EntrustAmount = cancelItem.EntrustAmount,
+                DealTimes = cancelItem.DealTimes,
+                EntrustPrice = cancelItem.EntrustPrice,
+            };
+
+            return entrustItem;
         }
     }
 }

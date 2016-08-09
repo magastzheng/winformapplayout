@@ -127,22 +127,34 @@ namespace TradingSystem.View
                 return;
             }
 
-            List<TradingCommandItem> successCancelItems = new List<TradingCommandItem>();
-            List<EntrustCommandItem> successCancelEntrustCmdItems = new List<EntrustCommandItem>();
-            foreach(var cmdItem in selectCmdItems)
+            //List<TradingCommandItem> successCancelItems = new List<TradingCommandItem>();
+            //List<EntrustCommandItem> successCancelEntrustCmdItems = new List<EntrustCommandItem>();
+            //foreach(var cmdItem in selectCmdItems)
+            //{
+            //    var cancelEntrustCmdItems = _withdrawBLL.CancelOne(cmdItem, new CallerCallback(CancelOneCallback));
+            //    if (cancelEntrustCmdItems.Count > 0)
+            //    {
+            //        successCancelItems.Add(cmdItem);
+            //        successCancelEntrustCmdItems.AddRange(cancelEntrustCmdItems);
+            //    }
+            //}
+
+            List<EntrustCommandItem> entrustedCmdItems = new List<EntrustCommandItem>();
+            foreach (var cmdItem in selectCmdItems)
             {
-                var cancelEntrustCmdItems = _withdrawBLL.CancelOne(cmdItem, new CallerCallback(CancelOneCallback));
-                if (cancelEntrustCmdItems.Count > 0)
-                {
-                    successCancelItems.Add(cmdItem);
-                    successCancelEntrustCmdItems.AddRange(cancelEntrustCmdItems);
-                }
+                var oneEntrustedCmdItems = _withdrawBLL.GetEntrustedCmdItems(cmdItem);
+                entrustedCmdItems.AddRange(oneEntrustedCmdItems);
+            }
+
+            if (entrustedCmdItems.Count == 0)
+            {
+                return;
             }
 
             var form = new CancelRedoDialog(_gridConfig);
             form.Owner = this;
             form.OnLoadControl(form, null);
-            form.OnLoadData(form, successCancelEntrustCmdItems);
+            form.OnLoadData(form, entrustedCmdItems);
             form.SaveData += new FormLoadHandler(Dialog_CancelRedoDialog_SaveData);
             form.ShowDialog();
         }

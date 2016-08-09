@@ -712,6 +712,46 @@ begin
 end
 
 go
+if exists (select name from sysobjects where name='procEntrustSecuritySelectCancelBySubmitId')
+drop proc procEntrustSecuritySelectCancelBySubmitId
+
+go
+create proc procEntrustSecuritySelectCancelBySubmitId(
+	@SubmitId int
+)
+as
+begin
+	--获取委托后可以撤单的证券
+	select RequestId
+		,SubmitId 
+		,CommandId			
+		,SecuCode			
+		,SecuType			
+		,EntrustAmount	
+		,EntrustPrice		
+		,EntrustDirection	
+		,EntrustStatus
+		,EntrustPriceType
+		,PriceType
+		,EntrustNo
+		,BatchNo
+		,DealStatus
+		,TotalDealAmount
+		,TotalDealBalance
+		,TotalDealFee
+		,DealTimes
+		,EntrustDate
+		,CreatedDate
+		,ModifiedDate
+		,EntrustFailCode
+		,EntrustFailCause
+	from entrustsecurity
+	where SubmitId = @SubmitId
+		and (DealStatus = 1 or DealStatus = 2)		--未成交或部分成交
+		and EntrustStatus = 4 --已完成委托
+end
+
+go
 
 if exists (select name from sysobjects where name='procEntrustSecuritySelectCancelCompletedRedo')
 drop proc procEntrustSecuritySelectCancelCompletedRedo

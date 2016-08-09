@@ -235,7 +235,7 @@ namespace TradingSystem.Dialog
             _entrustCommandItems = data as List<EntrustCommandItem>;
             foreach (var cmdItem in _entrustCommandItems)
             {
-                var cancelSecuItems = _withdrawBLL.GetCancelRedoBySubmitId(cmdItem);
+                var cancelSecuItems = _withdrawBLL.GetEnrustedSecuItems(cmdItem);
                 if (cancelSecuItems == null)
                     continue;
 
@@ -305,6 +305,18 @@ namespace TradingSystem.Dialog
                 MessageBox.Show(this, msg, "警告", MessageBoxButtons.OK);
                 return;
             }
+
+            var failedCancelItems = new List<CancelRedoItem>();
+            foreach (var cmdItem in _entrustCommandItems)
+            { 
+                var secuItems = _secuDataSource.Where(p => p.Selection && p.CommandId == cmdItem.CommandId && p.SubmitId == cmdItem.SubmitId).ToList();
+                var cancelItems = _withdrawBLL.CancelSecuItem(cmdItem, secuItems, null);
+                if (cancelItems.Count != secuItems.Count)
+                { 
+                    //TODO: report failed items
+                }
+            }
+
             //Get the price type
             PriceType spotBuyPrice = PriceTypeHelper.GetPriceType(this.cbSpotBuyPrice);
             PriceType spotSellPrice = PriceTypeHelper.GetPriceType(this.cbSpotSellPrice);
@@ -337,6 +349,7 @@ namespace TradingSystem.Dialog
         {
             msg = string.Empty;
             List<EntrustCommandItem> invalidItems = new List<EntrustCommandItem>();
+            List<CancelRedoItem> cancelItems = new List<CancelRedoItem>();
 
             foreach (var cmdItem in cmdItems)
             {
@@ -344,10 +357,14 @@ namespace TradingSystem.Dialog
                 if (selectedItems.Count > 0)
                 {
                     //选中的委托数量不能为0
-                    selectedItems = selectedItems.Where(p => p.EntrustAmount == 0).ToList();
-                    if (selectedItems.Count > 0)
+                    var zeroAmountItems = selectedItems.Where(p => p.EntrustAmount == 0).ToList();
+                    if (zeroAmountItems.Count > 0)
                     {
                         invalidItems.Add(cmdItem);
+                    }
+                    else
+                    {
+                        cancelItems.AddRange(selectedItems);
                     }
                 }
                 else
@@ -356,7 +373,7 @@ namespace TradingSystem.Dialog
                 }
             }
 
-            if (invalidItems.Count > 0)
+            if (cancelItems.Count == 0)
             {
                 StringBuilder sb = new StringBuilder();
                 invalidItems.ForEach(p =>
