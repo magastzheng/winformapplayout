@@ -8,12 +8,12 @@ namespace Service
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private int _timeOut = 60 * 1000; //1m
+        private int _interval = 60 * 1000; //1m
         private Timer _timer;
 
         public UFXHeartBeatService()
         {
-            _timer = new Timer(_timeOut);
+            _timer = new Timer(_interval);
             _timer.Elapsed += new ElapsedEventHandler(TimerHandler);
             _timer.AutoReset = true;
         }
