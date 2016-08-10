@@ -102,14 +102,39 @@ namespace TradingSystem.View
 
         private void ToolStripButton_Command_Cancel(object sender, EventArgs e)
         {
-            var selectCmdItems = _cmdDataSource.Where(p => p.Selection);
-            if (selectCmdItems != null && selectCmdItems.Count() > 0)
+            var selectCmdItems = _cmdDataSource.Where(p => p.Selection).ToList();
+            if (selectCmdItems == null || selectCmdItems.Count() == 0)
             {
-                foreach (var cmdItem in selectCmdItems)
-                {
-                    GridView_Command_Cancel(cmdItem);
-                }
+                return;
             }
+
+            List<EntrustCommandItem> entrustedCmdItems = new List<EntrustCommandItem>();
+            foreach (var cmdItem in selectCmdItems)
+            {
+                var oneEntrustedCmdItems = _withdrawBLL.GetEntrustedCmdItems(cmdItem);
+                entrustedCmdItems.AddRange(oneEntrustedCmdItems);
+            }
+
+            if (entrustedCmdItems.Count == 0)
+            {
+                return;
+            }
+
+            var form = new CancelEntrustDialog(_gridConfig);
+            form.Owner = this;
+            form.OnLoadControl(form, null);
+            form.OnLoadData(form, entrustedCmdItems);
+            //form.SaveData += new FormLoadHandler(Dialog_CancelRedoDialog_SaveData);
+            form.ShowDialog();
+
+            //var selectCmdItems = _cmdDataSource.Where(p => p.Selection);
+            //if (selectCmdItems != null && selectCmdItems.Count() > 0)
+            //{
+            //    foreach (var cmdItem in selectCmdItems)
+            //    {
+            //        GridView_Command_Cancel(cmdItem);
+            //    }
+            //}
         }
 
         private void GridView_Command_Cancel(TradingCommandItem cmdItem)

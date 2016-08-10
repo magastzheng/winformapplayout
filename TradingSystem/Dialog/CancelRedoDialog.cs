@@ -24,7 +24,7 @@ namespace TradingSystem.Dialog
 {
     public partial class CancelRedoDialog : Forms.BaseDialog
     {
-        private const string GridCancelRedoId = "entrustcanceladd";
+        private const string GridCancelRedoId = "entrustcancelredo";
 
         private EntrustBLL _entrustBLL = new EntrustBLL();
         private WithdrawBLL _withdrawBLL = new WithdrawBLL();

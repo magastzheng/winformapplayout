@@ -109,6 +109,39 @@ namespace BLL.Frontend
             return cancelSecuItems;
         }
 
+        public List<CancelSecurityItem> CancelSecuItem(EntrustCommandItem cmdItem, List<CancelSecurityItem> cancelItems, CallerCallback callerCallback)
+        {
+            var cancelSecuItems = new List<CancelSecurityItem>();
+            var entrustedSecuItems = new List<EntrustSecurityItem>();
+            foreach (var cancelItem in cancelItems)
+            {
+                var entrustSecuItem = ConvertBack(cancelItem);
+                entrustedSecuItems.Add(entrustSecuItem);
+            }
+
+            //set the status as EntrustStatus.CancelToDB in database
+            int ret = _entrustdao.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelToDB);
+            if (ret <= 0)
+            {
+                return cancelSecuItems;
+            }
+
+            var bllResponse = _ufxWithdrawBLL.Cancel(cmdItem, entrustedSecuItems, callerCallback);
+            if (BLLResponse.Success(bllResponse))
+            {
+                //int copies = cmdItem.Copies;
+                //_entrustdao.UpdateOneEntrustStatus(cmdItem.SubmitId, EntrustStatus.CancelSuccess);
+
+                cancelSecuItems.AddRange(cancelItems);
+            }
+            else
+            {
+                ret = _entrustdao.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelFail);
+            }
+
+            return cancelSecuItems;
+        }
+
         #endregion
 
         #region get/fetch
@@ -239,7 +272,7 @@ namespace BLL.Frontend
             return cancelRedoItem;
         }
 
-        private EntrustSecurityItem ConvertBack(CancelRedoItem cancelItem)
+        private EntrustSecurityItem ConvertBack(CancelSecurityItem cancelItem)
         {
             var entrustItem = new EntrustSecurityItem 
             {
@@ -250,11 +283,11 @@ namespace BLL.Frontend
                 EntrustNo = cancelItem.EntrustNo,
                 BatchNo = cancelItem.EntrustBatchNo,
                 PriceType = cancelItem.ECommandPrice,
-                EntrustPriceType = cancelItem.EEntrustPriceType,
+                EntrustPriceType = cancelItem.EOriginPriceType,
                 EntrustDirection = cancelItem.EDirection,
-                EntrustAmount = cancelItem.EntrustAmount,
+                EntrustAmount = cancelItem.ReportAmount,
                 DealTimes = cancelItem.DealTimes,
-                EntrustPrice = cancelItem.EntrustPrice,
+                EntrustPrice = cancelItem.ReportPrice,
             };
 
             return entrustItem;

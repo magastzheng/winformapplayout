@@ -6,7 +6,7 @@ using System;
 
 namespace Model.UI
 {
-    public class CancelRedoItem
+    public class CancelSecurityItem
     {
         [BindingAttribute("selection")]
         public bool Selection { get; set; }
@@ -35,36 +35,11 @@ namespace Model.UI
         [BindingAttribute("commandprice")]
         public string CommandPrice
         {
-            get 
+            get
             {
                 return EnumTypeDisplayHelper.GetPriceType(ECommandPrice);
             }
         }
-
-        [BindingAttribute("pricesetting")]
-        public string PriceSetting
-        {
-            get
-            {
-                return EnumTypeDisplayHelper.GetPriceType(EPriceSetting);
-            }
-        }
-
-        [BindingAttribute("pricetype")]
-        public string PriceType
-        {
-            get
-            {
-                return EnumTypeDisplayHelper.GetEntrustPriceType(EEntrustPriceType);
-            }
-        }
-
-
-        [BindingAttribute("entrustprice")]
-        public double EntrustPrice { get; set; }
-
-        [BindingAttribute("entrustamount")]
-        public int EntrustAmount { get; set; }
 
         [BindingAttribute("reportprice")]
         public double ReportPrice { get; set; }
@@ -81,7 +56,7 @@ namespace Model.UI
         [BindingAttribute("originpricetype")]
         public string OriginPriceType
         {
-            get 
+            get
             {
                 return EnumTypeDisplayHelper.GetEntrustPriceType(EOriginPriceType);
             }
@@ -160,12 +135,40 @@ namespace Model.UI
 
         public EntrustDirection EDirection { get; set; }
 
-        public PriceType EPriceSetting { get; set; }
-
         public PriceType ECommandPrice { get; set; }
 
-        public EntrustPriceType EEntrustPriceType { get; set; }
-
         public EntrustPriceType EOriginPriceType { get; set; }
+    }
+
+    public class CancelRedoItem : CancelSecurityItem
+    {
+        [BindingAttribute("pricesetting")]
+        public string PriceSetting
+        {
+            get
+            {
+                return EnumTypeDisplayHelper.GetPriceType(EPriceSetting);
+            }
+        }
+
+        [BindingAttribute("pricetype")]
+        public string PriceType
+        {
+            get
+            {
+                return EnumTypeDisplayHelper.GetEntrustPriceType(EEntrustPriceType);
+            }
+        }
+
+
+        [BindingAttribute("entrustprice")]
+        public double EntrustPrice { get; set; }
+
+        [BindingAttribute("entrustamount")]
+        public int EntrustAmount { get; set; }
+
+        public PriceType EPriceSetting { get; set; }
+
+        public EntrustPriceType EEntrustPriceType { get; set; }
     }
 }

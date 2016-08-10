@@ -349,6 +349,11 @@ namespace Quote
 
         private void FillData(WindData wd, Dictionary<string, int> fieldIndexMap)
         {
+            if (wd == null || wd.errorCode != 0)
+            {
+                return;
+            }
+
             int clength = wd.codeList.Length;
             int flength = wd.fieldList.Length;
             int tlength = wd.timeList.Length;

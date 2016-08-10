@@ -62,6 +62,12 @@
     <Compile Include="Controller\FormManager.cs" />
     <Compile Include="Controller\LoginController.cs" />
     <Compile Include="Controller\MainController.cs" />
+    <Compile Include="Dialog\CancelEntrustDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\CancelEntrustDialog.Designer.cs">
+      <DependentUpon>CancelEntrustDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialog\ChangePositionDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -206,6 +212,9 @@
     <Compile Include="View\WarnForm.Designer.cs">
       <DependentUpon>WarnForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Dialog\CancelEntrustDialog.resx">
+      <DependentUpon>CancelEntrustDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialog\ChangePositionDialog.resx">
       <DependentUpon>ChangePositionDialog.cs</DependentUpon>
     </EmbeddedResource>
