@@ -76,17 +76,7 @@ namespace BLL.Frontend
                 .ToList()
                 .ForEach(o => o.SubmitId = cmdItem.SubmitId);
 
-            //ret = _ufxEntrustBLL.Submit(cmdItem, entrustItems);
             var bllResponse = _ufxBasketEntrustBLL.Submit(cmdItem, entrustItems, null);
-            if (BLLResponse.Success(bllResponse))
-            {
-                ret = _tradecmddao.UpdateTargetNum(cmdItem.CommandId, cmdItem.Copies);
-                if (ret <= 0)
-                {
-                    bllResponse.Code = ConnectionCode.DBUpdateFail;
-                    bllResponse.Message = "Fail to update the TargetNum after entrusting success!";
-                }
-            }
 
             return bllResponse;
         }

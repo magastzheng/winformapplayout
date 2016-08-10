@@ -11,8 +11,8 @@ namespace DBAccess
     {
         private const string SP_Create = "procTradingCommandInsert";
         private const string SP_Modify = "procTradingCommandUpdateStatus";
-        private const string SP_ModifyTargetNum = "procTradingCommandUpdateTargetNum";
-        private const string SP_ModifyTargetNumBySumbitId = "procTradingCommandUpdateTargetNumBySubmitId";
+        //private const string SP_ModifyTargetNum = "procTradingCommandUpdateTargetNum";
+        //private const string SP_ModifyTargetNumBySumbitId = "procTradingCommandUpdateTargetNumBySubmitId";
         private const string SP_Delete = "procTradingCommandDelete";
         //private const string SP_Get = "procTradingCommandSelect";
         private const string SP_Get = "procTradingCommandSelectCombine";
@@ -74,25 +74,25 @@ namespace DBAccess
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public int UpdateTargetNum(int commandId, int copies)
-        {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyTargetNum);
-            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
-            _dbHelper.AddInParameter(dbCommand, "@Copies", System.Data.DbType.Int32, copies);
-            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+        //public int UpdateTargetNum(int commandId, int copies)
+        //{
+        //    var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyTargetNum);
+        //    _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+        //    _dbHelper.AddInParameter(dbCommand, "@Copies", System.Data.DbType.Int32, copies);
+        //    _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
             
-            return _dbHelper.ExecuteNonQuery(dbCommand);
-        }
+        //    return _dbHelper.ExecuteNonQuery(dbCommand);
+        //}
 
-        public int UpdateTargetNumBySubmitId(int submitId, int commandId)
-        {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyTargetNumBySumbitId);
-            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
-            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
-            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+        //public int UpdateTargetNumBySubmitId(int submitId, int commandId)
+        //{
+        //    var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyTargetNumBySumbitId);
+        //    _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
+        //    _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+        //    _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
-            return _dbHelper.ExecuteNonQuery(dbCommand);
-        }
+        //    return _dbHelper.ExecuteNonQuery(dbCommand);
+        //}
 
         public int Delete(int commandId)
         {
@@ -117,7 +117,6 @@ namespace DBAccess
                     item.CommandId = (int)reader["CommandId"];
                     item.InstanceId = (int)reader["InstanceId"];
                     item.CommandNum = (int)reader["CommandNum"];
-                    item.TargetNum = (int)reader["TargetNum"];
                     item.ModifiedTimes = (int)reader["ModifiedTimes"];
                     item.ECommandType = (CommandType)reader["CommandType"];
                     item.EExecuteType = (ExecuteType)reader["ExecuteType"];
@@ -178,7 +177,6 @@ namespace DBAccess
                     item.CommandId = (int)reader["CommandId"];
                     item.InstanceId = (int)reader["InstanceId"];
                     item.CommandNum = (int)reader["CommandNum"];
-                    item.TargetNum = (int)reader["TargetNum"];
                     item.ModifiedTimes = (int)reader["ModifiedTimes"];
                     item.ECommandType = (CommandType)reader["CommandType"];
                     item.EExecuteType = (ExecuteType)reader["ExecuteType"];

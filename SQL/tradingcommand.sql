@@ -7,7 +7,7 @@ create table tradingcommand(
 	CommandId			int identity(1, 1) primary key
 	,InstanceId			int not null
 	,CommandNum			int	--指令份数
-	,TargetNum			int	--目标份数
+	--,TargetNum			int	--目标份数
 	--,DealNum			int --成交份数
 	,ModifiedTimes		int	--修改次数
 	,CommandType		int -- 1 - 期现套利
@@ -51,7 +51,6 @@ begin
 	insert into tradingcommand(
 		InstanceId	
 		,CommandNum	
-		,TargetNum	
 		,ModifiedTimes		
 		,CommandType		
 		,ExecuteType		
@@ -66,8 +65,7 @@ begin
 	)
 	values(
 		@InstanceId
-		,@CommandNum
-		,0			
+		,@CommandNum		
 		,1		
 		,@CommandType		
 		,@ExecuteType		
@@ -106,59 +104,59 @@ begin
 	where CommandId=@CommandId
 end
 
-go
-if exists (select name from sysobjects where name='procTradingCommandUpdateTargetNum')
-drop proc procTradingCommandUpdateTargetNum
+--go
+--if exists (select name from sysobjects where name='procTradingCommandUpdateTargetNum')
+--drop proc procTradingCommandUpdateTargetNum
 
-go
-create proc procTradingCommandUpdateTargetNum(
-	@CommandId			int
-	,@Copies			int		-- positive integer means ADD; negative integer means reduce
-	,@ModifiedDate		datetime
-)
-as
-begin
+--go
+--create proc procTradingCommandUpdateTargetNum(
+--	@CommandId			int
+--	,@Copies			int		-- positive integer means ADD; negative integer means reduce
+--	,@ModifiedDate		datetime
+--)
+--as
+--begin
 	
-	declare @TargetNum int
-	set @TargetNum = (select TargetNum from tradingcommand where CommandId=@CommandId)
+--	declare @TargetNum int
+--	set @TargetNum = (select TargetNum from tradingcommand where CommandId=@CommandId)
 
-	update tradingcommand
-	set	TargetNum	= @TargetNum+@Copies
-		,ModifiedDate = @ModifiedDate
-	where CommandId=@CommandId
-end
+--	update tradingcommand
+--	set	TargetNum	= @TargetNum+@Copies
+--		,ModifiedDate = @ModifiedDate
+--	where CommandId=@CommandId
+--end
 
-go
-if exists (select name from sysobjects where name='procTradingCommandUpdateTargetNumBySubmitId')
-drop proc procTradingCommandUpdateTargetNumBySubmitId
+--go
+--if exists (select name from sysobjects where name='procTradingCommandUpdateTargetNumBySubmitId')
+--drop proc procTradingCommandUpdateTargetNumBySubmitId
 
-go
-create proc procTradingCommandUpdateTargetNumBySubmitId(
-	@CommandId			int
-	,@SubmitId			int
-	,@ModifiedDate		datetime
-)
-as
-begin
-	declare @TotalTargetNum int
-	declare @ThisTargetNum int
-	--
-	set @TotalTargetNum=(select TargetNum from tradingcommand where CommandId=@CommandId)
-	--从entrustcommand中获取本次委托份数
-	set @ThisTargetNum=(select Copies from entrustcommand where SubmitId=@SubmitId and EntrustStatus=12)
+--go
+--create proc procTradingCommandUpdateTargetNumBySubmitId(
+--	@CommandId			int
+--	,@SubmitId			int
+--	,@ModifiedDate		datetime
+--)
+--as
+--begin
+--	declare @TotalTargetNum int
+--	declare @ThisTargetNum int
+--	--
+--	set @TotalTargetNum=(select TargetNum from tradingcommand where CommandId=@CommandId)
+--	--从entrustcommand中获取本次委托份数
+--	set @ThisTargetNum=(select Copies from entrustcommand where SubmitId=@SubmitId and EntrustStatus=12)
 
-	set @TotalTargetNum=@TotalTargetNum-@ThisTargetNum
+--	set @TotalTargetNum=@TotalTargetNum-@ThisTargetNum
 
-	if @TotalTargetNum < 0
-	begin
-		set @TotalTargetNum=0
-	end
+--	if @TotalTargetNum < 0
+--	begin
+--		set @TotalTargetNum=0
+--	end
 
-	update tradingcommand
-	set	TargetNum	= @TotalTargetNum
-		,ModifiedDate = @ModifiedDate
-	where CommandId=@CommandId
-end
+--	update tradingcommand
+--	set	TargetNum	= @TotalTargetNum
+--		,ModifiedDate = @ModifiedDate
+--	where CommandId=@CommandId
+--end
 
 go
 if exists (select name from sysobjects where name='procTradingCommandDelete')
@@ -190,7 +188,6 @@ begin
 			CommandId			
 			,InstanceId	
 			,CommandNum
-			,TargetNum		
 			,ModifiedTimes		
 			,CommandType		
 			,ExecuteType		
@@ -211,8 +208,7 @@ begin
 		select 
 			CommandId			
 			,InstanceId	
-			,CommandNum	
-			,TargetNum		
+			,CommandNum		
 			,ModifiedTimes		
 			,CommandType		
 			,ExecuteType		
@@ -244,8 +240,7 @@ begin
 		select 
 			a.CommandId			
 			,a.InstanceId	
-			,a.CommandNum
-			,a.TargetNum		
+			,a.CommandNum	
 			,a.ModifiedTimes		
 			,a.CommandType		
 			,a.ExecuteType		
@@ -280,8 +275,7 @@ begin
 		select 
 			a.CommandId			
 			,a.InstanceId	
-			,a.CommandNum
-			,a.TargetNum		
+			,a.CommandNum	
 			,a.ModifiedTimes		
 			,a.CommandType		
 			,a.ExecuteType		

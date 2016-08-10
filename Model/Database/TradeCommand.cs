@@ -15,9 +15,6 @@ namespace Model.Database
         //指令份数
         public int CommandNum { get; set; }
 
-        //目标份数
-        public int TargetNum { get; set; }
-
         //指令数量
         public int CommandAmount { get; set; }
 

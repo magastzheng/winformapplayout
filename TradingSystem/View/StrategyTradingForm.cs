@@ -599,6 +599,7 @@ namespace TradingSystem.View
                     var cmdSecuItems = tradeSecuItems.Where(p => p.CommandId == cmdItem.CommandId).ToList();
                     var cmdEntrustSecuItems = entrustSecuItems.Where(p => p.CommandId == cmdItem.CommandId).ToList();
 
+
                     var totalLongCmdAmount = cmdSecuItems.Where(p => p.SecuType == SecurityType.Stock)
                                             .ToList()
                                             .Sum(o => o.CommandAmount);
@@ -618,11 +619,17 @@ namespace TradingSystem.View
                                                 .ToList()
                                                 .Sum(o => o.TotalDealAmount);
 
+                    var totalCmdAmount = totalLongCmdAmount + totalShortCmdAmount;
+                    var eachCopyAmount = totalCmdAmount / cmdItem.CommandNum;
+                    var totalEntrustAmount = totalLongEntrustAmount + totalShortEntrustAmount;
+
+                    double entrustRatio = GetRatio(totalEntrustAmount, eachCopyAmount);
                     double longEntrustRatio = GetRatio(totalLongEntrustAmount, totalLongCmdAmount);
                     double longDealRatio = GetRatio(totalLongDealAmount, totalLongCmdAmount);
                     double shortEntrustRatio = GetRatio(totalShortEntrustAmount, totalShortCmdAmount);
                     double shortDealRatio = GetRatio(totalShortDealAmount, totalShortCmdAmount);
 
+                    cmdItem.TargetNum = (int)Math.Ceiling(entrustRatio);
                     cmdItem.LongMoreThan = longEntrustRatio;
                     cmdItem.BearMoreThan = shortEntrustRatio;
                     cmdItem.LongRatio = longDealRatio;

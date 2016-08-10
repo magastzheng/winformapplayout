@@ -137,7 +137,6 @@ namespace BLL.Entrust
                 {
                     ret = _entrustdao.UpdateSecurityEntrustStatus(entrustSecuItems, Model.EnumType.EntrustStatus.CancelSuccess);
                     ret = _entrustcmddao.UpdateEntrustCommandStatus(token.SubmitId, Model.EnumType.EntrustStatus.CancelSuccess);
-                    ret = _tradecmddao.UpdateTargetNumBySubmitId(token.SubmitId, token.CommandId);
                 }
             }
 

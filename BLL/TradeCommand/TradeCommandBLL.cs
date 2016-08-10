@@ -191,7 +191,6 @@ namespace BLL.TradeCommand
                 CommandId = tradeCommand.CommandId,
                 InstanceId = tradeCommand.InstanceId,
                 CommandNum = tradeCommand.CommandNum,
-                TargetNum = tradeCommand.TargetNum,
                 ModifiedTimes = tradeCommand.ModifiedTimes,
                 ECommandType = tradeCommand.ECommandType,
                 EExecuteType = tradeCommand.EExecuteType,
