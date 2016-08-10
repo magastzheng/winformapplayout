@@ -622,6 +622,7 @@ namespace TradingSystem.View
                     var totalCmdAmount = totalLongCmdAmount + totalShortCmdAmount;
                     var eachCopyAmount = totalCmdAmount / cmdItem.CommandNum;
                     var totalEntrustAmount = totalLongEntrustAmount + totalShortEntrustAmount;
+                    var totalDealAmount = totalLongDealAmount + totalShortDealAmount;
 
                     double entrustRatio = GetRatio(totalEntrustAmount, eachCopyAmount);
                     double longEntrustRatio = GetRatio(totalLongEntrustAmount, totalLongCmdAmount);
@@ -634,6 +635,8 @@ namespace TradingSystem.View
                     cmdItem.BearMoreThan = shortEntrustRatio;
                     cmdItem.LongRatio = longDealRatio;
                     cmdItem.BearRatio = shortDealRatio;
+                    cmdItem.EntrustedAmount = totalEntrustAmount;
+                    cmdItem.DealAmount = totalDealAmount;
 
                     _cmdDataSource.Add(cmdItem);
                 }
