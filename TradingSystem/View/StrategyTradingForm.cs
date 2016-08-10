@@ -588,83 +588,17 @@ namespace TradingSystem.View
             _secuDataSource.Clear();
             _eiDataSource.Clear();
 
-            var tradingcmds = _tradeCommandBLL.GetTradeCommandItems();
+            var tradingcmds = _tradeCommandBLL.GetTradeCommandAll();
             if (tradingcmds != null)
             {
-                var tradeSecuItems = _tradeCommandBLL.GetCommandSecurityItems(tradingcmds);
-                var entrustSecuItems = _queryBLL.GetEntrustSecurityItems(tradingcmds);
-
-                foreach (var cmdItem in tradingcmds)
-                {
-                    var cmdSecuItems = tradeSecuItems.Where(p => p.CommandId == cmdItem.CommandId).ToList();
-                    var cmdEntrustSecuItems = entrustSecuItems.Where(p => p.CommandId == cmdItem.CommandId).ToList();
-
-
-                    var totalLongCmdAmount = cmdSecuItems.Where(p => p.SecuType == SecurityType.Stock)
-                                            .ToList()
-                                            .Sum(o => o.CommandAmount);
-                    var totalLongEntrustAmount = cmdEntrustSecuItems.Where(p => p.SecuType == SecurityType.Stock && p.EntrustStatus == EntrustStatus.Completed)
-                                             .ToList()
-                                             .Sum(o => o.EntrustAmount);
-                    var totalLongDealAmount = cmdEntrustSecuItems.Where(p => p.SecuType == SecurityType.Stock && (p.DealStatus == DealStatus.Completed || p.DealStatus == DealStatus.PartDeal))
-                                            .ToList()
-                                            .Sum(o => o.TotalDealAmount);
-                    var totalShortCmdAmount = cmdSecuItems.Where(p => p.SecuType == SecurityType.Futures)
-                                                .ToList()
-                                                .Sum(o => o.CommandAmount);
-                    var totalShortEntrustAmount = cmdEntrustSecuItems.Where(p => p.SecuType == SecurityType.Futures && p.EntrustStatus == EntrustStatus.Completed)
-                                                  .ToList()
-                                                  .Sum(o => o.EntrustAmount);
-                    var totalShortDealAmount = cmdEntrustSecuItems.Where(p => p.SecuType == SecurityType.Futures && (p.DealStatus == DealStatus.Completed || p.DealStatus == DealStatus.PartDeal))
-                                                .ToList()
-                                                .Sum(o => o.TotalDealAmount);
-
-                    var totalCmdAmount = totalLongCmdAmount + totalShortCmdAmount;
-                    var eachCopyAmount = totalCmdAmount / cmdItem.CommandNum;
-                    var totalEntrustAmount = totalLongEntrustAmount + totalShortEntrustAmount;
-                    var totalDealAmount = totalLongDealAmount + totalShortDealAmount;
-
-                    double entrustRatio = GetRatio(totalEntrustAmount, eachCopyAmount);
-                    double longEntrustRatio = GetRatio(totalLongEntrustAmount, totalLongCmdAmount);
-                    double longDealRatio = GetRatio(totalLongDealAmount, totalLongCmdAmount);
-                    double shortEntrustRatio = GetRatio(totalShortEntrustAmount, totalShortCmdAmount);
-                    double shortDealRatio = GetRatio(totalShortDealAmount, totalShortCmdAmount);
-
-                    cmdItem.TargetNum = (int)Math.Ceiling(entrustRatio);
-                    cmdItem.LongMoreThan = longEntrustRatio;
-                    cmdItem.BearMoreThan = shortEntrustRatio;
-                    cmdItem.LongRatio = longDealRatio;
-                    cmdItem.BearRatio = shortDealRatio;
-                    cmdItem.EntrustedAmount = totalEntrustAmount;
-                    cmdItem.DealAmount = totalDealAmount;
-
-                    _cmdDataSource.Add(cmdItem);
-                }
+                tradingcmds.ForEach( p => _cmdDataSource.Add(p));
             }
 
             return true;
         }
 
-        private double GetRatio(int eachOne, int total)
-        {
-            if (total > 0)
-            {
-                return (double)(eachOne) / total;
-            }
-
-            return 0.0f;
-        }
-
         private bool LoadDataEntrustFlow()
         {
-            //var efItems = _entrustBLL.GetEntrustFlow();
-            //if (efItems != null)
-            //{
-            //    foreach (var efItem in efItems)
-            //    {
-            //        _efDataSource.Add(efItem);
-            //    }
-            //}
             _efDataSource.Clear();
 
             UFXQueryEntrustBLL queryBll = new UFXQueryEntrustBLL();
@@ -675,15 +609,6 @@ namespace TradingSystem.View
 
         private bool LoadDataDealFlow()
         {
-            //var dfItems = _entrustBLL.GetDealFlow();
-            //if (dfItems != null)
-            //{
-            //    foreach (var dfItem in dfItems)
-            //    {
-            //        _dfDataSource.Add(dfItem);
-            //    }
-            //}
-
             _dfDataSource.Clear();
 
             UFXQueryDealBLL queryDealBll = new UFXQueryDealBLL();

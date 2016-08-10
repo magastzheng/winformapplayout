@@ -97,7 +97,7 @@
     <Compile Include="UFX\obsolete\T2SDKCallbackImpl.cs" />
     <Compile Include="UFX\obsolete\LoginBLL_extend.cs" />
     <Compile Include="UFX\obsolete\T2SDKBase.cs" />
-    <Compile Include="TradeCommand\TradeCommandBLL.cs" />
+    <Compile Include="Frontend\TradeCommandBLL.cs" />
     <Compile Include="TradeCommand\TradeInstanceBLL.cs" />
     <Compile Include="UFX\T2SDKWrap.cs" />
     <Compile Include="UFX\T2SubCallback.cs" />

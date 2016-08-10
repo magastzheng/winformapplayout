@@ -97,7 +97,7 @@ namespace BLL.Frontend
             return dfItems;
         }
 
-        public List<EntrustSecurityItem> GetEntrustSecurityItems(List<TradingCommandItem> cmdItems)
+        public List<EntrustSecurityItem> GetEntrustSecurityItems(List<Model.Database.TradeCommand> cmdItems)
         {
             var entrustSecuItems = new List<EntrustSecurityItem>();
 

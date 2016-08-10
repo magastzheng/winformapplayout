@@ -3,11 +3,13 @@ using DBAccess;
 using log4net;
 using Model.Database;
 using Model.EnumType;
+using Model.SecurityInfo;
 using Model.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BLL.TradeCommand
+namespace BLL.Frontend
 {
     public class TradeCommandBLL
     {
@@ -19,6 +21,8 @@ namespace BLL.TradeCommand
         private TradingInstanceSecurityDAO _tradeinstsecudao = new TradingInstanceSecurityDAO();
         private TradingCommandDAO _tradecommandao = new TradingCommandDAO();
         private TradingCommandSecurityDAO _tradecmdsecudao = new TradingCommandSecurityDAO();
+
+        private QueryBLL _queryBLL = new QueryBLL();
 
         public TradeCommandBLL()
         { 
@@ -118,25 +122,31 @@ namespace BLL.TradeCommand
 
         #region get/fetch
 
-        public List<TradingCommandItem> GetTradeCommandItems()
+        public List<TradingCommandItem> GetTradeCommandAll()
         {
             var uiCommands = new List<TradingCommandItem>();
             var tradeCommands = _tradecommandao.GetAll();
+
+            var tradeSecuItems = GetCommandSecurityItems(tradeCommands);
+            var entrustSecuItems = _queryBLL.GetEntrustSecurityItems(tradeCommands);
+
             foreach (var tradeCommand in tradeCommands)
             {
                 var uiCommand = BuildUICommand(tradeCommand);
+                CalculateUICommand(ref uiCommand, tradeSecuItems, entrustSecuItems);
+
                 uiCommands.Add(uiCommand);
             }
             return uiCommands;
         }
 
-        public TradingCommandItem GetTradeCommandItem(int commandId)
+
+        public Model.Database.TradeCommand GetTradeCommandItem(int commandId)
         {
-            var tradeCommand = _tradecommandao.Get(commandId);
-            return BuildUICommand(tradeCommand);
+            return _tradecommandao.Get(commandId);
         }
 
-        public List<TradeCommandSecurity> GetCommandSecurityItems(List<TradingCommandItem> cmdItems)
+        public List<TradeCommandSecurity> GetCommandSecurityItems(List<Model.Database.TradeCommand> cmdItems)
         {
             var cmdSecuItems = new List<TradeCommandSecurity>();
 
@@ -214,6 +224,62 @@ namespace BLL.TradeCommand
             };
 
             return uiCommand;
+        }
+
+        private void CalculateUICommand(ref TradingCommandItem uiCommand, List<TradeCommandSecurity> tradeSecuItems, List<EntrustSecurityItem> entrustSecuItems)
+        {
+            int commandId = uiCommand.CommandId;
+            var cmdSecuItems = tradeSecuItems.Where(p => p.CommandId == commandId).ToList();
+            var cmdEntrustSecuItems = entrustSecuItems.Where(p => p.CommandId == commandId).ToList();
+
+
+            var totalLongCmdAmount = cmdSecuItems.Where(p => p.SecuType == SecurityType.Stock)
+                                    .ToList()
+                                    .Sum(o => o.CommandAmount);
+            var totalLongEntrustAmount = cmdEntrustSecuItems.Where(p => p.SecuType == SecurityType.Stock && p.EntrustStatus == EntrustStatus.Completed)
+                                        .ToList()
+                                        .Sum(o => o.EntrustAmount);
+            var totalLongDealAmount = cmdEntrustSecuItems.Where(p => p.SecuType == SecurityType.Stock && (p.DealStatus == DealStatus.Completed || p.DealStatus == DealStatus.PartDeal))
+                                    .ToList()
+                                    .Sum(o => o.TotalDealAmount);
+            var totalShortCmdAmount = cmdSecuItems.Where(p => p.SecuType == SecurityType.Futures)
+                                        .ToList()
+                                        .Sum(o => o.CommandAmount);
+            var totalShortEntrustAmount = cmdEntrustSecuItems.Where(p => p.SecuType == SecurityType.Futures && p.EntrustStatus == EntrustStatus.Completed)
+                                            .ToList()
+                                            .Sum(o => o.EntrustAmount);
+            var totalShortDealAmount = cmdEntrustSecuItems.Where(p => p.SecuType == SecurityType.Futures && (p.DealStatus == DealStatus.Completed || p.DealStatus == DealStatus.PartDeal))
+                                        .ToList()
+                                        .Sum(o => o.TotalDealAmount);
+
+            var totalCmdAmount = totalLongCmdAmount + totalShortCmdAmount;
+            var eachCopyAmount = totalCmdAmount / uiCommand.CommandNum;
+            var totalEntrustAmount = totalLongEntrustAmount + totalShortEntrustAmount;
+            var totalDealAmount = totalLongDealAmount + totalShortDealAmount;
+
+            double entrustRatio = GetRatio(totalEntrustAmount, eachCopyAmount);
+            double longEntrustRatio = GetRatio(totalLongEntrustAmount, totalLongCmdAmount);
+            double longDealRatio = GetRatio(totalLongDealAmount, totalLongCmdAmount);
+            double shortEntrustRatio = GetRatio(totalShortEntrustAmount, totalShortCmdAmount);
+            double shortDealRatio = GetRatio(totalShortDealAmount, totalShortCmdAmount);
+
+            uiCommand.TargetNum = (int)Math.Ceiling(entrustRatio);
+            uiCommand.LongMoreThan = longEntrustRatio;
+            uiCommand.BearMoreThan = shortEntrustRatio;
+            uiCommand.LongRatio = longDealRatio;
+            uiCommand.BearRatio = shortDealRatio;
+            uiCommand.EntrustedAmount = totalEntrustAmount;
+            uiCommand.DealAmount = totalDealAmount;
+        }
+
+        private double GetRatio(int eachOne, int total)
+        {
+            if (total > 0)
+            {
+                return (double)(eachOne) / total;
+            }
+
+            return 0.0f;
         }
         #endregion
     }

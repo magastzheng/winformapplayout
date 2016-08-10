@@ -1,5 +1,5 @@
-﻿using BLL.SecurityInfo;
-using BLL.TradeCommand;
+﻿using BLL.Frontend;
+using BLL.SecurityInfo;
 using BLL.UFX;
 using BLL.UFX.impl;
 using Config;
@@ -79,7 +79,7 @@ namespace BLL.Entrust
 
                 if (tradeCommandItem != null)
                 {
-                    request.AccountCode = tradeCommandItem.FundCode;
+                    request.AccountCode = tradeCommandItem.AccountCode;
                     request.CombiNo = tradeCommandItem.PortfolioCode;
                 }
 

@@ -1,7 +1,6 @@
 ﻿using Config;
 using Controls.Entity;
 using Controls.GridView;
-using DBAccess;
 using Model.SecurityInfo;
 using Model.UI;
 using System;
@@ -17,6 +16,7 @@ using Model.Binding.BindingUtil;
 using TradingSystem.TradeUtil;
 using Model.Database;
 using BLL.Template;
+using BLL.Frontend;
 
 namespace TradingSystem.View
 {
