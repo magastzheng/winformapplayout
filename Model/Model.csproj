@@ -74,6 +74,13 @@
     <Compile Include="config\FunctionConfigItem.cs" />
     <Compile Include="PackageType.cs" />
     <Compile Include="PackFieldType.cs" />
+    <Compile Include="Permission\Feature.cs" />
+    <Compile Include="Permission\Resource.cs" />
+    <Compile Include="Permission\Role.cs" />
+    <Compile Include="Permission\RoleFeaturePermission.cs" />
+    <Compile Include="Permission\User.cs" />
+    <Compile Include="Permission\UserResourcePermission.cs" />
+    <Compile Include="Permission\UserRole.cs" />
     <Compile Include="Quote\EnumQuoteHelper.cs" />
     <Compile Include="Quote\MarketData.cs" />
     <Compile Include="SecurityInfo\SecurityItem.cs" />
