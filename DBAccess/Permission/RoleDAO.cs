@@ -8,31 +8,31 @@ using System.Threading.Tasks;
 
 namespace DBAccess.Permission
 {
-    public class UserDAO : BaseDAO
+    public class RoleDAO : BaseDAO
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private const string SP_Create = "procUsersInsert";
-        private const string SP_Modify = "procUsersUpdate";
-        private const string SP_Delete = "procUsersDelete";
-        private const string SP_Select = "procUsersSelect";
+        private const string SP_Create = "procRolesInsert";
+        private const string SP_Modify = "procRolesUpdate";
+        private const string SP_Delete = "procRolesDelete";
+        private const string SP_Select = "procRolesSelect";
 
-        public UserDAO()
+        public RoleDAO()
             : base()
-        { 
+        {
         }
 
-        public UserDAO(DbHelper dbHelper)
+        public RoleDAO(DbHelper dbHelper)
             : base(dbHelper)
         {
         }
 
-        public int Create(User user)
+        public int Create(Role role)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
-            _dbHelper.AddInParameter(dbCommand, "@Operator", System.Data.DbType.String, user.Operator);
-            _dbHelper.AddInParameter(dbCommand, "@Name", System.Data.DbType.String, user.Name);
-            _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)user.Status);
+            _dbHelper.AddInParameter(dbCommand, "@Name", System.Data.DbType.String, role.Name);
+            _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)role.Status);
+            _dbHelper.AddInParameter(dbCommand, "@Type", System.Data.DbType.Int32, (int)role.Type);
 
             _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
 
@@ -47,39 +47,40 @@ namespace DBAccess.Permission
             return id;
         }
 
-        public int Update(User user)
+        public int Update(Role role)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Modify);
-            _dbHelper.AddInParameter(dbCommand, "@Operator", System.Data.DbType.String, user.Operator);
-            _dbHelper.AddInParameter(dbCommand, "@Name", System.Data.DbType.String, user.Name);
-            _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)user.Status);
+            _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, role.Id);
+            _dbHelper.AddInParameter(dbCommand, "@Name", System.Data.DbType.String, role.Name);
+            _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)role.Status);
+            _dbHelper.AddInParameter(dbCommand, "@Type", System.Data.DbType.Int32, (int)role.Type);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public int Delete(string operatorNo)
+        public int Delete(int roleId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Delete);
-            _dbHelper.AddInParameter(dbCommand, "@Operator", System.Data.DbType.String, operatorNo);
-            
+            _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, roleId);
+
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public User Get(string operatorNo)
+        public Role Get(int roleId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Select);
-            _dbHelper.AddInParameter(dbCommand, "@Operator", System.Data.DbType.String, operatorNo);
+            _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, roleId);
 
-            User item = new User();
+            Role item = new Role();
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
                     item.Id = (int)reader["Id"];
-                    item.Operator = (string)reader["Operator"];
                     item.Name = (string)reader["Name"];
-                    item.Status = (UserStatus)reader["Status"];
+                    item.Status = (RoleStatus)reader["Status"];
+                    item.Type = (RoleType)reader["Type"];
                     break;
                 }
             }
@@ -90,21 +91,21 @@ namespace DBAccess.Permission
             return item;
         }
 
-        public List<User> Get()
+        public List<Role> Get()
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Select);
-            
-            List<User> items = new List<User>();
+
+            List<Role> items = new List<Role>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    User item = new User();
+                    Role item = new Role();
                     item.Id = (int)reader["Id"];
-                    item.Operator = (string)reader["Operator"];
                     item.Name = (string)reader["Name"];
-                    item.Status = (UserStatus)reader["Status"];
+                    item.Status = (RoleStatus)reader["Status"];
+                    item.Type = (RoleType)reader["Type"];
 
                     items.Add(item);
                 }

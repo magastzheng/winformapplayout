@@ -8,32 +8,32 @@ using System.Threading.Tasks;
 
 namespace DBAccess.Permission
 {
-    public class UserDAO : BaseDAO
+    public class FeatureDAO : BaseDAO
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private const string SP_Create = "procUsersInsert";
-        private const string SP_Modify = "procUsersUpdate";
-        private const string SP_Delete = "procUsersDelete";
-        private const string SP_Select = "procUsersSelect";
+        private const string SP_Create = "procFeaturesInsert";
+        private const string SP_Modify = "procFeaturesUpdate";
+        private const string SP_Delete = "procFeaturesDelete";
+        private const string SP_Select = "procFeaturesSelect";
 
-        public UserDAO()
+        public FeatureDAO()
             : base()
-        { 
+        {
         }
 
-        public UserDAO(DbHelper dbHelper)
+        public FeatureDAO(DbHelper dbHelper)
             : base(dbHelper)
         {
         }
 
-        public int Create(User user)
+        public int Create(Feature feature)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
-            _dbHelper.AddInParameter(dbCommand, "@Operator", System.Data.DbType.String, user.Operator);
-            _dbHelper.AddInParameter(dbCommand, "@Name", System.Data.DbType.String, user.Name);
-            _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)user.Status);
-
+            _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, feature.Id);
+            _dbHelper.AddInParameter(dbCommand, "@Name", System.Data.DbType.String, feature.Name);
+            _dbHelper.AddInParameter(dbCommand, "@Description", System.Data.DbType.String, feature.Description);
+            
             _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
 
             int ret = _dbHelper.ExecuteNonQuery(dbCommand);
@@ -47,39 +47,39 @@ namespace DBAccess.Permission
             return id;
         }
 
-        public int Update(User user)
+        public int Update(Feature feature)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Modify);
-            _dbHelper.AddInParameter(dbCommand, "@Operator", System.Data.DbType.String, user.Operator);
-            _dbHelper.AddInParameter(dbCommand, "@Name", System.Data.DbType.String, user.Name);
-            _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)user.Status);
+            _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, feature.Id);
+            _dbHelper.AddInParameter(dbCommand, "@Name", System.Data.DbType.String, feature.Name);
+            _dbHelper.AddInParameter(dbCommand, "@Description", System.Data.DbType.String, feature.Description);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public int Delete(string operatorNo)
+        public int Delete(int featureId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Delete);
-            _dbHelper.AddInParameter(dbCommand, "@Operator", System.Data.DbType.String, operatorNo);
-            
+            _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, featureId);
+
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public User Get(string operatorNo)
+        public Feature Get(int featureId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Select);
-            _dbHelper.AddInParameter(dbCommand, "@Operator", System.Data.DbType.String, operatorNo);
+            _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, featureId);
 
-            User item = new User();
+            Feature item = new Feature();
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
                     item.Id = (int)reader["Id"];
-                    item.Operator = (string)reader["Operator"];
                     item.Name = (string)reader["Name"];
-                    item.Status = (UserStatus)reader["Status"];
+                    item.Description = (string)reader["Description"];
+
                     break;
                 }
             }
@@ -90,21 +90,20 @@ namespace DBAccess.Permission
             return item;
         }
 
-        public List<User> Get()
+        public List<Feature> Get()
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Select);
             
-            List<User> items = new List<User>();
+            List<Feature> items = new List<Feature>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    User item = new User();
+                    Feature item = new Feature();
                     item.Id = (int)reader["Id"];
-                    item.Operator = (string)reader["Operator"];
                     item.Name = (string)reader["Name"];
-                    item.Status = (UserStatus)reader["Status"];
+                    item.Description = (string)reader["Description"];
 
                     items.Add(item);
                 }

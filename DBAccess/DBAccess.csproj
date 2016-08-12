@@ -55,6 +55,7 @@
     <Compile Include="FundDAO.cs" />
     <Compile Include="FuturesContractDAO.cs" />
     <Compile Include="MonitorUnitDAO.cs" />
+    <Compile Include="Permission\RoleDAO.cs" />
     <Compile Include="Permission\UserDAO.cs" />
     <Compile Include="PortfolioDAO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -54,11 +54,11 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procFeaturesUpdate')
-drop proc procFeaturesUpdate
+if exists (select name from sysobjects where name='procFeaturesDelete')
+drop proc procFeaturesDelete
 
 go
-create proc procFeaturesUpdate(
+create proc procFeaturesDelete(
 	@Id int
 )
 as
