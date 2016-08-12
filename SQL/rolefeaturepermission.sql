@@ -1,0 +1,122 @@
+use tradingsystem
+
+if object_id('rolefeaturepermission') is not null
+drop table rolefeaturepermission
+
+create table rolefeaturepermission(
+	Id			int identity(1, 1) primary key,
+	RoleId		int not null,
+	FeatureId	int not null,
+	Permission	int	
+)
+
+--Permission(32 bit)
+--0			1		2		3			4		5		6		7                        
+--Create   Delete  Modify  Select/View 	
+
+if exists (select name from sysobjects where name='procRoleFeaturePermissionInsert')
+drop proc procRoleFeaturePermissionInsert
+
+go
+create proc procRoleFeaturePermissionInsert(
+	@RoleId			int
+	,@FeatureId		int
+	,@Permission	int
+)
+as
+begin
+	declare @newid int
+	
+	insert into rolefeaturepermission(
+		RoleId
+		,FeatureId
+		,Permission
+	)
+	values
+	(
+		@RoleId
+		,@FeatureId
+		,@Permission
+	)
+
+	set @newid = SCOPE_IDENTITY()
+	return @newid
+end
+
+if exists (select name from sysobjects where name='procRoleFeaturePermissionUpdate')
+drop proc procRoleFeaturePermissionUpdate
+
+go
+create proc procRoleFeaturePermissionUpdate(
+	@RoleId			int
+	,@FeatureId		int
+	,@Permission	int
+)
+as
+begin
+	update rolefeaturepermission
+	set
+		Permission=@Permission
+	where RoleId=@RoleId and FeatureId=@FeatureId
+end
+
+if exists (select name from sysobjects where name='procRoleFeaturePermissionDelete')
+drop proc procRoleFeaturePermissionDelete
+
+go
+create proc procRoleFeaturePermissionDelete(
+	@RoleId			int
+	,@FeatureId		int
+)
+as
+begin
+	delete from rolefeaturepermission
+	where RoleId=@RoleId and FeatureId=@FeatureId
+end
+
+if exists (select name from sysobjects where name='procRoleFeaturePermissionSelect')
+drop proc procRoleFeaturePermissionSelect
+
+go
+create proc procRoleFeaturePermissionSelect(
+	@RoleId			int = NULL
+	,@FeatureId		int = NULL
+)
+as
+begin
+	if @RoleId is not null and @FeatureId is not null
+	begin
+		select Id
+			,RoleId
+			,FeatureId
+			,Permission
+		from rolefeaturepermission
+		where RoleId=@RoleId and FeatureId=@FeatureId
+	end
+	else if @RoleId is not null
+	begin
+		select Id
+			,RoleId
+			,FeatureId
+			,Permission
+		from rolefeaturepermission
+		where RoleId=@RoleId
+	end
+	else if @FeatureId is not null
+	begin
+		select Id
+			,RoleId
+			,FeatureId
+			,Permission
+		from rolefeaturepermission
+		where FeatureId=@FeatureId
+	end
+	else 
+	begin
+		select Id
+			,RoleId
+			,FeatureId
+			,Permission
+		from rolefeaturepermission
+	end
+end
