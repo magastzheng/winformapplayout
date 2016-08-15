@@ -8,6 +8,7 @@ namespace Model.Permission
 {
     public enum ResourceType
     { 
+        None = -1,
         Product = 1,
         AssetUnit = 2,
         Portfolio = 3,

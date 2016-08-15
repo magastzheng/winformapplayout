@@ -68,32 +68,36 @@ namespace DBAccess.Permission
 
         public Role Get(int roleId)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Select);
-            _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, roleId);
+            var items = GetInternal(roleId);
 
-            Role item = new Role();
-            var reader = _dbHelper.ExecuteReader(dbCommand);
-            if (reader.HasRows)
+            Role item = null;
+            if (items.Count > 0)
             {
-                while (reader.Read())
-                {
-                    item.Id = (int)reader["Id"];
-                    item.Name = (string)reader["Name"];
-                    item.Status = (RoleStatus)reader["Status"];
-                    item.Type = (RoleType)reader["Type"];
-                    break;
-                }
+                item = items[0];
             }
-
-            reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
-
+            else
+            {
+                item = new Role();
+            }
+            
             return item;
         }
 
         public List<Role> Get()
         {
+            return GetInternal(-1);
+        }
+
+        #region private method
+
+        public List<Role> GetInternal(int roleId)
+        {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Select);
+
+            if (roleId > 0)
+            {
+                _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, roleId);
+            }
 
             List<Role> items = new List<Role>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
@@ -116,5 +120,7 @@ namespace DBAccess.Permission
 
             return items;
         }
+
+        #endregion
     }
 }

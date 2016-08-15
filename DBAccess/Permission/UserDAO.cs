@@ -67,33 +67,36 @@ namespace DBAccess.Permission
 
         public User Get(string operatorNo)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Select);
-            _dbHelper.AddInParameter(dbCommand, "@Operator", System.Data.DbType.String, operatorNo);
+            var items = GetInternal(operatorNo);
 
-            User item = new User();
-            var reader = _dbHelper.ExecuteReader(dbCommand);
-            if (reader.HasRows)
+            User item = null;
+            if (items.Count > 0)
             {
-                while (reader.Read())
-                {
-                    item.Id = (int)reader["Id"];
-                    item.Operator = (string)reader["Operator"];
-                    item.Name = (string)reader["Name"];
-                    item.Status = (UserStatus)reader["Status"];
-                    break;
-                }
+                item = items[0];
             }
-
-            reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
-
+            else
+            {
+                item = new User();
+            }
+            
             return item;
         }
 
         public List<User> Get()
         {
+            return GetInternal(string.Empty);
+        }
+
+        #region private method
+
+        public List<User> GetInternal(string operatorNo)
+        {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Select);
-            
+            if (!string.IsNullOrEmpty(operatorNo))
+            {
+                _dbHelper.AddInParameter(dbCommand, "@Operator", System.Data.DbType.String, operatorNo);
+            }
+
             List<User> items = new List<User>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
@@ -115,5 +118,7 @@ namespace DBAccess.Permission
 
             return items;
         }
+
+        #endregion
     }
 }

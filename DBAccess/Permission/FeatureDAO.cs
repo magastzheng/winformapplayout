@@ -67,33 +67,36 @@ namespace DBAccess.Permission
 
         public Feature Get(int featureId)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Select);
-            _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, featureId);
+            var items = GetInternal(featureId);
 
-            Feature item = new Feature();
-            var reader = _dbHelper.ExecuteReader(dbCommand);
-            if (reader.HasRows)
+            Feature item = null;
+            if (items.Count > 0)
             {
-                while (reader.Read())
-                {
-                    item.Id = (int)reader["Id"];
-                    item.Name = (string)reader["Name"];
-                    item.Description = (string)reader["Description"];
-
-                    break;
-                }
+                item = items[0];
             }
-
-            reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
-
+            else
+            {
+                item = new Feature();
+            }
+            
             return item;
         }
 
         public List<Feature> Get()
         {
+            return GetInternal(-1);
+        }
+
+        #region private method
+
+        public List<Feature> GetInternal(int featureId)
+        {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Select);
-            
+            if (featureId > 0)
+            {
+                _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, featureId);
+            }
+
             List<Feature> items = new List<Feature>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
@@ -114,5 +117,7 @@ namespace DBAccess.Permission
 
             return items;
         }
+
+        #endregion
     }
 }

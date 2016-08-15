@@ -58,7 +58,10 @@
     <Compile Include="Permission\FeatureDAO.cs" />
     <Compile Include="Permission\ResourceDAO.cs" />
     <Compile Include="Permission\RoleDAO.cs" />
+    <Compile Include="Permission\RoleFeaturePermissionDAO.cs" />
     <Compile Include="Permission\UserDAO.cs" />
+    <Compile Include="Permission\UserResourcePermissionDAO.cs" />
+    <Compile Include="Permission\UserRoleDAO.cs" />
     <Compile Include="PortfolioDAO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SecurityInfoDAO.cs" />
