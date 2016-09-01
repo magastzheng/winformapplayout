@@ -10,14 +10,21 @@ namespace BLL
 
         private readonly object _locker = new object();
 
-        private LoginBLL _loginBLL;
+        private LoginSyncBLL _loginBLL;
+        private AccountBLL _accountBLL;
+        //private LoginBLL _loginBLL;
         private SecurityBLL _securityBLL;
         private StrategyBLL _strategyBLL;
         private T2Subscriber _subscriber;
 
-        public LoginBLL LoginBLL
+        public LoginSyncBLL LoginBLL
         {
             get { return _loginBLL; }
+        }
+
+        public AccountBLL AccountBLL
+        {
+            get { return _accountBLL; }
         }
 
         public SecurityBLL SecurityBLL
@@ -44,7 +51,9 @@ namespace BLL
         {
             lock (_locker)
             {
-                _loginBLL = new LoginBLL(t2SDKWrap);
+                _loginBLL = new LoginSyncBLL(t2SDKWrap);
+                _accountBLL = new AccountBLL(t2SDKWrap);
+                //_loginBLL = new LoginBLL(t2SDKWrap);
                 _securityBLL = new SecurityBLL(t2SDKWrap);
                 _strategyBLL = new StrategyBLL(t2SDKWrap);
             }

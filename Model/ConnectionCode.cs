@@ -24,6 +24,7 @@ namespace Model
         ErrorConn = -3,
         ErrorSendMsg = -4,
         ErrorFailContent = -5,
+        ErrorRecvMsg = -6,
         ErrorLogin = -10001,
         ErrorNoLogin = -10002,
         ErrorNoCallback = -30001,

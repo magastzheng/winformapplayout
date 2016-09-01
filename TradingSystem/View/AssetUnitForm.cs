@@ -15,9 +15,7 @@ namespace TradingSystem.View
     {
         private const string GridId = "assetunitmanagement";
         private GridConfig _gridConfig = null;
-        private LoginBLL _loginBLL = null;
-
-        private ManualResetEvent _waitEvent = new ManualResetEvent(false);
+        private AccountBLL _accountBLL = null;
 
         private SortableBindingList<AssetUnit> _dataSource = new SortableBindingList<AssetUnit>(new List<AssetUnit>());
 
@@ -31,7 +29,7 @@ namespace TradingSystem.View
             : this()
         {
             _gridConfig = gridConfig;
-            _loginBLL = bLLManager.LoginBLL;
+            _accountBLL = bLLManager.AccountBLL;
 
             this.LoadControl += new FormLoadHandler(Form_LoadControl);
             this.LoadData += new FormLoadHandler(Form_LoadData);
@@ -53,13 +51,11 @@ namespace TradingSystem.View
         {
             _dataSource.Clear();
 
-            var result = _loginBLL.QueryAssetUnit(new DataHandlerCallback(ParseData));
+            var result = _accountBLL.QueryAssetUnit();
             if (result != Model.ConnectionCode.Success)
             {
                 return false;
             }
-
-            _waitEvent.WaitOne(5000);
 
             var accounts = LoginManager.Instance.Assets;
             foreach (var account in accounts)
@@ -87,29 +83,6 @@ namespace TradingSystem.View
             }
 
             return true;
-        }
-
-        private int ParseData(DataParser parser)
-        {
-            for (int i = 1, count = parser.DataSets.Count; i < count; i++)
-            {
-                var dataSet = parser.DataSets[i];
-                foreach (var dataRow in dataSet.Rows)
-                {
-                    AssetItem asset = new AssetItem();
-                    asset.CapitalAccount = dataRow.Columns["capital_account"].GetStr();
-                    asset.AccountCode = dataRow.Columns["account_code"].GetStr();
-                    asset.AssetNo = dataRow.Columns["asset_no"].GetStr();
-                    asset.AssetName = dataRow.Columns["asset_name"].GetStr();
-
-                    LoginManager.Instance.AddAsset(asset);
-                }
-                break;
-            }
-
-            _waitEvent.Set();
-
-            return 1;
         }
     }
 }

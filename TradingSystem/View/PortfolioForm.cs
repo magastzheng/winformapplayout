@@ -15,7 +15,7 @@ namespace TradingSystem.View
     {
         private const string GridId = "portfoliomaintain";
         private GridConfig _gridConfig = null;
-        private LoginBLL _loginBLL = null;
+        private AccountBLL _accountBLL = null;
 
         private ManualResetEvent _waitEvent = new ManualResetEvent(false);
 
@@ -31,7 +31,7 @@ namespace TradingSystem.View
             : this()
         {
             _gridConfig = gridConfig;
-            _loginBLL = bLLManager.LoginBLL;
+            _accountBLL = bLLManager.AccountBLL;
 
             this.LoadControl += new FormLoadHandler(Form_LoadControl);
             this.LoadData += new FormLoadHandler(Form_LoadData);
@@ -53,9 +53,7 @@ namespace TradingSystem.View
         {
             _dataSource.Clear();
 
-            _loginBLL.QueryPortfolio(new DataHandlerCallback(ParseData));
-
-            _waitEvent.WaitOne(5000);
+            _accountBLL.QueryPortfolio();
 
             var portfolios = LoginManager.Instance.Portfolios;
             foreach (var p in portfolios)

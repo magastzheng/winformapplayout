@@ -28,7 +28,7 @@ exec procSelectTemplate 11111
 select * from stocktemplate
 truncate table stocktemplate
 
-
+select * from templatestock
 
 insert into benchmark(
 	BenchmarkId,

@@ -1,4 +1,5 @@
 ﻿using hundsun.t2sdk;
+using Model;
 using Model.Data;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,13 @@ namespace BLL.UFX.impl
             get { return _dataSets; }
         }
 
-        public int FunctionCode { get; set; } 
+        public ConnectionCode ErrorCode { get; set; }
+
+        public FunctionCode FunctionCode { get; set; } 
 
         public void Parse(CT2UnPacker lpUnPack)
         {
-            for (int i = 0; i < lpUnPack.GetDatasetCount(); i++)
+            for (int i = 0, dsLen = lpUnPack.GetDatasetCount(); i < dsLen; i++)
             {
                 RawDataSet dataSet = new RawDataSet();
                 dataSet.Rows = new List<RawDataRow>();
@@ -28,19 +31,19 @@ namespace BLL.UFX.impl
 
                 Dictionary<int, string> columnDic = new Dictionary<int, string>();
                 //打印字段
-                for (int j = 0; j < lpUnPack.GetColCount(); j++)
+                for (int j = 0, hLen = lpUnPack.GetColCount(); j < hLen; j++)
                 {
                     columnDic.Add(j, lpUnPack.GetColName(j));
                 }
 
                 //打印所有记录
-                for (int k = 0; k < lpUnPack.GetRowCount(); k++)
+                for (int k = 0, rLen = (int)lpUnPack.GetRowCount(); k < rLen; k++)
                 {
                     RawDataRow row = new RawDataRow();
                     row.Columns = new Dictionary<string,DataValue>();
 
                     //打印每条记录
-                    for (int t = 0; t < lpUnPack.GetColCount(); t++)
+                    for (int t = 0, cLen = lpUnPack.GetColCount(); t < cLen; t++)
                     {
                         string colName = columnDic[t];
                         DataValue dataValue = new DataValue();

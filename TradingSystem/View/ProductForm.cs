@@ -15,7 +15,7 @@ namespace TradingSystem.View
     {
         private const string GridId = "fundmanagement";
         private GridConfig _gridConfig = null;
-        private LoginBLL _loginBLL = null;
+        private AccountBLL _accountBLL = null;
 
         private ManualResetEvent _waitEvent = new ManualResetEvent(false);
 
@@ -31,7 +31,7 @@ namespace TradingSystem.View
             : this()
         {
             _gridConfig = gridConfig;
-            _loginBLL = bLLManager.LoginBLL;
+            _accountBLL = bLLManager.AccountBLL;
 
             this.LoadControl += new FormLoadHandler(Form_LoadControl);
             this.LoadData += new FormLoadHandler(Form_LoadData);
@@ -53,7 +53,7 @@ namespace TradingSystem.View
         {
             _dataSource.Clear();
 
-            var result = _loginBLL.QueryAccount(new DataHandlerCallback(ParseAccount));
+            var result = _accountBLL.QueryAccount();
             if (result != Model.ConnectionCode.Success)
             {
                 return false;

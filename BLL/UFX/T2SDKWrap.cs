@@ -170,6 +170,80 @@ namespace BLL.UFX
             return retCode;
         }
 
+        public DataParser SendSync2(CT2BizMessage message)
+        {
+            DataParser dataParser = new DataParser();
+
+            int iRet = _conn.SendBizMsg(message, (int)SendType.Sync);
+            if (iRet < 0)
+            {
+                string msg = string.Format("一般交易业务同步发送数据失败！ 错误码：{0}, 错误消息：{1}", iRet, _conn.GetErrorMsg(iRet));
+                logger.Error(msg);
+                dataParser.ErrorCode = ConnectionCode.ErrorSendMsg;
+
+                return dataParser;
+            }
+
+            CT2BizMessage bizMessage = null;
+            int retCode = _conn.RecvBizMsg(iRet, out bizMessage, (int)_timeOut, 1);
+            if (retCode < 0)
+            {
+                string msg = "一般交易业务同步接收出错: " + _conn.GetErrorMsg(retCode);
+                logger.Error(msg);
+                dataParser.ErrorCode = ConnectionCode.ErrorRecvMsg;
+
+                return dataParser;
+            }
+
+            int iFunction = bizMessage.GetFunction();
+            if (!Enum.IsDefined(typeof(FunctionCode), iFunction))
+            {
+                dataParser.ErrorCode = ConnectionCode.ErrorNoFunctionCode;
+
+                return dataParser;
+            }
+
+            dataParser.FunctionCode = (FunctionCode)iFunction;
+
+            int iRetCode = bizMessage.GetReturnCode();
+            int iErrorCode = bizMessage.GetErrorNo();
+            FunctionCode functionCode = (FunctionCode)iFunction;
+            if (iRetCode != 0)
+            {
+                string msg = string.Format("同步接收数据出错： {0}, {1}", iErrorCode, bizMessage.GetErrorInfo());
+                Console.WriteLine(msg);
+                logger.Error(msg);
+
+                dataParser.ErrorCode = ConnectionCode.ErrorRecvMsg;
+                return dataParser;
+            }
+
+            CT2UnPacker unpacker = null;
+            unsafe
+            {
+                int iLen = 0;
+                void* lpdata = bizMessage.GetContent(&iLen);
+                unpacker = new CT2UnPacker(lpdata, (uint)iLen);
+            }
+
+            if (unpacker == null)
+            {
+                string msg = string.Format("提交UFX请求回调中，功能号[{0}]数据获取失败！", iFunction);
+                logger.Error(msg);
+
+                dataParser.ErrorCode = ConnectionCode.ErrorFailContent;
+            }
+            else
+            {
+                dataParser.Parse(unpacker);
+                unpacker.Dispose();
+
+                dataParser.ErrorCode = ConnectionCode.Success;
+            }
+
+            return dataParser;
+        }
+
         public void PrintUnPack(CT2UnPacker lpUnPack)
         {
             Console.WriteLine("记录行数： {0}", lpUnPack.GetRowCount());
@@ -346,6 +420,7 @@ namespace BLL.UFX
             int iRetCode = bizMessage.GetReturnCode();
             int iErrorCode = bizMessage.GetErrorNo();
             int iFunction = bizMessage.GetFunction();
+            FunctionCode functionCode = (FunctionCode)iFunction;
             if (iRetCode != 0)
             {
                 string msg = string.Format("同步接收数据出错： {0}, {1}", iErrorCode, bizMessage.GetErrorInfo());
@@ -373,13 +448,11 @@ namespace BLL.UFX
             }
 
             DataParser parser = new DataParser();
-            parser.FunctionCode = iFunction;
+            parser.FunctionCode = functionCode;
             parser.Parse(unpacker);
             unpacker.Dispose();
             
             //parser.Output();
-
-            FunctionCode functionCode = (FunctionCode)iFunction;
             if (!_dataHandlerMap.ContainsKey(functionCode))
             {
                 ret = (int)ConnectionCode.ErrorNoCallback;

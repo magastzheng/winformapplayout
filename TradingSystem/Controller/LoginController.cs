@@ -16,7 +16,7 @@ namespace TradingSystem.Controller
         private LoginForm _loginForm;
         private T2SDKWrap _t2SDKWrap;
         private ProductBLL _productBLL;
-        private CountdownEvent _cdEvent = new CountdownEvent(4);
+        //private CountdownEvent _cdEvent = new CountdownEvent(4);
         //private LoginBLL _loginBLL;
         
         public LoginForm LoginForm
@@ -60,12 +60,11 @@ namespace TradingSystem.Controller
 
         private void LoginSuccess()
         {
-            BLLManager.Instance.LoginBLL.QueryAccount(new DataHandlerCallback(ParseAccount));
-            BLLManager.Instance.LoginBLL.QueryAssetUnit(new DataHandlerCallback(ParseAssetUnit));
-            BLLManager.Instance.LoginBLL.QueryPortfolio(new DataHandlerCallback(ParsePortfolio));
-            BLLManager.Instance.LoginBLL.QueryHolder(new DataHandlerCallback(ParseHolder));
+            BLLManager.Instance.AccountBLL.QueryAccount();
+            BLLManager.Instance.AccountBLL.QueryAssetUnit();
+            BLLManager.Instance.AccountBLL.QueryPortfolio();
+            BLLManager.Instance.AccountBLL.QueryHolder();
 
-            _cdEvent.Wait();
             _productBLL.Create(LoginManager.Instance.Accounts, LoginManager.Instance.Assets, LoginManager.Instance.Portfolios);
 
             BLLManager.Instance.Subscriber.Subscribe(LoginManager.Instance.LoginUser);
@@ -83,102 +82,6 @@ namespace TradingSystem.Controller
             {
                 BLLManager.Instance.LoginBLL.Logout();
             }
-        }
-
-        private int ParseAccount(DataParser parser)
-        {
-            for (int i = 1, count = parser.DataSets.Count; i < count; i++)
-            {
-                var dataSet = parser.DataSets[i];
-                foreach (var dataRow in dataSet.Rows)
-                {
-                    AccountItem acc = new AccountItem();
-                    acc.AccountCode = dataRow.Columns["account_code"].GetStr();
-                    acc.AccountName = dataRow.Columns["account_name"].GetStr();
-                    acc.AccountType = dataRow.Columns["account_type"].GetStr();
-
-                    LoginManager.Instance.AddAccount(acc);
-                }
-                break;
-            }
-
-            _cdEvent.Signal();
-
-            return 1;
-        }
-
-        private int ParseAssetUnit(DataParser parser)
-        {
-            for (int i = 1, count = parser.DataSets.Count; i < count; i++)
-            {
-                var dataSet = parser.DataSets[i];
-                foreach (var dataRow in dataSet.Rows)
-                {
-                    AssetItem asset = new AssetItem();
-                    asset.CapitalAccount = dataRow.Columns["capital_account"].GetStr();
-                    asset.AccountCode = dataRow.Columns["account_code"].GetStr();
-                    asset.AssetNo = dataRow.Columns["asset_no"].GetStr();
-                    asset.AssetName = dataRow.Columns["asset_name"].GetStr();
-
-                    LoginManager.Instance.AddAsset(asset);
-                }
-                break;
-            }
-
-            _cdEvent.Signal();
-
-            return 1;
-        }
-
-        private int ParsePortfolio(DataParser parser)
-        {
-            for (int i = 1, count = parser.DataSets.Count; i < count; i++)
-            {
-                var dataSet = parser.DataSets[i];
-                foreach (var dataRow in dataSet.Rows)
-                {
-                    PortfolioItem p = new PortfolioItem();
-                    p.AccountCode = dataRow.Columns["account_code"].GetStr();
-                    p.AssetNo = dataRow.Columns["asset_no"].GetStr();
-                    p.CombiNo = dataRow.Columns["combi_no"].GetStr();
-                    p.CombiName = dataRow.Columns["combi_name"].GetStr();
-                    p.CapitalAccount = dataRow.Columns["capital_account"].GetStr();
-                    p.MarketNoList = dataRow.Columns["market_no_list"].GetStr();
-                    p.FutuInvestType = dataRow.Columns["futu_invest_type"].GetStr();
-                    p.EntrustDirectionList = dataRow.Columns["entrust_direction_list"].GetStr();
-
-                    LoginManager.Instance.AddPortfolio(p);
-                }
-                break;
-            }
-
-            _cdEvent.Signal();
-
-            return 1;
-        }
-
-        private int ParseHolder(DataParser parser)
-        {
-            for (int i = 1, count = parser.DataSets.Count; i < count; i++)
-            {
-                var dataSet = parser.DataSets[i];
-                foreach (var dataRow in dataSet.Rows)
-                {
-                    HolderItem p = new HolderItem();
-                    p.AccountCode = dataRow.Columns["account_code"].GetStr();
-                    p.AssetNo = dataRow.Columns["asset_no"].GetStr();
-                    p.CombiNo = dataRow.Columns["combi_no"].GetStr();
-                    p.StockHolderId = dataRow.Columns["stockholder_id"].GetStr();
-                    p.MarketNo = dataRow.Columns["market_no"].GetStr();
-
-                    LoginManager.Instance.AddHolder(p);
-                }
-                break;
-            }
-
-            _cdEvent.Signal();
-
-            return 1;
         }
     }
 }

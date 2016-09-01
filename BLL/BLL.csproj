@@ -75,6 +75,8 @@
     <Compile Include="Permission\UserBLL.cs" />
     <Compile Include="Template\MonitorUnitBLL.cs" />
     <Compile Include="TradeCommand\TradeCommandSecurityBLL.cs" />
+    <Compile Include="UFX\impl\AccountBLL.cs" />
+    <Compile Include="UFX\impl\LoginSyncBLL.cs" />
     <Compile Include="UFX\T2ErrorHandler.cs" />
     <Compile Include="Entrust\UFXQueryDealBLL.cs" />
     <Compile Include="Entrust\UFXQueryEntrustBLL.cs" />
