@@ -75,6 +75,7 @@
     <Compile Include="PackageType.cs" />
     <Compile Include="PackFieldType.cs" />
     <Compile Include="Permission\Feature.cs" />
+    <Compile Include="Permission\PermissionMask.cs" />
     <Compile Include="Permission\Resource.cs" />
     <Compile Include="Permission\Role.cs" />
     <Compile Include="Permission\RoleFeaturePermission.cs" />

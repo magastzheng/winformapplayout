@@ -102,7 +102,7 @@ namespace TradingSystem.View
             ComboBoxUtil.SetComboBoxSelect(this.cbReplaceType, stockTemplate.ReplaceType.ToString());
         }
 
-        private StockTemplate GetData()
+        private StockTemplate GetTemplate()
         {
             StockTemplate stockTemplate = new StockTemplate();
             if (!string.IsNullOrEmpty(this.tbTemplateNo.Text))
@@ -185,7 +185,7 @@ namespace TradingSystem.View
         #region Button click event handler
         private void Button_Confirm_Click(object sender, EventArgs e)
         {
-            StockTemplate stockTemplate = GetData();
+            StockTemplate stockTemplate = GetTemplate();
             if (CheckInputValue(stockTemplate))
             {
                 OnSave(this, stockTemplate);

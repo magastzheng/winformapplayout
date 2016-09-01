@@ -651,6 +651,14 @@ namespace BLL.UFX.impl
         {
             int ret = -1;
             FunctionCode functionCode = (FunctionCode)parser.FunctionCode;
+            var errResponse = T2ErrorHandler.Handle(parser);
+            if (!T2ErrorHandler.Success(errResponse.ErrorCode))
+            {
+                string msg = string.Format("Fail to call the UFX - code: [{0}], msg: [{1}], details: [{2}]", errResponse.ErrorCode, errResponse.ErrorMessage, errResponse.MessageDetail);
+                logger.Error(msg);
+                return ret;
+            }
+
             if (_dataHandlerMap.ContainsKey(functionCode))
             {
                 _dataHandlerMap[functionCode](parser);

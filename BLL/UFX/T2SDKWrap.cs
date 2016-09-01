@@ -401,17 +401,15 @@ namespace BLL.UFX
 
             if (sendType == SendType.Sync)
             {
-                dataHandler(parser);
+                return dataHandler(parser);
             }
             else
             {
                 Task task = new Task(() => dataHandler(parser));
                 task.Start();
+
+                return (int)ConnectionCode.Success;
             }
-
-            ret = (int)ConnectionCode.Success;
-
-            return ret;
         }
 
         #endregion

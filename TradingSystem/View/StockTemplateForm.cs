@@ -490,7 +490,7 @@ namespace TradingSystem.View
         }
 
         private void LoadData()
-        { 
+        {
             //Load data from database
 
             //Fill data into gridview
