@@ -17,8 +17,6 @@ namespace TradingSystem.View
         private GridConfig _gridConfig = null;
         private AccountBLL _accountBLL = null;
 
-        private ManualResetEvent _waitEvent = new ManualResetEvent(false);
-
         private SortableBindingList<Fund> _dataSource = new SortableBindingList<Fund>(new List<Fund>());
 
         public ProductForm()
@@ -59,8 +57,6 @@ namespace TradingSystem.View
                 return false;
             }
 
-            _waitEvent.WaitOne(5000);
-
             var accounts = LoginManager.Instance.Accounts;
             foreach (var account in accounts)
             {
@@ -82,26 +78,5 @@ namespace TradingSystem.View
             return true;
         }
 
-        private int ParseAccount(DataParser parser)
-        {
-            for (int i = 1, count = parser.DataSets.Count; i < count; i++)
-            {
-                var dataSet = parser.DataSets[i];
-                foreach (var dataRow in dataSet.Rows)
-                {
-                    AccountItem acc = new AccountItem();
-                    acc.AccountCode = dataRow.Columns["account_code"].GetStr();
-                    acc.AccountName = dataRow.Columns["account_name"].GetStr();
-                    acc.AccountType = dataRow.Columns["account_type"].GetStr();
-
-                    LoginManager.Instance.AddAccount(acc);
-                }
-                break;
-            }
-
-            _waitEvent.Set();
-
-            return 1;
-        }
     }
 }

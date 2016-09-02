@@ -101,7 +101,7 @@
         "parentid": "",
         "isexpansed": false,
         "children": [{
-                "id": "instancemanager",
+                "id": "instancemanagement",
                 "title": "实例管理",
                 "parentid": "holding",
                 "isexpansed": false,

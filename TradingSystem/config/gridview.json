@@ -2856,6 +2856,354 @@ readonly:
 		}
 	]
 },{
+	"grid": "instancemanagement",
+	"columns": [{
+		"name": "instanceid",
+		"text": "实例序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "instancecode",
+		"text": "实例编号",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "instancetype",
+		"text": "实例类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "templatename",
+		"text": "模板名称",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "futurestrategy",
+		"text": "期权套利方案",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "fundid",
+		"text": "基金序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "fundname",
+		"text": "基金名称",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "assetunitid",
+		"text": "资产单元序号",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "assetunitname",
+		"text": "资产单元名称",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "portfoliocode",
+		"text": "组合编号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "portfolioname",
+		"text": "组合名称",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "monitorunitname",
+		"text": "监控单元",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "creator",
+		"text": "添加人员",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "createddate",
+		"text": "创建日期",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "createdtime",
+		"text": "创建时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "notes",
+		"text": "备注",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "last",
+		"text": "",
+		"width": 5,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},{
+	"grid": "sourceportfolioholding",
+	"columns": [{
+		"name": "selection",
+		"text": "选择",
+		"width": 80,
+		"columntype": 1,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "secucode",
+		"text": "证券代码",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "secuname",
+		"text": "证券名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "exchange",
+		"text": "交易市场",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "stockholderid",
+		"text": "股东代码",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "seatno",
+		"text": "席位代码",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "longshortflag",
+		"text": "多空标志",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "currentamount",
+		"text": "当期数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "availabletransferedamount",
+		"text": "可划数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "calcamount",
+		"text": "计算数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "transferedamount",
+		"text": "划转数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "pricetype",
+		"text": "价格类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "transferedprice",
+		"text": "划转价格",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "investmenttype",
+		"text": "投资类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "last",
+		"text": "",
+		"width": 5,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},{
+	"grid": "destinationportfolioholding",
+	"columns": [{
+		"name": "secucode",
+		"text": "证券代码",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "secuname",
+		"text": "证券名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "exchange",
+		"text": "交易市场",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "portfolioname",
+		"text": "组合名称",
+		"width": 160,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "stockholderid",
+		"text": "股东代码",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "seatno",
+		"text": "席位代码",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "longshortflag",
+		"text": "多空标志",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "currentamount",
+		"text": "当期数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "investmenttype",
+		"text": "投资类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "last",
+		"text": "",
+		"width": 5,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},{
 	"grid": "",
 	"columns": [
 	{

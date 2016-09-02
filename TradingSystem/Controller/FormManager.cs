@@ -112,6 +112,18 @@ namespace TradingSystem.Controller
                         break;
                     case "historytemplate":
                         break;
+                    case "instancemanagement":
+                        {
+                            formType = typeof(InstanceManagementForm);
+                            hasGrid = true;
+                        }
+                        break;
+                    case "holdingtransfer":
+                        {
+                            formType = typeof(HoldingTransferedForm);
+                            hasGrid = true;
+                        }
+                        break;
                     default:
                         break;
                 }

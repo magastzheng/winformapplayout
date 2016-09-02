@@ -17,8 +17,6 @@ namespace TradingSystem.View
         private GridConfig _gridConfig = null;
         private AccountBLL _accountBLL = null;
 
-        private ManualResetEvent _waitEvent = new ManualResetEvent(false);
-
         private SortableBindingList<Portfolio> _dataSource = new SortableBindingList<Portfolio>(new List<Portfolio>());
 
         public PortfolioForm():
@@ -89,33 +87,6 @@ namespace TradingSystem.View
             }
 
             return true;
-        }
-
-        private int ParseData(DataParser parser)
-        {
-            for (int i = 1, count = parser.DataSets.Count; i < count; i++)
-            {
-                var dataSet = parser.DataSets[i];
-                foreach (var dataRow in dataSet.Rows)
-                {
-                    PortfolioItem p = new PortfolioItem();
-                    p.AccountCode = dataRow.Columns["account_code"].GetStr();
-                    p.AssetNo = dataRow.Columns["asset_no"].GetStr();
-                    p.CombiNo = dataRow.Columns["combi_no"].GetStr();
-                    p.CombiName = dataRow.Columns["combi_name"].GetStr();
-                    p.CapitalAccount = dataRow.Columns["capital_account"].GetStr();
-                    p.MarketNoList = dataRow.Columns["market_no_list"].GetStr();
-                    p.FutuInvestType = dataRow.Columns["futu_invest_type"].GetStr();
-                    p.EntrustDirectionList = dataRow.Columns["entrust_direction_list"].GetStr();
-
-                    LoginManager.Instance.AddPortfolio(p);
-                }
-                break;
-            }
-
-            _waitEvent.Set();
-
-            return 1;
         }
     }
 }
