@@ -1,4 +1,5 @@
-﻿using Config;
+﻿using BLL.TradeCommand;
+using Config;
 using Controls.Entity;
 using Controls.GridView;
 using Model.Binding.BindingUtil;
@@ -14,6 +15,8 @@ namespace TradingSystem.View
         private GridConfig _gridConfig = null;
 
         private SortableBindingList<InstanceItem> _dataSource = new SortableBindingList<InstanceItem>(new List<InstanceItem>());
+
+        private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
 
         public InstanceManagementForm() :
             base()
@@ -44,6 +47,25 @@ namespace TradingSystem.View
         private bool Form_LoadData(object sender, object data)
         {
             //TODO:
+            var instances = _tradeInstanceBLL.GetAllInstance();
+            foreach (var instance in instances)
+            {
+                InstanceItem instItem = new InstanceItem 
+                {
+                    InstanceId = instance.InstanceId,
+                    InstanceCode = instance.InstanceCode,
+                    PortfolioId = instance.PortfolioId,
+                    PortfolioCode = instance.PortfolioCode,
+                    PortfolioName = instance.PortfolioName,
+                    TemplateId = instance.TemplateId,
+                    TemplateName = instance.TemplateName,
+                    MonitorUnitName = instance.MonitorUnitName,
+                    DCreatedDate = instance.CreatedDate,
+                    Owner = instance.Owner
+                };
+
+                _dataSource.Add(instItem);
+            }
 
             return true;
         }
