@@ -39,11 +39,17 @@ namespace TradingSystem.View
 
         private bool Form_LoadControl(object sender, object data)
         {
-            //TSDataGridViewHelper.AddColumns(this.gridView, _gridConfig.GetGid(GridId));
-            //Dictionary<string, string> colDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(InstanceItem));
-            //TSDataGridViewHelper.SetDataBinding(this.gridView, colDataMap);
+            TSDataGridViewHelper.AddColumns(this.srcGridView, _gridConfig.GetGid(GridSourceId));
+            Dictionary<string, string> colDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(SourceHoldingItem));
+            TSDataGridViewHelper.SetDataBinding(this.srcGridView, colDataMap);
 
-            //this.gridView.DataSource = _dataSource;
+            this.srcGridView.DataSource = _srcDataSource;
+
+            TSDataGridViewHelper.AddColumns(this.destGridView, _gridConfig.GetGid(GridDestId));
+            colDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(DestinationHoldingItem));
+            TSDataGridViewHelper.SetDataBinding(this.destGridView, colDataMap);
+
+            this.destGridView.DataSource = _destDataSource;
 
             return true;
         }
