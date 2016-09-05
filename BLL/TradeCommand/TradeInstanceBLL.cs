@@ -5,6 +5,7 @@ using Model.EnumType;
 using Model.SecurityInfo;
 using Model.UI;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BLL.TradeCommand
 {
@@ -57,6 +58,14 @@ namespace BLL.TradeCommand
         public List<TradingInstance> GetAllInstance()
         {
             return _tradinginstancedao.GetCombineAll();
+        }
+
+        public List<TradingInstance> GetPortfolioInstance(string portfolioCode)
+        {
+            var allInstances = GetAllInstance();
+            var portInstances = allInstances.Where(p => p.PortfolioCode.Equals(portfolioCode));
+
+            return portInstances.ToList();
         }
 
         #region

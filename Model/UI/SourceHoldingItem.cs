@@ -1,4 +1,5 @@
 ﻿using Model.Binding;
+using Model.SecurityInfo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,5 +51,9 @@ namespace Model.UI
 
         [BindingAttribute("investmenttype")]
         public string InvestmentType { get; set; }
+
+        public PositionType PositionType { get; set; }
+
+        public SecurityType SecuType { get; set; }
     }
 }

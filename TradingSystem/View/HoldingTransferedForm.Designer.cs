@@ -21,7 +21,7 @@
         {
             this.leftRightSplitter = new System.Windows.Forms.SplitContainer();
             this.rtbNotes = new System.Windows.Forms.RichTextBox();
-            this.cbTradeInst = new System.Windows.Forms.ComboBox();
+            this.cbDestTradeInst = new System.Windows.Forms.ComboBox();
             this.cbDestPortfolio = new System.Windows.Forms.ComboBox();
             this.cbDestFundCode = new System.Windows.Forms.ComboBox();
             this.cbSrcTradeInst = new System.Windows.Forms.ComboBox();
@@ -78,7 +78,7 @@
             // leftRightSplitter.Panel1
             // 
             this.leftRightSplitter.Panel1.Controls.Add(this.rtbNotes);
-            this.leftRightSplitter.Panel1.Controls.Add(this.cbTradeInst);
+            this.leftRightSplitter.Panel1.Controls.Add(this.cbDestTradeInst);
             this.leftRightSplitter.Panel1.Controls.Add(this.cbDestPortfolio);
             this.leftRightSplitter.Panel1.Controls.Add(this.cbDestFundCode);
             this.leftRightSplitter.Panel1.Controls.Add(this.cbSrcTradeInst);
@@ -109,13 +109,13 @@
             this.rtbNotes.TabIndex = 0;
             this.rtbNotes.Text = "";
             // 
-            // cbTradeInst
+            // cbDestTradeInst
             // 
-            this.cbTradeInst.FormattingEnabled = true;
-            this.cbTradeInst.Location = new System.Drawing.Point(101, 190);
-            this.cbTradeInst.Name = "cbTradeInst";
-            this.cbTradeInst.Size = new System.Drawing.Size(103, 20);
-            this.cbTradeInst.TabIndex = 14;
+            this.cbDestTradeInst.FormattingEnabled = true;
+            this.cbDestTradeInst.Location = new System.Drawing.Point(101, 190);
+            this.cbDestTradeInst.Name = "cbDestTradeInst";
+            this.cbDestTradeInst.Size = new System.Drawing.Size(103, 20);
+            this.cbDestTradeInst.TabIndex = 14;
             // 
             // cbDestPortfolio
             // 
@@ -450,7 +450,7 @@
         private System.Windows.Forms.Label lblSrcCaptin;
         private System.Windows.Forms.Label lblDestCaptin;
         private System.Windows.Forms.RichTextBox rtbNotes;
-        private System.Windows.Forms.ComboBox cbTradeInst;
+        private System.Windows.Forms.ComboBox cbDestTradeInst;
         private System.Windows.Forms.ComboBox cbDestPortfolio;
         private System.Windows.Forms.ComboBox cbDestFundCode;
         private System.Windows.Forms.ComboBox cbSrcTradeInst;

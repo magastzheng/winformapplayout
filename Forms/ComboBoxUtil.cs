@@ -29,5 +29,11 @@ namespace Forms
                 }
             }
         }
+
+        public static void ClearComboBox(ComboBox comboBox)
+        {
+            comboBox.Items.Clear();
+            comboBox.ResetText();
+        }
     }
 }

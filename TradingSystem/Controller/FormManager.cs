@@ -122,6 +122,7 @@ namespace TradingSystem.Controller
                         {
                             formType = typeof(HoldingTransferedForm);
                             hasGrid = true;
+                            needBLL = true;
                         }
                         break;
                     default:
