@@ -119,21 +119,27 @@ namespace Util
             {
                 fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
             }
-            catch(Exception e)
+            catch (IOException e)
             {
                 string msg = string.Format("Fail to read the file: {0}, message: {1}", fileName, e.Message);
                 logger.Error(msg);
-
-                return workbook;
+            }
+            finally 
+            {
+                if (fs != null)
+                {
+                    fs.Close();
+                }
             }
 
             try
             {
-                workbook = new HSSFWorkbook(fs);
+                workbook = WorkbookFactory.Create(fs);
             }
             catch
             {
-                workbook = new XSSFWorkbook(fs);
+                string msg = string.Format("Fail to read file :{0}", fileName);
+                logger.Error(msg);
             }
             finally
             {

@@ -44,7 +44,6 @@
             this.btnRefresh = new System.Windows.Forms.Button();
             this.btnCalc = new System.Windows.Forms.Button();
             this.lblUnit = new System.Windows.Forms.Label();
-            this.tbCopies = new System.Windows.Forms.TextBox();
             this.lblAmount = new System.Windows.Forms.Label();
             this.cbTemplate = new System.Windows.Forms.ComboBox();
             this.lblTemplate = new System.Windows.Forms.Label();
@@ -53,6 +52,7 @@
             this.destGridView = new Controls.GridView.TSDataGridView();
             this.destTopPanel = new System.Windows.Forms.Panel();
             this.lblDestCaptin = new System.Windows.Forms.Label();
+            this.nudCopies = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.leftRightSplitter)).BeginInit();
             this.leftRightSplitter.Panel1.SuspendLayout();
             this.leftRightSplitter.Panel2.SuspendLayout();
@@ -67,6 +67,7 @@
             this.destMainPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.destGridView)).BeginInit();
             this.destTopPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudCopies)).BeginInit();
             this.SuspendLayout();
             // 
             // leftRightSplitter
@@ -280,11 +281,11 @@
             // 
             // srcTopPanel
             // 
+            this.srcTopPanel.Controls.Add(this.nudCopies);
             this.srcTopPanel.Controls.Add(this.btnTransfer);
             this.srcTopPanel.Controls.Add(this.btnRefresh);
             this.srcTopPanel.Controls.Add(this.btnCalc);
             this.srcTopPanel.Controls.Add(this.lblUnit);
-            this.srcTopPanel.Controls.Add(this.tbCopies);
             this.srcTopPanel.Controls.Add(this.lblAmount);
             this.srcTopPanel.Controls.Add(this.cbTemplate);
             this.srcTopPanel.Controls.Add(this.lblTemplate);
@@ -329,13 +330,6 @@
             this.lblUnit.Size = new System.Drawing.Size(47, 12);
             this.lblUnit.TabIndex = 0;
             this.lblUnit.Text = "套手";
-            // 
-            // tbCopies
-            // 
-            this.tbCopies.Location = new System.Drawing.Point(233, 29);
-            this.tbCopies.Name = "tbCopies";
-            this.tbCopies.Size = new System.Drawing.Size(37, 21);
-            this.tbCopies.TabIndex = 4;
             // 
             // lblAmount
             // 
@@ -410,6 +404,23 @@
             this.lblDestCaptin.TabIndex = 0;
             this.lblDestCaptin.Text = "目标组合（交易实例）持仓";
             // 
+            // nudCopies
+            // 
+            this.nudCopies.Location = new System.Drawing.Point(217, 30);
+            this.nudCopies.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudCopies.Name = "nudCopies";
+            this.nudCopies.Size = new System.Drawing.Size(55, 21);
+            this.nudCopies.TabIndex = 9;
+            this.nudCopies.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
             // HoldingTransferedForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -433,6 +444,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.destGridView)).EndInit();
             this.destTopPanel.ResumeLayout(false);
             this.destTopPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudCopies)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -469,9 +481,9 @@
         private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.Button btnCalc;
         private System.Windows.Forms.Label lblUnit;
-        private System.Windows.Forms.TextBox tbCopies;
         private System.Windows.Forms.Label lblAmount;
         private System.Windows.Forms.ComboBox cbTemplate;
         private System.Windows.Forms.Label lblTemplate;
+        private System.Windows.Forms.NumericUpDown nudCopies;
     }
 }

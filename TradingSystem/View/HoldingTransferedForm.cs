@@ -244,7 +244,7 @@ namespace TradingSystem.View
             }
             else
             {
-                this.cbDestFundCode.Enabled = false;
+                this.cbDestFundCode.Enabled = true;
             }
         }
         #endregion
@@ -267,25 +267,6 @@ namespace TradingSystem.View
             var fundOption = LoadFund();
             ComboBoxUtil.SetComboBox(this.cbSrcFundCode, fundOption);
             ComboBoxUtil.SetComboBox(this.cbDestFundCode, fundOption);
-
-            //var srcFundItem = (ComboOptionItem)cbSrcFundCode.SelectedItem;
-            //var srcPortfolioOption = LoadPortfolio(srcFundItem.Id);
-            //ComboBoxUtil.SetComboBox(this.cbSrcPortfolio, srcPortfolioOption);
-
-            //var srcPortfolio = (ComboOptionItem)cbSrcPortfolio.SelectedItem;
-            //var srcTradeInstOption = LoadTradeInstance(srcPortfolio.Id);
-            //ComboBoxUtil.SetComboBox(this.cbSrcTradeInst, srcTradeInstOption);
-
-
-            //ComboBoxUtil.SetComboBox(this.cbDestFundCode, fundOption);
-
-            //var destFundItem = (ComboOptionItem)cbDestFundCode.SelectedItem;
-            //var destPortfolioOption = LoadPortfolio(destFundItem.Id);
-            //ComboBoxUtil.SetComboBox(this.cbDestPortfolio, destPortfolioOption);
-
-            //var destPortfolio = (ComboOptionItem)cbDestPortfolio.SelectedItem;
-            //var destTradeInstOption = LoadTradeInstance(destPortfolio.Id);
-            //ComboBoxUtil.SetComboBox(this.cbDestTradeInst, destTradeInstOption);
 
             return true;
         }

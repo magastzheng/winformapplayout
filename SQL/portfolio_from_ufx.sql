@@ -11,7 +11,7 @@ create table ufxportfolio
 	PortfolioName varchar(250) not null,
 	AccountCode varchar(32),
 	AccountName varchar(250),
-	AccountType int, 
+	AccountType int,			--资金管理类允许透支：1 - 允许， 2 - 不允许
 	AssetNo varchar(20),
 	AssetName varchar(250),
 	PortfolioStatus	int			-- 1 active

@@ -17,7 +17,13 @@ namespace Model.config
 
         public override string ToString()
         {
-            return string.Format("{0}  {1}", Code, Name);
+            string ret = string.Empty;
+            if (!string.IsNullOrEmpty(Code) || !string.IsNullOrEmpty(Name))
+            {
+                ret = string.Format("{0}  {1}", Code, Name);
+            }
+
+            return ret;
         }
     }
 

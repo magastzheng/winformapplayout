@@ -1,4 +1,5 @@
-﻿using BLL.SecurityInfo;
+﻿using BLL.Product;
+using BLL.SecurityInfo;
 using DBAccess;
 using DBAccess.TradeInstance;
 using Model.EnumType;
@@ -14,6 +15,7 @@ namespace BLL.TradeCommand
         private TradingInstanceDAO _tradinginstancedao = new TradingInstanceDAO();
         private TradingInstanceSecurityDAO _tradeinstsecudao = new TradingInstanceSecurityDAO();
         private TradeInstanceDAO _tradeinstancedao = new TradeInstanceDAO();
+        private ProductBLL _productBLL = new ProductBLL();
 
         public TradeInstanceBLL()
         { 
@@ -66,6 +68,43 @@ namespace BLL.TradeCommand
             var portInstances = allInstances.Where(p => p.PortfolioCode.Equals(portfolioCode));
 
             return portInstances.ToList();
+        }
+
+        public List<InstanceItem> GetAllInstanceItem()
+        {
+            var allInstances = GetAllInstance();
+            var portolios = _productBLL.GetAll();
+            var instItems = new List<InstanceItem>();
+
+            foreach (var instance in allInstances)
+            {
+                InstanceItem instItem = new InstanceItem 
+                {
+                    InstanceId = instance.InstanceId,
+                    InstanceCode = instance.InstanceCode,
+                    PortfolioId = instance.PortfolioId,
+                    PortfolioCode = instance.PortfolioCode,
+                    PortfolioName = instance.PortfolioName,
+                    TemplateId = instance.TemplateId,
+                    TemplateName = instance.TemplateName,
+                    MonitorUnitName = instance.MonitorUnitName,
+                    DCreatedDate = instance.CreatedDate,
+                    Owner = instance.Owner
+                };
+
+                var portfolio = portolios.Find(p => p.PortfolioId == instItem.PortfolioId);
+                if (portfolio != null)
+                {
+                    instItem.FundCode = portfolio.FundCode;
+                    instItem.FundName = portfolio.FundName;
+                    instItem.AssetUnitCode = portfolio.AssetNo;
+                    instItem.AssetUnitName = portfolio.AssetName;
+                }
+
+                instItems.Add(instItem);
+            }
+
+            return instItems;
         }
 
         #region

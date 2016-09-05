@@ -18,14 +18,14 @@ namespace Model.UI
         [BindingAttribute("templatename")]
         public string TemplateName { get; set; }
 
-        [BindingAttribute("fundid")]
-        public int FundId { get; set; }
+        [BindingAttribute("fundcode")]
+        public string FundCode { get; set; }
 
         [BindingAttribute("fundname")]
         public string FundName { get; set; }
 
-        [BindingAttribute("assetunitid")]
-        public int AssetUnitId { get; set; }
+        [BindingAttribute("assetunitcode")]
+        public string AssetUnitCode { get; set; }
 
         [BindingAttribute("assetunitname")]
         public string AssetUnitName { get; set; }

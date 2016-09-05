@@ -54,6 +54,18 @@ namespace UtilTest
         }
 
         [TestMethod]
+        public void TestExcel_2007()
+        {
+            string fileName = @"d:/temp/对冲0812全0819-20160905-resave.xlsx";
+            string sheetName = @"对冲0812全0819-20160905";
+
+            Dictionary<string, DataColumnHeader> colHeadMap = new Dictionary<string,DataColumnHeader>();
+            ExcelUtil.GetSheetData(fileName, 0, colHeadMap);
+
+            Console.WriteLine(fileName);
+        }
+
+        [TestMethod]
         public void TestStringParse()
         {
             string istr = "1,700";
