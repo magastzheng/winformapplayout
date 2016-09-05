@@ -220,10 +220,21 @@ namespace Util
                             case DataValueType.Int:
                                 {
                                     NumberStyles styles = NumberStyles.Integer | NumberStyles.AllowThousands;
-                                    int temp;
-                                    if (int.TryParse(cell.StringCellValue, styles, CultureInfo.InvariantCulture, out temp))
+                                    if (cell.CellType == CellType.Numeric)
                                     {
-                                        dataValue.Value = temp;
+                                        dataValue.Value = (int)cell.NumericCellValue;
+                                    }
+                                    else if (cell.CellType == CellType.String)
+                                    {
+                                        int temp;
+                                        if (int.TryParse(cell.StringCellValue, styles, CultureInfo.InvariantCulture, out temp))
+                                        {
+                                            dataValue.Value = temp;
+                                        }
+                                        else
+                                        {
+                                            dataValue.Value = 0;
+                                        }
                                     }
                                     else
                                     {
@@ -234,10 +245,21 @@ namespace Util
                             case DataValueType.Float:
                                 {
                                     NumberStyles styles = NumberStyles.Float | NumberStyles.AllowThousands;
-                                    double temp;
-                                    if (double.TryParse(cell.StringCellValue, styles, CultureInfo.InvariantCulture, out temp))
+                                    if (cell.CellType == CellType.Numeric)
                                     {
-                                        dataValue.Value = temp;
+                                        dataValue.Value = (double)cell.NumericCellValue;
+                                    }
+                                    else if (cell.CellType == CellType.String)
+                                    {
+                                        double temp;
+                                        if (double.TryParse(cell.StringCellValue, styles, CultureInfo.InvariantCulture, out temp))
+                                        {
+                                            dataValue.Value = temp;
+                                        }
+                                        else
+                                        {
+                                            dataValue.Value = 0f;
+                                        }
                                     }
                                     else
                                     {
@@ -247,7 +269,18 @@ namespace Util
                                 break;
                             case DataValueType.String:
                                 {
-                                    dataValue.Value = cell.StringCellValue;
+                                    if (cell.CellType == CellType.Numeric)
+                                    {
+                                        dataValue.Value = string.Format("{0}", cell.NumericCellValue);
+                                    }
+                                    else if (cell.CellType == CellType.String)
+                                    {
+                                        dataValue.Value = cell.StringCellValue;
+                                    }
+                                    else 
+                                    {
+                                        dataValue.Value = string.Empty;
+                                    }
                                 }
                                 break;
                         }

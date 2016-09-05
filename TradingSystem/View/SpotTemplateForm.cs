@@ -713,7 +713,7 @@ namespace TradingSystem.View
         private bool ImportFromExcel(ImportType importType)
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
-            fileDialog.Filter = "(*.xls)|*.xls";
+            fileDialog.Filter = "(*.xls)|*.xls|(*.xlsx)|*.xlsx";
             if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 string extension = Path.GetExtension(fileDialog.FileName);
