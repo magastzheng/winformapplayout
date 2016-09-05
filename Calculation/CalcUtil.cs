@@ -86,7 +86,15 @@ namespace Calculation
             for (int i = 0, count = weights.Length; i < count; i++)
             {
                 double dValue = totalMoney * weights[i] / prices[i];
-                int iValue = (int)Math.Round(dValue / 100) * 100;
+                int unit = (int)Math.Round(dValue / 100);
+                
+                //数量最少必须为100股
+                if(unit == 0)
+                {
+                    unit = 1;
+                }
+
+                int iValue = unit*100;
                 amounts[i] = iValue;
             }
 

@@ -124,13 +124,6 @@ namespace Util
                 string msg = string.Format("Fail to read the file: {0}, message: {1}", fileName, e.Message);
                 logger.Error(msg);
             }
-            finally 
-            {
-                if (fs != null)
-                {
-                    fs.Close();
-                }
-            }
 
             try
             {

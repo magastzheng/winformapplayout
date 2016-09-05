@@ -655,7 +655,8 @@ namespace TradingSystem.View
             }
 
             double totalWeight = weights.Sum();
-            double minusResult = 100.0 - totalWeight;
+            double minusResult = 1.0 - totalWeight;
+            //如果不为100%，则根据数量调整比例;这种调整方式是否可以改进, 通过市值调整？
             if ( minusResult > 0.001 )
             {
                 int[] origAmounts = new int[_spotDataSource.Count];
@@ -701,7 +702,7 @@ namespace TradingSystem.View
                 var stock = _spotDataSource[i];
                 stock.Amount = amounts[i];
                 stock.MarketCap = mktCaps[i];
-                stock.MarketCapWeight = stock.MarketCap / totalCap;
+                stock.MarketCapWeight = 100 * stock.MarketCap / totalCap;
             }
         }
 
