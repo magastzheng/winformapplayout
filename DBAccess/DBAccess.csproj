@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="AssetUnitDAO.cs" />
     <Compile Include="BaseDAO.cs" />
+    <Compile Include="BenchmarkDAO.cs" />
     <Compile Include="CommandDAO.cs" />
     <Compile Include="DbHelper.cs" />
     <Compile Include="DealSecurityDAO.cs" />

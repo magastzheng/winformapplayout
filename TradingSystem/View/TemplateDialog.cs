@@ -1,4 +1,5 @@
-﻿using Config;
+﻿using BLL.Template;
+using Config;
 using DBAccess;
 using Forms;
 using Model.config;
@@ -11,7 +12,7 @@ namespace TradingSystem.View
 {
     public partial class TemplateDialog : Forms.BaseDialog
     {
-        private StockTemplateDAO _dbdao = new StockTemplateDAO();
+        private BenchmarkBLL _benchmarkBLL = new BenchmarkBLL();
         public TemplateDialog()
         {
             InitializeComponent();
@@ -28,7 +29,7 @@ namespace TradingSystem.View
             var replaceType = ConfigManager.Instance.GetComboConfig().GetComboOption("replacetype");
             ComboBoxUtil.SetComboBox(this.cbReplaceType, replaceType);
 
-            var benchmarks = _dbdao.GetBenchmark();
+            var benchmarks = _benchmarkBLL.GetAll();
             ComboOption cbOption = new ComboOption
             {
                 Items = new List<ComboOptionItem>()

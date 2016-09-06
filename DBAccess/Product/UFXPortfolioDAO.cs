@@ -96,7 +96,7 @@ namespace DBAccess.Product
                     item.PortfolioName = (string)reader["PortfolioName"];
                     item.FundCode = (string)reader["AccountCode"];
                     item.FundName = (string)reader["AccountName"];
-                    item.AccountType = (int)reader["AccountType"];
+                    item.EAccountType = (FundAccountType)reader["AccountType"];
                     item.AssetNo = (string)reader["AssetNo"];
                     item.AssetName = (string)reader["AssetName"];
                     item.PortfolioStatus = (PortfolioStatus)reader["PortfolioStatus"];

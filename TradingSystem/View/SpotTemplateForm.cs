@@ -41,6 +41,7 @@ namespace TradingSystem.View
         //private TemplateStockDAO _stockdbdao = new TemplateStockDAO();
         //private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
         private TemplateBLL _templateBLL = new TemplateBLL();
+        private BenchmarkBLL _benchmarkBLL = new BenchmarkBLL();
         
         private SortableBindingList<StockTemplate> _tempDataSource = new SortableBindingList<StockTemplate>(new List<StockTemplate>());
         private SortableBindingList<TemplateStock> _spotDataSource = new SortableBindingList<TemplateStock>(new List<TemplateStock>());
@@ -130,7 +131,7 @@ namespace TradingSystem.View
             }
 
             _securityInfoList = SecurityInfoManager.Instance.Get();
-            _benchmarkList = _templateBLL.GetBenchmark();
+            _benchmarkList = _benchmarkBLL.GetAll();
 
             SetCurrentTemplate();
 

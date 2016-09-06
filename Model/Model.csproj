@@ -55,6 +55,7 @@
     <Compile Include="config\Label.cs" />
     <Compile Include="Database\TradeCommand.cs" />
     <Compile Include="Database\TradeCommandSecurity.cs" />
+    <Compile Include="EnumType\FundAccountType.cs" />
     <Compile Include="EnumType\EnumTypeConverter\EntrustRequestHelper.cs" />
     <Compile Include="EnumType\EnumTypeConverter\EnumTypeDisplayHelper.cs" />
     <Compile Include="EnumType\MonitorUnitAccountType.cs" />

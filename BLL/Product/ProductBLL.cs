@@ -1,4 +1,5 @@
 ﻿using DBAccess.Product;
+using Model.EnumType;
 using Model.strategy;
 using Model.UI;
 using System.Collections.Generic;
@@ -30,11 +31,7 @@ namespace BLL.Product
                 if (fund != null)
                 {
                     portfolio.FundName = fund.AccountName;
-                    int temp = -1;
-                    if (int.TryParse(fund.AccountType, out temp))
-                    {
-                        portfolio.AccountType = temp;
-                    }
+                    portfolio.EAccountType = fund.AccountType;
                 }
 
                 var asset = assets.Find(o => o.AssetNo.Equals(portfolio.AssetNo));

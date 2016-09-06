@@ -196,27 +196,5 @@ namespace DBAccess
 
             return stockTemplates;
         }
-
-        public List<Benchmark> GetBenchmark()
-        {
-            List<Benchmark> benchmarks = new List<Benchmark>();
-            string sql = "select BenchmarkId, BenchmarkName, Exchange, ContractMultiple from benchmark";
-            var dbCommand = _dbHelper.GetSqlStringCommand(sql);
-            var reader = _dbHelper.ExecuteReader(dbCommand);
-            if (reader.HasRows)
-            {
-                while (reader.Read())
-                {
-                    Benchmark benchmark = new Benchmark();
-                    benchmark.BenchmarkId = (string)reader["BenchmarkId"];
-                    benchmark.BenchmarkName = (string)reader["BenchmarkName"];
-                    benchmark.Exchange = (string)reader["Exchange"];
-                    benchmark.ContractMultiple = (int)reader["ContractMultiple"];
-                    benchmarks.Add(benchmark);
-                }
-            }
-
-            return benchmarks;
-        }
     }
 }

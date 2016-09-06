@@ -1,5 +1,6 @@
 ﻿using Model.Binding;
 using Model.EnumType;
+using Model.EnumType.EnumTypeConverter;
 
 namespace Model.UI
 {
@@ -12,7 +13,10 @@ namespace Model.UI
         public string FundCode { get; set; }
 
         [BindingAttribute("accounttype")]
-        public int AccountType { get; set; }
+        public string AccountType
+        {
+            get { return EnumTypeDisplayHelper.GetFundAccountType(EAccountType); }
+        }
 
         [BindingAttribute("capitalaccount")]
         public string CapitalAccount { get; set; }
@@ -32,5 +36,7 @@ namespace Model.UI
         public int PortfolioId { get; set; }
 
         public PortfolioStatus PortfolioStatus { get; set; }
+
+        public FundAccountType EAccountType { get; set; }
     }
 }

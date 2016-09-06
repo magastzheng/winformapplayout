@@ -72,10 +72,10 @@ namespace BLL.Template
 
         #region
 
-        public List<Benchmark> GetBenchmark()
-        {
-            return _tempdbdao.GetBenchmark();
-        }
+        //public List<Benchmark> GetBenchmark()
+        //{
+        //    return _tempdbdao.GetBenchmark();
+        //}
 
         #endregion
     }

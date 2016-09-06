@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Model.EnumType;
 
 namespace Model.strategy
 {
@@ -15,6 +11,6 @@ namespace Model.strategy
         public string AccountName;
 
         //账户类型
-        public string AccountType;
+        public FundAccountType AccountType;
     }
 }

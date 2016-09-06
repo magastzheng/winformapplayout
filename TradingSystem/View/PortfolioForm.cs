@@ -4,6 +4,7 @@ using Config;
 using Controls.Entity;
 using Controls.GridView;
 using Model.Binding.BindingUtil;
+using Model.EnumType;
 using Model.strategy;
 using Model.UI;
 using System.Collections.Generic;
@@ -69,11 +70,7 @@ namespace TradingSystem.View
                 if (fund != null)
                 {
                     portfolio.FundName = fund.AccountName;
-                    int temp = -1;
-                    if (int.TryParse(fund.AccountType, out temp))
-                    {
-                        portfolio.AccountType = temp;
-                    }
+                    portfolio.EAccountType = fund.AccountType;
                 }
 
                 var asset = LoginManager.Instance.Assets.Find(o => o.AssetNo.Equals(p.AssetNo));

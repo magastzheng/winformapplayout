@@ -311,5 +311,63 @@ namespace Model.EnumType.EnumTypeConverter
             }
             return typeName;
         }
+
+        public static string GetFundAccountType(FundAccountType accType)
+        {
+            string typeName = string.Empty;
+
+            switch (accType)
+            { 
+                case FundAccountType.ClosedEndFund:
+                    typeName = "封闭式基金";
+                    break;
+                case FundAccountType.OpenEndFund:
+                    typeName = "开放式基金";
+                    break;
+                case FundAccountType.SocialInsuranceFund:
+                    typeName = "社保基金";
+                    break;
+                case FundAccountType.AnnuityProduct:
+                    typeName = "年金产品";
+                    break;
+                case FundAccountType.SpecialProduct:
+                    typeName = "专户产品";
+                    break;
+                case FundAccountType.Annuities:
+                    typeName = "年金";
+                    break;
+                case FundAccountType.SeparateManagedAccount:
+                    typeName = "专户理财";
+                    break;
+                case FundAccountType.Insurance:
+                    typeName = "保险";
+                    break;
+                case FundAccountType.OneToManyAccounts:
+                    typeName = "一对多专户";
+                    break;
+                case FundAccountType.DirectionalFinancing:
+                    typeName = "定向理财";
+                    break;
+                case FundAccountType.CollectiveFinance:
+                    typeName = "集合理财";
+                    break;
+                case FundAccountType.SelfOperated:
+                    typeName = "自营";
+                    break;
+                case FundAccountType.Trust:
+                    typeName = "信托";
+                    break;
+                case FundAccountType.PrivatePlacement:
+                    typeName = "私募";
+                    break;
+                case FundAccountType.EntrustedAssets:
+                    typeName = "委托资产";
+                    break;
+                default:
+                    break;
+            }
+
+            return typeName;
+        }
     }
 }

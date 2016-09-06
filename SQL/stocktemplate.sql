@@ -40,16 +40,6 @@ create table templatestock(
 --	Exchange varchar(10)
 --)
 
-if object_id('benchmark') is not null
-drop table benchmark
-
-create table benchmark(
-	BenchmarkId varchar(10) primary key,	--标的指数代码(交易所代码)
-	BenchmarkName varchar(50) not null,		--标的指数名称
-	Exchange varchar(10) not null,			--标的指数交易所
-	ContractMultiple int					--标的指数合约乘数:每个基点对应的价值
-)
-
 ---=========================stocktemplate begin======================
 go
 if exists (select name from sysobjects where name='procTemplateInsert')

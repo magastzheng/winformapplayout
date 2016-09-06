@@ -73,6 +73,7 @@
     <Compile Include="Permission\PermissionManager.cs" />
     <Compile Include="Permission\RoleBLL.cs" />
     <Compile Include="Permission\UserBLL.cs" />
+    <Compile Include="Template\BenchmarkBLL.cs" />
     <Compile Include="Template\MonitorUnitBLL.cs" />
     <Compile Include="TradeCommand\TradeCommandSecurityBLL.cs" />
     <Compile Include="UFX\impl\AccountBLL.cs" />

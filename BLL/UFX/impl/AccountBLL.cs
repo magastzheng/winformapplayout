@@ -3,6 +3,7 @@ using hundsun.t2sdk;
 using log4net;
 using Model;
 using Model.config;
+using Model.EnumType;
 using Model.strategy;
 
 namespace BLL.UFX.impl
@@ -75,7 +76,13 @@ namespace BLL.UFX.impl
                         AccountItem acc = new AccountItem();
                         acc.AccountCode = dataRow.Columns["account_code"].GetStr();
                         acc.AccountName = dataRow.Columns["account_name"].GetStr();
-                        acc.AccountType = dataRow.Columns["account_type"].GetStr();
+
+                        string accType = dataRow.Columns["account_type"].GetStr();
+                        int temp;
+                        if(int.TryParse(accType, out temp))
+                        {
+                            acc.AccountType = (FundAccountType)temp;
+                        }
 
                         LoginManager.Instance.AddAccount(acc);
                     }

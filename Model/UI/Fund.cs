@@ -1,4 +1,6 @@
 ﻿using Model.Binding;
+using Model.EnumType;
+using Model.EnumType.EnumTypeConverter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,12 +19,17 @@ namespace Model.UI
         public string FundName { get; set; }
 
         [BindingAttribute("accounttype")]
-        public int AccountType { get; set; }
+        public string AccountType
+        {
+            get { return EnumTypeDisplayHelper.GetFundAccountType(EAccountType); }
+        }
 
         public string ManagerCode { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
         public DateTime ModifiedDate { get; set; }
+
+        public FundAccountType EAccountType { get; set; }
     }
 }

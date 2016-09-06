@@ -4,6 +4,7 @@ using Config;
 using Controls.Entity;
 using Controls.GridView;
 using Model.Binding.BindingUtil;
+using Model.EnumType;
 using Model.strategy;
 using Model.UI;
 using System.Collections.Generic;
@@ -64,13 +65,8 @@ namespace TradingSystem.View
                 {
                     FundCode = account.AccountCode,
                     FundName = account.AccountName,
+                    EAccountType = account.AccountType
                 };
-
-                int temp = -1;
-                if (int.TryParse(account.AccountType, out temp))
-                {
-                    fund.AccountType = temp;
-                }
 
                 _dataSource.Add(fund);
             }
