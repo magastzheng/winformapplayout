@@ -4,15 +4,15 @@ if object_id('stocktemplate') is not null
 drop table stocktemplate
 
 create table stocktemplate(
-	TemplateId int identity(1, 1) primary key,
-	TemplateName varchar(50),
-	Status int,
-	WeightType int,
-	ReplaceType int,
-	FuturesCopies int,
-	MarketCapOpt numeric(5, 2),
-	BenchmarkId varchar(10),
-	CreatedDate datetime,
+	TemplateId int identity(1, 1) primary key,		--模板ID
+	TemplateName varchar(50),						--模板名称
+	Status int,										-- 1 - normal, 2 - inactive
+	WeightType int,									-- 1 - 数量权重，2 - 比例权重
+	ReplaceType int,								-- 0 - 个股替代，1 - 模板替代
+	FuturesCopies int,								-- 期货份数
+	MarketCapOpt numeric(5, 2),						-- 市值比例(%)
+	BenchmarkId varchar(10),						-- 标的指数
+	CreatedDate datetime,						
 	ModifiedDate datetime,
 	CreatedUserId int
 )
@@ -21,12 +21,12 @@ if object_id('templatestock') is not null
 drop table templatestock
 
 create table templatestock(
-	TemplateId int not null,
-	SecuCode varchar(10) not null,
-	Amount int,
-	MarketCap numeric(20, 4),
-	MarketCapOpt numeric(5, 2),
-	SettingWeight numeric(5, 2),
+	TemplateId int not null,		--模板ID
+	SecuCode varchar(10) not null,	--证券代码
+	Amount int,						--证券数量
+	MarketCap numeric(20, 4),		--证券市值
+	MarketCapOpt numeric(5, 2),		--证券市值比例(%)
+	SettingWeight numeric(5, 2),	--证券设置权重(%)
 
 	constraint pk_templatestock_Id primary key(TemplateId,SecuCode)
 )
@@ -44,10 +44,10 @@ if object_id('benchmark') is not null
 drop table benchmark
 
 create table benchmark(
-	BenchmarkId varchar(10) primary key,
-	BenchmarkName varchar(50) not null,
-	Exchange varchar(10) not null,
-	ContractMultiple int
+	BenchmarkId varchar(10) primary key,	--标的指数代码(交易所代码)
+	BenchmarkName varchar(50) not null,		--标的指数名称
+	Exchange varchar(10) not null,			--标的指数交易所
+	ContractMultiple int					--标的指数合约乘数:每个基点对应的价值
 )
 
 ---=========================stocktemplate begin======================
@@ -200,7 +200,7 @@ create proc procTemplateDelete(
 )
 as
 begin
-	--�����ģ�屻��ص�Ԫʹ�ã�����ɾ��
+	--如果该模板被监控单元使用，不能删除
 	declare @UsedTotal int
 	set @UsedTotal=(select count(StockTemplateId) from monitorunit where StockTemplateId=@TemplateId)
 	if @UsedTotal > 0

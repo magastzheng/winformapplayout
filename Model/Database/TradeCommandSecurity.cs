@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Model.Database
 {
+    /// <summary>
+    /// 对应数据库中的表：tradingcommandsecurity
+    /// </summary>
     public class TradeCommandSecurity
     {
         //证券代码

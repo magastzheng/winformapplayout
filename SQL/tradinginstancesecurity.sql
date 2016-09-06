@@ -22,7 +22,7 @@ create table tradinginstancesecurity(
 	,SellToday			int				--当日卖量
 	,CreatedDate		datetime		--创建时间
 	,ModifiedDate		datetime		--修改时间
-	,LastDate			datetime		--用于记录最近一天时间
+	,LastDate			datetime		--用于记录最近一天时间，该字段用于清算
 	,constraint pk_TradingInstanceSecurity_IdSecuCode primary key(InstanceId, SecuCode)
 )
 
@@ -206,6 +206,7 @@ go
 create proc procTradingInstanceSecuritySettle
 as
 begin
+	--根据LastDate结算每支证券，统计持仓量，清空当天买量和卖量，并重新设置LastDate
 	update t
 	set t.PositionAmount = d.PositionAmount+d.BuyToday-d.SellToday
 		,t.BuyToday = 0.0

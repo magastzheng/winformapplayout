@@ -23,7 +23,7 @@ namespace Model.UI
 
         public FuturesPriceType FuturesPriceType { get; set; }
 
-        public int Status { get; set; }
+        public TradingInstanceStatus Status { get; set; }
 
         public string Owner { get; set; }
 

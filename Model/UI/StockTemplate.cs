@@ -1,4 +1,6 @@
 ﻿using Model.Binding;
+using Model.EnumType;
+using Model.EnumType.EnumTypeConverter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +18,10 @@ namespace Model.UI
         public string TemplateName { get; set; }
 
         [BindingAttribute("status")]
-        public int Status { get; set; }
+        public string Status
+        {
+            get { return EnumTypeDisplayHelper.GetTemplateStatus(EStatus); }
+        }
 
         [BindingAttribute("futurescopies")]
         public int FutureCopies { get; set; }
@@ -28,16 +33,50 @@ namespace Model.UI
         public string Benchmark { get; set; }
 
         [BindingAttribute("weighttype")]
-        public int WeightType { get; set; }
+        public string WeightType
+        {
+            get { return EnumTypeDisplayHelper.GetWeightType(EWeightType); }
+        }
 
         [BindingAttribute("replacetype")]
-        public int ReplaceType { get; set; }
+        public string ReplaceType 
+        {
+            get { return EnumTypeDisplayHelper.GetReplaceType(EReplaceType); } 
+        }
 
         [BindingAttribute("addeddate")]
-        public DateTime CreatedDate { get; set; }
+        public string CreatedDate 
+        {
+            get { return DCreatedDate.ToString("yyyy-MM-dd"); }
+        }
+
+        [BindingAttribute("addedtime")]
+        public string CreatedTime
+        {
+            get { return DCreatedDate.ToString("hh:mm:ss"); }
+        }
 
         [BindingAttribute("modifieddate")]
-        public DateTime ModifiedDate { get; set; }
+        public string ModifiedDate 
+        {
+            get { return DModifiedDate.ToString("yyyy-MM-dd"); }
+        }
+
+        [BindingAttribute("modifiedtime")]
+        public string ModifiedTime
+        {
+            get { return DModifiedDate.ToString("hh:mm:ss"); }
+        }
+
+        public TemplateStatus EStatus { get; set; }
+
+        public WeightType EWeightType { get; set; }
+
+        public ReplaceType EReplaceType { get; set; }
+
+        public DateTime DCreatedDate { get; set; }
+
+        public DateTime DModifiedDate { get; set; }
 
         public int UserId { get; set; }
     }

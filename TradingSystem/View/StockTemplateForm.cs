@@ -2,6 +2,7 @@
 using Controls;
 using DBAccess;
 using Model.Data;
+using Model.EnumType;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -165,7 +166,7 @@ namespace TradingSystem.View
                         break;
                     case "st_weighttype":
                         {
-                            dataValue.Value = stockTemplate.WeightType;
+                            dataValue.Value = stockTemplate.EWeightType;
                         }
                         break;
                     case "st_futurescopies":
@@ -220,7 +221,7 @@ namespace TradingSystem.View
                         break;
                     case "st_replacetype":
                         {
-                            dataValue.Value = stockTemplate.ReplaceType;
+                            dataValue.Value = stockTemplate.EReplaceType;
                         }
                         break;
                     case "st_replacetemplate":
@@ -280,7 +281,7 @@ namespace TradingSystem.View
                         break;
                     case "st_weighttype":
                         {
-                            stockTemplate.WeightType = dataValue.GetInt();
+                            stockTemplate.EWeightType = (WeightType)dataValue.GetInt();
                         }
                         break;
                     case "st_futurescopies":
@@ -335,7 +336,7 @@ namespace TradingSystem.View
                         break;
                     case "st_replacetype":
                         {
-                            stockTemplate.ReplaceType = dataValue.GetInt();
+                            stockTemplate.EReplaceType = (ReplaceType)dataValue.GetInt();
                         }
                         break;
                     case "st_replacetemplate":
@@ -560,13 +561,13 @@ namespace TradingSystem.View
             {
                 case TempChangeType.New:
                     {
-                        int newid = _tempdbdao.Create(stockTemplate.TemplateName, stockTemplate.WeightType, stockTemplate.ReplaceType, stockTemplate.FutureCopies, stockTemplate.MarketCapOpt, stockTemplate.Benchmark, 11111);
+                        int newid = _tempdbdao.Create(stockTemplate.TemplateName, stockTemplate.EWeightType, stockTemplate.EReplaceType, stockTemplate.FutureCopies, stockTemplate.MarketCapOpt, stockTemplate.Benchmark, 11111);
                         stockTemplate.TemplateId = newid;
                     }
                     break;
                 case TempChangeType.Update:
                     {
-                        int tempid = _tempdbdao.Update(stockTemplate.TemplateId, stockTemplate.TemplateName, stockTemplate.WeightType, stockTemplate.ReplaceType, stockTemplate.FutureCopies, stockTemplate.MarketCapOpt, stockTemplate.Benchmark, 11111);
+                        int tempid = _tempdbdao.Update(stockTemplate.TemplateId, stockTemplate.TemplateName, stockTemplate.EWeightType, stockTemplate.EReplaceType, stockTemplate.FutureCopies, stockTemplate.MarketCapOpt, stockTemplate.Benchmark, 11111);
                         stockTemplate.TemplateId = tempid;
                     }
                     break;

@@ -1,4 +1,6 @@
 ﻿using Model.Binding;
+using Model.EnumType;
+using Model.EnumType.EnumTypeConverter;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,7 +19,10 @@ namespace Model.UI
         public string MonitorUnitName { get; set; }
 
         [BindingAttribute("accounttype")]
-        public int AccountType { get; set; }
+        public string AccountType
+        {
+            get { return EnumTypeDisplayHelper.GetMonitorUnitAccountType(EAccountType); }
+        }
 
         [BindingAttribute("portfolioid")]
         public int PortfolioId { get; set; }
@@ -39,5 +44,7 @@ namespace Model.UI
         public bool Selection { get; set; }
 
         public string Owner { get; set; }
+
+        public MonitorUnitAccountType EAccountType { get; set; }
     }
 }

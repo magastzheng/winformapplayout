@@ -94,4 +94,4 @@ join securityinfo b
 on a.SecuCode = b.SecuCode and b.SecuType=2
 where a.TemplateId=1
 
-select * 
+select * from stocktemplate

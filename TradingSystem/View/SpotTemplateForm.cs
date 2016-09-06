@@ -16,6 +16,7 @@ using Util;
 using System.Linq;
 using BLL.Template;
 using Model.Binding.BindingUtil;
+using BLL.SecurityInfo;
 
 namespace TradingSystem.View
 {
@@ -36,9 +37,9 @@ namespace TradingSystem.View
         private const string GridTemplate = "stocktemplate";
         private const string GridStock = "templatestock";
 
-        private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
-        private TemplateStockDAO _stockdbdao = new TemplateStockDAO();
-        private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
+        //private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
+        //private TemplateStockDAO _stockdbdao = new TemplateStockDAO();
+        //private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
         private TemplateBLL _templateBLL = new TemplateBLL();
         
         private SortableBindingList<StockTemplate> _tempDataSource = new SortableBindingList<StockTemplate>(new List<StockTemplate>());
@@ -114,7 +115,7 @@ namespace TradingSystem.View
             _tempDataSource.Clear();
             _spotDataSource.Clear();
 
-            var items = _tempdbdao.GetByUser(-1);
+            var items = _templateBLL.GetTemplateByUser(-1);
             if (items != null)
             { 
                 foreach(var item in items)
@@ -128,8 +129,8 @@ namespace TradingSystem.View
                 }
             }
 
-            _securityInfoList = _secudbdao.Get(SecurityType.All);
-            _benchmarkList = _tempdbdao.GetBenchmark();
+            _securityInfoList = SecurityInfoManager.Instance.Get();
+            _benchmarkList = _templateBLL.GetBenchmark();
 
             SetCurrentTemplate();
 
@@ -142,7 +143,7 @@ namespace TradingSystem.View
                 return;
 
             _spotDataSource.Clear();
-            var stocks = _stockdbdao.Get(templateNo);
+            var stocks = _templateBLL.GetStocks(templateNo);
             if (stocks != null)
             {
                 foreach (var stock in stocks)
@@ -250,12 +251,12 @@ namespace TradingSystem.View
                 TemplateName = templateName,
                 FutureCopies = template.FutureCopies,
                 MarketCapOpt = template.MarketCapOpt,
-                ReplaceType = template.ReplaceType,
-                WeightType = template.WeightType,
+                EReplaceType = template.EReplaceType,
+                EWeightType = template.EWeightType,
                 Benchmark = template.Benchmark,
                 UserId = template.UserId,
-                Status = template.Status,
-                CreatedDate = DateTime.Now
+                EStatus = template.EStatus,
+                DCreatedDate = DateTime.Now
             };
 
             StockTemplate newtemp = _templateBLL.CreateTemplate(temp);
@@ -320,13 +321,15 @@ namespace TradingSystem.View
             {
                 case TempChangeType.New:
                     {
-                        int newid = _tempdbdao.Create(stockTemplate.TemplateName, stockTemplate.WeightType, stockTemplate.ReplaceType, stockTemplate.FutureCopies, stockTemplate.MarketCapOpt, stockTemplate.Benchmark, 11111);
-                        stockTemplate.TemplateId = newid;
+                        var template = _templateBLL.CreateTemplate(stockTemplate);
+                        //_tempdbdao.Create(stockTemplate.TemplateName, stockTemplate.EWeightType, stockTemplate.EReplaceType, stockTemplate.FutureCopies, stockTemplate.MarketCapOpt, stockTemplate.Benchmark, 11111);
+                        stockTemplate.TemplateId = template.TemplateId;
                     }
                     break;
                 case TempChangeType.Update:
                     {
-                        int tempid = _tempdbdao.Update(stockTemplate.TemplateId, stockTemplate.TemplateName, stockTemplate.WeightType, stockTemplate.ReplaceType, stockTemplate.FutureCopies, stockTemplate.MarketCapOpt, stockTemplate.Benchmark, 11111);
+                        //int tempid = _templateBLL.upd _tempdbdao.Update(stockTemplate.TemplateId, stockTemplate.TemplateName, stockTemplate.EWeightType, stockTemplate.EReplaceType, stockTemplate.FutureCopies, stockTemplate.MarketCapOpt, stockTemplate.Benchmark, 11111);
+                        int tempid = _templateBLL.UpdateTemplate(stockTemplate);
                         stockTemplate.TemplateId = tempid;
                     }
                     break;
@@ -420,7 +423,7 @@ namespace TradingSystem.View
                 return;
             }
 
-            int ret = _stockdbdao.Replace(template.TemplateId, _spotDataSource.ToList());
+            int ret = _templateBLL.Replace(template.TemplateId, _spotDataSource.ToList());
             if (ret > 0)
             {
                 SwitchTemplateStockSave(false);

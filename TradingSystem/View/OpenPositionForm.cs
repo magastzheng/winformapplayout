@@ -333,7 +333,7 @@ namespace TradingSystem.View
                         OperationCopies = newOpenItem.Copies,
                         StockPriceType = StockPriceType.NoLimit,
                         FuturesPriceType = FuturesPriceType.NoLimit,
-                        Status = 1,
+                        Status = TradingInstanceStatus.Active,
                     };
 
                     tradeInstance.Owner = LoginManager.Instance.LoginUser.Operator;

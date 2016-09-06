@@ -57,6 +57,7 @@
     <Compile Include="Database\TradeCommandSecurity.cs" />
     <Compile Include="EnumType\EnumTypeConverter\EntrustRequestHelper.cs" />
     <Compile Include="EnumType\EnumTypeConverter\EnumTypeDisplayHelper.cs" />
+    <Compile Include="EnumType\MonitorUnitAccountType.cs" />
     <Compile Include="EnumType\PortfolioStatus.cs" />
     <Compile Include="EnumType\PriceType.cs" />
     <Compile Include="config\TDFAPISetting.cs" />
@@ -69,6 +70,8 @@
     <Compile Include="EnumType\StockPriceType.cs" />
     <Compile Include="EntrustParam.cs" />
     <Compile Include="config\FieldConfigItem.cs" />
+    <Compile Include="EnumType\TemplateStatus.cs" />
+    <Compile Include="EnumType\TradingInstanceStatus.cs" />
     <Compile Include="FieldRequireType.cs" />
     <Compile Include="FunctionCode.cs" />
     <Compile Include="config\FunctionConfigItem.cs" />

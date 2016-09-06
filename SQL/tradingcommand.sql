@@ -4,23 +4,23 @@ if object_id('tradingcommand') is not null
 drop table tradingcommand
 
 create table tradingcommand(
-	CommandId			int identity(1, 1) primary key
-	,InstanceId			int not null
-	,CommandNum			int	--指令份数
+	CommandId			int identity(1, 1) primary key	--指令序号
+	,InstanceId			int not null					--交易实例ID
+	,CommandNum			int								--指令份数
 	--,TargetNum			int	--目标份数
 	--,DealNum			int --成交份数
-	,ModifiedTimes		int	--修改次数
-	,CommandType		int -- 1 - 期现套利
-	,ExecuteType		int -- 1 开仓， 2 - 平仓
-	,StockDirection		int --10 -- 买入现货，11--卖出现货
-	,FuturesDirection	int --12-卖出开仓，13 -买入平仓
-	,EntrustStatus		int	-- 1 - 未执行， 2 - 部分执行， 3- 已完成
-	,DealStatus			int	-- 1 - 未成交， 2 - 部分成交， 3 - 已完成
-	,SubmitPerson		varchar(10) --下达人
-	,CreatedDate		datetime -- 下达指令时间
-	,ModifiedDate		datetime -- 修改时间
-	,StartDate			datetime
-	,EndDate			datetime
+	,ModifiedTimes		int								--修改次数
+	,CommandType		int								-- 1 - 期现套利
+	,ExecuteType		int								-- 1 开仓， 2 - 平仓
+	,StockDirection		int								--10 -- 买入现货，11--卖出现货
+	,FuturesDirection	int								--12-卖出开仓，13 -买入平仓
+	,EntrustStatus		int								-- 1 - 未执行， 2 - 部分执行， 3- 已完成
+	,DealStatus			int								-- 1 - 未成交， 2 - 部分成交， 3 - 已完成
+	,SubmitPerson		varchar(10)						--下达人
+	,CreatedDate		datetime						-- 下达指令时间
+	,ModifiedDate		datetime						-- 修改时间
+	,StartDate			datetime						-- 指令有效开始时间
+	,EndDate			datetime						-- 指令有效结束时间
 )
 
 --====================================
@@ -169,6 +169,8 @@ create proc procTradingCommandDelete(
 as
 begin
 	--TODO:delete the tradingcommandsecurity
+	delete from tradingcommandsecurity where CommandId=@CommandId
+
 	delete from tradingcommand where CommandId=@CommandId
 end
 

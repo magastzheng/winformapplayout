@@ -1,4 +1,5 @@
 ﻿using Model.config;
+using Model.EnumType;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -30,8 +31,8 @@ namespace DBAccess
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
             _dbHelper.AddInParameter(dbCommand, "@TemplateName", System.Data.DbType.String, template.TemplateName);
             //_dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, status);
-            _dbHelper.AddInParameter(dbCommand, "@WeightType", System.Data.DbType.Int32, template.WeightType);
-            _dbHelper.AddInParameter(dbCommand, "@ReplaceType", System.Data.DbType.Int32, template.ReplaceType);
+            _dbHelper.AddInParameter(dbCommand, "@WeightType", System.Data.DbType.Int32, (int)template.EWeightType);
+            _dbHelper.AddInParameter(dbCommand, "@ReplaceType", System.Data.DbType.Int32, (int)template.EReplaceType);
             _dbHelper.AddInParameter(dbCommand, "@FuturesCopies", System.Data.DbType.Int32, template.FutureCopies);
             _dbHelper.AddInParameter(dbCommand, "@MarketCapOpt", System.Data.DbType.Decimal, template.MarketCapOpt);
             _dbHelper.AddInParameter(dbCommand, "@BenchmarkId", System.Data.DbType.String, template.Benchmark);
@@ -50,13 +51,13 @@ namespace DBAccess
             return templateId;
         }
 
-        public int Create(string templateName, int weightType, int replaceType, int futuresCopies, double marketCapOpt, string benchmarkId, int userId)
+        public int Create(string templateName, WeightType weightType, ReplaceType replaceType, int futuresCopies, double marketCapOpt, string benchmarkId, int userId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
             _dbHelper.AddInParameter(dbCommand, "@TemplateName", System.Data.DbType.String, templateName);
             //_dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, status);
-            _dbHelper.AddInParameter(dbCommand, "@WeightType", System.Data.DbType.Int32, weightType);
-            _dbHelper.AddInParameter(dbCommand, "@ReplaceType", System.Data.DbType.Int32, replaceType);
+            _dbHelper.AddInParameter(dbCommand, "@WeightType", System.Data.DbType.Int32, (int)weightType);
+            _dbHelper.AddInParameter(dbCommand, "@ReplaceType", System.Data.DbType.Int32, (int)replaceType);
             _dbHelper.AddInParameter(dbCommand, "@FuturesCopies", System.Data.DbType.Int32, futuresCopies);
             _dbHelper.AddInParameter(dbCommand, "@MarketCapOpt", System.Data.DbType.Decimal, marketCapOpt);
             _dbHelper.AddInParameter(dbCommand, "@BenchmarkId", System.Data.DbType.String, benchmarkId);
@@ -75,14 +76,14 @@ namespace DBAccess
             return templateId;
         }
 
-        public int Update(int templateNo, string templateName, int weightType, int replaceType, int futuresCopies, double marketCapOpt, string benchmarkId, int userId)
+        public int Update(int templateNo, string templateName, WeightType weightType, ReplaceType replaceType, int futuresCopies, double marketCapOpt, string benchmarkId, int userId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Modify);
             _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, templateNo);
             _dbHelper.AddInParameter(dbCommand, "@TemplateName", System.Data.DbType.String, templateName);
-            _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, 1);
-            _dbHelper.AddInParameter(dbCommand, "@WeightType", System.Data.DbType.Int32, weightType);
-            _dbHelper.AddInParameter(dbCommand, "@ReplaceType", System.Data.DbType.Int32, replaceType);
+            _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)TemplateStatus.Normal);
+            _dbHelper.AddInParameter(dbCommand, "@WeightType", System.Data.DbType.Int32, (int)weightType);
+            _dbHelper.AddInParameter(dbCommand, "@ReplaceType", System.Data.DbType.Int32, (int)replaceType);
             _dbHelper.AddInParameter(dbCommand, "@FuturesCopies", System.Data.DbType.Int32, futuresCopies);
             _dbHelper.AddInParameter(dbCommand, "@MarketCapOpt", System.Data.DbType.Decimal, marketCapOpt);
             _dbHelper.AddInParameter(dbCommand, "@BenchmarkId", System.Data.DbType.String, benchmarkId);
@@ -94,6 +95,31 @@ namespace DBAccess
             int ret = _dbHelper.ExecuteNonQuery(dbCommand);
             int templateId = -1;
             if(ret > 0)
+            {
+                templateId = (int)dbCommand.Parameters["@return"].Value;
+            }
+            return templateId;
+        }
+
+        public int Update(StockTemplate template)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Modify);
+            _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, template.TemplateId);
+            _dbHelper.AddInParameter(dbCommand, "@TemplateName", System.Data.DbType.String, template.TemplateName);
+            _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)template.EStatus);
+            _dbHelper.AddInParameter(dbCommand, "@WeightType", System.Data.DbType.Int32, (int)template.EWeightType);
+            _dbHelper.AddInParameter(dbCommand, "@ReplaceType", System.Data.DbType.Int32, (int)template.EReplaceType);
+            _dbHelper.AddInParameter(dbCommand, "@FuturesCopies", System.Data.DbType.Int32, template.FutureCopies);
+            _dbHelper.AddInParameter(dbCommand, "@MarketCapOpt", System.Data.DbType.Decimal, template.MarketCapOpt);
+            _dbHelper.AddInParameter(dbCommand, "@BenchmarkId", System.Data.DbType.String, template.Benchmark);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+            _dbHelper.AddInParameter(dbCommand, "@CreatedUserId", System.Data.DbType.Int32, template.UserId);
+
+            _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
+
+            int ret = _dbHelper.ExecuteNonQuery(dbCommand);
+            int templateId = -1;
+            if (ret > 0)
             {
                 templateId = (int)dbCommand.Parameters["@return"].Value;
             }
@@ -126,8 +152,8 @@ namespace DBAccess
                     item.TemplateName = (string)reader["TemplateName"];
                     item.FutureCopies = (int)reader["FuturesCopies"];
                     item.MarketCapOpt = (double)(decimal)reader["MarketCapOpt"];
-                    item.WeightType = (int)reader["WeightType"];
-                    //item.ReplaceType = (int)reader["ReplaceType"];
+                    item.EWeightType = (WeightType)reader["WeightType"];
+                    item.EReplaceType = (ReplaceType)reader["ReplaceType"];
                     item.Benchmark = (string)reader["BenchmarkId"];
 
                     stockTemplates.Add(item);
@@ -157,8 +183,9 @@ namespace DBAccess
                     item.TemplateName = (string)reader["TemplateName"];
                     item.FutureCopies = (int)reader["FuturesCopies"];
                     item.MarketCapOpt = (double)(decimal)reader["MarketCapOpt"];
-                    item.WeightType = (int)reader["WeightType"];
-                    //item.ReplaceType = (int)reader["ReplaceType"];
+                    item.EStatus = (TemplateStatus)reader["Status"];
+                    item.EWeightType = (WeightType)reader["WeightType"];
+                    item.EReplaceType = (ReplaceType)reader["ReplaceType"];
                     item.Benchmark = (string)reader["BenchmarkId"];
 
                     stockTemplates.Add(item);

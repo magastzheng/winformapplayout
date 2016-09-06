@@ -4,10 +4,10 @@ if object_id('users') is not null
 drop table users
 
 create table users(
-	Id int	identity(1, 1) primary key,
-	Operator varchar(10) not null,
-	Name	 varchar(10),
-	Status	 int  -- 0: inactive, 1: active
+	Id int	identity(1, 1) primary key,		-- 用户ID，首次成功登录系统会自动产生
+	Operator varchar(10) not null,			-- 用户操作代码，用于登录
+	Name	 varchar(10),					-- 用户名称
+	Status	 int							-- 用户状态：0 - inactive, 1 - active
 )
 
 go

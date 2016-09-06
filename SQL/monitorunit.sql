@@ -4,12 +4,12 @@ if object_id('monitorunit') is not null
 drop table monitorunit
 
 create table monitorunit(
-	MonitorUnitId		int identity(1, 1) primary key,
-	MonitorUnitName		varchar(100) not null,
-	AccountType			int, -- 1 单账户类型
-	PortfolioId			int,
-	BearContract		varchar(10),
-	StockTemplateId		int,
+	MonitorUnitId		int identity(1, 1) primary key, --监控模板ID
+	MonitorUnitName		varchar(100) not null,			--监控模板名称
+	AccountType			int,							--账户类型： 1 单账户类型， 2 - 多账户类型
+	PortfolioId			int,							--组合ID
+	BearContract		varchar(10),					--期货合约ID
+	StockTemplateId		int,							--现货模板ID
 	Active				int, -- 0 -inactive, 1 - active, 只有active的才会在开仓界面中可见
 	Owner				varchar(10),
 	CreatedDate			datetime,

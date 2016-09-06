@@ -4,9 +4,9 @@ if object_id('features') is not null
 drop table features
 
 create table features(
-	Id			int not null primary key,
-	Name		varchar(30) not null,
-	Description	varchar(100),
+	Id			int not null primary key,	--软件系统功能Id
+	Name		varchar(30) not null,		--软件系统功能名称
+	Description	varchar(100),				--软件系统功能描述
 )
 
 go

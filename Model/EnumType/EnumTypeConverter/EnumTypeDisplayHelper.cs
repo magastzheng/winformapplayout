@@ -240,5 +240,76 @@ namespace Model.EnumType.EnumTypeConverter
 
             return entrustPriceTypeName;
         }
+
+        public static string GetTemplateStatus(TemplateStatus status)
+        {
+            string statusName = string.Empty;
+            switch (status)
+            { 
+                case TemplateStatus.Normal:
+                    statusName = "正常";
+                    break;
+                case TemplateStatus.Inactive:
+                    statusName = "未使用";
+                    break;
+                default:
+                    break;
+            }
+
+            return statusName;
+        }
+
+        public static string GetWeightType(WeightType weightType)
+        {
+            string weightTypeName = string.Empty;
+            switch (weightType)
+            { 
+                case WeightType.ProportionalWeight:
+                    weightTypeName = "比例权重";
+                    break;
+                case WeightType.AmountWeight:
+                    weightTypeName = "数量权重";
+                    break;
+                default:
+                    break;
+            }
+
+            return weightTypeName;
+        }
+
+        public static string GetReplaceType(ReplaceType replaceType)
+        {
+            string replaceTypeName = string.Empty;
+            switch (replaceType)
+            { 
+                case ReplaceType.StockReplace:
+                    replaceTypeName = "个股替代";
+                    break;
+                case ReplaceType.TemplateReplace:
+                    replaceTypeName = "模板替代";
+                    break;
+                default:
+                    break;
+            }
+
+            return replaceTypeName;
+        }
+
+        public static string GetMonitorUnitAccountType(MonitorUnitAccountType accType)
+        {
+            string typeName = string.Empty;
+            switch (accType)
+            {
+                case MonitorUnitAccountType.SingleAccount:
+                    typeName = "单账户";
+                    break;
+                case MonitorUnitAccountType.MultipleAccount:
+                    typeName = "多账户";
+                    break;
+                default:
+                    break;
+            }
+            return typeName;
+        }
     }
 }

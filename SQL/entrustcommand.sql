@@ -5,17 +5,17 @@ if object_id('entrustcommand') is not null
 drop table entrustcommand
 
 create table entrustcommand(
-	SubmitId		int identity(1, 1) primary key
-	,CommandId		int not null
-	,Copies			int			--指令份数
-	,EntrustNo		int			--委托之后，服务器返回的委托号
-	,BatchNo		int			--委托之后，服务器返回的批号
-	,EntrustStatus	int
-	,DealStatus		int
-	,CreatedDate	datetime
-	,ModifiedDate	datetime
-	,EntrustFailCode	int			--委托错误码
-	,EntrustFailCause	varchar(128) --委托失败原因
+	SubmitId		int identity(1, 1) primary key	-- 指令提交ID,每次通过界面委托都会产生唯一的一个ID
+	,CommandId		int not null					-- 指令ID
+	,Copies			int								--指令份数
+	,EntrustNo		int								--委托之后，服务器返回的委托号
+	,BatchNo		int								--委托之后，服务器返回的批号
+	,EntrustStatus	int								--委托状态
+	,DealStatus		int								--成交状态
+	,CreatedDate	datetime						--提交时间	
+	,ModifiedDate	datetime						--修改时间	
+	,EntrustFailCode	int							--委托错误码
+	,EntrustFailCause	varchar(128)				--委托失败原因
 )
 
 go

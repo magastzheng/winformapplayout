@@ -5,27 +5,27 @@ if object_id('entrustsecurity') is not null
 drop table entrustsecurity
 
 create table entrustsecurity(
-	RequestId			int identity(1, 1) primary key
-	,SubmitId			int not null
-	,CommandId			int not null
-	,SecuCode			varchar(10) not null
-	,SecuType			int
-	,EntrustAmount		int
-	,EntrustPrice		numeric(20, 4) 
-	,EntrustDirection	int			 --10 - 买入股票， 11 - 卖出股票， 12 - 卖出开仓， 13 - 买入平仓
-	,EntrustStatus		int			 -- 0 - 提交到DB, 1 - 提交到UFX， 2 - 未执行， 3 - 部分执行， 4 - 已完成， 10 - 撤单DB, 11 - 撤单UFX, 12 - 撤单成功， 13 - 撤单失败
-	,EntrustPriceType	int			 -- 委托价格类型： 0 - 限价，'a'五档即成剩撤(上交所市价)， 'A'五档即成剩撤(深交所市价)
-	,PriceType			int			 -- 
+	RequestId			int identity(1, 1) primary key	--请求ID
+	,SubmitId			int not null					--指令提交ID
+	,CommandId			int not null					--指令ID
+	,SecuCode			varchar(10) not null			--证券交易所代码
+	,SecuType			int								--证券类型
+	,EntrustAmount		int								--委托数量
+	,EntrustPrice		numeric(20, 4)					--委托价格
+	,EntrustDirection	int			 --委托方向：10 - 买入股票， 11 - 卖出股票， 12 - 卖出开仓， 13 - 买入平仓
+	,EntrustStatus		int			 --委托状态： 0 - 提交到DB, 1 - 提交到UFX， 2 - 未执行， 3 - 部分执行， 4 - 已完成， 10 - 撤单DB, 11 - 撤单UFX, 12 - 撤单成功， 13 - 撤单失败
+	,EntrustPriceType	int			 --委托价格类型： 0 - 限价，'a'五档即成剩撤(上交所市价)， 'A'五档即成剩撤(深交所市价)
+	,PriceType			int			 --价格类型：委卖一， 委买一 ....
 	,EntrustNo			int			 --委托之后，服务器返回的委托号
-	,BatchNo			int			 -- 委托后返回的批号ID
-	,DealStatus			int			 -- 1 - 未成交， 2 - 部分成交， 3 - 已完成
-	,TotalDealAmount	int			 -- 累计成交数量
+	,BatchNo			int			 --委托后返回的批号ID
+	,DealStatus			int			 --成交状态：1 - 未成交， 2 - 部分成交， 3 - 已完成
+	,TotalDealAmount	int			 --累计成交数量
 	,TotalDealBalance	numeric(20, 4) --累计成交金额
 	,TotalDealFee		numeric(20, 4) --累计费用
 	,DealTimes			int			 -- 成交次数
 	,EntrustDate		datetime	 -- 委托时间
-	,CreatedDate		datetime
-	,ModifiedDate		datetime
+	,CreatedDate		datetime	 -- 委托时间	
+	,ModifiedDate		datetime	 -- 修改时间
 	,EntrustFailCode	int			 --委托失败代码
 	,EntrustFailCause	varchar(128) --委托失败原因
 )

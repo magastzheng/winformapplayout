@@ -6,15 +6,15 @@ drop table ufxportfolio
 
 create table ufxportfolio
 (
-	PortfolioId int identity(1, 1) primary key,
-	PortfolioCode varchar(20) not null,
-	PortfolioName varchar(250) not null,
-	AccountCode varchar(32),
-	AccountName varchar(250),
+	PortfolioId int identity(1, 1) primary key,	-- 组合ID
+	PortfolioCode varchar(20) not null,			-- 组合代码
+	PortfolioName varchar(250) not null,		-- 组合名称
+	AccountCode varchar(32),					-- 基金代码
+	AccountName varchar(250),					-- 基金名称
 	AccountType int,			--资金管理类允许透支：1 - 允许， 2 - 不允许
-	AssetNo varchar(20),
-	AssetName varchar(250),
-	PortfolioStatus	int			-- 1 active
+	AssetNo varchar(20),		--资产单元代码
+	AssetName varchar(250),		--资产单元名称
+	PortfolioStatus	int			--组合状态 1 active， 2 - inactive, -1 - none
 )
 
 go 

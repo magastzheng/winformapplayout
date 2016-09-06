@@ -5,6 +5,7 @@ using Controls.Entity;
 using DBAccess;
 using Forms;
 using Model.config;
+using Model.EnumType;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -163,7 +164,7 @@ namespace TradingSystem.Dialog
                 int temp = 0;
                 if (int.TryParse(accountItem.Id, out temp))
                 {
-                    monitorUnit.AccountType = temp;
+                    monitorUnit.EAccountType = (MonitorUnitAccountType)temp;
                 }
             }
 

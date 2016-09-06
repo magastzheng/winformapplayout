@@ -115,7 +115,7 @@ namespace DBAccess
                     item.OperationCopies = (int)reader["OperationCopies"];
                     item.StockPriceType = (StockPriceType)reader["StockPriceType"];
                     item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
-                    item.Status = (int)reader["Status"];
+                    item.Status = (TradingInstanceStatus)reader["Status"];
                     item.Owner = (string)reader["Owner"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
@@ -157,7 +157,7 @@ namespace DBAccess
                     item.OperationCopies = (int)reader["OperationCopies"];
                     item.StockPriceType = (StockPriceType)reader["StockPriceType"];
                     item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
-                    item.Status = (int)reader["Status"];
+                    item.Status = (TradingInstanceStatus)reader["Status"];
                     item.Owner = (string)reader["Owner"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
@@ -204,7 +204,7 @@ namespace DBAccess
                     item.OperationCopies = (int)reader["OperationCopies"];
                     item.StockPriceType = (StockPriceType)reader["StockPriceType"];
                     item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
-                    item.Status = (int)reader["Status"];
+                    item.Status = (TradingInstanceStatus)reader["Status"];
                     item.Owner = (string)reader["Owner"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
@@ -245,7 +245,7 @@ namespace DBAccess
                     item.OperationCopies = (int)reader["OperationCopies"];
                     item.StockPriceType = (StockPriceType)reader["StockPriceType"];
                     item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
-                    item.Status = (int)reader["Status"];
+                    item.Status = (TradingInstanceStatus)reader["Status"];
                     item.Owner = (string)reader["Owner"];
                     item.MonitorUnitName = (string)reader["MonitorUnitName"];
                     item.TemplateId = (int)reader["TemplateId"];
@@ -294,7 +294,7 @@ namespace DBAccess
                     item.OperationCopies = (int)reader["OperationCopies"];
                     item.StockPriceType = (StockPriceType)reader["StockPriceType"];
                     item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
-                    item.Status = (int)reader["Status"];
+                    item.Status = (TradingInstanceStatus)reader["Status"];
                     item.Owner = (string)reader["Owner"];
                     item.MonitorUnitName = (string)reader["MonitorUnitName"];
                     item.TemplateId = (int)reader["TemplateId"];
@@ -344,7 +344,7 @@ namespace DBAccess
                     item.OperationCopies = (int)reader["OperationCopies"];
                     item.StockPriceType = (StockPriceType)reader["StockPriceType"];
                     item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
-                    item.Status = (int)reader["Status"];
+                    item.Status = (TradingInstanceStatus)reader["Status"];
                     item.Owner = (string)reader["Owner"];
                     item.MonitorUnitName = (string)reader["MonitorUnitName"];
                     item.TemplateId = (int)reader["TemplateId"];

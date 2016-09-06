@@ -2,6 +2,7 @@
 using DBAccess;
 using Forms;
 using Model.config;
+using Model.EnumType;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -98,8 +99,8 @@ namespace TradingSystem.View
             this.tbMarketCapOpt.Text = stockTemplate.MarketCapOpt.ToString();
 
             ComboBoxUtil.SetComboBoxSelect(this.cbBenchmark, stockTemplate.Benchmark);
-            ComboBoxUtil.SetComboBoxSelect(this.cbWeightType, stockTemplate.WeightType.ToString());
-            ComboBoxUtil.SetComboBoxSelect(this.cbReplaceType, stockTemplate.ReplaceType.ToString());
+            ComboBoxUtil.SetComboBoxSelect(this.cbWeightType, stockTemplate.EWeightType.ToString());
+            ComboBoxUtil.SetComboBoxSelect(this.cbReplaceType, stockTemplate.EReplaceType.ToString());
         }
 
         private StockTemplate GetTemplate()
@@ -134,7 +135,7 @@ namespace TradingSystem.View
                 int type = 0;
                 if (int.TryParse(item.Id, out type))
                 {
-                    stockTemplate.WeightType = type;
+                    stockTemplate.EWeightType = (WeightType)type;
                 }
             }
 
@@ -144,7 +145,7 @@ namespace TradingSystem.View
                 int type = 0;
                 if (int.TryParse(item.Id, out type))
                 {
-                    stockTemplate.ReplaceType = type;
+                    stockTemplate.EReplaceType = (ReplaceType)type;
                 }
             }
 

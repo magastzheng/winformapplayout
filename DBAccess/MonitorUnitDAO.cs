@@ -1,4 +1,5 @@
-﻿using Model.UI;
+﻿using Model.EnumType;
+using Model.UI;
 using System;
 using System.Collections.Generic;
 
@@ -126,7 +127,7 @@ namespace DBAccess
                     MonitorUnit item = new MonitorUnit();
                     item.MonitorUnitId = (int)reader["MonitorUnitId"];
                     item.MonitorUnitName = (string)reader["MonitorUnitName"];
-                    item.AccountType = (int)reader["AccountType"];
+                    item.EAccountType = (MonitorUnitAccountType)reader["AccountType"];
                     item.PortfolioId = (int)reader["PortfolioId"];
                     item.BearContract = (string)reader["BearContract"];
                     item.StockTemplateId = (int)reader["StockTemplateId"];
@@ -162,7 +163,7 @@ namespace DBAccess
                     MonitorUnit item = new MonitorUnit();
                     item.MonitorUnitId = (int)reader["MonitorUnitId"];
                     item.MonitorUnitName = (string)reader["MonitorUnitName"];
-                    item.AccountType = (int)reader["AccountType"];
+                    item.EAccountType = (MonitorUnitAccountType)reader["AccountType"];
                     item.PortfolioId = (int)reader["PortfolioId"];
                     item.PortfolioName = (string)reader["PortfolioName"];
                     item.BearContract = (string)reader["BearContract"];
@@ -202,7 +203,7 @@ namespace DBAccess
                     MonitorUnit item = new MonitorUnit();
                     item.MonitorUnitId = (int)reader["MonitorUnitId"];
                     item.MonitorUnitName = (string)reader["MonitorUnitName"];
-                    item.AccountType = (int)reader["AccountType"];
+                    item.EAccountType = (MonitorUnitAccountType)reader["AccountType"];
                     item.PortfolioId = (int)reader["PortfolioId"];
                     item.PortfolioName = (string)reader["PortfolioName"];
                     item.BearContract = (string)reader["BearContract"];

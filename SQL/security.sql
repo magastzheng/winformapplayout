@@ -4,12 +4,12 @@ if object_id('securityinfo') is not null
 drop table securityinfo
 
 create table securityinfo(
-	SecuCode		varchar(10) not null,
-	SecuName		varchar(50),
-	ExchangeCode	varchar(10),
-	SecuType		int,
-	ListDate		varchar(10),
-	DeListDate		varchar(10),
+	SecuCode		varchar(10) not null,	--证券交易所代码
+	SecuName		varchar(50),			--证券名称
+	ExchangeCode	varchar(10),			--交易所代码
+	SecuType		int,					--证券类型：1 - 指数， 2 - 股票， 3 - 股指期货
+	ListDate		varchar(10),			--上市交易时间
+	DeListDate		varchar(10),			--退市时间
 	constraint pk_securityinfo_Id primary key(SecuCode, SecuType)
 )
 

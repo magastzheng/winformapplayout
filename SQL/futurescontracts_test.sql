@@ -161,3 +161,5 @@ select @findCode=Code from futurescontract where Code=@Code
 print @findCode
 
 exec procFuturesContractSelect
+
+select * from futurescontract
