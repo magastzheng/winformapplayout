@@ -7,6 +7,7 @@ using System.Linq;
 using Forms;
 using Model.config;
 using BLL.TradeCommand;
+using Model.Constant;
 
 namespace TradingSystem.Dialog
 {
@@ -85,10 +86,10 @@ namespace TradingSystem.Dialog
             DateTime now = DateTime.Now;
             DateTime startDate = new DateTime(now.Year, now.Month, now.Day, 9, 15, 0);
             DateTime endDate = new DateTime(now.Year, now.Month, now.Day, 15, 15, 0);
-            this.tbStartDate.Text = startDate.ToString("yyyyMMdd");
-            this.tbEndDate.Text = endDate.ToString("yyyyMMdd");
-            this.tbStartTime.Text = startDate.ToString("hhmmss");
-            this.tbEndTime.Text = endDate.ToString("hhmmss");
+            this.tbStartDate.Text = startDate.ToString(ConstVariable.DateFormat1);
+            this.tbEndDate.Text = endDate.ToString(ConstVariable.DateFormat1);
+            this.tbStartTime.Text = startDate.ToString(ConstVariable.TimeFormat1);
+            this.tbEndTime.Text = endDate.ToString(ConstVariable.TimeFormat1);
 
             //Initialize the instancecode
             var instances = _tradeInstanceBLL.GetAllInstance();

@@ -17,6 +17,7 @@ using TradingSystem.TradeUtil;
 using Model.Database;
 using BLL.Template;
 using BLL.Frontend;
+using Model.Constant;
 
 namespace TradingSystem.View
 {
@@ -381,7 +382,7 @@ namespace TradingSystem.View
 
         public OpenPositionItem GetSubmitItem(OpenPositionItem openItem)
         {
-            string instanceCode = string.Format("{0}-{1}-{2}", openItem.PortfolioId, openItem.TemplateId, DateTime.Now.ToString("yyyyMMdd"));
+            string instanceCode = string.Format("{0}-{1}-{2}", openItem.PortfolioId, openItem.TemplateId, DateTime.Now.ToString(ConstVariable.DateFormat1));
 
             openItem.InstanceCode = instanceCode;
 

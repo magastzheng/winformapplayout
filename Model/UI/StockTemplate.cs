@@ -1,4 +1,5 @@
 ﻿using Model.Binding;
+using Model.Constant;
 using Model.EnumType;
 using Model.EnumType.EnumTypeConverter;
 using System;
@@ -47,25 +48,25 @@ namespace Model.UI
         [BindingAttribute("addeddate")]
         public string CreatedDate 
         {
-            get { return DCreatedDate.ToString("yyyy-MM-dd"); }
+            get { return DCreatedDate.ToString(ConstVariable.DateFormat); }
         }
 
         [BindingAttribute("addedtime")]
         public string CreatedTime
         {
-            get { return DCreatedDate.ToString("hh:mm:ss"); }
+            get { return DCreatedDate.ToString(ConstVariable.TimeFormat); }
         }
 
         [BindingAttribute("modifieddate")]
         public string ModifiedDate 
         {
-            get { return DModifiedDate.ToString("yyyy-MM-dd"); }
+            get { return DModifiedDate.ToString(ConstVariable.DateFormat); }
         }
 
         [BindingAttribute("modifiedtime")]
         public string ModifiedTime
         {
-            get { return DModifiedDate.ToString("hh:mm:ss"); }
+            get { return DModifiedDate.ToString(ConstVariable.TimeFormat); }
         }
 
         public TemplateStatus EStatus { get; set; }

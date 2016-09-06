@@ -53,11 +53,13 @@
     <Compile Include="config\ComboOption.cs" />
     <Compile Include="config\FunctionItem.cs" />
     <Compile Include="config\Label.cs" />
+    <Compile Include="Constant\ConstVariable.cs" />
     <Compile Include="Database\TradeCommand.cs" />
     <Compile Include="Database\TradeCommandSecurity.cs" />
     <Compile Include="EnumType\FundAccountType.cs" />
     <Compile Include="EnumType\EnumTypeConverter\EntrustRequestHelper.cs" />
     <Compile Include="EnumType\EnumTypeConverter\EnumTypeDisplayHelper.cs" />
+    <Compile Include="EnumType\InvestmentType.cs" />
     <Compile Include="EnumType\MonitorUnitAccountType.cs" />
     <Compile Include="EnumType\PortfolioStatus.cs" />
     <Compile Include="EnumType\PriceType.cs" />
@@ -107,6 +109,7 @@
     <Compile Include="UI\ClosePositionInstanceItem.cs" />
     <Compile Include="UI\ClosePositionItem.cs" />
     <Compile Include="UI\ClosePositionSecurityItem.cs" />
+    <Compile Include="UI\CommandManagementItem.cs" />
     <Compile Include="UI\CommandSecurityItem.cs" />
     <Compile Include="UI\DealFlowItem.cs" />
     <Compile Include="UI\DealSecurityItem.cs" />

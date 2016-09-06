@@ -587,7 +587,7 @@ namespace WAPIWrapperCSharp
 
         public WindData wsd(string windCodes, string fields, DateTime startTime, DateTime endTime, string options)
         {
-            return wsd(windCodes, fields, startTime.ToString("yyyy-MM-dd"), endTime.ToString("yyyy-MM-dd"), options);
+            return wsd(windCodes, fields, startTime.ToString(DateConfig.ShortDateFormat), endTime.ToString(DateConfig.ShortDateFormat), options);
         }
 
         //多值函数wsi，获得分钟序列
@@ -602,7 +602,7 @@ namespace WAPIWrapperCSharp
 
         public WindData wsi(string windCodes, string fields, DateTime startTime, DateTime endTime, string options)
         {
-            return wsi(windCodes, fields, startTime.ToString("yyyy-MM-dd HH:mm:ss"), endTime.ToString("yyyy-MM-dd HH:mm:ss"), options);
+            return wsi(windCodes, fields, startTime.ToString(DateConfig.LongDateFormat), endTime.ToString(DateConfig.LongDateFormat), options);
         }
 
         //多值函数wst，获得日内跳价
@@ -615,7 +615,7 @@ namespace WAPIWrapperCSharp
         }
 
         public WindData wst(string windCodes, string fields, DateTime startTime, DateTime endTime, string options){
-            return wst(windCodes, fields, startTime.ToString("yyyy-MM-dd HH:mm:ss"), endTime.ToString("yyyy-MM-dd HH:mm:ss"), options);
+            return wst(windCodes, fields, startTime.ToString(DateConfig.LongDateFormat), endTime.ToString(DateConfig.LongDateFormat), options);
         }
 
         //多值函数wss，获得历史快照
@@ -766,7 +766,7 @@ namespace WAPIWrapperCSharp
         }
 
         public WindData tdays(DateTime startTime, DateTime endTime, string options) {
-            return tdays(startTime.ToString("yyyy-MM-dd"), endTime.ToString("yyyy-MM-dd"), options);
+            return tdays(startTime.ToString(DateConfig.ShortDateFormat), endTime.ToString(DateConfig.ShortDateFormat), options);
         }
 
         //日历日、工作日、交易日的日期偏移计算
@@ -779,7 +779,7 @@ namespace WAPIWrapperCSharp
         }
 
         public WindData tdaysoffset(DateTime startTime, int offset, string options) {
-            return tdaysoffset(startTime.ToString("yyyy-MM-dd"), offset, options);
+            return tdaysoffset(startTime.ToString(DateConfig.ShortDateFormat), offset, options);
         }
 
         //日历日、工作日、交易日的日期天数计算
@@ -793,7 +793,7 @@ namespace WAPIWrapperCSharp
 
         public WindData tdayscount(DateTime startTime, DateTime endTime, string options)
         {
-            return tdayscount(startTime.ToString("yyyy-MM-dd"), endTime.ToString("yyyy-MM-dd"), options);
+            return tdayscount(startTime.ToString(DateConfig.ShortDateFormat), endTime.ToString(DateConfig.ShortDateFormat), options);
         }
 
         //获取错误码相应的错误信息

@@ -1,4 +1,5 @@
 ﻿using Model.Binding;
+using Model.Constant;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,13 +46,13 @@ namespace Model.UI
         [BindingAttribute("createddate")]
         public string CreatedDate 
         {
-            get { return DCreatedDate.ToString("yyyy-MM-dd"); }
+            get { return DCreatedDate.ToString(ConstVariable.DateFormat); }
         }
 
         [BindingAttribute("createdtime")]
         public string CreatedTime
         {
-            get { return DCreatedDate.ToString("hh:mm:ss"); }
+            get { return DCreatedDate.ToString(ConstVariable.TimeFormat); }
         }
 
         public int TemplateId { get; set; }

@@ -9,6 +9,22 @@ namespace Model.EnumType.EnumTypeConverter
 {
     public class EnumTypeDisplayHelper
     {
+        public static string GetCommandType(CommandType commandType)
+        {
+            string typeName = string.Empty;
+
+            switch (commandType)
+            { 
+                case CommandType.Arbitrage:
+                    typeName = "期现套利";
+                    break;
+                default:
+                    break;
+            }
+
+            return typeName;
+        }
+
         public static string GetExecuteType(ExecuteType executeType)
         {
             string type = string.Empty;
@@ -362,6 +378,22 @@ namespace Model.EnumType.EnumTypeConverter
                     break;
                 case FundAccountType.EntrustedAssets:
                     typeName = "委托资产";
+                    break;
+                default:
+                    break;
+            }
+
+            return typeName;
+        }
+
+        public static string GetInvestmentType(InvestmentType invType)
+        {
+            string typeName = string.Empty;
+
+            switch (invType)
+            { 
+                case InvestmentType.ShortTerm:
+                    typeName = "短期投资";
                     break;
                 default:
                     break;

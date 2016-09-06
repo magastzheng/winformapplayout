@@ -1,4 +1,5 @@
 ﻿using Model.Binding;
+using Model.Constant;
 using Model.EnumType;
 using Model.EnumType.EnumTypeConverter;
 using Model.SecurityInfo;
@@ -85,7 +86,7 @@ namespace Model.UI
         {
             get
             {
-                return EntrustDate.ToString("yyyyMMdd");
+                return EntrustDate.ToString(ConstVariable.DateFormat1);
             }
         }
 

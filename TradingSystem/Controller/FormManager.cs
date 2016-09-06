@@ -67,6 +67,10 @@ namespace TradingSystem.Controller
                         }
                         break;
                     case "commandmanager":
+                        {
+                            formType = typeof(CommandManagementForm);
+                            hasGrid = true;
+                        }
                         break;
                     case "monitorunit":
                         {

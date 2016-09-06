@@ -1,5 +1,6 @@
 ﻿using BLL.SecurityInfo;
 using DBAccess;
+using Model.Constant;
 using Model.EnumType;
 using Model.UI;
 using System;
@@ -38,8 +39,8 @@ namespace BLL.Frontend
                     PriceType = item.PriceType.ToString(),
                     EntrustStatus = item.EntrustStatus.ToString(),
                     EntrustAmount = item.EntrustAmount,
-                    EntrustedDate = item.EntrustDate.ToString("yyyy-MM-dd"),
-                    EntrustedTime = item.EntrustDate.ToString("hhmmss"),
+                    EntrustedDate = item.EntrustDate.ToString(ConstVariable.DateFormat),
+                    EntrustedTime = item.EntrustDate.ToString(ConstVariable.TimeFormat1),
                     EntrustDirection = item.EntrustDirection.ToString(),
                     EntrustNo = item.EntrustNo,
                     DealAmount = item.TotalDealAmount,

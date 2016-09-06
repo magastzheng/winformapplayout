@@ -3204,6 +3204,506 @@ readonly:
 		}
 	]
 },{
+	"grid": "commandmanagement",
+	"columns": [{
+		"name": "date",
+		"text": "日期",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "commandid",
+		"text": "指令序号",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "commandmodifiedtimes",
+		"text": "指令修改次数",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "funddisplay",
+		"text": "基金编号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "portfoliodisplay",
+		"text": "组合序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "instanceid",
+		"text": "交易实例序号",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "instancecode",
+		"text": "交易实例编号",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "arbitragetype",
+		"text": "套利类型",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "arbitrageexecutestage",
+		"text": "套利执行阶段",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "investmenttype",
+		"text": "投资类型",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "bearcontract",
+		"text": "空头合约",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "longcontract",
+		"text": "多头合约",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "templateid",
+		"text": "现货模板编号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "templatename",
+		"text": "现货模板名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "arbitragecopies",
+		"text": "套利份数",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "businesstype",
+		"text": "业务分类",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "executeperson",
+		"text": "执行人",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "entrustexecutestatus",
+		"text": "委托执行状态",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "dealexecutestatus",
+		"text": "成交执行状态",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "executedescription",
+		"text": "执行说明",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "commandmoney",
+		"text": "指令金额",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "thedayentrustamount",
+		"text": "当日委托数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "thedaydealamount",
+		"text": "当日成交数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cumulativeentrustamount",
+		"text": "累计委托数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cumulativedealamount",
+		"text": "累计成交数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "unentrustamount",
+		"text": "未委托数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "undealamount",
+		"text": "未成交数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cumulativedealmoney",
+		"text": "累计成交金额",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "thedaydealmoney",
+		"text": "当日成交金额",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cumulativeentrustmoney",
+		"text": "累计委托金额",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "thedayentrustmoney",
+		"text": "当日委托金额",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "commandsubmitreason",
+		"text": "指令下达原因",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "pendingnumber",
+		"text": "挂单数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "undealmoney",
+		"text": "未成交金额",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "commandsubmitdate",
+		"text": "指令下达日期",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "commandsubmittime",
+		"text": "指令下达时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "commandsubmitperson",
+		"text": "指令下达人员",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "commandwaitsubmitperson",
+		"text": "指令待下达人",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "startdate",
+		"text": "起始日期",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "enddate",
+		"text": "结束日期",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "starttime",
+		"text": "起始时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "endtime",
+		"text": "结束时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "commandstatus",
+		"text": "指令状态",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "commandtype",
+		"text": "指令类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "dealvaluation",
+		"text": "交易评价",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "notes",
+		"text": "备注",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "approvalstatus",
+		"text": "审批状态",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "dispatchstatus",
+		"text": "分发状态",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "approvaltime",
+		"text": "审批时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "approvalperson",
+		"text": "审批操作员",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "dispatchtime",
+		"text": "分发时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "dispatchperson",
+		"text": "分发操作员",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "refusalreasonofapproval",
+		"text": "审批拒绝原因",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "refusalreasonofdispatch",
+		"text": "分发拒绝原因",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "canceltime",
+		"text": "撤销时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "modifyoperator",
+		"text": "修改操作员",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "modifyreason",
+		"text": "修改原因",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "cancelreason",
+		"text": "撤销原因",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "securitytargettype",
+		"text": "证券目标类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "commandlevel",
+		"text": "指令级别",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "netbuymoney",
+		"text": "净买入金额",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "last",
+		"text": "",
+		"width": 5,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},{
 	"grid": "",
 	"columns": [
 	{

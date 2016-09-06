@@ -1,4 +1,5 @@
 ﻿using Model.Binding;
+using Model.Constant;
 using Model.EnumType;
 using Model.EnumType.EnumTypeConverter;
 using System;
@@ -24,18 +25,7 @@ namespace Model.UI
         { 
             get 
             {
-                string ret = string.Empty;
-                switch (ECommandType)
-                {
-                    case EnumType.CommandType.Arbitrage:
-                        {
-                            ret = "期现套利";
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                return ret;
+                return EnumTypeDisplayHelper.GetCommandType(ECommandType);
             } 
         }
 
@@ -101,14 +91,14 @@ namespace Model.UI
         [BindingAttribute("startdate")]
         public string StartDate 
         {
-            get { return DStartDate.ToString("yyyyMMdd"); }
+            get { return DStartDate.ToString(ConstVariable.DateFormat); }
         }
 
         //结束日期yyyyMMdd
         [BindingAttribute("enddate")]
         public string EndDate 
         {
-            get { return DEndDate.ToString("yyyyMMdd"); }
+            get { return DEndDate.ToString(ConstVariable.DateFormat1); }
         }
 
         //开始时间
@@ -117,7 +107,7 @@ namespace Model.UI
         {
             get 
             {
-                return DStartDate.ToString("hh:mm:ss");
+                return DStartDate.ToString(ConstVariable.TimeFormat1);
             }
         }
 
@@ -127,7 +117,7 @@ namespace Model.UI
         {
             get
             {
-                return DEndDate.ToString("hh:mm:ss");
+                return DEndDate.ToString(ConstVariable.TimeFormat);
             }
         }
 
