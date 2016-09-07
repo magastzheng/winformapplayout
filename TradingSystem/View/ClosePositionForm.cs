@@ -49,6 +49,7 @@ namespace TradingSystem.View
         private SortableBindingList<ClosePositionItem> _instDataSource = new SortableBindingList<ClosePositionItem>(new List<ClosePositionItem>());
         private SortableBindingList<ClosePositionSecurityItem> _secuDataSource = new SortableBindingList<ClosePositionSecurityItem>(new List<ClosePositionSecurityItem>());
         private SortableBindingList<ClosePositionCmdItem> _cmdDataSource = new SortableBindingList<ClosePositionCmdItem>(new List<ClosePositionCmdItem>());
+        private ComboOption _futuresOption = new ComboOption();
 
         private Dictionary<int, string> _instanceFuturesMap = new Dictionary<int, string>();
 
@@ -215,11 +216,7 @@ namespace TradingSystem.View
             var futures = _futuresBLL.GetAll();
             if (futures != null && futures.Count > 0)
             {
-                ComboOption futuresOption = new ComboOption
-                {
-                    Items = new List<ComboOptionItem>(),
-                };
-
+                var items = new List<ComboOptionItem>();
                 foreach (var future in futures)
                 {
                     ComboOptionItem option = new ComboOptionItem
@@ -228,10 +225,11 @@ namespace TradingSystem.View
                         Name = future.Code
                     };
 
-                    futuresOption.Items.Add(option);
+                    items.Add(option);
                 }
 
-                TSDataGridViewHelper.SetDataBinding(this.cmdGridView, "futurescontract", futuresOption);
+                _futuresOption.Items = items;
+                TSDataGridViewHelper.SetDataBinding(this.cmdGridView, "futurescontract", _futuresOption);
             }
         }
 
@@ -296,6 +294,8 @@ namespace TradingSystem.View
                     TemplateName = instance.TemplateName,
                 };
 
+                AddFuturesContract(closeItem.FuturesContract);
+
                 _instDataSource.Add(closeItem);
             }
 
@@ -311,6 +311,26 @@ namespace TradingSystem.View
             holdingBLL.Query();
 
             Debug.WriteLine("Only test for the holding!");
+        }
+
+        private void AddFuturesContract(string futuresCode)
+        {
+            if (_futuresOption == null || _futuresOption.Items == null)
+            {
+                return;
+            }
+
+            var findItem = _futuresOption.Items.Find(p => p.Id.Equals(futuresCode));
+            if (findItem == null)
+            {
+                ComboOptionItem option = new ComboOptionItem
+                {
+                    Id = futuresCode,
+                    Name = futuresCode,
+                };
+
+                _futuresOption.Items.Add(option);
+            }
         }
         #endregion
 

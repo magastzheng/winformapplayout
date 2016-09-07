@@ -25,9 +25,9 @@ namespace ControlsTest
             //Application.Run(new ButtonContainerForm());
 
             //Application.Run(new TSDGVComboBox());
-            //Application.Run(new TSDGVComboBoxVarRowForm());
+            Application.Run(new TSDGVComboBoxVarRowForm());
 
-            Application.Run(new TSDGVNumericColumnForm());
+            //Application.Run(new TSDGVNumericColumnForm());
         }
     }
 }
