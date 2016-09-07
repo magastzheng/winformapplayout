@@ -161,60 +161,12 @@ namespace Controls.GridView
             {
                 MouseClickRow(this, e.RowIndex);
             }
-
-            //if (dgv.Columns["copies"] != null)
-            //{
-            //    int copiesIndex = dgv.Columns["copies"].Index;
-            //    DataGridViewRow row = dgv.Rows[e.RowIndex];
-            //    switch (dgv.Columns[e.ColumnIndex].Name)
-            //    {
-            //        case "plus":
-            //            {
-            //                int oldValue = int.Parse(row.Cells["copies"].Value.ToString());
-            //                if (oldValue < TSDataGridViewHelper.MAX_ENTRUST_AMOUNT)
-            //                {
-            //                    row.Cells["copies"].Value = oldValue + 1;
-            //                    if (dgv.UpdateRelatedDataGridHandler != null)
-            //                    {
-            //                        dgv.UpdateRelatedDataGridHandler(UpdateDirection.Increase, e.RowIndex, e.ColumnIndex);
-            //                    }
-            //                }
-            //                else
-            //                {
-            //                    //invalid input
-            //                }
-            //            }
-            //            break;
-            //        case "minus":
-            //            {
-            //                int oldValue = int.Parse(row.Cells["copies"].Value.ToString());
-            //                if (oldValue > 1)
-            //                {
-            //                    row.Cells["copies"].Value = oldValue - 1;
-            //                    if (dgv.UpdateRelatedDataGridHandler != null)
-            //                    { 
-            //                        dgv.UpdateRelatedDataGridHandler(UpdateDirection.Decrease, e.RowIndex, e.ColumnIndex);
-            //                    }
-            //                }
-            //                else
-            //                {
-            //                    //invalid input
-            //                }
-            //            }
-            //            break;
-            //    }
-            //}
         }
 
         public override void Sort(DataGridViewColumn dataGridViewColumn, ListSortDirection direction)
         {
             base.Sort(dataGridViewColumn, direction);
         }
-
-        //private void DataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        //{
-            
-        //}
 
         private void SwitchSelection(DataGridViewRow row, int colIndex)
         {
@@ -259,70 +211,6 @@ namespace Controls.GridView
             return index;
         }
 
-        //private Model.Data.DataRow GetDataRow(DataGridViewRow row, int defSelection)
-        //{
-        //    Model.Data.DataRow dataRow = new Model.Data.DataRow();
-        //    dataRow.Columns = new List<DataValue>();
-
-        //    var ds = this.DataSource;
-        //    if (ds is TSGridViewData)
-        //    {
-        //        var gridData = ds as TSGridViewData;
-
-        //        for (int i = 0, count = gridData.Columns.Count; i < count; i++)
-        //        {
-        //            HSGridColumn column = gridData.Columns[i];
-        //            if (column.ColumnType == HSGridColumnType.None)
-        //                continue;
-
-        //            DataValue dataValue = new DataValue();
-        //            dataValue.Type = column.ValueType;
-        //            if (column.ColumnType == HSGridColumnType.CheckBox)
-        //            {
-        //                dataValue.Value = defSelection;
-        //            }
-        //            else
-        //            {
-        //                dataValue.Value = row.Cells[i].Value;
-        //            }
-        //            dataRow.Columns.Add(dataValue);
-        //        }
-        //    }
-
-        //    return dataRow;
-        //}
-
-        //private Model.Data.DataTable GetSelectionRows()
-        //{
-        //    Model.Data.DataTable dataTable = new Model.Data.DataTable();
-        //    dataTable.ColumnIndex = new Dictionary<string, int>();
-        //    dataTable.Rows = new List<Model.Data.DataRow>();
-
-        //    int cbColIndex = GetCheckBoxColumnIndex();
-        //    if (cbColIndex < 0)
-        //        return dataTable;
-
-        //    var ds = this.DataSource;
-        //    if (ds is TSGridViewData)
-        //    {
-        //        var gridData = ds as TSGridViewData;
-        //        dataTable.ColumnIndex = gridData.DataTable.ColumnIndex;
-
-        //        int validColCount = gridData.Columns.Count - 1;
-        //        foreach (DataGridViewRow row in this.Rows)
-        //        {
-        //            bool isChecked = (bool)row.Cells[cbColIndex].EditedFormattedValue;
-        //            if (!isChecked)
-        //                continue;
-
-        //            Model.Data.DataRow dataRow = GetDataRow(row, 1);
-        //            dataTable.Rows.Add(dataRow);
-        //        }
-        //    }
-
-        //    return dataTable;
-        //}
-
         #region common operation of controls
 
         private void SetSelectionRowBackground(int rowIndex, bool isSelected)
@@ -350,65 +238,6 @@ namespace Controls.GridView
         }
         #endregion
 
-        //#region event handler
-        //private void DataGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
-        //{
-        //    if (e.ColumnIndex < 0 || e.RowIndex < 0)
-        //        return;
-        //    var ds = this.DataSource;
-        //    if (ds is TSGridViewData)
-        //    {
-        //        TSGridViewData gridData = ds as TSGridViewData;
-        //        if (e.ColumnIndex >= 0 && e.ColumnIndex < gridData.Columns.Count)
-        //        {
-        //            var column = gridData.Columns[e.ColumnIndex];
-        //            DataValueType colValType = column.ValueType;
-        //            switch (colValType)
-        //            {
-        //                case DataValueType.Int:
-        //                    {
-        //                        int temp = 0;
-        //                        if (!int.TryParse(e.FormattedValue.ToString(), out temp) || temp < 0)
-        //                        {
-        //                            e.Cancel = true;
-        //                            Rows[e.RowIndex].ErrorText = "请输入数字";
-        //                            //TODO: popup the error message
-        //                            return;
-        //                        }
-        //                        else
-        //                        {
-        //                            e.Cancel = false;
-        //                            Rows[e.RowIndex].ErrorText = string.Empty;
-        //                            return;
-        //                        }
-        //                    }
-        //                    break;
-        //                case DataValueType.Float:
-        //                    {
-        //                        double temp = 0.0f;
-        //                        if (!double.TryParse(e.FormattedValue.ToString(), out temp) || temp < 0.0001)
-        //                        {
-        //                            e.Cancel = true;
-        //                            Rows[e.RowIndex].ErrorText = "请输入数字";
-        //                            return;
-        //                        }
-        //                        else
-        //                        {
-        //                            e.Cancel = false;
-        //                            Rows[e.RowIndex].ErrorText = string.Empty;
-        //                            return;
-        //                        }
-        //                    }
-        //                    break;
-        //                case DataValueType.String:
-        //                    break;
-        //                default:
-        //                    break;
-        //            }
-        //        }
-        //    }
-        //}
-
         private void DataGridView_CellEnter(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex < 0 || e.RowIndex < 0)
@@ -434,66 +263,6 @@ namespace Controls.GridView
         {
             TSDataGridViewHelper.CellFormatting(this, e);
         }
-
-        //private void DataGridView_CellParsing(object sender, DataGridViewCellParsingEventArgs e)
-        //{
-        //    var ds = this.DataSource;
-        //    if (ds is TSGridViewData)
-        //    {
-        //        TSGridViewData gridData = ds as TSGridViewData;
-        //        if (e.ColumnIndex >= 0 && e.ColumnIndex < gridData.Columns.Count)
-        //        {
-        //            var column = gridData.Columns[e.ColumnIndex];
-        //            DataValue dataValue = new DataValue();
-        //            dataValue.Type = column.ValueType;
-        //            switch (column.ValueType)
-        //            {
-        //                case DataValueType.Int:
-        //                    {
-        //                        int temp = 0;
-        //                        if (int.TryParse((string)e.Value, out temp))
-        //                        {
-        //                            dataValue.Value = temp;
-        //                            e.Value = dataValue;
-        //                            e.ParsingApplied = true;
-        //                        }
-        //                        else
-        //                        {
-        //                            //dataValue.Value = temp;
-        //                            e.ParsingApplied = false;
-        //                        }
-        //                    }
-        //                    break;
-        //                case DataValueType.Float:
-        //                    {
-        //                        double temp = 0.0f;
-        //                        if (double.TryParse((string)e.Value, out temp))
-        //                        {
-        //                            dataValue.Value = temp;
-        //                            e.Value = dataValue;
-        //                            e.ParsingApplied = true;
-        //                        }
-        //                        else
-        //                        {
-        //                            //dataValue.Value = temp;
-        //                            e.ParsingApplied = false;
-        //                        }
-        //                    }
-        //                    break;
-        //                case DataValueType.String:
-        //                    {
-        //                        dataValue.Value = e.Value;
-        //                        e.Value = dataValue;
-        //                        e.ParsingApplied = true;
-        //                    }
-        //                    break;
-        //                default:
-        //                    break;
-        //            }
-        //        }
-        //    }
-        //}
-        //#endregion
 
         #region select/unselect
 
