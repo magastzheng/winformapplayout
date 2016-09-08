@@ -106,7 +106,11 @@ namespace TradingSystem.View
 
         private StockTemplate GetTemplate()
         {
-            StockTemplate stockTemplate = new StockTemplate();
+            StockTemplate stockTemplate = new StockTemplate
+            {
+                EStatus = TemplateStatus.Normal,
+            };
+
             if (!string.IsNullOrEmpty(this.tbTemplateNo.Text))
             {
                 int tempNo = -1;

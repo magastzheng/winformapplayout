@@ -54,6 +54,7 @@
     <Compile Include="config\FunctionItem.cs" />
     <Compile Include="config\Label.cs" />
     <Compile Include="Constant\ConstVariable.cs" />
+    <Compile Include="Constant\DateFormat.cs" />
     <Compile Include="Database\TradeCommand.cs" />
     <Compile Include="Database\TradeCommandSecurity.cs" />
     <Compile Include="EnumType\FundAccountType.cs" />
