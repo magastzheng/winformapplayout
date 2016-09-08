@@ -23,6 +23,8 @@ using BLL.TradeCommand;
 using BLL.UFX;
 using Model.BLL;
 using BLL.Frontend;
+using BLL.EntrustCommand;
+using BLL.Product;
 
 namespace TradingSystem.View
 {
@@ -40,6 +42,8 @@ namespace TradingSystem.View
 
         private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
         private TradeCommandSecurityBLL _tradeCommandSecuBLL = new TradeCommandSecurityBLL();
+        private EntrustSecurityBLL _entrustSecurityBLL = new EntrustSecurityBLL();
+        private ProductBLL _productBLL = new ProductBLL();
 
         private SortableBindingList<TradingCommandItem> _cmdDataSource = new SortableBindingList<TradingCommandItem>(new List<TradingCommandItem>());
         private SortableBindingList<EntrustFlowItem> _efDataSource = new SortableBindingList<EntrustFlowItem>(new List<EntrustFlowItem>());
@@ -625,7 +629,27 @@ namespace TradingSystem.View
 
             this.BeginInvoke(new Action(() =>
             {
-                dfItems.ForEach(p => _dfDataSource.Add(p));
+                dfItems.ForEach(p => {
+                    var secuInfo = SecurityInfoManager.Instance.Get(p.SecuCode);
+                    if (secuInfo != null)
+                    {
+                        p.SecuName = secuInfo.SecuName;
+                    }
+
+                    var findFund = LoginManager.Instance.Accounts.Find(o => o.AccountCode.Equals(p.FundNo));
+                    if (findFund != null)
+                    {
+                        p.FundName = findFund.AccountName;
+                    }
+
+                    var findPort = LoginManager.Instance.Portfolios.Find(o => o.CombiNo.Equals(p.PortfolioCode));
+                    if (findPort != null)
+                    {
+                        p.PortfolioName = findPort.CombiName;
+                    }
+
+                    _dfDataSource.Add(p); 
+                });
 
                 this.efGridView.Invalidate();
             }), null);
@@ -640,12 +664,24 @@ namespace TradingSystem.View
             
             this.BeginInvoke(new Action(()=>
             {
+                var entrustItems = _entrustSecurityBLL.GetAllCombine();
                 efItems.ForEach(p => {
                     var secuInfo = SecurityInfoManager.Instance.Get(p.SecuCode);
                     if (secuInfo != null)
                     {
                         p.SecuName = secuInfo.SecuName;
                         p.Market = SecurityItemHelper.GetExchange(secuInfo.ExchangeCode);
+                    }
+
+                    var entrustItem = entrustItems.Find(o => o.RequestId == p.RequestId);
+                    if (entrustItem != null)
+                    {
+                        p.CommandNo = entrustItem.CommandId;
+                        p.FundName = entrustItem.AccountName;
+                        p.PortfolioName = entrustItem.PortfolioName;
+                        p.InstanceId = entrustItem.InstanceId;
+                        p.InstanceNo = entrustItem.InstanceCode;
+                        
                     }
 
                     _efDataSource.Add(p); 
