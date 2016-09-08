@@ -107,5 +107,13 @@ namespace Model.UI
 
         [BindingAttribute("errorinfo")]
         public string ErrorInfo { get; set; }
+
+        public int RequestId { get; set; }
+
+        public string FundCode { get; set; }
+
+        public string Operator { get; set; }
+
+        public string PortfolioCode { get; set; }
     }
 }

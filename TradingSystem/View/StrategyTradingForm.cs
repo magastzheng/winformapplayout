@@ -640,7 +640,16 @@ namespace TradingSystem.View
             
             this.BeginInvoke(new Action(()=>
             {
-                efItems.ForEach(p => _efDataSource.Add(p));
+                efItems.ForEach(p => {
+                    var secuInfo = SecurityInfoManager.Instance.Get(p.SecuCode);
+                    if (secuInfo != null)
+                    {
+                        p.SecuName = secuInfo.SecuName;
+                        p.Market = SecurityItemHelper.GetExchange(secuInfo.ExchangeCode);
+                    }
+
+                    _efDataSource.Add(p); 
+                });
 
                 this.efGridView.Invalidate();
             }), null);

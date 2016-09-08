@@ -11,9 +11,12 @@ namespace DBAccess
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        //entrustcommand table
         private const string SP_CreateEntrustCommand = "procEntrustCommandInsert";
-        private const string SP_CreateEntrustSecurity = "procEntrustSecurityInsert";
         private const string SP_ModifyEntrustCommandStatus = "procEntrustCommandUpdateEntrustStatus";
+
+        //entrustsecurity table
+        private const string SP_CreateEntrustSecurity = "procEntrustSecurityInsert";
         private const string SP_ModifyEntrustSecurityStatusBySubmitId = "procEntrustSecurityUpdateEntrustStatusBySubmitId";
         private const string SP_ModifySecurityEntrustStatus = "procEntrustSecurityUpdateEntrustStatus";
         private const string SP_ModifySecurityEntrustResponseByRequestId = "procEntrustSecurityUpdateResponseByRequestId";

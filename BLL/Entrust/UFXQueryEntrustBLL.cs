@@ -1,4 +1,5 @@
 ﻿using BLL.Product;
+using BLL.SecurityInfo;
 using BLL.UFX;
 using BLL.UFX.impl;
 using log4net;
@@ -23,6 +24,7 @@ namespace BLL.Entrust
         private SecurityBLL _securityBLL = null;
         //private TradeCommandBLL _tradeCommandBLL = null;
         private ProductBLL _productBLL = new ProductBLL();
+        //private 
         private AutoResetEvent _waitEvent = new AutoResetEvent(false);
 
         public UFXQueryEntrustBLL()
@@ -68,6 +70,7 @@ namespace BLL.Entrust
                     {
                         SubmitId = 11111,
                         CommandId = 22222,
+                        InArgs = portfolio.PortfolioNo,
                         Caller = callback,
                     },
 
@@ -121,7 +124,7 @@ namespace BLL.Entrust
         {
             List<UFXQueryEntrustResponse> responseItems = new List<UFXQueryEntrustResponse>();
             var errorResponse = T2ErrorHandler.Handle(dataParser);
-            if (errorResponse.ErrorCode == 0)
+            if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
                 var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXQueryEntrustResponse>();
                 for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
@@ -161,6 +164,9 @@ namespace BLL.Entrust
                         EntrustNo = responseItem.EntrustNo,
                         DeclareSeat = responseItem.ReportSeat,
                         DeclareNo = Convert.ToInt32(responseItem.ReportNo),
+                        RequestId = responseItem.ExtSystemId,
+                        FundCode = responseItem.AccountCode,
+                        PortfolioCode = (string)token.InArgs,
                     };
 
                     entrustFlowItems.Add(efItem);
