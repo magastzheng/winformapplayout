@@ -1,4 +1,5 @@
-﻿using BLL.TradeCommand;
+﻿using BLL.EntrustCommand;
+using BLL.TradeCommand;
 using BLL.UFX.impl;
 using Config.ParamConverter;
 using DBAccess;
@@ -14,8 +15,8 @@ namespace BLL.Entrust.subscriber
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private EntrustSecurityDAO _entrustsecudao = new EntrustSecurityDAO();
         private DealSecurityDAO _dealsecudao = new DealSecurityDAO();
+        private EntrustSecurityBLL _entrustSecurityBLL = new EntrustSecurityBLL();
         private TradeInstanceSecurityBLL _tradeInstanceSecuBLL = new TradeInstanceSecurityBLL();
 
         public UFXEntrustDealBLL()
@@ -51,7 +52,7 @@ namespace BLL.Entrust.subscriber
 
                     if (EntrustRequestHelper.ParseThirdReff(responseItem.ThirdReff, out commandId, out submitId, out requestId))
                     {
-                        _entrustsecudao.UpdateDeal(submitId, commandId, responseItem.StockCode, responseItem.DealAmount, responseItem.DealBalance, responseItem.DealFee);
+                        _entrustSecurityBLL.UpdateDeal(submitId, commandId, responseItem.StockCode, responseItem.DealAmount, responseItem.DealBalance, responseItem.DealFee);
 
                        //TODO: save into database
                         var dealItem = Convert(responseItem);

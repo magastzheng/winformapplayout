@@ -1,4 +1,5 @@
-﻿using BLL.UFX;
+﻿using BLL.EntrustCommand;
+using BLL.UFX;
 using BLL.UFX.impl;
 using DBAccess;
 using log4net;
@@ -20,9 +21,9 @@ namespace BLL.Entrust
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private SecurityBLL _securityBLL = null;
+        private EntrustCommandBLL _entrustCommandBLL = new EntrustCommandBLL();
 
         private EntrustDAO _entrustdao = new EntrustDAO();
-        private EntrustCommandDAO _entrustcmddao = new EntrustCommandDAO();
         private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
 
         private int _timeOut = 30 * 1000;
@@ -136,7 +137,7 @@ namespace BLL.Entrust
                 if (entrustSecuItems.Count > 0)
                 {
                     ret = _entrustdao.UpdateSecurityEntrustStatus(entrustSecuItems, Model.EnumType.EntrustStatus.CancelSuccess);
-                    ret = _entrustcmddao.UpdateEntrustCommandStatus(token.SubmitId, Model.EnumType.EntrustStatus.CancelSuccess);
+                    ret = _entrustCommandBLL.UpdateEntrustCommandStatus(token.SubmitId, Model.EnumType.EntrustStatus.CancelSuccess);
                 }
             }
 

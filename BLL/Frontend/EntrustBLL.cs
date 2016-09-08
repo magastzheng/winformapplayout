@@ -1,10 +1,7 @@
 ﻿using BLL.Entrust;
-using BLL.SecurityInfo;
-using BLL.UFX.impl;
 using DBAccess;
 using Model;
 using Model.BLL;
-using Model.EnumType;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -15,8 +12,6 @@ namespace BLL.Frontend
 {
     public class EntrustBLL
     {
-        private EntrustCommandDAO _entrustcmddao = new EntrustCommandDAO();
-        private EntrustSecurityDAO _entrustsecudao = new EntrustSecurityDAO();
         private EntrustDAO _entrustdao = new EntrustDAO();
         private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
 

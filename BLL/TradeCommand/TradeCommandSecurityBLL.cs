@@ -1,4 +1,5 @@
-﻿using BLL.SecurityInfo;
+﻿using BLL.EntrustCommand;
+using BLL.SecurityInfo;
 using DBAccess;
 using log4net;
 using Model.UI;
@@ -15,7 +16,8 @@ namespace BLL.TradeCommand
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private TradingCommandSecurityDAO _tradecmdsecudao = new TradingCommandSecurityDAO();
-        private EntrustSecurityDAO _entrustsecudao = new EntrustSecurityDAO();
+
+        private EntrustSecurityBLL _entrustSecurityBLL = new EntrustSecurityBLL();
 
         public TradeCommandSecurityBLL()
         { 
@@ -26,7 +28,7 @@ namespace BLL.TradeCommand
         {
             List<CommandSecurityItem> finalSecuItems = new List<CommandSecurityItem>();
             var cmdSecuItems = _tradecmdsecudao.Get(cmdItem.CommandId);
-            var entrustSecuItems = _entrustsecudao.GetByCommandId(cmdItem.CommandId);
+            var entrustSecuItems = _entrustSecurityBLL.GetByCommandId(cmdItem.CommandId);
 
             int weightAmount = 0;
             foreach (var secuItem in cmdSecuItems)

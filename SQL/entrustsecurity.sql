@@ -167,51 +167,51 @@ begin
 		and DealStatus != 3			--已完成成交的不可以撤单
 end
 
-go
-if exists (select name from sysobjects where name='procEntrustSecurityUpdateEntrustResponse')
-drop proc procEntrustSecurityUpdateEntrustResponse
+--go
+--if exists (select name from sysobjects where name='procEntrustSecurityUpdateEntrustResponse')
+--drop proc procEntrustSecurityUpdateEntrustResponse
 
-go
-create proc procEntrustSecurityUpdateEntrustResponse(
-	@SubmitId			int
-	,@CommandId			int
-	,@SecuCode			varchar(10)
-	,@EntrustNo			int
-	,@BatchNo			int
-	,@ModifiedDate		datetime
-	,@EntrustFailCode	int
-	,@EntrustFailCause	varchar(128)
-)
-as
-begin
-	--没有错误表示成功
-	if @EntrustFailCode = 0
-	begin
-		update entrustsecurity
-		set EntrustNo			= @EntrustNo
-			,BatchNo			= @BatchNo
-			,EntrustStatus		= 4				--委托成功
-			,ModifiedDate		= @ModifiedDate
-			,EntrustFailCode	= @EntrustFailCode
-			,EntrustFailCause	= @EntrustFailCause
-		where SubmitId=@SubmitId
-			and CommandId=@CommandId 
-			and SecuCode=@SecuCode
-	end
-	else
-	begin
-		update entrustsecurity
-		set EntrustNo			= @EntrustNo
-			,BatchNo			= @BatchNo
-			,EntrustStatus		= -4				--委托失败
-			,ModifiedDate		= @ModifiedDate
-			,EntrustFailCode	= @EntrustFailCode
-			,EntrustFailCause	= @EntrustFailCause
-		where SubmitId=@SubmitId
-			and CommandId=@CommandId 
-			and SecuCode=@SecuCode
-	end
-end
+--go
+--create proc procEntrustSecurityUpdateEntrustResponse(
+--	@SubmitId			int
+--	,@CommandId			int
+--	,@SecuCode			varchar(10)
+--	,@EntrustNo			int
+--	,@BatchNo			int
+--	,@ModifiedDate		datetime
+--	,@EntrustFailCode	int
+--	,@EntrustFailCause	varchar(128)
+--)
+--as
+--begin
+--	--没有错误表示成功
+--	if @EntrustFailCode = 0
+--	begin
+--		update entrustsecurity
+--		set EntrustNo			= @EntrustNo
+--			,BatchNo			= @BatchNo
+--			,EntrustStatus		= 4				--委托成功
+--			,ModifiedDate		= @ModifiedDate
+--			,EntrustFailCode	= @EntrustFailCode
+--			,EntrustFailCause	= @EntrustFailCause
+--		where SubmitId=@SubmitId
+--			and CommandId=@CommandId 
+--			and SecuCode=@SecuCode
+--	end
+--	else
+--	begin
+--		update entrustsecurity
+--		set EntrustNo			= @EntrustNo
+--			,BatchNo			= @BatchNo
+--			,EntrustStatus		= -4				--委托失败
+--			,ModifiedDate		= @ModifiedDate
+--			,EntrustFailCode	= @EntrustFailCode
+--			,EntrustFailCause	= @EntrustFailCause
+--		where SubmitId=@SubmitId
+--			and CommandId=@CommandId 
+--			and SecuCode=@SecuCode
+--	end
+--end
 
 go
 if exists (select name from sysobjects where name='procEntrustSecurityUpdateResponseByRequestId')
@@ -271,23 +271,23 @@ begin
 	where SubmitId=@SubmitId
 end
 
-go
-if exists (select name from sysobjects where name='procEntrustSecurityUpdateEntrustStatusByRequestId')
-drop proc procEntrustSecurityUpdateEntrustStatusByRequestId
+--go
+--if exists (select name from sysobjects where name='procEntrustSecurityUpdateEntrustStatusByRequestId')
+--drop proc procEntrustSecurityUpdateEntrustStatusByRequestId
 
-go
-create proc procEntrustSecurityUpdateEntrustStatusByRequestId(
-	@RequestId		int
-	,@EntrustStatus		int
-	,@ModifiedDate		datetime
-)
-as
-begin
-	update entrustsecurity
-	set EntrustStatus		= @EntrustStatus
-		,ModifiedDate		= @ModifiedDate
-	where RequestId=@RequestId
-end
+--go
+--create proc procEntrustSecurityUpdateEntrustStatusByRequestId(
+--	@RequestId		int
+--	,@EntrustStatus		int
+--	,@ModifiedDate		datetime
+--)
+--as
+--begin
+--	update entrustsecurity
+--	set EntrustStatus		= @EntrustStatus
+--		,ModifiedDate		= @ModifiedDate
+--	where RequestId=@RequestId
+--end
 
 go
 if exists (select name from sysobjects where name='procEntrustSecurityUpdateDeal')
@@ -349,79 +349,79 @@ begin
 		and SecuCode=@SecuCode
 end
 
-go
-if exists (select name from sysobjects where name='procEntrustSecurityUpdateDealByRequestId')
-drop proc procEntrustSecurityUpdateDealByRequestId
+--go
+--if exists (select name from sysobjects where name='procEntrustSecurityUpdateDealByRequestId')
+--drop proc procEntrustSecurityUpdateDealByRequestId
 
-go
-create proc procEntrustSecurityUpdateDealByRequestId(
-	@RequestId			int
-	,@DealAmount		int
-	,@DealBalance		numeric(20, 4)
-	,@DealFee			numeric(20, 4)
-	,@ModifiedDate		datetime
-)
-as
-begin
-	--成交量?
-	declare @TotalTimes int
-	declare @TotalAmount int
-	declare @EntrustAmount int
-	declare @TotalBalance numeric(20, 4)
-	declare @TotalFee numeric(20, 4)
-	declare @DealStatus int
+--go
+--create proc procEntrustSecurityUpdateDealByRequestId(
+--	@RequestId			int
+--	,@DealAmount		int
+--	,@DealBalance		numeric(20, 4)
+--	,@DealFee			numeric(20, 4)
+--	,@ModifiedDate		datetime
+--)
+--as
+--begin
+--	--成交量?
+--	declare @TotalTimes int
+--	declare @TotalAmount int
+--	declare @EntrustAmount int
+--	declare @TotalBalance numeric(20, 4)
+--	declare @TotalFee numeric(20, 4)
+--	declare @DealStatus int
 
-	select @TotalTimes=DealTimes
-		,@TotalAmount=TotalDealAmount 
-		,@TotalBalance=TotalDealBalance
-		,@TotalFee=TotalDealFee
-		,@EntrustAmount=EntrustAmount
-	from entrustsecurity 
-	where RequestId=@RequestId
+--	select @TotalTimes=DealTimes
+--		,@TotalAmount=TotalDealAmount 
+--		,@TotalBalance=TotalDealBalance
+--		,@TotalFee=TotalDealFee
+--		,@EntrustAmount=EntrustAmount
+--	from entrustsecurity 
+--	where RequestId=@RequestId
 
-	set @TotalTimes=@TotalTimes+1
-	set @TotalAmount=@TotalAmount+@DealAmount
-	set @TotalBalance=@TotalBalance+@DealBalance
-	set @TotalFee=@TotalFee+@DealFee
+--	set @TotalTimes=@TotalTimes+1
+--	set @TotalAmount=@TotalAmount+@DealAmount
+--	set @TotalBalance=@TotalBalance+@DealBalance
+--	set @TotalFee=@TotalFee+@DealFee
 
-	if @TotalAmount=@EntrustAmount
-	begin
-		set @DealStatus=3 --已完成
-	end
-	else
-	begin
-		set @DealStatus=2 --部分完成
-	end
+--	if @TotalAmount=@EntrustAmount
+--	begin
+--		set @DealStatus=3 --已完成
+--	end
+--	else
+--	begin
+--		set @DealStatus=2 --部分完成
+--	end
 
-	update entrustsecurity
-	set DealStatus			= @DealStatus
-		,TotalDealAmount	= @TotalAmount
-		,TotalDealBalance	= @TotalBalance
-		,TotalDealFee		= @TotalFee
-		,DealTimes			= @TotalTimes
-		,ModifiedDate		= @ModifiedDate
-	where RequestId=@RequestId
-end
+--	update entrustsecurity
+--	set DealStatus			= @DealStatus
+--		,TotalDealAmount	= @TotalAmount
+--		,TotalDealBalance	= @TotalBalance
+--		,TotalDealFee		= @TotalFee
+--		,DealTimes			= @TotalTimes
+--		,ModifiedDate		= @ModifiedDate
+--	where RequestId=@RequestId
+--end
 
 go
 if exists (select name from sysobjects where name='procEntrustSecurityUpdateCancel')
-drop proc procEntrustSecurityUpdateCancel
+--drop proc procEntrustSecurityUpdateCancel
 
-go
-create proc procEntrustSecurityUpdateCancel(
-	@CommandId			int
-	,@ModifiedDate		datetime
-)
-as
-begin
-	--成交量?
-	update entrustsecurity
-	set EntrustStatus	= 10
-		,ModifiedDate	= @ModifiedDate
-	where CommandId=@CommandId 
-		and (DealStatus = 1 or DealStatus = 2)		--未成交或部分成交
-		and EntrustStatus = 4	--已完成
-end
+--go
+--create proc procEntrustSecurityUpdateCancel(
+--	@CommandId			int
+--	,@ModifiedDate		datetime
+--)
+--as
+--begin
+--	--成交量?
+--	update entrustsecurity
+--	set EntrustStatus	= 10
+--		,ModifiedDate	= @ModifiedDate
+--	where CommandId=@CommandId 
+--		and (DealStatus = 1 or DealStatus = 2)		--未成交或部分成交
+--		and EntrustStatus = 4	--已完成
+--end
 
 go
 if exists (select name from sysobjects where name='procEntrustSecurityDelete')
@@ -485,42 +485,42 @@ begin
 		and EntrustStatus=@EntrustStatus
 end
 
-go
-if exists (select name from sysobjects where name='procEntrustSecuritySelectBySubmitId')
-drop proc procEntrustSecuritySelectBySubmitId
+--go
+--if exists (select name from sysobjects where name='procEntrustSecuritySelectBySubmitId')
+--drop proc procEntrustSecuritySelectBySubmitId
 
-go
-create proc procEntrustSecuritySelectBySubmitId(
-	@SubmitId	int
-)
-as
-begin
-	select RequestId 
-		,SubmitId 
-		,CommandId			
-		,SecuCode			
-		,SecuType			
-		,EntrustAmount	
-		,EntrustPrice		
-		,EntrustDirection	
-		,EntrustStatus
-		,EntrustPriceType
-		,PriceType
-		,EntrustNo
-		,BatchNo
-		,DealStatus
-		,TotalDealAmount
-		,TotalDealBalance
-		,TotalDealFee
-		,DealTimes
-		,EntrustDate
-		,CreatedDate
-		,ModifiedDate
-		,EntrustFailCode
-		,EntrustFailCause
-	from entrustsecurity
-	where SubmitId = @SubmitId
-end
+--go
+--create proc procEntrustSecuritySelectBySubmitId(
+--	@SubmitId	int
+--)
+--as
+--begin
+--	select RequestId 
+--		,SubmitId 
+--		,CommandId			
+--		,SecuCode			
+--		,SecuType			
+--		,EntrustAmount	
+--		,EntrustPrice		
+--		,EntrustDirection	
+--		,EntrustStatus
+--		,EntrustPriceType
+--		,PriceType
+--		,EntrustNo
+--		,BatchNo
+--		,DealStatus
+--		,TotalDealAmount
+--		,TotalDealBalance
+--		,TotalDealFee
+--		,DealTimes
+--		,EntrustDate
+--		,CreatedDate
+--		,ModifiedDate
+--		,EntrustFailCode
+--		,EntrustFailCause
+--	from entrustsecurity
+--	where SubmitId = @SubmitId
+--end
 
 go
 if exists (select name from sysobjects where name='procEntrustSecuritySelectByCommandId')
@@ -559,80 +559,80 @@ begin
 	where CommandId = @CommandId
 end
 
-go
-if exists (select name from sysobjects where name='procEntrustSecuritySelectAll')
-drop proc procEntrustSecuritySelectAll
+--go
+--if exists (select name from sysobjects where name='procEntrustSecuritySelectAll')
+--drop proc procEntrustSecuritySelectAll
 
-go
-create proc procEntrustSecuritySelectAll
-as
-begin
-	select RequestId
-		,SubmitId 
-		,CommandId			
-		,SecuCode			
-		,SecuType			
-		,EntrustAmount	
-		,EntrustPrice		
-		,EntrustDirection	
-		,EntrustStatus
-		,EntrustPriceType
-		,PriceType
-		,EntrustNo
-		,BatchNo
-		,DealStatus
-		,TotalDealAmount
-		,TotalDealBalance
-		,TotalDealFee
-		,DealTimes
-		,EntrustDate
-		,CreatedDate
-		,ModifiedDate
-		,EntrustFailCode
-		,EntrustFailCause
-	from entrustsecurity
-end
+--go
+--create proc procEntrustSecuritySelectAll
+--as
+--begin
+--	select RequestId
+--		,SubmitId 
+--		,CommandId			
+--		,SecuCode			
+--		,SecuType			
+--		,EntrustAmount	
+--		,EntrustPrice		
+--		,EntrustDirection	
+--		,EntrustStatus
+--		,EntrustPriceType
+--		,PriceType
+--		,EntrustNo
+--		,BatchNo
+--		,DealStatus
+--		,TotalDealAmount
+--		,TotalDealBalance
+--		,TotalDealFee
+--		,DealTimes
+--		,EntrustDate
+--		,CreatedDate
+--		,ModifiedDate
+--		,EntrustFailCode
+--		,EntrustFailCause
+--	from entrustsecurity
+--end
 
-go
-if exists (select name from sysobjects where name='procEntrustSecuritySelectByEntrustStatus')
-drop proc procEntrustSecuritySelectByEntrustStatus
+--go
+--if exists (select name from sysobjects where name='procEntrustSecuritySelectByEntrustStatus')
+--drop proc procEntrustSecuritySelectByEntrustStatus
 
-go
-create proc procEntrustSecuritySelectByEntrustStatus(
-	@SubmitId		int
-	,@CommandId		int
-	,@EntrustStatus	int
-)
-as
-begin
-	select RequestId
-		,SubmitId 
-		,CommandId			
-		,SecuCode			
-		,SecuType			
-		,EntrustAmount	
-		,EntrustPrice		
-		,EntrustDirection	
-		,EntrustStatus
-		,EntrustPriceType
-		,PriceType
-		,EntrustNo
-		,BatchNo
-		,DealStatus
-		,TotalDealAmount
-		,TotalDealBalance
-		,TotalDealFee
-		,DealTimes
-		,EntrustDate
-		,CreatedDate
-		,ModifiedDate
-		,EntrustFailCode
-		,EntrustFailCause
-	from entrustsecurity
-	where SubmitId=@SubmitId 
-		and CommandId=@CommandId
-		and EntrustStatus=@EntrustStatus
-end
+--go
+--create proc procEntrustSecuritySelectByEntrustStatus(
+--	@SubmitId		int
+--	,@CommandId		int
+--	,@EntrustStatus	int
+--)
+--as
+--begin
+--	select RequestId
+--		,SubmitId 
+--		,CommandId			
+--		,SecuCode			
+--		,SecuType			
+--		,EntrustAmount	
+--		,EntrustPrice		
+--		,EntrustDirection	
+--		,EntrustStatus
+--		,EntrustPriceType
+--		,PriceType
+--		,EntrustNo
+--		,BatchNo
+--		,DealStatus
+--		,TotalDealAmount
+--		,TotalDealBalance
+--		,TotalDealFee
+--		,DealTimes
+--		,EntrustDate
+--		,CreatedDate
+--		,ModifiedDate
+--		,EntrustFailCode
+--		,EntrustFailCause
+--	from entrustsecurity
+--	where SubmitId=@SubmitId 
+--		and CommandId=@CommandId
+--		and EntrustStatus=@EntrustStatus
+--end
 
 go
 if exists (select name from sysobjects where name='procEntrustSecuritySelectAllByEntrustStatus')
@@ -751,47 +751,47 @@ begin
 		and EntrustStatus = 4 --已完成委托
 end
 
-go
+--go
 
-if exists (select name from sysobjects where name='procEntrustSecuritySelectCancelCompletedRedo')
-drop proc procEntrustSecuritySelectCancelCompletedRedo
+--if exists (select name from sysobjects where name='procEntrustSecuritySelectCancelCompletedRedo')
+--drop proc procEntrustSecuritySelectCancelCompletedRedo
 
-go
-create proc procEntrustSecuritySelectCancelCompletedRedo(
-	@CommandId int
-)
-as
-begin
-	--获取撤单成功并可以重新委托的证券
-	select RequestId
-		,SubmitId 
-		,CommandId			
-		,SecuCode			
-		,SecuType			
-		,EntrustAmount	
-		,EntrustPrice		
-		,EntrustDirection	
-		,EntrustStatus
-		,EntrustPriceType
-		,PriceType
-		,EntrustNo
-		,BatchNo
-		,DealStatus
-		,TotalDealAmount
-		,TotalDealBalance
-		,TotalDealFee
-		,DealTimes
-		,EntrustDate
-		,CreatedDate
-		,ModifiedDate
-		,EntrustFailCode
-		,EntrustFailCause
-	from entrustsecurity
-	where CommandId = @CommandId 
-		and (DealStatus = 1		--未成交
-		or DealStatus = 2)		--部分成交
-		and EntrustStatus = 12	--已完成委托
-end
+--go
+--create proc procEntrustSecuritySelectCancelCompletedRedo(
+--	@CommandId int
+--)
+--as
+--begin
+--	--获取撤单成功并可以重新委托的证券
+--	select RequestId
+--		,SubmitId 
+--		,CommandId			
+--		,SecuCode			
+--		,SecuType			
+--		,EntrustAmount	
+--		,EntrustPrice		
+--		,EntrustDirection	
+--		,EntrustStatus
+--		,EntrustPriceType
+--		,PriceType
+--		,EntrustNo
+--		,BatchNo
+--		,DealStatus
+--		,TotalDealAmount
+--		,TotalDealBalance
+--		,TotalDealFee
+--		,DealTimes
+--		,EntrustDate
+--		,CreatedDate
+--		,ModifiedDate
+--		,EntrustFailCode
+--		,EntrustFailCause
+--	from entrustsecurity
+--	where CommandId = @CommandId 
+--		and (DealStatus = 1		--未成交
+--		or DealStatus = 2)		--部分成交
+--		and EntrustStatus = 12	--已完成委托
+--end
 
 go
 

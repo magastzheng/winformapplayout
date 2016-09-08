@@ -1,4 +1,5 @@
-﻿using BLL.SecurityInfo;
+﻿using BLL.EntrustCommand;
+using BLL.SecurityInfo;
 using DBAccess;
 using Model.Constant;
 using Model.EnumType;
@@ -13,7 +14,7 @@ namespace BLL.Frontend
 {
     public class QueryBLL
     {
-        private EntrustSecurityDAO _entrustsecudao = new EntrustSecurityDAO();
+        private EntrustSecurityBLL _entrustSecurityBLL = new EntrustSecurityBLL();
 
         public QueryBLL()
         { 
@@ -24,7 +25,7 @@ namespace BLL.Frontend
         public List<EntrustFlowItem> GetEntrustFlow()
         {
             List<EntrustFlowItem> efItems = new List<EntrustFlowItem>();
-            var allItems = _entrustsecudao.GetAllCombine();
+            var allItems = _entrustSecurityBLL.GetAllCombine();
             var entrustedNoDealItems = allItems.Where(p =>
                 (p.EntrustStatus == EntrustStatus.Completed || p.EntrustStatus == EntrustStatus.CancelFail || p.EntrustStatus == EntrustStatus.CancelSuccess)
                 && (p.DealStatus != DealStatus.Completed)
@@ -69,7 +70,7 @@ namespace BLL.Frontend
         {
             List<DealFlowItem> dfItems = new List<DealFlowItem>();
 
-            var allItems = _entrustsecudao.GetAllCombine();
+            var allItems = _entrustSecurityBLL.GetAllCombine();
             var entrustedNoDealItems = allItems.Where(p => p.DealStatus == DealStatus.Completed);
 
             foreach (var item in entrustedNoDealItems)
@@ -85,7 +86,7 @@ namespace BLL.Frontend
                     PortfolioName = item.PortfolioName,
                     EntrustPrice = item.EntrustPrice,
                     DealAmount = item.TotalDealAmount,
-                    DealTime = item.ModifiedDate.ToString("hhmmss"),
+                    DealTime = item.ModifiedDate.ToString(ConstVariable.DateFormat1),
                     EntrustBatchNo = item.BatchNo.ToString(),
                     InstanceId = item.InstanceId.ToString(),
                     InstanceNo = item.InstanceCode,
@@ -104,7 +105,7 @@ namespace BLL.Frontend
 
             foreach (var cmdItem in cmdItems)
             {
-                var cmdSecuItems = _entrustsecudao.GetByCommandId(cmdItem.CommandId);
+                var cmdSecuItems = _entrustSecurityBLL.GetByCommandId(cmdItem.CommandId);
                 entrustSecuItems.AddRange(cmdSecuItems);
             }
 

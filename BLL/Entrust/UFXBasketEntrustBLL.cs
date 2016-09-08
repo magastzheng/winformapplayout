@@ -1,4 +1,5 @@
-﻿using BLL.Frontend;
+﻿using BLL.EntrustCommand;
+using BLL.Frontend;
 using BLL.SecurityInfo;
 using BLL.UFX;
 using BLL.UFX.impl;
@@ -23,9 +24,9 @@ namespace BLL.Entrust
 
         private SecurityBLL _securityBLL = null;
         private TradeCommandBLL _tradeCommandBLL = null;
+        private EntrustCommandBLL _entrustCommandBLL = new EntrustCommandBLL();
         private EntrustDAO _entrustdao = new EntrustDAO();
-        private EntrustCommandDAO _entrustcmddao = new EntrustCommandDAO();
-
+        
         public UFXBasketEntrustBLL()
         {
             _securityBLL = BLLManager.Instance.SecurityBLL;
@@ -173,11 +174,11 @@ namespace BLL.Entrust
                     batchNo = batchNos[0];
                 }
 
-                ret = _entrustcmddao.UpdateEntrustCommandBatchNo(token.SubmitId, batchNo, Model.EnumType.EntrustStatus.Completed, errorResponse.ErrorCode, errorResponse.ErrorMessage);
+                ret = _entrustCommandBLL.UpdateEntrustCommandBatchNo(token.SubmitId, batchNo, Model.EnumType.EntrustStatus.Completed, errorResponse.ErrorCode, errorResponse.ErrorMessage);
             }
             else
             {
-                ret = _entrustcmddao.UpdateEntrustCommandBatchNo(token.SubmitId, 0, Model.EnumType.EntrustStatus.EntrustFailed, errorResponse.ErrorCode, errorResponse.ErrorMessage);
+                ret = _entrustCommandBLL.UpdateEntrustCommandBatchNo(token.SubmitId, 0, Model.EnumType.EntrustStatus.EntrustFailed, errorResponse.ErrorCode, errorResponse.ErrorMessage);
 
                 //TODO:
                 string msg = string.Format("The SubmitId [{0}] was split into several batch no", token.SubmitId);

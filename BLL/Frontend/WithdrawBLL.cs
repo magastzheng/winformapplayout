@@ -1,4 +1,5 @@
 ﻿using BLL.Entrust;
+using BLL.EntrustCommand;
 using BLL.SecurityInfo;
 using BLL.UFX.impl;
 using DBAccess;
@@ -16,11 +17,11 @@ namespace BLL.Frontend
 {
     public class WithdrawBLL
     {
-        private EntrustSecurityDAO _entrustsecudao = new EntrustSecurityDAO();
-        private EntrustCommandDAO _entrustcmddao = new EntrustCommandDAO();
         private EntrustDAO _entrustdao = new EntrustDAO();
         private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
 
+        private EntrustCommandBLL _entrustCommandBLL = new EntrustCommandBLL();
+        private EntrustSecurityBLL _entrustSecurityBLL = new EntrustSecurityBLL();
         private UFXBasketWithdrawBLL _ufxBasketWithdrawBLL = new UFXBasketWithdrawBLL();
         private UFXWithdrawBLL _ufxWithdrawBLL = new UFXWithdrawBLL();
 
@@ -34,13 +35,13 @@ namespace BLL.Frontend
         {
             List<EntrustCommandItem> cancelEntrustCmdItems = new List<EntrustCommandItem>();
 
-            var entrustCmdItems = _entrustcmddao.GetCancel(cmdItem.CommandId);
+            var entrustCmdItems = _entrustCommandBLL.GetCancel(cmdItem.CommandId);
             if (entrustCmdItems == null || entrustCmdItems.Count == 0)
             {
                 return cancelEntrustCmdItems;
             }
 
-            var entrustSecuItems = _entrustsecudao.GetCancel(cmdItem.CommandId);
+            var entrustSecuItems = _entrustSecurityBLL.GetCancel(cmdItem.CommandId);
             if (entrustSecuItems == null || entrustSecuItems.Count == 0)
             {
                 return cancelEntrustCmdItems;
@@ -148,7 +149,7 @@ namespace BLL.Frontend
 
         public List<EntrustCommandItem> GetEntrustedCmdItems(TradingCommandItem cmdItem)
         {
-            return _entrustcmddao.GetCancel(cmdItem.CommandId);
+            return _entrustCommandBLL.GetCancel(cmdItem.CommandId);
         }
 
         //public List<EntrustSecurityItem> GetEntrustedSecuItems(TradingCommandItem cmdItem)
@@ -164,7 +165,7 @@ namespace BLL.Frontend
 
         public List<CancelRedoItem> GetEnrustedSecuItems(EntrustCommandItem cmdItem)
         {
-            var entrustSecuItems = _entrustsecudao.GetCancelBySumbitId(cmdItem.SubmitId);
+            var entrustSecuItems = _entrustSecurityBLL.GetCancelBySumbitId(cmdItem.SubmitId);
             var cancelItemList = new List<CancelRedoItem>();
             if (entrustSecuItems == null)
             {
@@ -188,7 +189,7 @@ namespace BLL.Frontend
 
         public List<CancelRedoItem> GetCancelRedoBySubmitId(EntrustCommandItem cmdItem)
         {
-            var entrustSecuItems = _entrustsecudao.GetCancelRedoBySubmitId(cmdItem.SubmitId);
+            var entrustSecuItems = _entrustSecurityBLL.GetCancelRedoBySubmitId(cmdItem.SubmitId);
             var cancelItemList = new List<CancelRedoItem>();
             if (entrustSecuItems == null)
             {

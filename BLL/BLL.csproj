@@ -55,6 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EntrustCommand\EntrustCommandBLL.cs" />
+    <Compile Include="EntrustCommand\EntrustSecurityBLL.cs" />
     <Compile Include="Entrust\subscriber\IUFXSubsriberBLLBase.cs" />
     <Compile Include="Entrust\subscriber\UFXEntrustCompletedBLL.cs" />
     <Compile Include="Entrust\subscriber\UFXEntrustDealBLL.cs" />
