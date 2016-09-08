@@ -152,9 +152,20 @@ namespace DBAccess
                     item.TemplateName = (string)reader["TemplateName"];
                     item.FutureCopies = (int)reader["FuturesCopies"];
                     item.MarketCapOpt = (double)(decimal)reader["MarketCapOpt"];
+                    item.EStatus = (TemplateStatus)reader["Status"];
                     item.EWeightType = (WeightType)reader["WeightType"];
                     item.EReplaceType = (ReplaceType)reader["ReplaceType"];
                     item.Benchmark = (string)reader["BenchmarkId"];
+
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+                    {
+                        item.DCreatedDate = (DateTime)reader["CreatedDate"];
+                    }
+
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+                    {
+                        item.DModifiedDate = (DateTime)reader["ModifiedDate"];
+                    }
 
                     stockTemplates.Add(item);
                 }
@@ -187,6 +198,16 @@ namespace DBAccess
                     item.EWeightType = (WeightType)reader["WeightType"];
                     item.EReplaceType = (ReplaceType)reader["ReplaceType"];
                     item.Benchmark = (string)reader["BenchmarkId"];
+
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+                    {
+                        item.DCreatedDate = (DateTime)reader["CreatedDate"];
+                    }
+
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+                    {
+                        item.DModifiedDate = (DateTime)reader["ModifiedDate"];
+                    }
 
                     stockTemplates.Add(item);
                 }

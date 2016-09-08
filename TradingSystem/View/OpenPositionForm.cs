@@ -33,6 +33,7 @@ namespace TradingSystem.View
         private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
         private TemplateBLL _templateBLL = new TemplateBLL();
         private MonitorUnitBLL _monitorUnitBLL = new MonitorUnitBLL();
+        private FuturesContractBLL _futuresContractBLL = new FuturesContractBLL();
 
         private SortableBindingList<OpenPositionItem> _monitorDataSource;
         private SortableBindingList<OpenPositionSecurityItem> _securityDataSource;
@@ -143,16 +144,10 @@ namespace TradingSystem.View
             
             if (monitorList.Count > 0)
             {
-                List<int> selectIndex = TSDataGridViewHelper.GetSelectRowIndex(monitorGridView);
-                if (selectIndex.Count > 0)
+                var selectedItems = _monitorDataSource.Where(p => p.Selection).ToList();
+                if (selectedItems.Count > 0)
                 {
-                    List<OpenPositionItem> selectMonitors = new List<OpenPositionItem>();
-                    foreach (var index in selectIndex)
-                    {
-                        selectMonitors.Add(_monitorDataSource[index]);
-                    }
-
-                    LoadSecurityData(selectMonitors);
+                    LoadSecurityData(selectedItems);
                 }
             }
 
@@ -290,20 +285,48 @@ namespace TradingSystem.View
                 var targetItem = secuList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
                 var marketData = QuoteCenter.Instance.GetMarketData(targetItem);
                 secuItem.LastPrice = marketData.CurrentPrice;
-                secuItem.CommandMoney = secuItem.LastPrice * secuItem.EntrustAmount;
                 secuItem.BuyAmount = marketData.BuyAmount;
                 secuItem.SellAmount = marketData.SellAmount;
                 secuItem.ESuspendFlag = marketData.SuspendFlag;
                 secuItem.ELimitUpDownFlag = QuotePriceHelper.GetLimitUpDownFlag(marketData.CurrentPrice, marketData.LowLimitPrice, marketData.HighLimitPrice);
+
+                if (secuItem.SecuType == SecurityType.Stock)
+                {
+                    secuItem.CommandMoney = secuItem.LastPrice * secuItem.EntrustAmount;
+                }
+                else if (secuItem.SecuType == SecurityType.Futures)
+                {
+                    secuItem.CommandMoney = _futuresContractBLL.GetMoney(secuItem.SecuCode, secuItem.EntrustAmount, secuItem.LastPrice);
+                }
+                else
+                {
+                    string msg = string.Format("存在不支持的证券类型: {0}", secuItem.SecuCode);
+                    throw new NotSupportedException(msg);
+                }
+            }
+
+            var selectedOpenItems = _monitorDataSource.Where(p => p.Selection).ToList();
+            foreach (var openItem in selectedOpenItems)
+            { 
+                var futureItem = _securityDataSource.ToList().Find(p => p.MonitorId == openItem.MonitorId && p.SecuType == SecurityType.Futures);
+                if(futureItem != null)
+                {
+                    openItem.FuturesMktCap = futureItem.CommandMoney;
+                }
+
+                var stockItems = _securityDataSource.Where(p => p.MonitorId == openItem.MonitorId && p.SecuType == SecurityType.Stock).ToList();
+                if (stockItems.Count > 0)
+                {
+                    openItem.StockMktCap = stockItems.Sum(p => p.CommandMoney);
+                }
             }
         }
 
         private void GiveOrder()
         {
-            List<int> selectedList = TSDataGridViewHelper.GetSelectRowIndex(this.monitorGridView);
-            foreach (var index in selectedList)
+            var selectedItems = _monitorDataSource.Where(p => p.Selection).ToList();
+            foreach (var openItem in selectedItems)
             {
-                var openItem = _monitorDataSource[index];
                 var newOpenItem = GetSubmitItem(openItem);
                 if (newOpenItem == null)
                 {

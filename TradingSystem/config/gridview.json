@@ -230,7 +230,7 @@ readonly:
 		},{
 		"name": "instancecode",
 		"text": "实例编号",
-		"width": 80,
+		"width": 160,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -2115,7 +2115,7 @@ readonly:
 		"text": "现货证券个数",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 1,
+		"valuetype": 0,
 		"visible": 1,
 		"readonly": 1
 		},{
@@ -2128,6 +2128,7 @@ readonly:
 		"readonly": 1
 		}
 	]
+
 },{
 	"grid": "openpositionsecurity",
 	"columns": [
@@ -2138,7 +2139,7 @@ readonly:
 		"columntype": 1,
 		"valuetype": 0,
 		"visible": 1,
-		"readonly": 1
+		"readonly": 0
 		},{
 		"name": "monitorid",
 		"text": "监控序号",

@@ -9,6 +9,9 @@ namespace Model.UI
 {
     public class OpenPositionItem
     {
+        [BindingAttribute("selection")]
+        public bool Selection { get; set; }
+
         [BindingAttribute("copies")]
         public int Copies { get; set; }
 
@@ -45,8 +48,8 @@ namespace Model.UI
         [BindingAttribute("arbitrageopporunity")]
         public double ArbitrageOpporunity { get; set; }
 
-        [BindingAttribute("futuremktcap")]
-        public double FutureMktCap { get; set; }
+        [BindingAttribute("futuresmktcap")]
+        public double FuturesMktCap { get; set; }
 
         [BindingAttribute("stockmktcap")]
         public double StockMktCap { get; set; }

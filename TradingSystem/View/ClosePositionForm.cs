@@ -446,9 +446,23 @@ namespace TradingSystem.View
                 var targetItem = secuList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
                 var marketData = QuoteCenter.Instance.GetMarketData(targetItem);
                 secuItem.LastPrice = marketData.CurrentPrice;
-                secuItem.CommandMoney = secuItem.LastPrice * secuItem.EntrustAmount;
+               
                 //secuItem.ESuspendFlag = marketData.SuspendFlag;
                 secuItem.ELimitUpDownFlag = QuotePriceHelper.GetLimitUpDownFlag(marketData.CurrentPrice, marketData.LowLimitPrice, marketData.HighLimitPrice);
+
+                if (secuItem.SecuType == SecurityType.Stock)
+                {
+                    secuItem.CommandMoney = secuItem.LastPrice * secuItem.EntrustAmount;
+                }
+                else if (secuItem.SecuType == SecurityType.Futures)
+                {
+                    secuItem.CommandMoney = _futuresBLL.GetMoney(secuItem.SecuCode, secuItem.EntrustAmount, secuItem.LastPrice);
+                }
+                else
+                {
+                    string msg = string.Format("存在不支持的证券类型: {0}", secuItem.SecuCode);
+                    throw new NotSupportedException(msg);
+                }
             }
         }
 

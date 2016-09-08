@@ -31,7 +31,7 @@ namespace DBAccess
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
             _dbHelper.AddInParameter(dbCommand, "@MonitorUnitName", System.Data.DbType.String, monitorUnit.MonitorUnitName);
-            _dbHelper.AddInParameter(dbCommand, "@AccountType", System.Data.DbType.Int32, monitorUnit.AccountType);
+            _dbHelper.AddInParameter(dbCommand, "@AccountType", System.Data.DbType.Int32, monitorUnit.EAccountType);
             _dbHelper.AddInParameter(dbCommand, "@PortfolioId", System.Data.DbType.Int32, monitorUnit.PortfolioId);
             _dbHelper.AddInParameter(dbCommand, "@BearContract", System.Data.DbType.String, monitorUnit.BearContract);
             _dbHelper.AddInParameter(dbCommand, "@StockTemplateId", System.Data.DbType.Int32, monitorUnit.StockTemplateId);
@@ -62,7 +62,7 @@ namespace DBAccess
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Modify);
             _dbHelper.AddInParameter(dbCommand, "@MonitorUnitId", System.Data.DbType.Int32, monitorUnit.MonitorUnitId);
             _dbHelper.AddInParameter(dbCommand, "@MonitorUnitName", System.Data.DbType.String, monitorUnit.MonitorUnitName);
-            _dbHelper.AddInParameter(dbCommand, "@AccountType", System.Data.DbType.Int32, monitorUnit.AccountType);
+            _dbHelper.AddInParameter(dbCommand, "@AccountType", System.Data.DbType.Int32, (int)monitorUnit.EAccountType);
             _dbHelper.AddInParameter(dbCommand, "@PortfolioId", System.Data.DbType.Int32, monitorUnit.PortfolioId);
             _dbHelper.AddInParameter(dbCommand, "@BearContract", System.Data.DbType.String, monitorUnit.BearContract);
             _dbHelper.AddInParameter(dbCommand, "@StockTemplateId", System.Data.DbType.Int32, monitorUnit.StockTemplateId);

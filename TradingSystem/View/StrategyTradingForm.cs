@@ -1102,31 +1102,32 @@ namespace TradingSystem.View
         {
             int copies = (int)nudCopies.Value;
 
-            if (copies >= 0)
+            if (copies == 0)
             {
-                _eiDataSource.ToList().ForEach(p => p.Copies = copies);
+                _eiDataSource.ToList()
+                    .ForEach(p => p.Copies = copies);
             }
             else
             {
-                foreach (var eiItem in _eiDataSource)
+                _eiDataSource.Where(p => p.Copies == 0)
+                    .ToList()
+                    .ForEach(o => o.Copies = copies);
+            }
+
+            foreach (var eiItem in _eiDataSource)
+            {
+                var cmdItem = _cmdDataSource.Single(p => p.Selection && p.CommandId == eiItem.CommandNo);
+                if (cmdItem == null)
                 {
-                    var cmdItem = _cmdDataSource.Single(p => p.Selection && p.CommandId == eiItem.CommandNo);
-                    if (cmdItem == null)
-                    {
-                        return false;
-                    }
-                    //if (cmdItem != null && cmdItem.CommandNum < eiItem.Copies)
-                    //{
-                    //    return false;
-                    //}
+                    return false;
                 }
             }
 
-            //var selItems = _eiDataSource.Where(p => p.Selection && p.Copies == 0).ToList();
-            //if (selItems != null && selItems.Count > 0)
-            //{
-            //    return false;
-            //}
+            var selItems = _eiDataSource.Where(p => p.Copies == 0).ToList();
+            if (selItems != null && selItems.Count > 0)
+            {
+                return false;
+            }
 
             return true;
         }

@@ -263,6 +263,7 @@ namespace BLL.Frontend
             double shortEntrustRatio = GetRatio(totalShortEntrustAmount, totalShortCmdAmount);
             double shortDealRatio = GetRatio(totalShortDealAmount, totalShortCmdAmount);
 
+            uiCommand.CommandAmount = totalCmdAmount;
             uiCommand.TargetNum = (int)Math.Ceiling(entrustRatio);
             uiCommand.LongMoreThan = longEntrustRatio;
             uiCommand.BearMoreThan = shortEntrustRatio;
