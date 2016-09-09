@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Model.t2sdk;
+using Model.UFX;
 using System;
 
 namespace ModelTest
@@ -10,19 +10,19 @@ namespace ModelTest
         [TestMethod]
         public void TestEnumChar()
         {
-            PushMessageType messageType = PushMessageType.None;
+            UFXPushMessageType messageType = UFXPushMessageType.None;
             var typeChar = Char.Parse("b");
-            PushMessageType tempType;
+            UFXPushMessageType tempType;
             if(Enum.TryParse(typeChar.ToString(), true, out tempType))
             {
                 messageType = tempType;
             }
             else
             {
-                messageType = (PushMessageType)typeChar;
+                messageType = (UFXPushMessageType)typeChar;
             }
             
-            Assert.AreEqual(PushMessageType.EntrustConfirm, messageType);
+            Assert.AreEqual(UFXPushMessageType.EntrustConfirm, messageType);
         }
     }
 }

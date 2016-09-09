@@ -1,7 +1,7 @@
 ﻿using BLL.UFX.impl;
 using log4net;
 using Model.Binding.BindingUtil;
-using Model.t2sdk;
+using Model.UFX;
 using System.Collections.Generic;
 
 namespace BLL.Entrust.subscriber

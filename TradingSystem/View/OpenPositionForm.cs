@@ -18,6 +18,7 @@ using Model.Database;
 using BLL.Template;
 using BLL.Frontend;
 using Model.Constant;
+using Model.Dialog;
 
 namespace TradingSystem.View
 {
@@ -253,6 +254,7 @@ namespace TradingSystem.View
                     {
                         QueryQuote();
 
+                        this.monitorGridView.Invalidate();
                         this.securityGridView.Invalidate();    
                     }
                     break;
@@ -327,13 +329,15 @@ namespace TradingSystem.View
             var selectedItems = _monitorDataSource.Where(p => p.Selection).ToList();
             foreach (var openItem in selectedItems)
             {
-                var newOpenItem = GetSubmitItem(openItem);
-                if (newOpenItem == null)
+                var orderItem = GetSubmitItem(openItem);
+                if (orderItem == null)
                 {
                     string msg = string.Format("对监控单元[{0}]下达指令失败", openItem.MonitorName);
                     MessageBox.Show(this, msg, "失败", MessageBoxButtons.OK);
                     continue;
                 }
+
+                var newOpenItem = GetOpenPositionItem(orderItem);
 
                 int instanceId = -1;
                 string instanceCode = newOpenItem.InstanceCode;
@@ -380,7 +384,9 @@ namespace TradingSystem.View
                         EFuturesDirection = EntrustDirection.SellOpen,
                         EEntrustStatus = EntrustStatus.NoExecuted,
                         EDealStatus = DealStatus.NoDeal,
-                        ModifiedTimes = 1
+                        ModifiedTimes = 1,
+                        DStartDate = orderItem.StartDate,
+                        DEndDate = orderItem.EndDate,
                     };
 
                     var cmdSecuItems = GetSelectCommandSecurities(newOpenItem, -1);
@@ -403,14 +409,14 @@ namespace TradingSystem.View
             }
         }
 
-        public OpenPositionItem GetSubmitItem(OpenPositionItem openItem)
+        public OrderConfirmItem GetSubmitItem(OpenPositionItem openItem)
         {
-            string instanceCode = string.Format("{0}-{1}-{2}", openItem.PortfolioId, openItem.TemplateId, DateTime.Now.ToString(ConstVariable.DateFormat1));
+            string instanceCode = string.Format("{0}-{1}-{2}", openItem.PortfolioId, openItem.TemplateId, DateFormat.Format(DateTime.Now, ConstVariable.DateFormat1));
 
             openItem.InstanceCode = instanceCode;
 
-            OpenPositionItem newOpenItem = null;
-
+            //OpenPositionItem newOpenItem = null;
+            OrderConfirmItem orderItem = null;
             //Open the dialog
             OpenPositionDialog dialog = new OpenPositionDialog();
             dialog.Owner = this;
@@ -419,14 +425,49 @@ namespace TradingSystem.View
             dialog.OnLoadData(dialog, openItem);
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                newOpenItem = (OpenPositionItem)dialog.GetData();
+                orderItem = (OrderConfirmItem)dialog.GetData();
                 dialog.Dispose();
             }
             else
             {
-                newOpenItem = null;
                 dialog.Dispose();
             }
+
+            //if (orderItem != null)
+            //{
+            //    newOpenItem = new OpenPositionItem 
+            //    {
+            //        MonitorId = orderItem.MonitorId,
+            //        MonitorName = orderItem.MonitorName,
+            //        PortfolioId = orderItem.PortfolioId,
+            //        PortfolioName = orderItem.PortfolioName,
+            //        TemplateId = orderItem.TemplateId,
+            //        TemplateName = orderItem.TemplateName,
+            //        Copies = orderItem.Copies,
+            //        FuturesContract = orderItem.FuturesContract,
+            //        InstanceCode = orderItem.InstanceCode,
+            //    };
+            //}
+
+            //return newOpenItem;
+
+            return orderItem;
+        }
+
+        private OpenPositionItem GetOpenPositionItem(OrderConfirmItem orderItem)
+        {
+            var newOpenItem = new OpenPositionItem
+            {
+                MonitorId = orderItem.MonitorId,
+                MonitorName = orderItem.MonitorName,
+                PortfolioId = orderItem.PortfolioId,
+                PortfolioName = orderItem.PortfolioName,
+                TemplateId = orderItem.TemplateId,
+                TemplateName = orderItem.TemplateName,
+                Copies = orderItem.Copies,
+                FuturesContract = orderItem.FuturesContract,
+                InstanceCode = orderItem.InstanceCode,
+            };
 
             return newOpenItem;
         }

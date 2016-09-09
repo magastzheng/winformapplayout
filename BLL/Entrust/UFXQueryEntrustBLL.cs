@@ -3,9 +3,11 @@ using BLL.SecurityInfo;
 using BLL.UFX;
 using BLL.UFX.impl;
 using log4net;
+using Model;
 using Model.Binding.BindingUtil;
+using Model.BLL;
 using Model.Data;
-using Model.t2sdk;
+using Model.UFX;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -25,7 +27,7 @@ namespace BLL.Entrust
         //private TradeCommandBLL _tradeCommandBLL = null;
         private ProductBLL _productBLL = new ProductBLL();
         //private 
-        private AutoResetEvent _waitEvent = new AutoResetEvent(false);
+        //private AutoResetEvent _waitEvent = new AutoResetEvent(false);
 
         public UFXQueryEntrustBLL()
         {
@@ -71,6 +73,7 @@ namespace BLL.Entrust
                         SubmitId = 11111,
                         CommandId = 22222,
                         InArgs = portfolio.PortfolioNo,
+                        WaitEvent = new AutoResetEvent(false),
                         Caller = callback,
                     },
 
@@ -78,6 +81,28 @@ namespace BLL.Entrust
                 };
 
                 var result = _securityBLL.QueryEntrust(requests, callbacker);
+
+                BLLResponse bllResponse = new BLLResponse();
+                if (result == Model.ConnectionCode.Success)
+                {
+                    callbacker.Token.WaitEvent.WaitOne();
+                    var errorResponse = callbacker.Token.OutArgs as UFXErrorResponse;
+                    if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
+                    {
+                        bllResponse.Code = ConnectionCode.Success;
+                        bllResponse.Message = "Success Entrust";
+                    }
+                    else
+                    {
+                        bllResponse.Code = ConnectionCode.FailEntrust;
+                        bllResponse.Message = "Fail Entrust: " + errorResponse.ErrorMessage;
+                    }
+                }
+                else
+                {
+                    bllResponse.Code = result;
+                    bllResponse.Message = "Fail to submit in ufx.";
+                }
             }
            
 
@@ -124,6 +149,8 @@ namespace BLL.Entrust
         {
             List<UFXQueryEntrustResponse> responseItems = new List<UFXQueryEntrustResponse>();
             var errorResponse = T2ErrorHandler.Handle(dataParser);
+            token.OutArgs = errorResponse;
+
             if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
                 var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXQueryEntrustResponse>();
@@ -175,7 +202,10 @@ namespace BLL.Entrust
                 token.Caller(token, entrustFlowItems, errorResponse);
             }
 
-            //_waitEvent.Set();
+            if (token.WaitEvent != null)
+            {
+                token.WaitEvent.Set();
+            }
 
             return responseItems.Count();
         }

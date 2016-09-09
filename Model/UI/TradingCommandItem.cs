@@ -91,14 +91,14 @@ namespace Model.UI
         [BindingAttribute("startdate")]
         public string StartDate 
         {
-            get { return DStartDate.ToString(ConstVariable.DateFormat1); }
+            get { return DateFormat.Format(DStartDate, ConstVariable.DateFormat1); }
         }
 
         //结束日期yyyyMMdd
         [BindingAttribute("enddate")]
         public string EndDate 
         {
-            get { return DEndDate.ToString(ConstVariable.DateFormat1); }
+            get { return DateFormat.Format(DEndDate, ConstVariable.DateFormat1); }
         }
 
         //开始时间
@@ -107,7 +107,7 @@ namespace Model.UI
         {
             get 
             {
-                return DStartDate.ToString(ConstVariable.TimeFormat1);
+                return DateFormat.Format(DStartDate, ConstVariable.TimeFormat1);
             }
         }
 
@@ -117,7 +117,7 @@ namespace Model.UI
         {
             get
             {
-                return DEndDate.ToString(ConstVariable.TimeFormat1);
+                return DateFormat.Format(DEndDate, ConstVariable.TimeFormat1);
             }
         }
 

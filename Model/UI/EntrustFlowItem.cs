@@ -1,4 +1,5 @@
 ﻿using Model.Binding;
+using Model.UFX;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -115,5 +116,9 @@ namespace Model.UI
         public string Operator { get; set; }
 
         public string PortfolioCode { get; set; }
+
+        public UFXMarketCode EMarketCode { get; set; }
+
+        public UFXEntrustDirection EEntrustDirection { get; set; }
     }
 }

@@ -41,10 +41,10 @@ namespace BLL.TradeCommand
             return _tradeinstancedao.Update(tradeInstance, tradeinstSecus);
         }
 
-        public int Update(TradingInstance tradeInstance, ClosePositionItem closeItem, List<ClosePositionSecurityItem> secuItems)
-        {
-            return -1;
-        }
+        //public int Update(TradingInstance tradeInstance, ClosePositionItem closeItem, List<ClosePositionSecurityItem> secuItems)
+        //{
+        //    return -1;
+        //}
 
         public TradingInstance GetInstance(int instanceId)
         {

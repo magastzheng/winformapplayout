@@ -2,13 +2,10 @@
 using BLL.UFX.impl;
 using log4net;
 using Model.Binding.BindingUtil;
-using Model.t2sdk;
-using System;
+using Model.UFX;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace BLL.Entrust
 {

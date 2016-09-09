@@ -662,6 +662,12 @@ namespace TradingSystem.View
                 return -1;
             var efItems = data as List<EntrustFlowItem>;
             
+            if(!T2ErrorHandler.Success(errorResponse.ErrorCode))
+            {
+                MessageBox.Show(this, errorResponse.ErrorMessage, "错误", MessageBoxButtons.OK);
+                return -1;
+            }
+
             this.BeginInvoke(new Action(()=>
             {
                 var entrustItems = _entrustSecurityBLL.GetAllCombine();
@@ -787,13 +793,13 @@ namespace TradingSystem.View
             //TODO:
             if (!ValidateCopies())
             {
-                MessageBox.Show(this, "委托份数非法，请输入正确的委托份数！", "警告", MessageBoxButtons.OK);
+                MessageBox.Show(this, "委托份数非法，请输入正确的委托份数！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                 return;
             }
 
             if (_secuDataSource.Count == 0)
             {
-                MessageBox.Show(this, "没有需要委托的证券！", "警告", MessageBoxButtons.OK);
+                MessageBox.Show(this, "没有需要委托的证券！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                 return;
             }
 
@@ -826,7 +832,7 @@ namespace TradingSystem.View
             if (selectedEntrustItems == null || selectedEntrustItems.Count == 0)
             {
                 //TODO: show message
-                MessageBox.Show(this, "请选择要委托的指令！", "警告", MessageBoxButtons.OK);
+                MessageBox.Show(this, "请选择要委托的指令！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                 return;
             }
 
@@ -835,20 +841,27 @@ namespace TradingSystem.View
                 int count = _secuDataSource.Count(p => p.Selection && p.CommandId == eiItem.CommandNo);
                 if (count == 0)
                 {
-                    MessageBox.Show(this, "请确保委托指令中包含有效证券！", "警告", MessageBoxButtons.OK);
+                    MessageBox.Show(this, "请确保委托指令中包含有效证券！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                     return;
                 }
             }
 
             if (!ValidateEntrust())
             {
-                MessageBox.Show(this, "请设置委托的证券数量和价格，证券数量需为正值，价格不能为零且需在最高最低价之间！", "警告", MessageBoxButtons.OK);
+                MessageBox.Show(this, "请设置委托的证券数量和价格，证券数量需为正值，价格不能为零且需在最高最低价之间！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                return;
+            }
+
+            var selectedSecuItems = _secuDataSource.Where(p => p.Selection).ToList();
+            string confirmMsg = string.Format("共有[{0}]只证券\n确定开始委托吗？", selectedSecuItems.Count);
+            if (MessageBox.Show(this, confirmMsg, "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.No)
+            {
                 return;
             }
 
             //submit each entrust item and each security in the entrustitem
             List<int> submitIds = new List<int>();
-            //1. submit into database
+            int successCount = 0;
             foreach (var eiItem in selectedEntrustItems)
             {
                 if (eiItem.Copies <= 0)
@@ -887,14 +900,18 @@ namespace TradingSystem.View
                     submitIds.Add(eciItem.SubmitId);
 
                     //TODO: update the targetnum in UI
+                    successCount += entrustSecuItems.Count;
                 }
                 else
                 { 
                     //Fail to submit into database
                     string msg = string.Format("委托指令[{0}]失败: {1}", eiItem.CommandNo, bllResponse.Message);
-                    MessageBox.Show(this, msg, "错误", MessageBoxButtons.OK);
+                    MessageBox.Show(this, msg, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 }
             }
+
+            string successMsg = string.Format("共有[{0}]只证券委托全部成功执行！", successCount);
+            MessageBox.Show(this, successMsg, "提示", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
 
             //update the UI
             nudCopies.Value = 1;

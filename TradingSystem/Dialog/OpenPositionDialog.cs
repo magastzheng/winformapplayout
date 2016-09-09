@@ -8,6 +8,8 @@ using Forms;
 using Model.config;
 using BLL.TradeCommand;
 using Model.Constant;
+using Util;
+using Model.Dialog;
 
 namespace TradingSystem.Dialog
 {
@@ -16,7 +18,7 @@ namespace TradingSystem.Dialog
         //private TradingInstanceDAO _tradeinstdao = new TradingInstanceDAO();
         private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
         private OpenPositionItem _originOpenItem = null;
-        private OpenPositionItem _newOpenItem = null;
+        //private OpenPositionItem _newOpenItem = null;
 
         public OpenPositionDialog()
         {
@@ -86,10 +88,10 @@ namespace TradingSystem.Dialog
             DateTime now = DateTime.Now;
             DateTime startDate = new DateTime(now.Year, now.Month, now.Day, 9, 15, 0);
             DateTime endDate = new DateTime(now.Year, now.Month, now.Day, 15, 15, 0);
-            this.tbStartDate.Text = startDate.ToString(ConstVariable.DateFormat1);
-            this.tbEndDate.Text = endDate.ToString(ConstVariable.DateFormat1);
-            this.tbStartTime.Text = startDate.ToString(ConstVariable.TimeFormat1);
-            this.tbEndTime.Text = endDate.ToString(ConstVariable.TimeFormat1);
+            this.tbStartDate.Text = DateFormat.Format(startDate, ConstVariable.DateFormat1);
+            this.tbEndDate.Text = DateFormat.Format(endDate, ConstVariable.DateFormat1);
+            this.tbStartTime.Text = DateFormat.Format(startDate, ConstVariable.TimeFormat1);
+            this.tbEndTime.Text = DateFormat.Format(endDate, ConstVariable.TimeFormat1);
 
             //Initialize the instancecode
             var instances = _tradeInstanceBLL.GetAllInstance();
@@ -137,8 +139,20 @@ namespace TradingSystem.Dialog
 
         private void Button_Confirm_Click(object sender, EventArgs e)
         {
-            UpdateNewItem();
-            if (!Validate(_newOpenItem))
+            if (!ValidateDate())
+            {
+                MessageBox.Show(this, "开始日期和结束日期为yyyyMMdd格式，且结束日期不能早于开始日期！", "错误", MessageBoxButtons.OK);
+                return;
+            }
+
+            if (!ValidateTime())
+            {
+                MessageBox.Show(this, "开始时间和结束时间为HHmmss格式，且结束时间不能早于开始时间！", "错误", MessageBoxButtons.OK);
+                return;
+            }
+
+            var orderItem = GetNewItem();
+            if (!ValidateInstanceCode(orderItem))
             {
                 MessageBox.Show(this, "交易实例编号不能为空！", "错误", MessageBoxButtons.OK);
                 return;
@@ -152,9 +166,9 @@ namespace TradingSystem.Dialog
             DialogResult = System.Windows.Forms.DialogResult.Cancel;
         }
 
-        private void UpdateNewItem()
+        private OrderConfirmItem GetNewItem()
         {
-            _newOpenItem = new OpenPositionItem
+            var newOpenItem = new OrderConfirmItem
             {
                 MonitorId = _originOpenItem.MonitorId,
                 MonitorName = _originOpenItem.MonitorName,
@@ -164,19 +178,67 @@ namespace TradingSystem.Dialog
                 TemplateName = _originOpenItem.TemplateName,
                 Copies = _originOpenItem.Copies,
                 FuturesContract = _originOpenItem.FuturesContract,
-
             };
+
+            DateTime startDate = DateTime.MinValue;
+            DateTime endDate = DateTime.MinValue;
+            DateTime startTime = DateTime.MinValue;
+            DateTime endTime = DateTime.MinValue;
+
+            DateTime dt;
+            if (DateUtil.IsValidDate(this.tbStartDate.Text.Trim(), ConstVariable.DateFormat1, out dt))
+            {
+                //newOpenItem.StartDate = DateFormat.Format(dt, ConstVariable.DateFormat1);
+                startDate = dt;
+            }
+
+            if(DateUtil.IsValidDate(this.tbEndDate.Text.Trim(), ConstVariable.DateFormat1, out dt))
+            {
+                //newOpenItem.EndDate = DateFormat.Format(dt, ConstVariable.DateFormat1);
+                endDate = dt;
+            }
+
+            if(DateUtil.IsValidDate(this.tbStartTime.Text.Trim(), ConstVariable.TimeFormat1, out dt))
+            {
+                //newOpenItem.StartTime = DateFormat.Format(dt, ConstVariable.TimeFormat1);
+                startTime = dt;
+            }
+
+            if(DateUtil.IsValidDate(this.tbEndTime.Text.Trim(), ConstVariable.TimeFormat1, out dt))
+            {
+                //newOpenItem.EndTime = DateFormat.Format(dt, ConstVariable.TimeFormat1);
+                endTime = dt;
+            }
+
+            DateTime now = DateTime.Now;
+            if (startDate > DateTime.MinValue && startTime > DateTime.MinValue)
+            {
+                newOpenItem.StartDate = new DateTime(startDate.Year, startDate.Month, startDate.Day, startTime.Hour, startTime.Minute, startTime.Second);
+            }
+            else
+            {
+                newOpenItem.StartDate = new DateTime(now.Year, now.Month, now.Day, 9, 15, 0); ;
+            }
+
+            if (endDate > DateTime.MinValue && endTime > DateTime.MinValue)
+            {
+                newOpenItem.EndDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, endTime.Hour, endTime.Minute, endTime.Second);
+            }
+            else
+            {
+                newOpenItem.EndDate = new DateTime(now.Year, now.Month, now.Day, 15, 15, 0);
+            }
 
             if (this.ckbInstanceCode.Checked)
             {
                 var selectItem = (ComboOptionItem)this.cbInstanceCode.SelectedItem;
                 if (selectItem != null)
                 {
-                    _newOpenItem.InstanceCode = selectItem.Name;
+                    newOpenItem.InstanceCode = selectItem.Name;
                 }
                 else if (!string.IsNullOrEmpty(this.cbInstanceCode.Text))
                 {
-                    _newOpenItem.InstanceCode = this.cbInstanceCode.Text.Trim();
+                    newOpenItem.InstanceCode = this.cbInstanceCode.Text.Trim();
                 }
                 else
                 { 
@@ -185,23 +247,74 @@ namespace TradingSystem.Dialog
             }
             else
             {
-                _newOpenItem.InstanceCode = _originOpenItem.InstanceCode;
+                newOpenItem.InstanceCode = _originOpenItem.InstanceCode;
+            }
+
+            return newOpenItem;
+        }
+
+        public bool ValidateDate()
+        {
+            DateTime dt;
+
+            int startDate = 0;
+            int endDate = 0;
+
+            if (DateUtil.IsValidDate(this.tbStartDate.Text.Trim(), ConstVariable.DateFormat1, out dt))
+            {
+                startDate = DateUtil.GetIntDate(dt);
+            }
+
+            if (DateUtil.IsValidDate(this.tbEndDate.Text.Trim(), ConstVariable.DateFormat1, out dt))
+            {
+                endDate = DateUtil.GetIntDate(dt);
+            }
+
+            if (startDate > 0 && endDate > 0 && startDate < endDate)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
-        private bool Validate(OpenPositionItem openItem)
+        public bool ValidateTime()
         {
-            if (openItem == null)
+            DateTime dt;
+
+            int startTime = 0;
+            int endTime = 0;
+
+            if (DateUtil.IsValidDate(this.tbStartTime.Text.Trim(), ConstVariable.TimeFormat1, out dt))
+            {
+                startTime = DateUtil.GetIntTime(dt);
+            }
+
+            if (DateUtil.IsValidDate(this.tbEndTime.Text.Trim(), ConstVariable.TimeFormat1, out dt))
+            {
+                endTime = DateUtil.GetIntTime(dt);
+            }
+
+            if (startTime > 0 && endTime > 0 && startTime < endTime)
+            {
+                return true;
+            }
+            else
             {
                 return false;
             }
+        }
 
-            if (string.IsNullOrEmpty(openItem.InstanceCode))
+        public bool ValidateInstanceCode(OrderConfirmItem item)
+        {
+            if (!string.IsNullOrEmpty(item.InstanceCode))
             {
-                return false;
+                return true;
             }
 
-            return true;
+            return false;
         }
 
         #endregion
@@ -210,7 +323,8 @@ namespace TradingSystem.Dialog
 
         public override object GetData()
         {
-            return _newOpenItem;
+            var orderItem = GetNewItem();
+            return orderItem;
         }
 
         #endregion

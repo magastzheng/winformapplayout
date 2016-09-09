@@ -11,7 +11,7 @@ namespace Model.UI
         [BindingAttribute("date")]
         public string Date 
         {
-            get { return DDate.ToString(ConstVariable.DateFormat); }
+            get { return DateFormat.Format(DDate, ConstVariable.DateFormat); }
         }
 
         [BindingAttribute("commandid")]
@@ -139,13 +139,13 @@ namespace Model.UI
         [BindingAttribute("commandsubmitdate")]
         public string CommandSubmitDate
         {
-            get { return DCommandSubmitDate.ToString(ConstVariable.DateFormat); }
+            get { return DateFormat.Format(DCommandSubmitDate, ConstVariable.DateFormat); }
         }
 
         [BindingAttribute("commandsubmittime")]
         public string CommandSubmitTime
         {
-            get { return DCommandSubmitDate.ToString(ConstVariable.TimeFormat); }
+            get { return DateFormat.Format(DCommandSubmitDate, ConstVariable.TimeFormat); }
         }
 
         [BindingAttribute("commandsubmitperson")]
@@ -161,25 +161,25 @@ namespace Model.UI
         [BindingAttribute("startdate")]
         public string StartDate 
         {
-            get { return DStartDate.ToString(ConstVariable.DateFormat); }
+            get { return DateFormat.Format(DStartDate, ConstVariable.DateFormat); }
         }
 
         [BindingAttribute("enddate")]
         public string EndDate
         {
-            get { return DEndDate.ToString(ConstVariable.DateFormat); }
+            get { return DateFormat.Format(DEndDate, ConstVariable.DateFormat); }
         }
 
         [BindingAttribute("starttime")]
         public string StartTime
         {
-            get { return DStartDate.ToString(ConstVariable.TimeFormat); }
+            get { return DateFormat.Format(DStartDate, ConstVariable.TimeFormat); }
         }
 
         [BindingAttribute("endtime")]
         public string EndTime
         {
-            get { return DEndDate.ToString(ConstVariable.TimeFormat); }
+            get { return DateFormat.Format(DEndDate, ConstVariable.TimeFormat); }
         }
 
         [BindingAttribute("commandstatus")]
@@ -211,7 +211,7 @@ namespace Model.UI
         [BindingAttribute("approvaltime")]
         public string ApprovalTime
         {
-            get { return DApprovalDate.ToString(ConstVariable.TimeFormat); }
+            get { return DateFormat.Format(DApprovalDate, ConstVariable.TimeFormat); }
         }
 
         [BindingAttribute("approvalperson")]
@@ -220,7 +220,7 @@ namespace Model.UI
         [BindingAttribute("dispatchtime")]
         public string DispatchTime 
         {
-            get { return DDispatchDate.ToString(ConstVariable.TimeFormat); }
+            get { return DateFormat.Format(DDispatchDate, ConstVariable.TimeFormat); }
         }
 
         [BindingAttribute("dispatchperson")]
@@ -235,7 +235,7 @@ namespace Model.UI
         [BindingAttribute("canceltime")]
         public string CancelTime
         {
-            get { return DCancelDate.ToString(ConstVariable.TimeFormat); }
+            get { return DateFormat.Format(DCancelDate, ConstVariable.TimeFormat); }
         }
 
         [BindingAttribute("modifyoperator")]

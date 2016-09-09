@@ -45,8 +45,18 @@ namespace DBAccess
             DateTime now = DateTime.Now;
             //9:15
             DateTime startDate = new DateTime(now.Year, now.Month, now.Day, 9, 15, 0);
+            if (cmdItem.DStartDate > DateTime.MinValue)
+            {
+                startDate = cmdItem.DStartDate;
+            }
+
             //15:15
             DateTime endDate = new DateTime(now.Year, now.Month, now.Day, 15, 15, 0);
+            if (cmdItem.DEndDate > DateTime.MinValue)
+            {
+                endDate = cmdItem.DEndDate;
+            }
+
             _dbHelper.AddInParameter(dbCommand, "@StartDate", System.Data.DbType.DateTime, startDate);
             _dbHelper.AddInParameter(dbCommand, "@EndDate", System.Data.DbType.DateTime, endDate);
 

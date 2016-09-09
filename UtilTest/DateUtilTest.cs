@@ -34,5 +34,39 @@ namespace UtilTest
             iTime = DateUtil.GetIntTime(dt);
             Assert.AreEqual(233059, iTime);
         }
+
+        [TestMethod]
+        public void Test_IsValidDate_Date()
+        {
+            string str = "20161010";
+            string format = "yyyyMMdd";
+
+            DateTime dt;
+            var result = DateUtil.IsValidDate(str, format, out dt);
+
+            Assert.AreEqual(true, result);
+
+            str = "20171245";
+            result = DateUtil.IsValidDate(str, format, out dt);
+
+            Assert.AreEqual(false, result);
+        }
+
+        [TestMethod]
+        public void Test_IsValidDate_Time()
+        {
+            string str = "154512";
+            string format = "HHmmss";
+
+            DateTime dt;
+            var result = DateUtil.IsValidDate(str, format, out dt);
+
+            Assert.AreEqual(true, result);
+
+            str = "541213";
+            result = DateUtil.IsValidDate(str, format, out dt);
+
+            Assert.AreEqual(false, result);
+        }
     }
 }

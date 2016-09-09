@@ -1,5 +1,5 @@
 ﻿using BLL.UFX.impl;
-using Model.t2sdk;
+using Model.UFX;
 using System;
 using System.Collections.Generic;
 using System.Linq;

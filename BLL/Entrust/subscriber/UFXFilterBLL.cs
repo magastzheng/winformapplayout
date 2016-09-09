@@ -1,12 +1,9 @@
 ﻿using BLL.UFX.impl;
 using log4net;
 using Model.Binding.BindingUtil;
-using Model.t2sdk;
+using Model.UFX;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Entrust.subscriber
 {
@@ -18,9 +15,9 @@ namespace BLL.Entrust.subscriber
         { 
         }
 
-        public PushMessageType GetMessageType(DataParser dataParser)
+        public UFXPushMessageType GetMessageType(DataParser dataParser)
         {
-            PushMessageType messageType = PushMessageType.None;
+            UFXPushMessageType messageType = UFXPushMessageType.None;
             List<UFXFilterResponse> responseItems = new List<UFXFilterResponse>();
             var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXFilterResponse>();
 
@@ -39,8 +36,8 @@ namespace BLL.Entrust.subscriber
             if (responseItems.Count == 1)
             {
                 var typeChar = Char.Parse(responseItems[0].MsgType);
-                PushMessageType tempType;
-                messageType = Enum.TryParse(typeChar.ToString(), true, out tempType) ? tempType : (PushMessageType)typeChar;
+                UFXPushMessageType tempType;
+                messageType = Enum.TryParse(typeChar.ToString(), true, out tempType) ? tempType : (UFXPushMessageType)typeChar;
             }
 
             return messageType;

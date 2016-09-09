@@ -46,13 +46,13 @@ namespace Model.UI
         [BindingAttribute("createddate")]
         public string CreatedDate 
         {
-            get { return DCreatedDate.ToString(ConstVariable.DateFormat); }
+            get { return DateFormat.Format(DCreatedDate, ConstVariable.DateFormat); }
         }
 
         [BindingAttribute("createdtime")]
         public string CreatedTime
         {
-            get { return DCreatedDate.ToString(ConstVariable.TimeFormat); }
+            get { return DateFormat.Format(DCreatedDate, ConstVariable.TimeFormat); }
         }
 
         public int TemplateId { get; set; }

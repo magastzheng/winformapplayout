@@ -57,6 +57,7 @@
     <Compile Include="Constant\DateFormat.cs" />
     <Compile Include="Database\TradeCommand.cs" />
     <Compile Include="Database\TradeCommandSecurity.cs" />
+    <Compile Include="Dialog\OrderConfirmItem.cs" />
     <Compile Include="EnumType\FundAccountType.cs" />
     <Compile Include="EnumType\EnumTypeConverter\EntrustRequestHelper.cs" />
     <Compile Include="EnumType\EnumTypeConverter\EnumTypeDisplayHelper.cs" />
@@ -98,11 +99,11 @@
     <Compile Include="strategy\HolderItem.cs" />
     <Compile Include="strategy\PortfolioItem.cs" />
     <Compile Include="strategy\TradingInstance.cs" />
-    <Compile Include="t2sdk\UFXEntrust.cs" />
-    <Compile Include="t2sdk\MarketCode.cs" />
-    <Compile Include="t2sdk\UFXHolding.cs" />
-    <Compile Include="t2sdk\UFXQuery.cs" />
-    <Compile Include="t2sdk\UFXSubscriber.cs" />
+    <Compile Include="UFX\UFXEntrust.cs" />
+    <Compile Include="UFX\UFXMarketCode.cs" />
+    <Compile Include="UFX\UFXHolding.cs" />
+    <Compile Include="UFX\UFXQuery.cs" />
+    <Compile Include="UFX\UFXSubscriber.cs" />
     <Compile Include="TradingCommand\TradingCommandItem.cs" />
     <Compile Include="TradingCommand\TradingCommandSecurityItem.cs" />
     <Compile Include="UI\CancelRedoItem.cs" />

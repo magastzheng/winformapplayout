@@ -86,7 +86,7 @@ namespace Model.UI
         {
             get
             {
-                return EntrustDate.ToString(ConstVariable.DateFormat1);
+                return DateFormat.Format(EntrustDate, ConstVariable.DateFormat1);
             }
         }
 

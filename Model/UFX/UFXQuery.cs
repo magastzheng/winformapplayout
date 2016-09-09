@@ -1,11 +1,6 @@
 ﻿using Model.Binding;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Model.t2sdk
+namespace Model.UFX
 {
     public class UFXQueryEntrustRequest
     {

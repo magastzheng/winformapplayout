@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Model.t2sdk
+﻿
+namespace Model.UFX
 {
     //交易所
-    public enum MarketCode
+    public enum UFXMarketCode
     {
         ShanghaiStockExchange = 1,
         ShenzhenStockExchange = 2,
@@ -17,7 +12,7 @@ namespace Model.t2sdk
     }
 
     //委托方向
-    public enum EntrustDirection
+    public enum UFXEntrustDirection
     { 
         //买入
         Buy = 1,
@@ -45,7 +40,7 @@ namespace Model.t2sdk
     }
 
     //委托状态
-    public enum EntrustState
+    public enum UFXEntrustState
     { 
         NoReport = '1',
         WaitReport = '2',
@@ -73,7 +68,7 @@ namespace Model.t2sdk
     }
 
     //开平仓
-    public enum OpenPositionDirection
+    public enum UFXOpenPositionDirection
     { 
         //开仓
         Open = 1,
@@ -87,7 +82,7 @@ namespace Model.t2sdk
     }
 
     //交易实例类型
-    public struct TradingInstanceType
+    public struct UFXTradingInstanceType
     {
         //股指期货期现套利
         public const string StockIndexFutures = "A";
@@ -111,7 +106,7 @@ namespace Model.t2sdk
     }
 
     //消息推送类型
-    public enum PushMessageType
+    public enum UFXPushMessageType
     { 
         None,
 

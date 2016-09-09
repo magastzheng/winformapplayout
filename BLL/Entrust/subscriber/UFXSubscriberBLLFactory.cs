@@ -1,4 +1,4 @@
-﻿using Model.t2sdk;
+﻿using Model.UFX;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,22 +9,22 @@ namespace BLL.Entrust.subscriber
 {
     public class UFXSubscriberBLLFactory
     {
-        public static IUFXSubsriberBLLBase Create(PushMessageType msgType)
+        public static IUFXSubsriberBLLBase Create(UFXPushMessageType msgType)
         {
             IUFXSubsriberBLLBase bll = null;
             switch (msgType)
             {
-                case PushMessageType.EntrustCommit:
+                case UFXPushMessageType.EntrustCommit:
                     {
                         bll = new UFXEntrustCompletedBLL();
                     }
                     break;
-                case PushMessageType.EntrustWithdrawDone:
+                case UFXPushMessageType.EntrustWithdrawDone:
                     {
                         bll = new UFXWithdrawCompletedBLL();
                     }
                     break;
-                case PushMessageType.EntrustDeal:
+                case UFXPushMessageType.EntrustDeal:
                     {
                         bll = new UFXEntrustDealBLL();
                     }

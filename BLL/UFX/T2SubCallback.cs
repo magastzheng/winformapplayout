@@ -2,7 +2,7 @@
 using BLL.UFX.impl;
 using hundsun.mcapi;
 using hundsun.t2sdk;
-using Model.t2sdk;
+using Model.UFX;
 using System;
 using System.Runtime.InteropServices;
 
@@ -30,7 +30,7 @@ namespace BLL.UFX
                 }
             }
 
-            PushMessageType messageType = PushMessageType.None;
+            UFXPushMessageType messageType = UFXPushMessageType.None;
             //过滤字段部分
             if (lpRecvData.iFilterDataLen > 0)
             {
