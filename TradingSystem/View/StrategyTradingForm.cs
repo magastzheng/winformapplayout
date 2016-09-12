@@ -664,7 +664,11 @@ namespace TradingSystem.View
             
             if(!T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
-                MessageBox.Show(this, errorResponse.ErrorMessage, "错误", MessageBoxButtons.OK);
+                this.BeginInvoke(new Action(() =>
+                {
+                    MessageBox.Show(this, errorResponse.ErrorMessage, "错误", MessageBoxButtons.OK);
+                }));
+
                 return -1;
             }
 
@@ -1136,22 +1140,23 @@ namespace TradingSystem.View
                     exchangeCode = SecurityInfoHelper.GetExchangeCode(secuItem.SecuCode);
                 }
 
-                if (exchangeCode.Equals(Exchange.SHSE))
-                {
-                    entrustSecurityItem.EntrustPriceType = EntrustPriceType.FifthIsLeftOffSH;
-                }
-                else if (exchangeCode.Equals(Exchange.SZSE))
-                {
-                    entrustSecurityItem.EntrustPriceType = EntrustPriceType.FifthIsLeftOffSZ;
-                }
-                else if (exchangeCode.Equals(Exchange.CFFEX))
-                {
-                    entrustSecurityItem.EntrustPriceType = EntrustPriceType.FifthIsLeftOffCFX;
-                }
-                else
-                { 
-                    //Do nothing
-                }
+                entrustSecurityItem.EntrustPriceType = EntrustPriceType.FixedPrice;
+                //if (exchangeCode.Equals(Exchange.SHSE))
+                //{
+                //    entrustSecurityItem.EntrustPriceType = EntrustPriceType.FifthIsLeftOffSH;
+                //}
+                //else if (exchangeCode.Equals(Exchange.SZSE))
+                //{
+                //    entrustSecurityItem.EntrustPriceType = EntrustPriceType.FifthIsLeftOffSZ;
+                //}
+                //else if (exchangeCode.Equals(Exchange.CFFEX))
+                //{
+                //    entrustSecurityItem.EntrustPriceType = EntrustPriceType.FifthIsLeftOffCFX;
+                //}
+                //else
+                //{ 
+                //    //Do nothing
+                //}
                 
 
                 entrustSecuItems.Add(entrustSecurityItem);

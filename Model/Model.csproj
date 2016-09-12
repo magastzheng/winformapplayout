@@ -55,9 +55,12 @@
     <Compile Include="config\Label.cs" />
     <Compile Include="Constant\ConstVariable.cs" />
     <Compile Include="Constant\DateFormat.cs" />
+    <Compile Include="Converter\StringEnumConverter.cs" />
+    <Compile Include="Converter\UFXTypeConverter.cs" />
     <Compile Include="Database\TradeCommand.cs" />
     <Compile Include="Database\TradeCommandSecurity.cs" />
     <Compile Include="Dialog\OrderConfirmItem.cs" />
+    <Compile Include="EnumType\EnumTypeConverter\EntrustPriceTypeConverter.cs" />
     <Compile Include="EnumType\FundAccountType.cs" />
     <Compile Include="EnumType\EnumTypeConverter\EntrustRequestHelper.cs" />
     <Compile Include="EnumType\EnumTypeConverter\EnumTypeDisplayHelper.cs" />
@@ -99,6 +102,7 @@
     <Compile Include="strategy\HolderItem.cs" />
     <Compile Include="strategy\PortfolioItem.cs" />
     <Compile Include="strategy\TradingInstance.cs" />
+    <Compile Include="UFX\StringToUFXTypeConverter.cs" />
     <Compile Include="UFX\UFXEntrust.cs" />
     <Compile Include="UFX\UFXMarketCode.cs" />
     <Compile Include="UFX\UFXHolding.cs" />

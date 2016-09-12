@@ -1,12 +1,16 @@
-﻿using BLL.UFX;
+﻿using BLL.Product;
+using BLL.UFX;
 using BLL.UFX.impl;
 using log4net;
+using Model;
 using Model.Binding.BindingUtil;
+using Model.BLL;
 using Model.UFX;
 using Model.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Util;
 
 namespace BLL.Entrust
@@ -14,7 +18,8 @@ namespace BLL.Entrust
     public class UFXQueryDealBLL
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
+       
+        private ProductBLL _productBLL = new ProductBLL();
         private SecurityBLL _securityBLL = null;
 
         public UFXQueryDealBLL()
@@ -24,26 +29,61 @@ namespace BLL.Entrust
 
         public int QueryToday(CallerCallback callback)
         {
-            List<UFXQueryDealRequest> requests = new List<UFXQueryDealRequest>();
-
-            UFXQueryDealRequest request = new UFXQueryDealRequest();
-            request.ExtSystemId = 100000999;
-            request.CombiNo = "30";
-            requests.Add(request);
-
-            Callbacker callbacker = new Callbacker
+            var portfolios = _productBLL.GetAll();
+            foreach (var portfolio in portfolios)
             {
-                Token = new CallerToken
+                List<UFXQueryDealRequest> requests = new List<UFXQueryDealRequest>();
+
+                UFXQueryDealRequest request = new UFXQueryDealRequest();
+                
+                //request.ExtSystemId = 100000999;
+                request.AccountCode = portfolio.FundCode;
+                request.CombiNo = portfolio.PortfolioNo;
+                requests.Add(request);
+
+                if (request.CombiNo == "30")
                 {
-                    SubmitId = 11111,
-                    CommandId = 22222,
-                    Caller = callback,
-                },
+                    request.EntrustNo = 197724;
+                }
 
-                DataHandler = QueryDataHandler,
-            };
+                Callbacker callbacker = new Callbacker
+                {
+                    Token = new CallerToken
+                    {
+                        SubmitId = 11111,
+                        CommandId = 22222,
+                        InArgs = portfolio.PortfolioNo,
+                        WaitEvent = new AutoResetEvent(false),
+                        Caller = callback,
+                    },
 
-            var result = _securityBLL.QueryDeal(requests, callbacker);
+                    DataHandler = QueryDataHandler,
+                };
+
+                var result = _securityBLL.QueryDeal(requests, callbacker);
+
+                BLLResponse bllResponse = new BLLResponse();
+                if (result == Model.ConnectionCode.Success)
+                {
+                    callbacker.Token.WaitEvent.WaitOne();
+                    var errorResponse = callbacker.Token.OutArgs as UFXErrorResponse;
+                    if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
+                    {
+                        bllResponse.Code = ConnectionCode.Success;
+                        bllResponse.Message = "Success QueryDeal";
+                    }
+                    else
+                    {
+                        bllResponse.Code = ConnectionCode.FailEntrust;
+                        bllResponse.Message = "Fail QueryDeal: " + errorResponse.ErrorMessage;
+                    }
+                }
+                else
+                {
+                    bllResponse.Code = result;
+                    bllResponse.Message = "Fail to QueryDeal in ufx.";
+                }
+            }
 
             return 1;
         }
@@ -79,15 +119,20 @@ namespace BLL.Entrust
         {
             List<UFXQueryDealResponse> responseItems = new List<UFXQueryDealResponse>();
             var errorResponse = T2ErrorHandler.Handle(dataParser);
-            var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXQueryDealResponse>();
-            for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
+            token.OutArgs = errorResponse;
+
+            if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
-                var dataSet = dataParser.DataSets[i];
-                foreach (var dataRow in dataSet.Rows)
+                var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXQueryDealResponse>();
+                for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
                 {
-                    UFXQueryDealResponse p = new UFXQueryDealResponse();
-                    UFXDataSetHelper.SetValue<UFXQueryDealResponse>(ref p, dataRow.Columns, dataFieldMap);
-                    responseItems.Add(p);
+                    var dataSet = dataParser.DataSets[i];
+                    foreach (var dataRow in dataSet.Rows)
+                    {
+                        UFXQueryDealResponse p = new UFXQueryDealResponse();
+                        UFXDataSetHelper.SetValue<UFXQueryDealResponse>(ref p, dataRow.Columns, dataFieldMap);
+                        responseItems.Add(p);
+                    }
                 }
             }
 
@@ -116,6 +161,11 @@ namespace BLL.Entrust
                 }
 
                 token.Caller(token, dealFlowItems,  errorResponse);
+            }
+
+            if (token.WaitEvent != null)
+            {
+                token.WaitEvent.Set();
             }
 
             return responseItems.Count();
