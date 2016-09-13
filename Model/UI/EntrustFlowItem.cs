@@ -1,4 +1,5 @@
 ﻿using Model.Binding;
+using Model.Converter;
 using Model.UFX;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,13 @@ namespace Model.UI
         public bool Selection { get; set; }
 
         [BindingAttribute("market")]
-        public string Market { get; set; }
+        public string Market
+        {
+            get 
+            {
+                return UFXTypeConverter.GetMarketName(EMarketCode);
+            }
+        }
 
         [BindingAttribute("secucode")]
         public string SecuCode { get; set; }
@@ -26,7 +33,13 @@ namespace Model.UI
         public string SecuName { get; set; }
 
         [BindingAttribute("entrustdirection")]
-        public string EntrustDirection { get; set; }
+        public string EntrustDirection
+        {
+            get 
+            {
+                return UFXTypeConverter.GetEntrustDirection(EEntrustDirection);
+            }
+        }
 
         [BindingAttribute("pricetype")]
         public string PriceType { get; set; }
@@ -38,7 +51,10 @@ namespace Model.UI
         public int EntrustAmount { get; set; }
 
         [BindingAttribute("entruststatus")]
-        public string EntrustStatus { get; set; }
+        public string EntrustStatus
+        {
+            get { return UFXTypeConverter.GetEntrustState(EEntrustState); }
+        }
 
         [BindingAttribute("dealamount")]
         public int DealAmount { get; set; }
@@ -120,5 +136,7 @@ namespace Model.UI
         public UFXMarketCode EMarketCode { get; set; }
 
         public UFXEntrustDirection EEntrustDirection { get; set; }
+
+        public UFXEntrustState EEntrustState { get; set; }
     }
 }

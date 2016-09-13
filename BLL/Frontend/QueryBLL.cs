@@ -38,11 +38,11 @@ namespace BLL.Frontend
                     CommandNo = item.CommandId,
                     SecuCode = item.SecuCode,
                     PriceType = item.PriceType.ToString(),
-                    EntrustStatus = item.EntrustStatus.ToString(),
+                    //EntrustStatus = item.EntrustStatus.ToString(),
                     EntrustAmount = item.EntrustAmount,
                     EntrustedDate = DateFormat.Format(item.EntrustDate, ConstVariable.DateFormat),
                     EntrustedTime = DateFormat.Format(item.EntrustDate, ConstVariable.TimeFormat1),
-                    EntrustDirection = item.EntrustDirection.ToString(),
+                    //EntrustDirection = item.EntrustDirection.ToString(),
                     EntrustNo = item.EntrustNo,
                     DealAmount = item.TotalDealAmount,
                     DealTimes = item.DealTimes,
@@ -57,7 +57,7 @@ namespace BLL.Frontend
                 if (secuInfoItem != null)
                 {
                     efItem.SecuName = secuInfoItem.SecuName;
-                    efItem.Market = secuInfoItem.ExchangeCode;
+                    //efItem.Market = secuInfoItem.ExchangeCode;
                 }
 
                 efItems.Add(efItem);

@@ -680,7 +680,7 @@ namespace TradingSystem.View
                     if (secuInfo != null)
                     {
                         p.SecuName = secuInfo.SecuName;
-                        p.Market = SecurityItemHelper.GetExchange(secuInfo.ExchangeCode);
+                        //p.Market = SecurityItemHelper.GetExchange(secuInfo.ExchangeCode);
                     }
 
                     var entrustItem = entrustItems.Find(o => o.RequestId == p.RequestId);

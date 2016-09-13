@@ -9,6 +9,7 @@ using log4net.Config;
 using BLL.UFX;
 using BLL.TradeCommand;
 using WAPIWrapperCSharp;
+using System.Configuration;
 
 namespace TradingSystem
 {
@@ -26,8 +27,11 @@ namespace TradingSystem
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            XmlConfigurator.Configure();
-            logger.Info("Log4net initialize...");
+            var log4net = ConfigurationManager.AppSettings["log4net"];
+            string logFilePath = Application.StartupPath + "\\" + log4net;
+            //XmlConfigurator.Configure();
+            XmlConfigurator.Configure(new Uri(logFilePath));
+            logger.Info("Log4net initialize...: " + logFilePath);
             //XmlConfigurator.ConfigureAndWatch("log4net.config");
 
             //处理未捕获的异常

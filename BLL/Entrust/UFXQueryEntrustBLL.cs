@@ -6,6 +6,7 @@ using log4net;
 using Model;
 using Model.Binding.BindingUtil;
 using Model.BLL;
+using Model.Converter;
 using Model.Data;
 using Model.UFX;
 using Model.UI;
@@ -174,13 +175,13 @@ namespace BLL.Entrust
                     EntrustFlowItem efItem = new EntrustFlowItem 
                     { 
                         CommandNo = token.CommandId,
-                        Market = responseItem.MarketNo,
+                        //Market = responseItem.MarketNo,
                         SecuCode = responseItem.StockCode,
-                        EntrustDirection = responseItem.EntrustDirection,
+                        //EntrustDirection = responseItem.EntrustDirection,
                         PriceType = responseItem.PriceType,
                         EntrustPrice = responseItem.EntrustPrice,
                         EntrustAmount = responseItem.EntrustAmount,
-                        EntrustStatus = responseItem.EntrustState,
+                        //EntrustStatus = responseItem.EntrustState,
                         DealAmount = responseItem.DealAmount,
                         DealMoney = responseItem.DealBalance,
                         DealTimes = responseItem.DealTimes,
@@ -194,6 +195,9 @@ namespace BLL.Entrust
                         RequestId = responseItem.ExtSystemId,
                         FundCode = responseItem.AccountCode,
                         PortfolioCode = (string)token.InArgs,
+                        EEntrustDirection = UFXTypeConverter.GetEntrustDirection(responseItem.EntrustDirection),
+                        EMarketCode = UFXTypeConverter.GetMarketCode(responseItem.MarketNo),
+                        EEntrustState = UFXTypeConverter.GetEntrustState(responseItem.EntrustState),
                     };
 
                     entrustFlowItems.Add(efItem);
