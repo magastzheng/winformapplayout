@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CC143059-3915-426E-992E-3825ED84F701}</ProjectGuid>
+    <ProjectGuid>{74B0347C-4DE0-4EA7-BE99-70BE91948CBD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UtilTest</RootNamespace>
-    <AssemblyName>UtilTest</AssemblyName>
+    <RootNamespace>BLLTest</RootNamespace>
+    <AssemblyName>BLLTest</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -20,7 +20,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -41,31 +40,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DateUtilTest.cs" />
-    <Compile Include="EntrustPriceTypeTest.cs" />
-    <Compile Include="ExcelUtilTest.cs" />
-    <Compile Include="JsonUtilTest.cs" />
-    <Compile Include="PermissionTest.cs" />
+    <Compile Include="PermissionCalculatorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Config\Config.csproj">
-      <Project>{1538db09-6bfc-4623-9db4-34577f335cd4}</Project>
-      <Name>Config</Name>
+    <ProjectReference Include="..\BLL\BLL.csproj">
+      <Project>{11d6ae0d-bf60-4a4f-af42-cf7710dd8afe}</Project>
+      <Name>BLL</Name>
     </ProjectReference>
     <ProjectReference Include="..\Model\Model.csproj">
       <Project>{9afc3370-02ab-444b-9c43-411e49f49b16}</Project>
       <Name>Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Util\Util.csproj">
-      <Project>{723db468-9d89-40e8-be82-ddecc927e2cb}</Project>
-      <Name>Util</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>xcopy /I /Y $(SolutionDir)TradingSystem\config\*.* $(TargetDir)config\*</PreBuildEvent>
-  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

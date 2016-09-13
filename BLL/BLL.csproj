@@ -73,6 +73,7 @@
     <Compile Include="Frontend\QueryBLL.cs" />
     <Compile Include="Frontend\WithdrawBLL.cs" />
     <Compile Include="Permission\FeatureBLL.cs" />
+    <Compile Include="Permission\PermissionCalculator.cs" />
     <Compile Include="Permission\PermissionManager.cs" />
     <Compile Include="Permission\ResourceBLL.cs" />
     <Compile Include="Permission\RoleBLL.cs" />
