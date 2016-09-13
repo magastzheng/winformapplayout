@@ -98,10 +98,9 @@ namespace DBAccess.Permission
                 _dbHelper.AddInParameter(dbCommand, "@RefId", System.Data.DbType.Int32, refId);
             }
 
-            var intType = (int)type;
-            if (intType > 0)
+            if (type != ResourceType.None)
             {
-                _dbHelper.AddInParameter(dbCommand, "@Type", System.Data.DbType.Int32, intType);
+                _dbHelper.AddInParameter(dbCommand, "@Type", System.Data.DbType.Int32, (int)type);
             }
 
             List<Resource> items = new List<Resource>();

@@ -8,6 +8,6 @@ namespace BLL.Permission
 {
     public class PermissionManager
     {
-
+        //public 
     }
 }

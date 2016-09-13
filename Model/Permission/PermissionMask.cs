@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Model.Permission
 {
     public enum PermissionMask
     {
-        Create  = 1,
-        Delete  = 2,
-        Edit    = 4,
-        Query   = 8,
-        View    = 16,
+        Owner   = 1,
+        Add  = 2,       //创建、添加
+        Delete  = 4,    //删除
+        Edit    = 8,    //修改
+        Query   = 16,   
+        View    = 32,
+        Execute = 64,   //执行命令
     }
 }
