@@ -9,11 +9,11 @@ namespace DBAccess.Product
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private const string SP_Create = "procInsertUFXPortfolio";
-        private const string SP_ModifyName = "procUpdateUFXPortfolioName";
-        private const string SP_ModifyStatus = "procUpdateUFXPortfolioStatus";
-        private const string SP_Get = "procGetUFXPortfolios";
-        private const string SP_Delete = "procDeleteUFXPortfolio";
+        private const string SP_Create = "procUFXPortfolioInsert";
+        private const string SP_ModifyName = "procUFXPortfolioUpdateName";
+        private const string SP_ModifyStatus = "procUFXPortfolioUpdateStatus";
+        private const string SP_Get = "procUFXPortfolioSelect";
+        private const string SP_Delete = "procUFXPortfolioDelete";
 
         public UFXPortfolioDAO()
             : base()

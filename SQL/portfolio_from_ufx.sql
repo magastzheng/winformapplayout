@@ -20,11 +20,11 @@ create table ufxportfolio
 )
 
 go 
-if exists (select name from sysobjects where name='procInsertUFXPortfolio')
-drop proc procInsertUFXPortfolio
+if exists (select name from sysobjects where name='procUFXPortfolioInsert')
+drop proc procUFXPortfolioInsert
 
 go
-create proc procInsertUFXPortfolio(
+create proc procUFXPortfolioInsert(
 	@PortfolioCode varchar(20),
 	@PortfolioName varchar(250),
 	@AccountCode varchar(20),
@@ -62,11 +62,11 @@ begin
 end
 
 go 
-if exists (select name from sysobjects where name='procUpdateUFXPortfolioName')
-drop proc procUpdateUFXPortfolioName
+if exists (select name from sysobjects where name='procUFXPortfolioUpdateName')
+drop proc procUFXPortfolioUpdateName
 
 go
-create proc procUpdateUFXPortfolioName(
+create proc procUFXPortfolioUpdateName(
 	@PortfolioCode varchar(20),
 	@PortfolioName varchar(250)
 )
@@ -78,11 +78,11 @@ begin
 end
 
 go 
-if exists (select name from sysobjects where name='procUpdateUFXPortfolioStatus')
-drop proc procUpdateUFXPortfolioStatus
+if exists (select name from sysobjects where name='procUFXPortfolioUpdateStatus')
+drop proc procUFXPortfolioUpdateStatus
 
 go
-create proc procUpdateUFXPortfolioStatus(
+create proc procUFXPortfolioUpdateStatus(
 	@PortfolioCode varchar(20),
 	@PortfolioStatus int
 )
@@ -94,11 +94,11 @@ begin
 end
 
 go 
-if exists (select name from sysobjects where name='procGetUFXPortfolios')
-drop proc procGetUFXPortfolios
+if exists (select name from sysobjects where name='procUFXPortfolioSelect')
+drop proc procUFXPortfolioSelect
 
 go
-create proc procGetUFXPortfolios(
+create proc procUFXPortfolioSelect(
 	@PortfolioCode varchar(20) = NULL
 )
 as
@@ -133,11 +133,11 @@ begin
 end
 
 go 
-if exists (select name from sysobjects where name='procDeleteUFXPortfolio')
-drop proc procDeleteUFXPortfolio
+if exists (select name from sysobjects where name='procUFXPortfolioDelete')
+drop proc procUFXPortfolioDelete
 
 go
-create proc procDeleteUFXPortfolio(
+create proc procUFXPortfolioDelete(
 	@PortfolioCode varchar(20) = NULL
 )
 as
