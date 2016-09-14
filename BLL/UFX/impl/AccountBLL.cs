@@ -68,9 +68,9 @@ namespace BLL.UFX.impl
 
             if (parser.ErrorCode == ConnectionCode.Success)
             {
-                for (int i = 1, count = parser.DataSets.Count; i < count; i++)
+                if(parser.DataSets.Count > 1)
                 {
-                    var dataSet = parser.DataSets[i];
+                    var dataSet = parser.DataSets[1];
                     foreach (var dataRow in dataSet.Rows)
                     {
                         AccountItem acc = new AccountItem();
@@ -86,7 +86,6 @@ namespace BLL.UFX.impl
 
                         LoginManager.Instance.AddAccount(acc);
                     }
-                    break;
                 }
 
                 return ConnectionCode.Success;
@@ -153,9 +152,9 @@ namespace BLL.UFX.impl
 
             if (parser.ErrorCode == ConnectionCode.Success)
             {
-                for (int i = 1, count = parser.DataSets.Count; i < count; i++)
+                if(parser.DataSets.Count > 1)
                 {
-                    var dataSet = parser.DataSets[i];
+                    var dataSet = parser.DataSets[1];
                     foreach (var dataRow in dataSet.Rows)
                     {
                         AssetItem asset = new AssetItem();
@@ -166,7 +165,6 @@ namespace BLL.UFX.impl
 
                         LoginManager.Instance.AddAsset(asset);
                     }
-                    break;
                 }
 
                 return ConnectionCode.Success;
@@ -241,9 +239,9 @@ namespace BLL.UFX.impl
                 return parser.ErrorCode;
             }
 
-            for (int i = 1, count = parser.DataSets.Count; i < count; i++)
+            if(parser.DataSets.Count > 1)
             {
-                var dataSet = parser.DataSets[i];
+                var dataSet = parser.DataSets[1];
                 foreach (var dataRow in dataSet.Rows)
                 {
                     PortfolioItem p = new PortfolioItem();
@@ -258,7 +256,6 @@ namespace BLL.UFX.impl
 
                     LoginManager.Instance.AddPortfolio(p);
                 }
-                break;
             }
 
             return ConnectionCode.Success;
@@ -330,9 +327,9 @@ namespace BLL.UFX.impl
             var response = T2ErrorHandler.Handle(parser);
             if (T2ErrorHandler.Success(response.ErrorCode))
             {
-                for (int i = 1, count = parser.DataSets.Count; i < count; i++)
+                if(parser.DataSets.Count > 1)
                 {
-                    var dataSet = parser.DataSets[i];
+                    var dataSet = parser.DataSets[1];
                     foreach (var dataRow in dataSet.Rows)
                     {
                         HolderItem p = new HolderItem();
@@ -344,7 +341,6 @@ namespace BLL.UFX.impl
 
                         LoginManager.Instance.AddHolder(p);
                     }
-                    break;
                 }
 
                 return ConnectionCode.Success;

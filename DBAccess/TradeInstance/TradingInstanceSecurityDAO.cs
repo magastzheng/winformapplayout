@@ -3,7 +3,7 @@ using Model.UI;
 using System;
 using System.Collections.Generic;
 
-namespace DBAccess
+namespace DBAccess.TradeInstance
 {
     public class TradingInstanceSecurityDAO: BaseDAO
     {

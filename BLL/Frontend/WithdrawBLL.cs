@@ -2,7 +2,7 @@
 using BLL.EntrustCommand;
 using BLL.SecurityInfo;
 using BLL.UFX.impl;
-using DBAccess;
+using DBAccess.Entrust;
 using DBAccess.TradeCommand;
 using Model.BLL;
 using Model.EnumType;
@@ -11,8 +11,6 @@ using Model.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Frontend
 {

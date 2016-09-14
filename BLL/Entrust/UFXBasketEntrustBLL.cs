@@ -5,7 +5,7 @@ using BLL.UFX;
 using BLL.UFX.impl;
 using Config;
 using Config.ParamConverter;
-using DBAccess;
+using DBAccess.Entrust;
 using log4net;
 using Model;
 using Model.Binding.BindingUtil;

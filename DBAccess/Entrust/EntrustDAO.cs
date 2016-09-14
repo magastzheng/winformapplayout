@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 
-namespace DBAccess
+namespace DBAccess.Entrust
 {
     public class EntrustDAO : BaseDAO
     {

@@ -1,19 +1,14 @@
 ﻿using BLL.EntrustCommand;
 using BLL.UFX;
 using BLL.UFX.impl;
-using DBAccess;
-using DBAccess.TradeCommand;
+using DBAccess.Entrust;
 using log4net;
 using Model.Binding.BindingUtil;
 using Model.BLL;
 using Model.UFX;
 using Model.UI;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace BLL.Entrust
 {

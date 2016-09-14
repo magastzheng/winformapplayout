@@ -1,13 +1,9 @@
-﻿using DBAccess;
-using DBAccess.TradeCommand;
+﻿using DBAccess.TradeCommand;
+using DBAccess.TradeInstance;
 using log4net;
 using Model.EnumType;
 using Model.UI;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.TradeCommand
 {

@@ -138,7 +138,6 @@ namespace DBAccess.TradeInstance
                 _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
                 ret = dbCommand.ExecuteNonQuery();
-                int instanceId = -1;
                 if (ret > 0)
                 {
                     

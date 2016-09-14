@@ -1,4 +1,4 @@
-﻿using DBAccess;
+﻿using DBAccess.Entrust;
 using Model.EnumType;
 using Model.UI;
 using System.Collections.Generic;

@@ -4,7 +4,7 @@ using Model.UI;
 using System;
 using System.Collections.Generic;
 
-namespace DBAccess
+namespace DBAccess.Entrust
 {
     public class EntrustCommandDAO: BaseDAO
     {

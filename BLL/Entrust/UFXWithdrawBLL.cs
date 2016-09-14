@@ -1,6 +1,7 @@
 ﻿using BLL.UFX;
 using BLL.UFX.impl;
 using DBAccess;
+using DBAccess.Entrust;
 using log4net;
 using Model.Binding.BindingUtil;
 using Model.BLL;

@@ -1,5 +1,6 @@
 ﻿using BLL.Entrust;
 using DBAccess;
+using DBAccess.Entrust;
 using DBAccess.TradeCommand;
 using Model;
 using Model.BLL;

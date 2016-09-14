@@ -166,8 +166,6 @@ namespace BLL.UFX
                 logger.Error(msg);
                 return (int)ConnectionCode.ErrorNoFunctionCode;
             }
-
-            return retCode;
         }
 
         public DataParser SendSync2(CT2BizMessage message)
