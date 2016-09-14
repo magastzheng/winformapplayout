@@ -11,6 +11,11 @@ namespace BLLTest
     [TestClass]
     public class PermissionCalculatorTest
     {
+        /// <summary>
+        /// BIT: 7      6       5       4       3       2       1       0
+        ///      1      1       1       1       1       1       1       1
+        ///      128    64      32      16      8       4       2       1
+        /// </summary>
         [TestMethod]
         public void TestHasPermission()
         {
@@ -20,6 +25,10 @@ namespace BLLTest
             var result = calculator.HasPermission(perm, Model.Permission.PermissionMask.Add);
             Assert.AreEqual(true, result);
             Console.WriteLine(result);
+
+            perm = -1;
+            result = calculator.HasPermission(perm, Model.Permission.PermissionMask.Add);
+            Assert.AreEqual(true, result);
         }
 
         [TestMethod]
@@ -28,20 +37,42 @@ namespace BLLTest
             int perm = 0;
             PermissionCalculator calculator = new PermissionCalculator();
 
+            //首次授权
             var result = calculator.GrantPermission(perm, Model.Permission.PermissionMask.Add);
-            Assert.AreEqual((int)Model.Permission.PermissionMask.Add, result);
-            Console.WriteLine(result);
+            var expected = (int)Model.Permission.PermissionMask.Add;
+            Assert.AreEqual(expected, result);
+            //Console.WriteLine(result);
+
+            //授予其他权限
+            result = calculator.GrantPermission(result, Model.Permission.PermissionMask.Delete);
+            expected = expected + (int)Model.Permission.PermissionMask.Delete;
+            Assert.AreEqual(expected, result);
+
+            //重复给相同权限
+            result = calculator.GrantPermission(result, Model.Permission.PermissionMask.Delete);
+            Assert.AreEqual(expected, result);
+
+            result = calculator.GrantPermission(result, Model.Permission.PermissionMask.Edit);
+            expected = expected + (int)Model.Permission.PermissionMask.Edit;
+            Assert.AreEqual(expected, result);
         }
 
         [TestMethod]
         public void TestRevokePermission()
         {
-            int perm = 3;
+            int perm = 255;
             PermissionCalculator calculator = new PermissionCalculator();
 
             var result = calculator.RevokePermission(perm, Model.Permission.PermissionMask.Add);
-            Assert.AreEqual(1, result);
-            Console.WriteLine(result);
+            var expected = perm - (int)Model.Permission.PermissionMask.Add;
+            Assert.AreEqual(expected, result);
+
+            result = calculator.RevokePermission(result, Model.Permission.PermissionMask.Add);
+            Assert.AreEqual(expected, result);
+
+            result = calculator.RevokePermission(result, Model.Permission.PermissionMask.Delete);
+            expected = expected - (int)Model.Permission.PermissionMask.Delete;
+            Assert.AreEqual(expected, result);
         }
     }
 }

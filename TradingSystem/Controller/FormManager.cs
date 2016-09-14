@@ -105,15 +105,15 @@ namespace TradingSystem.Controller
                             hasGrid = true;
                         }
                         break;
-                    case "currenttemplate":
-                        {
-                            formType = typeof(StockTemplateForm);
-                            hasGrid = true;
-                            //StockTemplateDAO _dbdao = new StockTemplateDAO();
-                            //var items = _dbdao.GetTemplate(-1);
-                            //json = JsonUtil.SerializeObject(items);
-                        }
-                        break;
+                    //case "currenttemplate":
+                    //    {
+                    //        formType = typeof(StockTemplateForm);
+                    //        hasGrid = true;
+                    //        //StockTemplateDAO _dbdao = new StockTemplateDAO();
+                    //        //var items = _dbdao.GetTemplate(-1);
+                    //        //json = JsonUtil.SerializeObject(items);
+                    //    }
+                    //    break;
                     case "historytemplate":
                         break;
                     case "instancemanagement":

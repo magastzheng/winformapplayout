@@ -7,13 +7,12 @@ create table rolefeaturepermission(
 	Id			int identity(1, 1) primary key,
 	RoleId		int not null,
 	FeatureId	int not null,
-	Permission	int	
+	Permission	int				--必须是非负整数
 )
 
 --Permission(32 bit)
 --0			1		2		3			4		5		6		7                        
---Create   Delete  Modify  Select/View 	
-
+--Owner		Add		Delete  Modify  Select/View Execute	Query	
 if exists (select name from sysobjects where name='procRoleFeaturePermissionInsert')
 drop proc procRoleFeaturePermissionInsert
 

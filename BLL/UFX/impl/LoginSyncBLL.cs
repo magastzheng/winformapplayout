@@ -116,6 +116,7 @@ namespace BLL.UFX.impl
                 }
                 else
                 {
+                    string msg = string.Format("Code: [{0}], Message: {1}", response.ErrorCode, response.ErrorMessage);
                     logger.Error(response.ErrorMessage);
                 }
 
@@ -183,6 +184,8 @@ namespace BLL.UFX.impl
                 var response = T2ErrorHandler.Handle(parser);
                 if (!T2ErrorHandler.Success(response.ErrorCode))
                 {
+                    string msg = string.Format("Code: [{0}], Message: {1}", response.ErrorCode, response.ErrorMessage);
+                    logger.Error(msg);
                     return ConnectionCode.ErrorFailContent;
                 }
             }
@@ -243,7 +246,8 @@ namespace BLL.UFX.impl
                 var response = T2ErrorHandler.Handle(parser);
                 if (!T2ErrorHandler.Success(response.ErrorCode))
                 {
-                    logger.Error(response.ErrorMessage);
+                    string msg = string.Format("Code: [{0}], Message: {1}", response.ErrorCode, response.ErrorMessage);
+                    logger.Error(msg);
                     return ConnectionCode.ErrorFailContent;
                 }
             }

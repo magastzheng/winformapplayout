@@ -12,6 +12,10 @@ namespace BLL.Permission
         private RoleBLL _roleBLL = new RoleBLL();
         private UserRoleBLL _userRoleBLL = new UserRoleBLL();
         private RoleFeaturePermissionBLL _roleFeaturePermBLL = new RoleFeaturePermissionBLL();
+        private UserResourcePermissionBLL _userResourcePermBLL = new UserResourcePermissionBLL();
+        private PermissionCalculator _permCalculator = new PermissionCalculator();
+
+        #region user role permission
 
         public List<Role> GetRoles(User user)
         {
@@ -58,5 +62,69 @@ namespace BLL.Permission
 
             return GetRoleFeaturePermission(roles);
         }
+
+        #endregion
+
+        #region check/grant/revoke rights of permission
+
+        public bool HasPermission(User user, Feature feature, PermissionMask mask)
+        {
+            var roleFeaturePerms = GetRoleFeaturePermission(user);
+            var currentFeaturePerms = roleFeaturePerms.Where(p => p.FeatureId == feature.Id).ToList();
+            var perms = currentFeaturePerms.Select(p => p.Permission).ToList();
+
+            return _permCalculator.HasPermission(perms, mask);
+        }
+
+        public int GrantPermission(Role role, Feature feature, PermissionMask mask)
+        {
+            var roleFeaturePerm = _roleFeaturePermBLL.Get(role.Id, feature.Id);
+            roleFeaturePerm.Permission = _permCalculator.GrantPermission(roleFeaturePerm.Permission, mask);
+
+            return _roleFeaturePermBLL.Update(roleFeaturePerm);
+        }
+
+        public int RevokePermission(Role role, Feature feature, PermissionMask mask)
+        {
+            var roleFeaturePerm = _roleFeaturePermBLL.Get(role.Id, feature.Id);
+            roleFeaturePerm.Permission = _permCalculator.RevokePermission(roleFeaturePerm.Permission, mask);
+
+            return _roleFeaturePermBLL.Update(roleFeaturePerm);
+        }
+
+        #endregion
+
+        #region user resource permission
+
+        public List<UserResourcePermission> GetUserResourcePermission(User user)
+        {
+            return _userResourcePermBLL.Get(user.Id);
+        }
+
+        #endregion
+
+        #region check/grant/revoke rights of resource
+
+        public bool HasPermission(User user, Resource resource, PermissionMask mask)
+        {
+            var userResourcePerm = _userResourcePermBLL.Get(user.Id, resource.Id);
+
+            return _permCalculator.HasPermission(userResourcePerm.Permission, mask);
+        }
+
+        public int GrantPermission(User user, Resource resource, PermissionMask mask)
+        {
+            var userResourcePerm = _userResourcePermBLL.Get(user.Id, resource.Id);
+
+            return _permCalculator.GrantPermission(userResourcePerm.Permission, mask);
+        }
+
+        public int RevokePermission(User user, Resource resource, PermissionMask mask)
+        {
+            var userResourcePerm = _userResourcePermBLL.Get(user.Id, resource.Id);
+
+            return _permCalculator.RevokePermission(userResourcePerm.Permission, mask);
+        }
+        #endregion
     }
 }
