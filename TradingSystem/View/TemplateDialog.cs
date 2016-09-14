@@ -160,6 +160,8 @@ namespace TradingSystem.View
                 stockTemplate.Benchmark = item.Id;
             }
 
+            stockTemplate.UserId = LoginManager.Instance.GetUserId();
+            
             return stockTemplate;
         }
 

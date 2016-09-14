@@ -11,7 +11,7 @@ create table monitorunit(
 	BearContract		varchar(10),					--期货合约ID
 	StockTemplateId		int,							--现货模板ID
 	Active				int, -- 0 -inactive, 1 - active, 只有active的才会在开仓界面中可见
-	Owner				varchar(10),
+	Owner				int,
 	CreatedDate			datetime,
 	ModifiedDate		datetime
 )
@@ -29,7 +29,7 @@ create proc procMonitorUnitInsert(
 	@PortfolioId int,
 	@BearContract varchar(10),
 	@StockTemplateId int,
-	@Owner varchar(10),
+	@Owner int,
 	@CreatedDate datetime
 )
 as

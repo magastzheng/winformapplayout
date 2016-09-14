@@ -35,14 +35,7 @@ namespace DBAccess
             _dbHelper.AddInParameter(dbCommand, "@PortfolioId", System.Data.DbType.Int32, monitorUnit.PortfolioId);
             _dbHelper.AddInParameter(dbCommand, "@BearContract", System.Data.DbType.String, monitorUnit.BearContract);
             _dbHelper.AddInParameter(dbCommand, "@StockTemplateId", System.Data.DbType.Int32, monitorUnit.StockTemplateId);
-            if (monitorUnit.Owner == null || string.IsNullOrEmpty(monitorUnit.Owner))
-            {
-                _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.String, "");
-            }
-            else
-            {
-                _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.String, monitorUnit.Owner);
-            }
+            _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.Int32, monitorUnit.Owner);
             _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, DateTime.Now);
 
             _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
@@ -131,7 +124,7 @@ namespace DBAccess
                     item.PortfolioId = (int)reader["PortfolioId"];
                     item.BearContract = (string)reader["BearContract"];
                     item.StockTemplateId = (int)reader["StockTemplateId"];
-                    item.Owner = (string)reader["Owner"];
+                    item.Owner = (int)reader["Owner"];
                     //item.CreatedDate = (DateTime)reader["CreatedDate"];
                     //if (reader["ModifiedDate"] != null)
                     //{
@@ -170,7 +163,7 @@ namespace DBAccess
                     item.StockTemplateId = (int)reader["StockTemplateId"];
                     item.StockTemplateName = (string)reader["TemplateName"];
                     item.Selection = ((int)reader["Active"] > 0) ? true : false;
-                    item.Owner = (string)reader["Owner"];
+                    item.Owner = (int)reader["Owner"];
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {
                         //item.CreatedDate = (DateTime)reader["CreatedDate"];
@@ -209,7 +202,7 @@ namespace DBAccess
                     item.BearContract = (string)reader["BearContract"];
                     item.StockTemplateId = (int)reader["StockTemplateId"];
                     item.StockTemplateName = (string)reader["TemplateName"];
-                    item.Owner = (string)reader["Owner"];
+                    item.Owner = (int)reader["Owner"];
 
                     activeItems.Add(item);
                 }

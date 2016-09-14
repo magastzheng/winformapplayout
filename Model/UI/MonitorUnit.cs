@@ -43,7 +43,7 @@ namespace Model.UI
         //[TypeConverter(typeof(IntBoolConverter))]
         public bool Selection { get; set; }
 
-        public string Owner { get; set; }
+        public int Owner { get; set; }
 
         public MonitorUnitAccountType EAccountType { get; set; }
     }

@@ -22,7 +22,7 @@ namespace BLL.UFX.obsolete
 
         }
 
-        public ConnectionCode Login(User user)
+        public ConnectionCode Login(LoginUser user)
         {
             if (!IsInit)
             {

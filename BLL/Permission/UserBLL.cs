@@ -37,5 +37,26 @@ namespace BLL.Permission
         {
             return _userdao.Get();
         }
+
+        public User GetUser(string operatorNo)
+        {
+            var user = Get(operatorNo);
+
+            //If there is no user in the database, create new one.
+            if (user == null || string.IsNullOrEmpty(user.Operator))
+            {
+                user = new User 
+                {
+                    Operator = operatorNo,
+                    Name = operatorNo,
+                    Status = UserStatus.Active,
+                };
+
+                int userId = Create(user);
+                user.Id = userId;
+            }
+
+            return user;
+        }
     }
 }

@@ -107,7 +107,7 @@ namespace BLL.UFX
         //    }
         //}
 
-        public ConnectionCode Subscribe(User user)
+        public ConnectionCode Subscribe(LoginUser user)
         {
             callback = new T2SubCallback();
             subcribe = _conn.NewSubscriber(callback, "ufx_subscribe", (int)_timeOut, 2000, 100);

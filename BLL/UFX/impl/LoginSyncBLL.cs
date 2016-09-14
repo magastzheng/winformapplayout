@@ -17,7 +17,7 @@ namespace BLL.UFX.impl
             _t2SDKWrap = t2SDKWrap;
         }
 
-        public ConnectionCode Login(User user)
+        public ConnectionCode Login(LoginUser user)
         {
             FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.Login);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)

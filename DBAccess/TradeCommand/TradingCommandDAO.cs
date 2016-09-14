@@ -40,6 +40,7 @@ namespace DBAccess.TradeCommand
             _dbHelper.AddInParameter(dbCommand, "@FuturesDirection", System.Data.DbType.Int32, (int)cmdItem.EFuturesDirection);
             _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)cmdItem.EEntrustStatus);
             _dbHelper.AddInParameter(dbCommand, "@DealStatus", System.Data.DbType.Int32, (int)cmdItem.EDealStatus);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitPerson", System.Data.DbType.Int32, cmdItem.SubmitPerson);
 
             //command time
             DateTime now = DateTime.Now;
@@ -134,7 +135,7 @@ namespace DBAccess.TradeCommand
                     item.EFuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
                     item.EEntrustStatus = (EntrustStatus)reader["EntrustStatus"];
                     item.EDealStatus = (DealStatus)reader["DealStatus"];
-                    item.SubmitPerson = (string)reader["SubmitPerson"];
+                    item.SubmitPerson = (int)reader["SubmitPerson"];
                     item.MonitorUnitId = (int)reader["MonitorUnitId"];
                     item.InstanceCode = (string)reader["InstanceCode"];
                     item.MonitorUnitName = (string)reader["MonitorUnitName"];
@@ -194,7 +195,7 @@ namespace DBAccess.TradeCommand
                     item.EFuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
                     item.EEntrustStatus = (EntrustStatus)reader["EntrustStatus"];
                     item.EDealStatus = (DealStatus)reader["DealStatus"];
-                    item.SubmitPerson = (string)reader["SubmitPerson"];
+                    item.SubmitPerson = (int)reader["SubmitPerson"];
                     item.MonitorUnitId = (int)reader["MonitorUnitId"];
                     item.InstanceCode = (string)reader["InstanceCode"];
                     item.MonitorUnitName = (string)reader["MonitorUnitName"];

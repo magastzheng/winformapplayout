@@ -18,7 +18,7 @@ go
 create proc procUsersInsert(
 	@Operator	varchar(10)
 	,@Name		varchar(10)
-	,@Status	int = NULL
+	,@Status	int = NULL	--默认为非激活状态
 )
 as
 begin
@@ -56,7 +56,8 @@ go
 create proc procUsersUpdate(
 	@Operator	varchar(10)
 	,@Name		varchar(10)
-	,@Status	int)
+	,@Status	int
+)
 as
 begin
 	update users

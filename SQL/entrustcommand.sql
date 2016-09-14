@@ -12,6 +12,7 @@ create table entrustcommand(
 	,BatchNo		int								--委托之后，服务器返回的批号
 	,EntrustStatus	int								--委托状态
 	,DealStatus		int								--成交状态
+	,SubmitPerson	int								--提交人
 	,CreatedDate	datetime						--提交时间	
 	,ModifiedDate	datetime						--修改时间	
 	,EntrustFailCode	int							--委托错误码
@@ -26,6 +27,7 @@ go
 create proc procEntrustCommandInsert(
 	@CommandId		int
 	,@Copies		int
+	,@SubmitPerson	int
 	,@CreatedDate	datetime
 )
 as
@@ -38,6 +40,7 @@ begin
 		,BatchNo
 		,EntrustStatus
 		,DealStatus
+		,SubmitPerson
 		,CreatedDate
 		,EntrustFailCode
 		,EntrustFailCause
@@ -49,6 +52,7 @@ begin
 		,-1
 		,0
 		,1
+		,@SubmitPerson
 		,@CreatedDate
 		,0
 		,NULL
@@ -330,6 +334,7 @@ begin
 		  ,BatchNo
 		  ,EntrustStatus
 		  ,DealStatus
+		  ,SubmitPerson
 		  ,CreatedDate
 		  ,ModifiedDate
 		  ,EntrustFailCode

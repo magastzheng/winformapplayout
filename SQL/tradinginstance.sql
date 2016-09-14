@@ -14,7 +14,7 @@ create table tradinginstance(
 	,StockPriceType		int			--股票价格类型： 0 - 不限价，1 - 最新价，A-J盘1至盘10
 	,FuturesPriceType	int			--期货合约价格类型： 0 - 不限价，1 - 最新价， A-E盘1到盘5
 	,Status				int			--交易实例状态 0 - 无效， 1 - 有效
-	,Owner				varchar(10)	--所有者
+	,Owner				int			--所有者
 	,CreatedDate		datetime	--交易实例创建时间
 	,ModifiedDate		datetime	--交易实例修改时间
 	--,StartDate			datetime -- 指令开始时间
@@ -36,8 +36,8 @@ create proc procTradingInstanceInsert(
 	,@OperationCopies	int
 	,@StockPriceType	int
 	,@FuturesPriceType	int
-	,@Status				int
-	,@Owner				varchar(10)
+	,@Status			int
+	,@Owner				int
 	,@CreatedDate		datetime
 )
 as
@@ -90,7 +90,7 @@ create proc procTradingInstanceUpdate(
 	,@StockPriceType	int
 	,@FuturesPriceType	int
 	,@Status			int
-	,@Owner				varchar(10)
+	,@Owner				int
 	,@ModifiedDate		datetime
 )
 as

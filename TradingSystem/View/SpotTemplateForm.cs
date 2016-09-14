@@ -322,13 +322,11 @@ namespace TradingSystem.View
                 case TempChangeType.New:
                     {
                         var template = _templateBLL.CreateTemplate(stockTemplate);
-                        //_tempdbdao.Create(stockTemplate.TemplateName, stockTemplate.EWeightType, stockTemplate.EReplaceType, stockTemplate.FutureCopies, stockTemplate.MarketCapOpt, stockTemplate.Benchmark, 11111);
                         stockTemplate.TemplateId = template.TemplateId;
                     }
                     break;
                 case TempChangeType.Update:
                     {
-                        //int tempid = _templateBLL.upd _tempdbdao.Update(stockTemplate.TemplateId, stockTemplate.TemplateName, stockTemplate.EWeightType, stockTemplate.EReplaceType, stockTemplate.FutureCopies, stockTemplate.MarketCapOpt, stockTemplate.Benchmark, 11111);
                         int tempid = _templateBLL.UpdateTemplate(stockTemplate);
                         stockTemplate.TemplateId = tempid;
                     }

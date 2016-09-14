@@ -392,6 +392,7 @@ namespace DBAccess.Entrust
                     }
                     item.EntrustStatus = (EntrustStatus)(int)reader["EntrustStatus"];
                     item.DealStatus = (DealStatus)(int)reader["DealStatus"];
+                    item.SubmitPerson = (int)reader["SubmitPerson"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {

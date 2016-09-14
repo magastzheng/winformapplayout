@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DBAccess
+namespace DBAccess.SecurityInfo
 {
     public class SecurityInfoDAO: BaseDAO
     {

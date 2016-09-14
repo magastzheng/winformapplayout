@@ -1,10 +1,6 @@
-﻿using DBAccess;
+﻿using DBAccess.SecurityInfo;
 using Model.config;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Template
 {

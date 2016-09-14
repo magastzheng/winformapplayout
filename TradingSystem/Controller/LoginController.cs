@@ -1,4 +1,5 @@
 ﻿using BLL;
+using BLL.Permission;
 using BLL.Product;
 using BLL.UFX;
 using BLL.UFX.impl;
@@ -16,6 +17,7 @@ namespace TradingSystem.Controller
         private LoginForm _loginForm;
         private T2SDKWrap _t2SDKWrap;
         private ProductBLL _productBLL;
+        private UserBLL _userBLL;
         //private CountdownEvent _cdEvent = new CountdownEvent(4);
         //private LoginBLL _loginBLL;
         
@@ -35,6 +37,7 @@ namespace TradingSystem.Controller
             //this._loginBLL = new LoginBLL(t2SDKWrap);
             //this._loginBLL
             this._productBLL = new ProductBLL();
+            this._userBLL = new UserBLL();
 
             this._loginForm = loginForm;
             this._loginForm.LoginController = this;
@@ -43,7 +46,7 @@ namespace TradingSystem.Controller
         public int Login(string userName, string password)
         {
 
-            User user = new User
+            LoginUser user = new LoginUser
             {
                 Operator = userName,
                 Password = password
@@ -60,13 +63,23 @@ namespace TradingSystem.Controller
 
         private void LoginSuccess()
         {
+            //get or create the user into the database.
+            var user = _userBLL.GetUser(LoginManager.Instance.LoginUser.Operator);
+            if (user != null && user.Id > 0)
+            {
+                LoginManager.Instance.LoginUser.LocalUser = user;
+            }
+
+            //fetch the Fund, AssetUnit, Portfolio, Holder by UFX.
             BLLManager.Instance.AccountBLL.QueryAccount();
             BLLManager.Instance.AccountBLL.QueryAssetUnit();
             BLLManager.Instance.AccountBLL.QueryPortfolio();
             BLLManager.Instance.AccountBLL.QueryHolder();
 
+            //sync the fund, AssetUnit, Portfolio into database.
             _productBLL.Create(LoginManager.Instance.Accounts, LoginManager.Instance.Assets, LoginManager.Instance.Portfolios);
 
+            //Subscribe the message from UFX.
             BLLManager.Instance.Subscriber.Subscribe(LoginManager.Instance.LoginUser);
             ServiceManager.Instance.Start();
             var gridConfig = ConfigManager.Instance.GetGridConfig();

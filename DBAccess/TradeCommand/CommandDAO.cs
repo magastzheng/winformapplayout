@@ -48,7 +48,7 @@ namespace DBAccess.TradeCommand
                 _dbHelper.AddInParameter(dbCommand, "@FuturesDirection", System.Data.DbType.Int32, (int)cmdItem.EFuturesDirection);
                 _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)cmdItem.EEntrustStatus);
                 _dbHelper.AddInParameter(dbCommand, "@DealStatus", System.Data.DbType.Int32, (int)cmdItem.EDealStatus);
-                _dbHelper.AddInParameter(dbCommand, "@SubmitPerson", System.Data.DbType.String, cmdItem.SubmitPerson);
+                _dbHelper.AddInParameter(dbCommand, "@SubmitPerson", System.Data.DbType.Int32, cmdItem.SubmitPerson);
                 
                 //command time
                 DateTime now = DateTime.Now;

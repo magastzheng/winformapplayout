@@ -1,5 +1,4 @@
 ﻿using DBAccess.Product;
-using Model.EnumType;
 using Model.strategy;
 using Model.UI;
 using System.Collections.Generic;

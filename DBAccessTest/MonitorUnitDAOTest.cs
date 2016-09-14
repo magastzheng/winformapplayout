@@ -24,7 +24,7 @@ namespace DBAccessTest
                 PortfolioId = 12,
                 BearContract = "IC1609",
                 StockTemplateId = 650,
-                Owner = "100200"
+                Owner = 100200
             };
 
             int id = dao.Create(monitorUnit);

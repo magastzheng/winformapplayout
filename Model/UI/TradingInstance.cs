@@ -25,7 +25,7 @@ namespace Model.UI
 
         public TradingInstanceStatus Status { get; set; }
 
-        public string Owner { get; set; }
+        public int Owner { get; set; }
 
         public DateTime CreatedDate { get; set; }
 

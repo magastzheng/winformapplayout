@@ -41,7 +41,7 @@ namespace Model.UI
         public string MonitorUnitName { get; set; }
 
         [BindingAttribute("creator")]
-        public string Owner { get; set; }
+        public string Creator { get; set; }
 
         [BindingAttribute("createddate")]
         public string CreatedDate 
@@ -54,6 +54,8 @@ namespace Model.UI
         {
             get { return DateFormat.Format(DCreatedDate, ConstVariable.TimeFormat); }
         }
+
+        public int Owner { get; set; }
 
         public int TemplateId { get; set; }
 

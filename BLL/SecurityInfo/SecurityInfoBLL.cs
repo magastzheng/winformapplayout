@@ -1,4 +1,4 @@
-﻿using DBAccess;
+﻿using DBAccess.SecurityInfo;
 using Model.SecurityInfo;
 using System.Collections.Generic;
 

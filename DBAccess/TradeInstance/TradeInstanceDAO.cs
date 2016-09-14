@@ -1,4 +1,5 @@
 ﻿using log4net;
+using Model.EnumType;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -53,8 +54,8 @@ namespace DBAccess.TradeInstance
                 _dbHelper.AddInParameter(dbCommand, "@OperationCopies", System.Data.DbType.Int32, tradeInstance.OperationCopies);
                 _dbHelper.AddInParameter(dbCommand, "@StockPriceType", System.Data.DbType.Int32, (int)tradeInstance.StockPriceType);
                 _dbHelper.AddInParameter(dbCommand, "@FuturesPriceType", System.Data.DbType.Int32, (int)tradeInstance.FuturesPriceType);
-                _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, 1);
-                _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.String, tradeInstance.Owner);
+                _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)TradingInstanceStatus.Active);
+                _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.Int32, (int)tradeInstance.Owner);
                 _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, DateTime.Now);
 
                 _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
@@ -133,8 +134,8 @@ namespace DBAccess.TradeInstance
                 _dbHelper.AddInParameter(dbCommand, "@OperationCopies", System.Data.DbType.Int32, tradeInstance.OperationCopies);
                 _dbHelper.AddInParameter(dbCommand, "@StockPriceType", System.Data.DbType.Int32, (int)tradeInstance.StockPriceType);
                 _dbHelper.AddInParameter(dbCommand, "@FuturesPriceType", System.Data.DbType.Int32, (int)tradeInstance.FuturesPriceType);
-                _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, 1);
-                _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.String, tradeInstance.Owner);
+                _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)TradingInstanceStatus.Active);
+                _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.Int32, tradeInstance.Owner);
                 _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
                 ret = dbCommand.ExecuteNonQuery();

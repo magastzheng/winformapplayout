@@ -39,8 +39,8 @@ namespace DBAccess.TradeInstance
             _dbHelper.AddInParameter(dbCommand, "@OperationCopies", System.Data.DbType.Int32, securityItem.OperationCopies);
             _dbHelper.AddInParameter(dbCommand, "@StockPriceType", System.Data.DbType.Int32, (int)securityItem.StockPriceType);
             _dbHelper.AddInParameter(dbCommand, "@FuturesPriceType", System.Data.DbType.Int32, (int)securityItem.FuturesPriceType);
-            _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, 1);
-            _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.String, securityItem.Owner);
+            _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)TradingInstanceStatus.Active);
+            _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.Int32, (int)securityItem.Owner);
             _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, DateTime.Now);
 
             _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
@@ -68,8 +68,8 @@ namespace DBAccess.TradeInstance
             _dbHelper.AddInParameter(dbCommand, "@OperationCopies", System.Data.DbType.Int32, securityItem.OperationCopies);
             _dbHelper.AddInParameter(dbCommand, "@StockPriceType", System.Data.DbType.Int32, (int)securityItem.StockPriceType);
             _dbHelper.AddInParameter(dbCommand, "@FuturesPriceType", System.Data.DbType.Int32, (int)securityItem.FuturesPriceType);
-            _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, securityItem.Status);
-            _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.String, securityItem.Owner);
+            _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)securityItem.Status);
+            _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.Int32, (int)securityItem.Owner);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
             int ret = _dbHelper.ExecuteNonQuery(dbCommand);
@@ -116,7 +116,7 @@ namespace DBAccess.TradeInstance
                     item.StockPriceType = (StockPriceType)reader["StockPriceType"];
                     item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
                     item.Status = (TradingInstanceStatus)reader["Status"];
-                    item.Owner = (string)reader["Owner"];
+                    item.Owner = (int)reader["Owner"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {
@@ -158,7 +158,7 @@ namespace DBAccess.TradeInstance
                     item.StockPriceType = (StockPriceType)reader["StockPriceType"];
                     item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
                     item.Status = (TradingInstanceStatus)reader["Status"];
-                    item.Owner = (string)reader["Owner"];
+                    item.Owner = (int)reader["Owner"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {
@@ -205,7 +205,7 @@ namespace DBAccess.TradeInstance
                     item.StockPriceType = (StockPriceType)reader["StockPriceType"];
                     item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
                     item.Status = (TradingInstanceStatus)reader["Status"];
-                    item.Owner = (string)reader["Owner"];
+                    item.Owner = (int)reader["Owner"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {
@@ -246,7 +246,7 @@ namespace DBAccess.TradeInstance
                     item.StockPriceType = (StockPriceType)reader["StockPriceType"];
                     item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
                     item.Status = (TradingInstanceStatus)reader["Status"];
-                    item.Owner = (string)reader["Owner"];
+                    item.Owner = (int)reader["Owner"];
                     item.MonitorUnitName = (string)reader["MonitorUnitName"];
                     item.TemplateId = (int)reader["TemplateId"];
                     item.TemplateName = (string)reader["TemplateName"];
@@ -295,7 +295,7 @@ namespace DBAccess.TradeInstance
                     item.StockPriceType = (StockPriceType)reader["StockPriceType"];
                     item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
                     item.Status = (TradingInstanceStatus)reader["Status"];
-                    item.Owner = (string)reader["Owner"];
+                    item.Owner = (int)reader["Owner"];
                     item.MonitorUnitName = (string)reader["MonitorUnitName"];
                     item.TemplateId = (int)reader["TemplateId"];
                     item.TemplateName = (string)reader["TemplateName"];
@@ -345,7 +345,7 @@ namespace DBAccess.TradeInstance
                     item.StockPriceType = (StockPriceType)reader["StockPriceType"];
                     item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
                     item.Status = (TradingInstanceStatus)reader["Status"];
-                    item.Owner = (string)reader["Owner"];
+                    item.Owner = (int)reader["Owner"];
                     item.MonitorUnitName = (string)reader["MonitorUnitName"];
                     item.TemplateId = (int)reader["TemplateId"];
                     item.TemplateName = (string)reader["TemplateName"];

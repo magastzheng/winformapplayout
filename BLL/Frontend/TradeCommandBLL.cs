@@ -33,7 +33,7 @@ namespace BLL.Frontend
         #region submit
         public int Submit(Model.Database.TradeCommand cmdItem, List<TradeCommandSecurity> secuItems)
         {
-            cmdItem.SubmitPerson = LoginManager.Instance.LoginUser.Operator;
+            cmdItem.SubmitPerson = LoginManager.Instance.GetUserId();
             return _commanddao.Create(cmdItem, secuItems);
         }
 

@@ -2,7 +2,7 @@
 using Model.config;
 using System.Collections.Generic;
 
-namespace DBAccess
+namespace DBAccess.SecurityInfo
 {
     public class BenchmarkDAO : BaseDAO
     {

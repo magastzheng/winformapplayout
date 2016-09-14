@@ -1,4 +1,5 @@
 ﻿using Model;
+using Model.Permission;
 using Model.strategy;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Config
     {
         private static readonly LoginManager _instance = new LoginManager();
 
-        private User _loginUser;
+        private LoginUser _loginUser;
 
         private List<AccountItem> _accounts = new List<AccountItem>();
         private List<AssetItem> _assets = new List<AssetItem>();
@@ -31,7 +32,7 @@ namespace Config
             get { return _instance; }
         }
 
-        public User LoginUser
+        public LoginUser LoginUser
         {
             get { return _loginUser; }
             set { _loginUser = value; }
@@ -51,6 +52,25 @@ namespace Config
         {
             get { return _portfolios; }
         }
+
+        #region user
+
+        public User GetUser()
+        {
+            return _loginUser.LocalUser;
+        }
+
+        public int GetUserId()
+        {
+            if (_loginUser != null && _loginUser.LocalUser != null)
+            {
+                return _loginUser.LocalUser.Id;
+            }
+
+            return -1;
+        }
+
+        #endregion
 
         #region accounts
         public void AddAccount(AccountItem account)

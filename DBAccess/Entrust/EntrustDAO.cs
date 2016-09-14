@@ -49,6 +49,7 @@ namespace DBAccess.Entrust
                 dbCommand.CommandText = SP_CreateEntrustCommand;
                 _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, cmdItem.CommandId);
                 _dbHelper.AddInParameter(dbCommand, "@Copies", System.Data.DbType.Int32, cmdItem.Copies);
+                _dbHelper.AddInParameter(dbCommand, "@SubmitPerson", System.Data.DbType.Int32, cmdItem.SubmitPerson);
                 _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, DateTime.Now);
 
                 _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);

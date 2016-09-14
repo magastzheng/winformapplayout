@@ -364,8 +364,8 @@ namespace TradingSystem.View
                         Status = TradingInstanceStatus.Active,
                     };
 
-                    tradeInstance.Owner = LoginManager.Instance.LoginUser.Operator;
-
+                    tradeInstance.Owner = LoginManager.Instance.GetUserId();
+                    
                     var secuItems = _securityDataSource.Where(p => p.MonitorId == newOpenItem.MonitorId).ToList();
 
                     instanceId = _tradeInstanceBLL.Create(tradeInstance, newOpenItem, secuItems);

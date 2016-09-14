@@ -1,4 +1,4 @@
-﻿using DBAccess;
+﻿using DBAccess.SecurityInfo;
 using Model.EnumType;
 using Model.Quote;
 using Model.SecurityInfo;

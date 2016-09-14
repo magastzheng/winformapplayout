@@ -165,7 +165,7 @@ namespace Model.UI
 
         public DateTime DEndDate { get; set; }
 
-        public string SubmitPerson { get; set; }
+        public int SubmitPerson { get; set; }
 
         public DateTime CreatedDate { get; set; }
 

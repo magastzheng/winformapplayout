@@ -16,7 +16,7 @@ create table tradingcommand(
 	,FuturesDirection	int								--12-卖出开仓，13 -买入平仓
 	,EntrustStatus		int								-- 1 - 未执行， 2 - 部分执行， 3- 已完成
 	,DealStatus			int								-- 1 - 未成交， 2 - 部分成交， 3 - 已完成
-	,SubmitPerson		varchar(10)						--下达人
+	,SubmitPerson		int								--下达人
 	,CreatedDate		datetime						-- 下达指令时间
 	,ModifiedDate		datetime						-- 修改时间
 	,StartDate			datetime						-- 指令有效开始时间
@@ -40,7 +40,7 @@ create proc procTradingCommandInsert(
 	,@FuturesDirection	int
 	,@EntrustStatus		int
 	,@DealStatus		int	
-	,@SubmitPerson		varchar(10)
+	,@SubmitPerson		int
 	,@CreatedDate		datetime
 	,@StartDate			datetime
 	,@EndDate			datetime
@@ -66,7 +66,7 @@ begin
 	values(
 		@InstanceId
 		,@CommandNum		
-		,1		
+		,0		
 		,@CommandType		
 		,@ExecuteType		
 		,@StockDirection	

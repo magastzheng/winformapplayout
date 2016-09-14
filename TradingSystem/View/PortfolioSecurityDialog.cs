@@ -1,5 +1,7 @@
-﻿using Controls.Entity;
+﻿using BLL.SecurityInfo;
+using Controls.Entity;
 using DBAccess;
+using DBAccess.SecurityInfo;
 using Model.SecurityInfo;
 using Model.UI;
 using System;
@@ -19,7 +21,7 @@ namespace TradingSystem.View
         private int _templateId = -1;
         private IList<AutoItem> _dataSource = new List<AutoItem>();
 
-        private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
+        //private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
         private List<SecurityItem> _securityInfoList = new List<SecurityItem>();
 
         public DialogType DialogType
@@ -99,7 +101,7 @@ namespace TradingSystem.View
             }
 
             acSecurity.SetDropdownList(this.lbDropdown);
-            _securityInfoList = _secudbdao.Get(SecurityType.All);
+            _securityInfoList = SecurityInfoManager.Instance.Get();
             foreach (var secuInfo in _securityInfoList)
             { 
                 AutoItem autoItem = new AutoItem
