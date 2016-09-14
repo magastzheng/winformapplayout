@@ -1,7 +1,10 @@
-﻿using BLL.UFX;
+﻿using BLL.Product;
+using BLL.UFX;
 using BLL.UFX.impl;
 using log4net;
+using Model;
 using Model.Binding.BindingUtil;
+using Model.BLL;
 using Model.UFX;
 using System;
 using System.Collections.Generic;
@@ -17,51 +20,69 @@ namespace BLL.Entrust
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private SecurityBLL _securityBLL = null;
+        private ProductBLL _productBLL = new ProductBLL();
+        private int _timeOut = 30 * 1000;
 
         public UFXQueryHoldingBLL()
         {
             _securityBLL = BLLManager.Instance.SecurityBLL;
         }
 
-        public int Query()
+        public int Query(CallerCallback callback)
         {
             int ret = -1;
 
-            //var portfolio = LoginManager.Instance.GetPortfolio(tradeCommandItem.PortfolioCode);
-            //var stockholder = LoginManager.Instance.GetHolder(tradeCommandItem.
-
-            var ufxRequests = new List<UFXHoldingRequest>();
-            var ufxRequest = new UFXHoldingRequest 
+            var portfolios = _productBLL.GetAll();
+            foreach (var portfolio in portfolios)
             {
-                CombiNo = "30",
-            };
-
-            ufxRequests.Add(ufxRequest);
-
-            Callbacker callbacker = new Callbacker
-            {
-                Token = new CallerToken
+                var ufxRequests = new List<UFXHoldingRequest>();
+                var ufxRequest = new UFXHoldingRequest
                 {
-                    SubmitId = 90000,
-                    CommandId = 90001,
-                    WaitEvent = new AutoResetEvent(false),
-                },
+                    CombiNo = portfolio.PortfolioNo,
+                };
 
-                DataHandler = DataHandlerCallback,
-            };
+                ufxRequests.Add(ufxRequest);
 
-            var result = _securityBLL.QueryHolding(ufxRequests, callbacker);
-
-            if (result == Model.ConnectionCode.Success)
-            {
-                callbacker.Token.WaitEvent.WaitOne();
-                var errorResponse = callbacker.Token.OutArgs as UFXErrorResponse;
-                if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
+                Callbacker callbacker = new Callbacker
                 {
-                    ret = 1;
+                    Token = new CallerToken
+                    {
+                        SubmitId = 90000,
+                        CommandId = 90001,
+                        InArgs = portfolio.PortfolioNo,
+                        WaitEvent = new AutoResetEvent(false),
+                        Caller = callback,
+                    },
+
+                    DataHandler = DataHandlerCallback,
+                };
+
+                var result = _securityBLL.QueryHolding(ufxRequests, callbacker);
+
+                BLLResponse bllResponse = new BLLResponse();
+                if (result == Model.ConnectionCode.Success)
+                {
+                    callbacker.Token.WaitEvent.WaitOne(_timeOut);
+                    var errorResponse = callbacker.Token.OutArgs as UFXErrorResponse;
+                    if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
+                    {
+                        ret = 1;
+                        bllResponse.Code = ConnectionCode.Success;
+                        bllResponse.Message = "Success QueryHolding";
+                    }
+                    else
+                    {
+                        bllResponse.Code = ConnectionCode.FailEntrust;
+                        bllResponse.Message = "Fail QueryHolding: " + errorResponse.ErrorMessage;
+                    }
+                }
+                else
+                {
+                    bllResponse.Code = result;
+                    bllResponse.Message = "Fail to QueryHolding in ufx.";
                 }
             }
-
+        
             return ret;
         }
 
@@ -94,6 +115,11 @@ namespace BLL.Entrust
             else
             {
                 ret = -1;
+            }
+
+            if (token.Caller != null)
+            {
+                token.Caller(token, null, errorResponse);
             }
 
             if (token.WaitEvent != null)
