@@ -2,7 +2,6 @@
 using Config;
 using Controls.Entity;
 using Controls.GridView;
-using DBAccess;
 using Model.config;
 using Model.Data;
 using Model.SecurityInfo;
@@ -167,7 +166,7 @@ namespace TradingSystem.View
             //如果之前的现货模板有改动，提示保存
             if (this._isTempStockChanged)
             {
-                if (MessageBox.Show(this, MsgSaveStock, MsgTitleWarn, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
+                if (MessageBox.Show(this, MsgSaveStock, MsgTitleWarn, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.No)
                 {
                     return;
                 }
@@ -282,7 +281,7 @@ namespace TradingSystem.View
             }
             else
             {
-                MessageBox.Show(this, MsgDeleteTemp, MsgTitleWarn, MessageBoxButtons.OK);
+                MessageBox.Show(this, MsgDeleteTemp, MsgTitleWarn, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -440,12 +439,12 @@ namespace TradingSystem.View
             List<int> selectIndex = TSDataGridViewHelper.GetSelectRowIndex(this.secuGridView);
             if (selectIndex.Count == 0)
             {
-                MessageBox.Show("请选择要删除的证券", "警告", MessageBoxButtons.OK);
+                MessageBox.Show(this, "请选择要删除的证券", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             string msg = string.Format(MsgDeleteStock, template.TemplateId, template.TemplateName, selectIndex.Count);
-            if (MessageBox.Show(msg, "警告", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
+            if (MessageBox.Show(this, msg, "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.No)
             {
                 return;
             }
@@ -467,14 +466,14 @@ namespace TradingSystem.View
         {
             if (tempGridView.CurrentRow == null)
             {
-                MessageBox.Show("请选择需要添加的现货模板！", "警告", MessageBoxButtons.OK);
+                MessageBox.Show(this, "请选择需要添加的现货模板！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             int rowIndex = tempGridView.CurrentRow.Index;
             if (rowIndex < 0 || rowIndex > _tempDataSource.Count)
             {
-                MessageBox.Show("无效选择！", "警告", MessageBoxButtons.OK);
+                MessageBox.Show(this, "无效选择！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -505,20 +504,20 @@ namespace TradingSystem.View
             List<int> selectIndex = TSDataGridViewHelper.GetSelectRowIndex(secuGridView);
             if (selectIndex.Count == 0)
             {
-                MessageBox.Show("请选择需要修改的证券！", "警告", MessageBoxButtons.OK);
+                MessageBox.Show(this, "请选择需要修改的证券！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (selectIndex.Count > 1)
             {
-                MessageBox.Show("每次仅能对一支证券修改！", "警告", MessageBoxButtons.OK);
+                MessageBox.Show(this, "每次仅能对一支证券修改！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             int rowIndex = selectIndex[0];
             if (rowIndex < 0 || rowIndex > _spotDataSource.Count)
             {
-                MessageBox.Show("无效选择！", "警告", MessageBoxButtons.OK);
+                MessageBox.Show(this, "无效选择！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -564,7 +563,7 @@ namespace TradingSystem.View
                             if (findStock != null)
                             {
                                 ret = false;
-                                MessageBox.Show(this, "不能添加相同的证券", "警告", MessageBoxButtons.OK);
+                                MessageBox.Show(this, "不能添加相同的证券", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             }
                             else
                             {
@@ -617,7 +616,7 @@ namespace TradingSystem.View
             var invalidSecuItem = _spotDataSource.Where(p => p.SettingWeight <= 0.0001 || p.Amount == 0).ToList();
             if (invalidSecuItem != null && invalidSecuItem.Count() > 0)
             {
-                if (MessageBox.Show(this, "存在权重设置为零的证券，如果继续将删除这些证券!", "警告", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
+                if (MessageBox.Show(this, "存在权重设置为零的证券，如果继续将删除这些证券!", "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.No)
                 {
                     return;
                 }
@@ -718,14 +717,18 @@ namespace TradingSystem.View
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
             fileDialog.Filter = "(*.xls)|*.xls|(*.xlsx)|*.xlsx";
-            if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (fileDialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+            {
+                return false;
+            }
+            else
             {
                 string extension = Path.GetExtension(fileDialog.FileName);
                 List<string> list = new List<string>() { ".xls", ".xlsx" };
 
                 if (!list.Contains(extension))
                 {
-                    MessageBox.Show(this, "文件类型不符合", "请选择excel文件", MessageBoxButtons.OK);
+                    MessageBox.Show(this, "文件类型不符合", "请选择excel文件", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                     return false;
                 }
@@ -739,43 +742,50 @@ namespace TradingSystem.View
 
                 int sheetIndex = 0;
                 var table = ExcelUtil.GetSheetData(fileDialog.FileName, sheetIndex, colHeadMap);
-                if (table != null)
+                if (table == null)
                 {
-                    var stockList = ExcelToGrid(table);
-                    switch (importType)
-                    {
-                        case ImportType.Replace:
-                            {
-                                _spotDataSource.Clear();
-                                foreach (var stock in stockList)
-                                {
-                                    _spotDataSource.Add(stock);
-                                }
-                            }
-                            break;
-                        case ImportType.Append:
-                            {
-                                //List<TemplateStock> appendList = new List<TemplateStock>();
-                                List<TemplateStock> duplicatedList = new List<TemplateStock>();
-                                foreach (var sp in _spotDataSource)
-                                {
-                                    int index = stockList.FindIndex(p => p.SecuCode.Equals(sp.SecuCode));
-                                    if (index >= 0)
-                                    {
-                                        duplicatedList.Add(stockList[index]);
-                                        stockList.RemoveAt(index);
-                                    }
-                                }
+                    return false;
+                }
 
-                                foreach (var nitem in stockList)
+                var stockList = ExcelToGrid(table);
+                if (stockList == null || stockList.Count == 0)
+                {
+                    return false;
+                }
+
+                switch (importType)
+                {
+                    case ImportType.Replace:
+                        {
+                            _spotDataSource.Clear();
+                            foreach (var stock in stockList)
+                            {
+                                _spotDataSource.Add(stock);
+                            }
+                        }
+                        break;
+                    case ImportType.Append:
+                        {
+                            //List<TemplateStock> appendList = new List<TemplateStock>();
+                            List<TemplateStock> duplicatedList = new List<TemplateStock>();
+                            foreach (var sp in _spotDataSource)
+                            {
+                                int index = stockList.FindIndex(p => p.SecuCode.Equals(sp.SecuCode));
+                                if (index >= 0)
                                 {
-                                    _spotDataSource.Add(nitem);
+                                    duplicatedList.Add(stockList[index]);
+                                    stockList.RemoveAt(index);
                                 }
                             }
-                            break;
-                        default:
-                            break;
-                    }
+
+                            foreach (var nitem in stockList)
+                            {
+                                _spotDataSource.Add(nitem);
+                            }
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
 
@@ -789,7 +799,6 @@ namespace TradingSystem.View
             if(template == null)
                 return stockList;
 
-            //var secuInfoList = _secudbdao.Get(2);
             //用于获取二维表表头名字与Excel中表头进行匹配，获取Excel DataTable中列的位置
             HSGrid hsGrid = _gridConfig.GetGid(GridStock);
             var gridColumns = hsGrid.Columns;
@@ -854,6 +863,7 @@ namespace TradingSystem.View
                         stock.Exchange = secuInfo.ExchangeCode;
                     }
                 }
+
                 stockList.Add(stock);
             }
 
