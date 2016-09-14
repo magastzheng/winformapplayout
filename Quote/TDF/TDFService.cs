@@ -50,6 +50,7 @@ namespace Quote.TDF
         private EventWaitHandle _waitHandle = new AutoResetEvent(false);
         private bool _isOpening = false;
         private Thread _serviceThread = null;
+        private int _timeOut = 30 * 1000;
 
         public void Open()
         {
@@ -100,7 +101,7 @@ namespace Quote.TDF
                 this._tdfImp = dataSource;
                 logger.Info("宏汇行情初始化成功!");
 
-                _waitHandle.WaitOne();
+                _waitHandle.WaitOne(_timeOut);
             }
 
             _isOpening = false;

@@ -21,6 +21,7 @@ namespace BLL.Entrust
        
         private ProductBLL _productBLL = new ProductBLL();
         private SecurityBLL _securityBLL = null;
+        private int _timeOut = 30 * 1000;
 
         public UFXQueryDealBLL()
         {
@@ -65,17 +66,24 @@ namespace BLL.Entrust
                 BLLResponse bllResponse = new BLLResponse();
                 if (result == Model.ConnectionCode.Success)
                 {
-                    callbacker.Token.WaitEvent.WaitOne();
-                    var errorResponse = callbacker.Token.OutArgs as UFXErrorResponse;
-                    if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
+                    if (callbacker.Token.WaitEvent.WaitOne(_timeOut))
                     {
-                        bllResponse.Code = ConnectionCode.Success;
-                        bllResponse.Message = "Success QueryDeal";
+                        var errorResponse = callbacker.Token.OutArgs as UFXErrorResponse;
+                        if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
+                        {
+                            bllResponse.Code = ConnectionCode.Success;
+                            bllResponse.Message = "Success QueryDeal";
+                        }
+                        else
+                        {
+                            bllResponse.Code = ConnectionCode.FailQueryDeal;
+                            bllResponse.Message = "Fail QueryDeal: " + errorResponse.ErrorMessage;
+                        }
                     }
                     else
                     {
-                        bllResponse.Code = ConnectionCode.FailEntrust;
-                        bllResponse.Message = "Fail QueryDeal: " + errorResponse.ErrorMessage;
+                        bllResponse.Code = ConnectionCode.FailQueryDeal;
+                        bllResponse.Message = "Fail QueryDeal: Timeout!";
                     }
                 }
                 else

@@ -41,5 +41,8 @@ namespace Model
         FailEntrust = -301,
         FailSubmit = -302,
         FailWithdraw = -303,
+        FailQueryEntrust = -304,
+        FailQueryDeal = -305,
+        FailQueryHolding = -306,
     }
 }

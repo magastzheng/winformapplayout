@@ -14,6 +14,7 @@ namespace BLL.Entrust
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private SecurityBLL _securityBLL = null;
+        private int _timeOut = 30 * 1000;
 
         public UFXQueryMultipleHoldingBLL()
         {
@@ -51,11 +52,17 @@ namespace BLL.Entrust
 
             if (result == Model.ConnectionCode.Success)
             {
-                callbacker.Token.WaitEvent.WaitOne();
-                var errorResponse = callbacker.Token.OutArgs as UFXErrorResponse;
-                if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
+                if (callbacker.Token.WaitEvent.WaitOne(_timeOut))
                 {
-                    ret = 1;
+                    var errorResponse = callbacker.Token.OutArgs as UFXErrorResponse;
+                    if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
+                    {
+                        ret = 1;
+                    }
+                }
+                else
+                {
+                    ret = -1;
                 }
             }
 

@@ -62,18 +62,25 @@ namespace BLL.Entrust
                 BLLResponse bllResponse = new BLLResponse();
                 if (result == Model.ConnectionCode.Success)
                 {
-                    callbacker.Token.WaitEvent.WaitOne(_timeOut);
-                    var errorResponse = callbacker.Token.OutArgs as UFXErrorResponse;
-                    if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
+                    if (callbacker.Token.WaitEvent.WaitOne(_timeOut))
                     {
-                        ret = 1;
-                        bllResponse.Code = ConnectionCode.Success;
-                        bllResponse.Message = "Success QueryHolding";
+                        var errorResponse = callbacker.Token.OutArgs as UFXErrorResponse;
+                        if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
+                        {
+                            ret = 1;
+                            bllResponse.Code = ConnectionCode.Success;
+                            bllResponse.Message = "Success QueryHolding";
+                        }
+                        else
+                        {
+                            bllResponse.Code = ConnectionCode.FailQueryHolding;
+                            bllResponse.Message = "Fail QueryHolding: " + errorResponse.ErrorMessage;
+                        }
                     }
                     else
-                    {
-                        bllResponse.Code = ConnectionCode.FailEntrust;
-                        bllResponse.Message = "Fail QueryHolding: " + errorResponse.ErrorMessage;
+                    { 
+                        bllResponse.Code = ConnectionCode.FailQueryHolding;
+                        bllResponse.Message = "Fail QueryHolding: Timeout";
                     }
                 }
                 else

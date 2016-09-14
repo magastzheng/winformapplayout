@@ -25,10 +25,8 @@ namespace BLL.Entrust
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private SecurityBLL _securityBLL = null;
-        //private TradeCommandBLL _tradeCommandBLL = null;
         private ProductBLL _productBLL = new ProductBLL();
-        //private 
-        //private AutoResetEvent _waitEvent = new AutoResetEvent(false);
+        private int _timeOut = 30 * 1000;
 
         public UFXQueryEntrustBLL()
         {
@@ -37,27 +35,7 @@ namespace BLL.Entrust
 
         public List<EntrustFlowItem> QueryToday(CallerCallback callback)
         {
-            //List<UFXQueryEntrustRequest> requests = new List<UFXQueryEntrustRequest>();
-
             var portfolios = _productBLL.GetAll();
-            //foreach (var portfolio in portfolios)
-            //{
-
-            //    UFXQueryEntrustRequest request = new UFXQueryEntrustRequest();
-            //    //request.RequestNum = 9000;
-            //    request.CombiNo = portfolio.PortfolioNo;
-            //    requests.Add(request);
-            //}
-            //UFXQueryEntrustRequest request = new UFXQueryEntrustRequest();
-            //request.AccountCode = "850010";
-            //request.CombiNo = "30";
-            //requests.Add(request);
-
-            //UFXQueryEntrustRequest request2 = new UFXQueryEntrustRequest();
-            //request2.AccountCode = "851001";
-            //request2.CombiNo = "11000002";
-            //requests.Add(request2);
-
             foreach (var portfolio in portfolios)
             {
                 List<UFXQueryEntrustRequest> requests = new List<UFXQueryEntrustRequest>();
@@ -86,17 +64,24 @@ namespace BLL.Entrust
                 BLLResponse bllResponse = new BLLResponse();
                 if (result == Model.ConnectionCode.Success)
                 {
-                    callbacker.Token.WaitEvent.WaitOne();
-                    var errorResponse = callbacker.Token.OutArgs as UFXErrorResponse;
-                    if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
+                    if (callbacker.Token.WaitEvent.WaitOne(_timeOut))
                     {
-                        bllResponse.Code = ConnectionCode.Success;
-                        bllResponse.Message = "Success Entrust";
+                        var errorResponse = callbacker.Token.OutArgs as UFXErrorResponse;
+                        if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
+                        {
+                            bllResponse.Code = ConnectionCode.Success;
+                            bllResponse.Message = "Success Entrust";
+                        }
+                        else
+                        {
+                            bllResponse.Code = ConnectionCode.FailEntrust;
+                            bllResponse.Message = "Fail Entrust: " + errorResponse.ErrorMessage;
+                        }
                     }
                     else
                     {
                         bllResponse.Code = ConnectionCode.FailEntrust;
-                        bllResponse.Message = "Fail Entrust: " + errorResponse.ErrorMessage;
+                        bllResponse.Message = "Fail Entrust: Timeout";
                     }
                 }
                 else
@@ -106,9 +91,6 @@ namespace BLL.Entrust
                 }
             }
            
-
-            //_waitEvent.WaitOne(30 * 1000);
-
             return null;
         }
 

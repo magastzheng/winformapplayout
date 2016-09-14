@@ -81,7 +81,7 @@ namespace BLL.Entrust
                 else
                 {
                     bllResponse.Code = Model.ConnectionCode.FailSubmit;
-                    bllResponse.Message = "Fail to submit the basket withdraw to UFX!";
+                    bllResponse.Message = "Fail to submit the basket withdraw to UFX: Timeout";
                 }
             }
             else

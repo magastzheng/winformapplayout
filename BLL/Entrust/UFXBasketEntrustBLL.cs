@@ -26,6 +26,7 @@ namespace BLL.Entrust
         private TradeCommandBLL _tradeCommandBLL = null;
         private EntrustCommandBLL _entrustCommandBLL = new EntrustCommandBLL();
         private EntrustDAO _entrustdao = new EntrustDAO();
+        private int _timeOut = 30 * 1000;
         
         public UFXBasketEntrustBLL()
         {
@@ -105,17 +106,24 @@ namespace BLL.Entrust
             BLLResponse bllResponse = new BLLResponse();
             if (result == Model.ConnectionCode.Success)
             {
-                callbacker.Token.WaitEvent.WaitOne();
-                var errorResponse = callbacker.Token.OutArgs as UFXErrorResponse;
-                if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
+                if (callbacker.Token.WaitEvent.WaitOne(_timeOut))
                 {
-                    bllResponse.Code = ConnectionCode.Success;
-                    bllResponse.Message = "Success Entrust";
+                    var errorResponse = callbacker.Token.OutArgs as UFXErrorResponse;
+                    if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
+                    {
+                        bllResponse.Code = ConnectionCode.Success;
+                        bllResponse.Message = "Success Entrust";
+                    }
+                    else
+                    {
+                        bllResponse.Code = ConnectionCode.FailEntrust;
+                        bllResponse.Message = "Fail Entrust: " + errorResponse.ErrorMessage;
+                    }
                 }
                 else
                 {
                     bllResponse.Code = ConnectionCode.FailEntrust;
-                    bllResponse.Message = "Fail Entrust: " + errorResponse.ErrorMessage;
+                    bllResponse.Message = "Timeout to entrust.";
                 }
             }
             else
