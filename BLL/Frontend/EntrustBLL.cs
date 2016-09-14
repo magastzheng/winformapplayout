@@ -1,5 +1,6 @@
 ﻿using BLL.Entrust;
 using DBAccess;
+using DBAccess.TradeCommand;
 using Model;
 using Model.BLL;
 using Model.UI;
@@ -13,8 +14,7 @@ namespace BLL.Frontend
     public class EntrustBLL
     {
         private EntrustDAO _entrustdao = new EntrustDAO();
-        private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
-
+        
         private UFXBasketEntrustBLL _ufxBasketEntrustBLL = new UFXBasketEntrustBLL();
         
         public EntrustBLL()

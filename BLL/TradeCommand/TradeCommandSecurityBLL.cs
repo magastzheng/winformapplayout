@@ -1,6 +1,7 @@
 ﻿using BLL.EntrustCommand;
 using BLL.SecurityInfo;
 using DBAccess;
+using DBAccess.TradeCommand;
 using log4net;
 using Model.UI;
 using System;

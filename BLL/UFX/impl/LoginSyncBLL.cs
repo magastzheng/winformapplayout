@@ -117,7 +117,7 @@ namespace BLL.UFX.impl
                 else
                 {
                     string msg = string.Format("Code: [{0}], Message: {1}", response.ErrorCode, response.ErrorMessage);
-                    logger.Error(response.ErrorMessage);
+                    logger.Error(msg);
                 }
 
                 if (!string.IsNullOrEmpty(token))

@@ -1,4 +1,5 @@
-﻿using Config;
+﻿using BLL.Template;
+using Config;
 using Controls;
 using DBAccess;
 using Model.Data;
@@ -19,9 +20,10 @@ namespace TradingSystem.View
         private const string GridStock = "templatestock";
         private HSGridView _tempGridView;
         private HSGridView _stockGridView;
-        private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
-        private TemplateStockDAO _stockdbdao = new TemplateStockDAO();
+        //private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
+        //private TemplateStockDAO _stockdbdao = new TemplateStockDAO();
         private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
+        private TemplateBLL _templateBLL = new TemplateBLL();
         private bool _isStockChange = false;
 
         public StockTemplateForm()
@@ -64,7 +66,7 @@ namespace TradingSystem.View
         private void Form_LoadActived(string json)
         {
             //StockTemplateDAO _dbdao = new StockTemplateDAO();
-            var items = _tempdbdao.GetByUser(-1);
+            var items = _templateBLL.GetTemplateByUser(-1);
             json = JsonUtil.SerializeObject(items);
 
             if(!string.IsNullOrEmpty(json))
@@ -106,7 +108,7 @@ namespace TradingSystem.View
             if (templateNo < 0)
                 return;
 
-            var stocks = _stockdbdao.Get(templateNo);
+            var stocks = _templateBLL.GetStocks(templateNo);
             Model.Data.DataTable dataTable = new Model.Data.DataTable
             {
                 ColumnIndex = new Dictionary<string, int>(),
@@ -561,13 +563,13 @@ namespace TradingSystem.View
             {
                 case TempChangeType.New:
                     {
-                        int newid = _tempdbdao.Create(stockTemplate.TemplateName, stockTemplate.EWeightType, stockTemplate.EReplaceType, stockTemplate.FutureCopies, stockTemplate.MarketCapOpt, stockTemplate.Benchmark, 11111);
-                        stockTemplate.TemplateId = newid;
+                        var newTemplate = _templateBLL.CreateTemplate(stockTemplate);
+                        stockTemplate.TemplateId = newTemplate.TemplateId;
                     }
                     break;
                 case TempChangeType.Update:
                     {
-                        int tempid = _tempdbdao.Update(stockTemplate.TemplateId, stockTemplate.TemplateName, stockTemplate.EWeightType, stockTemplate.EReplaceType, stockTemplate.FutureCopies, stockTemplate.MarketCapOpt, stockTemplate.Benchmark, 11111);
+                        int tempid = _templateBLL.UpdateTemplate(stockTemplate);
                         stockTemplate.TemplateId = tempid;
                     }
                     break;
@@ -659,11 +661,11 @@ namespace TradingSystem.View
             {
                 TemplateStock stock = GetStockDialogData(dataRow, dataTable.ColumnIndex);
                 stock.TemplateNo = template.TemplateId;
-                string newid = _stockdbdao.Create(stock);
-                if (string.IsNullOrEmpty(newid))
-                { 
-                    //TODO: popup the error message
-                }
+                //string newid = _stockdbdao.Create(stock);
+                //if (string.IsNullOrEmpty(newid))
+                //{ 
+                //    //TODO: popup the error message
+                //}
             }
         }
 
@@ -681,11 +683,11 @@ namespace TradingSystem.View
             {
                 TemplateStock stock = GetStockDialogData(dataRow, dataTable.ColumnIndex);
 
-                string newid = _stockdbdao.Delete(template.TemplateId, stock.SecuCode);
-                if (string.IsNullOrEmpty(newid))
-                {
-                    //TODO: popup the error message
-                }
+                //string newid = _stockdbdao.Delete(template.TemplateId, stock.SecuCode);
+                //if (string.IsNullOrEmpty(newid))
+                //{
+                //    //TODO: popup the error message
+                //}
             }
         }
 

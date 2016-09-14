@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 
-namespace DBAccess
+namespace DBAccess.TradeCommand
 {
     public class CommandDAO: BaseDAO
     {
@@ -26,7 +26,7 @@ namespace DBAccess
             
         }
 
-        public int Create(TradeCommand cmdItem, List<TradeCommandSecurity> secuItems)
+        public int Create(Model.Database.TradeCommand cmdItem, List<TradeCommandSecurity> secuItems)
         {
             var dbCommand = _dbHelper.GetCommand();
             _dbHelper.Open(_dbHelper.Connection);

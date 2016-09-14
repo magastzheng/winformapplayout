@@ -5,7 +5,7 @@ using Model.UI;
 using System;
 using System.Collections.Generic;
 
-namespace DBAccess
+namespace DBAccess.TradeCommand
 {
     public class TradingCommandDAO: BaseDAO
     {
@@ -29,7 +29,7 @@ namespace DBAccess
             
         }
 
-        public int Create(TradeCommand cmdItem)
+        public int Create(Model.Database.TradeCommand cmdItem)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
             _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, cmdItem.InstanceId);
@@ -73,7 +73,7 @@ namespace DBAccess
             return commandId;
         }
 
-        public int Update(TradeCommand cmdItem)
+        public int Update(Model.Database.TradeCommand cmdItem)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Modify);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, cmdItem.CommandId);
@@ -112,12 +112,12 @@ namespace DBAccess
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public TradeCommand Get(int commandId)
+        public Model.Database.TradeCommand Get(int commandId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
 
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
-            TradeCommand item = new TradeCommand();
+            var item = new Model.Database.TradeCommand();
 
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
@@ -171,19 +171,19 @@ namespace DBAccess
             return item;
         }
 
-        public List<TradeCommand> GetAll()
+        public List<Model.Database.TradeCommand> GetAll()
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
             
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, -1);
 
-            List<TradeCommand> items = new List<TradeCommand>();
+            var items = new List<Model.Database.TradeCommand>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    TradeCommand item = new TradeCommand();
+                    var item = new Model.Database.TradeCommand();
                     item.CommandId = (int)reader["CommandId"];
                     item.InstanceId = (int)reader["InstanceId"];
                     item.CommandNum = (int)reader["CommandNum"];

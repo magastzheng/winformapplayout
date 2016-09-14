@@ -1,5 +1,5 @@
 ﻿using DBAccess;
-using Model.config;
+using DBAccess.Template;
 using Model.UI;
 using System.Collections.Generic;
 

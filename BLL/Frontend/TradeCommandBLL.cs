@@ -1,5 +1,7 @@
 ﻿using Config;
 using DBAccess;
+using DBAccess.Template;
+using DBAccess.TradeCommand;
 using log4net;
 using Model.Database;
 using Model.EnumType;

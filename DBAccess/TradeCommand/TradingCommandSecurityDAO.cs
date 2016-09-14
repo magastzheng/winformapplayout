@@ -4,7 +4,7 @@ using Model.SecurityInfo;
 using Model.UI;
 using System.Collections.Generic;
 
-namespace DBAccess
+namespace DBAccess.TradeCommand
 {
     public class TradingCommandSecurityDAO: BaseDAO
     {

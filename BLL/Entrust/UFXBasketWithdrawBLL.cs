@@ -2,6 +2,7 @@
 using BLL.UFX;
 using BLL.UFX.impl;
 using DBAccess;
+using DBAccess.TradeCommand;
 using log4net;
 using Model.Binding.BindingUtil;
 using Model.BLL;
@@ -24,7 +25,6 @@ namespace BLL.Entrust
         private EntrustCommandBLL _entrustCommandBLL = new EntrustCommandBLL();
 
         private EntrustDAO _entrustdao = new EntrustDAO();
-        private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
 
         private int _timeOut = 30 * 1000;
 

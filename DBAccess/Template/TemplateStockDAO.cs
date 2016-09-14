@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 
-namespace DBAccess
+namespace DBAccess.Template
 {
     public class TemplateStockDAO : BaseDAO
     {

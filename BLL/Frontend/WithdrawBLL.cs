@@ -3,6 +3,7 @@ using BLL.EntrustCommand;
 using BLL.SecurityInfo;
 using BLL.UFX.impl;
 using DBAccess;
+using DBAccess.TradeCommand;
 using Model.BLL;
 using Model.EnumType;
 using Model.SecurityInfo;

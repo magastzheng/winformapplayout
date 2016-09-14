@@ -47,7 +47,7 @@
     <Compile Include="AssetUnitDAO.cs" />
     <Compile Include="BaseDAO.cs" />
     <Compile Include="BenchmarkDAO.cs" />
-    <Compile Include="CommandDAO.cs" />
+    <Compile Include="TradeCommand\CommandDAO.cs" />
     <Compile Include="DbHelper.cs" />
     <Compile Include="DealSecurityDAO.cs" />
     <Compile Include="EntrustCommandDAO.cs" />
@@ -66,11 +66,11 @@
     <Compile Include="PortfolioDAO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SecurityInfoDAO.cs" />
-    <Compile Include="StockTemplateDAO.cs" />
-    <Compile Include="TemplateStockDAO.cs" />
+    <Compile Include="Template\StockTemplateDAO.cs" />
+    <Compile Include="Template\TemplateStockDAO.cs" />
     <Compile Include="TradeInstance\TradeInstanceDAO.cs" />
-    <Compile Include="TradingCommandDAO.cs" />
-    <Compile Include="TradingCommandSecurityDAO.cs" />
+    <Compile Include="TradeCommand\TradingCommandDAO.cs" />
+    <Compile Include="TradeCommand\TradingCommandSecurityDAO.cs" />
     <Compile Include="TradingInstanceDAO.cs" />
     <Compile Include="TradingInstanceSecurityDAO.cs" />
     <Compile Include="Product\UFXPortfolioDAO.cs" />

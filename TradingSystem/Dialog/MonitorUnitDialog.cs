@@ -1,5 +1,6 @@
 ﻿using BLL.Frontend;
 using BLL.Product;
+using BLL.Template;
 using Config;
 using Controls.Entity;
 using DBAccess;
@@ -18,7 +19,7 @@ namespace TradingSystem.Dialog
         //private FuturesContractDAO _fcdbdao = new FuturesContractDAO();
         private FuturesContractBLL _futureBLL = new FuturesContractBLL();
         private ProductBLL _productBLL = new ProductBLL();
-        private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
+        private TemplateBLL _templateBLL = new TemplateBLL();
 
         public MonitorUnitDialog()
         {
@@ -94,7 +95,7 @@ namespace TradingSystem.Dialog
 
         private void LoadStockTemplate()
         {
-            var templates = _tempdbdao.GetByUser(-1);
+            var templates = _templateBLL.GetTemplateByUser(-1);
             if (templates == null || templates.Count == 0)
                 return;
 
