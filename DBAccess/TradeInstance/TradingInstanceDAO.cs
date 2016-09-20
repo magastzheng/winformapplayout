@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace DBAccess.TradeInstance
 {
-    public class TradingInstanceDAO: BaseDAO
+    public class  TradingInstanceDAO: BaseDAO
     {
         private const string SP_Create = "procTradingInstanceInsert";
         private const string SP_Modify = "procTradingInstanceUpdate";

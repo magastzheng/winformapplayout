@@ -1,9 +1,11 @@
-﻿using BLL.Product;
+﻿using BLL.Permission;
+using BLL.Product;
 using BLL.SecurityInfo;
 using Config;
 using DBAccess;
 using DBAccess.TradeInstance;
 using Model.EnumType;
+using Model.Permission;
 using Model.SecurityInfo;
 using Model.UI;
 using System.Collections.Generic;
@@ -17,6 +19,7 @@ namespace BLL.TradeCommand
         private TradingInstanceSecurityDAO _tradeinstsecudao = new TradingInstanceSecurityDAO();
         private TradeInstanceDAO _tradeinstancedao = new TradeInstanceDAO();
         private ProductBLL _productBLL = new ProductBLL();
+        private PermissionManager _permissionManager = new PermissionManager();
 
         public TradeInstanceBLL()
         { 
@@ -28,6 +31,10 @@ namespace BLL.TradeCommand
             int ret = _tradeinstancedao.Create(tradeInstance, tradeinstSecus);
             if (ret > 0)
             {
+                int userId = LoginManager.Instance.GetUserId();
+                var perms = _permissionManager.GetOwnerPermission();
+                _permissionManager.GrantPermission(userId, tradeInstance.InstanceId, ResourceType.TradeInstance, perms);
+
                 return tradeInstance.InstanceId;
             }
             else
@@ -38,8 +45,16 @@ namespace BLL.TradeCommand
 
         public int Update(TradingInstance tradeInstance, OpenPositionItem openItem, List<OpenPositionSecurityItem> secuItems)
         {
-            var tradeinstSecus = GetTradingInstanceSecurities(tradeInstance, openItem, secuItems);
-            return _tradeinstancedao.Update(tradeInstance, tradeinstSecus);
+            int userId = LoginManager.Instance.GetUserId();
+            if (_permissionManager.HasPermission(userId, tradeInstance.InstanceId, ResourceType.TradeInstance, PermissionMask.Edit))
+            {
+                var tradeinstSecus = GetTradingInstanceSecurities(tradeInstance, openItem, secuItems);
+                return _tradeinstancedao.Update(tradeInstance, tradeinstSecus);
+            }
+            else
+            {
+                return -1;
+            }
         }
 
         //public int Update(TradingInstance tradeInstance, ClosePositionItem closeItem, List<ClosePositionSecurityItem> secuItems)
@@ -49,18 +64,46 @@ namespace BLL.TradeCommand
 
         public TradingInstance GetInstance(int instanceId)
         {
-            return _tradinginstancedao.GetCombine(instanceId);
+            int userId = LoginManager.Instance.GetUserId();
+
+            if (_permissionManager.HasPermission(userId, instanceId, ResourceType.TradeInstance, PermissionMask.Veiw))
+            {
+                return _tradinginstancedao.GetCombine(instanceId);
+            }
+            else
+            {
+                return new TradingInstance();
+            }
         }
 
         public TradingInstance GetInstance(string instanceCode)
         {
+            int userId = LoginManager.Instance.GetUserId();
             var instance = _tradinginstancedao.GetCombineByCode(instanceCode);
-            return instance;
+            if (_permissionManager.HasPermission(userId, instance.InstanceId, ResourceType.TradeInstance, PermissionMask.Veiw))
+            {
+                return instance;
+            }
+            else
+            {
+                return new TradingInstance();
+            }
         }
 
         public List<TradingInstance> GetAllInstance()
         {
-            return _tradinginstancedao.GetCombineAll();
+            int userId = LoginManager.Instance.GetUserId();
+            var allInstances = _tradinginstancedao.GetCombineAll();
+            var instances = new List<TradingInstance>();
+            foreach (var instance in allInstances)
+            {
+                if (_permissionManager.HasPermission(userId, instance.InstanceId, ResourceType.TradeInstance, PermissionMask.Veiw))
+                {
+                    instances.Add(instance);
+                }
+            }
+
+            return instances;
         }
 
         public List<TradingInstance> GetPortfolioInstance(string portfolioCode)
@@ -106,6 +149,19 @@ namespace BLL.TradeCommand
             }
 
             return instItems;
+        }
+
+        public int Delete(int instanceId)
+        { 
+            var userId = LoginManager.Instance.GetUserId();
+            if (_permissionManager.HasPermission(userId, instanceId, ResourceType.TradeInstance, PermissionMask.Delete))
+            {
+                return _tradinginstancedao.Delete(instanceId);
+            }
+            else
+            {
+                return -1;
+            }
         }
 
         #region
