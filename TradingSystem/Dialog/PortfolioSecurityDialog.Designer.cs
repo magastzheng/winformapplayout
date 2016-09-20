@@ -1,4 +1,4 @@
-﻿namespace TradingSystem.View
+﻿namespace TradingSystem.Dialog
 {
     partial class PortfolioSecurityDialog
     {

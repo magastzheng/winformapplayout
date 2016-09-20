@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace TradingSystem.View
+namespace TradingSystem.Dialog
 {
     public enum DialogType
     { 
@@ -92,7 +92,7 @@ namespace TradingSystem.View
             if (data is DialogType)
             {
                 DialogType = (DialogType)data;
-                if (DialogType == View.DialogType.Modify)
+                if (DialogType == DialogType.Modify)
                 {
                     this.acSecurity.Enabled = false;
                 }

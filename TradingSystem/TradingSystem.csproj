@@ -133,10 +133,10 @@
     <Compile Include="View\HoldingTransferedForm.Designer.cs">
       <DependentUpon>HoldingTransferedForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\ImportOptionDialog.cs">
+    <Compile Include="Dialog\ImportOptionDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\ImportOptionDialog.Designer.cs">
+    <Compile Include="Dialog\ImportOptionDialog.Designer.cs">
       <DependentUpon>ImportOptionDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="View\InstanceManagementForm.cs">
@@ -183,10 +183,10 @@
     <Compile Include="View\PortfolioForm.Designer.cs">
       <DependentUpon>PortfolioForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\PortfolioSecurityDialog.cs">
+    <Compile Include="Dialog\PortfolioSecurityDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\PortfolioSecurityDialog.Designer.cs">
+    <Compile Include="Dialog\PortfolioSecurityDialog.Designer.cs">
       <DependentUpon>PortfolioSecurityDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="View\ProductForm.cs">
@@ -213,10 +213,10 @@
     <Compile Include="View\StrategyTradingForm.Designer.cs">
       <DependentUpon>StrategyTradingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\TemplateDialog.cs">
+    <Compile Include="Dialog\TemplateDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\TemplateDialog.Designer.cs">
+    <Compile Include="Dialog\TemplateDialog.Designer.cs">
       <DependentUpon>TemplateDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="View\TradingForm.cs">
@@ -264,7 +264,7 @@
     <EmbeddedResource Include="View\HoldingTransferedForm.resx">
       <DependentUpon>HoldingTransferedForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\ImportOptionDialog.resx">
+    <EmbeddedResource Include="Dialog\ImportOptionDialog.resx">
       <DependentUpon>ImportOptionDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\InstanceManagementForm.resx">
@@ -298,7 +298,7 @@
     <EmbeddedResource Include="View\PortfolioForm.resx">
       <DependentUpon>PortfolioForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\PortfolioSecurityDialog.resx">
+    <EmbeddedResource Include="Dialog\PortfolioSecurityDialog.resx">
       <DependentUpon>PortfolioSecurityDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\ProductForm.resx">
@@ -313,7 +313,7 @@
     <EmbeddedResource Include="View\StrategyTradingForm.resx">
       <DependentUpon>StrategyTradingForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\TemplateDialog.resx">
+    <EmbeddedResource Include="Dialog\TemplateDialog.resx">
       <DependentUpon>TemplateDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\WarnForm.resx">

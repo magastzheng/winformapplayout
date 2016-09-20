@@ -8,7 +8,7 @@ using Model.UI;
 using System;
 using System.Collections.Generic;
 
-namespace TradingSystem.View
+namespace TradingSystem.Dialog
 {
     public partial class TemplateDialog : Forms.BaseDialog
     {

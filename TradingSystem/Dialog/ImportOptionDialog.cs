@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace TradingSystem.View
+namespace TradingSystem.Dialog
 {
     public enum ImportType
     { 

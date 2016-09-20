@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Drawing;
-namespace TradingSystem.View
+namespace TradingSystem.Dialog
 {
     partial class TemplateDialog
     {
