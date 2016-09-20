@@ -328,7 +328,14 @@ namespace TradingSystem.View
                 case TempChangeType.Update:
                     {
                         int tempid = _templateBLL.UpdateTemplate(stockTemplate);
-                        stockTemplate.TemplateId = tempid;
+                        if (tempid > 0)
+                        {
+                            stockTemplate.TemplateId = tempid;
+                        }
+                        else
+                        {
+                            MessageBox.Show(this, "修改模板失败，没有权限或者数据库连接失败", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
                     break;
                 default:

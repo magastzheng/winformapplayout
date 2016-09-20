@@ -74,9 +74,20 @@ namespace BLL.Permission
 
         public int GrantPermission(int userId, int resourceId, ResourceType resourceType, PermissionMask mask)
         {
-            var userResourcePerm = _userResourcePermBLL.Get(userId, TokenType.User, resourceId, resourceType);
+            var masks = new List<PermissionMask>(){mask};
 
-            int perm = _permCalculator.GrantPermission(userResourcePerm.Permission, mask);
+            return GrantPermission(userId, resourceId, resourceType, masks);
+        }
+
+        public int GrantPermission(int userId, int resourceId, ResourceType resourceType, List<PermissionMask> masks)
+        {
+            var userResourcePerm = _userResourcePermBLL.Get(userId, TokenType.User, resourceId, resourceType);
+            int perm = userResourcePerm.Permission;
+            foreach (var mask in masks)
+            {
+                perm = _permCalculator.GrantPermission(perm, mask);
+            }
+
             if (userResourcePerm.Id == userId)
             {
                 return UpdatePermission(userId, TokenType.User, resourceId, resourceType, perm);
@@ -86,12 +97,25 @@ namespace BLL.Permission
                 return CreatePermission(userId, TokenType.User, resourceId, resourceType, perm);
             }
         }
+
 
         public int RevokePermission(int userId, int resourceId, ResourceType resourceType, PermissionMask mask)
         {
-            var userResourcePerm = _userResourcePermBLL.Get(userId, TokenType.User, resourceId, resourceType);
+            var masks = new List<PermissionMask>() { mask };
 
-            int perm = _permCalculator.RevokePermission(userResourcePerm.Permission, mask);
+            return RevokePermission(userId, resourceId, resourceType, masks);
+        }
+
+        public int RevokePermission(int userId, int resourceId, ResourceType resourceType, List<PermissionMask> masks)
+        {
+            var userResourcePerm = _userResourcePermBLL.Get(userId, TokenType.User, resourceId, resourceType);
+            int perm = userResourcePerm.Permission;
+            
+            foreach (var mask in masks)
+            {
+                perm = _permCalculator.RevokePermission(perm, mask);
+            }
+
             if (userResourcePerm.Id == userId)
             {
                 return UpdatePermission(userId, TokenType.User, resourceId, resourceType, perm);
@@ -101,6 +125,15 @@ namespace BLL.Permission
                 return CreatePermission(userId, TokenType.User, resourceId, resourceType, perm);
             }
         }
+        #endregion
+
+        #region permission value
+
+        public List<PermissionMask> GetOwnerPermission()
+        {
+            return new List<PermissionMask>() { PermissionMask.Edit, PermissionMask.Delete, PermissionMask.Owner, PermissionMask.Veiw};
+        }
+
         #endregion
 
         #region private method
