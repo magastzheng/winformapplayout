@@ -42,10 +42,10 @@ namespace BLL.Entrust
                 request.CombiNo = portfolio.PortfolioNo;
                 requests.Add(request);
 
-                if (request.CombiNo == "30")
-                {
-                    request.EntrustNo = 197724;
-                }
+                //if (request.CombiNo == "30")
+                //{
+                //    request.EntrustNo = 197724;
+                //}
 
                 Callbacker callbacker = new Callbacker
                 {
@@ -68,7 +68,7 @@ namespace BLL.Entrust
                 {
                     if (callbacker.Token.WaitEvent.WaitOne(_timeOut))
                     {
-                        var errorResponse = callbacker.Token.OutArgs as UFXErrorResponse;
+                        var errorResponse = callbacker.Token.ErrorResponse as UFXErrorResponse;
                         if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
                         {
                             bllResponse.Code = ConnectionCode.Success;
@@ -127,7 +127,7 @@ namespace BLL.Entrust
         {
             List<UFXQueryDealResponse> responseItems = new List<UFXQueryDealResponse>();
             var errorResponse = T2ErrorHandler.Handle(dataParser);
-            token.OutArgs = errorResponse;
+            token.ErrorResponse = errorResponse;
 
             if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
@@ -144,36 +144,41 @@ namespace BLL.Entrust
                 }
             }
 
-            if (token.Caller != null)
+            try
             {
-                var dealFlowItems = new List<DealFlowItem>();
-                foreach (var responseItem in responseItems)
+                if (token.Caller != null)
                 {
-                    DealFlowItem efItem = new DealFlowItem
+                    var dealFlowItems = new List<DealFlowItem>();
+                    foreach (var responseItem in responseItems)
                     {
-                        CommandNo = token.CommandId,
-                        SecuCode = responseItem.StockCode,
-                        FundNo = responseItem.AccountCode,
-                        PortfolioCode = responseItem.CombiNo,
-                        EntrustDirection = responseItem.EntrustDirection,
-                        DealPrice = responseItem.DealPrice,
-                        DealAmount = responseItem.DealAmount,
-                        DealMoney = responseItem.DealBalance,
-                        DealTime = string.Format("{0}", responseItem.DealTime),
-                        ShareHolderCode = responseItem.StockHolderId,
-                        EntrustNo = string.Format("{0}", responseItem.EntrustNo),
-                        DealNo = string.Format("{0}", responseItem.DealNo),
-                    };
+                        DealFlowItem efItem = new DealFlowItem
+                        {
+                            CommandNo = token.CommandId,
+                            SecuCode = responseItem.StockCode,
+                            FundNo = responseItem.AccountCode,
+                            PortfolioCode = responseItem.CombiNo,
+                            EntrustDirection = responseItem.EntrustDirection,
+                            DealPrice = responseItem.DealPrice,
+                            DealAmount = responseItem.DealAmount,
+                            DealMoney = responseItem.DealBalance,
+                            DealTime = string.Format("{0}", responseItem.DealTime),
+                            ShareHolderCode = responseItem.StockHolderId,
+                            EntrustNo = string.Format("{0}", responseItem.EntrustNo),
+                            DealNo = string.Format("{0}", responseItem.DealNo),
+                        };
 
-                    dealFlowItems.Add(efItem);
+                        dealFlowItems.Add(efItem);
+                    }
+
+                    token.Caller(token, dealFlowItems, errorResponse);
                 }
-
-                token.Caller(token, dealFlowItems,  errorResponse);
             }
-
-            if (token.WaitEvent != null)
+            finally
             {
-                token.WaitEvent.Set();
+                if (token.WaitEvent != null)
+                {
+                    token.WaitEvent.Set();
+                }
             }
 
             return responseItems.Count();

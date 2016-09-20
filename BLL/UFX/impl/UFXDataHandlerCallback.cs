@@ -52,6 +52,8 @@ namespace BLL.UFX.impl
 
         public object OutArgs { get; set; }
 
+        public UFXErrorResponse ErrorResponse { get; set; }
+
         public EventWaitHandle WaitEvent { get; set; }
 
         public CallerCallback Caller { get; set; }

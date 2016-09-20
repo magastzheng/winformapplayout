@@ -6,17 +6,6 @@ using System.Threading.Tasks;
 
 namespace Model.Permission
 {
-    public enum ResourceType
-    { 
-        None = -1,
-        Product = 1,
-        AssetUnit = 2,
-        Portfolio = 3,
-        TradeInstance = 4,
-        TradeCommand = 5,
-        EntrustCommand = 6,
-    }
-
     public class Resource
     {
         public int Id { get; set; }

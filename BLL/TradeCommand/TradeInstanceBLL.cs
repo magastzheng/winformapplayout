@@ -1,5 +1,6 @@
 ﻿using BLL.Product;
 using BLL.SecurityInfo;
+using Config;
 using DBAccess;
 using DBAccess.TradeInstance;
 using Model.EnumType;

@@ -12,10 +12,12 @@ namespace DBAccess.Permission
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private const string SP_Create = "procUserResourcePermissionInsert";
-        private const string SP_Modify = "procUserResourcePermissionUpdate";
-        private const string SP_Delete = "procUserResourcePermissionDelete";
-        private const string SP_Select = "procUserResourcePermissionSelect";
+        private const string SP_Create = "procTokenResourcePermissionInsert";
+        private const string SP_Modify = "procTokenResourcePermissionUpdate";
+        private const string SP_Delete = "procTokenResourcePermissionDelete";
+        private const string SP_SelectToken = "procTokenResourcePermissionSelectByToken";
+        private const string SP_SelectResourceType = "procTokenResourcePermissionSelectResourceType";
+        private const string SP_SelectSingle = "procTokenResourcePermissionSelectSingle";
 
         public UserResourcePermissionDAO()
             : base()
@@ -30,8 +32,10 @@ namespace DBAccess.Permission
         public int Create(UserResourcePermission permission)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
-            _dbHelper.AddInParameter(dbCommand, "@UserId", System.Data.DbType.Int32, permission.UserId);
+            _dbHelper.AddInParameter(dbCommand, "@Token", System.Data.DbType.Int32, permission.Token);
+            _dbHelper.AddInParameter(dbCommand, "@TokenType", System.Data.DbType.Int32, (int)permission.TokenType);
             _dbHelper.AddInParameter(dbCommand, "@ResourceId", System.Data.DbType.Int32, permission.ResourceId);
+            _dbHelper.AddInParameter(dbCommand, "@ResourceType", System.Data.DbType.Int32, (int)permission.ResourceType);
             _dbHelper.AddInParameter(dbCommand, "@Permission", System.Data.DbType.Int32, permission.Permission);
 
             _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
@@ -49,64 +53,62 @@ namespace DBAccess.Permission
 
         public int Update(UserResourcePermission permission)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
-            _dbHelper.AddInParameter(dbCommand, "@UserId", System.Data.DbType.Int32, permission.UserId);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Modify);
+            _dbHelper.AddInParameter(dbCommand, "@Token", System.Data.DbType.Int32, permission.Token);
+            _dbHelper.AddInParameter(dbCommand, "@TokenType", System.Data.DbType.Int32, (int)permission.TokenType);
             _dbHelper.AddInParameter(dbCommand, "@ResourceId", System.Data.DbType.Int32, permission.ResourceId);
+            _dbHelper.AddInParameter(dbCommand, "@ResourceType", System.Data.DbType.Int32, (int)permission.ResourceType);
             _dbHelper.AddInParameter(dbCommand, "@Permission", System.Data.DbType.Int32, permission.Permission);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public int Delete(int userId, int resourceId)
+        public int Delete(int token, TokenType tokenType, int resourceId, ResourceType resourceType)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
-            _dbHelper.AddInParameter(dbCommand, "@UserId", System.Data.DbType.Int32, userId);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Delete);
+            _dbHelper.AddInParameter(dbCommand, "@Token", System.Data.DbType.Int32, token);
+            _dbHelper.AddInParameter(dbCommand, "@TokenType", System.Data.DbType.Int32, (int)tokenType);
             _dbHelper.AddInParameter(dbCommand, "@ResourceId", System.Data.DbType.Int32, resourceId);
+            _dbHelper.AddInParameter(dbCommand, "@ResourceType", System.Data.DbType.Int32, (int)resourceType);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public UserResourcePermission Get(int userId, int resourceId)
+        public UserResourcePermission GetSingle(int token, TokenType tokenType, int resourceId, ResourceType resourceType)
         {
-            var items = GetInternal(userId, resourceId);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_SelectSingle);
+            _dbHelper.AddInParameter(dbCommand, "@Token", System.Data.DbType.Int32, token);
+            _dbHelper.AddInParameter(dbCommand, "@TokenType", System.Data.DbType.Int32, (int)tokenType);
+            _dbHelper.AddInParameter(dbCommand, "@ResourceId", System.Data.DbType.Int32, resourceId);
+            _dbHelper.AddInParameter(dbCommand, "@ResourceType", System.Data.DbType.Int32, (int)resourceType);
+            var reader = _dbHelper.ExecuteReader(dbCommand);
 
-            UserResourcePermission item = null;
-            if (items.Count > 0)
+            UserResourcePermission item = new UserResourcePermission();
+            if (reader.HasRows)
             {
-                item = items[0];
+                while (reader.Read())
+                {
+                    item.Id = (int)reader["Id"];
+                    item.Token = (int)reader["Token"];
+                    item.TokenType = (TokenType)reader["TokenType"];
+                    item.ResourceId = (int)reader["ResourceId"];
+                    item.ResourceType = (ResourceType)reader["ResourceType"];
+                    item.Permission = (int)reader["Permission"];
+                    break;
+                }
             }
-            else
-            {
-                item = new UserResourcePermission();
-            }
+
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
 
             return item;
         }
 
-        public List<UserResourcePermission> Get(int userId)
+        public List<UserResourcePermission> GetByToken(int token, TokenType tokenType)
         {
-            return GetInternal(userId, -1);
-        }
-
-        public List<UserResourcePermission> GetAll()
-        {
-            return GetInternal(-1, -1);
-        }
-
-        #region private method
-
-        private List<UserResourcePermission> GetInternal(int userId, int resourceId)
-        {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Select);
-            if (userId > 0)
-            {
-                _dbHelper.AddInParameter(dbCommand, "@UserId", System.Data.DbType.Int32, userId);
-            }
-
-            if (resourceId > 0)
-            {
-                _dbHelper.AddInParameter(dbCommand, "@ResourceId", System.Data.DbType.Int32, resourceId);
-            }
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_SelectToken);
+            _dbHelper.AddInParameter(dbCommand, "@Token", System.Data.DbType.Int32, token);
+            _dbHelper.AddInParameter(dbCommand, "@TokenType", System.Data.DbType.Int32, (int)tokenType);
 
             List<UserResourcePermission> items = new List<UserResourcePermission>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
@@ -116,8 +118,10 @@ namespace DBAccess.Permission
                 {
                     UserResourcePermission item = new UserResourcePermission();
                     item.Id = (int)reader["Id"];
-                    item.UserId = (int)reader["UserId"];
+                    item.Token = (int)reader["Token"];
+                    item.TokenType = (TokenType)reader["TokenType"];
                     item.ResourceId = (int)reader["ResourceId"];
+                    item.ResourceType = (ResourceType)reader["ResourceType"];
                     item.Permission = (int)reader["Permission"];
 
                     items.Add(item);
@@ -130,6 +134,35 @@ namespace DBAccess.Permission
             return items;
         }
 
-        #endregion
+        public List<UserResourcePermission> GetByResourceType(int token, TokenType tokenType, ResourceType resourceType)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_SelectResourceType);
+            _dbHelper.AddInParameter(dbCommand, "@Token", System.Data.DbType.Int32, token);
+            _dbHelper.AddInParameter(dbCommand, "@TokenType", System.Data.DbType.Int32, (int)tokenType);
+            _dbHelper.AddInParameter(dbCommand, "@ResourceType", System.Data.DbType.Int32, (int)resourceType);
+
+            List<UserResourcePermission> items = new List<UserResourcePermission>();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    UserResourcePermission item = new UserResourcePermission();
+                    item.Id = (int)reader["Id"];
+                    item.Token = (int)reader["Token"];
+                    item.TokenType = (TokenType)reader["TokenType"];
+                    item.ResourceId = (int)reader["ResourceId"];
+                    item.ResourceType = (ResourceType)reader["ResourceType"];
+                    item.Permission = (int)reader["Permission"];
+
+                    items.Add(item);
+                }
+            }
+
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return items;
+        }
     }
 }

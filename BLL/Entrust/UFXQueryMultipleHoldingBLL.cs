@@ -54,7 +54,7 @@ namespace BLL.Entrust
             {
                 if (callbacker.Token.WaitEvent.WaitOne(_timeOut))
                 {
-                    var errorResponse = callbacker.Token.OutArgs as UFXErrorResponse;
+                    var errorResponse = callbacker.Token.ErrorResponse as UFXErrorResponse;
                     if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
                     {
                         ret = 1;
@@ -74,7 +74,7 @@ namespace BLL.Entrust
             int ret = -1;
             
             var errorResponse = T2ErrorHandler.Handle(dataParser);
-            token.OutArgs = errorResponse;
+            token.ErrorResponse = errorResponse;
 
             List<UFXMultipleHoldingResponse> responseItems = new List<UFXMultipleHoldingResponse>();
             if (T2ErrorHandler.Success(errorResponse.ErrorCode))

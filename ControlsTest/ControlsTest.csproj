@@ -59,6 +59,12 @@
     <Compile Include="ButtonContainerForm.Designer.cs">
       <DependentUpon>ButtonContainerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CheckComboBoxForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CheckComboBoxForm.Designer.cs">
+      <DependentUpon>CheckComboBoxForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -114,6 +120,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ButtonContainerForm.resx">
       <DependentUpon>ButtonContainerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CheckComboBoxForm.resx">
+      <DependentUpon>CheckComboBoxForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

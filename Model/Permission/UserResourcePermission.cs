@@ -10,9 +10,13 @@ namespace Model.Permission
     {
         public int Id { get; set; }
 
-        public int UserId { get; set; }
+        public int Token { get; set; }
+
+        public TokenType TokenType { get; set; }
 
         public int ResourceId { get; set; }
+
+        public ResourceType ResourceType { get; set; }
 
         public int Permission { get; set; }
     }

@@ -1,35 +1,45 @@
 use tradingsystem
 
-if object_id('userresourcepermission') is not null
-drop table userresourcepermission
+go
+if object_id('tokenresourcepermission') is not null
+drop table tokenresourcepermission
 
-create table userresourcepermission(
-	Id			int identity(1, 1) primary key,
-	UserId		int not null,
-	ResourceId	int not null,
-	Permission	int
+create table tokenresourcepermission(
+	Id				int identity(1, 1) primary key,
+	Token			int not null,
+	TokenType		int not null,
+	ResourceId		int not null,			--使用(ResourceId, ResourceType）唯一的定位资源，
+	ResourceType	int not null,			--不需要额外的resource表
+	Permission		int
 )
 
-if exists (select name from sysobjects where name='procUserResourcePermissionInsert')
-drop proc procUserResourcePermissionInsert
+go
+if exists (select name from sysobjects where name='procTokenResourcePermissionInsert')
+drop proc procTokenResourcePermissionInsert
 
 go
-create proc procUserResourcePermissionInsert(
-	@UserId			int
+create proc procTokenResourcePermissionInsert(
+	@Token			int
+	,@TokenType		int
 	,@ResourceId	int
+	,@ResourceType	int
 	,@Permission	int
 )
 as
 begin
 	declare @newid int
-	insert into userresourcepermission(
-		UserId
+	insert into tokenresourcepermission(
+		Token
+		,TokenType
 		,ResourceId
+		,ResourceType
 		,Permission
 	)
 	values(
-		@UserId
+		@Token
+		,@TokenType
 		,@ResourceId
+		,@ResourceType
 		,@Permission
 	)
 
@@ -37,83 +47,119 @@ begin
 	return @newid
 end
 
-if exists (select name from sysobjects where name='procUserResourcePermissionUpdate')
-drop proc procUserResourcePermissionUpdate
+go
+if exists (select name from sysobjects where name='procTokenResourcePermissionUpdate')
+drop proc procTokenResourcePermissionUpdate
 
 go
-create proc procUserResourcePermissionUpdate(
-	@UserId			int
+create proc procTokenResourcePermissionUpdate(
+	@Token			int
+	,@TokenType		int
 	,@ResourceId	int
+	,@ResourceType	int
 	,@Permission	int
 )
 as
 begin
-	update userresourcepermission
+	update tokenresourcepermission
 	set Permission	= @Permission
-	where UserId=@UserId and ResourceId=@ResourceId
+	where Token=@Token
+		and TokenType=@TokenType
+		and ResourceId=@ResourceId
+		and ResourceType=@ResourceType
 end
 
-if exists (select name from sysobjects where name='procUserResourcePermissionDelete')
-drop proc procUserResourcePermissionDelete
+go
+if exists (select name from sysobjects where name='procTokenResourcePermissionDelete')
+drop proc procTokenResourcePermissionDelete
 
 go
-create proc procUserResourcePermissionDelete(
-	@UserId			int
+create proc procTokenResourcePermissionDelete(
+	@Token			int
+	,@TokenType		int
 	,@ResourceId	int
+	,@ResourceType	int
 )
 as
 begin
-	delete from userresourcepermission
-	where UserId=@UserId and ResourceId=@ResourceId
+	delete from tokenresourcepermission
+	where Token=@Token
+		and TokenType=@TokenType
+		and ResourceId=@ResourceId
+		and ResourceType=@ResourceType
 end
 
-if exists (select name from sysobjects where name='procUserResourcePermissionSelect')
-drop proc procUserResourcePermissionSelect
+go
+if exists (select name from sysobjects where name='procTokenResourcePermissionSelectByToken')
+drop proc procTokenResourcePermissionSelectByToken
 
 go
-create proc procUserResourcePermissionSelect(
-	@UserId			int = NULL
-	,@ResourceId	int = NULL
+create proc procTokenResourcePermissionSelectByToken(
+	@Token			int
+	,@TokenType		int
 )
 as
 begin
-	if @UserId is not null and @ResourceId is not null
-	begin
-		select
-			Id
-			,UserId
-			,ResourceId
-			,Permission
-		from userresourcepermission
-		where UserId=@UserId and ResourceId=@ResourceId
-	end
-	else if @UserId is not null
-	begin
-		select
-			Id
-			,UserId
-			,ResourceId
-			,Permission
-		from userresourcepermission
-		where UserId=@UserId
-	end
-	else if @ResourceId is not null
-	begin
-		select
-			Id
-			,UserId
-			,ResourceId
-			,Permission
-		from userresourcepermission
-		where ResourceId=@ResourceId
-	end
-	else
-	begin
-		select
-			Id
-			,UserId
-			,ResourceId
-			,Permission
-		from userresourcepermission
-	end
+	select
+		Id
+		,Token
+		,TokenType
+		,ResourceId
+		,ResourceType
+		,Permission
+	from tokenresourcepermission
+	where Token=@Token
+		and TokenType=@TokenType
+end
+
+go
+if exists (select name from sysobjects where name='procTokenResourcePermissionSelectResourceType')
+drop proc procTokenResourcePermissionSelectResourceType
+
+go
+create proc procTokenResourcePermissionSelectResourceType(
+	@Token			int
+	,@TokenType		int
+	,@ResourceType	int
+)
+as
+begin
+	select
+		Id
+		,Token
+		,TokenType
+		,ResourceId
+		,ResourceType
+		,Permission
+	from tokenresourcepermission
+	where Token=@Token
+		and TokenType=@TokenType
+		and ResourceType=@ResourceType
+end
+
+go
+if exists (select name from sysobjects where name='procTokenResourcePermissionSelectSingle')
+drop proc procTokenResourcePermissionSelectSingle
+
+go
+create proc procTokenResourcePermissionSelectSingle(
+	@Token			int
+	,@TokenType		int
+	,@ResourceId	int
+	,@ResourceType	int
+)
+as
+begin
+	select
+		Id
+		,Token
+		,TokenType
+		,ResourceId
+		,ResourceType
+		,Permission
+	from tokenresourcepermission
+	where Token=@Token
+		and TokenType=@TokenType
+		and ResourceId=@ResourceId
+		and ResourceType=@ResourceType
 end

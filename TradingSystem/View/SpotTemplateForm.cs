@@ -687,7 +687,19 @@ namespace TradingSystem.View
                 var stock = _spotDataSource[i];
                 var secuItem = secuList.Find(p => p.SecuCode.Equals(stock.SecuCode) && p.SecuType == SecurityType.Stock);
                 var secuData = QuoteCenter.Instance.GetMarketData(secuItem);
-                prices[i] = secuData.CurrentPrice;
+
+                if (!FloatUtil.IsZero(secuData.CurrentPrice))
+                {
+                    prices[i] = secuData.CurrentPrice;
+                }
+                else if (!FloatUtil.IsZero(secuData.PreClose))
+                {
+                    prices[i] = secuData.PreClose;
+                }
+                else
+                {
+                    prices[i] = secuData.LowLimitPrice;
+                }
             }
 
             var amounts = CalcUtil.CalcStockAmountPerCopyRound(totalValue, weights, prices);

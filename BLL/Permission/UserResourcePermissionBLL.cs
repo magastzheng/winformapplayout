@@ -21,24 +21,24 @@ namespace BLL.Permission
             return _urpermissiondao.Update(urPermission);
         }
 
-        public int Delete(int userId, int resouceId)
+        public int Delete(UserResourcePermission urPermission)
         {
-            return _urpermissiondao.Delete(userId, resouceId);
+            return _urpermissiondao.Delete(urPermission.Token, urPermission.TokenType, urPermission.ResourceId, urPermission.ResourceType);
         }
 
-        public UserResourcePermission Get(int userId, int resourceId)
+        public UserResourcePermission Get(int token, TokenType tokenType, int resourceId, ResourceType resourceType)
         {
-            return _urpermissiondao.Get(userId, resourceId);
+            return _urpermissiondao.GetSingle(token, tokenType, resourceId, resourceType);
         }
 
-        public List<UserResourcePermission> Get(int userId)
+        public List<UserResourcePermission> GetByToken(int token, TokenType tokenType)
         {
-            return _urpermissiondao.Get(userId);
+            return _urpermissiondao.GetByToken(token, tokenType);
         }
 
-        public List<UserResourcePermission> GetAll()
+        public List<UserResourcePermission> GetByResourceType(int token, TokenType tokenType, ResourceType resourceType)
         {
-            return _urpermissiondao.GetAll();
+            return _urpermissiondao.GetByResourceType(token, tokenType, resourceType);
         }
     }
 }

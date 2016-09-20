@@ -14,7 +14,7 @@ namespace BLL.UFX
         protected CT2Connection _conn = null;
         protected uint _timeOut = 10000;
         protected bool _isInit = false;
-        //private Dictionary<FunctionCode, ReceivedBizMsg> _bizCallbackMap = new Dictionary<FunctionCode, ReceivedBizMsg>();
+
         private T2SubCallback callback = null;
         private CT2SubscribeInterface subcribe = null;
 
@@ -86,26 +86,6 @@ namespace BLL.UFX
                 _isInit = false;
             }
         }
-
-        //public void Register(FunctionCode functionCode, ReceivedBizMsg receiver)
-        //{
-        //    if (!_bizCallbackMap.ContainsKey(functionCode))
-        //    {
-        //        _bizCallbackMap[functionCode] = receiver;
-        //    }
-        //    else
-        //    {
-        //        _bizCallbackMap[functionCode] = receiver;
-        //    }
-        //}
-
-        //public void UnRegister(FunctionCode functionCode)
-        //{
-        //    if (!_bizCallbackMap.ContainsKey(functionCode))
-        //    {
-        //        _bizCallbackMap.Remove(functionCode);
-        //    }
-        //}
 
         public ConnectionCode Subscribe(LoginUser user)
         {

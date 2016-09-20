@@ -34,7 +34,7 @@ namespace DBAccess.Product
             _dbHelper.AddInParameter(dbCommand, "@PortfolioName", System.Data.DbType.String, portfolio.PortfolioName);
             _dbHelper.AddInParameter(dbCommand, "@AccountCode", System.Data.DbType.String, portfolio.FundCode);
             _dbHelper.AddInParameter(dbCommand, "@AccountName", System.Data.DbType.String, portfolio.FundName);
-            _dbHelper.AddInParameter(dbCommand, "@AccountType", System.Data.DbType.Int32, portfolio.AccountType);
+            _dbHelper.AddInParameter(dbCommand, "@AccountType", System.Data.DbType.Int32, (int)portfolio.EAccountType);
             _dbHelper.AddInParameter(dbCommand, "@AssetNo", System.Data.DbType.String, portfolio.AssetNo);
             _dbHelper.AddInParameter(dbCommand, "@AssetName", System.Data.DbType.String, portfolio.AssetName);
 

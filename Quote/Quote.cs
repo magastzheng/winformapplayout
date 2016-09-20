@@ -15,7 +15,7 @@ namespace Quote
 
     public class QueryHelper
     {
-        public static List<string> AllFields = new List<string>() { "rt_last", "rt_amt", "rt_susp_flag", "rt_trade_status", "rt_high_limit", "rt_low_limit", "rt_upward_vol", "rt_downward_vol"};//, "rt_ask1", "rt_ask2", "rt_ask3", "rt_ask4", "rt_ask5", "rt_ask6", "rt_ask7", "rt_ask8", "rt_ask9", "rt_ask10", "rt_bid1", "rt_bid2", "rt_bid3", "rt_bid4", "rt_bid5", "rt_bid6", "rt_bid7", "rt_bid8", "rt_bid9", "rt_bid10" };
+        public static List<string> AllFields = new List<string>() { "rt_last", "rt_pre_close", "rt_amt", "rt_susp_flag", "rt_trade_status", "rt_high_limit", "rt_low_limit", "rt_upward_vol", "rt_downward_vol" };//, "rt_ask1", "rt_ask2", "rt_ask3", "rt_ask4", "rt_ask5", "rt_ask6", "rt_ask7", "rt_ask8", "rt_ask9", "rt_ask10", "rt_bid1", "rt_bid2", "rt_bid3", "rt_bid4", "rt_bid5", "rt_bid6", "rt_bid7", "rt_bid8", "rt_bid9", "rt_bid10" };
         private static Dictionary<PriceType, string> PriceTypeMap = new Dictionary<PriceType, string>() 
         {
             {PriceType.Market, "rt_last"},
@@ -456,6 +456,11 @@ namespace Quote
                                 case "rt_low_limit":
                                     {
                                         marketData.LowLimitPrice = dval;
+                                    }
+                                    break;
+                                case "rt_pre_close":
+                                    {
+                                        marketData.PreClose = dval;
                                     }
                                     break;
                                 default:

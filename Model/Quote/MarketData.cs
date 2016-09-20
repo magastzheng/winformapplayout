@@ -106,6 +106,8 @@ namespace Model.Quote
 
         public double LowLimitPrice;
 
+        public double PreClose;
+
         public string UpdateTime;
 
     }

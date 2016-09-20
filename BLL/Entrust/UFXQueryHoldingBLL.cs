@@ -6,12 +6,9 @@ using Model;
 using Model.Binding.BindingUtil;
 using Model.BLL;
 using Model.UFX;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace BLL.Entrust
 {
@@ -31,7 +28,6 @@ namespace BLL.Entrust
         public int Query(CallerCallback callback)
         {
             int ret = -1;
-
             var portfolios = _productBLL.GetAll();
             foreach (var portfolio in portfolios)
             {
@@ -64,7 +60,7 @@ namespace BLL.Entrust
                 {
                     if (callbacker.Token.WaitEvent.WaitOne(_timeOut))
                     {
-                        var errorResponse = callbacker.Token.OutArgs as UFXErrorResponse;
+                        var errorResponse = callbacker.Token.ErrorResponse as UFXErrorResponse;
                         if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
                         {
                             ret = 1;
@@ -98,7 +94,7 @@ namespace BLL.Entrust
             int ret = -1;
             
             var errorResponse = T2ErrorHandler.Handle(dataParser);
-            token.OutArgs = errorResponse;
+            token.ErrorResponse = errorResponse;
 
             List<UFXHoldingResponse> responseItems = new List<UFXHoldingResponse>();
             if (T2ErrorHandler.Success(errorResponse.ErrorCode))

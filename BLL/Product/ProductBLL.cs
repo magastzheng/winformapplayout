@@ -1,4 +1,7 @@
-﻿using DBAccess.Product;
+﻿using BLL.Permission;
+using Config;
+using DBAccess.Product;
+using Model.Permission;
 using Model.strategy;
 using Model.UI;
 using System.Collections.Generic;
@@ -8,6 +11,7 @@ namespace BLL.Product
     public class ProductBLL
     {
         private UFXPortfolioDAO _portfoliodao = new UFXPortfolioDAO();
+        private PermissionManager _permissionManager = new PermissionManager();
 
         public ProductBLL()
         { 
@@ -48,7 +52,7 @@ namespace BLL.Product
         public int Create(List<Portfolio> portfolios)
         {
             int ret = -1;
-
+            var userId = LoginManager.Instance.GetUserId();
             var oldPortfolios = GetAll();
 
             foreach (var portfolio in portfolios)
@@ -61,12 +65,17 @@ namespace BLL.Product
                 else
                 {
                     ret = _portfoliodao.Create(portfolio);
+                    _permissionManager.GrantPermission(userId, ret, ResourceType.Portfolio, PermissionMask.Veiw);
                 }
             }
 
             if (oldPortfolios.Count > 0)
             { 
                 //TODO: update the status
+                foreach (var portfolio in oldPortfolios)
+                {
+                    _permissionManager.GrantPermission(userId, portfolio.PortfolioId, ResourceType.Portfolio, PermissionMask.Veiw);
+                }
             }
 
             return ret;
@@ -96,20 +105,47 @@ namespace BLL.Product
 
         public List<Portfolio> GetAll()
         {
-            return _portfoliodao.Get(string.Empty);
+            var userId = LoginManager.Instance.GetUserId();
+            var allPortfolios = _portfoliodao.Get(string.Empty);
+            var validPortfolios = new List<Portfolio>();
+            foreach (var portfolio in allPortfolios)
+            {
+                if (HasPermission(userId, portfolio))
+                {
+                    validPortfolios.Add(portfolio);
+                }
+            }
+
+            return validPortfolios;
         }
 
-        public Portfolio Get(string portfolioCode)
+        public Portfolio Get(string portfolioCode, int userId)
         {
+            Portfolio port = null;
             var items = _portfoliodao.Get(portfolioCode);
-            if (items.Count == 1)
+            if (items.Count > 0)
             {
-                return items[0];
+                foreach (var portfolio in items)
+                {
+                    if (HasPermission(userId, portfolio))
+                    {
+                        port = portfolio;
+                        break;
+                    }
+                }
             }
-            else
+
+            if (port == null)
             {
-                return new Portfolio();
+                port = new Portfolio();
             }
+
+            return port;
+        }
+
+        private bool HasPermission(int userId, Portfolio portfolio)
+        {
+            return _permissionManager.HasPermission(userId, portfolio.PortfolioId, ResourceType.Portfolio, Model.Permission.PermissionMask.Veiw);
         }
     }
 }

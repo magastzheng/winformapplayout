@@ -55,8 +55,13 @@
     <Compile Include="ButtonContainer\ButtonContainer.Designer.cs">
       <DependentUpon>ButtonContainer.cs</DependentUpon>
     </Compile>
+    <Compile Include="CheckComboBox\CheckComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CheckComboBox\CheckComboBox.Designer.cs" />
     <Compile Include="Entity\AutoItem.cs" />
     <Compile Include="Entity\ButtonItem.cs" />
+    <Compile Include="Entity\CheckComboBoxItem.cs" />
     <Compile Include="Entity\ColumnConverter.cs" />
     <Compile Include="Entity\PropertyComparer.cs" />
     <Compile Include="Entity\SortableBindingList.cs" />

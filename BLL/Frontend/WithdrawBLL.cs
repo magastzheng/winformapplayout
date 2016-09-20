@@ -151,17 +151,6 @@ namespace BLL.Frontend
             return _entrustCommandBLL.GetCancel(cmdItem.CommandId);
         }
 
-        //public List<EntrustSecurityItem> GetEntrustedSecuItems(TradingCommandItem cmdItem)
-        //{
-        //    var entrustCmdItems = _entrustcmddao.GetCancel(cmdItem.CommandId);
-        //    if (entrustCmdItems == null || entrustCmdItems.Count == 0)
-        //    {
-        //        return new List<EntrustSecurityItem>();;
-        //    }
-
-        //    return _entrustsecudao.GetCancel(cmdItem.CommandId);
-        //}
-
         public List<CancelRedoItem> GetEnrustedSecuItems(EntrustCommandItem cmdItem)
         {
             var entrustSecuItems = _entrustSecurityBLL.GetCancelBySumbitId(cmdItem.SubmitId);
@@ -252,7 +241,7 @@ namespace BLL.Frontend
             cancelRedoItem.EntrustAmount = cancelRedoItem.LeftAmount;
             if (cancelRedoItem.SecuType == Model.SecurityInfo.SecurityType.Stock && cancelRedoItem.EDirection == EntrustDirection.BuySpot)
             {
-                if (cancelRedoItem.LeftAmount % 100 != 0)
+                if (cancelRedoItem.LeftAmount % 100 > 0)
                 {
                     cancelRedoItem.EntrustAmount = 100 * (int)Math.Round((double)(cancelRedoItem.LeftAmount / 100));
                 }

@@ -62,7 +62,7 @@ namespace BLL.Entrust
             {
                 if (callbacker.Token.WaitEvent.WaitOne(_timeOut))
                 {
-                    var errorResponse = callbacker.Token.OutArgs as UFXErrorResponse;
+                    var errorResponse = callbacker.Token.ErrorResponse as UFXErrorResponse;
                     if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
                     {
                         bllResponse.Code = Model.ConnectionCode.Success;
@@ -95,7 +95,7 @@ namespace BLL.Entrust
             List<UFXBasketWithdrawResponse> responseItems = new List<UFXBasketWithdrawResponse>();
 
             var errorResponse = T2ErrorHandler.Handle(dataParser);
-            token.OutArgs = errorResponse;
+            token.ErrorResponse = errorResponse;
 
             if (dataParser.DataSets.Count > 1)
             {
@@ -136,14 +136,19 @@ namespace BLL.Entrust
                 }
             }
 
-            if (token.Caller != null)
+            try
             {
-                token.Caller(token, entrustSecuItems, errorResponse);
+                if (token.Caller != null)
+                {
+                    token.Caller(token, entrustSecuItems, errorResponse);
+                }
             }
-
-            if (token.WaitEvent != null)
+            finally
             {
-                token.WaitEvent.Set();
+                if (token.WaitEvent != null)
+                {
+                    token.WaitEvent.Set();
+                }
             }
 
             return ret;
