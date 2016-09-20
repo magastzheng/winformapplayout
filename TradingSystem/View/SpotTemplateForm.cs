@@ -37,9 +37,6 @@ namespace TradingSystem.View
         private const string GridTemplate = "stocktemplate";
         private const string GridStock = "templatestock";
 
-        //private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
-        //private TemplateStockDAO _stockdbdao = new TemplateStockDAO();
-        //private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
         private TemplateBLL _templateBLL = new TemplateBLL();
         private BenchmarkBLL _benchmarkBLL = new BenchmarkBLL();
         

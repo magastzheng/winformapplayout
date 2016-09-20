@@ -333,7 +333,7 @@ namespace TradingSystem.View
                 if (orderItem == null)
                 {
                     string msg = string.Format("对监控单元[{0}]下达指令失败", openItem.MonitorName);
-                    MessageBox.Show(this, msg, "失败", MessageBoxButtons.OK);
+                    MessageBox.Show(this, msg, "失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     continue;
                 }
 

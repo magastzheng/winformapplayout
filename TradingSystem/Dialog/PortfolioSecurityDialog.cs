@@ -1,7 +1,5 @@
 ﻿using BLL.SecurityInfo;
 using Controls.Entity;
-using DBAccess;
-using DBAccess.SecurityInfo;
 using Model.SecurityInfo;
 using Model.UI;
 using System;
@@ -20,8 +18,6 @@ namespace TradingSystem.Dialog
     {
         private int _templateId = -1;
         private IList<AutoItem> _dataSource = new List<AutoItem>();
-
-        //private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
         private List<SecurityItem> _securityInfoList = new List<SecurityItem>();
 
         public DialogType DialogType
@@ -60,7 +56,7 @@ namespace TradingSystem.Dialog
             {
                 //TODO: make the error message
                 //DialogResult = System.Windows.Forms.DialogResult.No;
-                MessageBox.Show(this, "证券代码不能为空", "错误", MessageBoxButtons.OK);
+                MessageBox.Show(this, "证券代码不能为空", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

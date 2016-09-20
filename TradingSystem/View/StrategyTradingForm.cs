@@ -1,7 +1,6 @@
 ﻿using Config;
 using Controls.Entity;
 using Controls.GridView;
-using DBAccess;
 using Forms;
 using Model.UI;
 using System;
@@ -11,7 +10,6 @@ using System.Linq;
 using Model.SecurityInfo;
 using Quote;
 using Model.config;
-using Util;
 using BLL.SecurityInfo;
 using TradingSystem.Dialog;
 using TradingSystem.TradeUtil;
@@ -240,7 +238,7 @@ namespace TradingSystem.View
             else
             {
                 string msg = string.Format("撤销指令号 [{0}] 提价序号 [{1}] 失败！", token.CommandId, token.SubmitId);
-                MessageBox.Show(this, msg, "警告", MessageBoxButtons.OK);
+                MessageBox.Show(this, msg, "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return -1;
             }
         }
@@ -666,7 +664,7 @@ namespace TradingSystem.View
             {
                 this.BeginInvoke(new Action(() =>
                 {
-                    MessageBox.Show(this, errorResponse.ErrorMessage, "错误", MessageBoxButtons.OK);
+                    MessageBox.Show(this, errorResponse.ErrorMessage, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }));
 
                 return -1;
@@ -1205,7 +1203,7 @@ namespace TradingSystem.View
             if (entrustSecuItems == null || entrustSecuItems.Count == 0)
             {
                 //TODO: show message
-                MessageBox.Show(this, "请选择要委托的证券！", "警告", MessageBoxButtons.OK);
+                MessageBox.Show(this, "请选择要委托的证券！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 

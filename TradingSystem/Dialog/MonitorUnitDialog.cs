@@ -3,7 +3,6 @@ using BLL.Product;
 using BLL.Template;
 using Config;
 using Controls.Entity;
-using DBAccess;
 using Forms;
 using Model.config;
 using Model.EnumType;
@@ -16,7 +15,6 @@ namespace TradingSystem.Dialog
 {
     public partial class MonitorUnitDialog : Forms.BaseDialog
     {
-        //private FuturesContractDAO _fcdbdao = new FuturesContractDAO();
         private FuturesContractBLL _futureBLL = new FuturesContractBLL();
         private ProductBLL _productBLL = new ProductBLL();
         private TemplateBLL _templateBLL = new TemplateBLL();
@@ -255,7 +253,7 @@ namespace TradingSystem.Dialog
             {
                 //TODO: make the error message
                 //DialogResult = System.Windows.Forms.DialogResult.No;
-                MessageBox.Show("请确保监控名称和空头合约不为空", "错误", MessageBoxButtons.OK);
+                MessageBox.Show(this, "请确保监控名称和空头合约不为空", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

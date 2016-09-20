@@ -15,10 +15,8 @@ namespace TradingSystem.Dialog
 {
     public partial class OpenPositionDialog : Forms.BaseDialog
     {
-        //private TradingInstanceDAO _tradeinstdao = new TradingInstanceDAO();
         private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
         private OpenPositionItem _originOpenItem = null;
-        //private OpenPositionItem _newOpenItem = null;
 
         public OpenPositionDialog()
         {
@@ -141,20 +139,20 @@ namespace TradingSystem.Dialog
         {
             if (!ValidateDate())
             {
-                MessageBox.Show(this, "开始日期和结束日期为yyyyMMdd格式，且结束日期不能早于开始日期！", "错误", MessageBoxButtons.OK);
+                MessageBox.Show(this, "开始日期和结束日期为yyyyMMdd格式，且结束日期不能早于开始日期！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             if (!ValidateTime())
             {
-                MessageBox.Show(this, "开始时间和结束时间为HHmmss格式，且结束时间不能早于开始时间！", "错误", MessageBoxButtons.OK);
+                MessageBox.Show(this, "开始时间和结束时间为HHmmss格式，且结束时间不能早于开始时间！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             var orderItem = GetNewItem();
             if (!ValidateInstanceCode(orderItem))
             {
-                MessageBox.Show(this, "交易实例编号不能为空！", "错误", MessageBoxButtons.OK);
+                MessageBox.Show(this, "交易实例编号不能为空！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -188,25 +186,21 @@ namespace TradingSystem.Dialog
             DateTime dt;
             if (DateUtil.IsValidDate(this.tbStartDate.Text.Trim(), ConstVariable.DateFormat1, out dt))
             {
-                //newOpenItem.StartDate = DateFormat.Format(dt, ConstVariable.DateFormat1);
                 startDate = dt;
             }
 
             if(DateUtil.IsValidDate(this.tbEndDate.Text.Trim(), ConstVariable.DateFormat1, out dt))
             {
-                //newOpenItem.EndDate = DateFormat.Format(dt, ConstVariable.DateFormat1);
                 endDate = dt;
             }
 
             if(DateUtil.IsValidDate(this.tbStartTime.Text.Trim(), ConstVariable.TimeFormat1, out dt))
             {
-                //newOpenItem.StartTime = DateFormat.Format(dt, ConstVariable.TimeFormat1);
                 startTime = dt;
             }
 
             if(DateUtil.IsValidDate(this.tbEndTime.Text.Trim(), ConstVariable.TimeFormat1, out dt))
             {
-                //newOpenItem.EndTime = DateFormat.Format(dt, ConstVariable.TimeFormat1);
                 endTime = dt;
             }
 

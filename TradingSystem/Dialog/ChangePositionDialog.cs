@@ -150,7 +150,7 @@ namespace TradingSystem.Dialog
             var changeOutItem = GetChangeOutItem();
             if (!ValidateChangeItem(changeInItem) || !ValidateChangeItem(changeOutItem))
             {
-                MessageBox.Show("请确认换仓证券有效（数量，价格）", "错误", MessageBoxButtons.OK);
+                MessageBox.Show(this, "请确认换仓证券有效（数量，价格）", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

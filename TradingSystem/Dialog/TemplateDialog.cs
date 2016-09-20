@@ -1,6 +1,5 @@
 ﻿using BLL.Template;
 using Config;
-using DBAccess;
 using Forms;
 using Model.config;
 using Model.EnumType;
@@ -66,28 +65,6 @@ namespace TradingSystem.Dialog
 
             return true;
         }
-
-        //public override void OnFormActived(string json)
-        //{
-        //    base.OnFormActived(json);
-        //}
-
-        //private void Form_Load(object sender, EventArgs e)
-        //{
-            
-        //}
-
-        //private void Form_LoadActived(string json)
-        //{
-        //    if (!string.IsNullOrEmpty(json))
-        //    {
-        //        StockTemplate stockTemplate = JsonUtil.DeserializeObject<StockTemplate>(json);
-        //        if (stockTemplate != null)
-        //        {
-        //            FillData(stockTemplate);
-        //        }
-        //    }
-        //}
 
         private void FillData(StockTemplate stockTemplate)
         {

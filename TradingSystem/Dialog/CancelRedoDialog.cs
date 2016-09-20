@@ -7,10 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Linq;
-using DBAccess;
 using Model.config;
 using TradingSystem.TradeUtil;
-using BLL.Entrust;
 using Model.SecurityInfo;
 using BLL.SecurityInfo;
 using Model.EnumType;
@@ -302,7 +300,7 @@ namespace TradingSystem.Dialog
             if (!ValidateEntrustSecurities(_entrustCommandItems, out outMsg))
             {
                 string msg = string.Format("证券未勾选或勾选证券均未设置委托数量, [交易指令;提交号]为: {0}", outMsg);
-                MessageBox.Show(this, msg, "警告", MessageBoxButtons.OK);
+                MessageBox.Show(this, msg, "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -423,7 +421,7 @@ namespace TradingSystem.Dialog
             { 
                 int submitId = cancelRedoItems.Select(p => p.SubmitId).Distinct().Single();
                 string msg = string.Format("委托失败, 提交号：[{0}], 失败原因：{1}!", submitId, response.Message);
-                MessageBox.Show(this, msg, "错误", MessageBoxButtons.OK);
+                MessageBox.Show(this, msg, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

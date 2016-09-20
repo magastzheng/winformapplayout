@@ -140,12 +140,12 @@ namespace TradingSystem.View
                         List<int> selectIndex = TSDataGridViewHelper.GetSelectRowIndex(dataGridView);
                         if (selectIndex == null && selectIndex.Count == 0)
                         {
-                            MessageBox.Show(MsgSelectDelete, MsgBoxCaption, MessageBoxButtons.OK);
+                            MessageBox.Show(this, MsgSelectDelete, MsgBoxCaption, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             return;
                         }
 
                         string msg = string.Format(MsgConfirmDelete, selectIndex.Count);
-                        if (MessageBox.Show(msg, MsgBoxCaption, MessageBoxButtons.YesNo) != System.Windows.Forms.DialogResult.Yes)
+                        if (MessageBox.Show(this, msg, MsgBoxCaption, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != System.Windows.Forms.DialogResult.Yes)
                         {
                             return;
                         }
@@ -221,7 +221,7 @@ namespace TradingSystem.View
                         List<int> selectIndex = TSDataGridViewHelper.GetSelectRowIndex(dataGridView);
                         if (selectIndex == null && selectIndex.Count == 0)
                         {
-                            MessageBox.Show(MsgSelectMonitor, MsgBoxCaption, MessageBoxButtons.OK);
+                            MessageBox.Show(this, MsgSelectMonitor, MsgBoxCaption, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             return;
                         }
 

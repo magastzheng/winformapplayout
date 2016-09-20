@@ -4,11 +4,8 @@ using Config;
 using Controls.Entity;
 using Controls.GridView;
 using Model.Binding.BindingUtil;
-using Model.EnumType;
-using Model.strategy;
 using Model.UI;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace TradingSystem.View
 {
