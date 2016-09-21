@@ -249,6 +249,7 @@ namespace TradingSystem.View
             dialog.ShowDialog();
             if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
             {
+                MessageBox.Show(this, "修改成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 dialog.Dispose();
             }
             else
@@ -275,7 +276,10 @@ namespace TradingSystem.View
                 Benchmark = template.Benchmark,
                 CreatedUserId = template.CreatedUserId,
                 EStatus = template.EStatus,
-                DCreatedDate = DateTime.Now
+                DCreatedDate = DateTime.Now,
+                CanEditUsers = template.CanEditUsers,
+                CanViewUsers = template.CanViewUsers,
+                Permissions = template.Permissions,
             };
 
             StockTemplate newtemp = _templateBLL.CreateTemplate(temp);
@@ -653,36 +657,17 @@ namespace TradingSystem.View
                 }
             }
 
-            CalculateAmount(template);
+            ReCalculateAmount(template);
 
             this.secuGridView.Invalidate();
         }
 
-        private void CalculateAmount(StockTemplate template)
+        private void ReCalculateAmount(StockTemplate template)
         {
-            //_spotDataSource
-            List<SecurityItem> secuList = new List<SecurityItem>();
-            var benchmarkItem = _securityInfoList.Find(p => p.SecuCode.Equals(template.Benchmark) && p.SecuType == SecurityType.Index);
-            if (benchmarkItem != null)
-            {
-                secuList.Add(benchmarkItem);
-            }
-
-            double[] weights = new double[_spotDataSource.Count];
-            if (_spotDataSource != null)
-            {
-                for (int i = 0, count = _spotDataSource.Count; i < count; i++)
-                {
-                    var stock = _spotDataSource[i];
-                    weights[i] = stock.SettingWeight / 100;
-
-                    var secuItem = _securityInfoList.Find(p => p.SecuCode.Equals(stock.SecuCode) && p.SecuType == SecurityType.Stock);
-                    secuList.Add(secuItem);
-                }
-            }
-
+            double[] weights = _spotDataSource.Select(p => p.SettingWeight / 100).ToArray();
             double totalWeight = weights.Sum();
             double minusResult = 1.0 - totalWeight;
+
             //如果不为100%，则根据数量调整比例;这种调整方式是否可以改进, 通过市值调整？
             if ( minusResult > 0.001 )
             {
@@ -702,11 +687,72 @@ namespace TradingSystem.View
                 }
             }
 
+            List<SecurityItem> secuList = GetSecurityItems(template);
             QuoteCenter.Instance.Query(secuList);
 
+            var benchmarkItem = _securityInfoList.Find(p => p.SecuCode.Equals(template.Benchmark) && p.SecuType == SecurityType.Index);
             var benchmarkData = QuoteCenter.Instance.GetMarketData(benchmarkItem);
             var benchmark = _benchmarkList.Find(p => p.BenchmarkId.Equals(benchmarkItem.SecuCode));
             double totalValue = benchmarkData.CurrentPrice * benchmark.ContractMultiple;
+            
+            var prices = GetPrices(secuList);
+            var amounts = CalcUtil.CalcStockAmountPerCopyRound(totalValue, weights, prices);
+            var mktCaps = GetMarketCap(prices, amounts);
+            
+            double totalCap = mktCaps.Sum();
+            for (int i = 0, count = _spotDataSource.Count; i < count; i++)
+            {
+                var stock = _spotDataSource[i];
+                stock.Amount = amounts[i];
+                stock.MarketCap = mktCaps[i];
+                stock.MarketCapWeight = 100 * stock.MarketCap / totalCap;
+            }
+        }
+
+        private void CalculateAmount(StockTemplate template)
+        {
+            List<SecurityItem> secuList = GetSecurityItems(template);
+            QuoteCenter.Instance.Query(secuList);
+
+            double[] prices = GetPrices(secuList);
+            int[] amounts = _spotDataSource.Select(p => p.Amount).ToArray();
+            double[] mktCaps = GetMarketCap(prices, amounts);
+
+            double totalCap = mktCaps.Sum();
+            for (int i = 0, count = _spotDataSource.Count; i < count; i++)
+            {
+                var stock = _spotDataSource[i];
+                stock.Amount = amounts[i];
+                stock.MarketCap = mktCaps[i];
+                stock.MarketCapWeight = 100 * stock.MarketCap / totalCap;
+                stock.SettingWeight = stock.MarketCapWeight;
+            }
+
+        }
+
+        private List<SecurityItem> GetSecurityItems(StockTemplate template)
+        {
+            List<SecurityItem> secuList = new List<SecurityItem>();
+            var benchmarkItem = _securityInfoList.Find(p => p.SecuCode.Equals(template.Benchmark) && p.SecuType == SecurityType.Index);
+            if (benchmarkItem != null)
+            {
+                secuList.Add(benchmarkItem);
+            }
+
+            foreach (var stock in _spotDataSource)
+            {
+                var findItem = _securityInfoList.Find(p => p.SecuCode.Equals(stock.SecuCode) && p.SecuType == SecurityType.Stock);
+                if (findItem != null)
+                {
+                    secuList.Add(findItem);
+                }
+            }
+
+            return secuList;
+        }
+
+        private double[] GetPrices(List<SecurityItem> secuList)
+        {
             double[] prices = new double[_spotDataSource.Count];
             for (int i = 0, count = _spotDataSource.Count; i < count; i++)
             {
@@ -728,21 +774,18 @@ namespace TradingSystem.View
                 }
             }
 
-            var amounts = CalcUtil.CalcStockAmountPerCopyRound(totalValue, weights, prices);
-            double[] mktCaps = new double[_spotDataSource.Count];
+            return prices;
+        }
+
+        private double[] GetMarketCap(double[] prices, int[] amounts)
+        {
+            double[] mktCaps = new double[prices.Length];
             for (int i = 0, count = mktCaps.Length; i < count; i++)
             {
                 mktCaps[i] = prices[i] * amounts[i];
             }
 
-            double totalCap = mktCaps.Sum();
-            for (int i = 0, count = _spotDataSource.Count; i < count; i++)
-            {
-                var stock = _spotDataSource[i];
-                stock.Amount = amounts[i];
-                stock.MarketCap = mktCaps[i];
-                stock.MarketCapWeight = 100 * stock.MarketCap / totalCap;
-            }
+            return mktCaps;
         }
 
         #endregion

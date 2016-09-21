@@ -9,11 +9,15 @@ using Model.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace TradingSystem.Dialog
 {
     public partial class TemplateDialog : Forms.BaseDialog
     {
+        const string MsgPerm = "用户[{0}]权限设置为可编辑但未设为可浏览，可编辑用户必须同时设为可浏览！";
+        const string MsgInfoCaption = "提示";
+
         private BenchmarkBLL _benchmarkBLL = new BenchmarkBLL();
         private UserBLL _userBLL = new UserBLL();
         private PermissionManager _permissionManager = new PermissionManager();
@@ -228,6 +232,12 @@ namespace TradingSystem.Dialog
                 stockTemplate.Benchmark = item.Id;
             }
 
+            if (_oldTemplate != null)
+            {
+                stockTemplate.DCreatedDate = _oldTemplate.DCreatedDate;
+                stockTemplate.DModifiedDate = DateTime.Now;
+            }
+
             stockTemplate.CreatedUserId = LoginManager.Instance.GetUserId();
             UpdatePermission(ref stockTemplate);
             
@@ -261,11 +271,15 @@ namespace TradingSystem.Dialog
             {
                 int oldPerm = 0;
                 int newPerm = 0;
-                var urPerm = _oldTemplate.Permissions.Find(p => p.Token == user.Id && p.TokenType == TokenType.User);
-                if (urPerm != null)
+                UserResourcePermission urPerm = null;
+                if (_oldTemplate != null && _oldTemplate.Permissions != null)
                 {
-                    oldPerm = urPerm.Permission;
-                    newPerm = oldPerm;
+                    urPerm = _oldTemplate.Permissions.Find(p => p.Token == user.Id && p.TokenType == TokenType.User);
+                    if (urPerm != null)
+                    {
+                        oldPerm = urPerm.Permission;
+                        newPerm = oldPerm;
+                    }
                 }
 
                 List<PermissionMask> addRights = new List<PermissionMask>();
@@ -309,27 +323,30 @@ namespace TradingSystem.Dialog
             }
 
             //处理两种权限都被去掉的情况
-            foreach (var oldPerm in _oldTemplate.Permissions)
+            if (_oldTemplate != null && _oldTemplate.Permissions != null)
             {
-                var findPerm = urPermission.Find(p => p.Token == oldPerm.Token
-                    && p.TokenType == oldPerm.TokenType
-                    && p.ResourceId == oldPerm.ResourceId
-                    && p.ResourceType == oldPerm.ResourceType);
-
-                if (findPerm == null)
+                foreach (var oldPerm in _oldTemplate.Permissions)
                 {
-                    List<PermissionMask> rights = new List<PermissionMask>() { PermissionMask.Edit, PermissionMask.Veiw };
-                    int newPerm = _permissionManager.RemovePermission(oldPerm.Permission, rights);
-                    UserResourcePermission nurPerm = new UserResourcePermission
-                    {
-                        Token = oldPerm.Token,
-                        TokenType = TokenType.User,
-                        ResourceId = oldPerm.ResourceId,
-                        ResourceType = ResourceType.SpotTemplate,
-                        Permission = newPerm,
-                    };
+                    var findPerm = urPermission.Find(p => p.Token == oldPerm.Token
+                        && p.TokenType == oldPerm.TokenType
+                        && p.ResourceId == oldPerm.ResourceId
+                        && p.ResourceType == oldPerm.ResourceType);
 
-                    urPermission.Add(nurPerm);
+                    if (findPerm == null)
+                    {
+                        List<PermissionMask> rights = new List<PermissionMask>() { PermissionMask.Edit, PermissionMask.Veiw };
+                        int newPerm = _permissionManager.RemovePermission(oldPerm.Permission, rights);
+                        UserResourcePermission nurPerm = new UserResourcePermission
+                        {
+                            Token = oldPerm.Token,
+                            TokenType = TokenType.User,
+                            ResourceId = oldPerm.ResourceId,
+                            ResourceType = ResourceType.SpotTemplate,
+                            Permission = newPerm,
+                        };
+
+                        urPermission.Add(nurPerm);
+                    }
                 }
             }
 
@@ -356,6 +373,16 @@ namespace TradingSystem.Dialog
             if (string.IsNullOrEmpty(stockTemplate.Benchmark))
             {
                 return false;
+            }
+
+            foreach (var user in stockTemplate.CanEditUsers)
+            {
+                var findItem = stockTemplate.CanViewUsers.Find(p => p.Id == user.Id);
+                if (findItem == null)
+                {
+                    MessageBox.Show(this, MsgPerm, MsgInfoCaption, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return false;
+                }
             }
 
             return true;
