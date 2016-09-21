@@ -2,6 +2,7 @@
 using Model.Constant;
 using Model.EnumType;
 using Model.EnumType.EnumTypeConverter;
+using Model.Permission;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,6 +76,38 @@ namespace Model.UI
             }
         }
 
+        [BindingAttribute("editableuser")]
+        public string EditableUser
+        {
+            get 
+            {
+                string str = string.Empty;
+                if (CanEditUsers != null)
+                {
+                    var userNames = CanEditUsers.Select(p => p.Name).ToList();
+                    str = string.Join(",", userNames);
+                }
+
+                return str;
+            }
+        }
+
+        [BindingAttribute("viewuser")]
+        public string ViewUser
+        {
+            get
+            {
+                string str = string.Empty;
+                if (CanViewUsers != null)
+                {
+                    var userNames = CanViewUsers.Select(p => p.Name).ToList();
+                    str = string.Join(",", userNames);
+                }
+
+                return str;
+            }
+        }
+
         public TemplateStatus EStatus { get; set; }
 
         public WeightType EWeightType { get; set; }
@@ -85,6 +118,12 @@ namespace Model.UI
 
         public DateTime DModifiedDate { get; set; }
 
-        public int UserId { get; set; }
+        public int CreatedUserId { get; set; }
+
+        public List<User> CanEditUsers { get; set; }
+
+        public List<User> CanViewUsers { get; set; }
+
+        public List<UserResourcePermission> Permissions { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Model.config;
+using Model.Database;
 using Model.EnumType;
 using Model.UI;
 using System;
@@ -26,7 +27,7 @@ namespace DBAccess.Template
         
         }
 
-        public int Create(StockTemplate template)
+        public int Create(TemplateItem template)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
             _dbHelper.AddInParameter(dbCommand, "@TemplateName", System.Data.DbType.String, template.TemplateName);
@@ -37,7 +38,7 @@ namespace DBAccess.Template
             _dbHelper.AddInParameter(dbCommand, "@MarketCapOpt", System.Data.DbType.Decimal, template.MarketCapOpt);
             _dbHelper.AddInParameter(dbCommand, "@BenchmarkId", System.Data.DbType.String, template.Benchmark);
             _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, DateTime.Now);
-            _dbHelper.AddInParameter(dbCommand, "@CreatedUserId", System.Data.DbType.Int32, template.UserId);
+            _dbHelper.AddInParameter(dbCommand, "@CreatedUserId", System.Data.DbType.Int32, template.CreatedUserId);
 
             _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
 
@@ -101,7 +102,7 @@ namespace DBAccess.Template
             return templateId;
         }
 
-        public int Update(StockTemplate template)
+        public int Update(TemplateItem template)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Modify);
             _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, template.TemplateId);
@@ -113,7 +114,7 @@ namespace DBAccess.Template
             _dbHelper.AddInParameter(dbCommand, "@MarketCapOpt", System.Data.DbType.Decimal, template.MarketCapOpt);
             _dbHelper.AddInParameter(dbCommand, "@BenchmarkId", System.Data.DbType.String, template.Benchmark);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
-            _dbHelper.AddInParameter(dbCommand, "@CreatedUserId", System.Data.DbType.Int32, template.UserId);
+            _dbHelper.AddInParameter(dbCommand, "@CreatedUserId", System.Data.DbType.Int32, template.CreatedUserId);
 
             _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
 
@@ -134,9 +135,9 @@ namespace DBAccess.Template
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public List<StockTemplate> Get(int templateId)
+        public List<TemplateItem> Get(int templateId)
         {
-            List<StockTemplate> stockTemplates = new List<StockTemplate>();
+            List<TemplateItem> stockTemplates = new List<TemplateItem>();
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
             if (templateId > 0)
             {
@@ -147,7 +148,7 @@ namespace DBAccess.Template
             {
                 while (reader.Read())
                 {
-                    StockTemplate item = new StockTemplate();
+                    TemplateItem item = new TemplateItem();
                     item.TemplateId = (int)reader["TemplateId"];
                     item.TemplateName = (string)reader["TemplateName"];
                     item.FutureCopies = (int)reader["FuturesCopies"];
@@ -176,9 +177,9 @@ namespace DBAccess.Template
             return stockTemplates;
         }
 
-        public List<StockTemplate> GetByUser(int userId)
+        public List<TemplateItem> GetByUser(int userId)
         {
-            List<StockTemplate> stockTemplates = new List<StockTemplate>();
+            List<TemplateItem> stockTemplates = new List<TemplateItem>();
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetByUser);
             if (userId > 0)
             {
@@ -189,7 +190,7 @@ namespace DBAccess.Template
             {
                 while (reader.Read())
                 {
-                    StockTemplate item = new StockTemplate();
+                    TemplateItem item = new TemplateItem();
                     item.TemplateId = (int)reader["TemplateId"];
                     item.TemplateName = (string)reader["TemplateName"];
                     item.FutureCopies = (int)reader["FuturesCopies"];

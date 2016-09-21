@@ -125,6 +125,27 @@ namespace BLL.Permission
                 return CreatePermission(userId, TokenType.User, resourceId, resourceType, perm);
             }
         }
+
+        /// <summary>
+        /// change the permission value directly if there is old one, otherwise create new one.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="resourceId"></param>
+        /// <param name="resourceType"></param>
+        /// <param name="perm"></param>
+        /// <param name="isUpdated"></param>
+        /// <returns></returns>
+        public int ChangePermission(int userId, int resourceId, ResourceType resourceType, int perm, bool isUpdated)
+        {
+            if (isUpdated)
+            {
+                return UpdatePermission(userId, TokenType.User, resourceId, resourceType, perm);
+            }
+            else
+            {
+                return CreatePermission(userId, TokenType.User, resourceId, resourceType, perm);
+            }
+        }
         #endregion
 
         #region permission value
@@ -132,6 +153,26 @@ namespace BLL.Permission
         public List<PermissionMask> GetOwnerPermission()
         {
             return new List<PermissionMask>() { PermissionMask.Edit, PermissionMask.Delete, PermissionMask.Owner, PermissionMask.Veiw};
+        }
+
+        public int AddPermission(int perm, PermissionMask mask)
+        {
+            return _permCalculator.GrantPermission(perm, mask);
+        }
+
+        public int AddPermission(int perm, List<PermissionMask> masks)
+        {
+            return _permCalculator.GrantPermission(perm, masks);
+        }
+
+        public int RemovePermission(int perm, PermissionMask mask)
+        {
+            return _permCalculator.RevokePermission(perm, mask);
+        }
+
+        public int RemovePermission(int perm, List<PermissionMask> masks)
+        {
+            return _permCalculator.RevokePermission(perm, masks);
         }
 
         #endregion

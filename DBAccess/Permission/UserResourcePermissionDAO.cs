@@ -17,6 +17,7 @@ namespace DBAccess.Permission
         private const string SP_Delete = "procTokenResourcePermissionDelete";
         private const string SP_SelectToken = "procTokenResourcePermissionSelectByToken";
         private const string SP_SelectResourceType = "procTokenResourcePermissionSelectResourceType";
+        private const string SP_SelectByResource = "procTokenResourcePermissionSelectByResouce";
         private const string SP_SelectSingle = "procTokenResourcePermissionSelectSingle";
 
         public UserResourcePermissionDAO()
@@ -139,6 +140,36 @@ namespace DBAccess.Permission
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_SelectResourceType);
             _dbHelper.AddInParameter(dbCommand, "@Token", System.Data.DbType.Int32, token);
             _dbHelper.AddInParameter(dbCommand, "@TokenType", System.Data.DbType.Int32, (int)tokenType);
+            _dbHelper.AddInParameter(dbCommand, "@ResourceType", System.Data.DbType.Int32, (int)resourceType);
+
+            List<UserResourcePermission> items = new List<UserResourcePermission>();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    UserResourcePermission item = new UserResourcePermission();
+                    item.Id = (int)reader["Id"];
+                    item.Token = (int)reader["Token"];
+                    item.TokenType = (TokenType)reader["TokenType"];
+                    item.ResourceId = (int)reader["ResourceId"];
+                    item.ResourceType = (ResourceType)reader["ResourceType"];
+                    item.Permission = (int)reader["Permission"];
+
+                    items.Add(item);
+                }
+            }
+
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return items;
+        }
+
+        public List<UserResourcePermission> GetByResource(int resourceId, ResourceType resourceType)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_SelectByResource);
+            _dbHelper.AddInParameter(dbCommand, "@ResourceId", System.Data.DbType.Int32, resourceId);
             _dbHelper.AddInParameter(dbCommand, "@ResourceType", System.Data.DbType.Int32, (int)resourceType);
 
             List<UserResourcePermission> items = new List<UserResourcePermission>();

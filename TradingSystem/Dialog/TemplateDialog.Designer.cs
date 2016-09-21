@@ -41,12 +41,12 @@ namespace TradingSystem.Dialog
             this.lblReplaceType = new System.Windows.Forms.Label();
             this.cbReplaceTemplate = new System.Windows.Forms.ComboBox();
             this.lblReplaceTemplate = new System.Windows.Forms.Label();
-            this.cbViewUser = new System.Windows.Forms.ComboBox();
             this.lblViewUser = new System.Windows.Forms.Label();
-            this.cbEditUser = new System.Windows.Forms.ComboBox();
             this.lblEditUser = new System.Windows.Forms.Label();
             this.btnConfirm = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.cbViewUser = new Controls.CheckComboBox.CheckComboBox();
+            this.cbEditUser = new Controls.CheckComboBox.CheckComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.panelTop.SuspendLayout();
             this.SuspendLayout();
@@ -228,14 +228,6 @@ namespace TradingSystem.Dialog
             this.lblReplaceTemplate.Text = "替代模板";
             this.lblReplaceTemplate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // cbViewUser
-            // 
-            this.cbViewUser.FormattingEnabled = true;
-            this.cbViewUser.Location = new System.Drawing.Point(117, 302);
-            this.cbViewUser.Name = "cbViewUser";
-            this.cbViewUser.Size = new System.Drawing.Size(190, 20);
-            this.cbViewUser.TabIndex = 21;
-            // 
             // lblViewUser
             // 
             this.lblViewUser.AutoSize = true;
@@ -245,14 +237,6 @@ namespace TradingSystem.Dialog
             this.lblViewUser.TabIndex = 20;
             this.lblViewUser.Text = "可浏览用户";
             this.lblViewUser.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // cbEditUser
-            // 
-            this.cbEditUser.FormattingEnabled = true;
-            this.cbEditUser.Location = new System.Drawing.Point(117, 328);
-            this.cbEditUser.Name = "cbEditUser";
-            this.cbEditUser.Size = new System.Drawing.Size(190, 20);
-            this.cbEditUser.TabIndex = 23;
             // 
             // lblEditUser
             // 
@@ -287,15 +271,41 @@ namespace TradingSystem.Dialog
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.Button_Cancel_Click);
             // 
+            // cbViewUser
+            // 
+            this.cbViewUser.CheckOnClick = true;
+            this.cbViewUser.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.cbViewUser.DropDownHeight = 1;
+            this.cbViewUser.FormattingEnabled = true;
+            this.cbViewUser.IntegralHeight = false;
+            this.cbViewUser.Location = new System.Drawing.Point(117, 301);
+            this.cbViewUser.Name = "cbViewUser";
+            this.cbViewUser.Size = new System.Drawing.Size(190, 22);
+            this.cbViewUser.TabIndex = 26;
+            this.cbViewUser.ValueSeparator = ",";
+            // 
+            // cbEditUser
+            // 
+            this.cbEditUser.CheckOnClick = true;
+            this.cbEditUser.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.cbEditUser.DropDownHeight = 1;
+            this.cbEditUser.FormattingEnabled = true;
+            this.cbEditUser.IntegralHeight = false;
+            this.cbEditUser.Location = new System.Drawing.Point(117, 329);
+            this.cbEditUser.Name = "cbEditUser";
+            this.cbEditUser.Size = new System.Drawing.Size(190, 22);
+            this.cbEditUser.TabIndex = 27;
+            this.cbEditUser.ValueSeparator = ",";
+            // 
             // TemplateDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.ClientSize = new System.Drawing.Size(341, 405);
+            this.Controls.Add(this.cbEditUser);
+            this.Controls.Add(this.cbViewUser);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnConfirm);
-            this.Controls.Add(this.cbEditUser);
             this.Controls.Add(this.lblEditUser);
-            this.Controls.Add(this.cbViewUser);
             this.Controls.Add(this.lblViewUser);
             this.Controls.Add(this.cbReplaceTemplate);
             this.Controls.Add(this.lblReplaceTemplate);
@@ -345,11 +355,11 @@ namespace TradingSystem.Dialog
         private System.Windows.Forms.Label lblReplaceType;
         private System.Windows.Forms.ComboBox cbReplaceTemplate;
         private System.Windows.Forms.Label lblReplaceTemplate;
-        private System.Windows.Forms.ComboBox cbViewUser;
         private System.Windows.Forms.Label lblViewUser;
-        private System.Windows.Forms.ComboBox cbEditUser;
         private System.Windows.Forms.Label lblEditUser;
         private System.Windows.Forms.Button btnConfirm;
         private System.Windows.Forms.Button btnCancel;
+        private Controls.CheckComboBox.CheckComboBox cbViewUser;
+        private Controls.CheckComboBox.CheckComboBox cbEditUser;
     }
 }

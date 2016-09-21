@@ -40,5 +40,10 @@ namespace BLL.Permission
         {
             return _urpermissiondao.GetByResourceType(token, tokenType, resourceType);
         }
+
+        public List<UserResourcePermission> GetByResource(int resourceId, ResourceType resourceType)
+        {
+            return _urpermissiondao.GetByResource(resourceId, resourceType);
+        }
     }
 }

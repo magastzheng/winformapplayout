@@ -17,6 +17,7 @@ using BLL.Template;
 using Model.Binding.BindingUtil;
 using BLL.SecurityInfo;
 using TradingSystem.Dialog;
+using BLL.Permission;
 
 namespace TradingSystem.View
 {
@@ -39,6 +40,7 @@ namespace TradingSystem.View
 
         private TemplateBLL _templateBLL = new TemplateBLL();
         private BenchmarkBLL _benchmarkBLL = new BenchmarkBLL();
+        private PermissionManager _permissionManager = new PermissionManager();
         
         private SortableBindingList<StockTemplate> _tempDataSource = new SortableBindingList<StockTemplate>(new List<StockTemplate>());
         private SortableBindingList<TemplateStock> _spotDataSource = new SortableBindingList<TemplateStock>(new List<TemplateStock>());
@@ -86,6 +88,7 @@ namespace TradingSystem.View
         }
 
         #region load control
+        
         private bool Form_LoadControl(object sender, object data)
         {
             //set the monitorGridView
@@ -113,7 +116,7 @@ namespace TradingSystem.View
             _tempDataSource.Clear();
             _spotDataSource.Clear();
 
-            var items = _templateBLL.GetTemplateByUser(-1);
+            var items = _templateBLL.GetTemplates();
             if (items != null)
             { 
                 foreach(var item in items)
@@ -153,6 +156,23 @@ namespace TradingSystem.View
 
         #endregion
 
+        #region switch the top toolbar
+
+        private bool SwitchToolBar(int templateId)
+        {
+            int userId = LoginManager.Instance.GetUserId();
+            //var template = GetSelectTemplate();
+
+            bool hasPerm = _permissionManager.HasPermission(userId, templateId, Model.Permission.ResourceType.SpotTemplate, Model.Permission.PermissionMask.Edit);
+
+            this.tsbModify.Enabled = hasPerm;
+            this.tsbDelete.Enabled = hasPerm;
+
+            return true;
+        }
+
+        #endregion
+
         #region
 
         private void GridView_Template_MouseClickRow(object sender, int rowIndex)
@@ -178,6 +198,7 @@ namespace TradingSystem.View
 
             if (template != null && template.TemplateId > 0)
             {
+                SwitchToolBar(template.TemplateId);
                 LoadTemplateStock(template.TemplateId);
             }
 
@@ -252,7 +273,7 @@ namespace TradingSystem.View
                 EReplaceType = template.EReplaceType,
                 EWeightType = template.EWeightType,
                 Benchmark = template.Benchmark,
-                UserId = template.UserId,
+                CreatedUserId = template.CreatedUserId,
                 EStatus = template.EStatus,
                 DCreatedDate = DateTime.Now
             };

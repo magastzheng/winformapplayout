@@ -94,6 +94,19 @@ begin
 end
 
 go 
+if exists (select name from sysobjects where name='procUFXPortfolioDelete')
+drop proc procUFXPortfolioDelete
+
+go
+create proc procUFXPortfolioDelete(
+	@PortfolioCode varchar(20) = NULL
+)
+as
+begin
+	delete from ufxportfolio where PortfolioCode=@PortfolioCode
+end
+
+go 
 if exists (select name from sysobjects where name='procUFXPortfolioSelect')
 drop proc procUFXPortfolioSelect
 
@@ -132,15 +145,55 @@ begin
 	end
 end
 
+
 go 
-if exists (select name from sysobjects where name='procUFXPortfolioDelete')
-drop proc procUFXPortfolioDelete
+if exists (select name from sysobjects where name='procUFXPortfolioSelectByUser')
+drop proc procUFXPortfolioSelectByUser
 
 go
-create proc procUFXPortfolioDelete(
+create proc procUFXPortfolioSelectByUser(
+	@UserId int,
 	@PortfolioCode varchar(20) = NULL
 )
 as
 begin
-	delete from ufxportfolio where PortfolioCode=@PortfolioCode
+	if @PortfolioCode is not null
+	begin
+		select a.PortfolioId,
+			a.PortfolioCode,
+			a.PortfolioName,
+			a.AccountCode,
+			a.AccountName,
+			a.AccountType,
+			a.AssetNo,
+			a.AssetName,
+			a.PortfolioStatus,
+			b.Permission
+		from ufxportfolio a
+		join tokenresourcepermission b
+		on a.PortfolioId=b.ResourceId
+			and b.ResourceType=103		--投资组合
+			and b.Token = @UserId
+			and b.TokenType = 2			--用户类型
+		where a.PortfolioCode = @PortfolioCode
+	end
+	else
+	begin
+		select a.PortfolioId,
+			a.PortfolioCode,
+			a.PortfolioName,
+			a.AccountCode,
+			a.AccountName,
+			a.AccountType,
+			a.AssetNo,
+			a.AssetName,
+			a.PortfolioStatus,
+			b.Permission
+		from ufxportfolio a
+		join tokenresourcepermission b
+		on a.PortfolioId=b.ResourceId
+			and b.ResourceType=103		--投资组合
+			and b.Token = @UserId
+			and b.TokenType = 2			--用户类型
+	end
 end

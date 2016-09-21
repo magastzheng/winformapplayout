@@ -1,24 +1,38 @@
-﻿using BLL.Template;
+﻿using BLL.Permission;
+using BLL.Template;
 using Config;
 using Forms;
 using Model.config;
 using Model.EnumType;
+using Model.Permission;
 using Model.UI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TradingSystem.Dialog
 {
     public partial class TemplateDialog : Forms.BaseDialog
     {
         private BenchmarkBLL _benchmarkBLL = new BenchmarkBLL();
+        private UserBLL _userBLL = new UserBLL();
+        private PermissionManager _permissionManager = new PermissionManager();
+        
+        private List<User> _users = null;
+        private StockTemplate _oldTemplate = null;
+
         public TemplateDialog()
         {
             InitializeComponent();
 
             this.LoadControl += new FormLoadHandler(Form_LoadControl);
             this.LoadData += new FormLoadHandler(Form_LoadData);
+
+            cbEditUser.DisplayMember = "Name";
+            cbViewUser.DisplayMember = "Name";
         }
+
+        #region load control
 
         private bool Form_LoadControl(object sender, object data)
         {
@@ -28,6 +42,14 @@ namespace TradingSystem.Dialog
             var replaceType = ConfigManager.Instance.GetComboConfig().GetComboOption("replacetype");
             ComboBoxUtil.SetComboBox(this.cbReplaceType, replaceType);
 
+            LoadBenchmark();
+            LoadUser();
+
+            return true;
+        }
+
+        private bool LoadBenchmark()
+        {
             var benchmarks = _benchmarkBLL.GetAll();
             ComboOption cbOption = new ComboOption
             {
@@ -50,6 +72,35 @@ namespace TradingSystem.Dialog
             return true;
         }
 
+        private bool LoadUser()
+        {
+            if (_users == null || _users.Count == 0)
+            {
+                _users = _userBLL.GetAll();
+            }
+
+            var loginUserId = LoginManager.Instance.GetUserId();
+            for(int i = 0, count = _users.Count; i < count; i++)
+            {
+                var user = _users[i];
+                cbEditUser.Items.Add(user);
+                if (user.Id == loginUserId)
+                {
+                    cbEditUser.SetItemChecked(i, true);
+                }
+
+                cbViewUser.Items.Add(user);
+                if (user.Id == loginUserId)
+                {
+                    cbViewUser.SetItemChecked(i, true);
+                }
+            }
+
+            return true;
+        }
+
+        #endregion
+
         private bool Form_LoadData(object sender, object data)
         {
             if (sender == null || data == null)
@@ -60,7 +111,9 @@ namespace TradingSystem.Dialog
             StockTemplate stockTemplate = data as StockTemplate;
             if (stockTemplate != null)
             {
-                FillData(stockTemplate);
+                _oldTemplate = stockTemplate;
+                FillData(_oldTemplate);
+                SetUserPermission(_oldTemplate);
             }
 
             return true;
@@ -81,11 +134,49 @@ namespace TradingSystem.Dialog
             ComboBoxUtil.SetComboBoxSelect(this.cbReplaceType, stockTemplate.EReplaceType.ToString());
         }
 
+        private void SetUserPermission(StockTemplate stockTemplate)
+        {
+            var urPerms = stockTemplate.Permissions;
+            if (urPerms == null)
+                return;
+
+            for(int i = 0, count = this.cbEditUser.Items.Count; i < count; i++)
+            {
+                var user = (User)this.cbEditUser.Items[i];
+                var findItem = urPerms.Find(p => p.Token == user.Id && p.TokenType == TokenType.User);
+                if (findItem != null && _permissionManager.HasPermission(user.Id, stockTemplate.TemplateId, ResourceType.SpotTemplate, PermissionMask.Edit))
+                {
+                    this.cbEditUser.SetItemChecked(i, true);
+                }
+                else
+                {
+                    this.cbEditUser.SetItemChecked(i, false);
+                }
+            }
+
+            for (int i = 0, count = this.cbViewUser.Items.Count; i < count; i++)
+            {
+                var user = (User)this.cbViewUser.Items[i];
+                var findItem = urPerms.Find(p => p.Token == user.Id && p.TokenType == TokenType.User);
+                if (findItem != null && _permissionManager.HasPermission(user.Id, stockTemplate.TemplateId, ResourceType.SpotTemplate, PermissionMask.Veiw))
+                {
+                    this.cbViewUser.SetItemChecked(i, true);
+                }
+                else
+                {
+                    this.cbViewUser.SetItemChecked(i, false);
+                }
+            }
+        }
+
         private StockTemplate GetTemplate()
         {
             StockTemplate stockTemplate = new StockTemplate
             {
                 EStatus = TemplateStatus.Normal,
+                Permissions = new List<UserResourcePermission>(),
+                CanEditUsers = new List<User>(),
+                CanViewUsers = new List<User>(),
             };
 
             if (!string.IsNullOrEmpty(this.tbTemplateNo.Text))
@@ -137,9 +228,112 @@ namespace TradingSystem.Dialog
                 stockTemplate.Benchmark = item.Id;
             }
 
-            stockTemplate.UserId = LoginManager.Instance.GetUserId();
+            stockTemplate.CreatedUserId = LoginManager.Instance.GetUserId();
+            UpdatePermission(ref stockTemplate);
             
             return stockTemplate;
+        }
+
+        private void UpdatePermission(ref StockTemplate stockTemplate)
+        {
+            if (this.cbEditUser.CheckedItems != null && this.cbEditUser.CheckedItems.Count > 0)
+            {
+                foreach (var item in this.cbEditUser.CheckedItems)
+                {
+                    var user = item as User;
+                    stockTemplate.CanEditUsers.Add(user);
+                }
+            }
+
+            if (this.cbViewUser.CheckedItems != null && this.cbViewUser.CheckedItems.Count > 0)
+            {
+                foreach (var item in this.cbViewUser.CheckedItems)
+                {
+                    var user = item as User;
+                    stockTemplate.CanViewUsers.Add(user);
+                }
+            }
+
+            //处理权限改变的情况，添加新权限，或者去掉某一项权限
+            var permUsers = stockTemplate.CanEditUsers.Union(stockTemplate.CanViewUsers);
+            var urPermission = new List<UserResourcePermission>();
+            foreach (var user in permUsers)
+            {
+                int oldPerm = 0;
+                int newPerm = 0;
+                var urPerm = _oldTemplate.Permissions.Find(p => p.Token == user.Id && p.TokenType == TokenType.User);
+                if (urPerm != null)
+                {
+                    oldPerm = urPerm.Permission;
+                    newPerm = oldPerm;
+                }
+
+                List<PermissionMask> addRights = new List<PermissionMask>();
+                List<PermissionMask> removeRights = new List<PermissionMask>();
+                if (stockTemplate.CanEditUsers.Contains(user))
+                {
+                    addRights.Add(PermissionMask.Edit);
+                }
+                else
+                {
+                    removeRights.Add(PermissionMask.Edit);
+                }
+
+                if (stockTemplate.CanViewUsers.Contains(user))
+                {
+                    addRights.Add(PermissionMask.Veiw);
+                }
+                else
+                {
+                    removeRights.Add(PermissionMask.Veiw);
+                }
+
+                newPerm = _permissionManager.AddPermission(newPerm, addRights);
+                newPerm = _permissionManager.RemovePermission(newPerm, removeRights);
+
+                UserResourcePermission nurPerm = new UserResourcePermission
+                {
+                    Token = user.Id,
+                    TokenType = TokenType.User,
+                    ResourceId = stockTemplate.TemplateId,
+                    ResourceType = ResourceType.SpotTemplate,
+                    Permission = newPerm,
+                };
+
+                if (urPerm != null)
+                {
+                    nurPerm.Id = urPerm.Id;
+                }
+
+                urPermission.Add(nurPerm);
+            }
+
+            //处理两种权限都被去掉的情况
+            foreach (var oldPerm in _oldTemplate.Permissions)
+            {
+                var findPerm = urPermission.Find(p => p.Token == oldPerm.Token
+                    && p.TokenType == oldPerm.TokenType
+                    && p.ResourceId == oldPerm.ResourceId
+                    && p.ResourceType == oldPerm.ResourceType);
+
+                if (findPerm == null)
+                {
+                    List<PermissionMask> rights = new List<PermissionMask>() { PermissionMask.Edit, PermissionMask.Veiw };
+                    int newPerm = _permissionManager.RemovePermission(oldPerm.Permission, rights);
+                    UserResourcePermission nurPerm = new UserResourcePermission
+                    {
+                        Token = oldPerm.Token,
+                        TokenType = TokenType.User,
+                        ResourceId = oldPerm.ResourceId,
+                        ResourceType = ResourceType.SpotTemplate,
+                        Permission = newPerm,
+                    };
+
+                    urPermission.Add(nurPerm);
+                }
+            }
+
+            stockTemplate.Permissions.AddRange(urPermission);
         }
 
         private bool CheckInputValue(StockTemplate stockTemplate)

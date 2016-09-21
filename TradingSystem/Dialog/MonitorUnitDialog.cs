@@ -93,7 +93,7 @@ namespace TradingSystem.Dialog
 
         private void LoadStockTemplate()
         {
-            var templates = _templateBLL.GetTemplateByUser(-1);
+            var templates = _templateBLL.GetTemplates();
             if (templates == null || templates.Count == 0)
                 return;
 

@@ -67,7 +67,7 @@ namespace TradingSystem.View
         private void Form_LoadActived(string json)
         {
             //StockTemplateDAO _dbdao = new StockTemplateDAO();
-            var items = _templateBLL.GetTemplateByUser(-1);
+            var items = _templateBLL.GetTemplates();
             json = JsonUtil.SerializeObject(items);
 
             if(!string.IsNullOrEmpty(json))
