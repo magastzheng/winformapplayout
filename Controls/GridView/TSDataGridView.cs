@@ -17,6 +17,7 @@ namespace Controls.GridView
     public delegate void UpdateRelatedDataGrid(UpdateDirection direction, int rowIndex, int columnIndex);
     public delegate void ClickRowHandler(object sender, int rowIndex);
     public delegate void NumericUpDownValueChanged(int newValue, int rowIndex, int columnIndex);
+    public delegate void CellEndEditHandler(int rowIndex, int columnIndex, string columnName); 
 
     public partial class TSDataGridView : DataGridView
     {
@@ -24,6 +25,7 @@ namespace Controls.GridView
         public event ClickRowHandler MouseClickRow;
         public event ClickRowHandler DoubleClickRow;
         public event NumericUpDownValueChanged NumericUpDownValueChanged;
+        public event CellEndEditHandler CellEndEditHandler;
 
         public KeyPressEventHandler CopiesCheckHandler = new KeyPressEventHandler(CopiesCheck);
 
@@ -79,6 +81,12 @@ namespace Controls.GridView
             if (dgv == null)
                 return;
 
+            var cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            var val = cell.Value;
+            if (CellEndEditHandler != null)
+            {
+                CellEndEditHandler(e.RowIndex, e.ColumnIndex, dgv.Columns[e.ColumnIndex].Name);
+            }
             //DataGridViewColumn column = dgv.Columns[e.ColumnIndex];
 
             //if (column is DataGridViewComboBoxColumn)
@@ -307,6 +315,33 @@ namespace Controls.GridView
             }
         }
 
+        #endregion
+
+        #region
+
+        public void SetFocus(int rowIndex, int columnIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= this.Rows.Count || columnIndex < 0 || columnIndex >= this.Columns.Count)
+                return;
+
+            this.CurrentCell = this.Rows[rowIndex].Cells[columnIndex];
+            BeginEdit(true);
+        }
+
+        public void SetFocus(int rowIndex, string columnName)
+        {
+            if(rowIndex < 0 || rowIndex >= this.Rows.Count)
+                return;
+
+            var cell = this.Rows[rowIndex].Cells[columnName];
+            if (cell == null)
+            {
+                return;
+            }
+
+            this.CurrentCell = cell;
+            BeginEdit(true);
+        }
         #endregion
     }
 }

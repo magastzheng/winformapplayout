@@ -80,7 +80,7 @@ namespace BLL.Frontend
             return cancelEntrustCmdItems;
         }
 
-        public List<CancelRedoItem> CancelSecuItem(EntrustCommandItem cmdItem, List<CancelRedoItem> cancelItems, CallerCallback callerCallback)
+        public List<CancelRedoItem> CancelSecuItem(int submitId, int commandId, List<CancelRedoItem> cancelItems, CallerCallback callerCallback)
         {
             List<CancelRedoItem> cancelSecuItems = new List<CancelRedoItem>();
 
@@ -93,7 +93,7 @@ namespace BLL.Frontend
                 return cancelSecuItems;
             }
 
-            var bllResponse = _ufxWithdrawBLL.Cancel(cmdItem, entrustedSecuItems, callerCallback);
+            var bllResponse = _ufxWithdrawBLL.Cancel(submitId, commandId, entrustedSecuItems, callerCallback);
             if (BLLResponse.Success(bllResponse))
             {
                 //int copies = cmdItem.Copies;
@@ -109,7 +109,7 @@ namespace BLL.Frontend
             return cancelSecuItems;
         }
 
-        public List<CancelSecurityItem> CancelSecuItem(EntrustCommandItem cmdItem, List<CancelSecurityItem> cancelItems, CallerCallback callerCallback)
+        public List<CancelSecurityItem> CancelSecuItem(int submitId, int commandId, List<CancelSecurityItem> cancelItems, CallerCallback callerCallback)
         {
             var cancelSecuItems = new List<CancelSecurityItem>();
             var entrustedSecuItems = new List<EntrustSecurityItem>();
@@ -126,7 +126,7 @@ namespace BLL.Frontend
                 return cancelSecuItems;
             }
 
-            var bllResponse = _ufxWithdrawBLL.Cancel(cmdItem, entrustedSecuItems, callerCallback);
+            var bllResponse = _ufxWithdrawBLL.Cancel(submitId, commandId, entrustedSecuItems, callerCallback);
             if (BLLResponse.Success(bllResponse))
             {
                 //int copies = cmdItem.Copies;
@@ -151,7 +151,7 @@ namespace BLL.Frontend
             return _entrustCommandBLL.GetCancel(cmdItem.CommandId);
         }
 
-        public List<CancelRedoItem> GetEnrustedSecuItems(EntrustCommandItem cmdItem)
+        public List<CancelRedoItem> GetEntrustedSecuItems(EntrustCommandItem cmdItem)
         {
             var entrustSecuItems = _entrustSecurityBLL.GetCancelBySumbitId(cmdItem.SubmitId);
             var cancelItemList = new List<CancelRedoItem>();

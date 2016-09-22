@@ -8,7 +8,9 @@ namespace Config
     {
         private const string FileName = "message.json";
 
-        private Dictionary<string, List<Label>> _labels = new Dictionary<string, List<Label>>();
+        //private Dictionary<string, List<ErrorItem>> _errors = new Dictionary<string, List<ErrorItem>>();
+        //private Dictionary<string, List<Label>> _
+        private Message _message = new Message();
         public LabelConfig()
         {
             Init();
@@ -18,7 +20,8 @@ namespace Config
         {
             string filePath = RuntimeEnv.Instance.GetConfigFile(FileName);
             string content = FileUtil.ReadFile(filePath);
-            _labels = JsonConvert.DeserializeObject<Dictionary<string, List<Label>>>(content);
+            //_errors = JsonConvert.DeserializeObject<Dictionary<string, List<ErrorItem>>>(content);
+            _message = JsonConvert.DeserializeObject<Message>(content);
 
             return 0;
         }
@@ -26,12 +29,27 @@ namespace Config
         public string GetErrorMessage(int id)
         {
             string text = string.Empty;
-            if (_labels.ContainsKey("errors"))
+            if (_message != null && _message.Errors != null)
             {
-                var label = _labels["errors"].Find(p => p.Id == id);
+                var label = _message.Errors.Find(p => p.Id == id);
                 if (label != null)
                 {
                     text = label.Message;
+                }
+            }
+
+            return text;
+        }
+
+        public string GetLabelText(string id)
+        {
+            string text = string.Empty;
+            if (_message != null && _message.Labels != null)
+            {
+                var label = _message.Labels.Find(p => p.Id.Equals(id));
+                if (label != null)
+                {
+                    text = label.Text;
                 }
             }
 

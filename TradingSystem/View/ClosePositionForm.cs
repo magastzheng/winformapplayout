@@ -159,20 +159,22 @@ namespace TradingSystem.View
                 InstanceCode = closeItem.InstanceCode,
                 SpotTemplate = closeItem.TemplateId.ToString(),
                 MonitorName = closeItem.MonitorName,
+                FuturesContract = closeItem.FuturesContract,
                 TradeDirection = ((int)EntrustDirection.Buy).ToString(),
                 Copies = 1,
             };
 
-            if (_secuDataSource != null && _secuDataSource.Count > 0)
-            {
-                var futuresItem = _secuDataSource.ToList()
-                                    .Find(p => p.InstanceId == closeItem.InstanceId && p.SecuType == Model.SecurityInfo.SecurityType.Futures);
-                if (futuresItem != null)
-                {
-                    cmdItem.FuturesContract = futuresItem.SecuCode;
-                    _cmdDataSource.Add(cmdItem);
-                }
-            }
+            //if (_secuDataSource != null && _secuDataSource.Count > 0)
+            //{
+            //    var futuresItem = _secuDataSource.ToList()
+            //                        .Find(p => p.InstanceId == closeItem.InstanceId && p.SecuType == Model.SecurityInfo.SecurityType.Futures);
+            //    if (futuresItem != null)
+            //    {
+            //        cmdItem.FuturesContract = futuresItem.SecuCode;
+            //    }
+            //}
+
+            _cmdDataSource.Add(cmdItem);
         }
 
         #endregion

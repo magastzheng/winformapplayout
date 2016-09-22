@@ -233,7 +233,7 @@ namespace TradingSystem.Dialog
             _entrustCommandItems = data as List<EntrustCommandItem>;
             foreach (var cmdItem in _entrustCommandItems)
             {
-                var cancelSecuItems = _withdrawBLL.GetEnrustedSecuItems(cmdItem);
+                var cancelSecuItems = _withdrawBLL.GetEntrustedSecuItems(cmdItem);
                 if (cancelSecuItems == null)
                     continue;
 
@@ -308,7 +308,7 @@ namespace TradingSystem.Dialog
             foreach (var cmdItem in _entrustCommandItems)
             { 
                 var secuItems = _secuDataSource.Where(p => p.Selection && p.CommandId == cmdItem.CommandId && p.SubmitId == cmdItem.SubmitId).ToList();
-                var cancelItems = _withdrawBLL.CancelSecuItem(cmdItem, secuItems, null);
+                var cancelItems = _withdrawBLL.CancelSecuItem(cmdItem.SubmitId, cmdItem.CommandId, secuItems, null);
                 if (cancelItems.Count != secuItems.Count)
                 { 
                     //TODO: report failed items

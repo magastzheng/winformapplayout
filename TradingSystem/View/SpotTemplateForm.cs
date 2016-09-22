@@ -693,8 +693,18 @@ namespace TradingSystem.View
             var benchmarkItem = _securityInfoList.Find(p => p.SecuCode.Equals(template.Benchmark) && p.SecuType == SecurityType.Index);
             var benchmarkData = QuoteCenter.Instance.GetMarketData(benchmarkItem);
             var benchmark = _benchmarkList.Find(p => p.BenchmarkId.Equals(benchmarkItem.SecuCode));
-            double totalValue = benchmarkData.CurrentPrice * benchmark.ContractMultiple;
-            
+            double bmkPrice = 0f;
+            double totalValue = 0f;
+            if(!FloatUtil.IsZero(benchmarkData.CurrentPrice))
+            {
+                bmkPrice = benchmarkData.CurrentPrice;
+            }
+            else if (!FloatUtil.IsZero(benchmarkData.PreClose))
+            {
+                bmkPrice = benchmarkData.PreClose;
+            }
+            totalValue = bmkPrice * benchmark.ContractMultiple;
+
             var prices = GetPrices(secuList);
             var amounts = CalcUtil.CalcStockAmountPerCopyRound(totalValue, weights, prices);
             var mktCaps = GetMarketCap(prices, amounts);
@@ -821,8 +831,9 @@ namespace TradingSystem.View
 
                 int sheetIndex = 0;
                 var table = ExcelUtil.GetSheetData(fileDialog.FileName, sheetIndex, colHeadMap);
-                if (table == null)
+                if (table == null || table.ColumnIndex == null || table.Rows == null)
                 {
+                    MessageBox.Show(this, "无法处理导入的文件", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
 

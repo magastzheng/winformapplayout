@@ -12,7 +12,7 @@ namespace Model.SecurityInfo
         {
             string exchange = string.Empty;
 
-            switch (exchange)
+            switch (exchangeCode)
             {
                 case Exchange.CFFEX:
                     exchange = "中金所";

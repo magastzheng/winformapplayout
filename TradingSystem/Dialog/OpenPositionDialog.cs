@@ -264,7 +264,7 @@ namespace TradingSystem.Dialog
                 endDate = DateUtil.GetIntDate(dt);
             }
 
-            if (startDate > 0 && endDate > 0 && startDate < endDate)
+            if (startDate > 0 && endDate > 0 && startDate <= endDate)
             {
                 return true;
             }

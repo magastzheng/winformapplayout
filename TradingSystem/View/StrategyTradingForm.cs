@@ -23,6 +23,7 @@ using Model.BLL;
 using BLL.Frontend;
 using BLL.EntrustCommand;
 using BLL.Product;
+using Calculation;
 
 namespace TradingSystem.View
 {
@@ -33,6 +34,7 @@ namespace TradingSystem.View
         private const string GridDealFlowId = "dealflow";
         private const string GridCmdSecurityId = "cmdsecurity";
         private const string GridBuySellId = "buysell";
+        private const string EntrustPrice = "entrustprice";
 
         private EntrustBLL _entrustBLL = new EntrustBLL();
         private WithdrawBLL _withdrawBLL = new WithdrawBLL();
@@ -67,8 +69,10 @@ namespace TradingSystem.View
             tabParentMain.SelectedIndexChanged += new EventHandler(TabControl_Parent_SelectedIndexChanged);
             tabChildSecurity.SelectedIndexChanged += new EventHandler(TabControl_Child_SelectedIndexChanged);
 
+            //grid view event handler
             this.cmdGridView.UpdateRelatedDataGridHandler += new UpdateRelatedDataGrid(GridView_Command_UpdateRelatedDataGridHandler);
             this.bsGridView.UpdateRelatedDataGridHandler += new UpdateRelatedDataGrid(GridView_BuySell_UpdateRelatedDataGridHandler);
+            this.securityGridView.CellEndEditHandler += new CellEndEditHandler(GridView_Security_CellEndEditHandler);
 
             //Refresh
             this.tsbRefresh.Click += new EventHandler(ToolStripButton_Command_Refresh);
@@ -119,13 +123,27 @@ namespace TradingSystem.View
 
             if (entrustedCmdItems.Count == 0)
             {
+                MessageBox.Show(this, "当期没有委托可以撤单或撤补！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
+            }
+
+            var calcItems = new List<CancelSecurityItem>();
+            foreach (var cmdItem in entrustedCmdItems)
+            {
+                var cancelSecuItems = _withdrawBLL.GetEntrustedSecuItems(cmdItem);
+                if (cancelSecuItems == null)
+                    continue;
+
+                foreach (var cancelRedoItem in cancelSecuItems)
+                {
+                    calcItems.Add(cancelRedoItem);
+                }
             }
 
             var form = new CancelEntrustDialog(_gridConfig);
             form.Owner = this;
             form.OnLoadControl(form, null);
-            form.OnLoadData(form, entrustedCmdItems);
+            form.OnLoadData(form, calcItems);
             //form.SaveData += new FormLoadHandler(Dialog_CancelRedoDialog_SaveData);
             form.ShowDialog();
 
@@ -428,6 +446,58 @@ namespace TradingSystem.View
                 {
                     _eiDataSource.Remove(item);
                 }
+            }
+        }
+
+        private void GridView_Security_CellEndEditHandler(int rowIndex, int columnIndex, string columnName)
+        {
+            if(rowIndex < 0 || rowIndex >= _secuDataSource.Count)
+                return;
+
+            //TODO: while the EntrustPrice is changed, record it.
+            //Console.WriteLine(columnName);
+            if (columnName.CompareTo(EntrustPrice) == 0)
+            {
+                var secuItem = _secuDataSource[rowIndex];
+                if (secuItem.EntrustPrice < secuItem.LimitDownPrice || secuItem.EntrustPrice > secuItem.LimitUpPrice)
+                {
+                    MessageBox.Show(this, "委托价格必须在跌停价和涨停价之间！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                    var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
+                    var marketData = QuoteCenter.Instance.GetMarketData(findItem);
+                    secuItem.EntrustPrice = QuotePriceHelper.GetPrice(PriceType.Last, marketData);
+                }
+                else
+                {
+                    secuItem.EPriceType = PriceType.Assign;
+                }
+
+                this.securityGridView.InvalidateCell(columnIndex - 1, rowIndex);
+                this.securityGridView.InvalidateCell(columnIndex, rowIndex);
+            }
+        }
+
+        private void GridView_Security_ResetPriceType(List<CommandSecurityItem> secuItems)
+        {
+            var spotBuyPrice = PriceTypeHelper.GetPriceType(this.cbSpotBuyPrice);
+            var spotSellPrice = PriceTypeHelper.GetPriceType(this.cbSpotSellPrice);
+            var futuBuyPrice = PriceTypeHelper.GetPriceType(this.cbFuturesBuyPrice);
+            var futuSellPrice = PriceTypeHelper.GetPriceType(this.cbFuturesSellPrice);
+
+            if (secuItems != null)
+            {
+                secuItems.Where(p => p.EDirection == EntrustDirection.BuySpot)
+                    .ToList()
+                    .ForEach(o => o.EPriceType = spotBuyPrice);
+                secuItems.Where(p => p.EDirection == EntrustDirection.SellSpot)
+                    .ToList()
+                    .ForEach(o => o.EPriceType = spotSellPrice);
+                secuItems.Where(p => p.EDirection == EntrustDirection.SellOpen)
+                    .ToList()
+                    .ForEach(o => o.EPriceType = futuSellPrice);
+                secuItems.Where(p => p.EDirection == EntrustDirection.BuyClose)
+                    .ToList()
+                    .ForEach(o => o.EPriceType = futuBuyPrice);
             }
         }
 
@@ -792,7 +862,9 @@ namespace TradingSystem.View
 
         private void Button_Calculate_Click(object sender, EventArgs e)
         {
-            //TODO:
+            //如果份数框不为0，将所有的份数均设为输入框中的值
+            AssignCopies();
+            
             if (!ValidateCopies())
             {
                 MessageBox.Show(this, "委托份数非法，请输入正确的委托份数！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
@@ -850,7 +922,7 @@ namespace TradingSystem.View
 
             if (!ValidateEntrust())
             {
-                MessageBox.Show(this, "请设置委托的证券数量和价格，证券数量需为正值，价格不能为零且需在最高最低价之间！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(this, "请设置委托的证券数量和价格，证券数量需为正值，价格不能为零且需在最高最低价之间，证券可以正常交易！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                 return;
             }
 
@@ -866,12 +938,6 @@ namespace TradingSystem.View
             int successCount = 0;
             foreach (var eiItem in selectedEntrustItems)
             {
-                if (eiItem.Copies <= 0)
-                {
-                    //TODO: please input copies
-                    continue;
-                }
-
                 var cmdItem = _cmdDataSource.Single(p => p.CommandId == eiItem.CommandNo);
                 if (cmdItem == null)
                 {
@@ -916,15 +982,24 @@ namespace TradingSystem.View
             MessageBox.Show(this, successMsg, "提示", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
 
             //update the UI
+            GridView_Security_ResetPriceType(selectedSecuItems);
             nudCopies.Value = 1;
             this.cmdGridView.Invalidate();
             this.bsGridView.Invalidate();
+            this.securityGridView.Invalidate();
         }
 
         private void CalculateOne(EntrustItem eiItem, PriceType spotBuyPrice, PriceType spotSellPrice, PriceType futureBuyPrice, PriceType futureSellPrice)
         {
             var selCmdItem = _cmdDataSource.Single(p => p.CommandId == eiItem.CommandNo);
             if (selCmdItem == null)
+            {
+                return;
+            }
+
+            //检查委托数量
+            var noEntrustNum = selCmdItem.CommandAmount - selCmdItem.EntrustedAmount;
+            if (noEntrustNum <= 0)
             {
                 return;
             }
@@ -940,30 +1015,41 @@ namespace TradingSystem.View
 
             if (thisCopies <= 0)
             {
-                return;
+                thisCopies = 0;
             }
 
             var secuItems = _secuDataSource.Where(p => p.CommandId == eiItem.CommandNo).ToList();
             int weightAmount = 0;
             foreach (var secuItem in secuItems)
             {
-                weightAmount = secuItem.CommandAmount / selCmdItem.CommandNum;
-
                 secuItem.TargetCopies = targetNum;
+
                 int targetAmount = 0;
                 int thisEntrustAmount = 0;
                 int waitAmount = 0;
-                if (weightAmount > 0)
+
+                if (thisCopies > 0)
                 {
-                    targetAmount = targetNum * weightAmount;
-                    thisEntrustAmount = thisCopies * weightAmount;
-                    waitAmount = targetNum * weightAmount;
+                    //算出每一份的数量
+                    weightAmount = secuItem.CommandAmount / selCmdItem.CommandNum;
+                    if (weightAmount > 0)
+                    {
+                        targetAmount = targetNum * weightAmount;
+                        thisEntrustAmount = thisCopies * weightAmount;
+                        waitAmount = targetNum * weightAmount;
+                    }
+                    else
+                    {
+                        targetAmount = secuItem.TargetCopies;
+                        thisEntrustAmount = thisCopies;
+                        waitAmount = secuItem.TargetCopies;
+                    }
                 }
                 else
                 {
-                    targetAmount = secuItem.TargetCopies;
-                    thisEntrustAmount = thisCopies;
-                    waitAmount = secuItem.TargetCopies;
+                    targetAmount = secuItem.CommandAmount - secuItem.EntrustedAmount;
+                    thisEntrustAmount = secuItem.CommandAmount - secuItem.EntrustedAmount;
+                    waitAmount = thisEntrustAmount;
                 }
 
                 if (secuItem.EDirection == EntrustDirection.BuySpot && secuItem.SecuType == SecurityType.Stock)
@@ -1003,42 +1089,45 @@ namespace TradingSystem.View
                     secuItem.TargetAmount = secuItem.CommandAmount;
                 }
 
-                switch (secuItem.EDirection)
+                if (secuItem.EPriceType != PriceType.Assign)
                 {
-                    case EntrustDirection.BuySpot:
-                        {
-                            if (secuItem.SecuType == SecurityType.Stock)
+                    switch (secuItem.EDirection)
+                    {
+                        case EntrustDirection.BuySpot:
                             {
-                                secuItem.EPriceType = spotBuyPrice;
+                                if (secuItem.SecuType == SecurityType.Stock)
+                                {
+                                    secuItem.EPriceType = spotBuyPrice;
+                                }
                             }
-                        }
-                        break;
-                    case EntrustDirection.SellSpot:
-                        {
-                            if (secuItem.SecuType == SecurityType.Stock)
+                            break;
+                        case EntrustDirection.SellSpot:
                             {
-                                secuItem.EPriceType = spotSellPrice;
+                                if (secuItem.SecuType == SecurityType.Stock)
+                                {
+                                    secuItem.EPriceType = spotSellPrice;
+                                }
                             }
-                        }
-                        break;
-                    case EntrustDirection.SellOpen:
-                        {
-                            if (secuItem.SecuType == SecurityType.Futures)
+                            break;
+                        case EntrustDirection.SellOpen:
                             {
-                                secuItem.EPriceType = futureSellPrice;
+                                if (secuItem.SecuType == SecurityType.Futures)
+                                {
+                                    secuItem.EPriceType = futureSellPrice;
+                                }
                             }
-                        }
-                        break;
-                    case EntrustDirection.BuyClose:
-                        {
-                            if (secuItem.SecuType == SecurityType.Futures)
+                            break;
+                        case EntrustDirection.BuyClose:
                             {
-                                secuItem.EPriceType = futureBuyPrice;
+                                if (secuItem.SecuType == SecurityType.Futures)
+                                {
+                                    secuItem.EPriceType = futureBuyPrice;
+                                }
                             }
-                        }
-                        break;
-                    default:
-                        break;
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
@@ -1069,33 +1158,36 @@ namespace TradingSystem.View
                 secuItem.LimitDownPrice = marketData.LowLimitPrice;
                 secuItem.ESuspendFlag = marketData.SuspendFlag;
 
-                switch (secuItem.SecuType)
+                if (secuItem.EPriceType != PriceType.Assign)
                 {
-                    case SecurityType.Stock:
-                        {
+                    switch (secuItem.SecuType)
+                    {
+                        case SecurityType.Stock:
+                            {
 
-                            if (secuItem.EDirection == EntrustDirection.BuySpot)
-                            {
-                                secuItem.EntrustPrice = QuotePriceHelper.GetPrice(spotBuyPrice, marketData);
+                                if (secuItem.EDirection == EntrustDirection.BuySpot)
+                                {
+                                    secuItem.EntrustPrice = QuotePriceHelper.GetPrice(spotBuyPrice, marketData);
+                                }
+                                else if (secuItem.EDirection == EntrustDirection.SellSpot)
+                                {
+                                    secuItem.EntrustPrice = QuotePriceHelper.GetPrice(spotSellPrice, marketData);
+                                }
                             }
-                            else if (secuItem.EDirection == EntrustDirection.SellSpot)
+                            break;
+                        case SecurityType.Futures:
                             {
-                                secuItem.EntrustPrice = QuotePriceHelper.GetPrice(spotSellPrice, marketData);
+                                if (secuItem.EDirection == EntrustDirection.SellOpen)
+                                {
+                                    secuItem.EntrustPrice = QuotePriceHelper.GetPrice(futureSellPrice, marketData);
+                                }
+                                else if (secuItem.EDirection == EntrustDirection.BuyClose)
+                                {
+                                    secuItem.EntrustPrice = QuotePriceHelper.GetPrice(futureBuyPrice, marketData);
+                                }
                             }
-                        }
-                        break;
-                    case SecurityType.Futures:
-                        {
-                            if (secuItem.EDirection == EntrustDirection.SellOpen)
-                            {
-                                secuItem.EntrustPrice = QuotePriceHelper.GetPrice(futureSellPrice, marketData);
-                            }
-                            else if (secuItem.EDirection == EntrustDirection.BuyClose)
-                            {
-                                secuItem.EntrustPrice = QuotePriceHelper.GetPrice(futureBuyPrice, marketData);
-                            }
-                        }
-                        break;
+                            break;
+                    }
                 }
             }
         }
@@ -1163,22 +1255,18 @@ namespace TradingSystem.View
             return entrustSecuItems;
         }
 
-        private bool ValidateCopies()
+        private void AssignCopies()
         {
             int copies = (int)nudCopies.Value;
-
-            if (copies == 0)
+            if (copies > 0)
             {
                 _eiDataSource.ToList()
-                    .ForEach(p => p.Copies = copies);
-            }
-            else
-            {
-                _eiDataSource.Where(p => p.Copies == 0)
-                    .ToList()
                     .ForEach(o => o.Copies = copies);
             }
+        }
 
+        private bool ValidateCopies()
+        {
             foreach (var eiItem in _eiDataSource)
             {
                 var cmdItem = _cmdDataSource.Single(p => p.Selection && p.CommandId == eiItem.CommandNo);
@@ -1210,10 +1298,19 @@ namespace TradingSystem.View
             foreach (var entrustSecuItem in entrustSecuItems)
             {
                 if (entrustSecuItem.ThisEntrustAmount <= 0
+                    || FloatUtil.IsZero(entrustSecuItem.EntrustPrice)
                     || entrustSecuItem.EntrustPrice < entrustSecuItem.LimitDownPrice
                     || entrustSecuItem.EntrustPrice > entrustSecuItem.LimitUpPrice
-                    || entrustSecuItem.EntrustPrice <= 0.00001)
+                    || entrustSecuItem.ESuspendFlag != Model.Quote.SuspendFlag.NoSuspension
+                   )
                 {
+                    var findIndex = _secuDataSource.ToList().FindIndex(p => p.SecuCode == entrustSecuItem.SecuCode
+                        && p.CommandId == entrustSecuItem.CommandId);
+                    if (findIndex >= 0)
+                    {
+                        securityGridView.SetFocus(findIndex, EntrustPrice);
+                    }
+
                     return false;
                 }
             }

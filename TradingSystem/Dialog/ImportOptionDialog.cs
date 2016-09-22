@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Config;
+using System;
 using System.Windows.Forms;
 
 namespace TradingSystem.Dialog
@@ -17,6 +18,23 @@ namespace TradingSystem.Dialog
         public ImportOptionDialog()
         {
             InitializeComponent();
+
+            this.Load += new EventHandler(Dialog_Load);
+            this.LoadControl += new FormLoadHandler(Dialog_LoadControl);
+        }
+
+        private void Dialog_Load(object sender, EventArgs e)
+        {
+            OnLoadControl(null, null);
+            OnLoadData(null, null);
+        }
+
+        private bool Dialog_LoadControl(object sender, object data)
+        {
+            string text = ConfigManager.Instance.GetLabelConfig().GetLabelText("importdialognotes");
+            this.rtbImportDesc.Text = text;
+
+            return true;
         }
 
         private void Button_Confirm_Click(object sender, EventArgs e)

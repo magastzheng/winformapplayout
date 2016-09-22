@@ -163,7 +163,7 @@ namespace Util
 
             Dictionary<int, string> colIndexMap = new Dictionary<int, string>();
             //第一行为行头
-            IRow row = sheet.GetRow(1);
+            IRow row = sheet.GetRow(0);
             for (int colIndex = 0; colIndex <= row.LastCellNum; colIndex++)
             {
                 ICell cell = row.GetCell(colIndex);
@@ -181,7 +181,7 @@ namespace Util
                 }
             }
 
-            for (int rowIndex = 2; rowIndex <= sheet.LastRowNum; rowIndex++)
+            for (int rowIndex = 1; rowIndex <= sheet.LastRowNum; rowIndex++)
             {
                 row = sheet.GetRow(rowIndex);
                 DataRow dataRow = new DataRow 

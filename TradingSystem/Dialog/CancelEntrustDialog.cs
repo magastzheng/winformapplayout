@@ -19,7 +19,7 @@ namespace TradingSystem.Dialog
         private WithdrawBLL _withdrawBLL = new WithdrawBLL();
 
         private SortableBindingList<CancelSecurityItem> _secuDataSource = new SortableBindingList<CancelSecurityItem>(new List<CancelSecurityItem>());
-        private List<EntrustCommandItem> _entrustCommandItems = new List<EntrustCommandItem>();
+        //private List<EntrustCommandItem> _entrustCommandItems = new List<EntrustCommandItem>();
 
         GridConfig _gridConfig;
 
@@ -76,15 +76,23 @@ namespace TradingSystem.Dialog
             }
 
             var failedCancelItems = new List<CancelSecurityItem>();
-            foreach (var cmdItem in _entrustCommandItems)
+            var submitIds = _secuDataSource.ToList().Select(p => p.SubmitId).Distinct().ToList();
+            foreach (var submitId in submitIds)
             {
-                var secuItems = _secuDataSource.Where(p => p.Selection && p.CommandId == cmdItem.CommandId && p.SubmitId == cmdItem.SubmitId).ToList();
-                var cancelItems = _withdrawBLL.CancelSecuItem(cmdItem, secuItems, null);
-                if (cancelItems.Count != secuItems.Count)
+                var submitCalcItems = _secuDataSource.Where(p => p.SubmitId == submitId).ToList();
+                var commandIds = submitCalcItems.Select(p => p.CommandId).Distinct().ToList();
+                if (commandIds != null && commandIds.Count > 0)
                 {
-                    //TODO: report failed items
-                    var failItems = secuItems.ToList().Except(cancelItems).ToList();
-                    failedCancelItems.AddRange(failItems);
+                    foreach (var commandId in commandIds)
+                    {
+                        var calcSrcItems = submitCalcItems.Where(p => p.CommandId == commandId).ToList();
+                        var calcResItems = _withdrawBLL.CancelSecuItem(submitId, commandId, calcSrcItems, null);
+                        if (calcResItems.Count != calcSrcItems.Count)
+                        {
+                            var failItems = calcSrcItems.ToList().Except(calcResItems).ToList();
+                            failedCancelItems.AddRange(failItems);
+                        }
+                    }
                 }
             }
 
@@ -131,23 +139,17 @@ namespace TradingSystem.Dialog
                 return false;
             }
 
-            if (!(data is List<EntrustCommandItem>))
+            if (!(data is List<CancelSecurityItem>))
             {
                 return false;
             }
 
             _secuDataSource.Clear();
-            _entrustCommandItems = data as List<EntrustCommandItem>;
-            foreach (var cmdItem in _entrustCommandItems)
-            {
-                var cancelSecuItems = _withdrawBLL.GetEnrustedSecuItems(cmdItem);
-                if (cancelSecuItems == null)
-                    continue;
 
-                foreach (var cancelRedoItem in cancelSecuItems)
-                {
-                    _secuDataSource.Add(cancelRedoItem);
-                }
+            var calcItems = data as List<CancelSecurityItem>;
+            foreach (var calcItem in calcItems)
+            {
+                _secuDataSource.Add(calcItem);
             }
 
             return true;

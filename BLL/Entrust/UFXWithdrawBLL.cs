@@ -31,7 +31,7 @@ namespace BLL.Entrust
             _securityBLL = BLLManager.Instance.SecurityBLL;
         }
 
-        public BLLResponse Cancel(EntrustCommandItem cmdItem, List<EntrustSecurityItem> entrustItems, CallerCallback callerCallback)
+        public BLLResponse Cancel(int submitId, int commandId, List<EntrustSecurityItem> entrustItems, CallerCallback callerCallback)
         {
             BLLResponse bllResponse = new BLLResponse();
 
@@ -51,8 +51,8 @@ namespace BLL.Entrust
             {
                 Token = new CallerToken
                 {
-                    SubmitId = cmdItem.SubmitId,
-                    CommandId = cmdItem.CommandId,
+                    SubmitId = submitId,
+                    CommandId = commandId,
                     WaitEvent = new AutoResetEvent(false),
                     Caller = callerCallback,
                 },

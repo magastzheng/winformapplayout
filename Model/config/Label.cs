@@ -6,9 +6,22 @@ using System.Threading.Tasks;
 
 namespace Model.config
 {
-    public class Label
+    public class ErrorItem
     {
         public int Id { get; set; }
         public string Message { get; set; }
+    }
+
+    public class Label
+    {
+        public string Id { get; set; }
+        public string Text { get; set; }
+    }
+
+    public class Message
+    {
+        public List<ErrorItem> Errors { get; set; }
+
+        public List<Label> Labels { get; set; }
     }
 }
