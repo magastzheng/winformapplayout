@@ -47,6 +47,7 @@
     <Compile Include="Binding\BindingUtil\GridViewBindingHelper.cs" />
     <Compile Include="Binding\BindingUtil\UFXDataBindingHelper.cs" />
     <Compile Include="Binding\IntBoolConverter.cs" />
+    <Compile Include="Binding\StandardCodeAttribute.cs" />
     <Compile Include="Binding\UFXDataAttribute.cs" />
     <Compile Include="BLL\BLLResponse.cs" />
     <Compile Include="config\Benchmark.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="Constant\ConstVariable.cs" />
     <Compile Include="Constant\DateFormat.cs" />
     <Compile Include="Converter\StringEnumConverter.cs" />
+    <Compile Include="Converter\UFXMarketConverter.cs" />
     <Compile Include="Converter\UFXTypeConverter.cs" />
     <Compile Include="Database\TemplateItem.cs" />
     <Compile Include="Database\TradeCommand.cs" />

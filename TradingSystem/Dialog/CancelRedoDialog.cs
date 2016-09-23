@@ -298,15 +298,21 @@ namespace TradingSystem.Dialog
             //}
             var selectItems = _secuDataSource.Where(p => p.Selection).ToList();
 
-            var commandIds = _secuDataSource.Select(p => p.CommandId).Distinct().ToList();
-            var submitIds = _secuDataSource.Select(p => p.SubmitId).Distinct().ToList();
+            var commandIds = selectItems.Select(p => p.CommandId).Distinct().ToList();
+            var submitIds = selectItems.Select(p => p.SubmitId).Distinct().ToList();
             var failedCancelItems = new List<CancelRedoItem>();
+            var successCancelItems = new List<CancelRedoItem>(); 
             foreach (var commandId in commandIds)
             {
                 foreach (var submitId in submitIds)
                 {
-                    var secuItems = _secuDataSource.Where(p => p.Selection && p.CommandId == commandId && p.SubmitId == submitId).ToList();
+                    var secuItems = selectItems.Where(p => p.Selection && p.CommandId == commandId && p.SubmitId == submitId).ToList();
                     var cancelItems = _withdrawBLL.CancelSecuItem(submitId, commandId, secuItems, null);
+                    if (cancelItems.Count > 0)
+                    {
+                        successCancelItems.AddRange(cancelItems);
+                    }
+
                     if (cancelItems.Count != secuItems.Count)
                     {
                         //TODO: report failed items
@@ -323,8 +329,11 @@ namespace TradingSystem.Dialog
             //var commandIds = selectItems.Select(p => p.CommandId).Distinct().ToList();
             foreach (var commandId in commandIds)
             {
-                var oneCancelRedoItem = selectItems.Where(p => p.CommandId == commandId).ToList();
-                //Submit(oneEntrustCmdItems, oneCancelRedoItem);
+                var oneCancelRedoItem = successCancelItems.Where(p => p.CommandId == commandId).ToList();
+                if (oneCancelRedoItem.Count > 0)
+                {
+                    Submit(commandId, oneCancelRedoItem);
+                }
             }
 
             DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -410,15 +419,12 @@ namespace TradingSystem.Dialog
 
 
         //TODO: validate before submit
-        private void Submit(List<EntrustCommandItem> entrustCmdItems, List<CancelRedoItem> cancelRedoItems)
+        private void Submit(int commandId, List<CancelRedoItem> cancelRedoItems)
         {
-            int commandId = entrustCmdItems.Select(p => p.CommandId).Single();
-            int copies = entrustCmdItems.Select(p => p.Copies).Sum();
-
             EntrustCommandItem cmdItem = new EntrustCommandItem 
             {
                 CommandId = commandId,
-                Copies = copies,
+                Copies = 0,
             };
             var response = _entrustBLL.SubmitOne(cmdItem, cancelRedoItems);
             if (!BLLResponse.Success(response))

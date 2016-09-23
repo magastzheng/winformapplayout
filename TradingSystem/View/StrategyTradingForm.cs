@@ -24,6 +24,7 @@ using BLL.Frontend;
 using BLL.EntrustCommand;
 using BLL.Product;
 using Calculation;
+using Model.Converter;
 
 namespace TradingSystem.View
 {
@@ -118,6 +119,52 @@ namespace TradingSystem.View
         private void ToolStripButton_EntrustFlow_CancelAppend(object sender, EventArgs e)
         {
             //TODO:
+            var selectItems = _efDataSource.Where(p => p.Selection).ToList();
+            var canCancelItems = selectItems.Where(p => p.EEntrustState == Model.UFX.UFXEntrustState.NoReport
+                    || p.EEntrustState == Model.UFX.UFXEntrustState.WaitReport
+                    || p.EEntrustState == Model.UFX.UFXEntrustState.Reporting
+                    || p.EEntrustState == Model.UFX.UFXEntrustState.Reported
+                    || p.EEntrustState == Model.UFX.UFXEntrustState.PartDone
+                ).ToList();
+            if (selectItems.Count != canCancelItems.Count)
+            {
+                MessageBox.Show(this, "选择了包含不可以撤销的证券！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                return;
+            }
+
+            var cancelRedoItems = new List<CancelRedoItem>();
+            foreach (var canCancelItem in canCancelItems)
+            {
+                CancelRedoItem calcItem = new CancelRedoItem
+                {
+                    SubmitId = canCancelItem.SubmitId,
+                    CommandId = canCancelItem.CommandNo,
+                    SecuCode = canCancelItem.SecuCode,
+                    SecuName = canCancelItem.SecuName,
+                    EntrustNo = canCancelItem.EntrustNo,
+                    EntrustBatchNo = canCancelItem.EntrustBatchNo,
+                    FirstDealDate = canCancelItem.DFirstDealDate,
+                    EntrustDate = canCancelItem.DEntrustDate,
+                    ExchangeCode = UFXTypeConverter.GetMarketCode(canCancelItem.EMarketCode),
+                    //EDirection = selectItem.EEntrustDirection,
+                };
+
+                cancelRedoItems.Add(calcItem);
+            }
+
+            if (cancelRedoItems.Count == 0)
+            {
+                return;
+            }
+
+            //把可以撤销的证券传入撤补对话框
+            var dialog = new CancelRedoDialog(_gridConfig);
+            dialog.Owner = this;
+            dialog.OnLoadControl(dialog, null);
+            dialog.OnLoadData(dialog, cancelRedoItems);
+            dialog.SaveData += new FormLoadHandler(Dialog_CancelRedoDialog_SaveData);
+            dialog.ShowDialog();
         }
 
         private void ToolStripButton_EntrustFlow_Undo(object sender, EventArgs e)
@@ -236,18 +283,7 @@ namespace TradingSystem.View
                 return;
             }
 
-            //List<TradingCommandItem> successCancelItems = new List<TradingCommandItem>();
-            //List<EntrustCommandItem> successCancelEntrustCmdItems = new List<EntrustCommandItem>();
-            //foreach(var cmdItem in selectCmdItems)
-            //{
-            //    var cancelEntrustCmdItems = _withdrawBLL.CancelOne(cmdItem, new CallerCallback(CancelOneCallback));
-            //    if (cancelEntrustCmdItems.Count > 0)
-            //    {
-            //        successCancelItems.Add(cmdItem);
-            //        successCancelEntrustCmdItems.AddRange(cancelEntrustCmdItems);
-            //    }
-            //}
-
+            //获取选中的所有可以撤销的证券
             List<EntrustCommandItem> entrustedCmdItems = new List<EntrustCommandItem>();
             foreach (var cmdItem in selectCmdItems)
             {
@@ -260,12 +296,25 @@ namespace TradingSystem.View
                 return;
             }
 
-            var form = new CancelRedoDialog(_gridConfig);
-            form.Owner = this;
-            form.OnLoadControl(form, null);
-            form.OnLoadData(form, entrustedCmdItems);
-            form.SaveData += new FormLoadHandler(Dialog_CancelRedoDialog_SaveData);
-            form.ShowDialog();
+            var cancelRedoItems = new List<CancelRedoItem>();
+            foreach (var entrustedCmdItem in entrustedCmdItems)
+            {
+                var cancelSecuItems = _withdrawBLL.GetEntrustedSecuItems(entrustedCmdItem);
+                cancelRedoItems.AddRange(cancelSecuItems);
+            }
+
+            if (cancelRedoItems.Count == 0)
+            {
+                return;
+            }
+
+            //把可以撤销的证券传入撤补对话框
+            var dialog = new CancelRedoDialog(_gridConfig);
+            dialog.Owner = this;
+            dialog.OnLoadControl(dialog, null);
+            dialog.OnLoadData(dialog, cancelRedoItems);
+            dialog.SaveData += new FormLoadHandler(Dialog_CancelRedoDialog_SaveData);
+            dialog.ShowDialog();
         }
 
         private bool Dialog_CancelRedoDialog_SaveData(object sender, object data)
