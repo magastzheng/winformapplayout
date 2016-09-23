@@ -68,5 +68,28 @@ namespace UtilTest
 
             Assert.AreEqual(false, result);
         }
+
+        [TestMethod]
+        public void Test_GetDateFromInt()
+        {
+            int dtInt = 20160102;
+            DateTime dt = DateUtil.GetDateFromInt(dtInt);
+
+            DateTime expect = new DateTime(2016, 1, 2);
+            Assert.AreEqual(expect, dt);
+            Console.WriteLine(dt);
+        }
+
+        [TestMethod]
+        public void Test_GetDateTimeFromInt()
+        {
+            int dtInt = 20160102;
+            int timeInt = 122345;
+            DateTime dt = DateUtil.GetDateTimeFromInt(dtInt, timeInt);
+
+            DateTime expect = new DateTime(2016, 1, 2, 12, 23, 45);
+            Assert.AreEqual(expect, dt);
+            Console.WriteLine(dt);
+        }
     }
 }

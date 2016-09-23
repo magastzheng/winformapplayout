@@ -25,9 +25,9 @@ namespace BLL.Entrust
             _securityBLL = BLLManager.Instance.SecurityBLL;
         }
 
-        public int Query(CallerCallback callback)
+        public List<UFXHoldingResponse> Query(CallerCallback callback)
         {
-            int ret = -1;
+            List<UFXHoldingResponse> holdingItems = new List<UFXHoldingResponse>();
             var portfolios = _productBLL.GetAll();
             foreach (var portfolio in portfolios)
             {
@@ -46,6 +46,7 @@ namespace BLL.Entrust
                         SubmitId = 90000,
                         CommandId = 90001,
                         InArgs = portfolio.PortfolioNo,
+                        OutArgs = holdingItems,
                         WaitEvent = new AutoResetEvent(false),
                         Caller = callback,
                     },
@@ -63,7 +64,6 @@ namespace BLL.Entrust
                         var errorResponse = callbacker.Token.ErrorResponse as UFXErrorResponse;
                         if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
                         {
-                            ret = 1;
                             bllResponse.Code = ConnectionCode.Success;
                             bllResponse.Message = "Success QueryHolding";
                         }
@@ -86,7 +86,7 @@ namespace BLL.Entrust
                 }
             }
         
-            return ret;
+            return holdingItems;
         }
 
         private int DataHandlerCallback(CallerToken token, DataParser dataParser)
@@ -114,6 +114,12 @@ namespace BLL.Entrust
                 var futures = responseItems.Where(p => p.MarketNo == "7").ToList();
 
                 var validItems = responseItems.Where(p => p.CurrentAmount > 0).ToList();
+
+                if (validItems != null && validItems.Count > 0 
+                    && token.OutArgs != null && token.OutArgs is List<UFXHoldingResponse>)
+                {
+                    ((List<UFXHoldingResponse>)token.OutArgs).AddRange(validItems);
+                }
             }
             else
             {

@@ -132,6 +132,8 @@ namespace Model.UI
 
         public DateTime EntrustDate { get; set; }
 
+        public DateTime FirstDealDate { get; set; }
+
         public int SubmitId { get; set; }
 
         public EntrustDirection EDirection { get; set; }

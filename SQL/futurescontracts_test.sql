@@ -88,8 +88,8 @@ open cursor_fc
 fetch next from cursor_fc into @Code, @Name, @Exchange, @ListedDate, @LastTradingDay, @LastDeliveryDay, @Status
 while @@fetch_status = 0
 begin
-	if @Status = 1
-	begin
+	--if @Status = 1
+	--begin
 		--exec procFuturesContractInsert @Code
 		--,@Name
 		--,@Exchange
@@ -106,7 +106,11 @@ begin
 		select @total=count(Code) from futurescontract where Code=@Code
 		if @total > 0
 		begin
-			print @Code + ' has been added!'
+			print @Code + ' is added'
+			print @Status
+			update futurescontract
+			set Status=@Status
+			where Code=@Code
 		end
 		else
 		begin
@@ -135,7 +139,7 @@ begin
 				,@Status
 			)
 		end
-	end
+	--end
   	fetch next from cursor_fc into @Code, @Name, @Exchange, @ListedDate, @LastTradingDay, @LastDeliveryDay, @Status
 end
 close cursor_fc

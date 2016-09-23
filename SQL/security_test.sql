@@ -1,28 +1,29 @@
 use tradingsystem
 
 select * from [176.1.11.55].localwind.dbo.TB_OBJECT_1090
-where F4_1090 ='A'             --A¹É
+where F4_1090 ='A'             --Aè‚¡
 	and F27_1090 in ('SSE', 'SZSE')
-	and F19_1090 <> 1	--·ÇÍËÊĞ
-	and F21_1090=1		--ÒÑÉÏÊĞ
+	and F19_1090 <> 1	--éé€€å¸‚
+	and F21_1090=1		--å·²ä¸Šå¸‚
 order by F17_1090 desc
-		--and F5_1090 in ('ÉÏº£','ÉîÛÚ') --»¦Éî½»Ò×Ëù
-		--and F6_1090 in ('Ö÷°å','ÖĞĞ¡ÆóÒµ°å','´´Òµ°å')    --Ö÷°å¡¢ÖĞĞ¡°å¡¢´´Òµ°å
+		--and F5_1090 in ('ä¸Šæµ·','æ·±åœ³') --æ²ªæ·±äº¤æ˜“æ‰€
+		--and F6_1090 in ('ä¸»æ¿','ä¸­å°ä¼ä¸šæ¿','åˆ›ä¸šæ¿')    --ä¸»æ¿ã€ä¸­å°æ¿ã€åˆ›ä¸šæ¿
 
 select a.*, b.* from [176.1.11.55].localwind.dbo.TB_OBJECT_1090 a
 left join [176.1.11.55].localwind.dbo.TB_OBJECT_1120 b
 on a.F2_1090=b.F1_1120 and b.F2_1120='20160519'
-where a.F4_1090 ='A'             --A¹É
+where a.F4_1090 ='A'             --Aè‚¡
 	and a.F27_1090 in ('SSE', 'SZSE')
-	and a.F19_1090 <> 1	--·ÇÍËÊĞ
-	--and a.F21_1090=1		--ÒÑÉÏÊĞ
-	--and b.F21_1120 in ('Ö÷°å','ÖĞĞ¡ÆóÒµ°å','´´Òµ°å') 
+	and a.F19_1090 <> 1	--éé€€å¸‚
+	--and a.F21_1090=1		--å·²ä¸Šå¸‚
+	--and b.F21_1120 in ('ä¸»æ¿','ä¸­å°ä¼ä¸šæ¿','åˆ›ä¸šæ¿') 
 	--and b.F22_1120 = 'A'
 	--and b.F2_1120='20160519'
 
+---=====**********åˆå§‹åŒ–è¯åˆ¸å¼€å§‹*********========------------
 truncate table securityinfo
 
---¼ÓÈë¹ÉÆ±
+--åŠ å…¥è‚¡ç¥¨
 insert into securityinfo(
 	SecuCode
 	,SecuName
@@ -37,12 +38,12 @@ select
 	,2
 	,F17_1090
 from [176.1.11.55].localwind.dbo.TB_OBJECT_1090
-where F4_1090 ='A'             --A¹É
+where F4_1090 ='A'             --Aè‚¡
 	and F27_1090 in ('SSE', 'SZSE')
-	and F19_1090 <> 1	--·ÇÍËÊĞ
-	and F21_1090=1		--ÒÑÉÏÊĞ
+	and F19_1090 <> 1	--éé€€å¸‚
+	and F21_1090=1		--å·²ä¸Šå¸‚
 
---¼ÓÈëÖ¸Êı
+--åŠ å…¥æŒ‡æ•°
 insert into securityinfo(
 	SecuCode
 	,SecuName
@@ -57,28 +58,30 @@ select
 	,1
 	,F17_1090
 from [176.1.11.55].localwind.dbo.TB_OBJECT_1090
-where F4_1090 ='S'             --A¹É
+where F4_1090 ='S'             --Aè‚¡
 	and F27_1090 in ('SSE', 'SZSE')
-	and F19_1090 <> 1	--·ÇÍËÊĞ
-	and F21_1090=1		--ÒÑÉÏÊĞ
+	and F19_1090 <> 1	--éé€€å¸‚
+	and F21_1090=1		--å·²ä¸Šå¸‚
 	and F16_1090 in (select BenchmarkId from benchmark)
 
---¼ÓÈë¹ÉÖ¸ÆÚ»õ
+--åŠ å…¥è‚¡æŒ‡æœŸè´§
 insert into securityinfo(
 	SecuCode
 	,SecuName
 	,ExchangeCode
 	,SecuType
 	,ListDate	
+	,DeListDate
 )
 select 
 	Code
 	,Name
 	,Exchange
 	,3
-	,convert(varchar, ListedDate, 112)
+	,convert(varchar, ListedDate, 112) as ListedDate
+	,convert(varchar, LastDeliveryDay, 112) as LastDeliveryDay
 from futurescontract
-
+---=====**********åˆå§‹åŒ–è¯åˆ¸ç»“æŸ*********========------------
 
 
 select * from securityinfo
@@ -87,10 +90,10 @@ where SecuCode in (select BenchmarkId from benchmark)
 select a.*, b.* from localwind.dbo.TB_OBJECT_1090 a
 left join localwind.dbo.TB_OBJECT_1120 b
 on b.F2_1120='20160519' and a.F2_1090=b.F1_1120
-where a.F4_1090 ='A'             --A¹É
+where a.F4_1090 ='A'             --Aè‚¡
 	and a.F27_1090 in ('SSE', 'SZSE')
-	and a.F19_1090 <> 1	--·ÇÍËÊĞ
-	and a.F21_1090=1		--ÒÑÉÏÊĞ
+	and a.F19_1090 <> 1	--éé€€å¸‚
+	and a.F21_1090=1		--å·²ä¸Šå¸‚
 
 select * from [176.1.11.55].localwind.dbo.TB_OBJECT_1090
 where F16_1090 in (select BenchmarkId from benchmark)

@@ -1,5 +1,7 @@
 ﻿using Model.Binding;
+using Model.Constant;
 using Model.Converter;
+using Model.EnumType;
 using Model.UFX;
 using System;
 using System.Collections.Generic;
@@ -81,10 +83,22 @@ namespace Model.UI
         public string EffectDate { get; set; }
 
         [BindingAttribute("entrustdate")]
-        public string EntrustedDate { get; set; }
+        public string EntrustedDate
+        {
+            get { return DateFormat.Format(DEntrustDate, ConstVariable.DateFormat1); }
+        }
+        
+        [BindingAttribute("entrustedtime")]
+        public string EntrustedTime
+        {
+            get { return DateFormat.Format(DEntrustDate, ConstVariable.TimeFormat1); }
+        }
 
         [BindingAttribute("firstdealdate")]
-        public string FirstDealDate { get; set; }
+        public string FirstDealDate
+        {
+            get { return DateFormat.Format(DFirstDealDate, ConstVariable.DateFormat1); }
+        }
 
         [BindingAttribute("shareholdercode")]
         public string ShareHolderCode { get; set; }
@@ -97,9 +111,6 @@ namespace Model.UI
 
         [BindingAttribute("turnoverratio")]
         public double TurnoverRatio { get; set; }
-
-        [BindingAttribute("entrustedtime")]
-        public string EntrustedTime { get; set; }
 
         [BindingAttribute("withdrawamount")]
         public int WithdrawAmount { get; set; }
@@ -127,16 +138,24 @@ namespace Model.UI
 
         public int RequestId { get; set; }
 
+        public int SubmitId { get; set; }
+
         public string FundCode { get; set; }
 
         public string Operator { get; set; }
 
         public string PortfolioCode { get; set; }
 
+        public DateTime DEntrustDate { get; set; }
+
+        public DateTime DFirstDealDate { get; set; }
+
         public UFXMarketCode EMarketCode { get; set; }
 
         public UFXEntrustDirection EEntrustDirection { get; set; }
 
         public UFXEntrustState EEntrustState { get; set; }
+
+        public EntrustDirection EDirection { get; set; }
     }
 }

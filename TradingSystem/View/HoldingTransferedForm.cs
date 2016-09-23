@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using System.Linq;
 using BLL.TradeCommand;
 using BLL.Template;
+using BLL.Entrust;
 
 namespace TradingSystem.View
 {
@@ -254,6 +255,9 @@ namespace TradingSystem.View
 
             //TODO:
             LoadProductData();
+
+            UFXQueryHoldingBLL holdingBLL = new UFXQueryHoldingBLL();
+            holdingBLL.Query(null);
 
             return true;
         }

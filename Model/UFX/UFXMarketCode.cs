@@ -81,7 +81,7 @@ namespace Model.UFX
         [Description("部撤")]
         PartCancel = '8',
         //已撤
-        [Description("")]
+        [Description("已撤")]
         CancelDone = '9',
         //待撤
         [Description("待撤")]

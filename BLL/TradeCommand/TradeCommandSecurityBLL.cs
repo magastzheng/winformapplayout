@@ -70,6 +70,9 @@ namespace BLL.TradeCommand
                     csItem.DealAmount = dealItems.Sum(p => p.TotalDealAmount);
                 }
 
+                //TODO:待补足数量=目标数量-已委托数量
+                //csItem.WaitAmount = csItem.TargetAmount - csItem.EntrustedAmount;
+
                 var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode);
                 if (findItem != null)
                 {

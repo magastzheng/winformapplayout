@@ -658,6 +658,7 @@ namespace TradingSystem.View
             }
 
             ReCalculateAmount(template);
+            SwitchTemplateStockSave(true);
 
             this.secuGridView.Invalidate();
         }

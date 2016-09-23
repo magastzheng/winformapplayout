@@ -35,6 +35,7 @@ namespace TradingSystem.View
         private const string GridCmdSecurityId = "cmdsecurity";
         private const string GridBuySellId = "buysell";
         private const string EntrustPrice = "entrustprice";
+        private const string ThisEntrustAmount = "thisentrustamout";
 
         private EntrustBLL _entrustBLL = new EntrustBLL();
         private WithdrawBLL _withdrawBLL = new WithdrawBLL();
@@ -102,7 +103,56 @@ namespace TradingSystem.View
             this.cbSpotSellPrice.SelectedIndexChanged += new EventHandler(ComboBox_PriceType_SelectedIndexChange);
             this.cbFuturesBuyPrice.SelectedIndexChanged += new EventHandler(ComboBox_PriceType_SelectedIndexChange);
             this.cbFuturesSellPrice.SelectedIndexChanged += new EventHandler(ComboBox_PriceType_SelectedIndexChange);
+
+            //entrust flow view
+            //this.btnefSelect.Click += new EventHandler(ToolStripButton_EntrustFlow_Select);
+            //this.btnefUnSelect.Click += new EventHandler(ToolStripButton_EntrustFlow_UnSelect);
+            this.btnefUndo.Click += new EventHandler(ToolStripButton_EntrustFlow_Undo);
+            this.btnefCancelAppend.Click += new EventHandler(ToolStripButton_EntrustFlow_CancelAppend);
+
+            //deal flow view
         }
+
+        #region EntrustFlow view click event handler
+        
+        private void ToolStripButton_EntrustFlow_CancelAppend(object sender, EventArgs e)
+        {
+            //TODO:
+        }
+
+        private void ToolStripButton_EntrustFlow_Undo(object sender, EventArgs e)
+        {
+            //TODO:
+            //only select the no-deal
+            var selectItems = _efDataSource.Where(p => p.Selection).ToList();
+            var calcItems = new List<CancelSecurityItem>();
+            foreach (var selectItem in selectItems)
+            {
+                CancelSecurityItem calcItem = new CancelSecurityItem 
+                {
+                    SubmitId = selectItem.SubmitId,
+                    CommandId = selectItem.CommandNo,
+                    SecuCode = selectItem.SecuCode,
+                    SecuName = selectItem.SecuName,
+                    EntrustNo = selectItem.EntrustNo,
+                    EntrustBatchNo = selectItem.EntrustBatchNo,
+                    FirstDealDate = selectItem.DFirstDealDate,
+                    EntrustDate = selectItem.DEntrustDate,
+                    //EDirection = selectItem.EEntrustDirection,
+                };
+
+                calcItems.Add(calcItem);
+            }
+
+            var form = new CancelEntrustDialog(_gridConfig);
+            form.Owner = this;
+            form.OnLoadControl(form, null);
+            form.OnLoadData(form, calcItems);
+            //form.SaveData += new FormLoadHandler(Dialog_CancelRedoDialog_SaveData);
+            form.ShowDialog();
+        }
+
+        #endregion
 
         #region Command panel cancel/cancelappend/canceladd click event
 
@@ -456,24 +506,41 @@ namespace TradingSystem.View
 
             //TODO: while the EntrustPrice is changed, record it.
             //Console.WriteLine(columnName);
-            if (columnName.CompareTo(EntrustPrice) == 0)
+            var secuItem = _secuDataSource[rowIndex];
+            switch(columnName)
             {
-                var secuItem = _secuDataSource[rowIndex];
-                if (secuItem.EntrustPrice < secuItem.LimitDownPrice || secuItem.EntrustPrice > secuItem.LimitUpPrice)
-                {
-                    MessageBox.Show(this, "委托价格必须在跌停价和涨停价之间！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                case EntrustPrice:
+                    {
+                        if (secuItem.EntrustPrice < secuItem.LimitDownPrice || secuItem.EntrustPrice > secuItem.LimitUpPrice)
+                        {
+                            MessageBox.Show(this, "委托价格必须在跌停价和涨停价之间！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-                    var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
-                    var marketData = QuoteCenter.Instance.GetMarketData(findItem);
-                    secuItem.EntrustPrice = QuotePriceHelper.GetPrice(PriceType.Last, marketData);
-                }
-                else
-                {
-                    secuItem.EPriceType = PriceType.Assign;
-                }
+                            var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
+                            var marketData = QuoteCenter.Instance.GetMarketData(findItem);
+                            secuItem.EntrustPrice = QuotePriceHelper.GetPrice(PriceType.Last, marketData);
+                        }
+                        else
+                        {
+                            secuItem.EPriceType = PriceType.Assign;
+                        }
 
-                this.securityGridView.InvalidateCell(columnIndex - 1, rowIndex);
-                this.securityGridView.InvalidateCell(columnIndex, rowIndex);
+                        this.securityGridView.InvalidateCell(columnIndex - 1, rowIndex);
+                        this.securityGridView.InvalidateCell(columnIndex, rowIndex);
+                    }
+                    break;
+                case ThisEntrustAmount:
+                    {
+                        if (secuItem.ThisEntrustAmount + secuItem.EntrustedAmount > secuItem.CommandAmount)
+                        {
+                            MessageBox.Show(this, "本次委托证券数量不能超出委托总量！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+
+                            secuItem.ThisEntrustAmount = secuItem.CommandAmount - secuItem.EntrustedAmount;
+                            this.securityGridView.InvalidateCell(columnIndex, rowIndex);
+                        }
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -865,11 +932,11 @@ namespace TradingSystem.View
             //如果份数框不为0，将所有的份数均设为输入框中的值
             AssignCopies();
             
-            if (!ValidateCopies())
-            {
-                MessageBox.Show(this, "委托份数非法，请输入正确的委托份数！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
-                return;
-            }
+            //if (!ValidateCopies())
+            //{
+            //    MessageBox.Show(this, "委托份数非法，请输入正确的委托份数！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+            //    return;
+            //}
 
             if (_secuDataSource.Count == 0)
             {
@@ -912,17 +979,26 @@ namespace TradingSystem.View
 
             foreach (var eiItem in selectedEntrustItems)
             {
-                int count = _secuDataSource.Count(p => p.Selection && p.CommandId == eiItem.CommandNo);
+                var thisSecuItems = _secuDataSource.Where(p => p.Selection && p.CommandId == eiItem.CommandNo).ToList();
+                int count = thisSecuItems.Count;
                 if (count == 0)
                 {
                     MessageBox.Show(this, "请确保委托指令中包含有效证券！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                    return;
+                }
+
+                //选中的非正常交易证券
+                count = thisSecuItems.Count(p => p.ESuspendFlag != Model.Quote.SuspendFlag.NoSuspension);
+                if (count > 0)
+                {
+                    MessageBox.Show(this, "选中停牌的证券！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+
                     return;
                 }
             }
 
             if (!ValidateEntrust())
             {
-                MessageBox.Show(this, "请设置委托的证券数量和价格，证券数量需为正值，价格不能为零且需在最高最低价之间，证券可以正常交易！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                 return;
             }
 
@@ -945,14 +1021,6 @@ namespace TradingSystem.View
                     continue;
                 }
 
-                //cmdItem.TargetNum += eiItem.Copies;
-                int targetNum = cmdItem.TargetNum + eiItem.Copies;
-                if (targetNum > cmdItem.CommandNum)
-                { 
-                    //TODO: there are no so many securities
-                    continue;
-                }
-
                 EntrustCommandItem eciItem = new EntrustCommandItem
                 {
                     CommandId = eiItem.CommandNo,
@@ -969,12 +1037,17 @@ namespace TradingSystem.View
 
                     //TODO: update the targetnum in UI
                     successCount += entrustSecuItems.Count;
+
+                    UpdateEntrustedAmount(entrustSecuItems);
                 }
                 else
                 { 
                     //Fail to submit into database
-                    string msg = string.Format("委托指令[{0}]失败: {1}", eiItem.CommandNo, bllResponse.Message);
-                    MessageBox.Show(this, msg, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    string msg = string.Format("委托指令[{0}]失败: {1}, 是否继续委托下一个指令？", eiItem.CommandNo, bllResponse.Message);
+                    if (MessageBox.Show(this, msg, "错误", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.No)
+                    {
+                        break;
+                    }
                 }
             }
 
@@ -989,10 +1062,34 @@ namespace TradingSystem.View
             this.securityGridView.Invalidate();
         }
 
+        private void UpdateEntrustedAmount(List<EntrustSecurityItem> entrustedSecuItems)
+        {
+            foreach (var entrustedSecuItem in entrustedSecuItems)
+            {
+                var findItem = _secuDataSource.ToList().Find(p => p.CommandId == entrustedSecuItem.CommandId && p.SecuCode.Equals(entrustedSecuItem.SecuCode));
+                if (findItem != null)
+                {
+                    findItem.EntrustedAmount += entrustedSecuItem.EntrustAmount;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 计算目标份数、目标数量、本次委托数量、待补足数量
+        /// 新的目标份数 = 原来目标份数(计算前的) + 追加份数
+        /// 目标数量 = 新的目标份数 * 份数权重
+        /// 本次委托数量 = 目标数量 - 已委托数量
+        /// 待补足数量 = 目标数量 - 已委托数量
+        /// </summary>
+        /// <param name="eiItem"></param>
+        /// <param name="spotBuyPrice"></param>
+        /// <param name="spotSellPrice"></param>
+        /// <param name="futureBuyPrice"></param>
+        /// <param name="futureSellPrice"></param>
         private void CalculateOne(EntrustItem eiItem, PriceType spotBuyPrice, PriceType spotSellPrice, PriceType futureBuyPrice, PriceType futureSellPrice)
         {
             var selCmdItem = _cmdDataSource.Single(p => p.CommandId == eiItem.CommandNo);
-            if (selCmdItem == null)
+            if (selCmdItem == null || selCmdItem.CommandNum <= 0)
             {
                 return;
             }
@@ -1010,47 +1107,26 @@ namespace TradingSystem.View
             if (targetNum > selCmdItem.CommandNum)
             {
                 targetNum = selCmdItem.CommandNum;
-                thisCopies = targetNum - selCmdItem.TargetNum;
             }
 
-            if (thisCopies <= 0)
-            {
-                thisCopies = 0;
-            }
-
+            //TODO:确认指令数量、目标数量、待补足数量之间的关系
             var secuItems = _secuDataSource.Where(p => p.CommandId == eiItem.CommandNo).ToList();
             int weightAmount = 0;
+            int targetAmount = 0;
+            int thisEntrustAmount = 0;
+            int waitAmount = 0;
             foreach (var secuItem in secuItems)
             {
+                //目标份数
                 secuItem.TargetCopies = targetNum;
-
-                int targetAmount = 0;
-                int thisEntrustAmount = 0;
-                int waitAmount = 0;
-
-                if (thisCopies > 0)
-                {
-                    //算出每一份的数量
-                    weightAmount = secuItem.CommandAmount / selCmdItem.CommandNum;
-                    if (weightAmount > 0)
-                    {
-                        targetAmount = targetNum * weightAmount;
-                        thisEntrustAmount = thisCopies * weightAmount;
-                        waitAmount = targetNum * weightAmount;
-                    }
-                    else
-                    {
-                        targetAmount = secuItem.TargetCopies;
-                        thisEntrustAmount = thisCopies;
-                        waitAmount = secuItem.TargetCopies;
-                    }
-                }
-                else
-                {
-                    targetAmount = secuItem.CommandAmount - secuItem.EntrustedAmount;
-                    thisEntrustAmount = secuItem.CommandAmount - secuItem.EntrustedAmount;
-                    waitAmount = thisEntrustAmount;
-                }
+                //份数权重
+                weightAmount = secuItem.CommandAmount / selCmdItem.CommandNum;
+                //目标数量
+                targetAmount = targetNum * weightAmount;
+                //本次委托数量
+                thisEntrustAmount = targetAmount - secuItem.EntrustedAmount;
+                //待补足数量
+                waitAmount = targetAmount - secuItem.EntrustedAmount;
 
                 if (secuItem.EDirection == EntrustDirection.BuySpot && secuItem.SecuType == SecurityType.Stock)
                 {
@@ -1231,24 +1307,7 @@ namespace TradingSystem.View
                 }
 
                 entrustSecurityItem.EntrustPriceType = EntrustPriceType.FixedPrice;
-                //if (exchangeCode.Equals(Exchange.SHSE))
-                //{
-                //    entrustSecurityItem.EntrustPriceType = EntrustPriceType.FifthIsLeftOffSH;
-                //}
-                //else if (exchangeCode.Equals(Exchange.SZSE))
-                //{
-                //    entrustSecurityItem.EntrustPriceType = EntrustPriceType.FifthIsLeftOffSZ;
-                //}
-                //else if (exchangeCode.Equals(Exchange.CFFEX))
-                //{
-                //    entrustSecurityItem.EntrustPriceType = EntrustPriceType.FifthIsLeftOffCFX;
-                //}
-                //else
-                //{ 
-                //    //Do nothing
-                //}
-                
-
+               
                 entrustSecuItems.Add(entrustSecurityItem);
             }
 
@@ -1297,6 +1356,20 @@ namespace TradingSystem.View
 
             foreach (var entrustSecuItem in entrustSecuItems)
             {
+                if (entrustSecuItem.ThisEntrustAmount + entrustSecuItem.EntrustedAmount > entrustSecuItem.CommandAmount)
+                {
+                    MessageBox.Show(this, "本次委托证券数量超出委托总量！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+
+                    var findIndex = _secuDataSource.ToList().FindIndex(p => p.SecuCode == entrustSecuItem.SecuCode
+                        && p.CommandId == entrustSecuItem.CommandId);
+                    if (findIndex >= 0)
+                    {
+                        securityGridView.SetFocus(findIndex, ThisEntrustAmount);
+                    }
+
+                    return false;
+                }
+
                 if (entrustSecuItem.ThisEntrustAmount <= 0
                     || FloatUtil.IsZero(entrustSecuItem.EntrustPrice)
                     || entrustSecuItem.EntrustPrice < entrustSecuItem.LimitDownPrice
@@ -1304,6 +1377,8 @@ namespace TradingSystem.View
                     || entrustSecuItem.ESuspendFlag != Model.Quote.SuspendFlag.NoSuspension
                    )
                 {
+                    MessageBox.Show(this, "请设置委托的证券数量和价格，证券数量需为正值，价格不能为零且需在最高最低价之间，证券可以正常交易！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+
                     var findIndex = _secuDataSource.ToList().FindIndex(p => p.SecuCode == entrustSecuItem.SecuCode
                         && p.CommandId == entrustSecuItem.CommandId);
                     if (findIndex >= 0)

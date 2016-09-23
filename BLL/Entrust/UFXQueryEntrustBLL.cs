@@ -1,4 +1,5 @@
-﻿using BLL.Product;
+﻿using BLL.EntrustCommand;
+using BLL.Product;
 using BLL.UFX;
 using BLL.UFX.impl;
 using log4net;
@@ -22,6 +23,8 @@ namespace BLL.Entrust
 
         private SecurityBLL _securityBLL = null;
         private ProductBLL _productBLL = new ProductBLL();
+        private EntrustSecurityBLL _entrustSecuBLL = new EntrustSecurityBLL();
+
         private int _timeOut = 30 * 1000;
 
         public UFXQueryEntrustBLL()
@@ -108,7 +111,6 @@ namespace BLL.Entrust
                 request.CombiNo = portfolio.PortfolioNo;
 
                 requests.Add(request);
-            //}
 
                 Callbacker callbacker = new Callbacker
                 {
@@ -184,39 +186,7 @@ namespace BLL.Entrust
             {
                 if (token.Caller != null)
                 {
-                    var entrustFlowItems = new List<EntrustFlowItem>();
-                    foreach (var responseItem in responseItems)
-                    {
-                        EntrustFlowItem efItem = new EntrustFlowItem
-                        {
-                            CommandNo = token.CommandId,
-                            //Market = responseItem.MarketNo,
-                            SecuCode = responseItem.StockCode,
-                            //EntrustDirection = responseItem.EntrustDirection,
-                            PriceType = responseItem.PriceType,
-                            EntrustPrice = responseItem.EntrustPrice,
-                            EntrustAmount = responseItem.EntrustAmount,
-                            //EntrustStatus = responseItem.EntrustState,
-                            DealAmount = responseItem.DealAmount,
-                            DealMoney = responseItem.DealBalance,
-                            DealTimes = responseItem.DealTimes,
-                            EntrustedDate = string.Format("{0}", responseItem.EntrustDate),
-                            FirstDealDate = string.Format("{0}", responseItem.FirstDealTime),
-                            EntrustedTime = string.Format("{0}", responseItem.EntrustTime),
-                            EntrustBatchNo = responseItem.BatchNo,
-                            EntrustNo = responseItem.EntrustNo,
-                            DeclareSeat = responseItem.ReportSeat,
-                            DeclareNo = Convert.ToInt32(responseItem.ReportNo),
-                            RequestId = responseItem.ExtSystemId,
-                            FundCode = responseItem.AccountCode,
-                            PortfolioCode = (string)token.InArgs,
-                            EEntrustDirection = UFXTypeConverter.GetEntrustDirection(responseItem.EntrustDirection),
-                            EMarketCode = UFXTypeConverter.GetMarketCode(responseItem.MarketNo),
-                            EEntrustState = UFXTypeConverter.GetEntrustState(responseItem.EntrustState),
-                        };
-
-                        entrustFlowItems.Add(efItem);
-                    }
+                    var entrustFlowItems = GetFlowItems(token, responseItems);
 
                     if (token.OutArgs != null && token.OutArgs is List<EntrustFlowItem>)
                     {
@@ -235,6 +205,65 @@ namespace BLL.Entrust
             }
 
             return responseItems.Count();
+        }
+
+        private List<EntrustFlowItem> GetFlowItems(CallerToken token, List<UFXQueryEntrustResponse> responseItems)
+        {
+            var entrustFlowItems = new List<EntrustFlowItem>();
+            if (responseItems == null && responseItems.Count == 0)
+            {
+                return entrustFlowItems;
+            }
+
+            var entrustSecuItem = _entrustSecuBLL.GetAllCombine();
+            foreach (var responseItem in responseItems)
+            {
+                EntrustFlowItem efItem = new EntrustFlowItem
+                {
+                    CommandNo = token.CommandId,
+                    SubmitId = token.SubmitId,
+                    //Market = responseItem.MarketNo,
+                    SecuCode = responseItem.StockCode,
+                    //EntrustDirection = responseItem.EntrustDirection,
+                    PriceType = responseItem.PriceType,
+                    EntrustPrice = responseItem.EntrustPrice,
+                    EntrustAmount = responseItem.EntrustAmount,
+                    //EntrustStatus = responseItem.EntrustState,
+                    DealAmount = responseItem.DealAmount,
+                    DealMoney = responseItem.DealBalance,
+                    DealTimes = responseItem.DealTimes,
+                    DEntrustDate = DateUtil.GetDateTimeFromInt(responseItem.EntrustDate, responseItem.EntrustTime),
+                    DFirstDealDate = DateUtil.GetDateTimeFromInt(responseItem.EntrustDate, responseItem.FirstDealTime),
+                    EntrustBatchNo = responseItem.BatchNo,
+                    EntrustNo = responseItem.EntrustNo,
+                    DeclareSeat = responseItem.ReportSeat,
+                    DeclareNo = Convert.ToInt32(responseItem.ReportNo),
+                    RequestId = responseItem.ExtSystemId,
+                    FundCode = responseItem.AccountCode,
+                    PortfolioCode = (string)token.InArgs,
+                    EEntrustDirection = UFXTypeConverter.GetEntrustDirection(responseItem.EntrustDirection),
+                    EMarketCode = UFXTypeConverter.GetMarketCode(responseItem.MarketNo),
+                    EEntrustState = UFXTypeConverter.GetEntrustState(responseItem.EntrustState),
+                    WithdrawCause = responseItem.WithdrawCause,
+                };
+
+                var findItem = entrustSecuItem.Find(p => p.SecuCode.Equals(efItem.SecuCode) && p.EntrustNo == efItem.EntrustNo);
+                if (findItem != null)
+                {
+                    efItem.CommandNo = findItem.CommandId;
+                    efItem.SubmitId = findItem.SubmitId;
+                    efItem.EDirection = findItem.EntrustDirection;
+                }
+                else
+                {
+                    efItem.CommandNo = -1;
+                    efItem.SubmitId = -1;
+                }
+
+                entrustFlowItems.Add(efItem);
+            }
+
+            return entrustFlowItems;
         }
     }
 }
