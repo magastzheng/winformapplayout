@@ -28,7 +28,7 @@ namespace TradingSystem.Dialog
         private WithdrawBLL _withdrawBLL = new WithdrawBLL();
 
         private SortableBindingList<CancelRedoItem> _secuDataSource = new SortableBindingList<CancelRedoItem>(new List<CancelRedoItem>());
-        private List<EntrustCommandItem> _entrustCommandItems = new List<EntrustCommandItem>();
+        //private List<EntrustCommandItem> _entrustCommandItems = new List<EntrustCommandItem>();
 
         GridConfig _gridConfig;
 
@@ -216,7 +216,7 @@ namespace TradingSystem.Dialog
                 return false;
             }
 
-            if (!(data is List<EntrustCommandItem>))
+            if (!(data is List<CancelRedoItem>))
             {
                 return false;
             }
@@ -230,47 +230,40 @@ namespace TradingSystem.Dialog
             EntrustPriceType szPriceType = EntrustPriceTypeHelper.GetPriceType(this.cbSZExchangePrice);
 
             _secuDataSource.Clear();
-            _entrustCommandItems = data as List<EntrustCommandItem>;
-            foreach (var cmdItem in _entrustCommandItems)
+            var cancelSecuItems = data as List<CancelRedoItem>;
+            foreach (var cancelRedoItem in cancelSecuItems)
             {
-                var cancelSecuItems = _withdrawBLL.GetEntrustedSecuItems(cmdItem);
-                if (cancelSecuItems == null)
-                    continue;
-
-                foreach (var cancelRedoItem in cancelSecuItems)
+                if (cancelRedoItem.ExchangeCode.Equals("SZSE"))
                 {
-                    if (cancelRedoItem.ExchangeCode.Equals("SZSE"))
-                    {
-                        cancelRedoItem.EEntrustPriceType = szPriceType;
-                    }
-                    else if (cancelRedoItem.ExchangeCode.Equals("SSE"))
-                    {
-                        cancelRedoItem.EEntrustPriceType = shPriceType;
-                    }
-                    else
-                    {
-                        cancelRedoItem.EEntrustPriceType = cancelRedoItem.EOriginPriceType;
-                    }
-
-                    if (cancelRedoItem.SecuType == SecurityType.Stock && cancelRedoItem.EDirection == EntrustDirection.BuySpot)
-                    {
-                        cancelRedoItem.EPriceSetting = spotBuyPrice;
-                    }
-                    else if (cancelRedoItem.SecuType == SecurityType.Stock && cancelRedoItem.EDirection == EntrustDirection.BuySpot)
-                    {
-                        cancelRedoItem.EPriceSetting = spotSellPrice;
-                    }
-                    else if (cancelRedoItem.SecuType == SecurityType.Futures && cancelRedoItem.EDirection == EntrustDirection.SellOpen)
-                    {
-                        cancelRedoItem.EPriceSetting = futureSellPrice;
-                    }
-                    else if (cancelRedoItem.SecuType == SecurityType.Futures && cancelRedoItem.EDirection == EntrustDirection.BuyClose)
-                    {
-                        cancelRedoItem.EPriceSetting = futureBuyPrice;
-                    }
-
-                    _secuDataSource.Add(cancelRedoItem);
+                    cancelRedoItem.EEntrustPriceType = szPriceType;
                 }
+                else if (cancelRedoItem.ExchangeCode.Equals("SSE"))
+                {
+                    cancelRedoItem.EEntrustPriceType = shPriceType;
+                }
+                else
+                {
+                    cancelRedoItem.EEntrustPriceType = cancelRedoItem.EOriginPriceType;
+                }
+
+                if (cancelRedoItem.SecuType == SecurityType.Stock && cancelRedoItem.EDirection == EntrustDirection.BuySpot)
+                {
+                    cancelRedoItem.EPriceSetting = spotBuyPrice;
+                }
+                else if (cancelRedoItem.SecuType == SecurityType.Stock && cancelRedoItem.EDirection == EntrustDirection.BuySpot)
+                {
+                    cancelRedoItem.EPriceSetting = spotSellPrice;
+                }
+                else if (cancelRedoItem.SecuType == SecurityType.Futures && cancelRedoItem.EDirection == EntrustDirection.SellOpen)
+                {
+                    cancelRedoItem.EPriceSetting = futureSellPrice;
+                }
+                else if (cancelRedoItem.SecuType == SecurityType.Futures && cancelRedoItem.EDirection == EntrustDirection.BuyClose)
+                {
+                    cancelRedoItem.EPriceSetting = futureBuyPrice;
+                }
+
+                _secuDataSource.Add(cancelRedoItem);
             }
 
             return true;
@@ -297,21 +290,27 @@ namespace TradingSystem.Dialog
         private void Button_Confirm_Click(object sender, EventArgs e)
         {
             string outMsg = string.Empty;
-            if (!ValidateEntrustSecurities(_entrustCommandItems, out outMsg))
-            {
-                string msg = string.Format("证券未勾选或勾选证券均未设置委托数量, [交易指令;提交号]为: {0}", outMsg);
-                MessageBox.Show(this, msg, "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            //if (!ValidateEntrustSecurities(_entrustCommandItems, out outMsg))
+            //{
+            //    string msg = string.Format("证券未勾选或勾选证券均未设置委托数量, [交易指令;提交号]为: {0}", outMsg);
+            //    MessageBox.Show(this, msg, "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //    return;
+            //}
+            var selectItems = _secuDataSource.Where(p => p.Selection).ToList();
 
+            var commandIds = _secuDataSource.Select(p => p.CommandId).Distinct().ToList();
+            var submitIds = _secuDataSource.Select(p => p.SubmitId).Distinct().ToList();
             var failedCancelItems = new List<CancelRedoItem>();
-            foreach (var cmdItem in _entrustCommandItems)
-            { 
-                var secuItems = _secuDataSource.Where(p => p.Selection && p.CommandId == cmdItem.CommandId && p.SubmitId == cmdItem.SubmitId).ToList();
-                var cancelItems = _withdrawBLL.CancelSecuItem(cmdItem.SubmitId, cmdItem.CommandId, secuItems, null);
-                if (cancelItems.Count != secuItems.Count)
-                { 
-                    //TODO: report failed items
+            foreach (var commandId in commandIds)
+            {
+                foreach (var submitId in submitIds)
+                {
+                    var secuItems = _secuDataSource.Where(p => p.Selection && p.CommandId == commandId && p.SubmitId == submitId).ToList();
+                    var cancelItems = _withdrawBLL.CancelSecuItem(submitId, commandId, secuItems, null);
+                    if (cancelItems.Count != secuItems.Count)
+                    {
+                        //TODO: report failed items
+                    }
                 }
             }
 
@@ -321,14 +320,11 @@ namespace TradingSystem.Dialog
             PriceType futureBuyPrice = PriceTypeHelper.GetPriceType(this.cbFuturesBuyPrice);
             PriceType futureSellPrice = PriceTypeHelper.GetPriceType(this.cbFuturesSellPrice);
 
-            var selectItems = _secuDataSource.Where(p => p.Selection).ToList();
-            
-            var commandIds = selectItems.Select(p => p.CommandId).Distinct().ToList();
+            //var commandIds = selectItems.Select(p => p.CommandId).Distinct().ToList();
             foreach (var commandId in commandIds)
             {
-                var oneEntrustCmdItems = _entrustCommandItems.Where(p => p.CommandId == commandId).ToList();
                 var oneCancelRedoItem = selectItems.Where(p => p.CommandId == commandId).ToList();
-                Submit(oneEntrustCmdItems, oneCancelRedoItem);
+                //Submit(oneEntrustCmdItems, oneCancelRedoItem);
             }
 
             DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -416,7 +412,15 @@ namespace TradingSystem.Dialog
         //TODO: validate before submit
         private void Submit(List<EntrustCommandItem> entrustCmdItems, List<CancelRedoItem> cancelRedoItems)
         {
-            var response = _entrustBLL.SubmitOne(entrustCmdItems, cancelRedoItems);
+            int commandId = entrustCmdItems.Select(p => p.CommandId).Single();
+            int copies = entrustCmdItems.Select(p => p.Copies).Sum();
+
+            EntrustCommandItem cmdItem = new EntrustCommandItem 
+            {
+                CommandId = commandId,
+                Copies = copies,
+            };
+            var response = _entrustBLL.SubmitOne(cmdItem, cancelRedoItems);
             if (!BLLResponse.Success(response))
             { 
                 int submitId = cancelRedoItems.Select(p => p.SubmitId).Distinct().Single();

@@ -125,19 +125,33 @@ namespace TradingSystem.View
             //TODO:
             //only select the no-deal
             var selectItems = _efDataSource.Where(p => p.Selection).ToList();
+            var canCancelItems = selectItems.Where(p => p.EEntrustState == Model.UFX.UFXEntrustState.NoReport
+                    || p.EEntrustState == Model.UFX.UFXEntrustState.WaitReport
+                    || p.EEntrustState == Model.UFX.UFXEntrustState.Reporting
+                    || p.EEntrustState == Model.UFX.UFXEntrustState.Reported
+                    || p.EEntrustState == Model.UFX.UFXEntrustState.PartDone
+                ).ToList();
+
+            if (selectItems.Count != canCancelItems.Count)
+            {
+                MessageBox.Show(this, "选择了包含不可以撤销的证券！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                return;
+            }
+
             var calcItems = new List<CancelSecurityItem>();
-            foreach (var selectItem in selectItems)
+            foreach (var canCancelItem in canCancelItems)
             {
                 CancelSecurityItem calcItem = new CancelSecurityItem 
                 {
-                    SubmitId = selectItem.SubmitId,
-                    CommandId = selectItem.CommandNo,
-                    SecuCode = selectItem.SecuCode,
-                    SecuName = selectItem.SecuName,
-                    EntrustNo = selectItem.EntrustNo,
-                    EntrustBatchNo = selectItem.EntrustBatchNo,
-                    FirstDealDate = selectItem.DFirstDealDate,
-                    EntrustDate = selectItem.DEntrustDate,
+                    SubmitId = canCancelItem.SubmitId,
+                    CommandId = canCancelItem.CommandNo,
+                    SecuCode = canCancelItem.SecuCode,
+                    SecuName = canCancelItem.SecuName,
+                    EntrustNo = canCancelItem.EntrustNo,
+                    EntrustBatchNo = canCancelItem.EntrustBatchNo,
+                    FirstDealDate = canCancelItem.DFirstDealDate,
+                    EntrustDate = canCancelItem.DEntrustDate,
                     //EDirection = selectItem.EEntrustDirection,
                 };
 
@@ -1125,8 +1139,16 @@ namespace TradingSystem.View
                 targetAmount = targetNum * weightAmount;
                 //本次委托数量
                 thisEntrustAmount = targetAmount - secuItem.EntrustedAmount;
+                if (thisEntrustAmount < 0)
+                {
+                    thisEntrustAmount = 0;
+                }
                 //待补足数量
                 waitAmount = targetAmount - secuItem.EntrustedAmount;
+                if (waitAmount < 0)
+                {
+                    waitAmount = 0;
+                }
 
                 if (secuItem.EDirection == EntrustDirection.BuySpot && secuItem.SecuType == SecurityType.Stock)
                 {
