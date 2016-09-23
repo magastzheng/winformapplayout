@@ -1,4 +1,5 @@
 ﻿
+using Model.Binding;
 using System.ComponentModel;
 namespace Model.UFX
 {
@@ -6,8 +7,10 @@ namespace Model.UFX
     public enum UFXMarketCode
     {
         [Description("上交所")]
+        [StandardCode("SSE")]
         ShanghaiStockExchange = 1,
         [Description("深交所")]
+        [StandardCode("SZSE")]
         ShenzhenStockExchange = 2,
         [Description("上期所")]
         ShanghaiFuturesExchange = 3,
