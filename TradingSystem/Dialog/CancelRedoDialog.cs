@@ -17,6 +17,7 @@ using Quote;
 using System.Text;
 using Model.BLL;
 using BLL.Frontend;
+using Model.Constant;
 
 namespace TradingSystem.Dialog
 {
@@ -137,7 +138,7 @@ namespace TradingSystem.Dialog
         private void ComboBox_SHExchangePrice_SelectedIndexChanged(object sender, EventArgs e)
         {
             EntrustPriceType priceType = EntrustPriceTypeHelper.GetPriceType(this.cbSHExchangePrice);
-            _secuDataSource.Where(p => p.SecuType == SecurityType.Stock && p.ExchangeCode.Equals("SSE"))
+            _secuDataSource.Where(p => p.SecuType == SecurityType.Stock && p.ExchangeCode.Equals(ConstVariable.ShanghaiExchange))
                 .ToList()
                 .ForEach(o => o.EEntrustPriceType = priceType);
 
@@ -148,7 +149,7 @@ namespace TradingSystem.Dialog
         {
             EntrustPriceType priceType = EntrustPriceTypeHelper.GetPriceType(this.cbSZExchangePrice);
 
-            _secuDataSource.Where(p => p.SecuType == SecurityType.Stock && p.ExchangeCode.Equals("SZSE"))
+            _secuDataSource.Where(p => p.SecuType == SecurityType.Stock && p.ExchangeCode.Equals(ConstVariable.ShenzhenExchange))
                .ToList()
                .ForEach(o => o.EEntrustPriceType = priceType);
 
@@ -233,11 +234,11 @@ namespace TradingSystem.Dialog
             var cancelSecuItems = data as List<CancelRedoItem>;
             foreach (var cancelRedoItem in cancelSecuItems)
             {
-                if (cancelRedoItem.ExchangeCode.Equals("SZSE"))
+                if (cancelRedoItem.ExchangeCode.Equals(ConstVariable.ShenzhenExchange))
                 {
                     cancelRedoItem.EEntrustPriceType = szPriceType;
                 }
-                else if (cancelRedoItem.ExchangeCode.Equals("SSE"))
+                else if (cancelRedoItem.ExchangeCode.Equals(ConstVariable.ShanghaiExchange))
                 {
                     cancelRedoItem.EEntrustPriceType = shPriceType;
                 }

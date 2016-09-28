@@ -6,18 +6,29 @@ namespace Model.UFX
     //交易所
     public enum UFXMarketCode
     {
+        //上海证券交易所
         [Description("上交所")]
         [StandardCode("SSE")]
-        ShanghaiStockExchange = 1,
+        ShanghaiSecurityExchange = 1,
+        
+        //深圳交易所
         [Description("深交所")]
         [StandardCode("SZSE")]
-        ShenzhenStockExchange = 2,
+        ShenzhenSecurityExchange = 2,
+        
         [Description("上期所")]
         ShanghaiFuturesExchange = 3,
+        
         [Description("郑商所")]
         ZhengzhouCommodityExchange = 4,
+
         [Description("中金所")]
+        [StandardCode("CFFEX")]
         ChinaFinancialFuturesExchange = 7,
+
+        [Description("大商所")]
+        [StandardCode("DCE")]
+        DalianCommodityExchange = 9,
     }
 
     //委托方向

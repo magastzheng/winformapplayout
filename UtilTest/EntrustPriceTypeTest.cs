@@ -44,7 +44,7 @@ namespace UtilTest
             string marketCode = "2";
             var eMarket = UFXTypeConverter.GetMarketCode(marketCode);
 
-            Assert.AreEqual(UFXMarketCode.ShenzhenStockExchange, eMarket); 
+            Assert.AreEqual(UFXMarketCode.ShenzhenSecurityExchange, eMarket); 
             Console.WriteLine(eMarket.ToString());
 
             //Type type = Type.GetType("System.String");

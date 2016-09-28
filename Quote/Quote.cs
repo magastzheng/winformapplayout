@@ -166,15 +166,15 @@ namespace Quote
         public static string GetWindCode(SecurityItem secuItem)
         {
             string windCode = secuItem.SecuCode;
-            if (secuItem.ExchangeCode.Equals("SSE", StringComparison.OrdinalIgnoreCase))
+            if (secuItem.ExchangeCode.Equals(Exchange.SHSE, StringComparison.OrdinalIgnoreCase))
             {
                 windCode += ".SH";
             }
-            else if (secuItem.ExchangeCode.Equals("SZSE", StringComparison.OrdinalIgnoreCase))
+            else if (secuItem.ExchangeCode.Equals(Exchange.SZSE, StringComparison.OrdinalIgnoreCase))
             {
                 windCode += ".SZ";
             }
-            else if (secuItem.ExchangeCode.Equals("CFFEX", StringComparison.OrdinalIgnoreCase))
+            else if (secuItem.ExchangeCode.Equals(Exchange.CFFEX, StringComparison.OrdinalIgnoreCase))
             {
                 windCode += ".CFE";
             }
