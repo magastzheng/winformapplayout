@@ -16,6 +16,8 @@ namespace TradingSystem.Dialog
 
     public partial class PortfolioSecurityDialog : Forms.BaseDialog
     {
+        private const string msgSecuCodeNoEmpty = "securitydialogcodenoempty";
+
         private int _templateId = -1;
         private IList<AutoItem> _dataSource = new List<AutoItem>();
         private List<SecurityItem> _securityInfoList = new List<SecurityItem>();
@@ -56,7 +58,7 @@ namespace TradingSystem.Dialog
             {
                 //TODO: make the error message
                 //DialogResult = System.Windows.Forms.DialogResult.No;
-                MessageBox.Show(this, "证券代码不能为空", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageDialog.Error(this, msgSecuCodeNoEmpty);
             }
         }
 

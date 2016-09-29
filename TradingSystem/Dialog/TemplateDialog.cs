@@ -15,8 +15,10 @@ namespace TradingSystem.Dialog
 {
     public partial class TemplateDialog : Forms.BaseDialog
     {
-        const string MsgPerm = "用户[{0}]权限设置为可编辑但未设为可浏览，可编辑用户必须同时设为可浏览！";
-        const string MsgInfoCaption = "提示";
+        //const string MsgPerm = "用户[{0}]权限设置为可编辑但未设为可浏览，可编辑用户必须同时设为可浏览！";
+        //const string MsgInfoCaption = "提示";
+
+        private const string msgTempPermSetting = "temppermsetting";
 
         private BenchmarkBLL _benchmarkBLL = new BenchmarkBLL();
         private UserBLL _userBLL = new UserBLL();
@@ -380,7 +382,10 @@ namespace TradingSystem.Dialog
                 var findItem = stockTemplate.CanViewUsers.Find(p => p.Id == user.Id);
                 if (findItem == null)
                 {
-                    MessageBox.Show(this, MsgPerm, MsgInfoCaption, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    string format = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgTempPermSetting);
+                    string msg = string.Format(format, findItem.Name);
+                    MessageDialog.Info(this, msg);
+
                     return false;
                 }
             }

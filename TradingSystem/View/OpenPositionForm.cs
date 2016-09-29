@@ -24,6 +24,8 @@ namespace TradingSystem.View
 {
     public partial class OpenPositionForm : Forms.DefaultForm
     {
+        private const string msgSubmitFail = "opensubmitfail";
+
         private const string MonitorGridId = "openposition";
         private const string SecurityGridId = "openpositionsecurity";
         private const string BottomMenuId = "openposition";
@@ -332,8 +334,10 @@ namespace TradingSystem.View
                 var orderItem = GetSubmitItem(openItem);
                 if (orderItem == null)
                 {
-                    string msg = string.Format("对监控单元[{0}]下达指令失败", openItem.MonitorName);
-                    MessageBox.Show(this, msg, "失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    string format = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgSubmitFail);
+                    string msg = string.Format(format, openItem.MonitorName);
+                    MessageDialog.Fail(this, msg);
+
                     continue;
                 }
 

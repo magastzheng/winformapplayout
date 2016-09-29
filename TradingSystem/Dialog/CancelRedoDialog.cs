@@ -25,12 +25,19 @@ namespace TradingSystem.Dialog
     {
         private const string GridCancelRedoId = "entrustcancelredo";
 
+        private const string msgNoSecuritySelected = "nosecurityselected";
+        private const string msgEntrustCancelNoAmount = "entrustcancelnoamount";
+        private const string msgEntrustCancelRedoConfirm = "entrustcancelredoconfirm";
+        private const string msgEntrustCancelPartialFail = "entrustcancelpartialfail";
+        private const string msgEntrustCancelFailSecurity = "entrustcancelfailsecurity";
+        private const string msgEntrustCancelResubmitFail = "entrustcancelresubmitfail";
+
+
         private EntrustBLL _entrustBLL = new EntrustBLL();
         private WithdrawBLL _withdrawBLL = new WithdrawBLL();
 
         private SortableBindingList<CancelRedoItem> _secuDataSource = new SortableBindingList<CancelRedoItem>(new List<CancelRedoItem>());
-        //private List<EntrustCommandItem> _entrustCommandItems = new List<EntrustCommandItem>();
-
+        
         GridConfig _gridConfig;
 
         public CancelRedoDialog()
@@ -291,13 +298,23 @@ namespace TradingSystem.Dialog
         private void Button_Confirm_Click(object sender, EventArgs e)
         {
             string outMsg = string.Empty;
-            //if (!ValidateEntrustSecurities(_entrustCommandItems, out outMsg))
-            //{
-            //    string msg = string.Format("证券未勾选或勾选证券均未设置委托数量, [交易指令;提交号]为: {0}", outMsg);
-            //    MessageBox.Show(this, msg, "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //    return;
-            //}
             var selectItems = _secuDataSource.Where(p => p.Selection).ToList();
+            if (selectItems.Count == 0)
+            {
+                MessageDialog.Warn(this, msgNoSecuritySelected);
+                return;
+            }
+
+            if (!ValidateEntrustSecurities(selectItems, out outMsg))
+            {
+                MessageDialog.Warn(this, outMsg);
+                return;
+            }
+
+            if (MessageDialog.Info(this, msgEntrustCancelRedoConfirm, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
+            {
+                return;
+            }
 
             var commandIds = selectItems.Select(p => p.CommandId).Distinct().ToList();
             var submitIds = selectItems.Select(p => p.SubmitId).Distinct().ToList();
@@ -316,7 +333,8 @@ namespace TradingSystem.Dialog
 
                     if (cancelItems.Count != secuItems.Count)
                     {
-                        //TODO: report failed items
+                        var failItems = secuItems.Except(cancelItems);
+                        failedCancelItems.AddRange(failItems);
                     }
                 }
             }
@@ -327,14 +345,35 @@ namespace TradingSystem.Dialog
             PriceType futureBuyPrice = PriceTypeHelper.GetPriceType(this.cbFuturesBuyPrice);
             PriceType futureSellPrice = PriceTypeHelper.GetPriceType(this.cbFuturesSellPrice);
 
-            //var commandIds = selectItems.Select(p => p.CommandId).Distinct().ToList();
+            string resultMsg = string.Empty;
             foreach (var commandId in commandIds)
             {
                 var oneCancelRedoItem = successCancelItems.Where(p => p.CommandId == commandId).ToList();
                 if (oneCancelRedoItem.Count > 0)
                 {
-                    Submit(commandId, oneCancelRedoItem);
+                    resultMsg += Submit(commandId, oneCancelRedoItem);
                 }
+            }
+
+            StringBuilder sb = new StringBuilder();
+            if (failedCancelItems.Count > 0)
+            {
+                string format1 = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgEntrustCancelPartialFail);
+                string format2 = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgEntrustCancelFailSecurity);
+                sb.Append(format1);
+                failedCancelItems.ForEach(p => {
+                    sb.AppendFormat(format2, p.SubmitId, p.CommandId, p.SecuCode);
+                });
+            }
+
+            if (!string.IsNullOrEmpty(resultMsg))
+            {
+                sb.Append(resultMsg);
+            }
+
+            if (sb.Length > 0)
+            {
+                MessageDialog.Warn(this, sb.ToString());
             }
 
             DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -349,38 +388,27 @@ namespace TradingSystem.Dialog
 
         #region
 
-        private bool ValidateEntrustSecurities(List<EntrustCommandItem> cmdItems, out string msg)
+        private bool ValidateEntrustSecurities(List<CancelRedoItem> cancelRedoItems, out string msg)
         {
             msg = string.Empty;
-            List<EntrustCommandItem> invalidItems = new List<EntrustCommandItem>();
-            List<CancelRedoItem> cancelItems = new List<CancelRedoItem>();
+            List<CancelRedoItem> InvalidCancelItems = new List<CancelRedoItem>();
 
-            foreach (var cmdItem in cmdItems)
+            //TODO: 未成交数量需要大于0
+            foreach (var cancelRedoItem in cancelRedoItems)
             {
-                var selectedItems = _secuDataSource.Where(p => p.Selection && p.CommandId == cmdItem.CommandId && p.SubmitId == cmdItem.SubmitId).ToList();
-                if (selectedItems.Count > 0)
+                //选中的委托数量不能为0
+                if ((cancelRedoItem.EntrustAmount - cancelRedoItem.DealAmount) > 0)
                 {
-                    //选中的委托数量不能为0
-                    var zeroAmountItems = selectedItems.Where(p => p.EntrustAmount == 0).ToList();
-                    if (zeroAmountItems.Count > 0)
-                    {
-                        invalidItems.Add(cmdItem);
-                    }
-                    else
-                    {
-                        cancelItems.AddRange(selectedItems);
-                    }
-                }
-                else
-                {
-                    invalidItems.Add(cmdItem);
+                    InvalidCancelItems.Add(cancelRedoItem);
                 }
             }
 
-            if (cancelItems.Count == 0)
+            if (InvalidCancelItems.Count == 0)
             {
+                string format = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgEntrustCancelNoAmount);
                 StringBuilder sb = new StringBuilder();
-                invalidItems.ForEach(p =>
+                sb.Append(format);
+                InvalidCancelItems.ForEach(p =>
                 {
                     sb.Append("|");
                     sb.Append(p.CommandId);
@@ -420,20 +448,25 @@ namespace TradingSystem.Dialog
 
 
         //TODO: validate before submit
-        private void Submit(int commandId, List<CancelRedoItem> cancelRedoItems)
+        private string Submit(int commandId, List<CancelRedoItem> cancelRedoItems)
         {
             EntrustCommandItem cmdItem = new EntrustCommandItem 
             {
                 CommandId = commandId,
                 Copies = 0,
             };
+
+            string msg = string.Empty;
             var response = _entrustBLL.SubmitOne(cmdItem, cancelRedoItems);
             if (!BLLResponse.Success(response))
             { 
                 int submitId = cancelRedoItems.Select(p => p.SubmitId).Distinct().Single();
-                string msg = string.Format("委托失败, 提交号：[{0}], 失败原因：{1}!", submitId, response.Message);
-                MessageBox.Show(this, msg, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                string format = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgEntrustCancelResubmitFail);
+                msg = string.Format(format, submitId, response.Message);
             }
+
+            return msg;
         }
 
         #endregion

@@ -29,10 +29,25 @@ namespace TradingSystem.View
             Update = 1,
         }
 
-        private const string MsgTitleWarn = "警告";
-        private const string MsgDeleteStock = "确定要从模板[{0}-{1}]中删除选择的[{2}]支证券吗?";
-        private const string MsgSaveStock = "现货模板尚未保存，确定要放弃修改吗？";
-        private const string MsgDeleteTemp = "该现货模板还有占用的监控单元，不能注销。";
+        //private const string MsgTitleWarn = "警告";
+        //private const string MsgDeleteStock = "确定要从模板[{0}-{1}]中删除选择的[{2}]支证券吗?";
+        //private const string MsgSaveStock = "现货模板尚未保存，确定要放弃修改吗？";
+        //private const string MsgDeleteTemp = "该现货模板还有占用的监控单元，不能注销。";
+
+        private const string msgDeleteSecurity = "tempdeletesecurity";
+        private const string msgSaveSecurity = "tempsavesecurity";
+        private const string msgDeleteTemp = "tempdelete";
+        private const string msgModifySuccess = "tempmodifysuccess";
+        private const string msgModifyFail = "tempmodifyfail";
+        private const string msgDeleteSecuritySelect = "tempdeletesecurityselect";
+        private const string msgAddTempSelect = "tempaddselect";
+        private const string msgInvalidSelect = "tempinvalidselect";
+        private const string msgSecurityModifySelect = "tempsecuritymodifyselect";
+        private const string msgSecurityModifyOnlyOnce = "tempsecuritymodifyonlyonce";
+        private const string msgCannotAddSameSecurity = "tempcannotaddsamesecurity";
+        private const string msgSecurityZeroWeight = "tempsecurityzeroweight";
+        private const string msgImportInvalidFileType = "tempimportinvalidfiletype";
+        private const string msgImportLoadFail = "tempimportloadfail";
 
         private GridConfig _gridConfig = null;
         private const string GridTemplate = "stocktemplate";
@@ -184,7 +199,7 @@ namespace TradingSystem.View
             //如果之前的现货模板有改动，提示保存
             if (this._isTempStockChanged)
             {
-                if (MessageBox.Show(this, MsgSaveStock, MsgTitleWarn, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.No)
+                if (MessageDialog.Warn(this, msgSaveSecurity, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
                 {
                     return;
                 }
@@ -249,7 +264,7 @@ namespace TradingSystem.View
             dialog.ShowDialog();
             if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
             {
-                MessageBox.Show(this, "修改成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageDialog.Info(this, msgModifySuccess);
                 dialog.Dispose();
             }
             else
@@ -304,7 +319,7 @@ namespace TradingSystem.View
             }
             else
             {
-                MessageBox.Show(this, MsgDeleteTemp, MsgTitleWarn, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageDialog.Warn(this, msgDeleteTemp);
             }
         }
 
@@ -357,7 +372,7 @@ namespace TradingSystem.View
                         }
                         else
                         {
-                            MessageBox.Show(this, "修改模板失败，没有权限或者数据库连接失败", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageDialog.Error(this, msgModifyFail);
                         }
                     }
                     break;
@@ -467,12 +482,13 @@ namespace TradingSystem.View
             List<int> selectIndex = TSDataGridViewHelper.GetSelectRowIndex(this.secuGridView);
             if (selectIndex.Count == 0)
             {
-                MessageBox.Show(this, "请选择要删除的证券", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageDialog.Warn(this, msgDeleteSecuritySelect);
                 return;
             }
 
-            string msg = string.Format(MsgDeleteStock, template.TemplateId, template.TemplateName, selectIndex.Count);
-            if (MessageBox.Show(this, msg, "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.No)
+            string format = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgDeleteSecurity);
+            string msg = string.Format(format, template.TemplateId, template.TemplateName, selectIndex.Count);
+            if(MessageDialog.Warn(this, msg, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
             {
                 return;
             }
@@ -494,14 +510,14 @@ namespace TradingSystem.View
         {
             if (tempGridView.CurrentRow == null)
             {
-                MessageBox.Show(this, "请选择需要添加的现货模板！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageDialog.Warn(this, msgAddTempSelect);
                 return;
             }
 
             int rowIndex = tempGridView.CurrentRow.Index;
             if (rowIndex < 0 || rowIndex > _tempDataSource.Count)
             {
-                MessageBox.Show(this, "无效选择！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageDialog.Warn(this, msgInvalidSelect);
                 return;
             }
 
@@ -532,20 +548,20 @@ namespace TradingSystem.View
             List<int> selectIndex = TSDataGridViewHelper.GetSelectRowIndex(secuGridView);
             if (selectIndex.Count == 0)
             {
-                MessageBox.Show(this, "请选择需要修改的证券！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageDialog.Warn(this, msgSecurityModifySelect);
                 return;
             }
 
             if (selectIndex.Count > 1)
             {
-                MessageBox.Show(this, "每次仅能对一支证券修改！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageDialog.Warn(this, msgSecurityModifyOnlyOnce);
                 return;
             }
 
             int rowIndex = selectIndex[0];
             if (rowIndex < 0 || rowIndex > _spotDataSource.Count)
             {
-                MessageBox.Show(this, "无效选择！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageDialog.Warn(this, msgInvalidSelect);
                 return;
             }
 
@@ -591,7 +607,8 @@ namespace TradingSystem.View
                             if (findStock != null)
                             {
                                 ret = false;
-                                MessageBox.Show(this, "不能添加相同的证券", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                //MessageBox.Show(this, "不能添加相同的证券", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                MessageDialog.Warn(this, msgCannotAddSameSecurity);
                             }
                             else
                             {
@@ -644,7 +661,7 @@ namespace TradingSystem.View
             var invalidSecuItem = _spotDataSource.Where(p => p.SettingWeight <= 0.0001 || p.Amount == 0).ToList();
             if (invalidSecuItem != null && invalidSecuItem.Count() > 0)
             {
-                if (MessageBox.Show(this, "存在权重设置为零的证券，如果继续将删除这些证券!", "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.No)
+                if (MessageDialog.Warn(this, msgSecurityZeroWeight, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
                 {
                     return;
                 }
@@ -818,8 +835,7 @@ namespace TradingSystem.View
 
                 if (!list.Contains(extension))
                 {
-                    MessageBox.Show(this, "文件类型不符合", "请选择excel文件", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
+                    MessageDialog.Warn(this, msgImportInvalidFileType);
                     return false;
                 }
 
@@ -834,7 +850,7 @@ namespace TradingSystem.View
                 var table = ExcelUtil.GetSheetData(fileDialog.FileName, sheetIndex, colHeadMap);
                 if (table == null || table.ColumnIndex == null || table.Rows == null)
                 {
-                    MessageBox.Show(this, "无法处理导入的文件", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageDialog.Error(this, msgImportLoadFail);
                     return false;
                 }
 

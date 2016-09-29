@@ -73,7 +73,7 @@
             this.efMainPanel = new System.Windows.Forms.Panel();
             this.efGridView = new Controls.GridView.TSDataGridView();
             this.efBottonPanel = new System.Windows.Forms.Panel();
-            this.btnefCancelAppend = new System.Windows.Forms.Button();
+            this.btnefCancelRedo = new System.Windows.Forms.Button();
             this.btnefUndo = new System.Windows.Forms.Button();
             this.btnefUnSelect = new System.Windows.Forms.Button();
             this.btnefSelect = new System.Windows.Forms.Button();
@@ -165,7 +165,7 @@
             // 
             this.cmdMainSplitter.Panel2.Controls.Add(this.bsSplitter);
             this.cmdMainSplitter.Size = new System.Drawing.Size(1111, 538);
-            this.cmdMainSplitter.SplitterDistance = 939;
+            this.cmdMainSplitter.SplitterDistance = 938;
             this.cmdMainSplitter.TabIndex = 0;
             // 
             // cmdVerticalSplitter
@@ -183,7 +183,7 @@
             // cmdVerticalSplitter.Panel2
             // 
             this.cmdVerticalSplitter.Panel2.Controls.Add(this.tabChildSecurity);
-            this.cmdVerticalSplitter.Size = new System.Drawing.Size(939, 476);
+            this.cmdVerticalSplitter.Size = new System.Drawing.Size(938, 476);
             this.cmdVerticalSplitter.SplitterDistance = 276;
             this.cmdVerticalSplitter.TabIndex = 2;
             // 
@@ -193,7 +193,7 @@
             this.cmdTradingPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cmdTradingPanel.Location = new System.Drawing.Point(0, 0);
             this.cmdTradingPanel.Name = "cmdTradingPanel";
-            this.cmdTradingPanel.Size = new System.Drawing.Size(939, 247);
+            this.cmdTradingPanel.Size = new System.Drawing.Size(938, 247);
             this.cmdTradingPanel.TabIndex = 2;
             // 
             // cmdGridView
@@ -205,7 +205,7 @@
             this.cmdGridView.Location = new System.Drawing.Point(0, 0);
             this.cmdGridView.Name = "cmdGridView";
             this.cmdGridView.RowTemplate.Height = 23;
-            this.cmdGridView.Size = new System.Drawing.Size(939, 247);
+            this.cmdGridView.Size = new System.Drawing.Size(938, 247);
             this.cmdGridView.TabIndex = 1;
             // 
             // cmdMiddlePanel
@@ -215,7 +215,7 @@
             this.cmdMiddlePanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.cmdMiddlePanel.Location = new System.Drawing.Point(0, 247);
             this.cmdMiddlePanel.Name = "cmdMiddlePanel";
-            this.cmdMiddlePanel.Size = new System.Drawing.Size(939, 29);
+            this.cmdMiddlePanel.Size = new System.Drawing.Size(938, 29);
             this.cmdMiddlePanel.TabIndex = 1;
             // 
             // btnCmdUnSelect
@@ -245,7 +245,7 @@
             this.tabChildSecurity.Location = new System.Drawing.Point(0, 0);
             this.tabChildSecurity.Name = "tabChildSecurity";
             this.tabChildSecurity.SelectedIndex = 0;
-            this.tabChildSecurity.Size = new System.Drawing.Size(939, 196);
+            this.tabChildSecurity.Size = new System.Drawing.Size(938, 196);
             this.tabChildSecurity.TabIndex = 0;
             // 
             // tpCmdSecurity
@@ -254,7 +254,7 @@
             this.tpCmdSecurity.Location = new System.Drawing.Point(4, 22);
             this.tpCmdSecurity.Name = "tpCmdSecurity";
             this.tpCmdSecurity.Padding = new System.Windows.Forms.Padding(3);
-            this.tpCmdSecurity.Size = new System.Drawing.Size(931, 170);
+            this.tpCmdSecurity.Size = new System.Drawing.Size(930, 170);
             this.tpCmdSecurity.TabIndex = 0;
             this.tpCmdSecurity.Text = "指令证券";
             this.tpCmdSecurity.UseVisualStyleBackColor = true;
@@ -268,7 +268,7 @@
             this.securityGridView.Location = new System.Drawing.Point(3, 3);
             this.securityGridView.Name = "securityGridView";
             this.securityGridView.RowTemplate.Height = 23;
-            this.securityGridView.Size = new System.Drawing.Size(925, 164);
+            this.securityGridView.Size = new System.Drawing.Size(924, 164);
             this.securityGridView.TabIndex = 0;
             // 
             // tpCmdEntrustFlow
@@ -276,7 +276,7 @@
             this.tpCmdEntrustFlow.Location = new System.Drawing.Point(4, 22);
             this.tpCmdEntrustFlow.Name = "tpCmdEntrustFlow";
             this.tpCmdEntrustFlow.Padding = new System.Windows.Forms.Padding(3);
-            this.tpCmdEntrustFlow.Size = new System.Drawing.Size(911, 170);
+            this.tpCmdEntrustFlow.Size = new System.Drawing.Size(930, 170);
             this.tpCmdEntrustFlow.TabIndex = 1;
             this.tpCmdEntrustFlow.Text = "委托流水";
             this.tpCmdEntrustFlow.UseVisualStyleBackColor = true;
@@ -286,7 +286,7 @@
             this.tpCmdDealFlow.Location = new System.Drawing.Point(4, 22);
             this.tpCmdDealFlow.Name = "tpCmdDealFlow";
             this.tpCmdDealFlow.Padding = new System.Windows.Forms.Padding(3);
-            this.tpCmdDealFlow.Size = new System.Drawing.Size(911, 170);
+            this.tpCmdDealFlow.Size = new System.Drawing.Size(930, 170);
             this.tpCmdDealFlow.TabIndex = 2;
             this.tpCmdDealFlow.Text = "成交流水";
             this.tpCmdDealFlow.UseVisualStyleBackColor = true;
@@ -299,7 +299,7 @@
             this.cmdBottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.cmdBottomPanel.Location = new System.Drawing.Point(0, 507);
             this.cmdBottomPanel.Name = "cmdBottomPanel";
-            this.cmdBottomPanel.Size = new System.Drawing.Size(939, 31);
+            this.cmdBottomPanel.Size = new System.Drawing.Size(938, 31);
             this.cmdBottomPanel.TabIndex = 1;
             // 
             // btnSecuUnSelect
@@ -327,7 +327,7 @@
             this.cmdTopPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.cmdTopPanel.Location = new System.Drawing.Point(0, 0);
             this.cmdTopPanel.Name = "cmdTopPanel";
-            this.cmdTopPanel.Size = new System.Drawing.Size(939, 31);
+            this.cmdTopPanel.Size = new System.Drawing.Size(938, 31);
             this.cmdTopPanel.TabIndex = 0;
             // 
             // tsCmdTrading
@@ -340,7 +340,7 @@
             this.tsbCancelAdd});
             this.tsCmdTrading.Location = new System.Drawing.Point(0, 0);
             this.tsCmdTrading.Name = "tsCmdTrading";
-            this.tsCmdTrading.Size = new System.Drawing.Size(937, 25);
+            this.tsCmdTrading.Size = new System.Drawing.Size(936, 25);
             this.tsCmdTrading.TabIndex = 0;
             this.tsCmdTrading.Text = "toolStrip1";
             // 
@@ -393,7 +393,7 @@
             this.bsSplitter.Panel2.Controls.Add(this.bsGridView);
             this.bsSplitter.Panel2.Controls.Add(this.entrustBottonPanel);
             this.bsSplitter.Panel2.Controls.Add(this.entrustTopPanel);
-            this.bsSplitter.Size = new System.Drawing.Size(168, 538);
+            this.bsSplitter.Size = new System.Drawing.Size(169, 538);
             this.bsSplitter.SplitterDistance = 73;
             this.bsSplitter.TabIndex = 0;
             // 
@@ -406,7 +406,7 @@
             this.bsGridView.Location = new System.Drawing.Point(0, 124);
             this.bsGridView.Name = "bsGridView";
             this.bsGridView.RowTemplate.Height = 23;
-            this.bsGridView.Size = new System.Drawing.Size(168, 237);
+            this.bsGridView.Size = new System.Drawing.Size(169, 237);
             this.bsGridView.TabIndex = 2;
             // 
             // entrustBottonPanel
@@ -420,7 +420,7 @@
             this.entrustBottonPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.entrustBottonPanel.Location = new System.Drawing.Point(0, 361);
             this.entrustBottonPanel.Name = "entrustBottonPanel";
-            this.entrustBottonPanel.Size = new System.Drawing.Size(168, 100);
+            this.entrustBottonPanel.Size = new System.Drawing.Size(169, 100);
             this.entrustBottonPanel.TabIndex = 1;
             // 
             // nudCopies
@@ -483,7 +483,7 @@
             this.entrustTopPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.entrustTopPanel.Location = new System.Drawing.Point(0, 0);
             this.entrustTopPanel.Name = "entrustTopPanel";
-            this.entrustTopPanel.Size = new System.Drawing.Size(168, 124);
+            this.entrustTopPanel.Size = new System.Drawing.Size(169, 124);
             this.entrustTopPanel.TabIndex = 0;
             // 
             // cbFuturesSellPrice
@@ -595,7 +595,7 @@
             // efBottonPanel
             // 
             this.efBottonPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.efBottonPanel.Controls.Add(this.btnefCancelAppend);
+            this.efBottonPanel.Controls.Add(this.btnefCancelRedo);
             this.efBottonPanel.Controls.Add(this.btnefUndo);
             this.efBottonPanel.Controls.Add(this.btnefUnSelect);
             this.efBottonPanel.Controls.Add(this.btnefSelect);
@@ -605,14 +605,14 @@
             this.efBottonPanel.Size = new System.Drawing.Size(1111, 24);
             this.efBottonPanel.TabIndex = 1;
             // 
-            // btnefCancelAppend
+            // btnefCancelRedo
             // 
-            this.btnefCancelAppend.Location = new System.Drawing.Point(219, 0);
-            this.btnefCancelAppend.Name = "btnefCancelAppend";
-            this.btnefCancelAppend.Size = new System.Drawing.Size(66, 23);
-            this.btnefCancelAppend.TabIndex = 3;
-            this.btnefCancelAppend.Text = "撤补";
-            this.btnefCancelAppend.UseVisualStyleBackColor = true;
+            this.btnefCancelRedo.Location = new System.Drawing.Point(219, 0);
+            this.btnefCancelRedo.Name = "btnefCancelRedo";
+            this.btnefCancelRedo.Size = new System.Drawing.Size(66, 23);
+            this.btnefCancelRedo.TabIndex = 3;
+            this.btnefCancelRedo.Text = "撤补";
+            this.btnefCancelRedo.UseVisualStyleBackColor = true;
             // 
             // btnefUndo
             // 
@@ -837,7 +837,7 @@
         private System.Windows.Forms.Button btnSecuSelect;
         private System.Windows.Forms.ToolStrip tsEntrustFlow;
         private System.Windows.Forms.ToolStripButton tsbefRefresh;
-        private System.Windows.Forms.Button btnefCancelAppend;
+        private System.Windows.Forms.Button btnefCancelRedo;
         private System.Windows.Forms.Button btnefUndo;
         private System.Windows.Forms.Button btnefUnSelect;
         private System.Windows.Forms.Button btnefSelect;

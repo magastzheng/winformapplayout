@@ -75,6 +75,8 @@ namespace TradingSystem.Dialog
                 return;
             }
 
+            //if(MessageBox.Show(this, ""
+
             var failedCancelItems = new List<CancelSecurityItem>();
             var submitIds = _secuDataSource.ToList().Select(p => p.SubmitId).Distinct().ToList();
             foreach (var submitId in submitIds)

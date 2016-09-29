@@ -15,6 +15,10 @@ namespace TradingSystem.Dialog
 {
     public partial class OpenPositionDialog : Forms.BaseDialog
     {
+        private const string msgValidDate = "opendialogvaliddate";
+        private const string msgValidTime = "opendialogvalidtime";
+        private const string msgInstanceCodeNoEmpty = "opendialoginstancecodenoempty";
+
         private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
         private OpenPositionItem _originOpenItem = null;
 
@@ -139,20 +143,20 @@ namespace TradingSystem.Dialog
         {
             if (!ValidateDate())
             {
-                MessageBox.Show(this, "开始日期和结束日期为yyyyMMdd格式，且结束日期不能早于开始日期！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageDialog.Error(this, msgValidDate);
                 return;
             }
 
             if (!ValidateTime())
             {
-                MessageBox.Show(this, "开始时间和结束时间为HHmmss格式，且结束时间不能早于开始时间！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageDialog.Error(this, msgValidTime);
                 return;
             }
 
             var orderItem = GetNewItem();
             if (!ValidateInstanceCode(orderItem))
             {
-                MessageBox.Show(this, "交易实例编号不能为空！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageDialog.Error(this, msgInstanceCodeNoEmpty);
                 return;
             }
 

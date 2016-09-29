@@ -15,6 +15,8 @@ namespace TradingSystem.Dialog
 {
     public partial class MonitorUnitDialog : Forms.BaseDialog
     {
+        private const string msgNoEmptyNameContract = "monitornoemptynameandcontract";
+
         private FuturesContractBLL _futureBLL = new FuturesContractBLL();
         private ProductBLL _productBLL = new ProductBLL();
         private TemplateBLL _templateBLL = new TemplateBLL();
@@ -253,7 +255,8 @@ namespace TradingSystem.Dialog
             {
                 //TODO: make the error message
                 //DialogResult = System.Windows.Forms.DialogResult.No;
-                MessageBox.Show(this, "请确保监控名称和空头合约不为空", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //MessageBox.Show(this, "请确保监控名称和空头合约不为空", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageDialog.Error(this, msgNoEmptyNameContract);
             }
         }
 

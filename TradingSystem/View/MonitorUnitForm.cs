@@ -20,10 +20,15 @@ namespace TradingSystem.View
 
     public partial class MonitorUnitForm : Forms.DefaultForm
     {
-        private const string MsgBoxCaption = "警告";
-        private const string MsgConfirmDelete = "是否要删除这[{0}]个监控单元";
-        private const string MsgSelectDelete = "请先选择要删除的监控单元";
-        private const string MsgSelectMonitor = "请设置监控单元";
+        //private const string MsgBoxCaption = "警告";
+        //private const string MsgConfirmDelete = "是否要删除这[{0}]个监控单元";
+        //private const string MsgSelectDelete = "请先选择要删除的监控单元";
+        //private const string MsgSelectMonitor = "请设置监控单元";
+
+        private const string msgDeleteConfirm = "monitordeleteconfirm";
+        private const string msgSelectSetting = "monitorselectsetting";
+        private const string msgDeleteSelect = "monitordeleteselect";
+
         private const string GridId = "monitorunitmanager";
         private const string BottomMenuId = "monitorunit";
         private const string ConfirmCancelId = "confirmcancel";
@@ -140,12 +145,13 @@ namespace TradingSystem.View
                         List<int> selectIndex = TSDataGridViewHelper.GetSelectRowIndex(dataGridView);
                         if (selectIndex == null && selectIndex.Count == 0)
                         {
-                            MessageBox.Show(this, MsgSelectDelete, MsgBoxCaption, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageDialog.Warn(this, msgDeleteSelect);
                             return;
                         }
 
-                        string msg = string.Format(MsgConfirmDelete, selectIndex.Count);
-                        if (MessageBox.Show(this, msg, MsgBoxCaption, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != System.Windows.Forms.DialogResult.Yes)
+                        string format = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgDeleteConfirm);
+                        string msg = string.Format(format, selectIndex.Count);
+                        if (MessageDialog.Warn(this, msg, MessageBoxButtons.YesNo) != System.Windows.Forms.DialogResult.Yes)
                         {
                             return;
                         }
@@ -221,7 +227,7 @@ namespace TradingSystem.View
                         List<int> selectIndex = TSDataGridViewHelper.GetSelectRowIndex(dataGridView);
                         if (selectIndex == null && selectIndex.Count == 0)
                         {
-                            MessageBox.Show(this, MsgSelectMonitor, MsgBoxCaption, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageDialog.Warn(this, msgSelectSetting);
                             return;
                         }
 

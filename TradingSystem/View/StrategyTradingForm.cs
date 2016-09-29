@@ -30,6 +30,19 @@ namespace TradingSystem.View
 {
     public partial class StrategyTradingForm : Forms.BaseForm
     {
+        //label id
+        private const string msgContainCannotCancelSecurity = "tradecontaincannotcancelsecurity";
+        private const string msgNoEntrustCancel = "tradenoentrustcancel";
+        private const string msgCancelFail = "tradecancelfail";
+        private const string msgEntrustPriceBeyondLimit = "tradeentrustpricebeyondlimit";
+        private const string msgEntrustAmountBeyondTotal = "tradeentrustamountbeyondtotal";
+        private const string msgNoEntrustSecurity = "tradenotentrustsecurity";
+        private const string msgEntrustCommandSelect = "tradeentrustcommandselect";
+        private const string msgShouldContainSecurity = "tradeshouldcontainsecurity";
+        private const string msgEntrustSecuritySelect = "tradeentrustsecurityselect";
+        private const string msgEntrustPricePrompt = "tradeentrustpriceprompt";
+
+
         private const string GridCmdTradingId = "cmdtrading";
         private const string GridEntrustFlowId = "entrustflow";
         private const string GridDealFlowId = "dealflow";
@@ -109,14 +122,14 @@ namespace TradingSystem.View
             //this.btnefSelect.Click += new EventHandler(ToolStripButton_EntrustFlow_Select);
             //this.btnefUnSelect.Click += new EventHandler(ToolStripButton_EntrustFlow_UnSelect);
             this.btnefUndo.Click += new EventHandler(ToolStripButton_EntrustFlow_Undo);
-            this.btnefCancelAppend.Click += new EventHandler(ToolStripButton_EntrustFlow_CancelAppend);
+            this.btnefCancelRedo.Click += new EventHandler(ToolStripButton_EntrustFlow_CancelRedo);
 
             //deal flow view
         }
 
         #region EntrustFlow view click event handler
         
-        private void ToolStripButton_EntrustFlow_CancelAppend(object sender, EventArgs e)
+        private void ToolStripButton_EntrustFlow_CancelRedo(object sender, EventArgs e)
         {
             //TODO:
             var selectItems = _efDataSource.Where(p => p.Selection).ToList();
@@ -128,8 +141,7 @@ namespace TradingSystem.View
                 ).ToList();
             if (selectItems.Count != canCancelItems.Count)
             {
-                MessageBox.Show(this, "选择了包含不可以撤销的证券！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
+                MessageDialog.Warn(this, msgContainCannotCancelSecurity);
                 return;
             }
 
@@ -181,8 +193,7 @@ namespace TradingSystem.View
 
             if (selectItems.Count != canCancelItems.Count)
             {
-                MessageBox.Show(this, "选择了包含不可以撤销的证券！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
+                MessageDialog.Warn(this, msgContainCannotCancelSecurity);
                 return;
             }
 
@@ -234,7 +245,7 @@ namespace TradingSystem.View
 
             if (entrustedCmdItems.Count == 0)
             {
-                MessageBox.Show(this, "当期没有委托可以撤单或撤补！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageDialog.Info(this, msgNoEntrustCancel);
                 return;
             }
 
@@ -368,8 +379,9 @@ namespace TradingSystem.View
             }
             else
             {
-                string msg = string.Format("撤销指令号 [{0}] 提价序号 [{1}] 失败！", token.CommandId, token.SubmitId);
-                MessageBox.Show(this, msg, "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                string format = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgCancelFail);
+                string msg = string.Format(format, token.CommandId, token.SubmitId);
+                MessageDialog.Warn(this, msg);
                 return -1;
             }
         }
@@ -576,7 +588,7 @@ namespace TradingSystem.View
                     {
                         if (secuItem.EntrustPrice < secuItem.LimitDownPrice || secuItem.EntrustPrice > secuItem.LimitUpPrice)
                         {
-                            MessageBox.Show(this, "委托价格必须在跌停价和涨停价之间！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageDialog.Warn(this, msgEntrustPriceBeyondLimit);
 
                             var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
                             var marketData = QuoteCenter.Instance.GetMarketData(findItem);
@@ -595,7 +607,7 @@ namespace TradingSystem.View
                     {
                         if (secuItem.ThisEntrustAmount + secuItem.EntrustedAmount > secuItem.CommandAmount)
                         {
-                            MessageBox.Show(this, "本次委托证券数量不能超出委托总量！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                            MessageDialog.Warn(this, msgEntrustAmountBeyondTotal);
 
                             secuItem.ThisEntrustAmount = secuItem.CommandAmount - secuItem.EntrustedAmount;
                             this.securityGridView.InvalidateCell(columnIndex, rowIndex);
@@ -864,7 +876,7 @@ namespace TradingSystem.View
             {
                 this.BeginInvoke(new Action(() =>
                 {
-                    MessageBox.Show(this, errorResponse.ErrorMessage, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageDialog.Error(this, errorResponse.ErrorMessage);
                 }));
 
                 return -1;
@@ -1073,6 +1085,7 @@ namespace TradingSystem.View
             }
 
             //submit each entrust item and each security in the entrustitem
+            //TODO：choose the strategy(cancel all if failure appear)
             List<int> submitIds = new List<int>();
             int successCount = 0;
             foreach (var eiItem in selectedEntrustItems)
@@ -1420,8 +1433,7 @@ namespace TradingSystem.View
             var entrustSecuItems = _secuDataSource.Where(p => p.Selection).ToList();
             if (entrustSecuItems == null || entrustSecuItems.Count == 0)
             {
-                //TODO: show message
-                MessageBox.Show(this, "请选择要委托的证券！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageDialog.Warn(this, msgEntrustSecuritySelect);
                 return false;
             }
 
@@ -1429,7 +1441,7 @@ namespace TradingSystem.View
             {
                 if (entrustSecuItem.ThisEntrustAmount + entrustSecuItem.EntrustedAmount > entrustSecuItem.CommandAmount)
                 {
-                    MessageBox.Show(this, "本次委托证券数量超出委托总量！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                    MessageDialog.Warn(this, msgEntrustAmountBeyondTotal);
 
                     var findIndex = _secuDataSource.ToList().FindIndex(p => p.SecuCode == entrustSecuItem.SecuCode
                         && p.CommandId == entrustSecuItem.CommandId);
@@ -1448,7 +1460,7 @@ namespace TradingSystem.View
                     || entrustSecuItem.ESuspendFlag != Model.Quote.SuspendFlag.NoSuspension
                    )
                 {
-                    MessageBox.Show(this, "请设置委托的证券数量和价格，证券数量需为正值，价格不能为零且需在最高最低价之间，证券可以正常交易！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                    MessageDialog.Warn(this, msgEntrustPricePrompt);
 
                     var findIndex = _secuDataSource.ToList().FindIndex(p => p.SecuCode == entrustSecuItem.SecuCode
                         && p.CommandId == entrustSecuItem.CommandId);

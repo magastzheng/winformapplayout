@@ -38,6 +38,10 @@ namespace TradingSystem.View
         private const string GridSecurityId = "closepositionsecurity";
         private const string GridCloseCmdId = "closepositioncmd";
 
+        private const string msgCopies = "closecopiesinput";
+        private const string msgZeroAmount = "closecannotzeroentrustamount";
+        private const string msgSubmitInvalid = "closesubmitinvalid";
+
         private GridConfig _gridConfig;
 
         private FuturesContractBLL _futuresBLL = new FuturesContractBLL();
@@ -345,7 +349,7 @@ namespace TradingSystem.View
             var cmdItems = _cmdDataSource.ToList();
             if (!ValidateCopies(cmdItems))
             {
-                MessageBox.Show(this, "请输入有效的操作份数！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageDialog.Error(this, msgCopies);
                 return;
             }
 
@@ -401,7 +405,7 @@ namespace TradingSystem.View
 
             if (secuItem.EntrustAmount > 0)
             {
-                MessageBox.Show(this, "委托数量不为0，不能换仓！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageDialog.Error(this, msgZeroAmount);
                 return;
             }
 
@@ -522,8 +526,9 @@ namespace TradingSystem.View
             string outMsg;
             if (!ValidateEntrustSecurities(cmdItems, out outMsg))
             {
-                string msg = string.Format("证券未勾选或勾选证券均未设置委托数量, 交易实例为: {0}", outMsg);
-                MessageBox.Show(this, msg, "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                string format = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgSubmitInvalid);
+                string msg = string.Format(format, outMsg);
+                MessageDialog.Warn(this, msg);
                 return;
             }
 

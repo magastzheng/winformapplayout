@@ -35,6 +35,171 @@
 指数权重  －－ 第八列 (系统忽略此项，导入后置为0，保存后读取数据库中的指数权重)
 交易状态  －－ 第九列 (可选正常，停牌或2，1)
 行业信息  －－ 第十列 (可选)"
+		},{
+			"id": "nosecurityselected",
+			"text": "没有勾选的证券!"
+		},{
+			"id": "failtitle",
+			"text": "失败"
+		},{
+			"id": "warntitle",
+			"text": "警告"
+		},{
+			"id": "errortitle",
+			"text": "错误"
+		},{
+			"id": "prompttitle",
+			"text": "提示"
+		},{
+			"id": "tempdeletesecurity",
+			"text": "确定要从模板[{0}-{1}]中删除选择的[{2}]支证券吗?"
+		},{
+			"id": "tempsavesecurity",
+			"text": "现货模板尚未保存，确定要放弃修改吗？"
+		},{
+			"id": "tempdelete",
+			"text": "该现货模板还有占用的监控单元，不能注销。"
+		},{
+			"id": "tempmodifysuccess",
+			"text": "修改成功！"
+		},{
+			"id": "tempmodifyfail",
+			"text": "修改模板失败，没有权限或者数据库连接失败"
+		},{
+			"id": "tempdeletesecurityselect",
+			"text": "请选择要删除的证券"
+		},{
+			"id": "tempaddselect",
+			"text": "请选择需要添加的现货模板！"
+		},{
+			"id": "tempinvalidselect",
+			"text": "无效选择！"
+		},{
+			"id": "tempsecuritymodifyselect",
+			"text": "请选择需要修改的证券！"
+		},{
+			"id": "tempsecuritymodifyonlyonce",
+			"text": "每次仅能对一支证券修改！"
+		},{
+			"id": "tempcannotaddsamesecurity",
+			"text": "不能添加相同的证券"
+		},{
+			"id": "tempsecurityzeroweight",
+			"text": "存在权重设置为零的证券，如果继续将删除这些证券!"
+		},{
+			"id": "tempimportinvalidfiletype",
+			"text": "文件类型不符合"
+		},{
+			"id": "tempimportloadfail",
+			"text": "无法处理导入的文件"
+		},{
+			"id": "temppermsetting",
+			"text": "用户[{0}]权限设置为可编辑但未设为可浏览，可编辑用户必须同时设为可浏览！"
+		},{
+			"id": "monitordeleteselect",
+			"text": "请先选择要删除的监控单元"
+		},{
+			"id": "monitordeleteconfirm",
+			"text": "是否要删除这[{0}]个监控单元"
+		},{
+			"id": "monitorselectsetting",
+			"text": "请设置监控单元"
+		},{
+			"id": "monitornoemptynameandcontract",
+			"text": "请确保监控名称和空头合约不为空"
+		},{
+			"id": "opensubmitfail",
+			"text": "对监控单元[{0}]下达指令失败"
+		},{
+			"id": "opendialogvaliddate",
+			"text": "开始日期和结束日期为yyyyMMdd格式，且结束日期不能早于开始日期！"
+		},{
+			"id": "opendialogvalidtime",
+			"text": "开始时间和结束时间为HHmmss格式，且结束时间不能早于开始时间！"
+		},{
+			"id": "opendialoginstancecodenoempty",
+			"text": "交易实例编号不能为空！"
+		},{
+			"id": "securitydialogcodenoempty",
+			"text": "证券代码不能为空!"
+		},{
+			"id": "closecopiesinput",
+			"text": "请输入有效的操作份数！"
+		},{
+			"id": "closecannotzeroentrustamount",
+			"text": "委托数量不为0，不能换仓！"
+		},{
+			"id": "closesubmitinvalid",
+			"text": "证券未勾选或勾选证券均未设置委托数量, 交易实例为: {0}"
+		},{
+			"id": "chgpositionconfirm",
+			"text": "请确认换仓证券有效（数量，价格）"
+		},{
+			"id": "tradecontaincannotcancelsecurity",
+			"text": "选择了包含不可以撤销的证券！"
+		},{
+			"id": "tradenoentrustcancel",
+			"text": "当前没有委托可以撤单或撤补！"
+		},{
+			"id": "tradecancelfail",
+			"text": "撤销指令号 [{0}] 提交序号 [{1}] 失败！"
+		},{
+			"id": "tradeentrustpricebeyondlimit",
+			"text": "委托价格必须在跌停价和涨停价之间！"
+		},{
+			"id": "tradeentrustamountbeyondtotal",
+			"text": "本次委托证券数量不能超出委托总量！"
+		},{
+			"id": "tradenotentrustsecurity",
+			"text": "没有需要委托的证券！"
+		},{
+			"id": "tradeentrustcommandselect",
+			"text": "请选择要委托的指令！"
+		},{
+			"id": "tradeshouldcontainsecurity",
+			"text": "请确保委托指令中包含有效证券！"
+		},{
+			"id": "tradeentrustsecuritysuspend",
+			"text": "选中停牌的证券！"
+		},{
+			"id": "tradeentrustsecurityconfirm",
+			"text": "共有[{0}]只证券\n确定开始委托吗？"
+		},{
+			"id": "tradeentrustcommandfail",
+			"text": "委托指令[{0}]失败: {1}, 是否继续委托下一个指令？"
+		},{
+			"id": "tradeentrustsecuritysuccesscount",
+			"text": "共有[{0}]只证券委托全部成功执行！"
+		},{
+			"id": "tradeentrustsecurityselect",
+			"text": "请选择要委托的证券！"
+		},{
+			"id": "tradeentrustamountbeyondtotal",
+			"text": "本次委托证券数量超出委托总量！"
+		},{
+			"id": "tradeentrustpriceprompt",
+			"text": "请设置委托的证券数量和价格，证券数量需为正值，价格不能为零且需在最高最低价之间，证券可以正常交易！"
+		},{
+			"id": "entrustcancelundoconfirm",
+			"text": "确定要对选中的已委托证券撤销吗？"
+		},{
+			"id": "entrustcancelredoconfirm",
+			"text": "确定要对选中的已委托证券撤补吗？"
+		},{
+			"id": "entrustcancelnoamount",
+			"text": "选择的证券中不存在可以撤销委托数量："
+		},{
+			"id": "entrustcancelredoconfirm",
+			"text": "确定要对选中的证券撤补吗？"
+		},{
+			"id": "entrustcancelpartialfail",
+			"text": "部分证券撤销失败\n"
+		},{
+			"id": "entrustcancelfailsecurity",
+			"text": "提交号:{0}, 指令号:{1}, 证券代码:{2}\n"
+		},{
+			"id": "entrustcancelresubmitfail",
+			"text": "委托失败, 提交号：[{0}], 失败原因：{1}!"
 		}
 	]
 }

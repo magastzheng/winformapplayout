@@ -16,6 +16,8 @@ namespace TradingSystem.Dialog
 {
     public partial class ChangePositionDialog : Forms.BaseDialog
     {
+        private const string msgChgPositionConfirm = "chgpositionconfirm";
+
         private ClosePositionSecurityItem _originItem;
         private List<SecurityItem> _secuInfoList = null;
 
@@ -150,7 +152,7 @@ namespace TradingSystem.Dialog
             var changeOutItem = GetChangeOutItem();
             if (!ValidateChangeItem(changeInItem) || !ValidateChangeItem(changeOutItem))
             {
-                MessageBox.Show(this, "请确认换仓证券有效（数量，价格）", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageDialog.Error(this, msgChgPositionConfirm);
                 return;
             }
 
