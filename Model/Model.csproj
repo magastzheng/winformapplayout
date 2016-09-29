@@ -129,6 +129,8 @@
     <Compile Include="UI\EntrustFlowItem.cs" />
     <Compile Include="UI\EntrustItem.cs" />
     <Compile Include="UI\EntrustSecurityItem.cs" />
+    <Compile Include="UI\HistStockTemplate.cs" />
+    <Compile Include="UI\HistTemplateStock.cs" />
     <Compile Include="UI\InstanceItem.cs" />
     <Compile Include="UI\SourceHoldingItem.cs" />
     <Compile Include="UI\TradingCommandItem.cs" />
