@@ -3,9 +3,6 @@ using Model.EnumType;
 using Model.UI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DBAccess.Template
 {

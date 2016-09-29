@@ -10,6 +10,23 @@ namespace Model.UI
 {
     public class HistStockTemplate : StockTemplate
     {
+        public HistStockTemplate()
+            : base()
+        {
+        }
+
+        public HistStockTemplate(StockTemplate temp)
+            : base(temp)
+        { 
+        }
+
+        public HistStockTemplate(HistStockTemplate temp)
+            : base(temp)
+        {
+            ArchiveId = temp.ArchiveId;
+            DArchiveDate = temp.DArchiveDate;
+        }
+
         public int ArchiveId { get; set; }
 
         [BindingAttribute("archivedate")]

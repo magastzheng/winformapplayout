@@ -22,8 +22,10 @@ namespace Model.Permission
         Portfolio = 103,  
         //现货模板
         SpotTemplate = 111,
+        //历史现货模板
+        HistoricalSpotTemplate = 112,
         //交易实例
-        TradeInstance = 112,    
+        TradeInstance = 113,    
         //交易指令
         TradeCommand = 121,     
         //委托指令

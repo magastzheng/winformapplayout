@@ -13,6 +13,28 @@ namespace Model.UI
 {
     public class StockTemplate
     {
+        public StockTemplate()
+        { 
+        }
+
+        public StockTemplate(StockTemplate template)
+        {
+            this.TemplateId = template.TemplateId;
+            this.TemplateName = template.TemplateName;
+            this.FutureCopies = template.FutureCopies;
+            this.MarketCapOpt = template.MarketCapOpt;
+            this.Benchmark = template.Benchmark;
+            this.EStatus = template.EStatus;
+            this.EWeightType = template.EWeightType;
+            this.EReplaceType = template.EReplaceType;
+            this.DCreatedDate = template.DCreatedDate;
+            this.DModifiedDate = template.DModifiedDate;
+            this.CreatedUserId = template.CreatedUserId;
+            this.CanEditUsers = template.CanEditUsers;
+            this.CanViewUsers = template.CanViewUsers;
+            this.Permissions = template.Permissions;
+        }
+
         [BindingAttribute("templateid")]
         public int TemplateId { get; set; }
 
