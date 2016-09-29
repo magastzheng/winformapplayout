@@ -20,13 +20,13 @@ namespace BLL.UFX.impl
         {
             _t2SDKWrap = t2SDKWrap;
             //_receivedBizMsg = HandleReceivedBizMsg;
-            _t2SDKWrap.Register(FunctionCode.Login, new DataHandlerCallback(HandlData));
-            _t2SDKWrap.Register(FunctionCode.Logout, new DataHandlerCallback(HandlData));
-            _t2SDKWrap.Register(FunctionCode.HeartBeat, new DataHandlerCallback(HandlData));
+            //_t2SDKWrap.Register(FunctionCode.Login, new DataHandlerCallback(HandlData));
+            //_t2SDKWrap.Register(FunctionCode.Logout, new DataHandlerCallback(HandlData));
+            //_t2SDKWrap.Register(FunctionCode.HeartBeat, new DataHandlerCallback(HandlData));
             _t2SDKWrap.Register(FunctionCode.QuerymemoryData, new DataHandlerCallback(HandlData));
-            _t2SDKWrap.Register(FunctionCode.QueryAccount, new DataHandlerCallback(HandlData));
-            _t2SDKWrap.Register(FunctionCode.QueryAssetUnit, new DataHandlerCallback(HandlData));
-            _t2SDKWrap.Register(FunctionCode.QueryPortfolio, new DataHandlerCallback(HandlData));
+            //_t2SDKWrap.Register(FunctionCode.QueryAccount, new DataHandlerCallback(HandlData));
+            //_t2SDKWrap.Register(FunctionCode.QueryAssetUnit, new DataHandlerCallback(HandlData));
+            //_t2SDKWrap.Register(FunctionCode.QueryPortfolio, new DataHandlerCallback(HandlData));
             _t2SDKWrap.Register(FunctionCode.QueryTradingInstance, new DataHandlerCallback(HandlData));
             _t2SDKWrap.Register(FunctionCode.QueryHolder, new DataHandlerCallback(HandlData));
         }

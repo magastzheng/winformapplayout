@@ -42,6 +42,10 @@ namespace BLL.UFX
         {
         }
 
+        /// <summary>
+        /// 创建连接。在使用UFX接口之前，必须调用本接口初始化UFX接口，并创建连接。只有连接成功创建之后，才可以调用其他接口
+        /// </summary>
+        /// <returns>返回连接码表示创建连接是否成功。Success表示成功，其他为失败。</returns>
         public ConnectionCode Connect()
         {
             //新建连接
@@ -91,6 +95,9 @@ namespace BLL.UFX
             return ConnectionCode.Success;
         }
 
+        /// <summary>
+        /// 关闭连接。使用完成之后，应该关闭连接。
+        /// </summary>
         public void Close()
         {
             if (_conn != null)
@@ -103,6 +110,14 @@ namespace BLL.UFX
             }
         }
 
+        /// <summary>
+        /// 注册功能号和委托，如果针对该功能号的调用成功，就会触发该功能号委托的回调。这里所说的调用成功，指的是针对UFX接口
+        /// 的调用顺利，这个过程之后有可能会触发参数错误等各种问题，而不表示调用结果正确，获得正确的返回值。
+        /// 因此，获取返回数据后，还需要通过分析数据中的返回码来确定本次调用是否无误。
+        /// 注意：每个注册码只会保留最后一次注册的委托，多次注册时，先注册的委托会被后面的覆盖掉。
+        /// </summary>
+        /// <param name="functionCode">功能号</param>
+        /// <param name="receiver">本功能号的委托</param>
         public void Register(FunctionCode functionCode, DataHandlerCallback receiver)
         {
             if (!_dataHandlerMap.ContainsKey(functionCode))
@@ -123,6 +138,12 @@ namespace BLL.UFX
             }
         }
 
+        /// <summary>
+        /// 通过调用UFX接口异步发送请求，调用前必须确保已经注册了功能号和回调代理，即调用Register函数注册。
+        /// 同一功能号注册多次只会保留最后一次结果。
+        /// </summary>
+        /// <param name="message">CT2BizMessage对象的实例，包含用户信息，功能号，请求参数等信息</param>
+        /// <returns>返回正值表示发送句柄，否则表示失败。</returns>
         public int SendAsync(CT2BizMessage message)
         {
             int iRet = _conn.SendBizMsg(message, (int)SendType.Async);
@@ -136,6 +157,12 @@ namespace BLL.UFX
             return iRet;
         }
 
+        /// <summary>
+        /// 通过调用UFX接口同步发送请求，调用前必须确保已经注册了功能号和回调代理，即调用Register函数注册。
+        /// 同一功能号注册多次只会保留最后一次结果。
+        /// </summary>
+        /// <param name="message">CT2BizMessage对象的实例，包含用户信息，功能号，请求参数等信息</param>
+        /// <returns>返回正值表示发送句柄，否则表示失败。</returns>
         public int SendSync(CT2BizMessage message)
         {
             int iRet = _conn.SendBizMsg(message, (int)SendType.Sync);
@@ -168,6 +195,11 @@ namespace BLL.UFX
             }
         }
 
+        /// <summary>
+        /// 通过调用UFX接口同步发送请求，并将结果封装在DataParser对象中返回。
+        /// </summary>
+        /// <param name="message">CT2BizMessage对象的实例，包含用户信息，功能号，请求参数等信息</param>
+        /// <returns>DataParser对象实例，包含错误代码和最终数据。</returns>
         public DataParser SendSync2(CT2BizMessage message)
         {
             DataParser dataParser = new DataParser();
