@@ -114,7 +114,11 @@ namespace TradingSystem.Controller
                     //        //json = JsonUtil.SerializeObject(items);
                     //    }
                     //    break;
-                    case "historytemplate":
+                    case "historicaltemplate":
+                        {
+                            formType = typeof(HistSpotTemplateForm);
+                            hasGrid = true;
+                        }
                         break;
                     case "instancemanagement":
                         {

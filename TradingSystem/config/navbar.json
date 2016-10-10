@@ -87,7 +87,7 @@
                 "children": []
            },
             {
-                "id": "historytemplate",
+                "id": "historicaltemplate",
                 "title": "历史模板",
                 "parentid": "templatemanager",
                 "isexpansed": false,
