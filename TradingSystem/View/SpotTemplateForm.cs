@@ -29,14 +29,10 @@ namespace TradingSystem.View
             Update = 1,
         }
 
-        //private const string MsgTitleWarn = "警告";
-        //private const string MsgDeleteStock = "确定要从模板[{0}-{1}]中删除选择的[{2}]支证券吗?";
-        //private const string MsgSaveStock = "现货模板尚未保存，确定要放弃修改吗？";
-        //private const string MsgDeleteTemp = "该现货模板还有占用的监控单元，不能注销。";
-
         private const string msgDeleteSecurity = "tempdeletesecurity";
         private const string msgSaveSecurity = "tempsavesecurity";
         private const string msgDeleteTemp = "tempdelete";
+        private const string msgDeleteTempSuccess = "tempdeletesuccess";
         private const string msgModifySuccess = "tempmodifysuccess";
         private const string msgModifyFail = "tempmodifyfail";
         private const string msgDeleteSecuritySelect = "tempdeletesecurityselect";
@@ -106,12 +102,12 @@ namespace TradingSystem.View
         
         private bool Form_LoadControl(object sender, object data)
         {
-            //set the monitorGridView
+            //set the tempGridView
             TSDataGridViewHelper.AddColumns(this.tempGridView, _gridConfig.GetGid(GridTemplate));
             Dictionary<string, string> tempColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(StockTemplate));
             TSDataGridViewHelper.SetDataBinding(this.tempGridView, tempColDataMap);
 
-            //set the securityGridView
+            //set the secuGridView
             TSDataGridViewHelper.AddColumns(this.secuGridView, _gridConfig.GetGid(GridStock));
             Dictionary<string, string> securityColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(TemplateStock));
             TSDataGridViewHelper.SetDataBinding(this.secuGridView, securityColDataMap);
@@ -233,7 +229,6 @@ namespace TradingSystem.View
             dialog.StartPosition = FormStartPosition.CenterParent;
             dialog.OnLoadControl(dialog, null);
             dialog.OnLoadData(dialog, null);
-            //dialog.OnLoadFormActived(json);
             dialog.ShowDialog();
 
             if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
@@ -252,13 +247,10 @@ namespace TradingSystem.View
             if (stockTemplate == null)
                 return;
 
-            //string json = JsonUtil.SerializeObject(stockTemplate);
-
             TemplateDialog dialog = new TemplateDialog();
             dialog.SaveData += new FormLoadHandler(Dialog_ModifyTemplate);
             dialog.Owner = this;
             dialog.StartPosition = FormStartPosition.CenterParent;
-            //dialog.OnFormActived(json);
             dialog.OnLoadControl(dialog, null);
             dialog.OnLoadData(dialog, stockTemplate);
             dialog.ShowDialog();
@@ -315,7 +307,7 @@ namespace TradingSystem.View
             int ret = _templateBLL.DeleteTemplate(template);
             if (ret == 1)
             {
-                //TODO:  注销成功
+                MessageDialog.Info(this, msgDeleteTempSuccess);
             }
             else
             {
@@ -607,7 +599,6 @@ namespace TradingSystem.View
                             if (findStock != null)
                             {
                                 ret = false;
-                                //MessageBox.Show(this, "不能添加相同的证券", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 MessageDialog.Warn(this, msgCannotAddSameSecurity);
                             }
                             else

@@ -38,18 +38,20 @@ namespace TradingSystem.View
 
             this.LoadControl += new FormLoadHandler(Form_LoadControl);
             this.LoadData += new FormLoadHandler(Form_LoadData);
+
+            tempGridView.MouseClickRow += new ClickRowHandler(GridView_Template_MouseClickRow);
         }
 
         #region load control
 
         private bool Form_LoadControl(object sender, object data)
         {
-            //set the monitorGridView
+            //set the tempGridView
             TSDataGridViewHelper.AddColumns(this.tempGridView, _gridConfig.GetGid(GridTemplate));
             Dictionary<string, string> tempColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(HistStockTemplate));
             TSDataGridViewHelper.SetDataBinding(this.tempGridView, tempColDataMap);
 
-            //set the securityGridView
+            //set the secuGridView
             TSDataGridViewHelper.AddColumns(this.secuGridView, _gridConfig.GetGid(GridStock));
             Dictionary<string, string> securityColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(HistTemplateStock));
             TSDataGridViewHelper.SetDataBinding(this.secuGridView, securityColDataMap);
@@ -83,7 +85,6 @@ namespace TradingSystem.View
                 }
             }
 
-            //TODO: load data from database
             return true;
         }
 
@@ -100,6 +101,23 @@ namespace TradingSystem.View
                 {
                     _secuDataSource.Add(stock);
                 }
+            }
+        }
+
+        #endregion
+
+        #region event handler
+
+        private void GridView_Template_MouseClickRow(object sender, int rowIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= _tempDataSource.Count)
+                return;
+
+            //Load the securities of the selected template
+            var template = _tempDataSource[rowIndex];
+            if (template != null && template.ArchiveId > 0)
+            {
+                LoadTemplateStock(template.ArchiveId);
             }
         }
 

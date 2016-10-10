@@ -60,6 +60,9 @@
 			"id": "tempdelete",
 			"text": "该现货模板还有占用的监控单元，不能注销。"
 		},{
+			"id": "tempdeletesuccess",
+			"text": "模板注销成功！"
+		},{
 			"id": "tempmodifysuccess",
 			"text": "修改成功！"
 		},{
