@@ -154,12 +154,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="View\CancelRedoForm2.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\CancelRedoForm2.Designer.cs">
-      <DependentUpon>CancelRedoForm2.cs</DependentUpon>
-    </Compile>
     <Compile Include="View\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -202,12 +196,6 @@
     <Compile Include="View\SpotTemplateForm.Designer.cs">
       <DependentUpon>SpotTemplateForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\StockTemplateForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\StockTemplateForm.Designer.cs">
-      <DependentUpon>StockTemplateForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="View\StrategyTradingForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -219,12 +207,6 @@
     </Compile>
     <Compile Include="Dialog\TemplateDialog.Designer.cs">
       <DependentUpon>TemplateDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="View\TradingForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\TradingForm.Designer.cs">
-      <DependentUpon>TradingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="View\WarnForm.cs">
       <SubType>Form</SubType>
@@ -284,9 +266,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="View\CancelRedoForm2.resx">
-      <DependentUpon>CancelRedoForm2.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="View\LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -307,9 +286,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\SpotTemplateForm.resx">
       <DependentUpon>SpotTemplateForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="View\StockTemplateForm.resx">
-      <DependentUpon>StockTemplateForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\StrategyTradingForm.resx">
       <DependentUpon>StrategyTradingForm.cs</DependentUpon>
