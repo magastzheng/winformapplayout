@@ -43,13 +43,13 @@ namespace DBAccess.Template
             _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
 
             int ret = _dbHelper.ExecuteNonQuery(dbCommand);
-            int templateId = -1;
+            int archiveId = -1;
             if (ret > 0)
             {
-                templateId = (int)dbCommand.Parameters["@return"].Value;
+                archiveId = (int)dbCommand.Parameters["@return"].Value;
             }
 
-            return templateId;
+            return archiveId;
         }
 
         public int Delete(int archiveId)

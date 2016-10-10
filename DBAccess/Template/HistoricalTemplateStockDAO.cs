@@ -1,10 +1,15 @@
-﻿using Model.UI;
+﻿using log4net;
+using Model.UI;
+using System;
 using System.Collections.Generic;
+using System.Data.Common;
 
 namespace DBAccess.Template
 {
     public class HistoricalTemplateStockDAO : BaseDAO
     {
+        private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private const string SP_Create = "procHistTemplateStockInsert";
         private const string SP_Delete = "procHistTemplateStockDelete";
         private const string SP_DeleteAll = "procHistTemplateStockDeleteAll";
@@ -43,6 +48,64 @@ namespace DBAccess.Template
             }
 
             return newid;
+        }
+
+        public int Create(int archiveId, List<TemplateStock> tempStocks)
+        {
+            var dbCommand = _dbHelper.GetCommand();
+            _dbHelper.Open(dbCommand);
+
+            //use transaction to execute
+            DbTransaction transaction = dbCommand.Connection.BeginTransaction();
+            dbCommand.Transaction = transaction;
+            dbCommand.CommandType = System.Data.CommandType.StoredProcedure;
+            int ret = -1;
+            try
+            {
+                foreach (var tempStock in tempStocks)
+                {
+                    dbCommand.Parameters.Clear();
+                    dbCommand.CommandText = SP_Create;
+                    _dbHelper.AddInParameter(dbCommand, "@ArchiveId", System.Data.DbType.Int32, archiveId);
+                    _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, tempStock.TemplateNo);
+                    _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, tempStock.SecuCode);
+                    _dbHelper.AddInParameter(dbCommand, "@Amount", System.Data.DbType.Int32, tempStock.Amount);
+                    _dbHelper.AddInParameter(dbCommand, "@MarketCap", System.Data.DbType.Decimal, tempStock.MarketCap);
+                    _dbHelper.AddInParameter(dbCommand, "@MarketCapOpt", System.Data.DbType.Decimal, tempStock.MarketCapWeight);
+                    _dbHelper.AddInParameter(dbCommand, "@SettingWeight", System.Data.DbType.Decimal, tempStock.SettingWeight);
+
+                    _dbHelper.AddOutParameter(dbCommand, "@ReturnValue", System.Data.DbType.String, 20);
+
+                    ret = dbCommand.ExecuteNonQuery();
+                    string newid = string.Empty;
+                    if (ret > 0)
+                    {
+                        newid = (string)dbCommand.Parameters["@ReturnValue"].Value;
+                    }
+
+                    if (string.IsNullOrEmpty(newid))
+                    {
+                        ret++;
+                    }
+                }
+
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                //TODO: add log
+                logger.Error(ex);
+                ret = -1;
+                throw;
+            }
+            finally
+            {
+                _dbHelper.Close(dbCommand.Connection);
+                transaction.Dispose();
+            }
+
+            return ret;
         }
 
         public string DeleteOneStock(int archiveId, int templateId, string secuCode)

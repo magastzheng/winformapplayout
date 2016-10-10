@@ -4,21 +4,22 @@ using DBAccess.Template;
 using Model.UI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Template
 {
     public class HistTemplateBLL
     {
         private HistoricalTemplateDAO _templatedao = new HistoricalTemplateDAO();
+        private HistoricalTemplateStockDAO _tempstockdao = new HistoricalTemplateStockDAO();
+
         private PermissionManager _permissionManager = new PermissionManager();
         public HistTemplateBLL()
         { 
         }
 
-        public int Create(StockTemplate template)
+        #region historical template
+
+        public int CreateTemplate(StockTemplate template)
         {
             HistStockTemplate hst = new HistStockTemplate(template);
             hst.DArchiveDate = DateTime.Now;
@@ -40,12 +41,12 @@ namespace BLL.Template
             return archiveId;
         }
 
-        public int Delete(int archiveId)
+        public int DeleteTemplate(int archiveId)
         {
             return _templatedao.Delete(archiveId);
         }
 
-        public List<HistStockTemplate> Get()
+        public List<HistStockTemplate> GetTemplates()
         {
             int userId = LoginManager.Instance.GetUserId();
             var allTemplates = _templatedao.Get();
@@ -60,5 +61,27 @@ namespace BLL.Template
 
             return templates;
         }
+
+        #endregion
+
+        #region historical template stock
+
+        public int CreateStocks(int archiveId, List<TemplateStock> tempStocks)
+        {
+            var ret = _tempstockdao.Create(archiveId, tempStocks);
+            return ret;
+        }
+
+        public int DeleteStocks(int archiveId)
+        {
+            return _tempstockdao.DeleteOneArchive(archiveId);
+        }
+
+        public List<HistTemplateStock> GetStocks(int archiveId)
+        {
+            return _tempstockdao.Get(archiveId);
+        }
+
+        #endregion
     }
 }
