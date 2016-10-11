@@ -7,6 +7,7 @@ namespace Service
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        private EventWaitHandle _waitHandle = new AutoResetEvent(false);
         private object _locker = new object();
         private Thread serviceThread = null;
 
@@ -21,13 +22,16 @@ namespace Service
             int sleepTime = (int)obj;
 
             Thread.Sleep(sleepTime);
+
             //TODO: start the service
+
+            _waitHandle.WaitOne();
         }
 
         public void Stop()
         {
             //TODO: stop the service
-
+            _waitHandle.Set();
             return;
         }
     }

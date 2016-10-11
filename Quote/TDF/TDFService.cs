@@ -117,6 +117,14 @@ namespace Quote.TDF
 
                 dataSource.SetEnv(EnvironSetting.TDF_ENVIRON_OUT_LOG, 1);
 
+                //TODO:订阅多支股票和股指期货
+                //增加订阅列表中的股票
+                //dataSource.SetSubscription("", SubscriptionType.SUBSCRIPTION_ADD);
+                //删除订阅列表中的订阅
+                //dataSource.SetSubscription("", SubscriptionType.SUBSCRIPTION_DEL);
+                //设置为订阅列表中的股票
+                //dataSource.SetSubscription("", SubscriptionType.SUBSCRIPTION_SET);
+
                 TDFERRNO openRet = dataSource.Open();
                 if (openRet != TDFERRNO.TDF_ERR_SUCCESS)
                 {
@@ -131,7 +139,8 @@ namespace Quote.TDF
                 this._tdfImp = dataSource;
                 logger.Info("宏汇行情初始化成功!");
 
-                _waitHandle.WaitOne(_timeOut);
+                //_waitHandle.WaitOne(_timeOut);
+                _waitHandle.WaitOne();
             }
 
             _isOpening = false;

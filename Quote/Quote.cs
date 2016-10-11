@@ -5,7 +5,7 @@ namespace Quote
 {
     public class Quote : IQuote
     {
-        private static readonly object locker = new object();
+        private readonly object locker = new object();
         private Dictionary<string, MarketData> _marketDatas = new Dictionary<string, MarketData>();
         public Dictionary<string, MarketData> MarketDatas { get { return _marketDatas; } }
 
