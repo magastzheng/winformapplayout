@@ -344,7 +344,11 @@ namespace Quote.TDF
                             TDFMarketData data = marketOldDataArr[i];
                             string code = data.Code;
                             string windCode = data.WindCode;
-                            MarketData marketData = _quote.Get(windCode);
+
+                            MarketData marketData = new MarketData
+                            {
+                                InstrumentID = windCode
+                            };
                             
                             char status = (char)data.Status;
                             if (status == 'W'
@@ -377,6 +381,8 @@ namespace Quote.TDF
                                 marketData.BuyAmount = data.TotalBidVol;
                                 marketData.SellAmount = data.TotalAskVol;
                             }
+
+                            _quote.Add(windCode, marketData);
                         }
                     }
                     break;
@@ -390,7 +396,11 @@ namespace Quote.TDF
                             if (!windCode.EndsWith(".CF"))
                                 continue;
 
-                            MarketData marketData = _quote.Get(windCode);
+                            MarketData marketData = new MarketData 
+                            {
+                                InstrumentID = windCode
+                            };
+
                             marketData.CurrentPrice = (double)data.Match / 10000;
                             marketData.PreClose = (double)data.PreClose / 10000;
                             marketData.SellPrice1 = (double)data.AskPrice[0] / 10000;
@@ -406,6 +416,8 @@ namespace Quote.TDF
                             marketData.HighLimitPrice = (double)data.HighLimited / 10000;
                             marketData.LowLimitPrice = (double)data.LowLimited / 10000;
                             //BuyAmount, SellAmount
+
+                            _quote.Add(windCode, marketData);
                         }
                     }
                     break;
