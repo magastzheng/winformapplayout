@@ -61,6 +61,10 @@
       <Project>{9afc3370-02ab-444b-9c43-411e49f49b16}</Project>
       <Name>Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Quote\Quote.csproj">
+      <Project>{2f5fdd7a-7491-4fa7-9349-47a4289c711a}</Project>
+      <Name>Quote</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

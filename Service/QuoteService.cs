@@ -24,6 +24,7 @@ namespace Service
             Thread.Sleep(sleepTime);
 
             //TODO: start the service
+            
 
             _waitHandle.WaitOne();
         }
