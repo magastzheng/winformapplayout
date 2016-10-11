@@ -1205,46 +1205,362 @@
 	},
 	{
 		"code": 35012,
-		"name_en": "",
-		"name_zh": "",
+		"name_en": "func_am_currents_query",
+		"name_zh": "清算流水查询",
 		"param": [{
-			"name": "",
-			"type": "",
-			"require": ""
+			"name": "user_token",
+			"type": "C512",
+			"require": "Y"
+		},{
+			"name": "account_code",
+			"type": "C32",
+			"require": "N"
+		},{
+			"name": "asset_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "combi_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "market_no",
+			"type": "C3",
+			"require": "N"
+		},{
+			"name": "position_str",
+			"type": "C32",
+			"require": "N"
+		},{
+			"name": "request_num",
+			"type": "N8",
+			"require": "N"
 		}],
 		"response":[{
-			"name": "",
-			"type": ""
+			"name": "business_date",
+			"type": "N8"
+			},{
+			"name": "business_time",
+			"type": "N6"
+			},{
+			"name": "serial_no",
+			"type": "N12"
+			},{
+			"name": "currency_code",
+			"type": "C3"
+			},{
+			"name": "busin_caption",
+			"type": "C128"
+			},{
+			"name": "market_no",
+			"type": "C3"
+			},{
+			"name": "stock_code",
+			"type": "C16"
+			},{
+			"name": "account_code",
+			"type": "C32"
+			},{
+			"name": "asset_no",
+			"type": "C16"
+			},{
+			"name": "combi_no",
+			"type": "C16"
+			},{
+			"name": "stockholder_id",
+			"type": "C20"
+			},{
+			"name": "report_seat",
+			"type": "C6"
+			},{
+			"name": "position_flag",
+			"type": "C1"
+			},{
+			"name": "invest_type",
+			"type": "C1"
+			},{
+			"name": "entrust_direction",
+			"type": "C3"
+			},{
+			"name": "futures_direction",
+			"type": "C1"
+			},{
+			"name": "business_price",
+			"type": "N16.8"
+			},{
+			"name": "business_amount",
+			"type": "N16"
+			},{
+			"name": "business_balance",
+			"type": "N16.2"
+			},{
+			"name": "trade_fee",
+			"type": "N16.2"
+			},{
+			"name": "stamp_tax",
+			"type": "N16.2"
+			},{
+			"name": "transfer_fee",
+			"type": "N16.2"
+			},{
+			"name": "commission",
+			"type": "N16.2"
+			},{
+			"name": "handling_fee",
+			"type": "N16.2"
+			},{
+			"name": "admin_fee",
+			"type": "N16.2"
+			},{
+			"name": "clearing_fee",
+			"type": "N16.2"
+			},{
+			"name": "delivery_fee",
+			"type": "N16.2"
+			},{
+			"name": "risk_fund",
+			"type": "N16.2"
+			},{
+			"name": "other_fee",
+			"type": "N16.2"
+			},{
+			"name": "entrust_no",
+			"type": "N8"
+			},{
+			"name": "report_no",
+			"type": "C64"
+			},{
+			"name": "deal_no",
+			"type": "C64"
+			},{
+			"name": "deal_time",
+			"type": "N6"
+			},{
+			"name": "settle_speed",
+			"type": "N10"
+			},{
+			"name": "capital_direction",
+			"type": "C1"
+			},{
+			"name": "stock_direction",
+			"type": "C1"
+			},{
+			"name": "close_type",
+			"type": "C1"
+			},{
+			"name": "position_str",
+			"type": "C32"
 			}
 		]
 	},
 	{
 		"code": 35013,
-		"name_en": "",
-		"name_zh": "",
+		"name_en": "func_am_deposit_ratio_qry",
+		"name_zh": "保证金比例查询",
 		"param": [{
-			"name": "",
-			"type": "",
-			"require": ""
+			"name": "user_token",
+			"type": "C512",
+			"require": "Y"
+		},{
+			"name": "account_code",
+			"type": "C32",
+			"require": "N"
+		},{
+			"name": "asset_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "combi_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "market_no",
+			"type": "C3",
+			"require": "Y"
+		},{
+			"name": "stock_code",
+			"type": "C16",
+			"require": "N"
 		}],
 		"response":[{
-			"name": "",
-			"type": ""
+			"name": "account_code",
+			"type": "C32"
+			},{
+			"name": "asset_no",
+			"type": "C16"
+			},{
+			"name": "combi_no",
+			"type": "C16"
+			},{
+			"name": "market_no",
+			"type": "C3"
+			},{
+			"name": "stock_code",
+			"type": "C16"
+			},{
+			"name": "deposit_ratio",
+			"type": "N16.8"
+			},{
+			"name": "long_deposit_ratio",
+			"type": "N16.8"
 			}
 		]
 	},
 	{
 		"code": 36012,
-		"name_en": "",
-		"name_zh": "",
+		"name_en": "func_am_hist_currents_query",
+		"name_zh": "历史清算流水查询",
 		"param": [{
-			"name": "",
-			"type": "",
-			"require": ""
+			"name": "user_token",
+			"type": "C512",
+			"require": "Y"
+		},{
+			"name": "start_date",
+			"type": "N8",
+			"require": "Y"
+		},{
+			"name": "end_date",
+			"type": "N8",
+			"require": "Y"
+		},{
+			"name": "account_code",
+			"type": "C32",
+			"require": "N"
+		},{
+			"name": "asset_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "combi_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "market_no",
+			"type": "C3",
+			"require": "N"
+		},{
+			"name": "position_str",
+			"type": "C32",
+			"require": "N"
+		},{
+			"name": "request_num",
+			"type": "N8",
+			"require": "N"
 		}],
 		"response":[{
-			"name": "",
-			"type": ""
+			"name": "business_date",
+			"type": "N8"
+			},{
+			"name": "business_time",
+			"type": "N6"
+			},{
+			"name": "serial_no",
+			"type": "N12"
+			},{
+			"name": "currency_code",
+			"type": "C3"
+			},{
+			"name": "busin_caption",
+			"type": "C128"
+			},{
+			"name": "market_no",
+			"type": "C3"
+			},{
+			"name": "stock_code",
+			"type": "C16"
+			},{
+			"name": "account_code",
+			"type": "C32"
+			},{
+			"name": "asset_no",
+			"type": "C16"
+			},{
+			"name": "combi_no",
+			"type": "C16"
+			},{
+			"name": "stockholder_id",
+			"type": "C20"
+			},{
+			"name": "report_seat",
+			"type": "C6"
+			},{
+			"name": "position_flag",
+			"type": "C1"
+			},{
+			"name": "invest_type",
+			"type": "C1"
+			},{
+			"name": "entrust_direction",
+			"type": "C3"
+			},{
+			"name": "futures_direction",
+			"type": "C1"
+			},{
+			"name": "business_price",
+			"type": "N16.8"
+			},{
+			"name": "business_amount",
+			"type": "N16"
+			},{
+			"name": "business_balance",
+			"type": "N16.2"
+			},{
+			"name": "trade_fee",
+			"type": "N16.2"
+			},{
+			"name": "stamp_tax",
+			"type": "N16.2"
+			},{
+			"name": "transfer_fee",
+			"type": "N16.2"
+			},{
+			"name": "commission",
+			"type": "N16.2"
+			},{
+			"name": "handling_fee",
+			"type": "N16.2"
+			},{
+			"name": "admin_fee",
+			"type": "N16.2"
+			},{
+			"name": "clearing_fee",
+			"type": "N16.2"
+			},{
+			"name": "delivery_fee",
+			"type": "N16.2"
+			},{
+			"name": "risk_fund",
+			"type": "N16.2"
+			},{
+			"name": "other_fee",
+			"type": "N16.2"
+			},{
+			"name": "entrust_no",
+			"type": "N8"
+			},{
+			"name": "report_no",
+			"type": "C64"
+			},{
+			"name": "deal_no",
+			"type": "C64"
+			},{
+			"name": "deal_time",
+			"type": "N6"
+			},{
+			"name": "settle_speed",
+			"type": "N10"
+			},{
+			"name": "capital_direction",
+			"type": "C1"
+			},{
+			"name": "stock_direction",
+			"type": "C1"
+			},{
+			"name": "close_type",
+			"type": "C1"
+			},{
+			"name": "position_str",
+			"type": "C32"
 			}
 		]
 	},{
@@ -2381,21 +2697,6 @@
 		]
 	},
 	{
-		"code": 91104,
-		"name_en": "",
-		"name_zh": "",
-		"param": [{
-			"name": "",
-			"type": "",
-			"require": ""
-		}],
-		"response":[{
-			"name": "batch_no",
-			"type": "N8"
-			}
-		]
-	},
-	{
 		"code": 31001,
 		"name_en": "func_am_unitstk_qry",
 		"name_zh": "证券持仓查询",
@@ -2788,91 +3089,532 @@
 	},
 	{
 		"code": 30010,
-		"name_en": "",
-		"name_zh": "",
+		"name_en": "func_am_index_qry",
+		"name_zh": "期货信息查询",
 		"param": [{
-			"name": "",
-			"type": "",
-			"require": ""
+			"name": "user_token",
+			"type": "C512",
+			"require": "Y"
+		},{
+			"name": "market_no",
+			"type": "C3",
+			"require": "N"
+		},{
+			"name": "stock_code",
+			"type": "C16",
+			"require": "N"
 		}],
 		"response":[{
-			"name": "batch_no",
+			"name": "market_no",
+			"type": "C3"
+			},{
+			"name": "stock_code",
+			"type": "C16"
+			},{
+			"name": "stock_name",
+			"type": "C128"
+			},{
+			"name": "future_kind_name",
+			"type": "C20"
+			},{
+			"name": "settlement_month",
+			"type": "N6"
+			},{
+			"name": "target_market_no",
+			"type": "C3"
+			},{
+			"name": "target_stock_code",
+			"type": "C16"
+			},{
+			"name": "multiple",
+			"type": "N10"
+			},{
+			"name": "last_trade_date",
 			"type": "N8"
+			},{
+			"name": "last_trade_time",
+			"type": "N6"
+			},{
+			"name": "settlement_date",
+			"type": "N8"
+			},{
+			"name": "settlement_price",
+			"type": "N11.4"
+			},{
+			"name": "pre_settle_price",
+			"type": "N11.4"
+			},{
+			"name": "market_position",
+			"type": "N16.2"
+			},{
+			"name": "pre_market_position",
+			"type": "N16.2"
+			},{
+			"name": "market_price_permit",
+			"type": "C1"
+			},{
+			"name": "uplimited_price",
+			"type": "N11.4"
+			},{
+			"name": "downlimited_price",
+			"type": "N11.4"
 			}
 		]
 	},
 	{
 		"code": 91004,
-		"name_en": "",
-		"name_zh": "",
+		"name_en": "func_am_future_entrust",
+		"name_zh": "期货委托",
 		"param": [{
-			"name": "",
-			"type": "",
-			"require": ""
+			"name": "user_token",
+			"type": "C512",
+			"require": "Y"
+		},{
+			"name": "batch_no",
+			"type": "N8",
+			"require": "N"
+		},{
+			"name": "account_code",
+			"type": "C32",
+			"require": "N"
+		},{
+			"name": "asset_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "combi_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "stockholder_id",
+			"type": "C20",
+			"require": "N"
+		},{
+			"name": "market_no",
+			"type": "C3",
+			"require": "Y"
+		},{
+			"name": "stock_code",
+			"type": "C16",
+			"require": "Y"
+		},{
+			"name": "entrust_direction",
+			"type": "C3",
+			"require": "Y"
+		},{
+			"name": "futures_direction",
+			"type": "C1",
+			"require": "Y"
+		},{
+			"name": "price_type",
+			"type": "C1",
+			"require": "Y"
+		},{
+			"name": "entrust_price",
+			"type": "N11.4",
+			"require": "Y"
+		},{
+			"name": "entrust_amount",
+			"type": "N12",
+			"require": "Y"
+		},{
+			"name": "limit_deal_amount",
+			"type": "N12",
+			"require": "N"
+		},{
+			"name": "extsystem_id",
+			"type": "N8",
+			"require": "N"
+		},{
+			"name": "third_reff",
+			"type": "C256",
+			"require": "N"
 		}],
 		"response":[{
 			"name": "batch_no",
+			"type": "N8"
+			},{
+			"name": "entrust_no",
+			"type": "N8"
+			},{
+			"name": "extsystem_id",
 			"type": "N8"
 			}
 		]
 	},
 	{
 		"code": 91105,
-		"name_en": "",
-		"name_zh": "",
+		"name_en": "func_am_entrust_withdraw",
+		"name_zh": "期货委托撤单",
 		"param": [{
-			"name": "",
-			"type": "",
-			"require": ""
+			"name": "user_token",
+			"type": "C512",
+			"require": "Y"
+		},{
+			"name": "entrust_no",
+			"type": "N8",
+			"require": "Y"
 		}],
 		"response":[{
-			"name": "batch_no",
+			"name": "entrust_no",
 			"type": "N8"
+			},{
+			"name": "market_no",
+			"type": "C3"
+			},{
+			"name": "stock_code",
+			"type": "C16"
+			},{
+			"name": "success_flag",
+			"type": "C1"
+			},{
+			"name": "fail_cause",
+			"type": "C256"
 			}
 		]
 	},
 	{
 		"code": 31003,
-		"name_en": "",
-		"name_zh": "",
+		"name_en": "func_am_uft_unitstk_qry",
+		"name_zh": "期货持仓查询",
 		"param": [{
-			"name": "",
-			"type": "",
-			"require": ""
+			"name": "user_token",
+			"type": "C512",
+			"require": "Y"
+		},{
+			"name": "account_code",
+			"type": "C32",
+			"require": "N"
+		},{
+			"name": "asset_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "combi_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "market_no",
+			"type": "C3",
+			"require": "N"
+		},{
+			"name": "stock_code",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "stockholder_id",
+			"type": "C20",
+			"require": "N"
+		},{
+			"name": "hold_seat",
+			"type": "C6",
+			"require": "N"
+		},{
+			"name": "invest_type",
+			"type": "C1",
+			"require": "N"
+		},{
+			"name": "position_flag",
+			"type": "C1",
+			"require": "N"
 		}],
 		"response":[{
-			"name": "batch_no",
-			"type": "N8"
+			"name": "account_code",
+			"type": "C32"
+			},{
+			"name": "asset_no",
+			"type": "C16"
+			},{
+			"name": "combi_no",
+			"type": "C16"
+			},{
+			"name": "market_no",
+			"type": "C3"
+			},{
+			"name": "stock_code",
+			"type": "C16"
+			},{
+			"name": "stockholder_id",
+			"type": "C20"
+			},{
+			"name": "hold_seat",
+			"type": "C6"
+			},{
+			"name": "position_flag",
+			"type": "C1"
+			},{
+			"name": "invest_type",
+			"type": "C1"
+			},{
+			"name": "current_amount",
+			"type": "N16"
+			},{
+			"name": "today_amount",
+			"type": "N16"
+			},{
+			"name": "lastday_amount",
+			"type": "N16"
+			},{
+			"name": "enable_amount",
+			"type": "N16"
+			},{
+			"name": "today_enable_amount",
+			"type": "N16"
+			},{
+			"name": "lastday_enable_amount",
+			"type": "N16"
+			},{
+			"name": "begin_cost",
+			"type": "N16.2"
+			},{
+			"name": "current_cost",
+			"type": "N16.2"
+			},{
+			"name": "current_cost_price",
+			"type": "N9.3"
+			},{
+			"name": "pre_buy_amount",
+			"type": "N16"
+			},{
+			"name": "pre_sell_amount",
+			"type": "N16"
+			},{
+			"name": "pre_buy_balance",
+			"type": "N16.2"
+			},{
+			"name": "pre_sell_balance",
+			"type": "N16.2"
+			},{
+			"name": "today_buy_amount",
+			"type": "N16"
+			},{
+			"name": "today_sell_amount",
+			"type": "N16"
+			},{
+			"name": "today_buy_balance",
+			"type": "N16.2"
+			},{
+			"name": "today_sell_balance",
+			"type": "N16.2"
+			},{
+			"name": "today_buy_fee",
+			"type": "N16.2"
+			},{
+			"name": "today_sell_fee",
+			"type": "N16.2"
 			}
 		]
 	},
 	{
 		"code": 32003,
-		"name_en": "",
-		"name_zh": "",
+		"name_en": "func_am_entrust_qry",
+		"name_zh": "期货委托查询",
 		"param": [{
-			"name": "",
-			"type": "",
-			"require": ""
+			"name": "user_token",
+			"type": "C512",
+			"require": "Y"
+		},{
+			"name": "batch_no",
+			"type": "N8",
+			"require": "N"
+		},{
+			"name": "entrust_no",
+			"type": "N8",
+			"require": "N"
+		},{
+			"name": "account_code",
+			"type": "C32",
+			"require": "N"
+		},{
+			"name": "asset_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "combi_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "stockholder_id",
+			"type": "C20",
+			"require": "N"
+		},{
+			"name": "market_no",
+			"type": "C3",
+			"require": "N"
+		},{
+			"name": "stock_code",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "entrust_direction",
+			"type": "C3",
+			"require": "N"
+		},{
+			"name": "futures_direction",
+			"type": "C1",
+			"require": "N"
+		},{
+			"name": "entrust_state_list",
+			"type": "C256",
+			"require": "N"
+		},{
+			"name": "extsystem_id",
+			"type": "N8",
+			"require": "N"
+		},{
+			"name": "third_reff",
+			"type": "C256",
+			"require": "N"
+		},{
+			"name": "position_str",
+			"type": "C32",
+			"require": "N"
+		},{
+			"name": "request_num",
+			"type": "N8",
+			"require": "N"
 		}],
 		"response":[{
+			"name": "entrust_date",
+			"type": "N8"
+			},{
+			"name": "entrust_time",
+			"type": "N6"
+			},{
+			"name": "operator_no",
+			"type": "C16"
+			},{
 			"name": "batch_no",
 			"type": "N8"
+			},{
+			"name": "entrust_no",
+			"type": "N8"
+			},{
+			"name": "report_no",
+			"type": "C64"
+			},{
+			"name": "extsystem_id",
+			"type": "N8"
+			},{
+			"name": "third_reff",
+			"type": "C256"
+			},{
+			"name": "account_code",
+			"type": "C32"
+			},{
+			"name": "asset_no",
+			"type": "C16"
+			},{
+			"name": "combi_no",
+			"type": "C16"
+			},{
+			"name": "stockholder_id",
+			"type": "C20"
+			},{
+			"name": "report_seat",
+			"type": "C6"
+			},{
+			"name": "market_no",
+			"type": "C3"
+			},{
+			"name": "stock_code",
+			"type": "C16"
+			},{
+			"name": "entrust_direction",
+			"type": "C3"
+			},{
+			"name": "futures_direction",
+			"type": "C1"
+			},{
+			"name": "price_type",
+			"type": "C1"
+			},{
+			"name": "entrust_price",
+			"type": "N11.4"
+			},{
+			"name": "entrust_amount",
+			"type": "N12"
+			},{
+			"name": "pre_buy_frozen_balance",
+			"type": "N16.2"
+			},{
+			"name": "pre_sell_balance",
+			"type": "N16.2"
+			},{
+			"name": "confirm_no",
+			"type": "C32"
+			},{
+			"name": "entrust_state",
+			"type": "C1"
+			},{
+			"name": "first_deal_time",
+			"type": "N6"
+			},{
+			"name": "deal_amount",
+			"type": "N16"
+			},{
+			"name": "deal_balance",
+			"type": "N16.2"
+			},{
+			"name": "deal_price",
+			"type": "N11.4"
+			},{
+			"name": "deal_times",
+			"type": "N6"
+			},{
+			"name": "withdraw_amount",
+			"type": "N12"
+			},{
+			"name": "withdraw_cause",
+			"type": "C256"
+			},{
+			"name": "position_str",
+			"type": "C32"
+			},{
+			"name": "exchange_report_no",
+			"type": "C64"
 			}
 		]
 	},
 	{
 		"code": 34003,
-		"name_en": "",
-		"name_zh": "",
+		"name_en": "func_am_combofund_qry",
+		"name_zh": "期货保证金账户查询",
 		"param": [{
-			"name": "",
-			"type": "",
-			"require": ""
+			"name": "user_token",
+			"type": "C512",
+			"require": "Y"
+		},{
+			"name": "account_code",
+			"type": "C32",
+			"require": "N"
+		},{
+			"name": "asset_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "combi_no",
+			"type": "C16",
+			"require": "N"
 		}],
 		"response":[{
-			"name": "batch_no",
-			"type": "N8"
+			"name": "account_code",
+			"type": "C32"
+			},{
+			"name": "asset_no",
+			"type": "C16"
+			},{
+			"name": "occupy_deposit_balance",
+			"type": "N16.2"
+			},{
+			"name": "enable_deposit_balance",
+			"type": "N16.2"
+			},{
+			"name": "futu_deposit_balance",
+			"type": "N16.2"
+			},{
+			"name": "futu_temp_occupy_deposit",
+			"type": "N16.2"
 			}
 		]
 	}
