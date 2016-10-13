@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TDFAPI;
 
@@ -15,19 +16,60 @@ namespace Quote.TDF
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private TDFImp _dataSource = null;
+        private IQuote _quote = null;
+        private EventWaitHandle _waitHandle = new AutoResetEvent(false);
 
-        private IQuote _quote = new Quote();
+        //private Thread _startThread = null;
+        //private Thread _stopThread = null;
+        //private Thread _subscriptionThread = null;
+
+        public IQuote Quote
+        {
+            get { return _quote; }
+            //set { _quote = value; }
+        }
 
         public TDFQuote()
-        { 
+        {
+            _quote = new Quote();
+        }
+
+        public TDFQuote(IQuote quote)
+        {
+            _quote = quote;
+        }
+
+        #region
+
+        public void Start()
+        {
+            InitDataSource();
+        }
+
+        public void Stop()
+        {
+            _waitHandle.Set();
+        }
+
+        public void Subscription(TDFSubscriptionType type, List<string> windCodes)
+        {
+            SetSubscription(type, windCodes);
+        }
+
+        #endregion
+        
+        private void Close()
+        {
+            _dataSource.Close();
+            _dataSource.Dispose();
         }
 
         private bool InitDataSource()
         {
             var setting = GetSetting();
             _dataSource = new TDFImp(setting);
-            //dataSource.SysMsgDeal = OnRecvSysMsg;
-            //dataSource.DataMsgDeal = OnRecvDataMsg;
+            _dataSource.SysMsgDeal = OnRecvSysMsg;
+            _dataSource.DataMsgDeal = OnRecvDataMsg;
 
             _dataSource.SetEnv(EnvironSetting.TDF_ENVIRON_OUT_LOG, 1);
 
@@ -45,8 +87,7 @@ namespace Quote.TDF
                 var errorMessage = openRet.ToString();
                 logger.Error("宏汇行情初始化失败: " + errorMessage);
 
-                _dataSource.Close();
-                _dataSource.Dispose();
+                Close();
 
                 return false;
             }
@@ -54,7 +95,43 @@ namespace Quote.TDF
             {
                 logger.Info("宏汇行情初始化成功!");
 
+                _waitHandle.WaitOne();
+
+                Close();
+
                 return true;
+            }
+        }
+
+        private void SetSubscription(TDFSubscriptionType type, List<string> windCodes)
+        {
+            switch (type)
+            {
+                case TDFSubscriptionType.Add:
+                    {
+                        string str = string.Join(";", windCodes);
+                        _dataSource.SetSubscription(str, SubscriptionType.SUBSCRIPTION_ADD);
+                    }
+                    break;
+                case TDFSubscriptionType.Delete:
+                    {
+                        string str = string.Join(";", windCodes);
+                        _dataSource.SetSubscription(str, SubscriptionType.SUBSCRIPTION_DEL);
+                    }
+                    break;
+                case TDFSubscriptionType.Set:
+                    {
+                        string str = string.Join(";", windCodes);
+                        _dataSource.SetSubscription(str, SubscriptionType.SUBSCRIPTION_SET);
+                    }
+                    break;
+                case TDFSubscriptionType.Full:
+                    {
+                        _dataSource.SetSubscription("", SubscriptionType.SUBSCRIPTION_ADD);
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -414,7 +491,7 @@ namespace Quote.TDF
                             logger.Error(strMsg);
 
                             //TODO: notify the user to handle the connect failure
-                            //this.Close();
+                            Stop();
                         }
                         else
                         {
@@ -433,7 +510,7 @@ namespace Quote.TDF
                             logger.Error(strMsg);
 
                             //TODO: notify the user to handle the login failure
-                            //this.Close();
+                            Stop();
                         }
                         else
                         {

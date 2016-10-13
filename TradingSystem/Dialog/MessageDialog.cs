@@ -15,6 +15,11 @@ namespace TradingSystem.Dialog
             return Show(form, msgId, "errortitle", MessageBoxButtons.OK, MessageBoxIcon.Error); 
         }
 
+        public static DialogResult Error(Form form, string msgId, MessageBoxButtons msgBoxButtons)
+        {
+            return Show(form, msgId, "errortitle", msgBoxButtons, MessageBoxIcon.Error);
+        }
+
         public static DialogResult Fail(Form form, string msgId)
         {
             return Show(form, msgId, "failtitle", MessageBoxButtons.OK, MessageBoxIcon.Error);

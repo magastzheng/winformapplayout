@@ -1,4 +1,6 @@
 ﻿using log4net;
+using Quote;
+using Quote.TDF;
 using System.Threading;
 
 namespace Service
@@ -7,15 +9,34 @@ namespace Service
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private EventWaitHandle _waitHandle = new AutoResetEvent(false);
+        //private bool _terminal = false;
+        //private EventWaitHandle _waitHandle = new AutoResetEvent(false);
         private object _locker = new object();
-        private Thread serviceThread = null;
+        private Thread _startThread = null;
+        private Thread _stopThread = null;
+
+        private TDFQuote _tdfQuote = null;
+
+        public QuoteService(IQuote quote)
+        {
+            _tdfQuote = new TDFQuote(quote);
+        }
+
+        #region IService Interface
 
         public void Start()
         {
-            serviceThread = new Thread(InitServiceThread);
-            serviceThread.Start(1000);
+            _startThread = new Thread(InitServiceThread);
+            _startThread.Start(1000);
         }
+
+        public void Stop()
+        {
+            _stopThread = new Thread(StopService);
+            _stopThread.Start();
+        }
+
+        #endregion
 
         private void InitServiceThread(object obj)
         {
@@ -24,16 +45,21 @@ namespace Service
             Thread.Sleep(sleepTime);
 
             //TODO: start the service
-            
+            _tdfQuote.Start();
 
-            _waitHandle.WaitOne();
+            //_waitHandle.WaitOne();
         }
 
-        public void Stop()
+        private void StopService()
         {
+            //Monitor.Enter(_locker);
+            //_terminal = true;
+            //Monitor.Exit(_locker);
             //TODO: stop the service
-            _waitHandle.Set();
-            return;
+
+            _tdfQuote.Stop();
+
+            //_waitHandle.Set();
         }
     }
 }

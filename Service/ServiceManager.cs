@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Quote;
+using System.Collections.Generic;
 
 namespace Service
 {
@@ -18,8 +19,16 @@ namespace Service
             _services.Add(ufxService);
 
             //add other service
-            //var tdfService = new TDF
+            //TODO: Init the QuoteCenter before using.
+            var quote = QuoteCenter.Instance.Quote;
+            var quoteService = new QuoteService(quote);
+            _services.Add(quoteService);
         }
+
+        //public void Init()
+        //{
+        //    QuoteCenter.Instance.Quote;
+        //}
 
         public void Start()
         {
