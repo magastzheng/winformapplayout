@@ -99,5 +99,85 @@ namespace BLL.TradeCommand
         }
 
         #endregion
+
+        #region transfer
+
+        public int Transfer(TradingInstance dest, TradingInstance src, List<SourceHoldingItem> transferItems)
+        {
+            List<TradingInstanceSecurity> srcNewItems = new List<TradingInstanceSecurity>();
+            List<TradingInstanceSecurity> destNewItems = new List<TradingInstanceSecurity>();
+
+            //获取src中所有的持仓
+            var srcItems = Get(src.InstanceId);
+            
+            //获取dest中所有的持仓
+            var destItems = Get(dest.InstanceId);
+
+            //对于src,减去划转部分
+            //对于dest,加入划转部分
+            foreach (var transferItem in transferItems)
+            {
+                TradingInstanceSecurity srcOutItem = new TradingInstanceSecurity
+                {
+                    SecuCode = transferItem.SecuCode,
+                    SecuType = transferItem.SecuType,
+                    InstanceId = src.InstanceId,
+                };
+
+                var srcOldItem = srcItems.Find(p => p.SecuCode.Equals(transferItem.SecuCode) && p.SecuType == transferItem.SecuType);
+                if (srcOldItem != null)
+                {
+                    srcOutItem.PositionAmount = srcOldItem.PositionAmount - transferItem.TransferedAmount;
+                    srcOutItem.PositionType = srcOldItem.PositionType;
+                    srcOutItem.SellToday = srcOldItem.SellToday;
+                    srcOutItem.SellBalance = srcOldItem.SellBalance;
+                    srcOutItem.DealFee = srcOldItem.DealFee;
+                }
+                else
+                { 
+                    //TODO:
+                }
+                 
+                srcNewItems.Add(srcOutItem);
+
+                TradingInstanceSecurity destInItem = new TradingInstanceSecurity 
+                {
+                    SecuCode = transferItem.SecuCode,
+                    SecuType = transferItem.SecuType,
+                    InstanceId = dest.InstanceId,
+                };
+
+                var destOldItem = destItems.Find(p => p.SecuCode.Equals(transferItem.SecuCode) && p.SecuType == transferItem.SecuType);
+                if (destOldItem != null)
+                {
+                    srcOutItem.PositionAmount = destOldItem.PositionAmount + transferItem.TransferedAmount;
+                    srcOutItem.PositionType = destOldItem.PositionType;
+                    srcOutItem.SellToday = destOldItem.SellToday;
+                    srcOutItem.SellBalance = destOldItem.SellBalance;
+                    srcOutItem.DealFee = destOldItem.DealFee;
+                }
+                else
+                {
+                    srcOutItem.PositionAmount = transferItem.TransferedAmount;
+                    //TODO:
+                    if (transferItem.SecuType == Model.SecurityInfo.SecurityType.Stock)
+                    {
+                        srcOutItem.PositionType = PositionType.StockLong;
+                    }
+                    else if (transferItem.SecuType == Model.SecurityInfo.SecurityType.Futures)
+                    {
+                        srcOutItem.PositionType = PositionType.FuturesShort;
+                    }
+                }
+
+                destItems.Add(destInItem);
+            }
+
+            //更新数据库,指向要更新变化部分即可,通过提交事务
+
+            return -1;
+        }
+
+        #endregion
     }
 }

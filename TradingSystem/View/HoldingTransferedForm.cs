@@ -250,6 +250,9 @@ namespace TradingSystem.View
 
         private bool Form_LoadData(object sender, object data)
         {
+            //clear old data
+            ClearData();
+
             //load template
             LoadTemplate();
 
@@ -260,6 +263,17 @@ namespace TradingSystem.View
             holdingBLL.Query(null);
 
             return true;
+        }
+
+        private void ClearData()
+        {
+            ComboBoxUtil.ClearComboBox(this.cbTemplate);
+            ComboBoxUtil.ClearComboBox(this.cbSrcFundCode);
+            ComboBoxUtil.ClearComboBox(this.cbSrcPortfolio);
+            ComboBoxUtil.ClearComboBox(this.cbSrcTradeInst);
+            ComboBoxUtil.ClearComboBox(this.cbDestFundCode);
+            ComboBoxUtil.ClearComboBox(this.cbDestPortfolio);
+            ComboBoxUtil.ClearComboBox(this.cbDestTradeInst);
         }
 
         private bool LoadProductData()
