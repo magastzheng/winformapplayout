@@ -40,6 +40,7 @@
             this.srcMainPanel = new System.Windows.Forms.Panel();
             this.srcGridView = new Controls.GridView.TSDataGridView();
             this.srcTopPanel = new System.Windows.Forms.Panel();
+            this.nudCopies = new System.Windows.Forms.NumericUpDown();
             this.btnTransfer = new System.Windows.Forms.Button();
             this.btnRefresh = new System.Windows.Forms.Button();
             this.btnCalc = new System.Windows.Forms.Button();
@@ -52,7 +53,6 @@
             this.destGridView = new Controls.GridView.TSDataGridView();
             this.destTopPanel = new System.Windows.Forms.Panel();
             this.lblDestCaptin = new System.Windows.Forms.Label();
-            this.nudCopies = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.leftRightSplitter)).BeginInit();
             this.leftRightSplitter.Panel1.SuspendLayout();
             this.leftRightSplitter.Panel2.SuspendLayout();
@@ -64,10 +64,10 @@
             this.srcMainPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.srcGridView)).BeginInit();
             this.srcTopPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudCopies)).BeginInit();
             this.destMainPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.destGridView)).BeginInit();
             this.destTopPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudCopies)).BeginInit();
             this.SuspendLayout();
             // 
             // leftRightSplitter
@@ -99,71 +99,82 @@
             // 
             this.leftRightSplitter.Panel2.Controls.Add(this.topBottomSplitter);
             this.leftRightSplitter.Size = new System.Drawing.Size(1125, 570);
-            this.leftRightSplitter.SplitterDistance = 218;
+            this.leftRightSplitter.SplitterDistance = 260;
             this.leftRightSplitter.TabIndex = 0;
             // 
             // rtbNotes
             // 
-            this.rtbNotes.Location = new System.Drawing.Point(104, 220);
+            this.rtbNotes.Location = new System.Drawing.Point(98, 220);
             this.rtbNotes.Name = "rtbNotes";
-            this.rtbNotes.Size = new System.Drawing.Size(100, 96);
+            this.rtbNotes.Size = new System.Drawing.Size(145, 96);
             this.rtbNotes.TabIndex = 0;
             this.rtbNotes.Text = "";
             // 
             // cbDestTradeInst
             // 
+            this.cbDestTradeInst.DropDownWidth = 250;
             this.cbDestTradeInst.FormattingEnabled = true;
-            this.cbDestTradeInst.Location = new System.Drawing.Point(101, 190);
+            this.cbDestTradeInst.IntegralHeight = false;
+            this.cbDestTradeInst.Location = new System.Drawing.Point(98, 190);
             this.cbDestTradeInst.Name = "cbDestTradeInst";
-            this.cbDestTradeInst.Size = new System.Drawing.Size(103, 20);
+            this.cbDestTradeInst.Size = new System.Drawing.Size(145, 20);
             this.cbDestTradeInst.TabIndex = 14;
             // 
             // cbDestPortfolio
             // 
+            this.cbDestPortfolio.DropDownWidth = 250;
             this.cbDestPortfolio.FormattingEnabled = true;
-            this.cbDestPortfolio.Location = new System.Drawing.Point(101, 162);
+            this.cbDestPortfolio.IntegralHeight = false;
+            this.cbDestPortfolio.Location = new System.Drawing.Point(98, 162);
             this.cbDestPortfolio.Name = "cbDestPortfolio";
-            this.cbDestPortfolio.Size = new System.Drawing.Size(103, 20);
+            this.cbDestPortfolio.Size = new System.Drawing.Size(145, 20);
             this.cbDestPortfolio.TabIndex = 13;
             // 
             // cbDestFundCode
             // 
+            this.cbDestFundCode.DropDownWidth = 250;
             this.cbDestFundCode.FormattingEnabled = true;
-            this.cbDestFundCode.Location = new System.Drawing.Point(101, 133);
+            this.cbDestFundCode.IntegralHeight = false;
+            this.cbDestFundCode.Location = new System.Drawing.Point(98, 133);
             this.cbDestFundCode.Name = "cbDestFundCode";
-            this.cbDestFundCode.Size = new System.Drawing.Size(103, 20);
+            this.cbDestFundCode.Size = new System.Drawing.Size(145, 20);
             this.cbDestFundCode.TabIndex = 12;
             // 
             // cbSrcTradeInst
             // 
+            this.cbSrcTradeInst.DropDownWidth = 250;
             this.cbSrcTradeInst.FormattingEnabled = true;
-            this.cbSrcTradeInst.Location = new System.Drawing.Point(101, 103);
+            this.cbSrcTradeInst.IntegralHeight = false;
+            this.cbSrcTradeInst.Location = new System.Drawing.Point(98, 103);
             this.cbSrcTradeInst.Name = "cbSrcTradeInst";
-            this.cbSrcTradeInst.Size = new System.Drawing.Size(103, 20);
+            this.cbSrcTradeInst.Size = new System.Drawing.Size(145, 20);
             this.cbSrcTradeInst.TabIndex = 11;
             // 
             // cbSrcPortfolio
             // 
+            this.cbSrcPortfolio.DropDownWidth = 250;
             this.cbSrcPortfolio.FormattingEnabled = true;
-            this.cbSrcPortfolio.Location = new System.Drawing.Point(101, 75);
+            this.cbSrcPortfolio.Location = new System.Drawing.Point(98, 75);
             this.cbSrcPortfolio.Name = "cbSrcPortfolio";
-            this.cbSrcPortfolio.Size = new System.Drawing.Size(103, 20);
+            this.cbSrcPortfolio.Size = new System.Drawing.Size(145, 20);
             this.cbSrcPortfolio.TabIndex = 10;
             // 
             // cbSrcFundCode
             // 
+            this.cbSrcFundCode.DropDownWidth = 250;
             this.cbSrcFundCode.FormattingEnabled = true;
-            this.cbSrcFundCode.Location = new System.Drawing.Point(101, 46);
+            this.cbSrcFundCode.Location = new System.Drawing.Point(98, 46);
             this.cbSrcFundCode.Name = "cbSrcFundCode";
-            this.cbSrcFundCode.Size = new System.Drawing.Size(103, 20);
+            this.cbSrcFundCode.Size = new System.Drawing.Size(145, 20);
             this.cbSrcFundCode.TabIndex = 9;
             // 
             // cbOpertionType
             // 
+            this.cbOpertionType.DropDownWidth = 145;
             this.cbOpertionType.FormattingEnabled = true;
-            this.cbOpertionType.Location = new System.Drawing.Point(102, 16);
+            this.cbOpertionType.Location = new System.Drawing.Point(98, 16);
             this.cbOpertionType.Name = "cbOpertionType";
-            this.cbOpertionType.Size = new System.Drawing.Size(103, 20);
+            this.cbOpertionType.Size = new System.Drawing.Size(145, 20);
             this.cbOpertionType.TabIndex = 8;
             // 
             // lblNotes
@@ -254,7 +265,7 @@
             // 
             this.topBottomSplitter.Panel2.Controls.Add(this.destMainPanel);
             this.topBottomSplitter.Panel2.Controls.Add(this.destTopPanel);
-            this.topBottomSplitter.Size = new System.Drawing.Size(903, 570);
+            this.topBottomSplitter.Size = new System.Drawing.Size(861, 570);
             this.topBottomSplitter.SplitterDistance = 391;
             this.topBottomSplitter.TabIndex = 0;
             // 
@@ -264,7 +275,7 @@
             this.srcMainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.srcMainPanel.Location = new System.Drawing.Point(0, 65);
             this.srcMainPanel.Name = "srcMainPanel";
-            this.srcMainPanel.Size = new System.Drawing.Size(903, 326);
+            this.srcMainPanel.Size = new System.Drawing.Size(861, 326);
             this.srcMainPanel.TabIndex = 1;
             // 
             // srcGridView
@@ -276,7 +287,7 @@
             this.srcGridView.Location = new System.Drawing.Point(0, 0);
             this.srcGridView.Name = "srcGridView";
             this.srcGridView.RowTemplate.Height = 23;
-            this.srcGridView.Size = new System.Drawing.Size(903, 326);
+            this.srcGridView.Size = new System.Drawing.Size(861, 326);
             this.srcGridView.TabIndex = 0;
             // 
             // srcTopPanel
@@ -293,8 +304,25 @@
             this.srcTopPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.srcTopPanel.Location = new System.Drawing.Point(0, 0);
             this.srcTopPanel.Name = "srcTopPanel";
-            this.srcTopPanel.Size = new System.Drawing.Size(903, 65);
+            this.srcTopPanel.Size = new System.Drawing.Size(861, 65);
             this.srcTopPanel.TabIndex = 0;
+            // 
+            // nudCopies
+            // 
+            this.nudCopies.Location = new System.Drawing.Point(217, 30);
+            this.nudCopies.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudCopies.Name = "nudCopies";
+            this.nudCopies.Size = new System.Drawing.Size(55, 21);
+            this.nudCopies.TabIndex = 9;
+            this.nudCopies.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // btnTransfer
             // 
@@ -341,6 +369,7 @@
             // 
             // cbTemplate
             // 
+            this.cbTemplate.DropDownWidth = 250;
             this.cbTemplate.FormattingEnabled = true;
             this.cbTemplate.Location = new System.Drawing.Point(69, 31);
             this.cbTemplate.Name = "cbTemplate";
@@ -371,7 +400,7 @@
             this.destMainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.destMainPanel.Location = new System.Drawing.Point(0, 24);
             this.destMainPanel.Name = "destMainPanel";
-            this.destMainPanel.Size = new System.Drawing.Size(903, 151);
+            this.destMainPanel.Size = new System.Drawing.Size(861, 151);
             this.destMainPanel.TabIndex = 1;
             // 
             // destGridView
@@ -383,7 +412,7 @@
             this.destGridView.Location = new System.Drawing.Point(0, 0);
             this.destGridView.Name = "destGridView";
             this.destGridView.RowTemplate.Height = 23;
-            this.destGridView.Size = new System.Drawing.Size(903, 151);
+            this.destGridView.Size = new System.Drawing.Size(861, 151);
             this.destGridView.TabIndex = 0;
             // 
             // destTopPanel
@@ -392,7 +421,7 @@
             this.destTopPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.destTopPanel.Location = new System.Drawing.Point(0, 0);
             this.destTopPanel.Name = "destTopPanel";
-            this.destTopPanel.Size = new System.Drawing.Size(903, 24);
+            this.destTopPanel.Size = new System.Drawing.Size(861, 24);
             this.destTopPanel.TabIndex = 0;
             // 
             // lblDestCaptin
@@ -403,23 +432,6 @@
             this.lblDestCaptin.Size = new System.Drawing.Size(149, 12);
             this.lblDestCaptin.TabIndex = 0;
             this.lblDestCaptin.Text = "目标组合（交易实例）持仓";
-            // 
-            // nudCopies
-            // 
-            this.nudCopies.Location = new System.Drawing.Point(217, 30);
-            this.nudCopies.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.nudCopies.Name = "nudCopies";
-            this.nudCopies.Size = new System.Drawing.Size(55, 21);
-            this.nudCopies.TabIndex = 9;
-            this.nudCopies.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             // 
             // HoldingTransferedForm
             // 
@@ -440,11 +452,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.srcGridView)).EndInit();
             this.srcTopPanel.ResumeLayout(false);
             this.srcTopPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudCopies)).EndInit();
             this.destMainPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.destGridView)).EndInit();
             this.destTopPanel.ResumeLayout(false);
             this.destTopPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudCopies)).EndInit();
             this.ResumeLayout(false);
 
         }

@@ -1,4 +1,8 @@
 ﻿/*
+grid: 用于定义grid
+background: 如果为0则只读列不设置背景色，为1则只读列设置背景色
+columns: 数组，表示本grid中的所有列
+
 列属性说明
 columntype: 
 -1 - None
@@ -27,6 +31,7 @@ readonly:
 
 [{
 	"grid": "cmdtrading",
+	"background": 0,
 	"columns":[{
 		"name": "selection",
 		"text": "选中",
@@ -248,6 +253,7 @@ readonly:
 },
 {
 	"grid": "dealflow",
+	"background": 0,
 	"columns": [
 	{
 		"name": "commandno",
@@ -437,6 +443,7 @@ readonly:
 	]
 },{
 	"grid": "cmdsecurity",
+	"background": 1,
 	"columns": [
 	{
 		"name": "selection",
@@ -626,6 +633,7 @@ readonly:
 	]
 },{
 	"grid": "buysell",
+	"background": 0,
 	"columns": [{
 		"name": "copies",
 		"text": "份数",
@@ -654,6 +662,7 @@ readonly:
 	]
 },{
 	"grid": "entrustflow",
+	"background": 0,
 	"columns": [
 	{
 		"name": "commandno",
@@ -930,6 +939,7 @@ readonly:
 	]
 },{
 	"grid": "entrustcancel",
+	"background": 1,
 	"columns": [
 	{
 		"name": "selection",
@@ -1183,6 +1193,7 @@ readonly:
 	]
 },{
 	"grid": "entrustcancelredo",
+	"background": 1,
 	"columns": [
 	{
 		"name": "selection",
@@ -1468,6 +1479,7 @@ readonly:
 	]
 },{
 	"grid": "stocktemplate",
+	"background": 0,
 	"columns": [
 	{
 		"name": "templateid",
@@ -1609,6 +1621,7 @@ readonly:
 	]
 },{
 	"grid": "templatestock",
+	"background": 0,
 	"columns": [{
 		"name": "selection",
 		"text": "选中",
@@ -1685,6 +1698,7 @@ readonly:
 	]
 },{
 	"grid": "histstocktemplate",
+	"background": 0,
 	"columns": [
 	{
 		"name": "archivedate",
@@ -1834,6 +1848,7 @@ readonly:
 	]
 },{
 	"grid": "histtemplatestock",
+	"background": 0,
 	"columns": [{
 		"name": "secucode",
 		"text": "证券代码",
@@ -1902,6 +1917,7 @@ readonly:
 	]
 },{
 	"grid": "portfoliofund",
+	"background": 0,
 	"columns": [
 	{
 		"name": "fundcode",
@@ -1955,6 +1971,7 @@ readonly:
 	]
 },{
 	"grid": "portfolioassetunit",
+	"background": 0,
 	"columns": [
 	{
 		"name": "assetunitcode",
@@ -2024,6 +2041,7 @@ readonly:
 	]
 },{
 	"grid": "portfolio",
+	"background": 0,
 	"columns": [
 	{
 		"name": "fundname",
@@ -2120,6 +2138,7 @@ readonly:
 	]
 },{
 	"grid": "monitorunitmanager",
+	"background": 0,
 	"columns": [
 	{
 		"name": "selection",
@@ -2205,6 +2224,7 @@ readonly:
 	]
 },{
 	"grid": "openposition",
+	"background": 0,
 	"columns": [
 		{
 		"name": "selection",
@@ -2348,6 +2368,7 @@ readonly:
 
 },{
 	"grid": "openpositionsecurity",
+	"background": 1,
 	"columns": [
 	{
 		"name": "selection",
@@ -2489,6 +2510,7 @@ readonly:
 	]
 },{
 	"grid": "closeposition",
+	"background": 0,
 	"columns": [{
 		"name": "selection",
 		"text": "选择",
@@ -2582,6 +2604,7 @@ readonly:
 	]
 },{
 	"grid": "closepositionsecurity",
+	"background": 1,
 	"columns": [
 	{
 		"name": "selection",
@@ -2739,6 +2762,7 @@ readonly:
 	]
 },{
 	"grid": "closepositioncmd",
+	"background": 0,
 	"columns": [{
 		"name": "copies",
 		"text": "份数",
@@ -2807,6 +2831,7 @@ readonly:
 	]
 },{
 	"grid": "fundmanagement",
+	"background": 0,
 	"columns": [
 		{
 		"name": "fundname",
@@ -2845,6 +2870,7 @@ readonly:
 	]
 },{
 	"grid": "assetunitmanagement",
+	"background": 0,
 	"columns": [
 		{
 		"name": "fundname",
@@ -2906,6 +2932,7 @@ readonly:
 	]
 },{
 	"grid": "portfoliomaintain",
+	"background": 0,
 	"columns": [
 		{
 		"name": "fundname",
@@ -2983,6 +3010,7 @@ readonly:
 	]
 },{
 	"grid": "closepositioninstance",
+	"background": 0,
 	"columns": [{
 		"name": "portfoliodisplay",
 		"text": "套利组合",
@@ -3075,6 +3103,7 @@ readonly:
 	]
 },{
 	"grid": "instancemanagement",
+	"background": 0,
 	"columns": [{
 		"name": "instanceid",
 		"text": "实例序号",
@@ -3215,10 +3244,11 @@ readonly:
 	]
 },{
 	"grid": "sourceportfolioholding",
+	"background": 1,
 	"columns": [{
 		"name": "selection",
 		"text": "选择",
-		"width": 80,
+		"width": 50,
 		"columntype": 1,
 		"valuetype": 0,
 		"visible": 1,
@@ -3307,10 +3337,10 @@ readonly:
 		"name": "pricetype",
 		"text": "价格类型",
 		"width": 80,
-		"columntype": 0,
-		"valuetype": 3,
+		"columntype": 3,
+		"valuetype": 0,
 		"visible": 1,
-		"readonly": 1
+		"readonly": 0
 		},{
 		"name": "transferedprice",
 		"text": "划转价格",
@@ -3339,6 +3369,7 @@ readonly:
 	]
 },{
 	"grid": "destinationportfolioholding",
+	"background": 1,
 	"columns": [{
 		"name": "secucode",
 		"text": "证券代码",
@@ -3423,6 +3454,7 @@ readonly:
 	]
 },{
 	"grid": "commandmanagement",
+	"background": 0,
 	"columns": [{
 		"name": "date",
 		"text": "日期",
@@ -3923,6 +3955,7 @@ readonly:
 	]
 },{
 	"grid": "",
+	"background": 0,
 	"columns": [
 	{
 		"name": "last",

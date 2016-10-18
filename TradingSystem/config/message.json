@@ -203,6 +203,18 @@
 		},{
 			"id": "entrustcancelresubmitfail",
 			"text": "委托失败, 提交号：[{0}], 失败原因：{1}!"
+		},{
+			"id": "transferholdingnosecurityselected",
+			"text": "请勾选要调整的证券！"
+		},{
+			"id": "transferholdingnoemptydest",
+			"text": "目标组合或实例不能为空！"
+		},{
+			"id": "transferholdingsuccess",
+			"text": "划转成功！"
+		},{
+			"id": "transferholdinginvalidamount",
+			"text": "设置的划转数量超出可划转数量"
 		}
 	]
 }

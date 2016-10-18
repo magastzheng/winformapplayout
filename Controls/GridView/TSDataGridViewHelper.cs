@@ -80,6 +80,11 @@ namespace Controls.GridView
                 column.ReadOnly = (col.ReadOnly != 0) ? true : false;
                 column.Visible = (col.Visible != 0) ? true : false;
                 gridColumns[i] = column;
+
+                if (hsGrid.Background == 1 && column.ReadOnly)
+                {
+                    column.DefaultCellStyle.BackColor = Color.FromArgb(244, 243, 234);
+                }
             }
 
             dgv.Columns.AddRange(gridColumns);

@@ -1,19 +1,24 @@
-﻿using Model.SecurityInfo;
+﻿using log4net;
+using Model.SecurityInfo;
 using Model.UI;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 
 namespace DBAccess.TradeInstance
 {
     public class TradingInstanceSecurityDAO: BaseDAO
     {
         private const string SP_Create = "procTradingInstanceSecurityInsert";
+        private const string SP_Transfer = "procTradingInstanceSecurityTransfer";
         private const string SP_ModifyBuyToday = "procTradingInstanceSecurityBuyToday";
         private const string SP_ModifySellToday = "procTradingInstanceSecuritySellToday";
         private const string SP_ModifyPreTrade = "procTradingInstanceSecurityInstructionPreTrade";
         private const string SP_Delete = "procTradingInstanceSecurityDelete";
         private const string SP_Get = "procTradingInstanceSecuritySelect";
         private const string SP_Settle = "procTradingInstanceSecuritySettle";
+
+        private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public TradingInstanceSecurityDAO()
             : base()
@@ -153,6 +158,63 @@ namespace DBAccess.TradeInstance
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Settle);
            
             return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int Transfer(List<TradingInstanceSecurity> destSecuItem, List<TradingInstanceSecurity> srcSecuItem)
+        {
+            var dbCommand = _dbHelper.GetCommand();
+            _dbHelper.Open(_dbHelper.Connection);
+
+            //use transaction to execute
+            DbTransaction transaction = dbCommand.Connection.BeginTransaction();
+            dbCommand.Transaction = transaction;
+            dbCommand.CommandType = System.Data.CommandType.StoredProcedure;
+            int ret = -1;
+            try
+            {
+                dbCommand.CommandText = SP_Transfer;
+
+                foreach (var secuItem in srcSecuItem)
+                {
+                    dbCommand.Parameters.Clear();
+                    _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, secuItem.InstanceId);
+                    _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, secuItem.SecuCode);
+                    _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, (int)secuItem.SecuType);
+                    _dbHelper.AddInParameter(dbCommand, "@PositionType", System.Data.DbType.Int32, (int)secuItem.PositionType);
+                    _dbHelper.AddInParameter(dbCommand, "@PositionAmount", System.Data.DbType.Int32, secuItem.PositionAmount);
+
+                    ret = dbCommand.ExecuteNonQuery();
+                }
+
+                foreach (var secuItem in destSecuItem)
+                {
+                    dbCommand.Parameters.Clear();
+                    _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, secuItem.InstanceId);
+                    _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, secuItem.SecuCode);
+                    _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, (int)secuItem.SecuType);
+                    _dbHelper.AddInParameter(dbCommand, "@PositionType", System.Data.DbType.Int32, (int)secuItem.PositionType);
+                    _dbHelper.AddInParameter(dbCommand, "@PositionAmount", System.Data.DbType.Int32, secuItem.PositionAmount);
+
+                    ret = dbCommand.ExecuteNonQuery();
+                }
+
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                //TODO: add log
+                logger.Error(ex);
+                ret = -1;
+                throw;
+            }
+            finally
+            {
+                _dbHelper.Close(dbCommand.Connection);
+                transaction.Dispose();
+            }
+
+            return ret;
         }
     }
 }

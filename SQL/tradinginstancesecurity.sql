@@ -79,6 +79,75 @@ begin
 	set @RowId=@SecuCode+';'+cast(@InstanceId as varchar)
 end
 
+go
+if exists (select name from sysobjects where name='procTradingInstanceSecurityTransfer')
+drop proc procTradingInstanceSecurityTransfer
+
+go
+create proc procTradingInstanceSecurityTransfer(
+	@InstanceId				int
+	,@SecuCode				varchar(10)
+	,@SecuType				int
+	,@PositionType			int
+	,@PositionAmount		int
+)
+as
+begin
+	declare @Total int
+	set @Total = (select count(SecuCode) from tradinginstancesecurity
+				  where InstanceId=@InstanceId
+				  and SecuCode = @SecuCode
+				  and SecuType = @SecuType)
+	
+	if @Total = 1
+	begin
+		update tradinginstancesecurity
+		set PositionAmount = @PositionAmount
+			,ModifiedDate = getdate()
+		where InstanceId=@InstanceId
+			and SecuCode = @SecuCode
+			and SecuType = @SecuType
+	end
+	else
+	begin
+		insert into tradinginstancesecurity(
+			InstanceId
+			,SecuCode
+			,SecuType
+			,PositionType
+			,InstructionPreBuy
+			,InstructionPreSell
+			,PositionAmount
+			,BuyBalance
+			,SellBalance
+			,DealFee
+			,BuyToday
+			,SellToday
+			,CreatedDate
+			,ModifiedDate
+			,LastDate
+		)
+		values(@InstanceId
+			,@SecuCode
+			,@SecuType
+			,@PositionType
+			,0
+			,0
+			,@PositionAmount
+			,0.0
+			,0.0
+			,0.0
+			,0
+			,0
+			,getdate()
+			,NULL
+			,getdate()
+		)
+	end
+	
+
+	--set @RowId=@SecuCode+';'+cast(@InstanceId as varchar)
+end
 
 go
 if exists (select name from sysobjects where name='procTradingInstanceSecurityBuyToday')

@@ -28,6 +28,7 @@ namespace Controls.Entity
     public class HSGrid
     {
         public string Grid { get; set; }
+        public int Background { get; set; }
         public List<HSGridColumn> Columns { get; set; }
     }
 }

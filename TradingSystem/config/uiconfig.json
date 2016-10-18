@@ -387,5 +387,22 @@
 				"code": "2",
 				"name": "证券内部交易"
 			}]
+	},{
+		"name": "transferpricetype",
+		"selected": "1",
+		"items":[
+			{
+				"id": "0",
+				"code": "0",
+				"name": "指定价"
+			},{
+				"id": "1",
+				"code": "1",
+				"name": "成本价"
+			},{
+				"id": "2",
+				"code": "2",
+				"name": "最新价"
+			}]
 	}
 ]

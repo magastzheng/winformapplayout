@@ -15,14 +15,25 @@ using System.Linq;
 using BLL.TradeCommand;
 using BLL.Template;
 using BLL.Entrust;
+using TradingSystem.Dialog;
+using Model.strategy;
 
 namespace TradingSystem.View
 {
     public partial class HoldingTransferedForm : Forms.BaseForm
     {
+        private const string msgNoSecuritySelected = "transferholdingnosecurityselected";
+        private const string msgNoEmptyDest = "transferholdingnoemptydest";
+        private const string msgSuccess = "transferholdingsuccess";
+        private const string msgInvalidAmount = "transferholdinginvalidamount";
+
         private const string GridSourceId = "sourceportfolioholding";
         private const string GridDestId = "destinationportfolioholding";
         private GridConfig _gridConfig = null;
+
+        private const string emptyPortfolioId = "emptyportfolio";
+        private const int emptyInstanceId = -1;
+        private const string emptyInstanceCode = "emptytradeinstance";
 
         private SortableBindingList<SourceHoldingItem> _srcDataSource = new SortableBindingList<SourceHoldingItem>(new List<SourceHoldingItem>());
         private SortableBindingList<DestinationHoldingItem> _destDataSource = new SortableBindingList<DestinationHoldingItem>(new List<DestinationHoldingItem>());
@@ -55,150 +66,12 @@ namespace TradingSystem.View
             this.cbDestPortfolio.SelectedIndexChanged += new EventHandler(ComboBox_Portfolio_SelectedIndexChanged);
             this.cbSrcTradeInst.SelectedIndexChanged += new EventHandler(ComboBox_TradeInst_SelectedIndexChanged);
             this.cbDestTradeInst.SelectedIndexChanged += new EventHandler(ComboBox_TradeInst_SelectedIndexChanged);
+
+            //button click
+            this.btnTransfer.Click += new EventHandler(Button_Transfer_Click);
+            this.btnRefresh.Click += new EventHandler(Button_Refresh_Click);
+            this.btnCalc.Click += new EventHandler(Button_Calc_Click);
         }
-
-        #region combobox selected index changed event handler
-
-        private void ComboBox_OpertionType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SetDestFundCodeState();
-
-            this.cbSrcFundCode.ResetText();
-            ComboBoxUtil.ClearComboBox(this.cbSrcPortfolio);
-            ComboBoxUtil.ClearComboBox(this.cbSrcTradeInst);
-
-            this.cbDestFundCode.ResetText();
-            ComboBoxUtil.ClearComboBox(this.cbDestPortfolio);
-            ComboBoxUtil.ClearComboBox(this.cbDestTradeInst);
-        }
-
-        private void ComboBox_FundCode_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ComboBox cb = sender as ComboBox;
-            if (cb == null)
-                return;
-            
-            var fundItem = (ComboOptionItem)cb.SelectedItem;
-            var portfolioOption = LoadPortfolio(fundItem.Id);
-
-            switch (cb.Name)
-            {
-                case "cbSrcFundCode":
-                    {
-                        ComboBoxUtil.ClearComboBox(this.cbSrcPortfolio);
-                        ComboBoxUtil.ClearComboBox(this.cbSrcTradeInst);
-
-                        ComboBoxUtil.SetComboBox(this.cbSrcPortfolio, portfolioOption);
-
-                        if (IsSecurityTransfer())
-                        {
-                            ComboBoxUtil.ClearComboBox(this.cbDestPortfolio);
-                            ComboBoxUtil.ClearComboBox(this.cbDestTradeInst);
-
-                            ComboBoxUtil.SetComboBoxSelect(this.cbDestFundCode, fundItem.Id);
-                            ComboBoxUtil.SetComboBox(this.cbDestPortfolio, portfolioOption);
-                        }
-                    }
-                    break;
-                case "cbDestFundCode":
-                    {
-                        ComboBoxUtil.ClearComboBox(this.cbDestPortfolio);
-                        ComboBoxUtil.ClearComboBox(this.cbDestTradeInst);
-
-                        ComboBoxUtil.SetComboBox(this.cbDestPortfolio, portfolioOption);
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void ComboBox_Portfolio_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ComboBox cb = sender as ComboBox;
-            if (cb == null)
-                return;
-
-            var portfolio = (ComboOptionItem)cb.SelectedItem;
-            var tradeInstOption = LoadTradeInstance(portfolio.Id);
-
-            switch (cb.Name)
-            {
-                case "cbSrcPortfolio":
-                    {
-                        ComboBoxUtil.ClearComboBox(this.cbSrcTradeInst);
-
-                        ComboBoxUtil.SetComboBox(this.cbSrcTradeInst, tradeInstOption);
-                    }
-                    break;
-                case "cbDestPortfolio":
-                    {
-                        ComboBoxUtil.ClearComboBox(this.cbDestTradeInst);
-
-                        ComboBoxUtil.SetComboBox(this.cbDestTradeInst, tradeInstOption);
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void ComboBox_TradeInst_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ComboBox cb = sender as ComboBox;
-            if (cb == null)
-                return;
-
-            var tradeInst = (ComboOptionItem)cb.SelectedItem;
-            if(string.IsNullOrEmpty(tradeInst.Id) || tradeInst.Id.StartsWith("empty"))
-                return;
-
-            var securities = _tradeInstanceSecuBLL.Get(((TradingInstance)tradeInst.Data).InstanceId);
-            switch (cb.Name)
-            {
-                case "cbSrcTradeInst":
-                    {
-                        _srcDataSource.Clear();
-
-                        foreach (var secuItem in securities)
-                        {
-                            SourceHoldingItem srcItem = new SourceHoldingItem 
-                            {
-                                SecuCode = secuItem.SecuCode,
-                                CurrentAmount = secuItem.PositionAmount,
-                                SecuType = secuItem.SecuType,
-                                PositionType = secuItem.PositionType,
-                            };
-
-                            _srcDataSource.Add(srcItem);
-                        }
-                    }
-                    break;
-                case "cbDestTradeInst":
-                    {
-                        _destDataSource.Clear();
-
-                        foreach (var secuItem in securities)
-                        {
-                            DestinationHoldingItem destItem = new DestinationHoldingItem 
-                            {
-                                SecuCode = secuItem.SecuCode,
-                                SecuType = secuItem.SecuType,
-                                CurrentAmount = secuItem.PositionAmount,
-                                PositionType = secuItem.PositionType,
-                            };
-
-                            _destDataSource.Add(destItem);
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        
-        #endregion
 
         #region load control
 
@@ -326,12 +199,18 @@ namespace TradingSystem.View
         {
             var optionList = new List<ComboOptionItem>();
 
+            PortfolioItem emptyPortfolio = new PortfolioItem 
+            {
+                AccountCode = fundCode,
+                CombiNo = emptyPortfolioId,
+                CombiName = string.Empty,
+            };
             ComboOptionItem emptyItem = new ComboOptionItem
             {
-                Id = "emptyportfolio",
+                Id = emptyPortfolio.CombiNo,
                 Name = "",
                 Code = "",
-                Data = "emptyportfolio"
+                Data = emptyPortfolio
             };
 
             optionList.Add(emptyItem);
@@ -380,12 +259,18 @@ namespace TradingSystem.View
             var tradeInstances = _tradeInstanceBLL.GetPortfolioInstance(portfolioCode);
             var optionList = new List<ComboOptionItem>();
 
+            TradingInstance emptyInstance = new TradingInstance 
+            {
+                InstanceId = emptyInstanceId,
+                InstanceCode = emptyInstanceCode,
+            };
+
             ComboOptionItem emptyItem = new ComboOptionItem
             {
-                Id = "emptytradeinstance",
+                Id = emptyInstance.InstanceId.ToString(),
                 Name = "",
                 Code = "",
-                Data = "emptytradeinstance"
+                Data = emptyInstance,
             };
 
             optionList.Add(emptyItem);
@@ -442,6 +327,315 @@ namespace TradingSystem.View
             ComboBoxUtil.SetComboBox(this.cbTemplate, templateOption);
 
             return true;
+        }
+
+        #endregion
+
+
+        #region combobox selected index changed event handler
+
+        private void ComboBox_OpertionType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetDestFundCodeState();
+
+            this.cbSrcFundCode.ResetText();
+            ComboBoxUtil.ClearComboBox(this.cbSrcPortfolio);
+            ComboBoxUtil.ClearComboBox(this.cbSrcTradeInst);
+
+            this.cbDestFundCode.ResetText();
+            ComboBoxUtil.ClearComboBox(this.cbDestPortfolio);
+            ComboBoxUtil.ClearComboBox(this.cbDestTradeInst);
+        }
+
+        private void ComboBox_FundCode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBox cb = sender as ComboBox;
+            if (cb == null)
+                return;
+
+            var fundItem = (ComboOptionItem)cb.SelectedItem;
+            var portfolioOption = LoadPortfolio(fundItem.Id);
+
+            switch (cb.Name)
+            {
+                case "cbSrcFundCode":
+                    {
+                        ComboBoxUtil.ClearComboBox(this.cbSrcPortfolio);
+                        ComboBoxUtil.ClearComboBox(this.cbSrcTradeInst);
+
+                        ComboBoxUtil.SetComboBox(this.cbSrcPortfolio, portfolioOption);
+
+                        if (IsSecurityTransfer())
+                        {
+                            ComboBoxUtil.ClearComboBox(this.cbDestPortfolio);
+                            ComboBoxUtil.ClearComboBox(this.cbDestTradeInst);
+
+                            ComboBoxUtil.SetComboBoxSelect(this.cbDestFundCode, fundItem.Id);
+                            ComboBoxUtil.SetComboBox(this.cbDestPortfolio, portfolioOption);
+                        }
+                    }
+                    break;
+                case "cbDestFundCode":
+                    {
+                        ComboBoxUtil.ClearComboBox(this.cbDestPortfolio);
+                        ComboBoxUtil.ClearComboBox(this.cbDestTradeInst);
+
+                        ComboBoxUtil.SetComboBox(this.cbDestPortfolio, portfolioOption);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void ComboBox_Portfolio_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBox cb = sender as ComboBox;
+            if (cb == null)
+                return;
+
+            var portfolio = (ComboOptionItem)cb.SelectedItem;
+            var tradeInstOption = LoadTradeInstance(portfolio.Id);
+
+            switch (cb.Name)
+            {
+                case "cbSrcPortfolio":
+                    {
+                        ComboBoxUtil.ClearComboBox(this.cbSrcTradeInst);
+
+                        ComboBoxUtil.SetComboBox(this.cbSrcTradeInst, tradeInstOption);
+
+                        //TODO: load the gridview
+                        _srcDataSource.Clear();
+                    }
+                    break;
+                case "cbDestPortfolio":
+                    {
+                        ComboBoxUtil.ClearComboBox(this.cbDestTradeInst);
+
+                        ComboBoxUtil.SetComboBox(this.cbDestTradeInst, tradeInstOption);
+
+                        //TODO:load the gridview
+                        _destDataSource.Clear();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void ComboBox_TradeInst_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBox cb = sender as ComboBox;
+            if (cb == null)
+                return;
+
+            var tradeInst = (ComboOptionItem)cb.SelectedItem;
+            //if(string.IsNullOrEmpty(tradeInst.Id) || tradeInst.Id.StartsWith("empty"))
+            //    return;
+            if (!(tradeInst.Data is TradingInstance))
+                return;
+
+            var instance = tradeInst.Data as TradingInstance;
+            var securities = _tradeInstanceSecuBLL.Get(instance.InstanceId);
+            switch (cb.Name)
+            {
+                case "cbSrcTradeInst":
+                    {
+                        _srcDataSource.Clear();
+                        FillSrcGridView(_srcDataSource, securities);
+                    }
+                    break;
+                case "cbDestTradeInst":
+                    {
+                        _destDataSource.Clear();
+                        FillDestGridView(_destDataSource, securities);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void FillSrcGridView(SortableBindingList<SourceHoldingItem> dataSource, List<TradingInstanceSecurity> secuItems)
+        {
+            foreach (var secuItem in secuItems)
+            {
+                SourceHoldingItem srcItem = new SourceHoldingItem
+                {
+                    SecuCode = secuItem.SecuCode,
+                    CurrentAmount = secuItem.PositionAmount,
+                    SecuType = secuItem.SecuType,
+                    PositionType = secuItem.PositionType,
+                };
+
+                dataSource.Add(srcItem);
+            }
+        }
+
+        private void FillDestGridView(SortableBindingList<DestinationHoldingItem> dataSource, List<TradingInstanceSecurity> secuItems)
+        {
+            foreach (var secuItem in secuItems)
+            {
+                DestinationHoldingItem destItem = new DestinationHoldingItem
+                {
+                    SecuCode = secuItem.SecuCode,
+                    SecuType = secuItem.SecuType,
+                    CurrentAmount = secuItem.PositionAmount,
+                    PositionType = secuItem.PositionType,
+                };
+
+                dataSource.Add(destItem);
+            }
+        }
+
+        #endregion
+
+        #region button click event
+
+        private void Button_Calc_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Button_Refresh_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Button_Transfer_Click(object sender, EventArgs e)
+        {
+            //get the source portfolio, instance
+            AccountItem srcAccount = null;
+            var srcSelectFund = cbSrcFundCode.SelectedItem as ComboOptionItem;// AccountItem;
+            if (srcSelectFund != null)
+            {
+                srcAccount = srcSelectFund.Data as AccountItem;
+            }
+
+            PortfolioItem srcPortfolio = null;
+            var srcSelectPortfolio = cbSrcPortfolio.SelectedItem as ComboOptionItem;
+            if (srcSelectPortfolio != null)
+            {
+                srcPortfolio = srcSelectPortfolio.Data as PortfolioItem;
+            }
+
+            TradingInstance srcTradingInstance = null;
+            var srcSelectInstance = cbSrcTradeInst.SelectedItem as ComboOptionItem;
+            if (srcSelectInstance != null)
+            {
+                srcTradingInstance = srcSelectInstance.Data as TradingInstance;
+            }
+
+            //get the target portfolio, instance
+            AccountItem destAccount = null;
+            var destSelectFund = cbDestFundCode.SelectedItem as ComboOptionItem;
+            if (destSelectFund != null)
+            {
+                destAccount = destSelectFund.Data as AccountItem;
+            }
+            PortfolioItem destPortfolio = null;
+            var destSelectPortfolio = cbDestPortfolio.SelectedItem as ComboOptionItem;
+            if (destSelectPortfolio != null)
+            {
+                destPortfolio = destSelectPortfolio.Data as PortfolioItem;
+            }
+
+            TradingInstance destTradingInstance = null;
+            var destSelectInstance = cbDestTradeInst.SelectedItem as ComboOptionItem;
+            if (destSelectInstance != null)
+            {
+                destTradingInstance = destSelectInstance.Data as TradingInstance;
+            }
+
+            if (!ValidatePortfolio(srcPortfolio) || !ValidatePortfolio(destPortfolio))
+            {
+                MessageDialog.Warn(this, msgNoEmptyDest);
+                return;
+            }
+
+            if (!ValidateTradingInstance(srcTradingInstance) || !ValidateTradingInstance(destTradingInstance))
+            {
+                MessageDialog.Warn(this, msgNoEmptyDest);
+                return;
+            }
+
+            var selectedItems = _srcDataSource.Where(p => p.Seletion && p.TransferedAmount > 0).ToList();
+            if (selectedItems.Count == 0)
+            {
+                MessageDialog.Warn(this, msgNoSecuritySelected);
+                return;
+            }
+
+            var invalidItems = selectedItems.Where(p => p.TransferedAmount > p.AvailableTransferedAmount || p.TransferedAmount > p.CurrentAmount).ToList();
+            if (invalidItems.Count > 0)
+            { 
+                MessageDialog.Warn(this, msgInvalidAmount);
+                return;
+            }
+
+            if (srcTradingInstance != null && destTradingInstance != null)
+            {
+                int ret = _tradeInstanceSecuBLL.Transfer(destTradingInstance, srcTradingInstance, selectedItems);
+                if (ret > 0)
+                {
+                    MessageDialog.Info(this, msgSuccess);
+                    //TODO: update the gridview security in both source and destination
+                    AdjustSecurity(selectedItems);
+                }
+            }
+        }
+
+
+        private bool ValidatePortfolio(PortfolioItem portfolio)
+        {
+            if (portfolio == null || portfolio.CombiNo.Equals(emptyInstanceId))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private bool ValidateTradingInstance(TradingInstance instance)
+        {
+            if (instance == null || instance.InstanceId == -1)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+
+        private void AdjustSecurity(List<SourceHoldingItem> selectedItems)
+        {
+            foreach (var selectItem in selectedItems)
+            {
+                var transferedAmount = selectItem.TransferedAmount;
+                var srcItem = _srcDataSource.ToList()
+                    .Find(p => p.SecuCode.Equals(selectItem.SecuCode) && p.SecuType == selectItem.SecuType);
+                if (srcItem != null)
+                {
+                    srcItem.AvailableTransferedAmount = srcItem.AvailableTransferedAmount - transferedAmount;
+                    srcItem.CurrentAmount = srcItem.CurrentAmount - transferedAmount;
+                    if (srcItem.CurrentAmount == 0)
+                    {
+                        _srcDataSource.Remove(srcItem);
+                    }
+                }
+
+                var destItem = _destDataSource.ToList()
+                    .Find(p => p.SecuCode.Equals(selectItem.SecuCode) && p.SecuType == selectItem.SecuType);
+                if (destItem != null)
+                {
+                    destItem.CurrentAmount = destItem.CurrentAmount + transferedAmount;
+                }
+            }
         }
 
         #endregion

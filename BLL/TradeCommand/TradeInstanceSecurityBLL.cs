@@ -170,11 +170,11 @@ namespace BLL.TradeCommand
                     }
                 }
 
-                destItems.Add(destInItem);
+                destNewItems.Add(destInItem);
             }
 
             //更新数据库,指向要更新变化部分即可,通过提交事务
-
+            int ret = _tradeinstsecudao.Transfer(destNewItems, srcNewItems);
             return -1;
         }
 
