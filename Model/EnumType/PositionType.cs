@@ -1,7 +1,7 @@
 ﻿
 namespace Model.EnumType
 {
-    public enum PosistionType
+    public enum PositionType
     {
         SpotLong = 1,
         SpotShort = 2,

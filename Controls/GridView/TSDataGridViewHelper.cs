@@ -121,8 +121,8 @@ namespace Controls.GridView
                 {
                     var cbColumn = column as DataGridViewComboBoxColumn;
                     cbColumn.DataSource = cbOption.Items;
-                    cbColumn.DisplayMember = "Name";
                     cbColumn.ValueMember = "Id";
+                    cbColumn.DisplayMember = "Text";
 
                     break;
                 }

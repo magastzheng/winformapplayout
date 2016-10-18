@@ -256,19 +256,19 @@ namespace TradingSystem.Dialog
                         }
                     }
                     break;
-                case PositionType.StockLong:
+                case PositionType.SpotLong:
                     {
                         if (changeInItem.SecuType == Model.SecurityInfo.SecurityType.Stock)
                         {
-                            changeInItem.PositionType = PositionType.StockShort;
+                            changeInItem.PositionType = PositionType.SpotShort;
                         }
                     }
                     break;
-                case PositionType.StockShort:
+                case PositionType.SpotShort:
                     {
                         if (changeInItem.SecuType == Model.SecurityInfo.SecurityType.Stock)
                         {
-                            changeInItem.PositionType = PositionType.StockLong;
+                            changeInItem.PositionType = PositionType.SpotLong;
                         }
                     }
                     break;

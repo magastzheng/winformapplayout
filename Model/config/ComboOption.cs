@@ -15,16 +15,45 @@ namespace Model.config
         public string Name { get; set; }
         public object Data { get; set; }
 
-        public override string ToString()
+        public string Text 
         {
-            string ret = string.Empty;
-            if (!string.IsNullOrEmpty(Code) || !string.IsNullOrEmpty(Name))
+            get 
             {
-                ret = string.Format("{0}  {1}", Code, Name);
-            }
+                string ret = string.Empty;
+                if (!string.IsNullOrEmpty(Code)&&!string.IsNullOrEmpty(Name))
+                {
+                    if (Name.StartsWith("-"))
+                    {
+                        ret = string.Format("{0}{1}", Code, Name);
+                    }
+                    else
+                    {
+                        ret = string.Format("{0} {1}", Code, Name);
+                    }
+                }
+                else if (!string.IsNullOrEmpty(Name))
+                {
+                    ret = Name;
+                }
+                else
+                { 
+                    //Do nothing
+                }
 
-            return ret;
+                return ret;
+            }
         }
+
+        //public override string ToString()
+        //{
+        //    string ret = string.Empty;
+        //    if (!string.IsNullOrEmpty(Code) || !string.IsNullOrEmpty(Name))
+        //    {
+        //        ret = string.Format("{0}{1}", Code, Name);
+        //    }
+
+        //    return ret;
+        //}
     }
 
     public class ComboOption

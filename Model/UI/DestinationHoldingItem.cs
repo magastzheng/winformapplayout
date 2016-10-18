@@ -1,4 +1,6 @@
 ﻿using Model.Binding;
+using Model.EnumType;
+using Model.EnumType.EnumTypeConverter;
 using Model.SecurityInfo;
 using System;
 using System.Collections.Generic;
@@ -17,7 +19,10 @@ namespace Model.UI
         public string SecuName { get; set; }
 
         [BindingAttribute("exchange")]
-        public string Exchange { get; set; }
+        public string Exchange
+        {
+            get { return SecurityItemHelper.GetExchange(ExchangeCode); }
+        }
 
         [BindingAttribute("portfolioname")]
         public string PortfolioName { get; set; }
@@ -29,7 +34,10 @@ namespace Model.UI
         public string SeatNo { get; set; }
 
         [BindingAttribute("longshortflag")]
-        public string LongShortFlag { get; set; }
+        public string LongShortFlag
+        {
+            get { return PositionTypeHelper.GetDisplayText(PositionType); }
+        }
 
         [BindingAttribute("currentamount")]
         public int CurrentAmount { get; set; }
@@ -40,5 +48,9 @@ namespace Model.UI
         public PositionType PositionType { get; set; }
 
         public SecurityType SecuType { get; set; }
+
+        public string ExchangeCode { get; set; }
+
+        public string PortfolioCode { get; set; }
     }
 }

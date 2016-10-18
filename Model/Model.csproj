@@ -64,6 +64,7 @@
     <Compile Include="Database\TradeCommandSecurity.cs" />
     <Compile Include="Dialog\OrderConfirmItem.cs" />
     <Compile Include="EnumType\EnumTypeConverter\EntrustPriceTypeConverter.cs" />
+    <Compile Include="EnumType\EnumTypeConverter\PositionTypeHelper.cs" />
     <Compile Include="EnumType\FundAccountType.cs" />
     <Compile Include="EnumType\EnumTypeConverter\EntrustRequestHelper.cs" />
     <Compile Include="EnumType\EnumTypeConverter\EnumTypeDisplayHelper.cs" />
@@ -77,7 +78,7 @@
     <Compile Include="Data\DataValue.cs" />
     <Compile Include="Data\DataValueType.cs" />
     <Compile Include="EnumType\EntrustDirection.cs" />
-    <Compile Include="EnumType\PosistionType.cs" />
+    <Compile Include="EnumType\PositionType.cs" />
     <Compile Include="EnumType\StockPriceType.cs" />
     <Compile Include="EntrustParam.cs" />
     <Compile Include="config\FieldConfigItem.cs" />

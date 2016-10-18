@@ -3348,7 +3348,7 @@ readonly:
 		"columntype": 0,
 		"valuetype": 1,
 		"visible": 1,
-		"readonly": 1
+		"readonly": 0
 		},{
 		"name": "investmenttype",
 		"text": "投资类型",
@@ -3356,7 +3356,7 @@ readonly:
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
-		"readonly": 0
+		"readonly": 1
 		},{
 		"name": "last",
 		"text": "",
@@ -3433,7 +3433,7 @@ readonly:
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
-		"readonly": 1
+		"readonly": 0
 		},{
 		"name": "investmenttype",
 		"text": "投资类型",
@@ -3441,7 +3441,7 @@ readonly:
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
-		"readonly": 0
+		"readonly": 1
 		},{
 		"name": "last",
 		"text": "",

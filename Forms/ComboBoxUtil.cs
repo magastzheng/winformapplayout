@@ -7,6 +7,9 @@ namespace Forms
     {
         public static void SetComboBox(ComboBox comboBox, ComboOption comboOption)
         {
+            comboBox.ValueMember = "Id";
+            comboBox.DisplayMember = "Text";
+
             foreach (var item in comboOption.Items)
             {
                 comboBox.Items.Add(item);

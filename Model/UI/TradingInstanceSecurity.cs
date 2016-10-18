@@ -1,4 +1,5 @@
-﻿using Model.SecurityInfo;
+﻿using Model.EnumType;
+using Model.SecurityInfo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,14 +8,6 @@ using System.Threading.Tasks;
 
 namespace Model.UI
 {
-    public enum PositionType
-    { 
-        StockLong = 1,
-        StockShort = 2,
-        FuturesLong = 3,
-        FuturesShort = 4,
-    }
-
     public class TradingInstanceSecurity
     {
         public int InstanceId { get; set; }

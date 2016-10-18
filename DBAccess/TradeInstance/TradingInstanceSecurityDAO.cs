@@ -1,4 +1,5 @@
 ﻿using log4net;
+using Model.EnumType;
 using Model.SecurityInfo;
 using Model.UI;
 using System;

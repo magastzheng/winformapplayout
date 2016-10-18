@@ -193,11 +193,11 @@ namespace BLL.TradeCommand
                                 tiSecuItem.InstructionPreBuy = openItem.Copies * item.WeightAmount;
                                 if (item.EDirection == EntrustDirection.BuySpot)
                                 {
-                                    tiSecuItem.PositionType = PositionType.StockLong;
+                                    tiSecuItem.PositionType = PositionType.SpotLong;
                                 }
                                 else if (item.EDirection == EntrustDirection.SellSpot)
                                 {
-                                    tiSecuItem.PositionType = PositionType.StockShort;
+                                    tiSecuItem.PositionType = PositionType.SpotShort;
                                 }
                             }
                             break;

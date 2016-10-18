@@ -1047,7 +1047,7 @@ namespace TradingSystem.View
 
             if (secuType == SecurityType.Stock)
             {
-                closeSecuItem.PositionType = PositionType.StockLong;
+                closeSecuItem.PositionType = PositionType.SpotLong;
             }
             else if (secuType == SecurityType.Futures)
             {
@@ -1091,7 +1091,7 @@ namespace TradingSystem.View
 
             if (closeSecuItem.SecuType == SecurityType.Stock)
             {
-                closeSecuItem.PositionType = PositionType.StockLong;
+                closeSecuItem.PositionType = PositionType.SpotLong;
             }
             else if (closeSecuItem.SecuType == SecurityType.Futures)
             {

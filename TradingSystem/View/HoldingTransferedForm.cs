@@ -17,6 +17,7 @@ using BLL.Template;
 using BLL.Entrust;
 using TradingSystem.Dialog;
 using Model.strategy;
+using BLL.SecurityInfo;
 
 namespace TradingSystem.View
 {
@@ -59,6 +60,8 @@ namespace TradingSystem.View
             this.LoadControl += new FormLoadHandler(Form_LoadControl);
             this.LoadData += new FormLoadHandler(Form_LoadData);
 
+            this.srcGridView.UpdateRelatedDataGridHandler += new UpdateRelatedDataGrid(GridView_Source_UpdateRelatedDataGridHandler);
+
             this.cbOpertionType.SelectedIndexChanged += new EventHandler(ComboBox_OpertionType_SelectedIndexChanged);
             this.cbSrcFundCode.SelectedIndexChanged += new EventHandler(ComboBox_FundCode_SelectedIndexChanged);
             this.cbDestFundCode.SelectedIndexChanged += new EventHandler(ComboBox_FundCode_SelectedIndexChanged);
@@ -71,6 +74,42 @@ namespace TradingSystem.View
             this.btnTransfer.Click += new EventHandler(Button_Transfer_Click);
             this.btnRefresh.Click += new EventHandler(Button_Refresh_Click);
             this.btnCalc.Click += new EventHandler(Button_Calc_Click);
+        }
+
+        private void GridView_Source_UpdateRelatedDataGridHandler(UpdateDirection direction, int rowIndex, int columnIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= _srcDataSource.Count)
+                return;
+
+            SourceHoldingItem selectedItem = _srcDataSource[rowIndex];
+
+            switch (direction)
+            {
+                case UpdateDirection.Select:
+                    {
+                        GridView_Source_Select(selectedItem);
+                    }
+                    break;
+                case UpdateDirection.UnSelect:
+                    {
+                        GridView_Source_UnSelect(selectedItem);
+                    }
+                    break;
+            }
+        }
+
+        private void GridView_Source_Select(SourceHoldingItem selectedItem)
+        {
+            selectedItem.PriceType = "lastprice";
+            selectedItem.TransferedAmount = selectedItem.AvailableTransferedAmount;
+
+            //TODO: update the price
+        }
+
+        private void GridView_Source_UnSelect(SourceHoldingItem selectedItem)
+        {
+            selectedItem.PriceType = "";
+            selectedItem.TransferedAmount = 0;
         }
 
         #region load control
@@ -89,9 +128,11 @@ namespace TradingSystem.View
 
             this.destGridView.DataSource = _destDataSource;
 
+            LoadTradeDirectionOption();
+
             //Load child control
             LoadProductControl();
-
+            
             return true;
         }
 
@@ -117,6 +158,13 @@ namespace TradingSystem.View
                 this.cbDestFundCode.Enabled = true;
             }
         }
+
+        private void LoadTradeDirectionOption()
+        {
+            var transferPriceType = ConfigManager.Instance.GetComboConfig().GetComboOption("transferpricetype");
+            TSDataGridViewHelper.SetDataBinding(this.srcGridView, "pricetype", transferPriceType);
+        }
+
         #endregion
 
         #region load data
@@ -436,6 +484,7 @@ namespace TradingSystem.View
             if (!(tradeInst.Data is TradingInstance))
                 return;
 
+            //TODO: cannot select the same TradingInstance
             var instance = tradeInst.Data as TradingInstance;
             var securities = _tradeInstanceSecuBLL.Get(instance.InstanceId);
             switch (cb.Name)
@@ -443,13 +492,13 @@ namespace TradingSystem.View
                 case "cbSrcTradeInst":
                     {
                         _srcDataSource.Clear();
-                        FillSrcGridView(_srcDataSource, securities);
+                        FillSrcGridView(_srcDataSource, securities, instance);
                     }
                     break;
                 case "cbDestTradeInst":
                     {
                         _destDataSource.Clear();
-                        FillDestGridView(_destDataSource, securities);
+                        FillDestGridView(_destDataSource, securities, instance);
                     }
                     break;
                 default:
@@ -457,7 +506,7 @@ namespace TradingSystem.View
             }
         }
 
-        private void FillSrcGridView(SortableBindingList<SourceHoldingItem> dataSource, List<TradingInstanceSecurity> secuItems)
+        private void FillSrcGridView(SortableBindingList<SourceHoldingItem> dataSource, List<TradingInstanceSecurity> secuItems, TradingInstance tradeInstance)
         {
             foreach (var secuItem in secuItems)
             {
@@ -467,13 +516,21 @@ namespace TradingSystem.View
                     CurrentAmount = secuItem.PositionAmount,
                     SecuType = secuItem.SecuType,
                     PositionType = secuItem.PositionType,
+                    PortfolioCode = tradeInstance.PortfolioCode,
+                    PortfolioName = tradeInstance.PortfolioName
                 };
 
+                var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
+                if (findItem != null)
+                {
+                    srcItem.SecuName = findItem.SecuName;
+                    srcItem.ExchangeCode = findItem.ExchangeCode;
+                }
                 dataSource.Add(srcItem);
             }
         }
 
-        private void FillDestGridView(SortableBindingList<DestinationHoldingItem> dataSource, List<TradingInstanceSecurity> secuItems)
+        private void FillDestGridView(SortableBindingList<DestinationHoldingItem> dataSource, List<TradingInstanceSecurity> secuItems, TradingInstance tradeInstance)
         {
             foreach (var secuItem in secuItems)
             {
@@ -483,7 +540,16 @@ namespace TradingSystem.View
                     SecuType = secuItem.SecuType,
                     CurrentAmount = secuItem.PositionAmount,
                     PositionType = secuItem.PositionType,
+                    PortfolioCode = tradeInstance.PortfolioCode,
+                    PortfolioName = tradeInstance.PortfolioName
                 };
+
+                var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
+                if (findItem != null)
+                {
+                    destItem.SecuName = findItem.SecuName;
+                    destItem.ExchangeCode = findItem.ExchangeCode;
+                }
 
                 dataSource.Add(destItem);
             }
@@ -495,19 +561,72 @@ namespace TradingSystem.View
 
         private void Button_Calc_Click(object sender, EventArgs e)
         {
+            var selectedItem = this.cbTemplate.SelectedItem as ComboOptionItem;
+            if (selectedItem == null)
+            {
+                return;
+            }
 
+            var template = selectedItem.Data as StockTemplate;
+            if (template == null)
+            {
+                return;
+            }
+
+            int copies = (int)this.nudCopies.Value;
+            if (copies <= 0)
+            {
+                return;
+            }
+
+            var stocks = _templateBLl.GetStocks(template.TemplateId);
+            foreach (var srcItem in _srcDataSource)
+            {
+                var findItem = stocks.Find(p => p.SecuCode.Equals(srcItem.SecuCode));
+                if (findItem != null)
+                {
+                    srcItem.Seletion = true;
+                    srcItem.PriceType = "lastprice";
+
+                    int amount = copies * findItem.Amount;
+                    srcItem.CalcAmount = amount;
+
+                    if (srcItem.AvailableTransferedAmount > amount)
+                    {
+                        srcItem.TransferedAmount = amount;
+                    }
+                    else
+                    {
+                        srcItem.TransferedAmount = srcItem.AvailableTransferedAmount;
+                    }
+                }
+                else
+                {
+                    srcItem.CalcAmount = 0;
+                }
+            }
         }
 
         private void Button_Refresh_Click(object sender, EventArgs e)
         {
+            //all selection items have the TransferAmount=Available, CalcAmount=0
+            _srcDataSource.ToList()
+                .Where(p => p.Seletion)
+                .ToList()
+                .ForEach(o => 
+                { 
+                    o.CalcAmount = 0;
+                    o.TransferedAmount = o.AvailableTransferedAmount;
+                });
 
+            this.srcGridView.Invalidate();
         }
 
         private void Button_Transfer_Click(object sender, EventArgs e)
         {
             //get the source portfolio, instance
             AccountItem srcAccount = null;
-            var srcSelectFund = cbSrcFundCode.SelectedItem as ComboOptionItem;// AccountItem;
+            var srcSelectFund = cbSrcFundCode.SelectedItem as ComboOptionItem;
             if (srcSelectFund != null)
             {
                 srcAccount = srcSelectFund.Data as AccountItem;

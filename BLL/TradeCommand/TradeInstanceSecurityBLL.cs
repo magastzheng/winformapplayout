@@ -162,7 +162,7 @@ namespace BLL.TradeCommand
                     //TODO:
                     if (transferItem.SecuType == Model.SecurityInfo.SecurityType.Stock)
                     {
-                        srcOutItem.PositionType = PositionType.StockLong;
+                        srcOutItem.PositionType = PositionType.SpotLong;
                     }
                     else if (transferItem.SecuType == Model.SecurityInfo.SecurityType.Futures)
                     {

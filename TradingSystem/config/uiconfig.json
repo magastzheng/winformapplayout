@@ -389,20 +389,20 @@
 			}]
 	},{
 		"name": "transferpricetype",
-		"selected": "1",
+		"selected": "lastprice",
 		"items":[
 			{
-				"id": "0",
+				"id": "assignedprice",
 				"code": "0",
-				"name": "指定价"
+				"name": "-指定价"
 			},{
-				"id": "1",
+				"id": "constprice",
 				"code": "1",
-				"name": "成本价"
+				"name": "-成本价"
 			},{
-				"id": "2",
+				"id": "lastprice",
 				"code": "2",
-				"name": "最新价"
+				"name": "-最新价"
 			}]
 	}
 ]
