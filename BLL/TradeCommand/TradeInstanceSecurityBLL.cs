@@ -144,17 +144,18 @@ namespace BLL.TradeCommand
                 {
                     SecuCode = transferItem.SecuCode,
                     SecuType = transferItem.SecuType,
+                    PositionType = transferItem.PositionType,
                     InstanceId = dest.InstanceId,
                 };
 
                 var destOldItem = destItems.Find(p => p.SecuCode.Equals(transferItem.SecuCode) && p.SecuType == transferItem.SecuType);
                 if (destOldItem != null)
                 {
-                    srcOutItem.PositionAmount = destOldItem.PositionAmount + transferItem.TransferedAmount;
-                    srcOutItem.PositionType = destOldItem.PositionType;
-                    srcOutItem.SellToday = destOldItem.SellToday;
-                    srcOutItem.SellBalance = destOldItem.SellBalance;
-                    srcOutItem.DealFee = destOldItem.DealFee;
+                    destInItem.PositionAmount = destOldItem.PositionAmount + transferItem.TransferedAmount;
+                    destInItem.PositionType = destOldItem.PositionType;
+                    destInItem.SellToday = destOldItem.SellToday;
+                    destInItem.SellBalance = destOldItem.SellBalance;
+                    destInItem.DealFee = destOldItem.DealFee;
                 }
                 else
                 {
@@ -175,7 +176,7 @@ namespace BLL.TradeCommand
 
             //更新数据库,指向要更新变化部分即可,通过提交事务
             int ret = _tradeinstsecudao.Transfer(destNewItems, srcNewItems);
-            return -1;
+            return ret;
         }
 
         #endregion

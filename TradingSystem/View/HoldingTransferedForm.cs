@@ -95,7 +95,11 @@ namespace TradingSystem.View
                         GridView_Source_UnSelect(selectedItem);
                     }
                     break;
+                default:
+                    break;
             }
+
+            this.srcGridView.Invalidate();
         }
 
         private void GridView_Source_Select(SourceHoldingItem selectedItem)
@@ -514,6 +518,7 @@ namespace TradingSystem.View
                 {
                     SecuCode = secuItem.SecuCode,
                     CurrentAmount = secuItem.PositionAmount,
+                    AvailableTransferedAmount = secuItem.PositionAmount,
                     SecuType = secuItem.SecuType,
                     PositionType = secuItem.PositionType,
                     PortfolioCode = tradeInstance.PortfolioCode,
@@ -701,6 +706,9 @@ namespace TradingSystem.View
                     MessageDialog.Info(this, msgSuccess);
                     //TODO: update the gridview security in both source and destination
                     AdjustSecurity(selectedItems);
+
+                    this.srcGridView.Invalidate();
+                    this.destGridView.Invalidate();
                 }
             }
         }
@@ -746,6 +754,12 @@ namespace TradingSystem.View
                     {
                         _srcDataSource.Remove(srcItem);
                     }
+                    else
+                    {
+                        srcItem.Seletion = false;
+                        srcItem.TransferedAmount = 0;
+                        srcItem.PriceType = string.Empty;
+                    }
                 }
 
                 var destItem = _destDataSource.ToList()
@@ -753,6 +767,22 @@ namespace TradingSystem.View
                 if (destItem != null)
                 {
                     destItem.CurrentAmount = destItem.CurrentAmount + transferedAmount;
+                }
+                else
+                {
+                    destItem = new DestinationHoldingItem
+                    {
+                        SecuCode = selectItem.SecuCode,
+                        SecuType = selectItem.SecuType,
+                        PositionType = selectItem.PositionType,
+                        PortfolioCode = selectItem.PortfolioCode,
+                        PortfolioName = selectItem.PortfolioName,
+                        SecuName = selectItem.SecuName,
+                        ExchangeCode = selectItem.ExchangeCode,
+                        CurrentAmount = transferedAmount,
+                    };
+
+                    _destDataSource.Add(destItem);
                 }
             }
         }
