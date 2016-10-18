@@ -63,6 +63,7 @@
     <Compile Include="Database\TradeCommand.cs" />
     <Compile Include="Database\TradeCommandSecurity.cs" />
     <Compile Include="Dialog\OrderConfirmItem.cs" />
+    <Compile Include="EnumType\AdjustmentType.cs" />
     <Compile Include="EnumType\EnumTypeConverter\EntrustPriceTypeConverter.cs" />
     <Compile Include="EnumType\EnumTypeConverter\PositionTypeHelper.cs" />
     <Compile Include="EnumType\FundAccountType.cs" />
@@ -147,6 +148,7 @@
     <Compile Include="UI\TemplateStock.cs" />
     <Compile Include="EnumType\TradingCommandType.cs" />
     <Compile Include="UI\TradingInstance.cs" />
+    <Compile Include="UI\TradingInstanceAdjustmentItem.cs" />
     <Compile Include="UI\TradingInstanceSecurity.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
