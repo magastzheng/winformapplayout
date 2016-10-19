@@ -71,6 +71,11 @@ namespace DBAccess.Permission
             return item;
         }
 
+        public List<UserRole> GetByUser(int userId)
+        {
+            return GetInternal(userId, -1);
+        }
+
         public List<UserRole> GetAll()
         {
             return GetInternal(-1, -1);

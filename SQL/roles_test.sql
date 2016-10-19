@@ -1,14 +1,38 @@
 use tradingsystem
 
----======´´½¨½ÇÉ«
-exec procRolesInsert '¹ÜÀíÔ±', 1, 1
-exec procRolesInsert 'ÏµÍ³¹ÜÀíÔ±', 1, 2
-exec procRolesInsert '»ù½ğ¾­Àí', 1, 5
-exec procRolesInsert '½»Ò×Ô±', 1, 6
+---======åˆ›å»ºè§’è‰²
+exec procRolesInsert 'ç®¡ç†å‘˜', 1, 1
+exec procRolesInsert 'ç³»ç»Ÿç®¡ç†å‘˜', 1, 2
+exec procRolesInsert 'åŸºé‡‘ç»ç†', 1, 5
+exec procRolesInsert 'äº¤æ˜“å‘˜', 1, 6
 
----======·ÖÅäÈ¨ÏŞ
-exec 
+---======åˆ†é…æƒé™
+--**featureæƒé™åªåˆ†é…'æµè§ˆ'**åºŸå¼ƒrolefeaturepermissionè¡¨
+--exec procRoleFeaturePermissionInsert @RoleId=1,@FeatureId=11,@Permission=16
+--exec procRoleFeaturePermissionInsert @RoleId=1,@FeatureId=12,@Permission=16
+--exec procRoleFeaturePermissionInsert @RoleId=1,@FeatureId=13,@Permission=16
+--exec procRoleFeaturePermissionInsert @RoleId=1,@FeatureId=14,@Permission=16
+--exec procRoleFeaturePermissionInsert @RoleId=1,@FeatureId=15,@Permission=16
+
+--exec procRoleFeaturePermissionInsert @RoleId=1,@FeatureId=101,@Permission=16
+--exec procRoleFeaturePermissionInsert @RoleId=1,@FeatureId=102,@Permission=16
+--exec procRoleFeaturePermissionInsert @RoleId=1,@FeatureId=103,@Permission=16
+--exec procRoleFeaturePermissionInsert @RoleId=1,@FeatureId=104,@Permission=16
+--exec procRoleFeaturePermissionInsert @RoleId=1,@FeatureId=105,@Permission=16
+--exec procRoleFeaturePermissionInsert @RoleId=1,@FeatureId=106,@Permission=16
+--exec procRoleFeaturePermissionInsert @RoleId=1,@FeatureId=107,@Permission=16
+--exec procRoleFeaturePermissionInsert @RoleId=1,@FeatureId=108,@Permission=16
+--exec procRoleFeaturePermissionInsert @RoleId=1,@FeatureId=109,@Permission=16
+--exec procRoleFeaturePermissionInsert @RoleId=1,@FeatureId=110,@Permission=16
+--exec procRoleFeaturePermissionInsert @RoleId=1,@FeatureId=111,@Permission=16
+--exec procRoleFeaturePermissionInsert @RoleId=1,@FeatureId=112,@Permission=16
+
+--**ä½¿ç”¨tokenresourcepermissionå­˜æ”¾æ‰€æœ‰æƒé™æ•°æ®
+exec procTokenResourcePermissionInsert @Token=1,@TokenType=1,@ResourceId=11,@ResourceType=2,@Permission=16
 
 
----======²âÊÔÓÃÀı
+---======æµ‹è¯•ç”¨ä¾‹
 select * from roles
+
+select * from rolefeaturepermission
+truncate table rolefeaturepermission

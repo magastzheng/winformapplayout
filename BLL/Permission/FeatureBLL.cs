@@ -27,6 +27,11 @@ namespace BLL.Permission
             return _featuredao.Delete(featureId);
         }
 
+        public Feature GetByCode(string code)
+        {
+            return _featuredao.GetByCode(code);
+        }
+
         public Feature Get(int featureId)
         {
             return _featuredao.Get(featureId);

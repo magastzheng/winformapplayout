@@ -26,6 +26,11 @@ namespace BLL.Permission
             return _userroledao.Get(userId, roleId);
         }
 
+        public List<UserRole> GetByUser(int userId)
+        {
+            return _userroledao.GetByUser(userId);
+        }
+
         public List<UserRole> GetAll()
         {
             return _userroledao.GetAll();

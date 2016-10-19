@@ -11,8 +11,8 @@ create table rolefeaturepermission(
 )
 
 --Permission(32 bit)
---0			1		2		3			4		5		6		7                        
---Owner		Add		Delete  Modify  Select/View Execute	Query	
+--1			2		4		8			16		32		64		                        
+--Owner		Add		Delete  Edit  Select/View Execute	Query	
 if exists (select name from sysobjects where name='procRoleFeaturePermissionInsert')
 drop proc procRoleFeaturePermissionInsert
 

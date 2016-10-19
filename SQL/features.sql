@@ -102,3 +102,21 @@ begin
 		from features
 	end
 end
+
+go
+if exists (select name from sysobjects where name='procFeaturesSelectByCode')
+drop proc procFeaturesSelectByCode
+
+go
+create proc procFeaturesSelectByCode(
+	@Code varchar(30)
+)
+as
+begin
+	select Id
+		,Code
+		,Name
+		,Description
+	from features
+	where Code=@Code
+end

@@ -16,6 +16,7 @@ namespace DBAccess.Permission
         private const string SP_Modify = "procFeaturesUpdate";
         private const string SP_Delete = "procFeaturesDelete";
         private const string SP_Select = "procFeaturesSelect";
+        private const string SP_SelectByCode = "procFeaturesSelectByCode";
 
         public FeatureDAO()
             : base()
@@ -65,6 +66,30 @@ namespace DBAccess.Permission
             _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, featureId);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public Feature GetByCode(string code)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_SelectByCode);
+            _dbHelper.AddInParameter(dbCommand, "@Code", System.Data.DbType.String, code);
+
+            Feature item = new Feature();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                if (reader.Read())
+                {
+                    item.Id = (int)reader["Id"];
+                    item.Code = (string)reader["Code"];
+                    item.Name = (string)reader["Name"];
+                    item.Description = (string)reader["Description"];
+                }
+            }
+
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return item;
         }
 
         public Feature Get(int featureId)

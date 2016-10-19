@@ -19,47 +19,149 @@ namespace BLL.Permission
     {
         private RoleBLL _roleBLL = new RoleBLL();
         private UserRoleBLL _userRoleBLL = new UserRoleBLL();
-        //private RoleFeaturePermissionBLL _roleFeaturePermBLL = new RoleFeaturePermissionBLL();
+        private FeatureBLL _featureBLL = new FeatureBLL();
         private TokenResourcePermissionBLL _userResourcePermBLL = new TokenResourcePermissionBLL();
         private PermissionCalculator _permCalculator = new PermissionCalculator();
 
         #region user role permission
 
-        public List<Role> GetRoles(User user)
+        //public List<Role> GetRoles(User user)
+        //{
+        //    var roles = _roleBLL.GetAll();
+        //    var userRoles = _userRoleBLL.GetAll();
+        //    var valideUserRoles = userRoles.Where(p => p.UserId == user.Id).ToList();
+        //    List<Role> currentRoles = new List<Role>();
+        //    foreach (var userRole in userRoles)
+        //    {
+        //        var role = roles.Find(p => p.Id == userRole.RoleId);
+        //        if (role != null)
+        //        {
+        //            currentRoles.Add(role);
+        //        }
+        //    }
+
+        //    return currentRoles;
+        //}
+
+        //public List<TokenResourcePermission> GetRolePermission(Role role)
+        //{
+        //    return _userResourcePermBLL.GetByToken(role.Id, TokenType.Role);
+        //}
+
+        //public List<TokenResourcePermission> GetUserRolePermission(User user)
+        //{
+        //    var roles = GetRoles(user);
+        //    var currentPerms = new List<TokenResourcePermission>();
+        //    foreach (var role in roles)
+        //    {
+        //        var rolePerm = GetRolePermission(role);
+        //    }
+
+        //    return currentPerms;
+        //}
+
+        public bool HasPermission(int userId, string featureCode, PermissionMask mask)
         {
-            var roles = _roleBLL.GetAll();
-            var userRoles = _userRoleBLL.GetAll();
-            var valideUserRoles = userRoles.Where(p => p.UserId == user.Id).ToList();
-            List<Role> currentRoles = new List<Role>();
-            foreach (var userRole in userRoles)
+            bool hasPerm = false;
+            var feature = GetFeature(featureCode);
+            if (feature != null)
             {
-                var role = roles.Find(p => p.Id == userRole.RoleId);
-                if (role != null)
+                hasPerm = HasPermission(userId, feature.Id, mask);
+            }
+
+            return hasPerm;
+        }
+
+        public int GrantPermission(int roleId, string featureCode, List<PermissionMask> masks)
+        {
+            var feature = GetFeature(featureCode);
+            if (feature != null)
+            {
+                return GrantPermission(roleId, feature.Id, masks);
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        public int RevokePermission(int roleId, string featureCode, List<PermissionMask> masks)
+        { 
+            var feature = GetFeature(featureCode);
+            if (feature != null)
+            {
+                return RevokePermission(roleId, feature.Id, masks);
+            }
+            else
+            {
+                return -1;
+            }
+        }
+        #endregion
+
+        #region private method to check/grant/revoke the permission for Role
+        private bool HasPermission(int userId, int featureId, PermissionMask mask)
+        {
+            bool hasPerm = false;
+            var roles = GetRoles(userId);
+            foreach (var role in roles)
+            {
+                var roleFeaturePerm = GetPermission(role.RoleId, TokenType.Role, featureId, ResourceType.Feature);
+                if (_permCalculator.HasPermission(roleFeaturePerm.Permission, mask))
                 {
-                    currentRoles.Add(role);
+                    hasPerm = true;
+                    break;
                 }
             }
 
-            return currentRoles;
+            return hasPerm;
         }
 
-        public List<TokenResourcePermission> GetRolePermission(Role role)
+        /// <summary>
+        /// Grant the permission to the Role
+        /// </summary>
+        /// <param name="roleId"></param>
+        /// <param name="featureId"></param>
+        /// <param name="masks"></param>
+        /// <returns></returns>
+        private int GrantPermission(int roleId, int featureId, List<PermissionMask> masks)
         {
-            return _userResourcePermBLL.GetByToken(role.Id, TokenType.Role);
-        }
-
-        public List<TokenResourcePermission> GetUserRolePermission(User user)
-        {
-            var roles = GetRoles(user);
-            var currentPerms = new List<TokenResourcePermission>();
-            foreach (var role in roles)
+            var userResourcePerm = GetPermission(roleId, TokenType.Role, featureId, ResourceType.Feature);
+            int perm = userResourcePerm.Permission;
+            foreach (var mask in masks)
             {
-                var rolePerm = GetRolePermission(role);
+                perm = _permCalculator.GrantPermission(perm, mask);
             }
 
-            return currentPerms;
+            if (userResourcePerm.Id == roleId)
+            {
+                return UpdatePermission(roleId, TokenType.Role, featureId, ResourceType.Feature, perm);
+            }
+            else
+            {
+                return CreatePermission(roleId, TokenType.Role, featureId, ResourceType.Feature, perm);
+            }
         }
 
+        private int RevokePermission(int roleId, int featureId, List<PermissionMask> masks)
+        {
+            var userResourcePerm = GetPermission(roleId, TokenType.Role, featureId, ResourceType.Feature);
+            int perm = userResourcePerm.Permission;
+
+            foreach (var mask in masks)
+            {
+                perm = _permCalculator.RevokePermission(perm, mask);
+            }
+
+            if (userResourcePerm.Id == roleId)
+            {
+                return UpdatePermission(roleId, TokenType.Role, featureId, ResourceType.Feature, perm);
+            }
+            else
+            {
+                return CreatePermission(roleId, TokenType.Role, featureId, ResourceType.Feature, perm);
+            }
+        }
         #endregion
 
         #region user resource permission
@@ -75,7 +177,7 @@ namespace BLL.Permission
 
         public bool HasPermission(int userId, int resourceId, ResourceType resourceType, PermissionMask mask)
         {
-            var userResourcePerm = _userResourcePermBLL.Get(userId, TokenType.User, resourceId, resourceType);
+            var userResourcePerm = GetPermission(userId, TokenType.User, resourceId, resourceType);
 
             return _permCalculator.HasPermission(userResourcePerm.Permission, mask);
         }
@@ -89,7 +191,7 @@ namespace BLL.Permission
 
         public int GrantPermission(int userId, int resourceId, ResourceType resourceType, List<PermissionMask> masks)
         {
-            var userResourcePerm = _userResourcePermBLL.Get(userId, TokenType.User, resourceId, resourceType);
+            var userResourcePerm = GetPermission(userId, TokenType.User, resourceId, resourceType);
             int perm = userResourcePerm.Permission;
             foreach (var mask in masks)
             {
@@ -106,7 +208,6 @@ namespace BLL.Permission
             }
         }
 
-
         public int RevokePermission(int userId, int resourceId, ResourceType resourceType, PermissionMask mask)
         {
             var masks = new List<PermissionMask>() { mask };
@@ -116,7 +217,7 @@ namespace BLL.Permission
 
         public int RevokePermission(int userId, int resourceId, ResourceType resourceType, List<PermissionMask> masks)
         {
-            var userResourcePerm = _userResourcePermBLL.Get(userId, TokenType.User, resourceId, resourceType);
+            var userResourcePerm = GetPermission(userId, TokenType.User, resourceId, resourceType);
             int perm = userResourcePerm.Permission;
             
             foreach (var mask in masks)
@@ -215,6 +316,23 @@ namespace BLL.Permission
             return _userResourcePermBLL.Update(urPerm);
         }
 
+        private TokenResourcePermission GetPermission(int token, TokenType tokenType, int resourceId, ResourceType resourceType)
+        {
+            return _userResourcePermBLL.Get(token, tokenType, resourceId, resourceType);
+        }
+        #endregion
+
+        #region private method to get roles
+
+        private List<UserRole> GetRoles(int userId)
+        {
+            return _userRoleBLL.GetByUser(userId);
+        }
+
+        private Feature GetFeature(string featureCode)
+        {
+            return _featureBLL.GetByCode(featureCode);
+        }
         #endregion
     }
 }
