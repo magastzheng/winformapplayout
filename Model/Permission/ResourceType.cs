@@ -26,6 +26,8 @@ namespace Model.Permission
         HistoricalSpotTemplate = 112,
         //交易实例
         TradeInstance = 113,    
+        //交易实例调整
+        TradeInstanceAdjustment = 114,
         //交易指令
         TradeCommand = 121,     
         //委托指令

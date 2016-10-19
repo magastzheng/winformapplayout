@@ -1,5 +1,5 @@
 ﻿using BLL.EntrustCommand;
-using BLL.TradeCommand;
+using BLL.TradeInstance;
 using BLL.UFX.impl;
 using Config.ParamConverter;
 using DBAccess;

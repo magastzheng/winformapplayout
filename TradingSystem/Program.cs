@@ -7,9 +7,9 @@ using System.Windows.Forms;
 using TradingSystem.View;
 using log4net.Config;
 using BLL.UFX;
-using BLL.TradeCommand;
 using WAPIWrapperCSharp;
 using System.Configuration;
+using BLL.TradeInstance;
 
 namespace TradingSystem
 {

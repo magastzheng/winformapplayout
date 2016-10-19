@@ -2,7 +2,6 @@
 using BLL.Product;
 using BLL.SecurityInfo;
 using Config;
-using DBAccess;
 using DBAccess.TradeInstance;
 using Model.EnumType;
 using Model.Permission;
@@ -11,7 +10,7 @@ using Model.UI;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BLL.TradeCommand
+namespace BLL.TradeInstance
 {
     public class TradeInstanceBLL
     {

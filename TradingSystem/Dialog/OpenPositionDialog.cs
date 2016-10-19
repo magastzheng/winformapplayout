@@ -1,15 +1,14 @@
-﻿using DBAccess;
-using Model.UI;
+﻿using Model.UI;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Linq;
 using Forms;
 using Model.config;
-using BLL.TradeCommand;
 using Model.Constant;
 using Util;
 using Model.Dialog;
+using BLL.TradeInstance;
 
 namespace TradingSystem.Dialog
 {

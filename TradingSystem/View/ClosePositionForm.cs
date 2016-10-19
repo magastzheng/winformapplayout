@@ -11,7 +11,6 @@ using Util;
 using BLL.SecurityInfo;
 using TradingSystem.Dialog;
 using BLL.Template;
-using BLL.TradeCommand;
 using Model.config;
 using Model.EnumType;
 using Model.Binding.BindingUtil;
@@ -22,6 +21,7 @@ using System.Diagnostics;
 using System.Text;
 using Model.Database;
 using BLL.Frontend;
+using BLL.TradeInstance;
 
 namespace TradingSystem.View
 {

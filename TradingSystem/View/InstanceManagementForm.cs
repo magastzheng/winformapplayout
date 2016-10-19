@@ -1,4 +1,4 @@
-﻿using BLL.TradeCommand;
+﻿using BLL.TradeInstance;
 using Config;
 using Controls.Entity;
 using Controls.GridView;

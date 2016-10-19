@@ -10,7 +10,6 @@ using System.Linq;
 using Quote;
 using TradingSystem.Dialog;
 using BLL.SecurityInfo;
-using BLL.TradeCommand;
 using Model.EnumType;
 using Model.Binding.BindingUtil;
 using TradingSystem.TradeUtil;
@@ -19,6 +18,7 @@ using BLL.Template;
 using BLL.Frontend;
 using Model.Constant;
 using Model.Dialog;
+using BLL.TradeInstance;
 
 namespace TradingSystem.View
 {

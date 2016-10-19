@@ -12,12 +12,12 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Linq;
-using BLL.TradeCommand;
 using BLL.Template;
 using BLL.Entrust;
 using TradingSystem.Dialog;
 using Model.strategy;
 using BLL.SecurityInfo;
+using BLL.TradeInstance;
 
 namespace TradingSystem.View
 {

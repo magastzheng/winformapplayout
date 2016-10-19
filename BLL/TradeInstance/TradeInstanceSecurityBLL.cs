@@ -5,7 +5,7 @@ using Model.EnumType;
 using Model.UI;
 using System.Collections.Generic;
 
-namespace BLL.TradeCommand
+namespace BLL.TradeInstance
 {
     public class TradeInstanceSecurityBLL
     {
@@ -106,6 +106,7 @@ namespace BLL.TradeCommand
         {
             List<TradingInstanceSecurity> srcNewItems = new List<TradingInstanceSecurity>();
             List<TradingInstanceSecurity> destNewItems = new List<TradingInstanceSecurity>();
+            List<TradingInstanceAdjustmentItem> adjustItems = new List<TradingInstanceAdjustmentItem>();
 
             //获取src中所有的持仓
             var srcItems = Get(src.InstanceId);
@@ -117,6 +118,7 @@ namespace BLL.TradeCommand
             //对于dest,加入划转部分
             foreach (var transferItem in transferItems)
             {
+                //对源实例中的证券进行更新
                 TradingInstanceSecurity srcOutItem = new TradingInstanceSecurity
                 {
                     SecuCode = transferItem.SecuCode,
@@ -140,6 +142,7 @@ namespace BLL.TradeCommand
                  
                 srcNewItems.Add(srcOutItem);
 
+                //对目标实例中的证券进行更新
                 TradingInstanceSecurity destInItem = new TradingInstanceSecurity 
                 {
                     SecuCode = transferItem.SecuCode,
@@ -172,10 +175,29 @@ namespace BLL.TradeCommand
                 }
 
                 destNewItems.Add(destInItem);
+
+                //对调整做记录
+                TradingInstanceAdjustmentItem adjustItem = new TradingInstanceAdjustmentItem 
+                {
+                    SourceInstanceId = src.InstanceId,
+                    SourcePortfolioCode = src.PortfolioCode,
+                    DestinationInstanceId = dest.InstanceId,
+                    DestinationPortfolioCode = dest.PortfolioCode,
+                    SecuCode = transferItem.SecuCode,
+                    SecuType = transferItem.SecuType,
+                    PositionType = PositionType.SpotLong,
+                    Price = transferItem.TransferedPrice,
+                    Amount = transferItem.TransferedAmount,
+                    AdjustType = AdjustmentType.Transfer,
+                };
+
+                adjustItems.Add(adjustItem);
             }
 
             //更新数据库,指向要更新变化部分即可,通过提交事务
             int ret = _tradeinstsecudao.Transfer(destNewItems, srcNewItems);
+            //TODO: store the transfer record
+
             return ret;
         }
 
