@@ -10,39 +10,44 @@ namespace TradingSystem.Dialog
 {
     public sealed class MessageDialog
     {
+        public static string TitleError = "errortitle";
+        public static string TitleFail = "failtitle";
+        public static string TitleWarn = "warntitle";
+        public static string TitlePrompt = "prompttitle";
+
         public static DialogResult Error(Form form, string msgId)
-        { 
-            return Show(form, msgId, "errortitle", MessageBoxButtons.OK, MessageBoxIcon.Error); 
+        {
+            return Show(form, TitleError, msgId, MessageBoxButtons.OK, MessageBoxIcon.Error); 
         }
 
         public static DialogResult Error(Form form, string msgId, MessageBoxButtons msgBoxButtons)
         {
-            return Show(form, msgId, "errortitle", msgBoxButtons, MessageBoxIcon.Error);
+            return Show(form, TitleError, msgId, msgBoxButtons, MessageBoxIcon.Error);
         }
 
         public static DialogResult Fail(Form form, string msgId)
         {
-            return Show(form, msgId, "failtitle", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return Show(form, TitleFail, msgId, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         public static DialogResult Warn(Form form, string msgId)
         {
-            return Show(form, msgId, "warntitle", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return Show(form, TitleWarn, msgId, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         public static DialogResult Warn(Form form, string msgId, MessageBoxButtons msgBoxButtons)
         {
-            return Show(form, msgId, "warntitle", msgBoxButtons, MessageBoxIcon.Warning);
+            return Show(form, TitleWarn, msgId, msgBoxButtons, MessageBoxIcon.Warning);
         }
 
         public static DialogResult Info(Form form, string msgId)
         {
-            return Show(form, msgId, "prompttitle", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return Show(form, TitlePrompt, msgId, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public static DialogResult Info(Form form, string msgId, MessageBoxButtons msgBoxButtons)
         {
-            return Show(form, msgId, "prompttitle", msgBoxButtons, MessageBoxIcon.Information);
+            return Show(form, TitlePrompt, msgId, msgBoxButtons, MessageBoxIcon.Information);
         }
 
         private static DialogResult Show(Form form, string msgId, string titleId, MessageBoxButtons msgBoxButtons, MessageBoxIcon msgBoxIcon)
