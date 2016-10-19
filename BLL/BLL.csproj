@@ -79,7 +79,7 @@
     <Compile Include="Permission\RoleBLL.cs" />
     <Compile Include="Permission\RoleFeaturePermissionBLL.cs" />
     <Compile Include="Permission\UserBLL.cs" />
-    <Compile Include="Permission\UserResourcePermissionBLL.cs" />
+    <Compile Include="Permission\TokenResourcePermissionBLL.cs" />
     <Compile Include="Permission\UserRoleBLL.cs" />
     <Compile Include="Template\BenchmarkBLL.cs" />
     <Compile Include="Template\HistTemplateBLL.cs" />

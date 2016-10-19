@@ -146,6 +146,6 @@ namespace Model.UI
 
         public List<User> CanViewUsers { get; set; }
 
-        public List<UserResourcePermission> Permissions { get; set; }
+        public List<TokenResourcePermission> Permissions { get; set; }
     }
 }

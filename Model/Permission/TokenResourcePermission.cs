@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Model.Permission
 {
-    public class UserResourcePermission
+    public class TokenResourcePermission
     {
         public int Id { get; set; }
 

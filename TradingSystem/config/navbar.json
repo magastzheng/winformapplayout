@@ -14,7 +14,7 @@
             }
         ]
     },{
-        "id": "trading",
+        "id": "strategycommand",
         "title": "策略指令",
         "parentid": "",
         "isexpansed": false,
@@ -22,32 +22,32 @@
             {
                 "id": "open",
                 "title": "期现开仓",
-                "parentid": "trading",
+                "parentid": "strategycommand",
                 "isexpansed": false,
                 "children": []
             },{
                 "id": "close",
                 "title": "期现平仓",
-                "parentid": "trading",
+                "parentid": "strategycommand",
                 "isexpansed": false,
                 "children": []
             },{
                 "id": "commandmanager",
                 "title": "指令管理",
-                "parentid": "trading",
+                "parentid": "strategycommand",
                 "isexpansed": false,
                 "children": []
             },{
                 "id": "monitorunit",
                 "title": "监控单元",
-                "parentid": "trading",
+                "parentid": "strategycommand",
                 "isexpansed": false,
                 "children": []
             }
         ]
     },{
         "id": "portfoliomanagement",
-        "title": "组合管理管理",
+        "title": "组合管理",
         "parentid": "",
         "isexpansed": false,
         "children":[
@@ -96,7 +96,7 @@
         ]
     },
     {
-        "id": "holding",
+        "id": "holdingmanagement",
         "title": "持仓管理",
         "parentid": "",
         "isexpansed": false,

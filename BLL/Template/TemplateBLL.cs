@@ -15,7 +15,7 @@ namespace BLL.Template
         private TemplateStockDAO _stockdbdao = new TemplateStockDAO();
         private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
         private PermissionManager _permissionManager = new PermissionManager();
-        private UserResourcePermissionBLL _urPermissionBLL = new UserResourcePermissionBLL();
+        private TokenResourcePermissionBLL _urPermissionBLL = new TokenResourcePermissionBLL();
         private UserBLL _userBLL = new UserBLL();
 
         public TemplateBLL()

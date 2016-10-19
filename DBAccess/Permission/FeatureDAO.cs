@@ -31,6 +31,7 @@ namespace DBAccess.Permission
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
             _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, feature.Id);
+            _dbHelper.AddInParameter(dbCommand, "@Code", System.Data.DbType.String, feature.Code);
             _dbHelper.AddInParameter(dbCommand, "@Name", System.Data.DbType.String, feature.Name);
             _dbHelper.AddInParameter(dbCommand, "@Description", System.Data.DbType.String, feature.Description);
             
@@ -51,6 +52,7 @@ namespace DBAccess.Permission
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Modify);
             _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, feature.Id);
+            _dbHelper.AddInParameter(dbCommand, "@Code", System.Data.DbType.String, feature.Code);
             _dbHelper.AddInParameter(dbCommand, "@Name", System.Data.DbType.String, feature.Name);
             _dbHelper.AddInParameter(dbCommand, "@Description", System.Data.DbType.String, feature.Description);
 
@@ -105,6 +107,7 @@ namespace DBAccess.Permission
                 {
                     Feature item = new Feature();
                     item.Id = (int)reader["Id"];
+                    item.Code = (string)reader["Code"];
                     item.Name = (string)reader["Name"];
                     item.Description = (string)reader["Description"];
 

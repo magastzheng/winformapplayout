@@ -7,12 +7,20 @@ using System.Threading.Tasks;
 
 namespace BLL.Permission
 {
+    /// <summary>
+    /// There are two types of user and resource permission. One is that the user is a role and the role has the permission,
+    /// then the user has the permission; the other is that the user has the permission directly. The later case is in the
+    /// area where user generates the resource.
+    /// user --> role --> resource
+    /// user --> resource
+    /// A user is a role and the role has some permissions.
+    /// </summary>
     public class PermissionManager
     {
         private RoleBLL _roleBLL = new RoleBLL();
         private UserRoleBLL _userRoleBLL = new UserRoleBLL();
-        private RoleFeaturePermissionBLL _roleFeaturePermBLL = new RoleFeaturePermissionBLL();
-        private UserResourcePermissionBLL _userResourcePermBLL = new UserResourcePermissionBLL();
+        //private RoleFeaturePermissionBLL _roleFeaturePermBLL = new RoleFeaturePermissionBLL();
+        private TokenResourcePermissionBLL _userResourcePermBLL = new TokenResourcePermissionBLL();
         private PermissionCalculator _permCalculator = new PermissionCalculator();
 
         #region user role permission
@@ -35,15 +43,15 @@ namespace BLL.Permission
             return currentRoles;
         }
 
-        public List<UserResourcePermission> GetRolePermission(Role role)
+        public List<TokenResourcePermission> GetRolePermission(Role role)
         {
             return _userResourcePermBLL.GetByToken(role.Id, TokenType.Role);
         }
 
-        public List<UserResourcePermission> GetUserRolePermission(User user)
+        public List<TokenResourcePermission> GetUserRolePermission(User user)
         {
             var roles = GetRoles(user);
-            var currentPerms = new List<UserResourcePermission>();
+            var currentPerms = new List<TokenResourcePermission>();
             foreach (var role in roles)
             {
                 var rolePerm = GetRolePermission(role);
@@ -56,7 +64,7 @@ namespace BLL.Permission
 
         #region user resource permission
 
-        public List<UserResourcePermission> GetUserResourcePermission(User user)
+        public List<TokenResourcePermission> GetUserResourcePermission(User user)
         {
             return _userResourcePermBLL.GetByToken(user.Id, TokenType.User);
         }
@@ -181,7 +189,7 @@ namespace BLL.Permission
 
         private int CreatePermission(int token, TokenType tokenType, int resourceId, ResourceType resourceType, int permission)
         {
-            UserResourcePermission urPerm = new UserResourcePermission
+            TokenResourcePermission urPerm = new TokenResourcePermission
             {
                 Token = token,
                 TokenType = tokenType,
@@ -195,7 +203,7 @@ namespace BLL.Permission
 
         private int UpdatePermission(int token, TokenType tokenType, int resourceId, ResourceType resourceType, int permission)
         {
-            UserResourcePermission urPerm = new UserResourcePermission
+            TokenResourcePermission urPerm = new TokenResourcePermission
             {
                 Token = token,
                 TokenType = tokenType,

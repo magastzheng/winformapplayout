@@ -5,6 +5,7 @@ drop table features
 
 create table features(
 	Id			int not null primary key,	--软件系统功能Id
+	Code		varchar(30) not null,		--软件系统功能代码
 	Name		varchar(30) not null,		--软件系统功能名称
 	Description	varchar(100),				--软件系统功能描述
 )
@@ -16,22 +17,27 @@ drop proc procFeaturesInsert
 go
 create proc procFeaturesInsert(
 	@Id					int
+	,@Code				varchar(20)
 	,@Name				varchar(30)
 	,@Description		varchar(100)
 )
 as
 begin
 	insert into features(
-		Id			
+		Id
+		,Code			
 		,Name		
 		,Description
 	)
 	values
 	(
-		@Id			
+		@Id
+		,@Code			
 		,@Name		
 		,@Description
 	)
+
+	return @Id
 end
 
 go
@@ -41,14 +47,16 @@ drop proc procFeaturesUpdate
 go
 create proc procFeaturesUpdate(
 	@Id					int
+	,@Code				varchar(30)
 	,@Name				varchar(30)
 	,@Description		varchar(100)
 )
 as
 begin
 	update features
-	set			
-		Name			= @Name	
+	set	
+		Code			= @Code		
+		,Name			= @Name	
 		,Description	= @Description
 	where Id=@Id
 end
@@ -79,6 +87,7 @@ begin
 	if @Id is not null
 	begin
 		select Id
+			,Code
 			,Name
 			,Description
 		from features
@@ -87,6 +96,7 @@ begin
 	else
 	begin
 		select Id
+			,Code
 			,Name
 			,Description
 		from features

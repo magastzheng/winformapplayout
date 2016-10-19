@@ -56,6 +56,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelTest", "ModelTest\Mode
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLLTest", "BLLTest\BLLTest.csproj", "{74B0347C-4DE0-4EA7-BE99-70BE91948CBD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemManagement", "SystemManagement\SystemManagement.csproj", "{6103AE88-C6A6-4DFE-A261-50631076BD4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -150,6 +152,10 @@ Global
 		{74B0347C-4DE0-4EA7-BE99-70BE91948CBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74B0347C-4DE0-4EA7-BE99-70BE91948CBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74B0347C-4DE0-4EA7-BE99-70BE91948CBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6103AE88-C6A6-4DFE-A261-50631076BD4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6103AE88-C6A6-4DFE-A261-50631076BD4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6103AE88-C6A6-4DFE-A261-50631076BD4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6103AE88-C6A6-4DFE-A261-50631076BD4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

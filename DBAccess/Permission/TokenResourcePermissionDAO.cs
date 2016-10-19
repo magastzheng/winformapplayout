@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DBAccess.Permission
 {
-    public class UserResourcePermissionDAO : BaseDAO
+    public class TokenResourcePermissionDAO : BaseDAO
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -20,17 +20,17 @@ namespace DBAccess.Permission
         private const string SP_SelectByResource = "procTokenResourcePermissionSelectByResouce";
         private const string SP_SelectSingle = "procTokenResourcePermissionSelectSingle";
 
-        public UserResourcePermissionDAO()
+        public TokenResourcePermissionDAO()
             : base()
         { 
         }
 
-        public UserResourcePermissionDAO(DbHelper dbHelper)
+        public TokenResourcePermissionDAO(DbHelper dbHelper)
             : base(dbHelper)
         {
         }
 
-        public int Create(UserResourcePermission permission)
+        public int Create(TokenResourcePermission permission)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
             _dbHelper.AddInParameter(dbCommand, "@Token", System.Data.DbType.Int32, permission.Token);
@@ -52,7 +52,7 @@ namespace DBAccess.Permission
             return id;
         }
 
-        public int Update(UserResourcePermission permission)
+        public int Update(TokenResourcePermission permission)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Modify);
             _dbHelper.AddInParameter(dbCommand, "@Token", System.Data.DbType.Int32, permission.Token);
@@ -75,7 +75,7 @@ namespace DBAccess.Permission
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public UserResourcePermission GetSingle(int token, TokenType tokenType, int resourceId, ResourceType resourceType)
+        public TokenResourcePermission GetSingle(int token, TokenType tokenType, int resourceId, ResourceType resourceType)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_SelectSingle);
             _dbHelper.AddInParameter(dbCommand, "@Token", System.Data.DbType.Int32, token);
@@ -84,7 +84,7 @@ namespace DBAccess.Permission
             _dbHelper.AddInParameter(dbCommand, "@ResourceType", System.Data.DbType.Int32, (int)resourceType);
             var reader = _dbHelper.ExecuteReader(dbCommand);
 
-            UserResourcePermission item = new UserResourcePermission();
+            TokenResourcePermission item = new TokenResourcePermission();
             if (reader.HasRows)
             {
                 while (reader.Read())
@@ -105,19 +105,19 @@ namespace DBAccess.Permission
             return item;
         }
 
-        public List<UserResourcePermission> GetByToken(int token, TokenType tokenType)
+        public List<TokenResourcePermission> GetByToken(int token, TokenType tokenType)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_SelectToken);
             _dbHelper.AddInParameter(dbCommand, "@Token", System.Data.DbType.Int32, token);
             _dbHelper.AddInParameter(dbCommand, "@TokenType", System.Data.DbType.Int32, (int)tokenType);
 
-            List<UserResourcePermission> items = new List<UserResourcePermission>();
+            List<TokenResourcePermission> items = new List<TokenResourcePermission>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    UserResourcePermission item = new UserResourcePermission();
+                    TokenResourcePermission item = new TokenResourcePermission();
                     item.Id = (int)reader["Id"];
                     item.Token = (int)reader["Token"];
                     item.TokenType = (TokenType)reader["TokenType"];
@@ -135,20 +135,20 @@ namespace DBAccess.Permission
             return items;
         }
 
-        public List<UserResourcePermission> GetByResourceType(int token, TokenType tokenType, ResourceType resourceType)
+        public List<TokenResourcePermission> GetByResourceType(int token, TokenType tokenType, ResourceType resourceType)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_SelectResourceType);
             _dbHelper.AddInParameter(dbCommand, "@Token", System.Data.DbType.Int32, token);
             _dbHelper.AddInParameter(dbCommand, "@TokenType", System.Data.DbType.Int32, (int)tokenType);
             _dbHelper.AddInParameter(dbCommand, "@ResourceType", System.Data.DbType.Int32, (int)resourceType);
 
-            List<UserResourcePermission> items = new List<UserResourcePermission>();
+            List<TokenResourcePermission> items = new List<TokenResourcePermission>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    UserResourcePermission item = new UserResourcePermission();
+                    TokenResourcePermission item = new TokenResourcePermission();
                     item.Id = (int)reader["Id"];
                     item.Token = (int)reader["Token"];
                     item.TokenType = (TokenType)reader["TokenType"];
@@ -166,19 +166,19 @@ namespace DBAccess.Permission
             return items;
         }
 
-        public List<UserResourcePermission> GetByResource(int resourceId, ResourceType resourceType)
+        public List<TokenResourcePermission> GetByResource(int resourceId, ResourceType resourceType)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_SelectByResource);
             _dbHelper.AddInParameter(dbCommand, "@ResourceId", System.Data.DbType.Int32, resourceId);
             _dbHelper.AddInParameter(dbCommand, "@ResourceType", System.Data.DbType.Int32, (int)resourceType);
 
-            List<UserResourcePermission> items = new List<UserResourcePermission>();
+            List<TokenResourcePermission> items = new List<TokenResourcePermission>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    UserResourcePermission item = new UserResourcePermission();
+                    TokenResourcePermission item = new TokenResourcePermission();
                     item.Id = (int)reader["Id"];
                     item.Token = (int)reader["Token"];
                     item.TokenType = (TokenType)reader["TokenType"];

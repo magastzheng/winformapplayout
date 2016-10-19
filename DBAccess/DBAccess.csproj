@@ -63,7 +63,7 @@
     <Compile Include="Permission\RoleDAO.cs" />
     <Compile Include="Permission\RoleFeaturePermissionDAO.cs" />
     <Compile Include="Permission\UserDAO.cs" />
-    <Compile Include="Permission\UserResourcePermissionDAO.cs" />
+    <Compile Include="Permission\TokenResourcePermissionDAO.cs" />
     <Compile Include="Permission\UserRoleDAO.cs" />
     <Compile Include="PortfolioDAO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -180,7 +180,7 @@ namespace TradingSystem.Dialog
             StockTemplate stockTemplate = new StockTemplate
             {
                 EStatus = TemplateStatus.Normal,
-                Permissions = new List<UserResourcePermission>(),
+                Permissions = new List<TokenResourcePermission>(),
                 CanEditUsers = new List<User>(),
                 CanViewUsers = new List<User>(),
             };
@@ -268,12 +268,12 @@ namespace TradingSystem.Dialog
 
             //处理权限改变的情况，添加新权限，或者去掉某一项权限
             var permUsers = stockTemplate.CanEditUsers.Union(stockTemplate.CanViewUsers);
-            var urPermission = new List<UserResourcePermission>();
+            var urPermission = new List<TokenResourcePermission>();
             foreach (var user in permUsers)
             {
                 int oldPerm = 0;
                 int newPerm = 0;
-                UserResourcePermission urPerm = null;
+                TokenResourcePermission urPerm = null;
                 if (_oldTemplate != null && _oldTemplate.Permissions != null)
                 {
                     urPerm = _oldTemplate.Permissions.Find(p => p.Token == user.Id && p.TokenType == TokenType.User);
@@ -307,7 +307,7 @@ namespace TradingSystem.Dialog
                 newPerm = _permissionManager.AddPermission(newPerm, addRights);
                 newPerm = _permissionManager.RemovePermission(newPerm, removeRights);
 
-                UserResourcePermission nurPerm = new UserResourcePermission
+                TokenResourcePermission nurPerm = new TokenResourcePermission
                 {
                     Token = user.Id,
                     TokenType = TokenType.User,
@@ -338,7 +338,7 @@ namespace TradingSystem.Dialog
                     {
                         List<PermissionMask> rights = new List<PermissionMask>() { PermissionMask.Edit, PermissionMask.Veiw };
                         int newPerm = _permissionManager.RemovePermission(oldPerm.Permission, rights);
-                        UserResourcePermission nurPerm = new UserResourcePermission
+                        TokenResourcePermission nurPerm = new TokenResourcePermission
                         {
                             Token = oldPerm.Token,
                             TokenType = TokenType.User,

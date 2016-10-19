@@ -6,8 +6,8 @@ drop table roles
 create table roles(
 	Id		int identity(1, 1) primary key,
 	Name	varchar(20) not null,
-	Status	int,
-	Type	int
+	Status	int,	--0 inactive, 1 - normal
+	Type	int		--1 admin, 2 - systemmanager, 5 - fundmanager, 6 - dealer
 )
 
 go

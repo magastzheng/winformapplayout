@@ -4,44 +4,44 @@ using System.Collections.Generic;
 
 namespace BLL.Permission
 {
-    public class UserResourcePermissionBLL
+    public class TokenResourcePermissionBLL
     {
-        private UserResourcePermissionDAO _urpermissiondao = new UserResourcePermissionDAO();
-        public UserResourcePermissionBLL()
+        private TokenResourcePermissionDAO _urpermissiondao = new TokenResourcePermissionDAO();
+        public TokenResourcePermissionBLL()
         { 
         }
 
-        public int Create(UserResourcePermission urPermission)
+        public int Create(TokenResourcePermission urPermission)
         {
             return _urpermissiondao.Create(urPermission);
         }
 
-        public int Update(UserResourcePermission urPermission)
+        public int Update(TokenResourcePermission urPermission)
         {
             return _urpermissiondao.Update(urPermission);
         }
 
-        public int Delete(UserResourcePermission urPermission)
+        public int Delete(TokenResourcePermission urPermission)
         {
             return _urpermissiondao.Delete(urPermission.Token, urPermission.TokenType, urPermission.ResourceId, urPermission.ResourceType);
         }
 
-        public UserResourcePermission Get(int token, TokenType tokenType, int resourceId, ResourceType resourceType)
+        public TokenResourcePermission Get(int token, TokenType tokenType, int resourceId, ResourceType resourceType)
         {
             return _urpermissiondao.GetSingle(token, tokenType, resourceId, resourceType);
         }
 
-        public List<UserResourcePermission> GetByToken(int token, TokenType tokenType)
+        public List<TokenResourcePermission> GetByToken(int token, TokenType tokenType)
         {
             return _urpermissiondao.GetByToken(token, tokenType);
         }
 
-        public List<UserResourcePermission> GetByResourceType(int token, TokenType tokenType, ResourceType resourceType)
+        public List<TokenResourcePermission> GetByResourceType(int token, TokenType tokenType, ResourceType resourceType)
         {
             return _urpermissiondao.GetByResourceType(token, tokenType, resourceType);
         }
 
-        public List<UserResourcePermission> GetByResource(int resourceId, ResourceType resourceType)
+        public List<TokenResourcePermission> GetByResource(int resourceId, ResourceType resourceType)
         {
             return _urpermissiondao.GetByResource(resourceId, resourceType);
         }

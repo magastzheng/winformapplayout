@@ -4,11 +4,7 @@ using DBAccess.TradeInstance;
 using log4net;
 using Model.Permission;
 using Model.UI;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.TradeInstance
 {
@@ -24,6 +20,9 @@ namespace BLL.TradeInstance
         
         }
 
+        #region public method
+
+        //Add new record into the table and then add the permission for the user.
         public int Create(TradingInstanceAdjustmentItem item)
         {
             int id = _tradeinstadjustmentdao.Create(item);
@@ -42,6 +41,11 @@ namespace BLL.TradeInstance
             return finalId;
         }
 
+        /// <summary>
+        /// Delete the specified item if it has the permission.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public int Delete(int id)
         {
             var userId = LoginManager.Instance.GetUserId();
@@ -70,5 +74,7 @@ namespace BLL.TradeInstance
 
             return items;
         }
+
+        #endregion
     }
 }
