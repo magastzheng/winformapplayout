@@ -36,7 +36,7 @@
     </Win32Resource>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationIcon>htsamc_logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ext_t2sdkEx, Version=1.0.5654.21600, Culture=neutral, processorArchitecture=AMD64">
@@ -369,6 +369,9 @@
     <None Include="Resources\refresh.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\edit.png" />
+    <Content Include="Resources\htsamc_logo.ico" />
+    <Content Include="Resources\htsamc_logo.png" />
     <None Include="Resources\cancelredo.png" />
     <None Include="Resources\canceladd.jpeg" />
     <None Include="Resources\undo.png" />
@@ -379,11 +382,13 @@
     <None Include="config\navbar.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="htsamc_logo.ico" />
     <Content Include="icon.ico" />
     <Content Include="img\addnew.jpg" />
     <Content Include="img\addnew2.jpg" />
     <Content Include="img\down.png" />
     <None Include="img\edit.png" />
+    <None Include="img\htsamc_logo.png" />
     <Content Include="img\item.png" />
     <Content Include="img\minus.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

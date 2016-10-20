@@ -28,6 +28,14 @@ namespace TradingSystem.View
         #region event handler
         private void MainForm_Load(object sender, System.EventArgs e)
         {
+            //Set the user name into the statuslabel
+            var user = LoginManager.Instance.GetUser();
+            if (user != null)
+            {
+                this.tsslUser.Text = user.Name;
+            }
+
+            //load the navbar in the left panel
             var nodes = ConfigManager.Instance.GetNavbarConfig().BarDataList;
             if (nodes != null)
             {
