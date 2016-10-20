@@ -30,10 +30,10 @@ namespace DBAccess.Permission
         public int Create(Role role)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
+            _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, (int)role.Id);
             _dbHelper.AddInParameter(dbCommand, "@Name", System.Data.DbType.String, role.Name);
             _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)role.Status);
-            _dbHelper.AddInParameter(dbCommand, "@Type", System.Data.DbType.Int32, (int)role.Type);
-
+            
             _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
 
             int ret = _dbHelper.ExecuteNonQuery(dbCommand);
@@ -50,25 +50,24 @@ namespace DBAccess.Permission
         public int Update(Role role)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Modify);
-            _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, role.Id);
+            _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, (int)role.Id);
             _dbHelper.AddInParameter(dbCommand, "@Name", System.Data.DbType.String, role.Name);
             _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)role.Status);
-            _dbHelper.AddInParameter(dbCommand, "@Type", System.Data.DbType.Int32, (int)role.Type);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public int Delete(int roleId)
+        public int Delete(RoleType id)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Delete);
-            _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, roleId);
+            _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, (int)id);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public Role Get(int roleId)
+        public Role Get(RoleType roleType)
         {
-            var items = GetInternal(roleId);
+            var items = GetInternal(roleType);
 
             Role item = null;
             if (items.Count > 0)
@@ -85,18 +84,18 @@ namespace DBAccess.Permission
 
         public List<Role> Get()
         {
-            return GetInternal(-1);
+            return GetInternal(RoleType.None);
         }
 
         #region private method
 
-        public List<Role> GetInternal(int roleId)
+        public List<Role> GetInternal(RoleType roleType)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Select);
 
-            if (roleId > 0)
+            if (roleType != RoleType.None)
             {
-                _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, roleId);
+                _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, (int)roleType);
             }
 
             List<Role> items = new List<Role>();
@@ -106,11 +105,10 @@ namespace DBAccess.Permission
                 while (reader.Read())
                 {
                     Role item = new Role();
-                    item.Id = (int)reader["Id"];
+                    item.Id = (RoleType)reader["Id"];
                     item.Name = (string)reader["Name"];
                     item.Status = (RoleStatus)reader["Status"];
-                    item.Type = (RoleType)reader["Type"];
-
+                    
                     items.Add(item);
                 }
             }

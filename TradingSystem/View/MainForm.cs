@@ -1,6 +1,9 @@
 ﻿using BLL;
+using BLL.Permission;
 using BLL.UFX;
 using Config;
+using Controls.Entity;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using TradingSystem.Controller;
 
@@ -10,6 +13,7 @@ namespace TradingSystem.View
     {
         private GridConfig _gridConfig;
         private T2SDKWrap _t2SDKWrap;
+        private PermissionManager _permissionManager = new PermissionManager();
 
         //private Dictionary<string, Forms.BaseForm> _childFormMap = new Dictionary<string, Forms.BaseForm>();
 
@@ -44,25 +48,37 @@ namespace TradingSystem.View
             {
                 this.tsslUser.Text = user.Name;
             }
+            int userId = LoginManager.Instance.GetUserId();
 
             //load the navbar in the left panel
             var nodes = ConfigManager.Instance.GetNavbarConfig().BarDataList;
-            if (nodes != null)
+            var validNodes = GetValidNavItems(userId, nodes);
+            if (validNodes != null)
             {
-                foreach (var node in nodes)
+                foreach (var node in validNodes)
                 {
-                    Controls.TSNavBarItem tsNavBarItem = _navBarContainer.AddBar();
-                    tsNavBarItem.Title = node.Title;
-                    //tsNavBarItem.Dock = DockStyle.Top;
-                    tsNavBarItem.AddTreeNode(node.Children);
-                    tsNavBarItem.TreeView.NodeCollapseImage = _imageList.Images[0];
-                    tsNavBarItem.TreeView.NodeExpandedImage = _imageList.Images[1];
-                    tsNavBarItem.TreeView.NodeImage = _imageList.Images[2];
+                    if (_permissionManager.HasPermission(userId, node.Id, Model.Permission.PermissionMask.View))
+                    {
+                        Controls.TSNavBarItem tsNavBarItem = _navBarContainer.AddBar();
+                        tsNavBarItem.Title = node.Title;
+                        //tsNavBarItem.Dock = DockStyle.Top;
+                        tsNavBarItem.AddTreeNode(node.Children);
+                        tsNavBarItem.TreeView.NodeCollapseImage = _imageList.Images[0];
+                        tsNavBarItem.TreeView.NodeExpandedImage = _imageList.Images[1];
+                        tsNavBarItem.TreeView.NodeImage = _imageList.Images[2];
+                    }
                 }
 
-                //_navBarContainer.SwitchBarState(1);
-                _navBarContainer.ExpandDefaultBar(1);
-                FormManager.Instance.ActiveForm(this, _panelMain, "open", _gridConfig, BLLManager.Instance);
+                //Set the default expand
+                const int index = 0;
+                string featureId = string.Empty;
+                if (validNodes.Count > 0 && validNodes[index].Children != null && validNodes[index].Children.Count > 0)
+                {
+                    featureId = validNodes[index].Children[0].Id;
+
+                    _navBarContainer.ExpandDefaultBar(index);
+                    FormManager.Instance.ActiveForm(this, _panelMain, featureId, _gridConfig, BLLManager.Instance);
+                }
             }
         }
 
@@ -77,6 +93,42 @@ namespace TradingSystem.View
 
             //TODO:
         }
+        #endregion
+
+        #region left panel nav items
+
+        private List<TSNavNodeData> GetValidNavItems(int userId, List<TSNavNodeData> allNavItems)
+        {
+            var navItems = new List<TSNavNodeData>();
+            foreach (var navItem in allNavItems)
+            {
+                if (_permissionManager.HasPermission(userId, navItem.Id, Model.Permission.PermissionMask.View))
+                {
+                    var newNavItem = new TSNavNodeData 
+                    {
+                        Id = navItem.Id,
+                        IsExpansed = navItem.IsExpansed,
+                        Title = navItem.Title,
+                        ParentId = navItem.ParentId,
+                        Children = new List<TSNavNodeData>()
+                    };
+
+                    if (navItem.Children != null && navItem.Children.Count > 0)
+                    {
+                        var children = GetValidNavItems(userId, navItem.Children);
+                        if (children.Count > 0)
+                        {
+                            newNavItem.Children.AddRange(children);
+                        }
+                    }
+
+                    navItems.Add(newNavItem);
+                }
+            }
+
+            return navItems;
+        }
+
         #endregion
 
         #region MenuItem click event handler

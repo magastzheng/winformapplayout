@@ -22,12 +22,12 @@ namespace BLL.Permission
             return _roledao.Update(role);
         }
 
-        public int Delete(int roleId)
+        public int Delete(RoleType roleId)
         {
             return _roledao.Delete(roleId);
         }
 
-        public Role Get(int roleId)
+        public Role Get(RoleType roleId)
         {
             return _roledao.Get(roleId);
         }
