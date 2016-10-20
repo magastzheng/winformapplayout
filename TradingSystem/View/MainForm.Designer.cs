@@ -311,7 +311,6 @@
             this.MainMenuStrip = this._menuStripMain;
             this.Name = "MainForm";
             this.Text = "交易系统";
-            this.Load += new System.EventHandler(this.MainForm_Load);
             this.panelTopContainer.ResumeLayout(false);
             this.panelTopContainer.PerformLayout();
             this._toolStrip.ResumeLayout(false);

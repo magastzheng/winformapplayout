@@ -16,6 +16,16 @@ namespace TradingSystem.View
         public MainForm()
         {
             InitializeComponent();
+
+            this.Load += new System.EventHandler(this.MainForm_Load);
+            _systemMenuItem.Click += new System.EventHandler(MenuItem_Click_System);
+            _viewMenuItem.Click += new System.EventHandler(MenuItem_Click_View);
+            _toolMenuItem.Click += new System.EventHandler(MenuItem_Click_Tool);
+            _helpMenuItem.Click += new System.EventHandler(MenuItem_Click_Help);
+
+            _tbOpen.Click += new System.EventHandler(ToolStripButton_Click_Open);
+            _tbSave.Click += new System.EventHandler(ToolStripButton_Click_Save);
+            _tbRefresh.Click += new System.EventHandler(ToolStripButton_Click_Refresh);
         }
 
         public MainForm(GridConfig gridConfig, T2SDKWrap t2SDKWrap)
@@ -47,6 +57,7 @@ namespace TradingSystem.View
                     tsNavBarItem.AddTreeNode(node.Children);
                     tsNavBarItem.TreeView.NodeCollapseImage = _imageList.Images[0];
                     tsNavBarItem.TreeView.NodeExpandedImage = _imageList.Images[1];
+                    tsNavBarItem.TreeView.NodeImage = _imageList.Images[2];
                 }
 
                 //_navBarContainer.SwitchBarState(1);
@@ -66,6 +77,49 @@ namespace TradingSystem.View
 
             //TODO:
         }
+        #endregion
+
+        #region MenuItem click event handler
+
+        private void MenuItem_Click_System(object sender, System.EventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void MenuItem_Click_View(object sender, System.EventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void MenuItem_Click_Tool(object sender, System.EventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void MenuItem_Click_Help(object sender, System.EventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        #endregion
+
+        #region ToolStripButton click event handler
+
+        private void ToolStripButton_Click_Open(object sender, System.EventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void ToolStripButton_Click_Save(object sender, System.EventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void ToolStripButton_Click_Refresh(object sender, System.EventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+
         #endregion
     }
 }

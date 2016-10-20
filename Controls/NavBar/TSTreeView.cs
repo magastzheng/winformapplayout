@@ -11,6 +11,7 @@ namespace Controls
         private Pen _backgroundPen;
         private Image _nodeExpandedImage;
         private Image _nodeCollapseImage;
+        private Image _nodeImage;
         private Size _nodeImageSize;
         private int _nodeOffset;
 
@@ -46,6 +47,12 @@ namespace Controls
             set { _nodeCollapseImage = value; }
         }
 
+        public Image NodeImage
+        {
+            get { return _nodeImage; }
+            set { _nodeImage = value; }
+        }
+
         public Size NodeImageSize
         {
             get { return _nodeImageSize; }
@@ -73,6 +80,7 @@ namespace Controls
 
             _nodeExpandedImage = null;
             _nodeCollapseImage = null;
+            _nodeImage = null;
             _nodeImageSize = new Size(18, 30);
 
             _nodeOffset = 5;
@@ -168,8 +176,12 @@ namespace Controls
                         g.DrawImage(_nodeCollapseImage, rect);
                     }
                 }
+                else
+                {
+                    g.DrawImage(_nodeImage, rect);
+                }
 
-                rect.X += 15;
+                rect.X += 5;
             }
 
             //绘制节点自身图片
