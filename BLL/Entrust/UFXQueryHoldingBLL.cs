@@ -75,7 +75,7 @@ namespace BLL.Entrust
                     }
                     else
                     { 
-                        bllResponse.Code = ConnectionCode.FailQueryHolding;
+                        bllResponse.Code = ConnectionCode.FailTimeoutQueryHolding;
                         bllResponse.Message = "Fail QueryHolding: Timeout";
                     }
                 }

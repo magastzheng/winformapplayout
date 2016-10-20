@@ -82,7 +82,7 @@ namespace BLL.Entrust
                     }
                     else
                     {
-                        bllResponse.Code = ConnectionCode.FailQueryDeal;
+                        bllResponse.Code = ConnectionCode.FailTimeoutQueryDeal;
                         bllResponse.Message = "Fail QueryDeal: Timeout!";
                     }
                 }

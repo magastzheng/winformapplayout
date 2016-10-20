@@ -122,7 +122,7 @@ namespace BLL.Entrust
                 }
                 else
                 {
-                    bllResponse.Code = ConnectionCode.FailEntrust;
+                    bllResponse.Code = ConnectionCode.FailTimeoutEntrust;
                     bllResponse.Message = "Timeout to entrust.";
                 }
             }

@@ -44,5 +44,11 @@ namespace Model
         FailQueryEntrust = -304,
         FailQueryDeal = -305,
         FailQueryHolding = -306,
+        FailTimeoutEntrust = -307,
+        FailTimeoutSubmit = -308,
+        FailTimeoutWithdraw = -309,
+        FailTimeoutQueryEntrust = -310,
+        FailTimeoutQueryDeal = -311,
+        FailTimeoutQueryHolding = -312,
     }
 }
