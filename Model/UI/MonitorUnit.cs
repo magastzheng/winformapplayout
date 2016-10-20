@@ -46,5 +46,7 @@ namespace Model.UI
         public int Owner { get; set; }
 
         public MonitorUnitAccountType EAccountType { get; set; }
+
+        public MonitorUnitStatus Status { get; set; }
     }
 }

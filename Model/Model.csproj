@@ -71,6 +71,7 @@
     <Compile Include="EnumType\EnumTypeConverter\EnumTypeDisplayHelper.cs" />
     <Compile Include="EnumType\InvestmentType.cs" />
     <Compile Include="EnumType\MonitorUnitAccountType.cs" />
+    <Compile Include="EnumType\MonitorUnitStatus.cs" />
     <Compile Include="EnumType\PortfolioStatus.cs" />
     <Compile Include="EnumType\PriceType.cs" />
     <Compile Include="config\TDFAPISetting.cs" />

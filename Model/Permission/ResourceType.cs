@@ -28,6 +28,8 @@ namespace Model.Permission
         TradeInstance = 113,    
         //交易实例调整
         TradeInstanceAdjustment = 114,
+        //监控单元
+        MonitorUnit = 115,
         //交易指令
         TradeCommand = 121,     
         //委托指令

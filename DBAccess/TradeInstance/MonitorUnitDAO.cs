@@ -73,11 +73,11 @@ namespace DBAccess
             return id;
         }
 
-        public int Active(int monitorId, int status)
+        public int Active(int monitorId, MonitorUnitStatus status)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Active);
             _dbHelper.AddInParameter(dbCommand, "@MonitorUnitId", System.Data.DbType.Int32, monitorId);
-            _dbHelper.AddInParameter(dbCommand, "@Active", System.Data.DbType.Int32, status);
+            _dbHelper.AddInParameter(dbCommand, "@Active", System.Data.DbType.Int32, (int)status);
 
             _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
 
@@ -162,6 +162,7 @@ namespace DBAccess
                     item.BearContract = (string)reader["BearContract"];
                     item.StockTemplateId = (int)reader["StockTemplateId"];
                     item.StockTemplateName = (string)reader["TemplateName"];
+                    item.Status = (MonitorUnitStatus)reader["Active"];
                     item.Selection = ((int)reader["Active"] > 0) ? true : false;
                     item.Owner = (int)reader["Owner"];
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)

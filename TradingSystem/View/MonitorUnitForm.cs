@@ -1,8 +1,10 @@
-﻿using Config;
+﻿using BLL.Template;
+using Config;
 using Controls.Entity;
 using Controls.GridView;
 using DBAccess;
 using Model.Binding.BindingUtil;
+using Model.EnumType;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -20,22 +22,19 @@ namespace TradingSystem.View
 
     public partial class MonitorUnitForm : Forms.DefaultForm
     {
-        //private const string MsgBoxCaption = "警告";
-        //private const string MsgConfirmDelete = "是否要删除这[{0}]个监控单元";
-        //private const string MsgSelectDelete = "请先选择要删除的监控单元";
-        //private const string MsgSelectMonitor = "请设置监控单元";
-
+        //label
         private const string msgDeleteConfirm = "monitordeleteconfirm";
         private const string msgSelectSetting = "monitorselectsetting";
         private const string msgDeleteSelect = "monitordeleteselect";
 
+        //grid view id
         private const string GridId = "monitorunitmanager";
         private const string BottomMenuId = "monitorunit";
         private const string ConfirmCancelId = "confirmcancel";
 
         private GridConfig _gridConfig = null;
-        private MonitorUnitDAO _dbdao = new MonitorUnitDAO();
-        //List<MonitorUnit> _monitorUnits;
+
+        private MonitorUnitBLL _monitorUnitBLL = new MonitorUnitBLL();
         private SortableBindingList<MonitorUnit> _dataSource;
         MonitorType _monitorType = MonitorType.None;
 
@@ -86,7 +85,7 @@ namespace TradingSystem.View
         private bool Form_LoadData(object sender, object data)
         {
             //Load data here
-            var monitorUnits = _dbdao.GetCombine(-1);
+            var monitorUnits = _monitorUnitBLL.GetAll();
             _dataSource = new SortableBindingList<MonitorUnit>(monitorUnits);
             dataGridView.DataSource = _dataSource;
 
@@ -162,7 +161,7 @@ namespace TradingSystem.View
                             if (rowIndex >= 0 && rowIndex < _dataSource.Count)
                             {
                                 MonitorUnit monitorUnit = _dataSource[rowIndex];
-                                int ret = _dbdao.Delete(monitorUnit.MonitorUnitId);
+                                int ret = _monitorUnitBLL.Delete(monitorUnit.MonitorUnitId);
                                 if (ret > 0)
                                 {
                                     _dataSource.RemoveAt(rowIndex);
@@ -212,7 +211,7 @@ namespace TradingSystem.View
                 case "Refresh":
                     {
                         _dataSource.Clear();
-                        var monitorUnits = _dbdao.GetCombine(-1);
+                        var monitorUnits = _monitorUnitBLL.GetAll();
                         if (monitorUnits != null)
                         {
                             foreach (var item in monitorUnits)
@@ -237,11 +236,11 @@ namespace TradingSystem.View
                             if (selectIndex.Contains(rowIndex))
                             {
 
-                                int ret = _dbdao.Active(monitorUnit.MonitorUnitId, 1);
+                                int ret = _monitorUnitBLL.Active(monitorUnit.MonitorUnitId, MonitorUnitStatus.Active);
                             }
                             else
                             {
-                                int ret = _dbdao.Active(monitorUnit.MonitorUnitId, 0);
+                                int ret = _monitorUnitBLL.Active(monitorUnit.MonitorUnitId, MonitorUnitStatus.Inactive);
                             }
                         }
                     }
@@ -268,7 +267,7 @@ namespace TradingSystem.View
             {
                 case MonitorType.New:
                     {
-                        int newid = _dbdao.Create(monitorUnit);
+                        int newid = _monitorUnitBLL.Create(monitorUnit);
                         if (newid > 0)
                         {
                             monitorUnit.MonitorUnitId = newid;
@@ -278,7 +277,7 @@ namespace TradingSystem.View
                     break;
                 case MonitorType.Modify:
                     {
-                        int newid = _dbdao.Update(monitorUnit);
+                        int newid = _monitorUnitBLL.Update(monitorUnit);
                         if (newid > 0)
                         {
                             for (int i = 0, count = _dataSource.Count; i < count; i++)
