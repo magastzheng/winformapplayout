@@ -13,6 +13,9 @@ namespace TradingSystem.Dialog
 {
     public partial class CancelEntrustDialog : Forms.BaseDialog
     {
+        private const string msgNoSecuritySelected = "nosecurityselected";
+        private const string msgPartialSecurityFail = "entrustcancelpartialsecurityfail";
+
         private const string GridId = "entrustcancel";
 
         //private EntrustBLL _entrustBLL = new EntrustBLL();
@@ -70,8 +73,7 @@ namespace TradingSystem.Dialog
             var selectedItems = _secuDataSource.Where(p => p.Selection).ToList();
             if (selectedItems.Count == 0)
             {
-                string msg = "没有勾选的证券";
-                MessageBox.Show(this, msg, "警告", MessageBoxButtons.OK);
+                MessageDialog.Warn(this, msgNoSecuritySelected);
                 return;
             }
 
@@ -101,10 +103,11 @@ namespace TradingSystem.Dialog
             if (failedCancelItems.Count > 0)
             {
                 var failedSecuCode = failedCancelItems.Select(p => p.SecuCode).ToList();
-                string msg = string.Join("|", failedSecuCode);
-                msg = string.Format("部分证券撤单失败: {0}", msg);
+                string strSecuCode = string.Join("|", failedSecuCode);
+                string label = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgPartialSecurityFail);
+                string msg = string.Format("{0} {1}", label, strSecuCode);
 
-                MessageBox.Show(this, msg, "警告", MessageBoxButtons.OK);
+                MessageDialog.Warn(this, msg);
                 DialogResult = System.Windows.Forms.DialogResult.Cancel;
             }
             else

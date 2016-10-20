@@ -122,8 +122,8 @@ namespace TradingSystem.View
             this.cbFuturesSellPrice.SelectedIndexChanged += new EventHandler(ComboBox_PriceType_SelectedIndexChange);
 
             //entrust flow view
-            //this.btnefSelect.Click += new EventHandler(ToolStripButton_EntrustFlow_Select);
-            //this.btnefUnSelect.Click += new EventHandler(ToolStripButton_EntrustFlow_UnSelect);
+            this.btnefSelect.Click += new EventHandler(ToolStripButton_EntrustFlow_Select);
+            this.btnefUnSelect.Click += new EventHandler(ToolStripButton_EntrustFlow_UnSelect);
             this.btnefUndo.Click += new EventHandler(ToolStripButton_EntrustFlow_Undo);
             this.btnefCancelRedo.Click += new EventHandler(ToolStripButton_EntrustFlow_CancelRedo);
 
@@ -131,7 +131,27 @@ namespace TradingSystem.View
         }
 
         #region EntrustFlow view click event handler
-        
+
+        private void ToolStripButton_EntrustFlow_Select(object sender, EventArgs e)
+        {
+            foreach (var efItem in _efDataSource)
+            {
+                efItem.Selection = true;
+            }
+
+            this.efGridView.Invalidate();
+        }
+
+        private void ToolStripButton_EntrustFlow_UnSelect(object sender, EventArgs e)
+        {
+            foreach (var efItem in _efDataSource)
+            {
+                efItem.Selection = false;
+            }
+
+            this.efGridView.Invalidate();
+        }
+
         private void ToolStripButton_EntrustFlow_CancelRedo(object sender, EventArgs e)
         {
             //TODO:

@@ -66,7 +66,7 @@ namespace BLL.TradeInstance
             var items = new List<TradingInstanceAdjustmentItem>();
             foreach (var item in allItems)
             {
-                if (_permissionManager.HasPermission(userId, item.Id, ResourceType.TradeInstanceAdjustment, PermissionMask.Veiw))
+                if (_permissionManager.HasPermission(userId, item.Id, ResourceType.TradeInstanceAdjustment, PermissionMask.View))
                 {
                     items.Add(item);
                 }

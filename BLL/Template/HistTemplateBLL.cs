@@ -53,7 +53,7 @@ namespace BLL.Template
             var templates = new List<HistStockTemplate>();
             foreach (var template in allTemplates)
             {
-                if (_permissionManager.HasPermission(userId, template.ArchiveId, Model.Permission.ResourceType.HistoricalSpotTemplate, Model.Permission.PermissionMask.Veiw))
+                if (_permissionManager.HasPermission(userId, template.ArchiveId, Model.Permission.ResourceType.HistoricalSpotTemplate, Model.Permission.PermissionMask.View))
                 {
                     templates.Add(template);
                 }

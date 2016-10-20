@@ -39,16 +39,16 @@
 			"id": "nosecurityselected",
 			"text": "没有勾选的证券!"
 		},{
-			"id": "failtitle",
+			"id": "captionfail",
 			"text": "失败"
 		},{
-			"id": "warntitle",
+			"id": "captionwarn",
 			"text": "警告"
 		},{
-			"id": "errortitle",
+			"id": "captionerror",
 			"text": "错误"
 		},{
-			"id": "prompttitle",
+			"id": "captionprompt",
 			"text": "提示"
 		},{
 			"id": "tempdeletesecurity",
@@ -197,6 +197,9 @@
 		},{
 			"id": "entrustcancelpartialfail",
 			"text": "部分证券撤销失败\n"
+		},{
+			"id": "entrustcancelpartialsecurityfail",
+			"text": "部分证券撤单失败:"
 		},{
 			"id": "entrustcancelfailsecurity",
 			"text": "提交号:{0}, 指令号:{1}, 证券代码:{2}\n"

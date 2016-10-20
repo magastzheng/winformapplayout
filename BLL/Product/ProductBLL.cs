@@ -65,7 +65,7 @@ namespace BLL.Product
                 else
                 {
                     ret = _portfoliodao.Create(portfolio);
-                    _permissionManager.GrantPermission(userId, ret, ResourceType.Portfolio, PermissionMask.Veiw);
+                    _permissionManager.GrantPermission(userId, ret, ResourceType.Portfolio, PermissionMask.View);
                 }
             }
 
@@ -74,7 +74,7 @@ namespace BLL.Product
                 //TODO: update the status
                 foreach (var portfolio in oldPortfolios)
                 {
-                    _permissionManager.GrantPermission(userId, portfolio.PortfolioId, ResourceType.Portfolio, PermissionMask.Veiw);
+                    _permissionManager.GrantPermission(userId, portfolio.PortfolioId, ResourceType.Portfolio, PermissionMask.View);
                 }
             }
 
@@ -145,7 +145,7 @@ namespace BLL.Product
 
         private bool HasPermission(int userId, Portfolio portfolio)
         {
-            return _permissionManager.HasPermission(userId, portfolio.PortfolioId, ResourceType.Portfolio, Model.Permission.PermissionMask.Veiw);
+            return _permissionManager.HasPermission(userId, portfolio.PortfolioId, ResourceType.Portfolio, Model.Permission.PermissionMask.View);
         }
     }
 }

@@ -121,7 +121,7 @@ namespace BLL.Permission
         }
 
         /// <summary>
-        /// Add the permission: perm & rights. The same rights can be granted repeatedly because only the bit is changed after
+        /// Add the permission: perm | rights. The same rights can be granted repeatedly because only the bit is changed after
         /// the calculation and its value is always 1.
         /// </summary>
         /// <param name="perm">The original permission value.</param>

@@ -164,7 +164,7 @@ namespace TradingSystem.Dialog
             {
                 var user = (User)this.cbViewUser.Items[i];
                 var findItem = urPerms.Find(p => p.Token == user.Id && p.TokenType == TokenType.User);
-                if (findItem != null && _permissionManager.HasPermission(user.Id, stockTemplate.TemplateId, ResourceType.SpotTemplate, PermissionMask.Veiw))
+                if (findItem != null && _permissionManager.HasPermission(user.Id, stockTemplate.TemplateId, ResourceType.SpotTemplate, PermissionMask.View))
                 {
                     this.cbViewUser.SetItemChecked(i, true);
                 }
@@ -297,11 +297,11 @@ namespace TradingSystem.Dialog
 
                 if (stockTemplate.CanViewUsers.Contains(user))
                 {
-                    addRights.Add(PermissionMask.Veiw);
+                    addRights.Add(PermissionMask.View);
                 }
                 else
                 {
-                    removeRights.Add(PermissionMask.Veiw);
+                    removeRights.Add(PermissionMask.View);
                 }
 
                 newPerm = _permissionManager.AddPermission(newPerm, addRights);
@@ -336,7 +336,7 @@ namespace TradingSystem.Dialog
 
                     if (findPerm == null)
                     {
-                        List<PermissionMask> rights = new List<PermissionMask>() { PermissionMask.Edit, PermissionMask.Veiw };
+                        List<PermissionMask> rights = new List<PermissionMask>() { PermissionMask.Edit, PermissionMask.View };
                         int newPerm = _permissionManager.RemovePermission(oldPerm.Permission, rights);
                         TokenResourcePermission nurPerm = new TokenResourcePermission
                         {

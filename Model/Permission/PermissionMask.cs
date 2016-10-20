@@ -12,7 +12,7 @@ namespace Model.Permission
         Add     = 2,    //创建、添加
         Delete  = 4,    //删除
         Edit    = 8,    //修改
-        Veiw    = 16,   //浏览
+        View    = 16,   //浏览
         Execute = 32,   //执行命令
         Query   = 64,   //???
     }

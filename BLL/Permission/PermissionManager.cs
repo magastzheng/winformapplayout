@@ -162,6 +162,7 @@ namespace BLL.Permission
                 return CreatePermission(roleId, TokenType.Role, featureId, ResourceType.Feature, perm);
             }
         }
+
         #endregion
 
         #region user resource permission
@@ -261,7 +262,7 @@ namespace BLL.Permission
 
         public List<PermissionMask> GetOwnerPermission()
         {
-            return new List<PermissionMask>() { PermissionMask.Edit, PermissionMask.Delete, PermissionMask.Owner, PermissionMask.Veiw};
+            return new List<PermissionMask>() { PermissionMask.Edit, PermissionMask.Delete, PermissionMask.Owner, PermissionMask.View};
         }
 
         public int AddPermission(int perm, PermissionMask mask)

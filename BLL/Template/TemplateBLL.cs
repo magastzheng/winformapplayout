@@ -102,7 +102,7 @@ namespace BLL.Template
         {
             StockTemplate targetTemplate = null;
             int loginUserId = LoginManager.Instance.GetUserId();
-            if (_permissionManager.HasPermission(loginUserId, templateId, ResourceType.SpotTemplate, PermissionMask.Veiw))
+            if (_permissionManager.HasPermission(loginUserId, templateId, ResourceType.SpotTemplate, PermissionMask.View))
             {
                 var template = _tempdbdao.Get(templateId);
                 if (template != null && template.Count == 1)
@@ -140,7 +140,7 @@ namespace BLL.Template
             var templates = new List<StockTemplate>();
             foreach (var template in allTemplates)
             {
-                if (_permissionManager.HasPermission(userId, template.TemplateId, ResourceType.SpotTemplate, PermissionMask.Veiw))
+                if (_permissionManager.HasPermission(userId, template.TemplateId, ResourceType.SpotTemplate, PermissionMask.View))
                 {
                     var uiItem = ConvertToUIItem(template);
                     var urPerm = _urPermissionBLL.GetByResource(template.TemplateId, ResourceType.SpotTemplate);
@@ -167,7 +167,7 @@ namespace BLL.Template
                 foreach (var perm in temp.Permissions)
                 {
                     //Get the view user list
-                    if (_permissionManager.HasPermission(perm.Token, temp.TemplateId, ResourceType.SpotTemplate, PermissionMask.Veiw))
+                    if (_permissionManager.HasPermission(perm.Token, temp.TemplateId, ResourceType.SpotTemplate, PermissionMask.View))
                     {
                         var user = users.Find(p => p.Id == perm.Token);
                         if (user != null)

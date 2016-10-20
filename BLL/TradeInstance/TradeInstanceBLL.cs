@@ -65,7 +65,7 @@ namespace BLL.TradeInstance
         {
             int userId = LoginManager.Instance.GetUserId();
 
-            if (_permissionManager.HasPermission(userId, instanceId, ResourceType.TradeInstance, PermissionMask.Veiw))
+            if (_permissionManager.HasPermission(userId, instanceId, ResourceType.TradeInstance, PermissionMask.View))
             {
                 return _tradinginstancedao.GetCombine(instanceId);
             }
@@ -79,7 +79,7 @@ namespace BLL.TradeInstance
         {
             int userId = LoginManager.Instance.GetUserId();
             var instance = _tradinginstancedao.GetCombineByCode(instanceCode);
-            if (_permissionManager.HasPermission(userId, instance.InstanceId, ResourceType.TradeInstance, PermissionMask.Veiw))
+            if (_permissionManager.HasPermission(userId, instance.InstanceId, ResourceType.TradeInstance, PermissionMask.View))
             {
                 return instance;
             }
@@ -96,7 +96,7 @@ namespace BLL.TradeInstance
             var instances = new List<TradingInstance>();
             foreach (var instance in allInstances)
             {
-                if (_permissionManager.HasPermission(userId, instance.InstanceId, ResourceType.TradeInstance, PermissionMask.Veiw))
+                if (_permissionManager.HasPermission(userId, instance.InstanceId, ResourceType.TradeInstance, PermissionMask.View))
                 {
                     instances.Add(instance);
                 }
