@@ -218,6 +218,9 @@
 		},{
 			"id": "transferholdinginvalidamount",
 			"text": "设置的划转数量超出可划转数量"
+		},{
+			"id": "transferholdingcannotsameinstance",
+			"text": "目标交易实例不能与源交易实例相同！"
 		}
 	]
 }

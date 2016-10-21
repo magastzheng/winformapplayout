@@ -27,6 +27,7 @@ namespace TradingSystem.View
         private const string msgNoEmptyDest = "transferholdingnoemptydest";
         private const string msgSuccess = "transferholdingsuccess";
         private const string msgInvalidAmount = "transferholdinginvalidamount";
+        private const string msgCannotSameInstance = "transferholdingcannotsameinstance";
 
         private const string GridSourceId = "sourceportfolioholding";
         private const string GridDestId = "destinationportfolioholding";
@@ -61,6 +62,8 @@ namespace TradingSystem.View
             this.LoadData += new FormLoadHandler(Form_LoadData);
 
             this.srcGridView.UpdateRelatedDataGridHandler += new UpdateRelatedDataGrid(GridView_Source_UpdateRelatedDataGridHandler);
+            this.srcGridView.MouseDown += new MouseEventHandler(GridView_MouseDown);
+            this.destGridView.MouseDown += new MouseEventHandler(GridView_MouseDown);
 
             this.cbOpertionType.SelectedIndexChanged += new EventHandler(ComboBox_OpertionType_SelectedIndexChanged);
             this.cbSrcFundCode.SelectedIndexChanged += new EventHandler(ComboBox_FundCode_SelectedIndexChanged);
@@ -70,10 +73,24 @@ namespace TradingSystem.View
             this.cbSrcTradeInst.SelectedIndexChanged += new EventHandler(ComboBox_TradeInst_SelectedIndexChanged);
             this.cbDestTradeInst.SelectedIndexChanged += new EventHandler(ComboBox_TradeInst_SelectedIndexChanged);
 
+            //this.cbSrcTradeInst.DropDownClosed += new EventHandler(ComboBox_TradeInst_DropDownClosed);
+            //this.cbDestTradeInst.DropDownClosed += new EventHandler(ComboBox_TradeInst_DropDownClosed);
+            //this.cbSrcTradeInst.LostFocus += new EventHandler(ComboBox_TradeInst_LostFocus);
+            //this.cbDestTradeInst.LostFocus += new EventHandler(ComboBox_TradeInst_LostFocus);
+
             //button click
             this.btnTransfer.Click += new EventHandler(Button_Transfer_Click);
             this.btnRefresh.Click += new EventHandler(Button_Refresh_Click);
             this.btnCalc.Click += new EventHandler(Button_Calc_Click);
+        }
+
+        private void GridView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (!ValidateTradingInstance(this.cbSrcTradeInst, this.cbDestTradeInst))
+            {
+                MessageDialog.Warn(this, "目标交易实例不能与源交易实例相同！");
+                SetFocus();
+            }
         }
 
         private void GridView_Source_UpdateRelatedDataGridHandler(UpdateDirection direction, int rowIndex, int columnIndex)
@@ -478,6 +495,8 @@ namespace TradingSystem.View
 
         private void ComboBox_TradeInst_SelectedIndexChanged(object sender, EventArgs e)
         {
+            Console.WriteLine("SelectedIndexChanged: " + e.ToString());
+
             ComboBox cb = sender as ComboBox;
             if (cb == null)
                 return;
@@ -487,6 +506,7 @@ namespace TradingSystem.View
             //    return;
             if (!(tradeInst.Data is TradingInstance))
                 return;
+            
 
             //TODO: cannot select the same TradingInstance
             var instance = tradeInst.Data as TradingInstance;
@@ -508,6 +528,27 @@ namespace TradingSystem.View
                 default:
                     break;
             }
+        }
+
+        private bool ValidateTradingInstance(ComboBox cbSrc, ComboBox cbDest)
+        {
+            var srcTradeInst = (ComboOptionItem)this.cbSrcTradeInst.SelectedItem;
+            var destTradeInst = (ComboOptionItem)this.cbDestTradeInst.SelectedItem;
+
+            if (srcTradeInst != null && destTradeInst != null)
+            {
+                if (srcTradeInst.Id.Equals(destTradeInst.Id))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private void SetFocus()
+        {
+            this.cbDestTradeInst.Focus();
         }
 
         private void FillSrcGridView(SortableBindingList<SourceHoldingItem> dataSource, List<TradingInstanceSecurity> secuItems, TradingInstance tradeInstance)
