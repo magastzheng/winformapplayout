@@ -26,6 +26,12 @@ namespace DBAccess.TradeCommand
             
         }
 
+        /// <summary>
+        /// Create the TradingCommand and TradingCommandSecurity by Transaction.
+        /// </summary>
+        /// <param name="cmdItem"></param>
+        /// <param name="secuItems"></param>
+        /// <returns>CommandId</returns>
         public int Create(Model.Database.TradeCommand cmdItem, List<TradeCommandSecurity> secuItems)
         {
             var dbCommand = _dbHelper.GetCommand();
@@ -36,6 +42,7 @@ namespace DBAccess.TradeCommand
             dbCommand.Transaction = transaction;
             dbCommand.CommandType = System.Data.CommandType.StoredProcedure;
             int ret = -1;
+            int commandId = -1;
             try
             {
                 dbCommand.CommandText = SP_CreateTradeCommand;
@@ -76,7 +83,6 @@ namespace DBAccess.TradeCommand
 
                 if (ret >= 0)
                 {
-                    int commandId = -1;
                     if (ret > 0)
                     {
                         commandId = (int)dbCommand.Parameters["@return"].Value;
@@ -118,7 +124,7 @@ namespace DBAccess.TradeCommand
                 transaction.Dispose();
             }
 
-            return ret;
+            return commandId;
         }
     }
 }

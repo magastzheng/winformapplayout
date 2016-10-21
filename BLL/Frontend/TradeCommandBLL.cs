@@ -1,10 +1,12 @@
-﻿using Config;
+﻿using BLL.Permission;
+using Config;
 using DBAccess.Template;
 using DBAccess.TradeCommand;
 using DBAccess.TradeInstance;
 using log4net;
 using Model.Database;
 using Model.EnumType;
+using Model.Permission;
 using Model.SecurityInfo;
 using Model.UI;
 using System;
@@ -24,6 +26,7 @@ namespace BLL.Frontend
         private TradingCommandDAO _tradecommandao = new TradingCommandDAO();
         private TradingCommandSecurityDAO _tradecmdsecudao = new TradingCommandSecurityDAO();
 
+        private PermissionManager _permissionManager = new PermissionManager();
         private QueryBLL _queryBLL = new QueryBLL();
 
         public TradeCommandBLL()
@@ -33,8 +36,22 @@ namespace BLL.Frontend
         #region submit
         public int Submit(Model.Database.TradeCommand cmdItem, List<TradeCommandSecurity> secuItems)
         {
-            cmdItem.SubmitPerson = LoginManager.Instance.GetUserId();
-            return _commanddao.Create(cmdItem, secuItems);
+            int userId = LoginManager.Instance.GetUserId();
+            cmdItem.SubmitPerson = userId;
+            //TODO: add the permission control
+            int commandId = _commanddao.Create(cmdItem, secuItems);
+            if (commandId > 0)
+            {
+                var perm = _permissionManager.GetOwnerPermission();
+                _permissionManager.GrantPermission(userId, commandId, ResourceType.TradeCommand, perm);
+
+                //对管理员和交易员进行授权
+                var dealPerms = new List<PermissionMask> { PermissionMask.View, PermissionMask.Execute};
+                _permissionManager.GrantPermission((int)RoleType.Administrator, commandId, ResourceType.TradeCommand, dealPerms);
+                _permissionManager.GrantPermission((int)RoleType.Dealer, commandId, ResourceType.TradeCommand, dealPerms);
+            }
+
+            return commandId;
         }
 
         public int SubmitClosePosition(Model.Database.TradeCommand cmdItem, ClosePositionItem closePositionItem, List<ClosePositionSecurityItem> closeSecuItems)
@@ -126,6 +143,7 @@ namespace BLL.Frontend
 
         public List<TradingCommandItem> GetTradeCommandAll()
         {
+            int userId = LoginManager.Instance.GetUserId();
             var uiCommands = new List<TradingCommandItem>();
             var tradeCommands = _tradecommandao.GetAll();
 
@@ -134,10 +152,15 @@ namespace BLL.Frontend
 
             foreach (var tradeCommand in tradeCommands)
             {
-                var uiCommand = BuildUICommand(tradeCommand);
-                CalculateUICommand(ref uiCommand, tradeSecuItems, entrustSecuItems);
+                if (_permissionManager.HasPermission(userId, tradeCommand.CommandId, ResourceType.TradeCommand, PermissionMask.View)
+                    //|| _permissionManager.HasPermission(userId, ResourceType.
+                    )
+                {
+                    var uiCommand = BuildUICommand(tradeCommand);
+                    CalculateUICommand(ref uiCommand, tradeSecuItems, entrustSecuItems);
 
-                uiCommands.Add(uiCommand);
+                    uiCommands.Add(uiCommand);
+                }
             }
             return uiCommands;
         }

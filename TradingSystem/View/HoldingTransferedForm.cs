@@ -18,6 +18,9 @@ using TradingSystem.Dialog;
 using Model.strategy;
 using BLL.SecurityInfo;
 using BLL.TradeInstance;
+using Model.SecurityInfo;
+using Model.EnumType;
+using Quote;
 
 namespace TradingSystem.View
 {
@@ -45,6 +48,8 @@ namespace TradingSystem.View
         private TemplateBLL _templateBLl = new TemplateBLL();
         private TradeInstanceSecurityBLL _tradeInstanceSecuBLL = new TradeInstanceSecurityBLL();
         private AccountBLL _accountBLL = null;
+
+        private List<SecurityItem> _secuList = new List<SecurityItem>();
 
         public HoldingTransferedForm()
             :base()
@@ -125,12 +130,41 @@ namespace TradingSystem.View
             selectedItem.TransferedAmount = selectedItem.AvailableTransferedAmount;
 
             //TODO: update the price
+            var targetItem = _secuList.Find(p => p.SecuCode.Equals(selectedItem.SecuCode));
+            var marketData = QuoteCenter.Instance.GetMarketData(targetItem);
+            if (marketData != null)
+            {
+                selectedItem.TransferedPrice = marketData.CurrentPrice;
+            }
         }
 
         private void GridView_Source_UnSelect(SourceHoldingItem selectedItem)
         {
             selectedItem.PriceType = "";
             selectedItem.TransferedAmount = 0;
+            selectedItem.TransferedPrice = 0;
+        }
+
+        private void QueryQuote()
+        {
+            //query the price and set it
+            
+            var uniqueSecuItems = _srcDataSource.GroupBy(p => p.SecuCode).Select(o => o.First());
+            foreach (var secuItem in uniqueSecuItems)
+            {
+                if (_secuList.Find(p => p.SecuCode.Equals(secuItem.SecuCode)) == null)
+                {
+                    var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
+                    if (findItem != null)
+                    {
+                        _secuList.Add(findItem);
+                    }
+                }
+            }
+
+            //更新行情相关数据
+            List<PriceType> priceTypes = new List<PriceType>() { PriceType.Last };
+            QuoteCenter.Instance.Query(_secuList, priceTypes);
         }
 
         #region load control
@@ -517,6 +551,9 @@ namespace TradingSystem.View
                     {
                         _srcDataSource.Clear();
                         FillSrcGridView(_srcDataSource, securities, instance);
+
+                        //Quote the price
+                        QueryQuote();
                     }
                     break;
                 case "cbDestTradeInst":

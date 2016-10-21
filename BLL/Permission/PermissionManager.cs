@@ -60,24 +60,24 @@ namespace BLL.Permission
         //    return currentPerms;
         //}
 
-        public bool HasPermission(int userId, string featureCode, PermissionMask mask)
+        public bool HasFeaturePermission(int userId, string featureCode, PermissionMask mask)
         {
             bool hasPerm = false;
             var feature = GetFeature(featureCode);
             if (feature != null)
             {
-                hasPerm = HasPermission(userId, feature.Id, mask);
+                hasPerm = HasRolePermission(userId, feature.Id, ResourceType.Feature, mask);
             }
 
             return hasPerm;
         }
 
-        public int GrantPermission(int roleId, string featureCode, List<PermissionMask> masks)
+        public int GrantFeaturePermission(int roleId, string featureCode, List<PermissionMask> masks)
         {
             var feature = GetFeature(featureCode);
             if (feature != null)
             {
-                return GrantPermission(roleId, feature.Id, masks);
+                return GrantByRole(roleId, feature.Id, ResourceType.Feature, masks);
             }
             else
             {
@@ -85,12 +85,12 @@ namespace BLL.Permission
             }
         }
 
-        public int RevokePermission(int roleId, string featureCode, List<PermissionMask> masks)
+        public int RevokeFeaturePermission(int roleId, string featureCode, List<PermissionMask> masks)
         { 
             var feature = GetFeature(featureCode);
             if (feature != null)
             {
-                return RevokePermission(roleId, feature.Id, masks);
+                return RevokeByRole(roleId, feature.Id, ResourceType.Feature, masks);
             }
             else
             {
@@ -99,14 +99,33 @@ namespace BLL.Permission
         }
         #endregion
 
+        #region permission by on role
+
+        public bool HasRolePermission(RoleType roleId, int resourceId, ResourceType resourceType, PermissionMask mask)
+        {
+            return HasRolePermission((int)roleId, resourceId, ResourceType.Feature, mask);
+        }
+
+        public int GrantByRole(RoleType roleId, int resourceId, ResourceType resourceType, List<PermissionMask> masks)
+        {
+            return GrantByRole((int)roleId, resourceId, resourceType, masks);
+        }
+
+        public int RevokeByRole(RoleType roleId, int resourceId, ResourceType resourceType, List<PermissionMask> masks)
+        {
+            return RevokeByRole((int)roleId, resourceId, resourceType, masks);
+        }
+
+        #endregion
+
         #region private method to check/grant/revoke the permission for Role
-        private bool HasPermission(int userId, int featureId, PermissionMask mask)
+        private bool HasRolePermission(int userId, int resourceId, ResourceType resourceType, PermissionMask mask)
         {
             bool hasPerm = false;
             var roles = GetRoles(userId);
             foreach (var role in roles)
             {
-                var roleFeaturePerm = GetPermission(role.RoleId, TokenType.Role, featureId, ResourceType.Feature);
+                var roleFeaturePerm = GetPermission(role.RoleId, TokenType.Role, resourceId, resourceType);
                 if (_permCalculator.HasPermission(roleFeaturePerm.Permission, mask))
                 {
                     hasPerm = true;
@@ -124,9 +143,9 @@ namespace BLL.Permission
         /// <param name="featureId"></param>
         /// <param name="masks"></param>
         /// <returns></returns>
-        private int GrantPermission(int roleId, int featureId, List<PermissionMask> masks)
+        private int GrantByRole(int roleId, int resourceId, ResourceType resourceType, List<PermissionMask> masks)
         {
-            var userResourcePerm = GetPermission(roleId, TokenType.Role, featureId, ResourceType.Feature);
+            var userResourcePerm = GetPermission(roleId, TokenType.Role, resourceId, resourceType);
             int perm = userResourcePerm.Permission;
             foreach (var mask in masks)
             {
@@ -135,17 +154,17 @@ namespace BLL.Permission
 
             if (userResourcePerm.Id == roleId)
             {
-                return UpdatePermission(roleId, TokenType.Role, featureId, ResourceType.Feature, perm);
+                return UpdatePermission(roleId, TokenType.Role, resourceId, resourceType, perm);
             }
             else
             {
-                return CreatePermission(roleId, TokenType.Role, featureId, ResourceType.Feature, perm);
+                return CreatePermission(roleId, TokenType.Role, resourceId, resourceType, perm);
             }
         }
 
-        private int RevokePermission(int roleId, int featureId, List<PermissionMask> masks)
+        private int RevokeByRole(int roleId, int resourceId, ResourceType resourceType, List<PermissionMask> masks)
         {
-            var userResourcePerm = GetPermission(roleId, TokenType.Role, featureId, ResourceType.Feature);
+            var userResourcePerm = GetPermission(roleId, TokenType.Role, resourceId, resourceType);
             int perm = userResourcePerm.Permission;
 
             foreach (var mask in masks)
@@ -155,11 +174,11 @@ namespace BLL.Permission
 
             if (userResourcePerm.Id == roleId)
             {
-                return UpdatePermission(roleId, TokenType.Role, featureId, ResourceType.Feature, perm);
+                return UpdatePermission(roleId, TokenType.Role, resourceId, resourceType, perm);
             }
             else
             {
-                return CreatePermission(roleId, TokenType.Role, featureId, ResourceType.Feature, perm);
+                return CreatePermission(roleId, TokenType.Role, resourceId, resourceType, perm);
             }
         }
 

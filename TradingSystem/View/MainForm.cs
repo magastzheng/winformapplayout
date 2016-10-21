@@ -57,7 +57,7 @@ namespace TradingSystem.View
             {
                 foreach (var node in validNodes)
                 {
-                    if (_permissionManager.HasPermission(userId, node.Id, Model.Permission.PermissionMask.View))
+                    if (_permissionManager.HasFeaturePermission(userId, node.Id, Model.Permission.PermissionMask.View))
                     {
                         Controls.TSNavBarItem tsNavBarItem = _navBarContainer.AddBar();
                         tsNavBarItem.Title = node.Title;
@@ -102,7 +102,7 @@ namespace TradingSystem.View
             var navItems = new List<TSNavNodeData>();
             foreach (var navItem in allNavItems)
             {
-                if (_permissionManager.HasPermission(userId, navItem.Id, Model.Permission.PermissionMask.View))
+                if (_permissionManager.HasFeaturePermission(userId, navItem.Id, Model.Permission.PermissionMask.View))
                 {
                     var newNavItem = new TSNavNodeData 
                     {
