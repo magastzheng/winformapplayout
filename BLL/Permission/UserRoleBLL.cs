@@ -16,12 +16,12 @@ namespace BLL.Permission
             return _userroledao.Create(userRole);
         }
 
-        public int Delete(int userId, int roleId)
+        public int Delete(int userId, RoleType roleId)
         {
             return _userroledao.Delete(userId, roleId);
         }
 
-        public UserRole Get(int userId, int roleId)
+        public UserRole Get(int userId, RoleType roleId)
         {
             return _userroledao.Get(userId, roleId);
         }

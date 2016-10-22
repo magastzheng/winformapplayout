@@ -97,3 +97,6 @@ where Token=1 and TokenType=1
 
 delete from tokenresourcepermission
 where Token=3 and TokenType=1
+
+select * from tokenresourcepermission
+where TokenType=1

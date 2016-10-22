@@ -31,7 +31,7 @@ namespace DBAccess.Permission
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
             _dbHelper.AddInParameter(dbCommand, "@UserId", System.Data.DbType.Int32, userRole.UserId);
-            _dbHelper.AddInParameter(dbCommand, "@RoleId", System.Data.DbType.Int32, userRole.RoleId);
+            _dbHelper.AddInParameter(dbCommand, "@RoleId", System.Data.DbType.Int32, (int)userRole.RoleId);
             
             _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
 
@@ -46,16 +46,16 @@ namespace DBAccess.Permission
             return id;
         }
 
-        public int Delete(int userId, int roleId)
+        public int Delete(int userId, RoleType roleId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Delete);
             _dbHelper.AddInParameter(dbCommand, "@UserId", System.Data.DbType.Int32, userId);
-            _dbHelper.AddInParameter(dbCommand, "@RoleId", System.Data.DbType.Int32, roleId);
+            _dbHelper.AddInParameter(dbCommand, "@RoleId", System.Data.DbType.Int32, (int)roleId);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public UserRole Get(int userId, int roleId)
+        public UserRole Get(int userId, RoleType roleId)
         {
             var items = GetInternal(userId, roleId);
             UserRole item = null;
@@ -73,17 +73,17 @@ namespace DBAccess.Permission
 
         public List<UserRole> GetByUser(int userId)
         {
-            return GetInternal(userId, -1);
+            return GetInternal(userId, RoleType.None);
         }
 
         public List<UserRole> GetAll()
         {
-            return GetInternal(-1, -1);
+            return GetInternal(-1, RoleType.None);
         }
 
         #region private method
 
-        public List<UserRole> GetInternal(int userId, int roleId)
+        public List<UserRole> GetInternal(int userId, RoleType roleId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Select);
             if (userId > 0)
@@ -91,9 +91,9 @@ namespace DBAccess.Permission
                 _dbHelper.AddInParameter(dbCommand, "@UserId", System.Data.DbType.Int32, userId);
             }
 
-            if (roleId > 0)
+            if (roleId != RoleType.None)
             {
-                _dbHelper.AddInParameter(dbCommand, "@RoleId", System.Data.DbType.Int32, roleId);
+                _dbHelper.AddInParameter(dbCommand, "@RoleId", System.Data.DbType.Int32, (int)roleId);
             }
 
             List<UserRole> items = new List<UserRole>();
@@ -105,7 +105,7 @@ namespace DBAccess.Permission
                     UserRole item = new UserRole();
                     item.Id = (int)reader["Id"];
                     item.UserId = (int)reader["UserId"];
-                    item.RoleId = (int)reader["RoleId"];
+                    item.RoleId = (RoleType)reader["RoleId"];
 
                     items.Add(item);
                 }

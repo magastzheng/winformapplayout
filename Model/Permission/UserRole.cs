@@ -12,6 +12,6 @@ namespace Model.Permission
 
         public int UserId { get; set; }
 
-        public int RoleId { get; set; }
+        public RoleType RoleId { get; set; }
     }
 }
