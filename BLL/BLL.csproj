@@ -110,6 +110,7 @@
     <Compile Include="UFX\T2SubCallback.cs" />
     <Compile Include="Template\TemplateBLL.cs" />
     <Compile Include="UFX\T2Subscriber.cs" />
+    <Compile Include="UsageTracking\UserActionTrackingBLL.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Config\Config.csproj">

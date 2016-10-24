@@ -153,6 +153,8 @@
     <Compile Include="UI\TradingInstance.cs" />
     <Compile Include="UI\TradingInstanceAdjustmentItem.cs" />
     <Compile Include="UI\TradingInstanceSecurity.cs" />
+    <Compile Include="UsageTracking\ActionType.cs" />
+    <Compile Include="UsageTracking\UserActionTracking.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
