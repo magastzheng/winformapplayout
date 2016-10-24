@@ -66,7 +66,7 @@ namespace BLL.Permission
             var feature = GetFeature(featureCode);
             if (feature != null)
             {
-                hasPerm = HasRolePermission(userId, feature.Id, ResourceType.Feature, mask);
+                hasPerm = ValidatePermission(userId, feature.Id, ResourceType.Feature, mask);
             }
 
             return hasPerm;
@@ -103,7 +103,7 @@ namespace BLL.Permission
 
         public bool HasRolePermission(RoleType roleId, int resourceId, ResourceType resourceType, PermissionMask mask)
         {
-            return HasRolePermission((int)roleId, resourceId, ResourceType.Feature, mask);
+            return ValidatePermission(roleId, resourceId, resourceType, mask);
         }
 
         public int GrantByRole(RoleType roleId, int resourceId, ResourceType resourceType, List<PermissionMask> masks)
@@ -120,14 +120,13 @@ namespace BLL.Permission
 
         #region private method to check/grant/revoke the permission for Role
 
-        private bool HasRolePermission(int userId, int resourceId, ResourceType resourceType, PermissionMask mask)
+        private bool ValidatePermission(int userId, int resourceId, ResourceType resourceType, PermissionMask mask)
         {
             bool hasPerm = false;
             var roles = GetRoles(userId);
             foreach (var role in roles)
             {
-                var roleFeaturePerm = GetPermission((int)role.RoleId, TokenType.Role, resourceId, resourceType);
-                if (_permCalculator.HasPermission(roleFeaturePerm.Permission, mask))
+                if(ValidatePermission(role.RoleId, resourceId, resourceType, mask))
                 {
                     hasPerm = true;
                     break;
@@ -135,6 +134,19 @@ namespace BLL.Permission
             }
 
             return hasPerm;
+        }
+
+        private bool ValidatePermission(RoleType roleId, int resourceId, ResourceType resourceType, PermissionMask mask)
+        {
+            var roleFeaturePerm = GetPermission((int)roleId, TokenType.Role, resourceId, resourceType);
+            if (_permCalculator.HasPermission(roleFeaturePerm.Permission, mask))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -189,7 +201,7 @@ namespace BLL.Permission
 
         public bool HasUserRolePermission(int userId, int resourceId, ResourceType resourceType, PermissionMask mask)
         {
-            return false;
+            return ValidatePermission(userId, resourceId, resourceType, mask);
         }
 
         #endregion

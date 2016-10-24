@@ -62,9 +62,101 @@ namespace Model.UFX
         [Description("配股认购")]
         Subscription = 9,
 
+        //债转股
+        [Description("债转股")]
+        DebtToEquity = 10,
+
+        //债回售
+        [Description("债回售")]
+        SaleOfDebt = 11,
+
         //申购
         [Description("申购")]
         Purchase = 12,
+
+        //基金认购
+        [Description("基金认购")]
+        SubscribingFund = 13,
+
+        //转托管
+        [Description("转托管")]
+        CustodyTransfer = 17,
+
+        //ETF申购
+        [Description("ETF申购")]
+        PurchasingETF = 26,
+
+        //ETF赎回
+        [Description("ETF赎回")]
+        RedeemingETF = 27,
+
+        //行权认购
+        [Description("行权认购")]
+        ExecuteCallOption = 28,
+
+        //行权认沽
+        [Description("行权认沽")]
+        ExecutePutOption = 29,
+
+        //提交质押
+        [Description("提交质押")]
+        SubmitPledge = 30,
+
+        //转回质押
+        [Description("转回质押")]
+        ReversalOfPledge = 31,
+
+        //基金分拆
+        [Description("基金分拆")]
+        FundSplit = 50,
+
+        //基金合并
+        [Description("基金合并")]
+        FundConsolidation = 51,
+
+        //开基申购
+        [Description("开基申购")]
+        PurchasingOE = 53,
+
+        //开基赎回
+        [Description("开基赎回")]
+        RedeemingOE = 54,
+
+        //债券认购
+        [Description("债券认购")]
+        SubscribingBond = 55,
+
+        //保证券锁定
+        [Description("保证券锁定")]
+        LockSecurity = 63,
+
+        //保证券解锁
+        [Description("保证券解锁")]
+        UnlockSecurity = 64,
+
+        //融券卖出
+        [Description("融券卖出")]
+        MarginSelling = 67,
+
+        //买券还券
+        [Description("买券还券")]
+        BuyCoupon = 68,
+
+        //直接还款
+        [Description("直接还款")]
+        DirectRepayment = 69,
+
+        //直接还券
+        [Description("直接还券")]
+        DirectCoupon = 70,
+
+        //融资买入
+        [Description("融资买入")]
+        Buyout = 75,
+
+        //卖券还款
+        [Description("卖券还款")]
+        SellingCoupon = 76,
     }
 
     //委托状态

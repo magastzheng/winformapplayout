@@ -47,8 +47,8 @@ namespace BLL.Frontend
 
                 //对管理员和交易员进行授权
                 var dealPerms = new List<PermissionMask> { PermissionMask.View, PermissionMask.Execute};
-                _permissionManager.GrantPermission((int)RoleType.Administrator, commandId, ResourceType.TradeCommand, dealPerms);
-                _permissionManager.GrantPermission((int)RoleType.Dealer, commandId, ResourceType.TradeCommand, dealPerms);
+                _permissionManager.GrantByRole(RoleType.Administrator, commandId, ResourceType.TradeCommand, dealPerms);
+                _permissionManager.GrantByRole(RoleType.Dealer, commandId, ResourceType.TradeCommand, dealPerms);
             }
 
             return commandId;
@@ -147,20 +147,26 @@ namespace BLL.Frontend
             var uiCommands = new List<TradingCommandItem>();
             var tradeCommands = _tradecommandao.GetAll();
 
-            var tradeSecuItems = GetCommandSecurityItems(tradeCommands);
-            var entrustSecuItems = _queryBLL.GetEntrustSecurityItems(tradeCommands);
-
+            var validTradeCommands = new List<Model.Database.TradeCommand>();
             foreach (var tradeCommand in tradeCommands)
             {
                 if (_permissionManager.HasPermission(userId, tradeCommand.CommandId, ResourceType.TradeCommand, PermissionMask.View)
-                    //|| _permissionManager.HasPermission(userId, ResourceType.
+                    || _permissionManager.HasUserRolePermission(userId, tradeCommand.CommandId, ResourceType.TradeCommand, PermissionMask.View)
                     )
                 {
-                    var uiCommand = BuildUICommand(tradeCommand);
-                    CalculateUICommand(ref uiCommand, tradeSecuItems, entrustSecuItems);
-
-                    uiCommands.Add(uiCommand);
+                    validTradeCommands.Add(tradeCommand);
                 }
+            }
+
+            var tradeSecuItems = GetCommandSecurityItems(validTradeCommands);
+            var entrustSecuItems = _queryBLL.GetEntrustSecurityItems(validTradeCommands);
+
+            foreach (var tradeCommand in validTradeCommands)
+            {
+                var uiCommand = BuildUICommand(tradeCommand);
+                CalculateUICommand(ref uiCommand, tradeSecuItems, entrustSecuItems);
+
+                uiCommands.Add(uiCommand);
             }
             return uiCommands;
         }

@@ -188,7 +188,11 @@ namespace BLL.Entrust
                 {
                     var entrustFlowItems = GetFlowItems(token, responseItems);
 
-                    if (token.OutArgs != null && token.OutArgs is List<EntrustFlowItem>)
+                    if (token.OutArgs != null 
+                        && token.OutArgs is List<EntrustFlowItem>
+                        && entrustFlowItems != null
+                        && entrustFlowItems.Count > 0
+                    )
                     {
                         ((List<EntrustFlowItem>)token.OutArgs).AddRange(entrustFlowItems);
                     }
@@ -210,7 +214,7 @@ namespace BLL.Entrust
         private List<EntrustFlowItem> GetFlowItems(CallerToken token, List<UFXQueryEntrustResponse> responseItems)
         {
             var entrustFlowItems = new List<EntrustFlowItem>();
-            if (responseItems == null && responseItems.Count == 0)
+            if (responseItems == null || responseItems.Count == 0)
             {
                 return entrustFlowItems;
             }
