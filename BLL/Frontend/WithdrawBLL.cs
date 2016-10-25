@@ -2,15 +2,20 @@
 using BLL.EntrustCommand;
 using BLL.SecurityInfo;
 using BLL.UFX.impl;
+using BLL.UsageTracking;
+using Config;
 using DBAccess.Entrust;
 using DBAccess.TradeCommand;
 using Model.BLL;
 using Model.EnumType;
+using Model.Permission;
 using Model.SecurityInfo;
 using Model.UI;
+using Model.UsageTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Util;
 
 namespace BLL.Frontend
 {
@@ -19,6 +24,7 @@ namespace BLL.Frontend
         private EntrustDAO _entrustdao = new EntrustDAO();
         private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
 
+        private UserActionTrackingBLL _userActionTrackingBLL = new UserActionTrackingBLL();
         private EntrustCommandBLL _entrustCommandBLL = new EntrustCommandBLL();
         private EntrustSecurityBLL _entrustSecurityBLL = new EntrustSecurityBLL();
         private UFXBasketWithdrawBLL _ufxBasketWithdrawBLL = new UFXBasketWithdrawBLL();
@@ -32,6 +38,7 @@ namespace BLL.Frontend
 
         public List<EntrustCommandItem> CancelOne(TradingCommandItem cmdItem, CallerCallback callerCallback)
         {
+            Tracking(ActionType.Cancel, ResourceType.TradeCommand, cmdItem.CommandId, cmdItem);
             List<EntrustCommandItem> cancelEntrustCmdItems = new List<EntrustCommandItem>();
 
             var entrustCmdItems = _entrustCommandBLL.GetCancel(cmdItem.CommandId);
@@ -82,6 +89,8 @@ namespace BLL.Frontend
 
         public List<CancelRedoItem> CancelSecuItem(int submitId, int commandId, List<CancelRedoItem> cancelItems, CallerCallback callerCallback)
         {
+            Tracking(ActionType.Cancel, ResourceType.TradeCommand, -1, null);
+
             List<CancelRedoItem> cancelSecuItems = new List<CancelRedoItem>();
 
             var entrustedSecuItems = ConvertToEntrustSecuItems(cancelItems);
@@ -280,6 +289,13 @@ namespace BLL.Frontend
             };
 
             return entrustItem;
+        }
+
+        private int Tracking(ActionType actionType, ResourceType resourceType, int resourceId, TradingCommandItem cmdItem)
+        {
+            int userId = LoginManager.Instance.GetUserId();
+
+            return _userActionTrackingBLL.Create(userId, actionType, resourceType, resourceId, JsonUtil.SerializeObject(cmdItem));
         }
     }
 }

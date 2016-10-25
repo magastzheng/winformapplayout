@@ -1,4 +1,6 @@
-﻿using Model.Permission;
+﻿using BLL.UsageTracking;
+using Model.Permission;
+using Model.UsageTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,26 +24,9 @@ namespace BLL.Permission
         private FeatureBLL _featureBLL = new FeatureBLL();
         private TokenResourcePermissionBLL _userResourcePermBLL = new TokenResourcePermissionBLL();
         private PermissionCalculator _permCalculator = new PermissionCalculator();
+        private UserActionTrackingBLL _userActionTrackingBLL = new UserActionTrackingBLL();
 
         #region user role permission
-
-        public List<Role> GetRoles(User user)
-        {
-            var roles = _roleBLL.GetAll();
-            var userRoles = _userRoleBLL.GetAll();
-            var valideUserRoles = userRoles.Where(p => p.UserId == user.Id).ToList();
-            List<Role> currentRoles = new List<Role>();
-            foreach (var userRole in userRoles)
-            {
-                var role = roles.Find(p => p.Id == userRole.RoleId);
-                if (role != null)
-                {
-                    currentRoles.Add(role);
-                }
-            }
-
-            return currentRoles;
-        }
 
         //public List<TokenResourcePermission> GetRolePermission(Role role)
         //{
@@ -68,6 +53,8 @@ namespace BLL.Permission
             {
                 hasPerm = ValidatePermission(userId, feature.Id, ResourceType.Feature, mask);
             }
+
+            _userActionTrackingBLL.Create(userId, Model.UsageTracking.ActionType.CheckPermission, ResourceType.Feature, feature.Id, mask.ToString());
 
             return hasPerm;
         }
@@ -119,6 +106,24 @@ namespace BLL.Permission
         #endregion
 
         #region private method to check/grant/revoke the permission for Role
+
+        private List<Role> GetRoles(User user)
+        {
+            var roles = _roleBLL.GetAll();
+            var userRoles = _userRoleBLL.GetAll();
+            var valideUserRoles = userRoles.Where(p => p.UserId == user.Id).ToList();
+            List<Role> currentRoles = new List<Role>();
+            foreach (var userRole in userRoles)
+            {
+                var role = roles.Find(p => p.Id == userRole.RoleId);
+                if (role != null)
+                {
+                    currentRoles.Add(role);
+                }
+            }
+
+            return currentRoles;
+        }
 
         private bool ValidatePermission(int userId, int resourceId, ResourceType resourceType, PermissionMask mask)
         {
@@ -221,6 +226,8 @@ namespace BLL.Permission
         {
             var userResourcePerm = GetPermission(userId, TokenType.User, resourceId, resourceType);
 
+            Tracking(userId, ActionType.CheckPermission, resourceType, resourceId, (int)mask);
+
             return _permCalculator.HasPermission(userResourcePerm.Permission, mask);
         }
 
@@ -239,6 +246,8 @@ namespace BLL.Permission
             {
                 perm = _permCalculator.GrantPermission(perm, mask);
             }
+
+            Tracking(userId, ActionType.GrantPermission, resourceType, resourceId, perm);
 
             if (userResourcePerm.Id == userId)
             {
@@ -267,6 +276,8 @@ namespace BLL.Permission
                 perm = _permCalculator.RevokePermission(perm, mask);
             }
 
+            Tracking(userId, ActionType.RevokePermission, resourceType, resourceId, perm);
+
             if (userResourcePerm.Id == userId)
             {
                 return UpdatePermission(userId, TokenType.User, resourceId, resourceType, perm);
@@ -288,6 +299,8 @@ namespace BLL.Permission
         /// <returns></returns>
         public int ChangePermission(int userId, int resourceId, ResourceType resourceType, int perm, bool isUpdated)
         {
+            Tracking(userId, ActionType.EditPermission, resourceType, resourceId, perm);
+
             if (isUpdated)
             {
                 return UpdatePermission(userId, TokenType.User, resourceId, resourceType, perm);
@@ -375,6 +388,15 @@ namespace BLL.Permission
         {
             return _featureBLL.GetByCode(featureCode);
         }
+        #endregion
+
+        #region usage tracking
+
+        private int Tracking(int userId, ActionType action, ResourceType resourceType, int resourceId, int perm)
+        {
+            return _userActionTrackingBLL.Create(userId, action, resourceType, resourceId, perm.ToString());
+        }
+
         #endregion
     }
 }

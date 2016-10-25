@@ -1,4 +1,5 @@
 ﻿using BLL.Permission;
+using BLL.UsageTracking;
 using Config;
 using DBAccess.SecurityInfo;
 using DBAccess.Template;
@@ -6,6 +7,7 @@ using Model.Database;
 using Model.Permission;
 using Model.UI;
 using System.Collections.Generic;
+using Util;
 
 namespace BLL.Template
 {
@@ -14,6 +16,8 @@ namespace BLL.Template
         private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
         private TemplateStockDAO _stockdbdao = new TemplateStockDAO();
         private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
+
+        private UserActionTrackingBLL _userActionTrackingBLL = new UserActionTrackingBLL();
         private PermissionManager _permissionManager = new PermissionManager();
         private TokenResourcePermissionBLL _urPermissionBLL = new TokenResourcePermissionBLL();
         private UserBLL _userBLL = new UserBLL();
@@ -30,8 +34,11 @@ namespace BLL.Template
             if (templateId > 0)
             {
                 template.TemplateId = templateId;
-
                 int userId = LoginManager.Instance.GetUserId();
+
+                //Add the usage tracking information
+                _userActionTrackingBLL.Create(userId, Model.UsageTracking.ActionType.Create, ResourceType.SpotTemplate, templateId, JsonUtil.SerializeObject(template));
+
                 var perms = _permissionManager.GetOwnerPermission();
                 _permissionManager.GrantPermission(userId, templateId, ResourceType.SpotTemplate, perms);
 
@@ -57,6 +64,9 @@ namespace BLL.Template
                 int tempId = _tempdbdao.Update(dbItem);
                 if (tempId > 0)
                 {
+                    //add the usage tracking
+                    _userActionTrackingBLL.Create(userId, Model.UsageTracking.ActionType.Edit, ResourceType.SpotTemplate, template.TemplateId, JsonUtil.SerializeObject(template));
+
                     //update the permission
                     foreach (var perm in template.Permissions)
                     {
@@ -79,14 +89,28 @@ namespace BLL.Template
 
         public int DeleteTemplate(StockTemplate template)
         {
-            //TODO: delete the permission, too.
-            return _tempdbdao.Delete(template.TemplateId);
+            int ret = -1;
+            int userId = LoginManager.Instance.GetUserId();
+            if (_permissionManager.HasPermission(userId, template.TemplateId, ResourceType.SpotTemplate, PermissionMask.Delete))
+            {
+                //TODO: delete the permission, too.
+                ret = _tempdbdao.Delete(template.TemplateId);
+                if (ret > 0)
+                {
+                    //add the usage tracking
+                    _userActionTrackingBLL.Create(userId, Model.UsageTracking.ActionType.Edit, ResourceType.SpotTemplate, template.TemplateId, JsonUtil.SerializeObject(template));
+                }
+            }
+
+            return ret;
         }
 
         public List<StockTemplate> GetTemplates()
         {
             var allTemplates = _tempdbdao.Get(-1);
             int userId = LoginManager.Instance.GetUserId();
+
+            _userActionTrackingBLL.Create(userId, Model.UsageTracking.ActionType.Get, ResourceType.SpotTemplate, -1, "Get all template");
 
             return GetPermissionTemplates(userId, allTemplates);
         }
@@ -119,16 +143,24 @@ namespace BLL.Template
                 targetTemplate = new StockTemplate();
             }
 
+            _userActionTrackingBLL.Create(loginUserId, Model.UsageTracking.ActionType.Get, ResourceType.SpotTemplate, templateId, JsonUtil.SerializeObject(targetTemplate));
+
             return targetTemplate;
         }
 
         public List<TemplateStock> GetStocks(int templateId)
         {
+            int loginUserId = LoginManager.Instance.GetUserId();
+            _userActionTrackingBLL.Create(loginUserId, Model.UsageTracking.ActionType.Get, ResourceType.SpotTemplate, templateId, "stocks");
+
             return _stockdbdao.Get(templateId);
         }
 
         public int Replace(int templateNo, List<TemplateStock> tempStocks)
         {
+            int loginUserId = LoginManager.Instance.GetUserId();
+            _userActionTrackingBLL.Create(loginUserId, Model.UsageTracking.ActionType.Edit, ResourceType.SpotTemplate, templateNo, "Replace");
+
             return _stockdbdao.Replace(templateNo, tempStocks);
         }
 

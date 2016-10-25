@@ -542,7 +542,7 @@ readonly:
 		"visible": 1,
 		"readonly": 0
 		},{
-		"name": "thisentrustamout",
+		"name": "thisentrustamount",
 		"text": "本次委托数量",
 		"width": 80,
 		"columntype": 0,

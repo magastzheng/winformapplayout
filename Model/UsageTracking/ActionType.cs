@@ -23,25 +23,31 @@ namespace Model.UsageTracking
         //保存对象
         Save = 5,
 
+        //查看权限
+        CheckPermission = 6,
+
         //授予权限
-        Grant = 6,
+        GrantPermission = 7,
 
         //回收权限
-        Revoke = 7,
+        RevokePermission = 8,
+
+        //改变权限
+        EditPermission = 9,
 
         //提交对象
-        Submit = 8,
+        Submit = 10,
 
         //计算对象
-        Calc = 9,
+        Calc = 11,
 
         //委托对象
-        Entrust = 10,
+        Entrust = 12,
 
         //撤销对象
-        Cancel = 11,
+        Cancel = 13,
 
         //撤补对象
-        CancelRedo = 12,
+        CancelRedo = 14,
     }
 }

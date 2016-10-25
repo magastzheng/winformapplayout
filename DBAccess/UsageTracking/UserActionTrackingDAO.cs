@@ -37,6 +37,8 @@ namespace DBAccess.UsageTracking
             _dbHelper.AddInParameter(dbCommand, "@ResourceId", System.Data.DbType.Int32, item.ResourceId);
             _dbHelper.AddInParameter(dbCommand, "@Details", System.Data.DbType.String, item.Details);
 
+            _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
+
             int ret = _dbHelper.ExecuteNonQuery(dbCommand);
 
             int commandId = -1;

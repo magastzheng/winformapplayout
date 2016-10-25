@@ -52,7 +52,7 @@ namespace TradingSystem.View
         private const string GridCmdSecurityId = "cmdsecurity";
         private const string GridBuySellId = "buysell";
         private const string EntrustPrice = "entrustprice";
-        private const string ThisEntrustAmount = "thisentrustamout";
+        private const string ThisEntrustAmount = "thisentrustamount";
 
         private EntrustBLL _entrustBLL = new EntrustBLL();
         private WithdrawBLL _withdrawBLL = new WithdrawBLL();
@@ -116,6 +116,7 @@ namespace TradingSystem.View
             this.btnSecuSelect.Click += new EventHandler(Button_Security_Select_Click);
             this.btnSecuUnSelect.Click += new EventHandler(Button_Security_UnSelect_Click);
 
+            //entrust price setting
             this.cbSpotBuyPrice.SelectedIndexChanged += new EventHandler(ComboBox_PriceType_SelectedIndexChange);
             this.cbSpotSellPrice.SelectedIndexChanged += new EventHandler(ComboBox_PriceType_SelectedIndexChange);
             this.cbFuturesBuyPrice.SelectedIndexChanged += new EventHandler(ComboBox_PriceType_SelectedIndexChange);
@@ -1030,16 +1031,9 @@ namespace TradingSystem.View
             //如果份数框不为0，将所有的份数均设为输入框中的值
             AssignCopies();
             
-            //if (!ValidateCopies())
-            //{
-            //    MessageBox.Show(this, "委托份数非法，请输入正确的委托份数！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
-            //    return;
-            //}
-
             if (_secuDataSource.Count == 0)
             {
                 MessageDialog.Warn(this, msgNoEntrustSecurity, MessageBoxButtons.OK);
-                //MessageBox.Show(this, "没有需要委托的证券！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                 return;
             }
 
@@ -1066,13 +1060,10 @@ namespace TradingSystem.View
 
         private void Button_Entrust_Click(object sender, EventArgs e)
         {
-            //TODO:
             //Check the entrust security items of entrust item. Make sure there is security item selected
             var selectedEntrustItems = _eiDataSource.ToList();
             if (selectedEntrustItems == null || selectedEntrustItems.Count == 0)
             {
-                //TODO: show message
-                //MessageBox.Show(this, "请选择要委托的指令！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                 MessageDialog.Warn(this, msgEntrustCommandSelect, MessageBoxButtons.OK);
                 return;
             }
@@ -1083,7 +1074,6 @@ namespace TradingSystem.View
                 int count = thisSecuItems.Count;
                 if (count == 0)
                 {
-                    //MessageBox.Show(this, "请确保委托指令中包含有效证券！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                     MessageDialog.Warn(this, msgShouldContainSecurity, MessageBoxButtons.OK);
                     return;
                 }
@@ -1092,7 +1082,6 @@ namespace TradingSystem.View
                 count = thisSecuItems.Count(p => p.ESuspendFlag != Model.Quote.SuspendFlag.NoSuspension);
                 if (count > 0)
                 {
-                    //MessageBox.Show(this, "选中停牌的证券！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                     MessageDialog.Warn(this, msgEntrustSecuritySuspend, MessageBoxButtons.OK);
                     return;
                 }
@@ -1106,7 +1095,6 @@ namespace TradingSystem.View
             var selectedSecuItems = _secuDataSource.Where(p => p.Selection).ToList();
             string confirmFormat = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgEntrustSecurityConfirm);
             string confirmMsg = string.Format(confirmFormat, selectedSecuItems.Count);
-            //if (MessageBox.Show(this, confirmMsg, "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.No)
             if(MessageDialog.Warn(this, confirmMsg, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
             {
                 return;
@@ -1147,10 +1135,8 @@ namespace TradingSystem.View
                 else
                 { 
                     //Fail to submit into database
-                    //string msg = string.Format("委托指令[{0}]失败: {1}, 是否继续委托下一个指令？", eiItem.CommandNo, bllResponse.Message);
                     string errFormat = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgEntrustCommandFail);
                     string msg = string.Format(errFormat, eiItem.CommandNo, bllResponse.Message);
-                    //if (MessageBox.Show(this, msg, "错误", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.No)
                     if(MessageDialog.Error(this, msg, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
                     {
                         break;
@@ -1160,7 +1146,6 @@ namespace TradingSystem.View
 
             string msgFormat = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgEntrustSecuritySuccessCount);
             string successMsg = string.Format(msgFormat, successCount);
-            //MessageBox.Show(this, successMsg, "提示", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
             MessageDialog.Info(this, successMsg);
             //update the UI
             GridView_Security_ResetPriceType(selectedSecuItems);

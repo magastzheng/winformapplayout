@@ -1,4 +1,5 @@
 ﻿using BLL.Permission;
+using BLL.UsageTracking;
 using Config;
 using DBAccess.Template;
 using DBAccess.TradeCommand;
@@ -9,9 +10,11 @@ using Model.EnumType;
 using Model.Permission;
 using Model.SecurityInfo;
 using Model.UI;
+using Model.UsageTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Util;
 
 namespace BLL.Frontend
 {
@@ -26,6 +29,7 @@ namespace BLL.Frontend
         private TradingCommandDAO _tradecommandao = new TradingCommandDAO();
         private TradingCommandSecurityDAO _tradecmdsecudao = new TradingCommandSecurityDAO();
 
+        private UserActionTrackingBLL _userActionTrackingBLL = new UserActionTrackingBLL();
         private PermissionManager _permissionManager = new PermissionManager();
         private QueryBLL _queryBLL = new QueryBLL();
 
@@ -42,6 +46,8 @@ namespace BLL.Frontend
             int commandId = _commanddao.Create(cmdItem, secuItems);
             if (commandId > 0)
             {
+                Tracking(ActionType.Submit, ResourceType.TradeCommand, commandId, cmdItem);
+
                 var perm = _permissionManager.GetOwnerPermission();
                 _permissionManager.GrantPermission(userId, commandId, ResourceType.TradeCommand, perm);
 
@@ -147,6 +153,8 @@ namespace BLL.Frontend
             var uiCommands = new List<TradingCommandItem>();
             var tradeCommands = _tradecommandao.GetAll();
 
+            Tracking(ActionType.Get, ResourceType.TradeCommand, -1, null);
+
             var validTradeCommands = new List<Model.Database.TradeCommand>();
             foreach (var tradeCommand in tradeCommands)
             {
@@ -174,6 +182,7 @@ namespace BLL.Frontend
 
         public Model.Database.TradeCommand GetTradeCommandItem(int commandId)
         {
+            Tracking(ActionType.Get, ResourceType.TradeCommand, commandId, null);
             return _tradecommandao.Get(commandId);
         }
 
@@ -312,6 +321,15 @@ namespace BLL.Frontend
             }
 
             return 0.0f;
+        }
+        #endregion
+
+        #region User action tracking
+
+        private int Tracking(ActionType actionType, ResourceType resourceType, int resourceId, Model.Database.TradeCommand cmdItem)
+        {
+            int userId = LoginManager.Instance.GetUserId();
+            return _userActionTrackingBLL.Create(userId, actionType, resourceType, resourceId, JsonUtil.SerializeObject(cmdItem));
         }
         #endregion
     }

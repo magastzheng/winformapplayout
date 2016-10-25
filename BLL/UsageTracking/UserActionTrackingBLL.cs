@@ -17,6 +17,21 @@ namespace BLL.UsageTracking
         { 
         }
 
+        public int Create(int userId, ActionType action, ResourceType resourceType, int resourceId, string details)
+        {
+            var item = new UserActionTracking 
+            {
+                UserId = userId,
+                CreatedDate = DateTime.Now,
+                ActionType = action,
+                ResourceType = resourceType,
+                ResourceId = resourceId,
+                Details = details,
+            };
+
+            return Create(item);
+        }
+
         public int Create(UserActionTracking item)
         {
             return _useractiontrackingdao.Create(item);
