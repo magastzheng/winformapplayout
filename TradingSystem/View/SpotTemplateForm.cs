@@ -423,14 +423,14 @@ namespace TradingSystem.View
 
         private void ToolStripButton_Import_Click(object sender, EventArgs e)
         {
-            ImportOptionDialog ioDialog = new ImportOptionDialog();
+            ImportOptionDialog importDialog = new ImportOptionDialog();
             //ioDialog.SaveFormData += new FormDataSaveHandler(ImportOptionDialog_SaveFormData);
-            ioDialog.ShowDialog();
-            if (ioDialog.DialogResult == System.Windows.Forms.DialogResult.OK)
+            importDialog.ShowDialog();
+            if (importDialog.DialogResult == System.Windows.Forms.DialogResult.OK)
             {
-                var importType = ioDialog.ImportType;
-                ioDialog.Close();
-                ioDialog.Dispose();
+                var importType = importDialog.ImportType;
+                importDialog.Close();
+                importDialog.Dispose();
 
                 bool ret = ImportFromExcel(importType);
                 if (ret)
@@ -440,8 +440,8 @@ namespace TradingSystem.View
             }
             else
             {
-                ioDialog.Close();
-                ioDialog.Dispose();
+                importDialog.Close();
+                importDialog.Dispose();
             }
         }
 
@@ -610,14 +610,11 @@ namespace TradingSystem.View
                         break;
                     case DialogType.Modify:
                         {
-                            for (int i = 0, count = _spotDataSource.Count; i < count; i++)
-                            {
-                                if (stock.SecuCode.Equals(_spotDataSource[i].SecuCode))
-                                {
-                                    ret = true;
-                                    _spotDataSource[i] = stock;
-                                    break;
-                                }
+                            int findIndex = _spotDataSource.ToList().FindIndex(p => p.SecuCode.Equals(stock.SecuCode));
+                            if(findIndex >= 0 && findIndex < _spotDataSource.Count)
+                            {                                    
+                                ret = true;
+                                _spotDataSource[findIndex] = stock;
                             }
                         }
                         break;
@@ -625,12 +622,15 @@ namespace TradingSystem.View
                         break;
                 }
 
-                var template = _tempDataSource.Single(p => p.TemplateId == stock.TemplateNo);
-                CalculateAmount(template);
+                if (ret)
+                {
+                    var template = _tempDataSource.Single(p => p.TemplateId == stock.TemplateNo);
+                    CalculateAmount(template);
 
-                SwitchTemplateStockSave(true);
+                    SwitchTemplateStockSave(true);
 
-                this.secuGridView.Invalidate();
+                    this.secuGridView.Invalidate();
+                }
             }
 
             return ret;
@@ -796,6 +796,13 @@ namespace TradingSystem.View
             return prices;
         }
 
+        /// <summary>
+        /// The formulas to calculate the market cap
+        /// MarketCap(i) = Price[i] * Amounts[i]
+        /// </summary>
+        /// <param name="prices">An array with each element as a security current price.</param>
+        /// <param name="amounts">An array with each element as a security amount.</param>
+        /// <returns>An array with each element as a security market capital.</returns>
         private double[] GetMarketCap(double[] prices, int[] amounts)
         {
             double[] mktCaps = new double[prices.Length];
