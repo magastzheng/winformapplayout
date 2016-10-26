@@ -18,6 +18,7 @@ using System.Text;
 using Model.BLL;
 using BLL.Frontend;
 using Model.Constant;
+using BLL.UFX.impl;
 
 namespace TradingSystem.Dialog
 {
@@ -351,7 +352,7 @@ namespace TradingSystem.Dialog
                 var oneCancelRedoItem = successCancelItems.Where(p => p.CommandId == commandId).ToList();
                 if (oneCancelRedoItem.Count > 0)
                 {
-                    resultMsg += Submit(commandId, oneCancelRedoItem);
+                    resultMsg += Submit(commandId, oneCancelRedoItem, null);
                 }
             }
 
@@ -448,7 +449,7 @@ namespace TradingSystem.Dialog
 
 
         //TODO: validate before submit
-        private string Submit(int commandId, List<CancelRedoItem> cancelRedoItems)
+        private string Submit(int commandId, List<CancelRedoItem> cancelRedoItems, CallerCallback callback)
         {
             EntrustCommandItem cmdItem = new EntrustCommandItem 
             {
@@ -457,7 +458,7 @@ namespace TradingSystem.Dialog
             };
 
             string msg = string.Empty;
-            var response = _entrustBLL.SubmitOne(cmdItem, cancelRedoItems);
+            var response = _entrustBLL.SubmitOne(cmdItem, cancelRedoItems, callback);
             if (!BLLResponse.Success(response))
             { 
                 int submitId = cancelRedoItems.Select(p => p.SubmitId).Distinct().Single();
