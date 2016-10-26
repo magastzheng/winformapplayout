@@ -5,6 +5,7 @@ using Model;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Util;
 
 namespace BLL.UFX
 {
@@ -25,6 +26,8 @@ namespace BLL.UFX
         protected uint _timeOut = 10000;
         protected bool _isInit = false;
         private Dictionary<FunctionCode, DataHandlerCallback> _dataHandlerMap = new Dictionary<FunctionCode, DataHandlerCallback>();
+
+        private TaskScheduler _taskScheduler = new LimitedConcurrencyLevelTaskScheduler(2);
 
         public bool IsInit 
         { 
@@ -508,8 +511,13 @@ namespace BLL.UFX
             }
             else
             {
-                Task task = new Task(() => dataHandler(parser));
-                task.Start();
+                //TODO: control the maximum number of the thread?
+                //Task task = new Task(() => dataHandler(parser));
+                //task.Start();
+
+                //use the TaskScheduler to limit the maximum thread number
+                TaskFactory taskFactory = new TaskFactory(_taskScheduler);
+                taskFactory.StartNew(() => dataHandler(parser));
 
                 return (int)ConnectionCode.Success;
             }

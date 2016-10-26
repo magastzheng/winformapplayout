@@ -257,6 +257,7 @@ namespace TradingSystem.View
             var selectCmdItems = _cmdDataSource.Where(p => p.Selection).ToList();
             if (selectCmdItems == null || selectCmdItems.Count() == 0)
             {
+                MessageDialog.Warn(this, msgNoEntrustCancel);
                 return;
             }
 
@@ -315,6 +316,7 @@ namespace TradingSystem.View
             var selectCmdItems = _cmdDataSource.Where(p => p.Selection).ToList();
             if (selectCmdItems == null || selectCmdItems.Count() == 0)
             {
+                MessageDialog.Warn(this, msgNoEntrustCancel);
                 return;
             }
 
@@ -328,6 +330,7 @@ namespace TradingSystem.View
 
             if (entrustedCmdItems.Count == 0)
             {
+                MessageDialog.Warn(this, msgNoEntrustCancel);
                 return;
             }
 
@@ -340,6 +343,7 @@ namespace TradingSystem.View
 
             if (cancelRedoItems.Count == 0)
             {
+                MessageDialog.Warn(this, msgNoEntrustCancel);
                 return;
             }
 
@@ -488,15 +492,17 @@ namespace TradingSystem.View
                         GridView_Command_UnSelect(cmdItem);
                     }
                     break;
-                case UpdateDirection.Increase:
-                    {
+                //case UpdateDirection.Increase:
+                //    {
                         
-                    }
-                    break;
-                case UpdateDirection.Decrease:
-                    {
+                //    }
+                //    break;
+                //case UpdateDirection.Decrease:
+                //    {
                         
-                    }
+                //    }
+                //    break;
+                default:
                     break;
             }
         }

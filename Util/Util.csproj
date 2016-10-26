@@ -65,6 +65,7 @@
     <Compile Include="EntrustDirectionUtil.cs" />
     <Compile Include="ExcelUtil.cs" />
     <Compile Include="JsonUtil.cs" />
+    <Compile Include="LimitedConcurrencyLevelTaskScheduler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

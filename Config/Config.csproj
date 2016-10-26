@@ -50,6 +50,7 @@
     <Compile Include="ButtonConfig.cs" />
     <Compile Include="ComboConfig.cs" />
     <Compile Include="ConfigManager.cs" />
+    <Compile Include="DefaultSettingConfig.cs" />
     <Compile Include="FileUtil.cs" />
     <Compile Include="FunctionConfig.cs" />
     <Compile Include="GridConfig.cs" />

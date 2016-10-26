@@ -107,6 +107,9 @@
     <Compile Include="Quote\MarketData.cs" />
     <Compile Include="SecurityInfo\SecurityItem.cs" />
     <Compile Include="SecurityInfo\SecurityItemHelper.cs" />
+    <Compile Include="Setting\DefaultEntrustSetting.cs" />
+    <Compile Include="Setting\DefaultSetting.cs" />
+    <Compile Include="Setting\DefaultUFXSetting.cs" />
     <Compile Include="strategy\AccountItem.cs" />
     <Compile Include="strategy\AssetItem.cs" />
     <Compile Include="strategy\HolderItem.cs" />

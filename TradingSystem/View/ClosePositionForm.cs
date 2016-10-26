@@ -313,8 +313,8 @@ namespace TradingSystem.View
         private void LoadHolding()
         {
             //UFXQueryHoldingBLL holdingBLL = new UFXQueryHoldingBLL();
-            UFXQueryMultipleHoldingBLL holdingBLL = new UFXQueryMultipleHoldingBLL();
-            holdingBLL.Query();
+            //UFXQueryMultipleHoldingBLL holdingBLL = new UFXQueryMultipleHoldingBLL();
+            //holdingBLL.Query();
 
             Debug.WriteLine("Only test for the holding!");
         }
@@ -384,6 +384,8 @@ namespace TradingSystem.View
                 //    //TODO: fail to submit
                 //}
             }
+
+            QueryQuote();
 
             this.cmdGridView.Invalidate();
             this.securityGridView.Invalidate();
@@ -459,10 +461,43 @@ namespace TradingSystem.View
                 if (secuItem.SecuType == SecurityType.Stock)
                 {
                     secuItem.CommandMoney = secuItem.LastPrice * secuItem.EntrustAmount;
+                    switch (secuItem.EDirection)
+                    {
+                        case EntrustDirection.BuySpot:
+                            { 
+                                secuItem.TargetMktCap = secuItem.LastPrice * (secuItem.HoldingAmount + secuItem.EntrustAmount);
+                            }
+                            break;
+                        case EntrustDirection.SellSpot:
+                            {
+                                secuItem.TargetMktCap = secuItem.LastPrice * (secuItem.HoldingAmount - secuItem.EntrustAmount);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
                 else if (secuItem.SecuType == SecurityType.Futures)
                 {
                     secuItem.CommandMoney = _futuresBLL.GetMoney(secuItem.SecuCode, secuItem.EntrustAmount, secuItem.LastPrice);
+                    int totalAmount = 0;
+                    switch (secuItem.EDirection)
+                    {
+                        case EntrustDirection.SellOpen:
+                            {
+                                totalAmount = secuItem.HoldingAmount + secuItem.EntrustAmount;
+                            }
+                            break;
+                        case EntrustDirection.BuyClose:
+                            {
+                                totalAmount = secuItem.HoldingAmount - secuItem.EntrustAmount;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+
+                    secuItem.TargetMktCap = _futuresBLL.GetMoney(secuItem.SecuCode, totalAmount, secuItem.LastPrice);
                 }
                 else
                 {
@@ -857,7 +892,7 @@ namespace TradingSystem.View
                 return;
             }
 
-            //TODO: handle those 
+            //设置委托数量和委托方向
             foreach (var secuItem in secuItems)
             {
                 secuItem.EntrustAmount = secuItem.AvailableAmount;

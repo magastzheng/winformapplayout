@@ -15,6 +15,7 @@ namespace Config
         private ImportConfig _importConfig;
         private ButtonConfig _buttonConfig;
         private TDFAPIConfig _tdfAPIConfig;
+        private DefaultSettingConfig _defaultSettingConfig;
 
         private ConfigManager()
         {
@@ -39,6 +40,7 @@ namespace Config
                 _importConfig = new ImportConfig();
                 _buttonConfig = new ButtonConfig();
                 _tdfAPIConfig = new TDFAPIConfig();
+                _defaultSettingConfig = new DefaultSettingConfig();
                 
                 _terminalConfig = new TerminalConfig(_systemConfig);
             //}
@@ -103,6 +105,11 @@ namespace Config
         public TDFAPIConfig GetTDFAPIConfig()
         {
             return _instance._tdfAPIConfig;
+        }
+
+        public DefaultSettingConfig GetDefaultSettingConfig()
+        {
+            return _instance._defaultSettingConfig;
         }
     }
 }

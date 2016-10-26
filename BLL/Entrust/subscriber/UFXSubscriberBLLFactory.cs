@@ -16,7 +16,7 @@ namespace BLL.Entrust.subscriber
             {
                 case UFXPushMessageType.EntrustCommit:
                     {
-                        bll = new UFXEntrustCompletedBLL();
+                        bll = new UFXEntrustCommitBLL();
                     }
                     break;
                 case UFXPushMessageType.EntrustWithdrawDone:

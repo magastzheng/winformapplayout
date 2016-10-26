@@ -1,4 +1,5 @@
 ﻿using BLL.Entrust;
+using BLL.UFX.impl;
 using DBAccess;
 using DBAccess.Entrust;
 using DBAccess.TradeCommand;
@@ -110,6 +111,21 @@ namespace BLL.Frontend
             var bllResponse = _ufxBasketEntrustBLL.Submit(cmdItem, entrustItems, null);
 
             return bllResponse;
+        }
+
+        public BLLResponse SubmitOne(EntrustCommandItem cmdItem, List<EntrustSecurityItem> entrustItems, CallerCallback callback)
+        {
+            int ret = _entrustdao.Submit(cmdItem, entrustItems);
+            if (ret <= 0)
+            {
+                return new BLLResponse(ConnectionCode.DBInsertFail, "Fail to submit into database");
+            }
+
+            entrustItems.Where(p => p.CommandId == cmdItem.CommandId)
+                .ToList()
+                .ForEach(o => o.SubmitId = cmdItem.SubmitId);
+
+            return _ufxBasketEntrustBLL.Submit(cmdItem, entrustItems, callback);
         }
 
         //public BLLResponse Submit(List<EntrustCommandItem> cmdItems, List<EntrustSecurityItem> entrustItems)

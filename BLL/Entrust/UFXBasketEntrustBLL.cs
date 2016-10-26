@@ -117,7 +117,7 @@ namespace BLL.Entrust
                     else
                     {
                         bllResponse.Code = ConnectionCode.FailEntrust;
-                        bllResponse.Message = "Fail Entrust: " + errorResponse.ErrorMessage;
+                        bllResponse.Message = "Fail Entrust: " + errorResponse.ErrorCode + " " + errorResponse.ErrorMessage + " " + errorResponse.MessageDetail;
                     }
                 }
                 else
@@ -189,8 +189,8 @@ namespace BLL.Entrust
                 ret = _entrustCommandBLL.UpdateEntrustCommandBatchNo(token.SubmitId, 0, Model.EnumType.EntrustStatus.EntrustFailed, errorResponse.ErrorCode, errorResponse.ErrorMessage);
 
                 //TODO:
-                string msg = string.Format("The SubmitId [{0}] was split into several batch no", token.SubmitId);
-                logger.Warn(msg);
+                string msg = string.Format("The SubmitId [{0}] fail to entrust. ErrorCode: {1}, ErrorMessage: {2}, MessageDetail: {3}", token.SubmitId, errorResponse.ErrorCode, errorResponse.ErrorMessage, errorResponse.MessageDetail);
+                logger.Error(msg);
             }
 
             try

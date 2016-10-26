@@ -308,6 +308,9 @@
     <None Include="config\buttons.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="config\defaultsetting.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="config\excelgrid.json" />
     <None Include="config\import.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

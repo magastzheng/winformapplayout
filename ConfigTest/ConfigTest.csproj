@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultSettingConfigTest.cs" />
     <Compile Include="ImportConfigTest.cs" />
     <Compile Include="LabelConfigTest.cs" />
     <Compile Include="NavbarConfigTest.cs" />

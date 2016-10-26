@@ -202,10 +202,10 @@
 			"text": "部分证券撤单失败:"
 		},{
 			"id": "entrustcancelfailsecurity",
-			"text": "提交号:{0}, 指令号:{1}, 证券代码:{2}\n"
+			"text": "撤销失败，提交号:{0}, 指令号:{1}, 证券代码:{2}\n"
 		},{
 			"id": "entrustcancelresubmitfail",
-			"text": "委托失败, 提交号：[{0}], 失败原因：{1}!"
+			"text": "撤销委托失败, 提交号：[{0}], 失败原因：{1}!"
 		},{
 			"id": "transferholdingnosecurityselected",
 			"text": "请勾选要调整的证券！"

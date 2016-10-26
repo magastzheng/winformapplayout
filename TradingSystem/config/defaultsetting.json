@@ -1,0 +1,21 @@
+﻿/**
+*
+*/
+{
+	"ufxsetting":
+	{
+		"timeout": 10,
+	},
+	"entrustsetting":
+	{
+		"buyfutuprice": "Market",
+		"sellfutuprice": "Market",
+		"buyspotprice": "Market",
+		"sellspotprice": "Market",
+		"buysellentrustorder": 1,
+		"autoratio": 100,
+		"fragmentedstockmode": 3,
+		"szseentrustpricetype": "0",
+		"sseentrustpricetype": "0"
+	}
+}

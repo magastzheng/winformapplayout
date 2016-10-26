@@ -42,7 +42,7 @@ namespace BLL.UFX
 
 
                 Console.WriteLine("====推送=====过滤字段部分=====开始");
-                parser.Output();
+                //parser.Output();
                 Console.WriteLine("====推送=====过滤字段部分=====结束");
                 lpUnpacker.Dispose();
 
@@ -60,7 +60,7 @@ namespace BLL.UFX
                     DataParser parser = new DataParser();
                     parser.Parse(lpUnpacker1);
                     Console.WriteLine("====推送*****数据部分=====开始");
-                    parser.Output();
+                    //parser.Output();
                     Console.WriteLine("====推送*****数据部分=====结束");
                     lpUnpacker1.Dispose();
 
