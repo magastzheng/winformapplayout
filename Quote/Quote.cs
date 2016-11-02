@@ -1,5 +1,7 @@
 ﻿using Model.Quote;
+using Model.SecurityInfo;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Quote
 {
@@ -7,7 +9,16 @@ namespace Quote
     {
         private readonly object locker = new object();
         private Dictionary<string, MarketData> _marketDatas = new Dictionary<string, MarketData>();
+        private Dictionary<string, SecurityItem> _securityDatas = new Dictionary<string, SecurityItem>();
+
         public Dictionary<string, MarketData> MarketDatas { get { return _marketDatas; } }
+
+        #region interface
+
+        public List<SecurityItem> GetSecurities()
+        {
+            return _securityDatas.Values.ToList();
+        }
 
         public Dictionary<string, MarketData> GetMarketData(List<string> instrumentIDs)
         {
@@ -52,5 +63,46 @@ namespace Quote
 
             return _marketDatas[instrumentID];
         }
+
+        public void AddSecurity(string investmentID, SecurityItem securityItem)
+        {
+            if (!_securityDatas.ContainsKey(investmentID))
+            {
+                _securityDatas.Add(investmentID, securityItem);
+            }
+            else
+            {
+                _securityDatas[investmentID] = securityItem;
+            }
+        }
+
+        public SecurityItem GetSecurity(string investmentID)
+        {
+            if (!_securityDatas.ContainsKey(investmentID))
+            {
+                int pos = investmentID.IndexOf('.');
+                string secuCode = string.Empty;
+                if (pos > 0)
+                {
+                    secuCode = investmentID.Substring(0, pos);
+                }
+                else
+                {
+                    secuCode = investmentID;
+                }
+
+                SecurityItem securityItem = new SecurityItem 
+                {
+                    SecuCode = secuCode,
+                };
+
+                AddSecurity(investmentID, securityItem);
+            }
+
+            return _securityDatas[investmentID];
+        }
+
+        #endregion
+
     }
 }

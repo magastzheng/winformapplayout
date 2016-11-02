@@ -28,10 +28,19 @@ namespace BLL.Entrust
         private EntrustDAO _entrustdao = new EntrustDAO();
         private int _timeOut = 30 * 1000;
         
+        private double _limitEntrustRatio = 100.0;
+        private double _futuLimitEntrustRatio = 100.0;
+        private double _optLimitEntrustRatio = 100;
+
         public UFXBasketEntrustBLL()
         {
             _securityBLL = BLLManager.Instance.SecurityBLL;
             _tradeCommandBLL = new TradeCommandBLL();
+
+            _timeOut = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.Timeout;
+            _limitEntrustRatio = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.LimitEntrustRatio;
+            _futuLimitEntrustRatio = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.FutuLimitEntrustRatio;
+            _optLimitEntrustRatio = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.OptLimitEntrustRatio;
         }
 
         public BLLResponse Submit(EntrustCommandItem cmdItem, List<EntrustSecurityItem> entrustItems, CallerCallback callerCallback)
@@ -57,9 +66,9 @@ namespace BLL.Entrust
                     PriceType = EntrustRequestHelper.GetEntrustPriceType(secuItem.EntrustPriceType),
                     ExtSystemId = secuItem.RequestId,
                     ThirdReff = EntrustRequestHelper.GenerateThirdReff(secuItem.CommandId, secuItem.SubmitId, secuItem.RequestId),
-                    LimitEntrustRatio = 100,
-                    FutuLimitEntrustRatio = 100,
-                    OptLimitEntrustRatio = 100,
+                    LimitEntrustRatio = _limitEntrustRatio,
+                    FutuLimitEntrustRatio = _futuLimitEntrustRatio,
+                    OptLimitEntrustRatio = _optLimitEntrustRatio,
                 };
 
                 if (secuItem.SecuType == Model.SecurityInfo.SecurityType.Stock)

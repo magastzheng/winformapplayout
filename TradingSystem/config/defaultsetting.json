@@ -1,10 +1,27 @@
 ﻿/**
-*
+* ufxsetting - 跟UFX接口相关参数默认设置
+*	timeout: 调用UFX接口等待超时时间
+*	limitentrustratio: 现货最小委托比例
+*	futulimitentrustratio: 期货最小委托比例
+*	optlimitentrustratio: 期权最小委托比例
+* entrustsetting - 策略交易界面相关参数默认设置
+*	buyfutuprice: 期货委买价
+*	sellfutuprice: 期货委卖价
+*	buyspotprice: 现货委买价
+*	sellspotprice: 现货委卖价
+*	buysellentrustorder: 买卖委托顺序
+*	automatichandicapratio: 自动盘口系数
+*	fragmentedstockmode: 委托数量零股处理模式
+*	szseentrustpricetype: 深交所市价委托方式
+*	sseentrustpricetype: 上交所市价委托方式
 */
 {
 	"ufxsetting":
 	{
 		"timeout": 10,
+		"limitentrustratio": 100.0,
+		"futulimitentrustratio": 100.0,
+		"optlimitentrustratio": 100.0
 	},
 	"entrustsetting":
 	{
@@ -13,7 +30,7 @@
 		"buyspotprice": "Market",
 		"sellspotprice": "Market",
 		"buysellentrustorder": 1,
-		"autoratio": 100,
+		"automatichandicapratio": 100,
 		"fragmentedstockmode": 3,
 		"szseentrustpricetype": "0",
 		"sseentrustpricetype": "0"

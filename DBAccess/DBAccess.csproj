@@ -49,6 +49,7 @@
     <Compile Include="SecurityInfo\BenchmarkDAO.cs" />
     <Compile Include="Template\HistoricalTemplateDAO.cs" />
     <Compile Include="Template\HistoricalTemplateStockDAO.cs" />
+    <Compile Include="TradeCommand\ArchiveTradingCommandDAO.cs" />
     <Compile Include="TradeCommand\CommandDAO.cs" />
     <Compile Include="DbHelper.cs" />
     <Compile Include="DealSecurityDAO.cs" />

@@ -64,6 +64,8 @@
     <Compile Include="Database\TradeCommandSecurity.cs" />
     <Compile Include="Dialog\OrderConfirmItem.cs" />
     <Compile Include="EnumType\AdjustmentType.cs" />
+    <Compile Include="EnumType\CommandStatus.cs" />
+    <Compile Include="EnumType\DispatchStatus.cs" />
     <Compile Include="EnumType\EnumTypeConverter\EntrustPriceTypeConverter.cs" />
     <Compile Include="EnumType\EnumTypeConverter\PositionTypeHelper.cs" />
     <Compile Include="EnumType\FundAccountType.cs" />
@@ -122,6 +124,7 @@
     <Compile Include="UFX\UFXSubscriber.cs" />
     <Compile Include="TradingCommand\TradingCommandItem.cs" />
     <Compile Include="TradingCommand\TradingCommandSecurityItem.cs" />
+    <Compile Include="UI\ArchiveTradeCommand.cs" />
     <Compile Include="UI\CancelRedoItem.cs" />
     <Compile Include="UI\ClosePositionCmdItem.cs" />
     <Compile Include="UI\ClosePositionInstanceItem.cs" />

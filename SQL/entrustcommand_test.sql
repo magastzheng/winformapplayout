@@ -5,6 +5,8 @@ truncate table entrustcommand
 select * from entrustcommand
 where CommandId=2
 
+select * from tradingcommand
+
 
 
 select * from entrustsecurity

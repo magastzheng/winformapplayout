@@ -1,6 +1,8 @@
 ﻿using Config;
 using log4net;
+using Model.Constant;
 using Model.Quote;
+using Model.SecurityInfo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -329,37 +331,66 @@ namespace Quote.TDF
                             };
 
                             char status = (char)data.Status;
-                            if (status == 'W'
-                                || status == 'X'
-                                || status == 'B'
-                                || status == 'D')
+                            switch (status)
                             {
-                                //TODO: 停牌
-                                marketData.TradingStatus = TradingStatus.Suspend;
+                                case 'B':
+                                    {
+                                        marketData.TradingStatus = TradingStatus.Suspend;
+                                        marketData.SuspendFlag = SuspendFlag.Suspend1Day;
+                                    }
+                                    break;
+                                case 'D':
+                                    {
+                                        marketData.TradingStatus = TradingStatus.Suspend;
+                                        marketData.SuspendFlag = SuspendFlag.SuspendTemp;
+                                    }
+                                    break;
+                                case 'W':
+                                    {
+                                        marketData.TradingStatus = TradingStatus.Suspend;
+                                        marketData.SuspendFlag = SuspendFlag.SuspendTemp;
+                                    }
+                                    break;
+                                case 'X':
+                                    {
+                                        marketData.TradingStatus = TradingStatus.Suspend;
+                                        marketData.SuspendFlag = SuspendFlag.Suspend1Day;
+                                    }
+                                    break;
+                                default:
+                                    {
+                                        //正常交易
+                                        marketData.TradingStatus = TradingStatus.Normal;
+                                        marketData.SuspendFlag = SuspendFlag.NoSuspension;
+                                    }
+                                    break;
                             }
-                            else
+                            
+                            marketData.CurrentPrice = (double)data.Match / 10000;
+                            marketData.PreClose = data.PreClose / 10000;
+                            if (data.AskPrice != null && data.AskPrice.Length >= 5)
                             {
-                                //正常交易
-                                marketData.TradingStatus = TradingStatus.Normal;
-                                marketData.SuspendFlag = SuspendFlag.NoSuspension;
-                                marketData.CurrentPrice = (double)data.Match / 10000;
-                                marketData.PreClose = data.PreClose / 10000;
                                 marketData.SellPrice1 = (double)data.AskPrice[0] / 10000;
                                 marketData.SellPrice2 = (double)data.AskPrice[1] / 10000;
                                 marketData.SellPrice3 = (double)data.AskPrice[2] / 10000;
                                 marketData.SellPrice4 = (double)data.AskPrice[3] / 10000;
                                 marketData.SellPrice5 = (double)data.AskPrice[4] / 10000;
+                            }
+
+                            if (data.BidPrice != null && data.BidPrice.Length >= 5)
+                            {
                                 marketData.BuyPrice1 = (double)data.BidPrice[0] / 10000;
                                 marketData.BuyPrice2 = (double)data.BidPrice[1] / 10000;
                                 marketData.BuyPrice3 = (double)data.BidPrice[2] / 10000;
                                 marketData.BuyPrice4 = (double)data.BidPrice[3] / 10000;
                                 marketData.BuyPrice5 = (double)data.BidPrice[4] / 10000;
-                                marketData.HighLimitPrice = (double)data.HighLimited / 10000;
-                                marketData.LowLimitPrice = (double)data.LowLimited / 10000;
-                                marketData.BuyAmount = data.TotalBidVol;
-                                marketData.SellAmount = data.TotalAskVol;
                             }
 
+                            marketData.HighLimitPrice = (double)data.HighLimited / 10000;
+                            marketData.LowLimitPrice = (double)data.LowLimited / 10000;
+                            marketData.BuyAmount = data.TotalBidVol;
+                            marketData.SellAmount = data.TotalAskVol;
+ 
                             _quote.Add(windCode, marketData);
                         }
                     }
@@ -381,16 +412,23 @@ namespace Quote.TDF
 
                             marketData.CurrentPrice = (double)data.Match / 10000;
                             marketData.PreClose = (double)data.PreClose / 10000;
-                            marketData.SellPrice1 = (double)data.AskPrice[0] / 10000;
-                            marketData.SellPrice2 = (double)data.AskPrice[1] / 10000;
-                            marketData.SellPrice3 = (double)data.AskPrice[2] / 10000;
-                            marketData.SellPrice4 = (double)data.AskPrice[3] / 10000;
-                            marketData.SellPrice5 = (double)data.AskPrice[4] / 10000;
-                            marketData.BuyPrice1 = (double)data.BidPrice[0] / 10000;
-                            marketData.BuyPrice2 = (double)data.BidPrice[1] / 10000;
-                            marketData.BuyPrice3 = (double)data.BidPrice[2] / 10000;
-                            marketData.BuyPrice4 = (double)data.BidPrice[3] / 10000;
-                            marketData.BuyPrice5 = (double)data.BidPrice[4] / 10000;
+                            if (data.AskPrice != null && data.AskPrice.Length >= 5)
+                            {
+                                marketData.SellPrice1 = (double)data.AskPrice[0] / 10000;
+                                marketData.SellPrice2 = (double)data.AskPrice[1] / 10000;
+                                marketData.SellPrice3 = (double)data.AskPrice[2] / 10000;
+                                marketData.SellPrice4 = (double)data.AskPrice[3] / 10000;
+                                marketData.SellPrice5 = (double)data.AskPrice[4] / 10000;
+                            }
+
+                            if (data.BidPrice != null && data.BidPrice.Length >= 5)
+                            {
+                                marketData.BuyPrice1 = (double)data.BidPrice[0] / 10000;
+                                marketData.BuyPrice2 = (double)data.BidPrice[1] / 10000;
+                                marketData.BuyPrice3 = (double)data.BidPrice[2] / 10000;
+                                marketData.BuyPrice4 = (double)data.BidPrice[3] / 10000;
+                                marketData.BuyPrice5 = (double)data.BidPrice[4] / 10000;
+                            }
                             marketData.HighLimitPrice = (double)data.HighLimited / 10000;
                             marketData.LowLimitPrice = (double)data.LowLimited / 10000;
                             //BuyAmount, SellAmount
@@ -529,7 +567,7 @@ namespace Quote.TDF
                         //获取代码表内容,多个市场使用分号分割：SH;SZ;CF
                         TDFCode[] codeArr;
                         this._dataSource.GetCodeTable("", out codeArr);
-
+                        AddSecurity(codeArr);
                         //if (codeArr[i].Type >= 0x90 && codeArr[i].Type <= 0x95)
                         //{
                         //    // 期权数据
@@ -564,6 +602,73 @@ namespace Quote.TDF
                     break;
                 default:
                     break;
+            }
+        }
+
+        private void AddSecurity(TDFCode[] codeArr)
+        {
+            for (int i = 0; i < codeArr.Length; i++)
+            {
+                if (codeArr[i].Type >= 0x10 && codeArr[i].Type <= 0x16)
+                {
+                    //股票代码
+                    //TDFOptionCode code = new TDFOptionCode();
+                    //var ret = _tdfImp.GetOptionCodeInfo(codeArr[i].WindCode, ref code);
+                    SecurityItem securityItem = new SecurityItem();
+                    securityItem.SecuCode = codeArr[i].Code;
+                    securityItem.SecuName = codeArr[i].CNName;
+                    securityItem.SecuType = SecurityType.Stock;
+
+                    if (codeArr[i].Market.Equals("SZ", System.StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        securityItem.ExchangeCode = ConstVariable.ShenzhenExchange;
+                    }
+                    else if (codeArr[i].Market.Equals("SH", System.StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        securityItem.ExchangeCode = ConstVariable.ShanghaiExchange;
+                    }
+                    else
+                    {
+                        //Fail;
+                    }
+
+                    _quote.AddSecurity(codeArr[i].WindCode, securityItem);
+                }
+                else if (codeArr[i].Type == 0x70)
+                {
+                    SecurityItem securityItem = new SecurityItem();
+                    securityItem.SecuCode = codeArr[i].Code;
+                    securityItem.SecuName = codeArr[i].CNName;
+                    securityItem.SecuType = SecurityType.Futures;
+                    securityItem.ExchangeCode = ConstVariable.ShanghaiFuturesExchange;
+                    _quote.AddSecurity(codeArr[i].WindCode, securityItem);
+                }
+                else if (codeArr[i].Type == 0x01)
+                {
+                    SecurityItem securityItem = new SecurityItem();
+                    securityItem.SecuCode = codeArr[i].Code;
+                    securityItem.SecuName = codeArr[i].CNName;
+                    securityItem.SecuType = SecurityType.Index;
+
+                    if (codeArr[i].Market.Equals("SZ", System.StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        securityItem.ExchangeCode = ConstVariable.ShenzhenExchange;
+                    }
+                    else if (codeArr[i].Market.Equals("SH", System.StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        securityItem.ExchangeCode = ConstVariable.ShanghaiExchange;
+                    }
+                    else
+                    {
+                        //Fail;
+                    }
+
+                    _quote.AddSecurity(codeArr[i].WindCode, securityItem);
+                }
+                else
+                {
+                    //do nothing
+                }
             }
         }
     }

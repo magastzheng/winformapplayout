@@ -1,6 +1,8 @@
 ﻿using Config;
 using log4net;
+using Model.Constant;
 using Model.Quote;
+using Model.SecurityInfo;
 using System.Threading;
 using TDFAPI;
 
@@ -559,6 +561,66 @@ namespace Quote.TDF
                         //获取代码表内容,多个市场使用分号分割：SH;SZ;CF
                         TDFCode[] codeArr;
                         this._tdfImp.GetCodeTable("", out codeArr);
+
+                        for (int i = 0; i < codeArr.Length; i++)
+                        {
+                            if (codeArr[i].Type >= 0x10 && codeArr[i].Type <= 0x16)
+                            { 
+                                //股票代码
+                                //TDFOptionCode code = new TDFOptionCode();
+                                //var ret = _tdfImp.GetOptionCodeInfo(codeArr[i].WindCode, ref code);
+                                SecurityItem securityItem = new SecurityItem();
+                                securityItem.SecuCode = codeArr[i].Code;
+                                securityItem.SecuType = SecurityType.Stock;
+                                if (codeArr[i].Market.Equals("SZ", System.StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    securityItem.ExchangeCode = ConstVariable.ShenzhenExchange;
+                                }
+                                else if (codeArr[i].Market.Equals("SH", System.StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    securityItem.ExchangeCode = ConstVariable.ShanghaiExchange;
+                                }
+                                else
+                                { 
+                                    //Fail;
+                                }
+
+                                _quote.AddSecurity(codeArr[i].WindCode, securityItem);
+                            }
+                            else if (codeArr[i].Type == 0x70)
+                            {
+                                SecurityItem securityItem = new SecurityItem();
+                                securityItem.SecuCode = codeArr[i].Code;
+                                securityItem.SecuType = SecurityType.Futures;
+                                securityItem.ExchangeCode = ConstVariable.ShanghaiFuturesExchange;
+                                _quote.AddSecurity(codeArr[i].WindCode, securityItem);
+                            }
+                            else if (codeArr[i].Type == 0x01)
+                            {
+                                SecurityItem securityItem = new SecurityItem();
+                                securityItem.SecuCode = codeArr[i].Code;
+                                securityItem.SecuType = SecurityType.Index;
+                                
+                                if (codeArr[i].Market.Equals("SZ", System.StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    securityItem.ExchangeCode = ConstVariable.ShenzhenExchange;
+                                }
+                                else if (codeArr[i].Market.Equals("SH", System.StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    securityItem.ExchangeCode = ConstVariable.ShanghaiExchange;
+                                }
+                                else
+                                {
+                                    //Fail;
+                                }
+
+                                _quote.AddSecurity(codeArr[i].WindCode, securityItem);
+                            }
+                            else
+                            {
+                                //do nothing
+                            }
+                        }
 
                         //if (codeArr[i].Type >= 0x90 && codeArr[i].Type <= 0x95)
                         //{
