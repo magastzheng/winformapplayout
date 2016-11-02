@@ -1,6 +1,6 @@
 ﻿/**
 * ufxsetting - 跟UFX接口相关参数默认设置
-*	timeout: 调用UFX接口等待超时时间
+*	timeout: 调用UFX接口等待超时时间(毫秒)
 *	limitentrustratio: 现货最小委托比例
 *	futulimitentrustratio: 期货最小委托比例
 *	optlimitentrustratio: 期权最小委托比例
@@ -18,7 +18,7 @@
 {
 	"ufxsetting":
 	{
-		"timeout": 10,
+		"timeout": 10000,
 		"limitentrustratio": 100.0,
 		"futulimitentrustratio": 100.0,
 		"optlimitentrustratio": 100.0

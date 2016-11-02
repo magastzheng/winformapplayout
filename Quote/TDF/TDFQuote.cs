@@ -97,9 +97,9 @@ namespace Quote.TDF
             {
                 logger.Info("宏汇行情初始化成功!");
 
-                _waitHandle.WaitOne();
+                //_waitHandle.WaitOne();
 
-                Close();
+                //Close();
 
                 return true;
             }
