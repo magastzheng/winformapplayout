@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -81,6 +82,15 @@ namespace UtilTest
         }
 
         [TestMethod]
+        public void Test_GetDateFromInt_Invalid()
+        {
+            int dtInt = 20162102;
+            DateTime dt = DateUtil.GetDateFromInt(dtInt);
+
+            Assert.AreEqual(DateTime.MinValue, dt);
+        }
+
+        [TestMethod]
         public void Test_GetDateTimeFromInt()
         {
             int dtInt = 20160102;
@@ -89,7 +99,54 @@ namespace UtilTest
 
             DateTime expect = new DateTime(2016, 1, 2, 12, 23, 45);
             Assert.AreEqual(expect, dt);
-            Console.WriteLine(dt);
+
+            dtInt = 20160102;
+            timeInt = 82345;
+            dt = DateUtil.GetDateTimeFromInt(dtInt, timeInt);
+            expect = new DateTime(2016, 1, 2, 8, 23, 45);
+            Assert.AreEqual(expect, dt);
+        }
+
+        [TestMethod]
+        public void Test_GetDateTimeFromInt_Invalid_Day()
+        {
+            int dtInt = 20162102;
+            int timeInt = 122345;
+            DateTime dt = DateUtil.GetDateTimeFromInt(dtInt, timeInt);
+
+            DateTime expect = DateTime.MinValue;
+            Assert.AreEqual(expect, dt);
+
+            dtInt = 20160152;
+            timeInt = 82345;
+            dt = DateUtil.GetDateTimeFromInt(dtInt, timeInt);
+            Assert.AreEqual(expect, dt);
+
+            dtInt = 0;
+            timeInt = 0;
+            dt = DateUtil.GetDateTimeFromInt(dtInt, timeInt);
+            Assert.AreEqual(expect, dt);
+        }
+
+        [TestMethod]
+        public void Test_GetDateTimeFromInt_Invalid_Time()
+        {
+            int dtInt = 20160102;
+            int timeInt = 282345;
+            DateTime dt = DateUtil.GetDateTimeFromInt(dtInt, timeInt);
+
+            DateTime expect = DateTime.MinValue;
+            Assert.AreEqual(expect, dt);
+
+            dtInt = 20160102;
+            timeInt = 186345;
+            dt = DateUtil.GetDateTimeFromInt(dtInt, timeInt);
+            Assert.AreEqual(expect, dt);
+
+            dtInt = 20160102;
+            timeInt = 182365;
+            dt = DateUtil.GetDateTimeFromInt(dtInt, timeInt);
+            Assert.AreEqual(expect, dt);
         }
     }
 }

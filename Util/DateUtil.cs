@@ -10,38 +10,58 @@ namespace Util
 {
     public class DateUtil
     {
+        private static int[] days = new int[13]{0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+        /// <summary>
+        /// Convert the specified DateTime value year, month, day parts into an integer value like the format 'yyyyMMdd'.
+        /// NOTE: the year should be nonnegative.
+        /// </summary>
+        /// <param name="dt">An given DateTime value.</param>
+        /// <returns>An nonnegative interger value.</returns>
         public static int GetIntDate(DateTime dt)
         {
             return dt.Year * 10000 + dt.Month * 100 + dt.Day;
         }
 
+        /// <summary>
+        /// Convert the specified DateTime value hour, minute, second parts into an integer value like the format 'HHmmss'.
+        /// </summary>
+        /// <param name="dt">An given DateTime value.</param>
+        /// <returns>An nonnegative integer value.</returns>
         public static int GetIntTime(DateTime dt)
         {
             return dt.Hour * 10000 + dt.Minute * 100 + dt.Second;
         }
 
         /// <summary>
-        /// Parse the integer value like '19990220' to a DateTime value. The integer value MUST have 'yyyyMMdd' format.
+        /// Parse the nonnegative integer value like '19990220' to a DateTime value. The nonnegative integer value MUST have 'yyyyMMdd' format.
         /// It will return a DateTime.MinValue if it fail to parse.
         /// </summary>
-        /// <param name="ymd">An integer value with the format 'yyyyMMdd'.</param>
+        /// <param name="ymd">An nonnegative integer value with the format 'yyyyMMdd'.</param>
         /// <returns>An DateTime value represent the given year, month, day. Or the default DateTime.MinValue if it fails
         /// to parse the given input value.
         /// </returns>
         public static DateTime GetDateFromInt(int ymd)
         {
-            string str = string.Format("{0}", ymd);
-            DateTime dt;
-            DateTime temp;
-            if (IsValidDate(str, ConstVariable.DateFormat1, out temp))
+            DateTime dt = DateTime.MinValue;
+            if (ymd < 0)
             {
-                dt = temp;
-            }
-            else
-            {
-                dt = DateTime.MinValue;
+                return dt;
             }
 
+            int year = 0;
+            int month = 0;
+            int day = 0;
+
+            year = ymd / 10000;
+            month = (ymd % 10000) / 100;
+            day = ymd % 100;
+
+            if (IsValidDay(year, month, day))
+            {
+                dt = new DateTime(year, month, day);
+            }
+            
             return dt;
         }
 
@@ -56,17 +76,29 @@ namespace Util
         /// </returns>
         public static DateTime GetDateTimeFromInt(int ymd, int hms)
         {
-            string dateTimeFormat = string.Format("{0} {1}", ConstVariable.DateFormat1, ConstVariable.TimeFormat1);
-            string str = string.Format("{0} {1}", ymd, hms);
-            DateTime dt;
-            DateTime temp;
-            if (IsValidDate(str, dateTimeFormat, out temp))
+            DateTime dt = DateTime.MinValue;
+            if (ymd < 0 || hms < 0)
             {
-                dt = temp;
+                return dt;
             }
-            else
-            {
-                dt = DateTime.MinValue;
+
+            int year = 0;
+            int month = 0;
+            int day = 0;
+            int hour = 0;
+            int minute = 0;
+            int second = 0;
+
+            year = ymd / 10000;
+            month = (ymd % 10000) / 100;
+            day = ymd % 100;
+            hour = hms / 10000;
+            minute = (hms % 10000) / 100;
+            second = hms % 100;
+
+            if (IsValidDay(year, month, day) && IsValidTime(hour, minute, second))
+            { 
+                dt = new DateTime(year, month, day, hour, minute, second);
             }
 
             return dt;
@@ -86,6 +118,44 @@ namespace Util
             bool isValid = DateTime.TryParseExact(str, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
 
             return isValid;
+        }
+
+        private static bool IsValidDay(int year, int month, int day)
+        {
+            bool isValid = false;
+            if (month >= 1 && month <= 12)
+            {
+                int lastDay = days[month];
+                if (month == 2 && IsLeap(year))
+                {
+                    lastDay += 1;
+                }
+
+                if (day >= 1 && day <= lastDay)
+                {
+                    isValid = true;
+                }
+            }
+
+            return isValid;
+        }
+
+        private static bool IsValidTime(int hour, int minute, int second)
+        {
+            bool isValid = false;
+            if (hour >= 0 && hour <= 23 
+                && minute >= 0 && minute <= 59 
+                && second >= 0 && second <= 59)
+            {
+                isValid = true;
+            }
+
+            return isValid;
+        }
+
+        private static bool IsLeap(int year)
+        {
+            return year % 400 == 0 || (year % 4 == 0 && year % 100 != 0);
         }
     }
 }
