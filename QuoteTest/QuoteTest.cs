@@ -14,19 +14,19 @@ namespace QuoteTest
         [TestMethod]
         public void Test_QuoteCenter_Query()
         {
-            List<string> secuCodes = new List<string>() { "000001", "600000"};
-            QuoteCenter.Instance.Query(secuCodes, new List<Model.EnumType.PriceType>() { Model.EnumType.PriceType.Sell1});
+            //List<string> secuCodes = new List<string>() { "000001", "600000"};
+            //QuoteCenter.Instance.Query(secuCodes, new List<Model.EnumType.PriceType>() { Model.EnumType.PriceType.Sell1});
 
-            var data = QuoteCenter.Instance.Quote;
+            //var data = QuoteCenter.Instance.Quote;
         }
 
         [TestMethod]
         public void Test_QuoteCenter_QueryAll()
         {
-            QuoteCenter.Instance.Query();
-            var data = QuoteCenter.Instance.Quote;
+            //QuoteCenter.Instance.Query();
+            //var data = QuoteCenter.Instance.Quote;
 
-            Assert.IsNotNull(data);
+            //Assert.IsNotNull(data);
         }
     }
 }

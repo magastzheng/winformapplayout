@@ -63,7 +63,7 @@ namespace BLL.EntrustCommand
 
         public List<EntrustCommandItem> GetCancel(int commandId)
         {
-            Tracking(ActionType.Get, ResourceType.EntrustCommand, commandId, null);
+            Tracking(ActionType.Get, ResourceType.EntrustCommand, commandId, string.Empty);
             return _entrustcmddao.GetCancel(commandId);
         }
 

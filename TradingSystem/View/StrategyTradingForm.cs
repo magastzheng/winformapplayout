@@ -53,6 +53,7 @@ namespace TradingSystem.View
         private const string GridBuySellId = "buysell";
         private const string EntrustPrice = "entrustprice";
         private const string ThisEntrustAmount = "thisentrustamount";
+        private const string SuspensionFlag = "suspensionflag";
 
         private EntrustBLL _entrustBLL = new EntrustBLL();
         private WithdrawBLL _withdrawBLL = new WithdrawBLL();
@@ -182,8 +183,18 @@ namespace TradingSystem.View
                     EntrustBatchNo = canCancelItem.EntrustBatchNo,
                     FirstDealDate = canCancelItem.DFirstDealDate,
                     EntrustDate = canCancelItem.DEntrustDate,
+                    EDirection = canCancelItem.EDirection,
                     ExchangeCode = UFXTypeConverter.GetMarketCode(canCancelItem.EMarketCode),
-                    //EDirection = selectItem.EEntrustDirection,
+                    FundName = canCancelItem.FundName,
+                    PortfolioName = canCancelItem.PortfolioName,
+                    ReportAmount = canCancelItem.EntrustAmount,
+                    ReportPrice = canCancelItem.EntrustPrice,
+                    ReportNo = canCancelItem.DeclareNo,
+                    DealAmount = canCancelItem.DealAmount,
+                    DealTimes = canCancelItem.DealTimes,
+                    DealMoney = canCancelItem.DealMoney,
+                    EntrustAmount = canCancelItem.EntrustAmount - canCancelItem.DealAmount,
+                    LeftAmount = canCancelItem.EntrustAmount - canCancelItem.DealAmount,
                 };
 
                 cancelRedoItems.Add(calcItem);
@@ -234,9 +245,21 @@ namespace TradingSystem.View
                     EntrustBatchNo = canCancelItem.EntrustBatchNo,
                     FirstDealDate = canCancelItem.DFirstDealDate,
                     EntrustDate = canCancelItem.DEntrustDate,
-                    //EDirection = selectItem.EEntrustDirection,
+                    EDirection = canCancelItem.EDirection,
+                    ExchangeCode = UFXTypeConverter.GetMarketCode(canCancelItem.EMarketCode),
+                    FundName = canCancelItem.FundName,
+                    PortfolioName = canCancelItem.PortfolioName,
+                    ReportAmount = canCancelItem.EntrustAmount,
+                    ReportPrice = canCancelItem.EntrustPrice,
+                    ReportNo = canCancelItem.DeclareNo,
+                    DealAmount = canCancelItem.DealAmount,
+                    DealTimes = canCancelItem.DealTimes,
+                    DealMoney = canCancelItem.DealMoney,
+                    LeftAmount = canCancelItem.EntrustAmount - canCancelItem.DealAmount,
+                    //ECommandPrice = canCancelItem.EntrustPrice,                    
                 };
 
+                //var marketData = QuoteCenter2.Instance.GetMarketData(
                 calcItems.Add(calcItem);
             }
 
@@ -621,7 +644,7 @@ namespace TradingSystem.View
                             MessageDialog.Warn(this, msgEntrustPriceBeyondLimit);
 
                             var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
-                            var marketData = QuoteCenter.Instance.GetMarketData(findItem);
+                            var marketData = QuoteCenter2.Instance.GetMarketData(findItem);
                             secuItem.EntrustPrice = QuotePriceHelper.GetPrice(PriceType.Last, marketData);
                         }
                         else
@@ -759,12 +782,16 @@ namespace TradingSystem.View
                 this.tpCmdEntrustFlow.Controls.Clear();
                 this.efMainPanel.Controls.Clear();
                 this.efMainPanel.Controls.Add(this.efGridView);
+
+                LoadDataEntrustFlow();
             }
             else if (selectTabName == this.tpDealFlow.Name)
             {
                 this.tpCmdDealFlow.Controls.Clear();
                 this.dfMainPanel.Controls.Clear();
                 this.dfMainPanel.Controls.Add(this.dfGridView);
+
+                LoadDataDealFlow();
             }
             else if (selectTabName == tpCmdTrading.Name)
             {
@@ -783,12 +810,16 @@ namespace TradingSystem.View
                 this.efMainPanel.Controls.Clear();
                 this.tpCmdEntrustFlow.Controls.Clear();
                 this.tpCmdEntrustFlow.Controls.Add(this.efGridView);
+
+                LoadDataEntrustFlow();
             }
             else if (selectTabName == this.tpCmdDealFlow.Name)
             {
                 this.dfMainPanel.Controls.Clear();
                 this.tpCmdDealFlow.Controls.Clear();
                 this.tpCmdDealFlow.Controls.Add(this.dfGridView);
+
+                LoadDataDealFlow();
             }
         }
 
@@ -1331,11 +1362,11 @@ namespace TradingSystem.View
 
             //更新行情相关数据
             List<PriceType> priceTypes = new List<PriceType>() { spotBuyPrice, spotSellPrice, futureBuyPrice, futureSellPrice };
-            QuoteCenter.Instance.Query(secuList, priceTypes);
+            //QuoteCenter.Instance.Query(secuList, priceTypes);
             foreach (var secuItem in _secuDataSource)
             {
                 var targetItem = secuList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
-                var marketData = QuoteCenter.Instance.GetMarketData(targetItem);
+                var marketData = QuoteCenter2.Instance.GetMarketData(targetItem);
 
                 secuItem.LimitUpPrice = marketData.HighLimitPrice;
                 secuItem.LimitDownPrice = marketData.LowLimitPrice;
@@ -1476,11 +1507,35 @@ namespace TradingSystem.View
                     return false;
                 }
 
-                if (entrustSecuItem.ThisEntrustAmount <= 0
-                    || FloatUtil.IsZero(entrustSecuItem.EntrustPrice)
+                if (entrustSecuItem.ESuspendFlag != Model.Quote.SuspendFlag.NoSuspension)
+                {
+                    MessageDialog.Warn(this, msgEntrustPricePrompt);
+
+                    var findIndex = _secuDataSource.ToList().FindIndex(p => p.SecuCode == entrustSecuItem.SecuCode
+                        && p.CommandId == entrustSecuItem.CommandId);
+                    if (findIndex >= 0)
+                    {
+                        securityGridView.SetFocus(findIndex, SuspensionFlag);
+                    }
+
+                    return false;
+                }
+                else if (entrustSecuItem.ThisEntrustAmount <= 0)
+                {
+                    MessageDialog.Warn(this, msgEntrustPricePrompt);
+
+                    var findIndex = _secuDataSource.ToList().FindIndex(p => p.SecuCode == entrustSecuItem.SecuCode
+                        && p.CommandId == entrustSecuItem.CommandId);
+                    if (findIndex >= 0)
+                    {
+                        securityGridView.SetFocus(findIndex, ThisEntrustAmount);
+                    }
+
+                    return false;
+                }
+                else if(FloatUtil.IsZero(entrustSecuItem.EntrustPrice)
                     || entrustSecuItem.EntrustPrice < entrustSecuItem.LimitDownPrice
                     || entrustSecuItem.EntrustPrice > entrustSecuItem.LimitUpPrice
-                    || entrustSecuItem.ESuspendFlag != Model.Quote.SuspendFlag.NoSuspension
                    )
                 {
                     MessageDialog.Warn(this, msgEntrustPricePrompt);

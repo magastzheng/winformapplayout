@@ -170,7 +170,7 @@ namespace Quote
             }
             else if (secuItem.ExchangeCode.Equals(Exchange.CFFEX, StringComparison.OrdinalIgnoreCase))
             {
-                windCode += ".CFE";
+                windCode += ".CF";
             }
 
             return windCode;

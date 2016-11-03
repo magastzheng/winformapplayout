@@ -71,7 +71,7 @@ namespace TradingSystem
             BLLManager.Instance.Subscriber = t2Subscriber;
 
             //启动wind行情服务
-            WindAPIWrap.Instance.Start();
+            //WindAPIWrap.Instance.Start();
 
             //TODO: subscribe the message after getting login information
             LoginController loginController = new LoginController(new LoginForm(), t2SDKWrap);
@@ -85,7 +85,7 @@ namespace TradingSystem
             loginController.Logout();
             t2SDKWrap.Close();
             t2Subscriber.Close();
-            WindAPIWrap.Instance.Dispose();
+            //WindAPIWrap.Instance.Dispose();
 
             glExitApp = true;
         }

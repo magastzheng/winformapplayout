@@ -18,7 +18,7 @@
 {
 	"ufxsetting":
 	{
-		"timeout": 10000,
+		"timeout": 30000,
 		"limitentrustratio": 100.0,
 		"futulimitentrustratio": 100.0,
 		"optlimitentrustratio": 100.0

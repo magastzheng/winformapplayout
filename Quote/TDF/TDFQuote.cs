@@ -50,7 +50,7 @@ namespace Quote.TDF
 
         public void Stop()
         {
-            _waitHandle.Set();
+            //_waitHandle.Set();
         }
 
         public void Subscription(TDFSubscriptionType type, List<string> windCodes)
@@ -563,6 +563,7 @@ namespace Quote.TDF
                         TDFCodeResult codeResult = msg.Data as TDFCodeResult;
 
                         string strMsg = string.Format("获取到代码表, info:{0}, 市场个数:{1}", codeResult.Info, codeResult.Markets.Length);
+                        logger.Info(strMsg);
 
                         //获取代码表内容,多个市场使用分号分割：SH;SZ;CF
                         TDFCode[] codeArr;

@@ -448,11 +448,11 @@ namespace TradingSystem.View
                 }
             }
 
-            QuoteCenter.Instance.Query(secuList);
+            //QuoteCenter.Instance.Query(secuList);
             foreach (var secuItem in _secuDataSource)
             {
                 var targetItem = secuList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
-                var marketData = QuoteCenter.Instance.GetMarketData(targetItem);
+                var marketData = QuoteCenter2.Instance.GetMarketData(targetItem);
                 secuItem.LastPrice = marketData.CurrentPrice;
                
                 //secuItem.ESuspendFlag = marketData.SuspendFlag;

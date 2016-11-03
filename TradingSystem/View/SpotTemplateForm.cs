@@ -697,10 +697,10 @@ namespace TradingSystem.View
             }
 
             List<SecurityItem> secuList = GetSecurityItems(template);
-            QuoteCenter.Instance.Query(secuList);
+            //QuoteCenter.Instance.Query(secuList);
 
             var benchmarkItem = _securityInfoList.Find(p => p.SecuCode.Equals(template.Benchmark) && p.SecuType == SecurityType.Index);
-            var benchmarkData = QuoteCenter.Instance.GetMarketData(benchmarkItem);
+            var benchmarkData = QuoteCenter2.Instance.GetMarketData(benchmarkItem);
             var benchmark = _benchmarkList.Find(p => p.BenchmarkId.Equals(benchmarkItem.SecuCode));
             double bmkPrice = 0f;
             double totalValue = 0f;
@@ -731,7 +731,7 @@ namespace TradingSystem.View
         private void CalculateAmount(StockTemplate template)
         {
             List<SecurityItem> secuList = GetSecurityItems(template);
-            QuoteCenter.Instance.Query(secuList);
+            //QuoteCenter.Instance.Query(secuList);
 
             double[] prices = GetPrices(secuList);
             int[] amounts = _spotDataSource.Select(p => p.Amount).ToArray();
@@ -777,7 +777,7 @@ namespace TradingSystem.View
             {
                 var stock = _spotDataSource[i];
                 var secuItem = secuList.Find(p => p.SecuCode.Equals(stock.SecuCode) && p.SecuType == SecurityType.Stock);
-                var secuData = QuoteCenter.Instance.GetMarketData(secuItem);
+                var secuData = QuoteCenter2.Instance.GetMarketData(secuItem);
 
                 if (!FloatUtil.IsZero(secuData.CurrentPrice))
                 {

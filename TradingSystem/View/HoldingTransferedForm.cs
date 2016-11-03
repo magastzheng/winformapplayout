@@ -131,7 +131,7 @@ namespace TradingSystem.View
 
             //TODO: update the price
             var targetItem = _secuList.Find(p => p.SecuCode.Equals(selectedItem.SecuCode));
-            var marketData = QuoteCenter.Instance.GetMarketData(targetItem);
+            var marketData = QuoteCenter2.Instance.GetMarketData(targetItem);
             if (marketData != null)
             {
                 selectedItem.TransferedPrice = marketData.CurrentPrice;
@@ -163,8 +163,8 @@ namespace TradingSystem.View
             }
 
             //更新行情相关数据
-            List<PriceType> priceTypes = new List<PriceType>() { PriceType.Last };
-            QuoteCenter.Instance.Query(_secuList, priceTypes);
+            //List<PriceType> priceTypes = new List<PriceType>() { PriceType.Last };
+            //QuoteCenter2.Instance.Query(_secuList, priceTypes);
         }
 
         #region load control
@@ -553,7 +553,7 @@ namespace TradingSystem.View
                         FillSrcGridView(_srcDataSource, securities, instance);
 
                         //Quote the price
-                        QueryQuote();
+                        //QueryQuote();
                     }
                     break;
                 case "cbDestTradeInst":

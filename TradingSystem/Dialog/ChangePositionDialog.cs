@@ -377,10 +377,10 @@ namespace TradingSystem.Dialog
                 secuItemList.Add(outItem);
             }
 
-            QuoteCenter.Instance.Query(secuItemList);
+            //QuoteCenter.Instance.Query(secuItemList);
 
-            var inPriceData = QuoteCenter.Instance.GetMarketData(inItem);
-            var outPriceData = QuoteCenter.Instance.GetMarketData(outItem);
+            var inPriceData = QuoteCenter2.Instance.GetMarketData(inItem);
+            var outPriceData = QuoteCenter2.Instance.GetMarketData(outItem);
 
             int inAmount = 0;
             if(inPriceData != null && outPriceData != null)

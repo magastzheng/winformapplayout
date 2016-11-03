@@ -42,6 +42,8 @@ namespace BLL.Entrust
 
                 UFXQueryEntrustRequest request = new UFXQueryEntrustRequest();
                 //request.RequestNum = 9000;
+                request.AccountCode = portfolio.FundCode;
+                request.AssetNo = portfolio.AssetNo;
                 request.CombiNo = portfolio.PortfolioNo;
                 requests.Add(request);
 

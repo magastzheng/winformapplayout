@@ -127,11 +127,11 @@ namespace TradingSystem.Dialog
                 }
 
                 List<PriceType> priceTypes = new List<PriceType>() { priceType };
-                QuoteCenter.Instance.Query(secuList, priceTypes);
+                //QuoteCenter.Instance.Query(secuList, priceTypes);
                 foreach (var secuItem in stockItems)
                 {
                     var targetItem = secuList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
-                    var marketData = QuoteCenter.Instance.GetMarketData(targetItem);
+                    var marketData = QuoteCenter2.Instance.GetMarketData(targetItem);
                     secuItem.EntrustPrice = QuotePriceHelper.GetPrice(priceType, marketData);
                 }
             }

@@ -77,8 +77,12 @@ exec procTokenResourcePermissionInsert @Token=6,@TokenType=1,@ResourceId=108,@Re
 
 
 --===添加用户角色
+--系统管理员
 exec procUserRoleInsert @UserId=2, @RoleId=1
+--基金经理
 exec procUserRoleInsert @UserId=1, @RoleId=5
+--交易员
+exec procUserRoleInsert @UserId=1, @RoleId=6
 exec procUserRoleInsert @UserId=3, @RoleId=6
 
 

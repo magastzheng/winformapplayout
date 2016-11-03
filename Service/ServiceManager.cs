@@ -20,7 +20,8 @@ namespace Service
 
             //add other service
             //TODO: Init the QuoteCenter before using.
-            var quote = QuoteCenter.Instance.Quote;
+            //var quote = QuoteCenter.Instance.Quote;
+            var quote = QuoteCenter2.Instance.Quote;
             var quoteService = new QuoteService(quote);
             _services.Add(quoteService);
         }
