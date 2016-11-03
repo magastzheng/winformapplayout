@@ -838,8 +838,9 @@ namespace TradingSystem.View
                 }
 
                 var sheetConfig = ConfigManager.Instance.GetImportConfig().GetSheet("stocktemplate");
+                var cellRanges = ConfigManager.Instance.GetImportConfig().GetColumnHeader(sheetConfig.Columns);
                 Dictionary<string, DataColumnHeader> colHeadMap = new Dictionary<string, DataColumnHeader>();
-                foreach (var column in sheetConfig.Columns)
+                foreach (var column in cellRanges)
                 {
                     colHeadMap.Add(column.Name, column);
                 }
@@ -942,6 +943,13 @@ namespace TradingSystem.View
                     if (field == null)
                         continue;
 
+                    DataValueType valType = DataValueType.String;
+                    var gridColomn = gridColumns.Find(p => p.Name.Equals(kv.Key));
+                    if (gridColomn != null)
+                    {
+                        valType = gridColomn.ValueType;
+                    }
+
                     var val = row.Columns[valIndex];
                     switch(val.Type)
                     {
@@ -952,7 +960,18 @@ namespace TradingSystem.View
                             field.SetValue(stock, val.GetDouble());
                             break;
                         case DataValueType.String:
-                            field.SetValue(stock, val.GetStr());
+                            if (valType == DataValueType.Int)
+                            {
+                                field.SetValue(stock, val.GetInt());
+                            }
+                            else if (valType == DataValueType.Float)
+                            {
+                                field.SetValue(stock, val.GetDouble());
+                            }
+                            else
+                            {
+                                field.SetValue(stock, val.GetStr());
+                            }
                             break;
                         default:
                             break;
@@ -1000,19 +1019,22 @@ namespace TradingSystem.View
                 string extension = Path.GetExtension(fileDialog.FileName);
 
                 var tempStocks = _spotDataSource.Where(p => p.TemplateNo == template.TemplateId).ToList();
-                var table = GridToExecl(tempStocks);
-                ExcelUtil.CreateExcel(fileDialog.FileName, table);
+                List<DataHeader> cellRanges = null;
+                var table = GridToExecl(tempStocks, out cellRanges);
+                ExcelUtil.CreateExcel(fileDialog.FileName, table, cellRanges);
             }
         }
 
-        private Model.Data.DataTable GridToExecl(List<TemplateStock> tempStocks)
+        private Model.Data.DataTable GridToExecl(List<TemplateStock> tempStocks, out List<DataHeader> cellRanges)
         {
             HSGrid hsGrid = _gridConfig.GetGid(GridStock);
             var gridColumns = hsGrid.Columns;
 
             var sheetConfig = ConfigManager.Instance.GetImportConfig().GetSheet("stocktemplate");
+            cellRanges = sheetConfig.Columns;
+            var sheetColumns = ConfigManager.Instance.GetImportConfig().GetColumnHeader(cellRanges);
             Dictionary<string, DataColumnHeader> colHeadMap = new Dictionary<string, DataColumnHeader>();
-            foreach (var column in sheetConfig.Columns)
+            foreach (var column in sheetColumns)
             {
                 //colHeadMap.Add(column.Name, column);
                 var gridColumn = gridColumns.Find(p => p.Text.Equals(column.Name));
@@ -1027,11 +1049,11 @@ namespace TradingSystem.View
 
             //实体类标签名与Excel DataTable DataRow.Columns中列索引映射表
             Dictionary<string, int> excelNameColumnIndexMap = new Dictionary<string, int>();
-            for (int i = 0, count = sheetConfig.Columns.Count; i < count; i++)
+            for (int i = 0, count = sheetColumns.Count; i < count; i++)
             {
-                if (!excelNameColumnIndexMap.ContainsKey(sheetConfig.Columns[i].Name))
+                if (!excelNameColumnIndexMap.ContainsKey(sheetColumns[i].Name))
                 {
-                    excelNameColumnIndexMap.Add(sheetConfig.Columns[i].Name, i);
+                    excelNameColumnIndexMap.Add(sheetColumns[i].Name, i);
                 }
             }
 
@@ -1039,7 +1061,7 @@ namespace TradingSystem.View
             for (int i = 0, count = gridColumns.Count; i < count; i++)
             {
                 var column = gridColumns[i];
-                int index = sheetConfig.Columns.FindIndex(p => p.Name.Equals(column.Text));
+                int index = sheetColumns.FindIndex(p => p.Name.Equals(column.Text));
                 if (index >= 0)
                 {
                     if (!fieldNameColumnIndexMap.ContainsKey(column.Name))

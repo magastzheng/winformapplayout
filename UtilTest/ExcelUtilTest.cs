@@ -37,8 +37,9 @@ namespace UtilTest
         public void TestExcelRead3()
         {
             var sheetConfig = ConfigManager.Instance.GetImportConfig().GetSheet("stocktemplate");
+            var cellRanges = ConfigManager.Instance.GetImportConfig().GetColumnHeader(sheetConfig.Columns);
             Dictionary<string, DataColumnHeader> colHeadMap = new Dictionary<string, DataColumnHeader>();
-            foreach (var column in sheetConfig.Columns)
+            foreach (var column in cellRanges)
             {
                 colHeadMap.Add(column.Name, column);
             }
@@ -50,6 +51,27 @@ namespace UtilTest
 
             string newFileName = @"d:/temp/20160222_newcopy.xls";
             ExcelUtil.CreateExcel(newFileName, table);
+            Console.WriteLine("test2");
+        }
+
+        [TestMethod]
+        public void TestExcelRead_cellRange()
+        {
+            var sheetConfig = ConfigManager.Instance.GetImportConfig().GetSheet("stocktemplate");
+            var cellRanges = ConfigManager.Instance.GetImportConfig().GetColumnHeader(sheetConfig.Columns);
+            Dictionary<string, DataColumnHeader> colHeadMap = new Dictionary<string, DataColumnHeader>();
+            foreach (var column in cellRanges)
+            {
+                colHeadMap.Add(column.Name, column);
+            }
+
+            string fileName = @"d:/temp/20160222saveas.xls";
+            string sheetName = @"20160222";
+            var table = ExcelUtil.GetSheetData(fileName, sheetName, colHeadMap);
+            Console.WriteLine("test");
+
+            string newFileName = @"d:/temp/20160222_newcopy_cellRange.xls";
+            ExcelUtil.CreateExcel(newFileName, table, sheetConfig.Columns);
             Console.WriteLine("test2");
         }
 
@@ -84,6 +106,24 @@ namespace UtilTest
             {
                 Console.WriteLine(dTemp);
             }
+        }
+
+        [TestMethod]
+        public void Test_Excel_WithoutMergeCell()
+        {
+            string fileName = @"D:\temp\测试上交所成交模板--test.xls";
+
+            Dictionary<string, DataColumnHeader> colHeadMap = new Dictionary<string, DataColumnHeader>();
+            ExcelUtil.GetSheetData(fileName, 0, colHeadMap);
+        }
+
+        [TestMethod]
+        public void Test_Excel_MergeCell()
+        {
+            string fileName = @"D:\temp\spottemplate\对冲0930全1021-20161103-saveas.xlsx";
+
+            Dictionary<string, DataColumnHeader> colHeadMap = new Dictionary<string,DataColumnHeader>();
+            ExcelUtil.GetSheetData(fileName, 0, colHeadMap);
         }
     }
 }

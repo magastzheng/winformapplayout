@@ -1,4 +1,5 @@
-﻿using Model.UI;
+﻿using Model.Data;
+using Model.UI;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
@@ -33,6 +34,18 @@ namespace Config
             }
 
             return targetSheet;
+        }
+
+        public List<DataColumnHeader> GetColumnHeader(List<DataHeader> cellRanges)
+        {
+            List<DataColumnHeader> columns = new List<DataColumnHeader>();
+
+            foreach (var range in cellRanges)
+            {
+                columns.AddRange(range.Children);
+            }
+
+            return columns;
         }
     }
 }

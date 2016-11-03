@@ -2,6 +2,7 @@
 using Model.Data;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
+using NPOI.SS.Util;
 using NPOI.XSSF.UserModel;
 using System;
 using System.Collections.Generic;
@@ -59,6 +60,98 @@ namespace Util
                             break;
                     }
                     
+                }
+            }
+
+            try
+            {
+                using (FileStream fs = File.OpenWrite(fileName))
+                {
+                    wk.Write(fs);
+                }
+            }
+            catch (Exception e)
+            {
+                string msg = string.Format("Fail to write the data into excel: {0}, message: {1}", fileName, e.Message);
+                logger.Error(msg);
+                throw;
+            }
+        }
+
+        public static void CreateExcel(string fileName, DataTable dataTable, List<DataHeader> cellRange)
+        {
+            //create the workbook
+            HSSFWorkbook wk = new HSSFWorkbook();
+
+            //create the sheet
+            ISheet sheet = wk.CreateSheet("mysheet");
+
+            int startRow = 0;
+            //create the cell ranges
+            if (cellRange != null && cellRange.Count > 0)
+            {
+                IRow rowRange = sheet.CreateRow(startRow);
+                int startCol = 0;
+                int endCol = 0;
+                foreach (var range in cellRange)
+                {
+                    ICell cell = rowRange.CreateCell(startCol);
+                    cell.SetCellValue(range.Name);
+
+                    if (range.Children.Count > 0)
+                    {
+                        endCol = startCol + range.Children.Count - 1;
+                    }
+                    else
+                    {
+                        endCol = startCol;
+                    }
+
+                    sheet.AddMergedRegion(new CellRangeAddress(startRow, startRow, startCol, endCol));
+
+                    startCol = endCol + 1;
+                }
+
+                startRow += 1;
+            }
+
+            //create a row to write header
+            IRow rowHead = sheet.CreateRow(startRow);
+            foreach (var kv in dataTable.ColumnIndex)
+            {
+                //create the cell in row
+                ICell cell = rowHead.CreateCell(kv.Value);
+                //add data into the cell
+                cell.SetCellValue(kv.Key);
+            }
+
+            startRow += 1;
+
+            for (int rowIndex = 0, rowSize = dataTable.Rows.Count; rowIndex < rowSize; rowIndex++)
+            {
+                DataRow dataRow = dataTable.Rows[rowIndex];
+                IRow row = sheet.CreateRow(startRow + rowIndex);
+
+                for (int colIndex = 0, colSize = dataRow.Columns.Count; colIndex < colSize; colIndex++)
+                {
+                    DataValue dataValue = dataRow.Columns[colIndex];
+                    ICell cell = row.CreateCell(colIndex);
+                    switch (dataValue.Type)
+                    {
+                        case DataValueType.Int:
+                            cell.SetCellValue(dataValue.GetInt());
+                            break;
+                        case DataValueType.Float:
+                            cell.SetCellValue(dataValue.GetDouble());
+                            break;
+                        case DataValueType.String:
+                            cell.SetCellValue(dataValue.GetStr());
+                            break;
+                        default:
+                            cell.SetCellValue(dataValue.GetStr());
+                            break;
+                    }
+
                 }
             }
 
@@ -153,8 +246,45 @@ namespace Util
             return workbook.GetSheetAt(sheetIndex);
         }
 
+        private static List<DataCellRange> GetSheetMergeCellRange(ISheet sheet)
+        {
+            List<DataCellRange> ranges = new List<DataCellRange>();
+            
+            int regionsCount = sheet.NumMergedRegions;
+            for (int i = 0; i < regionsCount; i++)
+            {
+                CellRangeAddress range = sheet.GetMergedRegion(i);
+                if(sheet.IsMergedRegion(range))
+                {
+                    int firstCol = range.FirstColumn;
+                    int lastCol = range.LastColumn;
+                    int firstRow = range.FirstRow;
+                    int lastRow = range.LastRow;
+                    int num = range.NumberOfCells;
+
+                    var row = sheet.GetRow(firstRow);
+                    var cell = row.GetCell(firstCol);
+
+                    DataCellRange cellRange = new DataCellRange 
+                    {
+                        Name = cell.StringCellValue,
+                        FirstRow = firstRow,
+                        LastRow = lastRow,
+                        FirstColumn = firstCol,
+                        LastColumn = lastCol,
+                    };
+
+                    ranges.Add(cellRange);
+                }
+            }
+
+            return ranges;
+        }
+
         private static DataTable ReadSheet(ISheet sheet, Dictionary<string, DataColumnHeader> colHeadMap)
         {
+            var cellRanges = GetSheetMergeCellRange(sheet);
+
             DataTable table = new DataTable 
             {
                 ColumnIndex = new Dictionary<string,int>(),
@@ -162,9 +292,18 @@ namespace Util
             };
 
             Dictionary<int, string> colIndexMap = new Dictionary<int, string>();
+
+            int startRow = 0;
+            if (cellRanges.Count > 0)
+            {
+                startRow = 1;
+            }
+
             //第一行为行头
-            IRow row = sheet.GetRow(0);
-            for (int colIndex = 0; colIndex <= row.LastCellNum; colIndex++)
+            IRow row = sheet.GetRow(startRow);
+            short minCol = row.FirstCellNum;
+            short maxCol = row.LastCellNum;
+            for (int colIndex = minCol; colIndex < maxCol; colIndex++)
             {
                 ICell cell = row.GetCell(colIndex);
                 if (cell != null)
@@ -181,15 +320,20 @@ namespace Util
                 }
             }
 
-            for (int rowIndex = 1; rowIndex <= sheet.LastRowNum; rowIndex++)
+            for (int rowIndex = startRow + 1; rowIndex < sheet.LastRowNum; rowIndex++)
             {
                 row = sheet.GetRow(rowIndex);
+                if (row == null)
+                    break;
+
                 DataRow dataRow = new DataRow 
                 {
                     Columns = new List<DataValue>()
                 };
 
-                for (int colIndex = 0; colIndex <= row.LastCellNum; colIndex++)
+                minCol = row.FirstCellNum;
+                maxCol = row.LastCellNum;
+                for (int colIndex = minCol; colIndex < maxCol; colIndex++)
                 {
                     ICell cell = row.GetCell(colIndex);
                     if (cell != null)

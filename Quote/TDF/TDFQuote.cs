@@ -51,6 +51,7 @@ namespace Quote.TDF
         public void Stop()
         {
             //_waitHandle.Set();
+            Close();
         }
 
         public void Subscription(TDFSubscriptionType type, List<string> windCodes)

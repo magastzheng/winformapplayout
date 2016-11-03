@@ -10,6 +10,6 @@ namespace Model.UI
     public class ImportSheet
     {
         public string Id { get; set; }
-        public List<DataColumnHeader> Columns { get; set; }
+        public List<DataHeader> Columns { get; set; }
     }
 }

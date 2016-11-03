@@ -2,64 +2,84 @@
 	"id": "stocktemplate",
 	"columns": [
 		{
-			"name": "证券代码",
-			"type": 3
+			"name": "代码",
+			"children":[
+				{
+					"name": "证券代码",
+					"type": 3
+				},{
+					"name": "证券名称",
+					"type": 3
+				},{
+					"name": "交易市场",
+					"type": 3
+				}
+			]
 		},{
-			"name": "证券名称",
-			"type": 3
-		},{
-			"name": "交易市场",
-			"type": 3
-		},{
-			"name": "数量",
-			"type": 0
-		},{
-			"name": "市值",
-			"type": 1
-		},{
-			"name": "市值权重(%)",
-			"type": 1
-		},{
-			"name": "设置比例(%)",
-			"type": 1
-		},{
-			"name": "指数权重(%)",
-			"type": 1
+			"name": "基本信息",
+			"children":[
+				{
+					"name": "数量",
+					"type": 0
+				},{
+					"name": "市值",
+					"type": 1
+				},{
+					"name": "市值权重(%)",
+					"type": 1
+				},{
+					"name": "设置比例(%)",
+					"type": 1
+				},{
+					"name": "指数权重(%)",
+					"type": 1
+				},{
+					"name": "停牌标志",
+					"type": 3
+				},{
+					"name": "涨跌停",
+					"type": 3
+				},{
+					"name": "涨幅(%)",
+					"type": 1
+				},{
+					"name": "所属行业",
+					"type": 3
+				}
+			]
 		}
 	]
-},{
+	},{
 	"id": "test",
 	"columns": [
 		{
-			"name": "",
-			"type": 3
+			"name": "代码",
+			"children":[
+				{
+					"name": "证券代码",
+					"type": 3
+				},{
+					"name": "证券名称",
+					"type": 3
+				},{
+					"name": "交易市场",
+					"type": 3
+				}
+			]
 		},{
-			"name": "",
-			"type": 3
-		},{
-			"name": "",
-			"type": 3
-		},{
-			"name": "",
-			"type": 3
-		},{
-			"name": "",
-			"type": 3
-		},{
-			"name": "",
-			"type": 3
-		},{
-			"name": "",
-			"type": 3
-		},{
-			"name": "",
-			"type": 3
-		},{
-			"name": "",
-			"type": 3
-		},{
-			"name": "",
-			"type": 3
+			"name": "代码2",
+			"children":[
+				{
+					"name": "证券代码2",
+					"type": 3
+				},{
+					"name": "证券名称2",
+					"type": 3
+				},{
+					"name": "交易市场2",
+					"type": 3
+				}
+			]
 		}
 	]
 }]
