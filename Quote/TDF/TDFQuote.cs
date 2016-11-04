@@ -343,6 +343,12 @@ namespace Quote.TDF
                                         marketData.SuspendFlag = SuspendFlag.Suspend1Day;
                                     }
                                     break;
+                                case 'C':
+                                    {
+                                        marketData.TradingStatus = TradingStatus.Close;
+                                        marketData.SuspendFlag = SuspendFlag.NoSuspension;
+                                    }
+                                    break;
                                 case 'D':
                                     {
                                         marketData.TradingStatus = TradingStatus.Suspend;
@@ -413,6 +419,48 @@ namespace Quote.TDF
                             {
                                 InstrumentID = windCode
                             };
+
+                            char status = (char)data.Status;
+                            switch (status)
+                            {
+                                case 'B':
+                                    {
+                                        marketData.TradingStatus = TradingStatus.Suspend;
+                                        marketData.SuspendFlag = SuspendFlag.Suspend1Day;
+                                    }
+                                    break;
+                                case 'C':
+                                    {
+                                        marketData.TradingStatus = TradingStatus.Close;
+                                        marketData.SuspendFlag = SuspendFlag.NoSuspension;
+                                    }
+                                    break;
+                                case 'D':
+                                    {
+                                        marketData.TradingStatus = TradingStatus.Suspend;
+                                        marketData.SuspendFlag = SuspendFlag.SuspendTemp;
+                                    }
+                                    break;
+                                case 'W':
+                                    {
+                                        marketData.TradingStatus = TradingStatus.Suspend;
+                                        marketData.SuspendFlag = SuspendFlag.SuspendTemp;
+                                    }
+                                    break;
+                                case 'X':
+                                    {
+                                        marketData.TradingStatus = TradingStatus.Suspend;
+                                        marketData.SuspendFlag = SuspendFlag.Suspend1Day;
+                                    }
+                                    break;
+                                default:
+                                    {
+                                        //正常交易
+                                        marketData.TradingStatus = TradingStatus.Normal;
+                                        marketData.SuspendFlag = SuspendFlag.NoSuspension;
+                                    }
+                                    break;
+                            }
 
                             marketData.CurrentPrice = (double)data.Match / 10000;
                             marketData.PreClose = (double)data.PreClose / 10000;

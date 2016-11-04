@@ -29,14 +29,24 @@ namespace BLL.UFX.impl
             if (_dataHandlerMap.ContainsKey(functionCode))
             {
                 var callbacker = GetDataHandler(functionCode, hSend);
-                var token = callbacker.Token;
-                var callback = callbacker.DataHandler;
-                if (callback != null)
+                if (callbacker != null)
                 {
-                    callback(token, parser);
-                }
+                    var token = callbacker.Token;
+                    var callback = callbacker.DataHandler;
+                    if (callback != null)
+                    {
+                        callback(token, parser);
+                    }
 
-                return 1;
+                    return 1;
+                }
+                else
+                {
+                    string msg = string.Format("提交UFX请求时，功能号[{0}]的回调方法，未注册的句柄ID[{0}]！", functionCode, hSend);
+                    logger.Error(msg);
+
+                    return -1;
+                }
             }
             else
             {
@@ -66,6 +76,10 @@ namespace BLL.UFX.impl
                 if (_dataHandlerMap[functionCode].ContainsKey(hSend))
                 {
                     _dataHandlerMap[functionCode][hSend] = callbacker;
+                }
+                else
+                {
+                    _dataHandlerMap[functionCode].Add(hSend, callbacker);
                 }
             }
             else
