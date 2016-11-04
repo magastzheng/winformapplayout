@@ -25,7 +25,11 @@ namespace BLL.UFX.impl
     public delegate int CallerCallback(CallerToken token, object data, UFXErrorResponse errorResponse);
 
     /// <summary>
-    /// 
+    /// Store the UFX interface response result message.
+    /// ErrorCode: 返回的错误代码
+    /// ErrorMessage: 返回的错误消息摘要
+    /// MessageDetail: 返回的详细错误消息
+    /// DataCount: 返回的数据条数
     /// </summary>
     public class UFXErrorResponse
     {
@@ -61,6 +65,8 @@ namespace BLL.UFX.impl
 
     /// <summary>
     /// The Callbacker wrap is used to register in the UFX interface.
+    /// Token: 传递给回调函数的参数，并存储该过程中获取的数据
+    /// DataHandler: 回调函数 
     /// </summary>
     public class Callbacker
     {

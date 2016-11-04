@@ -63,8 +63,11 @@ namespace Quote.TDF
         
         private void Close()
         {
-            _dataSource.Close();
-            _dataSource.Dispose();
+            if (_dataSource != null)
+            {
+                _dataSource.Close();
+                _dataSource.Dispose();
+            }
         }
 
         private bool InitDataSource()

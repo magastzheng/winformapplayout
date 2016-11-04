@@ -15,7 +15,7 @@ namespace BLL.UFX.impl
 
         protected T2SDKWrap _t2SDKWrap;
         protected DataHandlerCallback _dataHandler;
-        protected Dictionary<FunctionCode, Queue<Callbacker>> _dataHandlerMap = new Dictionary<FunctionCode, Queue<Callbacker>>();
+        protected Dictionary<FunctionCode, Dictionary<int, Callbacker>> _dataHandlerMap = new Dictionary<FunctionCode, Dictionary<int, Callbacker>>();
 
         public UFXBLLBase(T2SDKWrap t2SDKWrap)
         {
@@ -23,12 +23,12 @@ namespace BLL.UFX.impl
             _dataHandler = HandlData;
         }
 
-        public int HandlData(DataParser parser)
+        public int HandlData(FunctionCode functionCode, int hSend, DataParser parser)
         {
-            FunctionCode functionCode = (FunctionCode)parser.FunctionCode;
+            //FunctionCode functionCode = (FunctionCode)parser.FunctionCode;
             if (_dataHandlerMap.ContainsKey(functionCode))
             {
-                var callbacker = GetDataHandler(functionCode);
+                var callbacker = GetDataHandler(functionCode, hSend);
                 var token = callbacker.Token;
                 var callback = callbacker.DataHandler;
                 if (callback != null)
@@ -59,19 +59,19 @@ namespace BLL.UFX.impl
             _t2SDKWrap.UnRegister(functionCode);
         }
 
-        protected void AddDataHandler(FunctionCode functionCode, Callbacker callbacker)
+        protected void AddDataHandler(FunctionCode functionCode, int hSend, Callbacker callbacker)
         {
             if (_dataHandlerMap.ContainsKey(functionCode))
             {
-                if (!_dataHandlerMap[functionCode].Contains(callbacker))
+                if (_dataHandlerMap[functionCode].ContainsKey(hSend))
                 {
-                    _dataHandlerMap[functionCode].Enqueue(callbacker);
+                    _dataHandlerMap[functionCode][hSend] = callbacker;
                 }
             }
             else
             {
-                _dataHandlerMap[functionCode] = new Queue<Callbacker>();
-                _dataHandlerMap[functionCode].Enqueue(callbacker);
+                _dataHandlerMap[functionCode] = new Dictionary<int, Callbacker>();
+                _dataHandlerMap[functionCode].Add(hSend, callbacker);
             }
         }
 
@@ -83,14 +83,18 @@ namespace BLL.UFX.impl
         //    }
         //}
 
-        protected Callbacker GetDataHandler(FunctionCode functionCode)
+        protected Callbacker GetDataHandler(FunctionCode functionCode, int hSend)
         {
             Callbacker callbacker = null;
 
             if (_dataHandlerMap.ContainsKey(functionCode))
             {
-                var cbList = _dataHandlerMap[functionCode];
-                callbacker = cbList.Dequeue();
+                var sendCbMap = _dataHandlerMap[functionCode];
+                if (sendCbMap.ContainsKey(hSend))
+                {
+                    callbacker = sendCbMap[hSend];
+                    sendCbMap.Remove(hSend);
+                }
             }
 
             return callbacker;
@@ -117,9 +121,6 @@ namespace BLL.UFX.impl
                 logger.Error(msg);
                 return ConnectionCode.ErrorLogin;
             }
-
-            //注册UFX返回数据后，需要调用的回调
-            AddDataHandler(functionCode, callbacker);
 
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化
@@ -163,15 +164,20 @@ namespace BLL.UFX.impl
                 bizMessage.SetContent(packer.GetPackBuf(), packer.GetPackLen());
             }
 
-            int retCode = _t2SDKWrap.SendAsync(bizMessage);
+            int hSend = _t2SDKWrap.SendAsync(bizMessage);
             packer.Dispose();
             bizMessage.Dispose();
 
-            if (retCode < 0)
+            if (hSend < 0)
             {
-                string msg = string.Format("提交UFX请求[{0}]失败！", functionCode);
+                string msg = string.Format("提交UFX请求[{0}]失败, 返回值：[{1}]！", functionCode, hSend);
                 logger.Error(msg);
                 return ConnectionCode.ErrorConn;
+            }
+            else
+            {
+                //注册UFX返回数据后，需要调用的回调
+                AddDataHandler(functionCode, hSend, callbacker);
             }
 
             return ConnectionCode.Success;

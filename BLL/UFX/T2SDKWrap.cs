@@ -26,6 +26,7 @@ namespace BLL.UFX
         protected uint _timeOut = 10000;
         protected bool _isInit = false;
         private Dictionary<FunctionCode, DataHandlerCallback> _dataHandlerMap = new Dictionary<FunctionCode, DataHandlerCallback>();
+        //private Dictionary<FunctionCode, Dictionary<int, DataHandlerCallback>> _dataHandlerMap = new Dictionary<FunctionCode, Dictionary<int, DataHandlerCallback>>();
 
         private TaskScheduler _taskScheduler = new LimitedConcurrencyLevelTaskScheduler(2);
 
@@ -149,15 +150,15 @@ namespace BLL.UFX
         /// <returns>返回正值表示发送句柄，否则表示失败。</returns>
         public int SendAsync(CT2BizMessage message)
         {
-            int iRet = _conn.SendBizMsg(message, (int)SendType.Async);
-            if (iRet < 0)
+            int hSend = _conn.SendBizMsg(message, (int)SendType.Async);
+            if (hSend < 0)
             {
-                string msg = string.Format("一般交易业务异步发送数据失败！ 错误码：{0}, 错误消息：{1}", iRet, _conn.GetErrorMsg(iRet));
+                string msg = string.Format("一般交易业务异步发送数据失败！ 错误码：{0}, 错误消息：{1}", hSend, _conn.GetErrorMsg(hSend));
                 logger.Error(msg);
-                return iRet;
+                return hSend;
             }
 
-            return iRet;
+            return hSend;
         }
 
         /// <summary>
@@ -188,7 +189,7 @@ namespace BLL.UFX
             int iFunction = bizMessage.GetFunction();
             if (Enum.IsDefined(typeof(FunctionCode), iFunction))
             {
-                return HandleReceivedBizMsg(SendType.Sync, bizMessage);
+                return HandleReceivedBizMsg(SendType.Sync, (FunctionCode)iFunction, retCode, bizMessage);
             }
             else
             {
@@ -405,7 +406,7 @@ namespace BLL.UFX
             }
             else
             {
-                HandleReceivedBizMsg(SendType.Async, lpMsg);
+                HandleReceivedBizMsg(SendType.Async, (FunctionCode)iFunction, hSend, lpMsg);
             }
         }
 
@@ -448,12 +449,12 @@ namespace BLL.UFX
 
         #region private
 
-        private int HandleReceivedBizMsg(SendType sendType, CT2BizMessage bizMessage)
+        private int HandleReceivedBizMsg(SendType sendType, FunctionCode functionCode, int hSend, CT2BizMessage bizMessage)
         {
             int iRetCode = bizMessage.GetReturnCode();
             int iErrorCode = bizMessage.GetErrorNo();
             int iFunction = bizMessage.GetFunction();
-            FunctionCode functionCode = (FunctionCode)iFunction;
+            //FunctionCode functionCode = (FunctionCode)iFunction;
             if (iRetCode != 0)
             {
                 string msg = string.Format("同步接收数据出错： {0}, {1}", iErrorCode, bizMessage.GetErrorInfo());
@@ -507,7 +508,7 @@ namespace BLL.UFX
 
             if (sendType == SendType.Sync)
             {
-                return dataHandler(parser);
+                return dataHandler(functionCode, hSend, parser);
             }
             else
             {
@@ -517,7 +518,7 @@ namespace BLL.UFX
 
                 //use the TaskScheduler to limit the maximum thread number
                 TaskFactory taskFactory = new TaskFactory(_taskScheduler);
-                taskFactory.StartNew(() => dataHandler(parser));
+                taskFactory.StartNew(() => dataHandler(functionCode, hSend, parser));
 
                 return (int)ConnectionCode.Success;
             }
