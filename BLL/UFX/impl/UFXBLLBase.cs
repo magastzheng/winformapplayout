@@ -178,23 +178,26 @@ namespace BLL.UFX.impl
                 bizMessage.SetContent(packer.GetPackBuf(), packer.GetPackLen());
             }
 
+            ConnectionCode retCode = ConnectionCode.Success;
             int hSend = _t2SDKWrap.SendAsync(bizMessage);
-            packer.Dispose();
-            bizMessage.Dispose();
-
             if (hSend < 0)
             {
                 string msg = string.Format("提交UFX请求[{0}]失败, 返回值：[{1}]！", functionCode, hSend);
                 logger.Error(msg);
-                return ConnectionCode.ErrorConn;
+                retCode = ConnectionCode.ErrorConn;
             }
             else
             {
                 //注册UFX返回数据后，需要调用的回调
+                //此处存在假设，异步提交返回之前，不会触发回调
                 AddDataHandler(functionCode, hSend, callbacker);
+                retCode = ConnectionCode.Success;
             }
 
-            return ConnectionCode.Success;
+            packer.Dispose();
+            bizMessage.Dispose();
+            
+            return retCode;
         }
 
         #endregion
