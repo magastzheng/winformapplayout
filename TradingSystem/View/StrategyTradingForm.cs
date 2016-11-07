@@ -863,7 +863,7 @@ namespace TradingSystem.View
             _secuDataSource.Clear();
             _eiDataSource.Clear();
 
-            var tradingcmds = _tradeCommandBLL.GetTradeCommandAll();
+            var tradingcmds = _tradeCommandBLL.GetTradeCommand();
             if (tradingcmds != null)
             {
                 tradingcmds.ForEach( p => _cmdDataSource.Add(p));

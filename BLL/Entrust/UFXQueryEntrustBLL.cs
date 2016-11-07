@@ -7,6 +7,7 @@ using Model;
 using Model.Binding.BindingUtil;
 using Model.BLL;
 using Model.Converter;
+using Model.EnumType.EnumTypeConverter;
 using Model.UFX;
 using Model.UI;
 using System;
@@ -231,7 +232,7 @@ namespace BLL.Entrust
                     //Market = responseItem.MarketNo,
                     SecuCode = responseItem.StockCode,
                     //EntrustDirection = responseItem.EntrustDirection,
-                    PriceType = responseItem.PriceType,
+                    EEntrustPriceType = EntrustPriceTypeConverter.GetPriceType(responseItem.PriceType),
                     EntrustPrice = responseItem.EntrustPrice,
                     EntrustAmount = responseItem.EntrustAmount,
                     //EntrustStatus = responseItem.EntrustState,

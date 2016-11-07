@@ -3,6 +3,7 @@ using BLL.SecurityInfo;
 using DBAccess;
 using Model.Constant;
 using Model.EnumType;
+using Model.EnumType.EnumTypeConverter;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -37,7 +38,8 @@ namespace BLL.Frontend
                 {
                     CommandNo = item.CommandId,
                     SecuCode = item.SecuCode,
-                    PriceType = item.PriceType.ToString(),
+                    EEntrustPriceType = item.EntrustPriceType,
+                    //PriceType = item.PriceType.ToString(),
                     //EntrustStatus = item.EntrustStatus.ToString(),
                     EntrustAmount = item.EntrustAmount,
                     //EntrustedDate = DateFormat.Format(item.EntrustDate, ConstVariable.DateFormat),

@@ -160,17 +160,24 @@ namespace Quote
         public static string GetWindCode(SecurityItem secuItem)
         {
             string windCode = secuItem.SecuCode;
-            if (secuItem.ExchangeCode.Equals(Exchange.SHSE, StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrEmpty(secuItem.ExchangeCode))
             {
-                windCode += ".SH";
+                if (secuItem.ExchangeCode.Equals(Exchange.SHSE, StringComparison.OrdinalIgnoreCase))
+                {
+                    windCode += ".SH";
+                }
+                else if (secuItem.ExchangeCode.Equals(Exchange.SZSE, StringComparison.OrdinalIgnoreCase))
+                {
+                    windCode += ".SZ";
+                }
+                else if (secuItem.ExchangeCode.Equals(Exchange.CFFEX, StringComparison.OrdinalIgnoreCase))
+                {
+                    windCode += ".CF";
+                }
             }
-            else if (secuItem.ExchangeCode.Equals(Exchange.SZSE, StringComparison.OrdinalIgnoreCase))
-            {
-                windCode += ".SZ";
-            }
-            else if (secuItem.ExchangeCode.Equals(Exchange.CFFEX, StringComparison.OrdinalIgnoreCase))
-            {
-                windCode += ".CF";
+            else
+            { 
+                
             }
 
             return windCode;

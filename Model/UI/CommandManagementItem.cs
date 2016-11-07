@@ -36,7 +36,7 @@ namespace Model.UI
         public int InstanceId { get; set; }
 
         [BindingAttribute("instancecode")]
-        public int InstanceCode { get; set; }
+        public string InstanceCode { get; set; }
 
         [BindingAttribute("arbitragetype")]
         public string ArbitrageType 
@@ -186,7 +186,7 @@ namespace Model.UI
         public string CommandStatus 
         {
             //TODO
-            get { return ""; }
+            get { return ECommandStatus.ToString(); }
         }
 
         [BindingAttribute("commandtype")]
@@ -292,5 +292,7 @@ namespace Model.UI
         public DateTime DCancelDate { get; set; }
 
         public WeightType EWeightType { get; set; }
+
+        public CommandStatus ECommandStatus { get; set; }
     }
 }

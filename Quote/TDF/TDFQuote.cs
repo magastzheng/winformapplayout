@@ -493,6 +493,18 @@ namespace Quote.TDF
                     {
                         //指数消息
                         TDFIndexData[] indexDataArr = msg.Data as TDFIndexData[];
+                        foreach (TDFIndexData data in indexDataArr)
+                        {
+                            string windCode = data.WindCode;
+
+                            MarketData marketData = new MarketData
+                            {
+                                InstrumentID = windCode
+                            };
+
+                            marketData.CurrentPrice = (double)data.LastIndex / 10000;
+                            marketData.PreClose = (double)data.PreCloseIndex / 10000;
+                        }
                     }
                     break;
                 //case TDFMSGID.MSG_DATA_TRANSACTION:
@@ -672,6 +684,11 @@ namespace Quote.TDF
                     securityItem.SecuName = codeArr[i].CNName;
                     securityItem.SecuType = SecurityType.Stock;
 
+                    if (codeArr[i].WindCode.Equals("002109.SZ", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        Console.WriteLine(codeArr[i].WindCode);
+                    }
+
                     if (codeArr[i].Market.Equals("SZ", System.StringComparison.InvariantCultureIgnoreCase))
                     {
                         securityItem.ExchangeCode = ConstVariable.ShenzhenExchange;
@@ -693,7 +710,7 @@ namespace Quote.TDF
                     securityItem.SecuCode = codeArr[i].Code;
                     securityItem.SecuName = codeArr[i].CNName;
                     securityItem.SecuType = SecurityType.Futures;
-                    securityItem.ExchangeCode = ConstVariable.ShanghaiFuturesExchange;
+                    securityItem.ExchangeCode = ConstVariable.ChinaFinancialFuturesExchange;
                     _quote.AddSecurity(codeArr[i].WindCode, securityItem);
                 }
                 else if (codeArr[i].Type == 0x01)

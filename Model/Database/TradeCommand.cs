@@ -1,9 +1,5 @@
 ﻿using Model.EnumType;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Model.Database
 {
@@ -14,6 +10,9 @@ namespace Model.Database
 
         //指令份数
         public int CommandNum { get; set; }
+
+        //指令状态
+        public CommandStatus ECommandStatus { get; set; }
 
         //指令数量
         public int CommandAmount { get; set; }
@@ -58,6 +57,8 @@ namespace Model.Database
         //监控单元
         public string MonitorUnitName { get; set; }
 
+        public int TemplateId { get; set; }
+
         public int PortfolioId { get; set; }
 
         public string PortfolioCode { get; set; }
@@ -67,5 +68,8 @@ namespace Model.Database
         public string AccountCode { get; set; }
 
         public string AccountName { get; set; }
+
+        //备注
+        public string Notes { get; set; }
     }
 }

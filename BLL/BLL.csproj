@@ -125,6 +125,10 @@
       <Project>{9afc3370-02ab-444b-9c43-411e49f49b16}</Project>
       <Name>Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Quote\Quote.csproj">
+      <Project>{2f5fdd7a-7491-4fa7-9349-47a4289c711a}</Project>
+      <Name>Quote</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Util\Util.csproj">
       <Project>{723db468-9d89-40e8-be82-ddecc927e2cb}</Project>
       <Name>Util</Name>

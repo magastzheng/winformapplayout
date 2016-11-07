@@ -56,6 +56,7 @@
     <Compile Include="config\Label.cs" />
     <Compile Include="Constant\ConstVariable.cs" />
     <Compile Include="Constant\DateFormat.cs" />
+    <Compile Include="Converter\EnumAttributeHelper.cs" />
     <Compile Include="Converter\StringEnumConverter.cs" />
     <Compile Include="Converter\UFXMarketConverter.cs" />
     <Compile Include="Converter\UFXTypeConverter.cs" />

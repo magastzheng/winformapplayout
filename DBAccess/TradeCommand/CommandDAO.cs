@@ -77,6 +77,9 @@ namespace DBAccess.TradeCommand
                 _dbHelper.AddInParameter(dbCommand, "@StartDate", System.Data.DbType.DateTime, startDate);
                 _dbHelper.AddInParameter(dbCommand, "@EndDate", System.Data.DbType.DateTime, endDate);
 
+                string notes = (cmdItem.Notes != null) ? cmdItem.Notes : string.Empty;
+                _dbHelper.AddInParameter(dbCommand, "@Notes", System.Data.DbType.String, notes);
+
                 _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
 
                 ret = dbCommand.ExecuteNonQuery();

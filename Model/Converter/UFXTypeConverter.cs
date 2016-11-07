@@ -23,52 +23,24 @@ namespace Model.Converter
             return StringEnumConverter.GetCharType<UFXEntrustState>(status);
         }
 
-        public static string GetEnumDescription<T>(T value)
-        {
-            FieldInfo fi = value.GetType().GetField(value.ToString());
-            DescriptionAttribute[] attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
-            if (attributes != null && attributes.Length > 0)
-            {
-                return attributes[0].Description;
-            }
-            else
-            {
-                return value.ToString();
-            }
-        }
-
-        public static string GetStandardCode<T>(T value)
-        {
-            FieldInfo fi = value.GetType().GetField(value.ToString());
-            StandardCodeAttribute[] attributes = (StandardCodeAttribute[])fi.GetCustomAttributes(typeof(StandardCodeAttribute), false);
-            if (attributes != null && attributes.Length > 0)
-            {
-                return attributes[0].Code;
-            }
-            else
-            {
-                return value.ToString();
-            }
-        }
-
         public static string GetMarketName(UFXMarketCode marketCode)
         {
-            return GetEnumDescription<UFXMarketCode>(marketCode);
+            return EnumAttributeHelper.GetEnumDescription<UFXMarketCode>(marketCode);
         }
 
         public static string GetMarketCode(UFXMarketCode marketCode)
         {
-            return GetStandardCode<UFXMarketCode>(marketCode);
+            return EnumAttributeHelper.GetStandardCode<UFXMarketCode>(marketCode);
         }
 
         public static string GetEntrustDirection(UFXEntrustDirection direction)
         {
-            return GetEnumDescription<UFXEntrustDirection>(direction);
+            return EnumAttributeHelper.GetEnumDescription<UFXEntrustDirection>(direction);
         }
 
         public static string GetEntrustState(UFXEntrustState state)
         {
-            return GetEnumDescription<UFXEntrustState>(state);
+            return EnumAttributeHelper.GetEnumDescription<UFXEntrustState>(state);
         }
     }
 }

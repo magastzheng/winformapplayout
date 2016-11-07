@@ -10,7 +10,8 @@ namespace DBAccess.TradeCommand
     public class TradingCommandDAO: BaseDAO
     {
         private const string SP_Create = "procTradingCommandInsert";
-        private const string SP_Modify = "procTradingCommandUpdateStatus";
+        private const string SP_Modify = "procTradingCommandUpdate";
+        private const string SP_ModifyStatus = "procTradingCommandUpdateStatus";
         //private const string SP_ModifyTargetNum = "procTradingCommandUpdateTargetNum";
         //private const string SP_ModifyTargetNumBySumbitId = "procTradingCommandUpdateTargetNumBySubmitId";
         private const string SP_Delete = "procTradingCommandDelete";
@@ -61,6 +62,9 @@ namespace DBAccess.TradeCommand
             _dbHelper.AddInParameter(dbCommand, "@StartDate", System.Data.DbType.DateTime, startDate);
             _dbHelper.AddInParameter(dbCommand, "@EndDate", System.Data.DbType.DateTime, endDate);
 
+            string notes = (cmdItem.Notes != null) ? cmdItem.Notes : string.Empty;
+            _dbHelper.AddInParameter(dbCommand, "@Notes", System.Data.DbType.String, notes);
+
             _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
 
             int ret = _dbHelper.ExecuteNonQuery(dbCommand);
@@ -77,6 +81,21 @@ namespace DBAccess.TradeCommand
         public int Update(Model.Database.TradeCommand cmdItem)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Modify);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, cmdItem.CommandId);
+            _dbHelper.AddInParameter(dbCommand, "@CommandStatus", System.Data.DbType.Int32, (int)cmdItem.ECommandStatus);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+            _dbHelper.AddInParameter(dbCommand, "@StartDate", System.Data.DbType.DateTime, cmdItem.DStartDate);
+            _dbHelper.AddInParameter(dbCommand, "@EndDate", System.Data.DbType.DateTime, cmdItem.DEndDate);
+
+            string notes = (cmdItem.Notes != null) ? cmdItem.Notes : string.Empty;
+            _dbHelper.AddInParameter(dbCommand, "@Notes", System.Data.DbType.String, notes);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int UpdateStatus(Model.Database.TradeCommand cmdItem)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyStatus);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, cmdItem.CommandId);
             _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)cmdItem.EEntrustStatus);
             _dbHelper.AddInParameter(dbCommand, "@DealStatus", System.Data.DbType.Int32, (int)cmdItem.EDealStatus);
@@ -128,6 +147,7 @@ namespace DBAccess.TradeCommand
                     item.CommandId = (int)reader["CommandId"];
                     item.InstanceId = (int)reader["InstanceId"];
                     item.CommandNum = (int)reader["CommandNum"];
+                    item.ECommandStatus = (CommandStatus)reader["CommandStatus"];
                     item.ModifiedTimes = (int)reader["ModifiedTimes"];
                     item.ECommandType = (CommandType)reader["CommandType"];
                     item.EExecuteType = (ExecuteType)reader["ExecuteType"];
@@ -139,11 +159,13 @@ namespace DBAccess.TradeCommand
                     item.MonitorUnitId = (int)reader["MonitorUnitId"];
                     item.InstanceCode = (string)reader["InstanceCode"];
                     item.MonitorUnitName = (string)reader["MonitorUnitName"];
+                    item.TemplateId = (int)reader["StockTemplateId"];
                     item.PortfolioId = (int)reader["PortfolioId"];
                     item.PortfolioCode = (string)reader["PortfolioCode"];
                     item.PortfolioName = (string)reader["PortfolioName"];
                     item.AccountCode = (string)reader["AccountCode"];
                     item.AccountName = (string)reader["AccountName"];
+                    item.Notes = (string)reader["Notes"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {
@@ -188,6 +210,7 @@ namespace DBAccess.TradeCommand
                     item.CommandId = (int)reader["CommandId"];
                     item.InstanceId = (int)reader["InstanceId"];
                     item.CommandNum = (int)reader["CommandNum"];
+                    item.ECommandStatus = (CommandStatus)reader["CommandStatus"];
                     item.ModifiedTimes = (int)reader["ModifiedTimes"];
                     item.ECommandType = (CommandType)reader["CommandType"];
                     item.EExecuteType = (ExecuteType)reader["ExecuteType"];
@@ -199,11 +222,13 @@ namespace DBAccess.TradeCommand
                     item.MonitorUnitId = (int)reader["MonitorUnitId"];
                     item.InstanceCode = (string)reader["InstanceCode"];
                     item.MonitorUnitName = (string)reader["MonitorUnitName"];
+                    item.TemplateId = (int)reader["StockTemplateId"];
                     item.PortfolioId = (int)reader["PortfolioId"];
                     item.PortfolioCode = (string)reader["PortfolioCode"];
                     item.PortfolioName = (string)reader["PortfolioName"];
                     item.AccountCode = (string)reader["AccountCode"];
                     item.AccountName = (string)reader["AccountName"];
+                    item.Notes = (string)reader["Notes"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {

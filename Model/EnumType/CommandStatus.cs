@@ -9,5 +9,9 @@ namespace Model.EnumType
         Modified = 2,
         //已撤销
         Canceled = 3,
+        //委托完成
+        Entrusted = 4,
+        //已完成成交
+        Done = 5,
     }
 }

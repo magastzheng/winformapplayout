@@ -147,22 +147,38 @@ namespace BLL.Frontend
 
         #region get/fetch
 
-        public List<TradingCommandItem> GetTradeCommandAll()
+        public List<TradingCommandItem> GetTradeCommandUIAll()
         {
-            int userId = LoginManager.Instance.GetUserId();
             var uiCommands = new List<TradingCommandItem>();
-            var tradeCommands = _tradecommandao.GetAll();
+            var validTradeCommands = GetAll();
+            
+            var tradeSecuItems = GetCommandSecurityItems(validTradeCommands);
+            var entrustSecuItems = _queryBLL.GetEntrustSecurityItems(validTradeCommands);
 
-            Tracking(ActionType.Get, ResourceType.TradeCommand, -1, null);
-
-            var validTradeCommands = new List<Model.Database.TradeCommand>();
-            foreach (var tradeCommand in tradeCommands)
+            foreach (var tradeCommand in validTradeCommands)
             {
-                if (_permissionManager.HasPermission(userId, tradeCommand.CommandId, ResourceType.TradeCommand, PermissionMask.View)
-                    || _permissionManager.HasUserRolePermission(userId, tradeCommand.CommandId, ResourceType.TradeCommand, PermissionMask.View)
-                    )
+                var uiCommand = BuildUICommand(tradeCommand);
+                CalculateUICommand(ref uiCommand, tradeSecuItems, entrustSecuItems);
+
+                uiCommands.Add(uiCommand);
+            }
+            return uiCommands;
+        }
+
+        /// <summary>
+        /// 获取那些有效的，委托完成的，没有完成成交的指令。
+        /// </summary>
+        /// <returns></returns>
+        public List<TradingCommandItem> GetTradeCommand()
+        {
+            var uiCommands = new List<TradingCommandItem>();
+            var validTradeCommands = new List<Model.Database.TradeCommand>();
+            var allItems = GetAll();
+            foreach (var item in allItems)
+            {
+                if (item.ECommandStatus == CommandStatus.Effective || item.ECommandStatus == CommandStatus.Entrusted)
                 {
-                    validTradeCommands.Add(tradeCommand);
+                    validTradeCommands.Add(item);
                 }
             }
 
@@ -179,6 +195,26 @@ namespace BLL.Frontend
             return uiCommands;
         }
 
+        public List<Model.Database.TradeCommand> GetAll()
+        {
+            int userId = LoginManager.Instance.GetUserId();
+            var tradeCommands = _tradecommandao.GetAll();
+
+            Tracking(ActionType.Get, ResourceType.TradeCommand, -1, null);
+
+            var validTradeCommands = new List<Model.Database.TradeCommand>();
+            foreach (var tradeCommand in tradeCommands)
+            {
+                if (_permissionManager.HasPermission(userId, tradeCommand.CommandId, ResourceType.TradeCommand, PermissionMask.View)
+                    || _permissionManager.HasUserRolePermission(userId, tradeCommand.CommandId, ResourceType.TradeCommand, PermissionMask.View)
+                    )
+                {
+                    validTradeCommands.Add(tradeCommand);
+                }
+            }
+
+            return validTradeCommands;
+        }
 
         public Model.Database.TradeCommand GetTradeCommandItem(int commandId)
         {

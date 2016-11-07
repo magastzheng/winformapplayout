@@ -2,6 +2,7 @@
 using Model.Constant;
 using Model.Converter;
 using Model.EnumType;
+using Model.EnumType.EnumTypeConverter;
 using Model.UFX;
 using System;
 using System.Collections.Generic;
@@ -44,7 +45,13 @@ namespace Model.UI
         }
 
         [BindingAttribute("pricetype")]
-        public string PriceType { get; set; }
+        public string PriceType
+        {
+            get 
+            {
+                return EntrustPriceTypeConverter.GetPriceTypeName(EEntrustPriceType);
+            }
+        }
 
         [BindingAttribute("entrustprice")]
         public double EntrustPrice { get; set; }
@@ -157,5 +164,7 @@ namespace Model.UI
         public UFXEntrustState EEntrustState { get; set; }
 
         public EntrustDirection EDirection { get; set; }
+
+        public EntrustPriceType EEntrustPriceType { get; set; }
     }
 }
