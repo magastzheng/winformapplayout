@@ -17,6 +17,10 @@ namespace TradingSystem.View
         private const string GridId = "commandmanagement";
         private GridConfig _gridConfig = null;
 
+        private const string msgNoSelected = "tradecommandmodifynoselected";
+        private const string msgCanEditOnlyOne = "tradecommandmodifycaneditonlyone";
+        private const string msgInvalidSelected = "tradecommandmodifyinvalidselected";
+
         private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
 
         private SortableBindingList<CommandManagementItem> _dataSource = new SortableBindingList<CommandManagementItem>(new List<CommandManagementItem>());
@@ -53,13 +57,13 @@ namespace TradingSystem.View
             var selectedItems = _dataSource.Where(p => p.Selection).ToList();
             if (selectedItems.Count == 0)
             {
-                //TODO: there is no item selected
+                MessageDialog.Warn(this, msgNoSelected);
                 return;
             }
 
             if (selectedItems.Count > 1)
             {
-                //TODO: only can select one item
+                MessageDialog.Warn(this, msgCanEditOnlyOne);
                 return;
             }
 
@@ -67,7 +71,7 @@ namespace TradingSystem.View
                 && p.ECommandStatus != Model.EnumType.CommandStatus.Modified).ToList();
             if (invalidItems.Count > 0)
             {
-                //TODO: there is invalid item
+                MessageDialog.Warn(this, msgInvalidSelected);
                 return;
             }
 
@@ -93,7 +97,7 @@ namespace TradingSystem.View
             var selectedItems = _dataSource.Where(p => p.Selection).ToList();
             if (selectedItems.Count == 0)
             {
-                //TODO: there is no item selected
+                MessageDialog.Warn(this, msgNoSelected);
                 return;
             }
 
@@ -101,7 +105,7 @@ namespace TradingSystem.View
                 && p.ECommandStatus != Model.EnumType.CommandStatus.Modified).ToList();
             if (invalidItems.Count > 0)
             {
-                //TODO: there is invalid item.
+                MessageDialog.Warn(this, msgInvalidSelected);
                 return;
             }
 
@@ -189,6 +193,7 @@ namespace TradingSystem.View
                     PortfolioCode = item.PortfolioCode,
                     PortfolioName = item.PortfolioName,
                     TemplateId = item.TemplateId,
+                    TemplateName = item.TemplateName,
                     BearContract = item.BearContract,
                     FundCode = item.AccountCode,
                     FundName = item.AccountName,

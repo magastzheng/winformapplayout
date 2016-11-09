@@ -4,6 +4,7 @@ using Model.EnumType;
 using Model.UI;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 
 namespace DBAccess.TradeCommand
 {
@@ -142,51 +143,9 @@ namespace DBAccess.TradeCommand
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
             {
-                while (reader.Read())
+                if (reader.Read())
                 {
-                    item.CommandId = (int)reader["CommandId"];
-                    item.InstanceId = (int)reader["InstanceId"];
-                    item.CommandNum = (int)reader["CommandNum"];
-                    item.ECommandStatus = (CommandStatus)reader["CommandStatus"];
-                    item.ModifiedTimes = (int)reader["ModifiedTimes"];
-                    item.ECommandType = (CommandType)reader["CommandType"];
-                    item.EExecuteType = (ExecuteType)reader["ExecuteType"];
-                    item.EStockDirection = (EntrustDirection)(int)reader["StockDirection"];
-                    item.EFuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
-                    item.EEntrustStatus = (EntrustStatus)reader["EntrustStatus"];
-                    item.EDealStatus = (DealStatus)reader["DealStatus"];
-                    item.SubmitPerson = (int)reader["SubmitPerson"];
-                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
-                    item.InstanceCode = (string)reader["InstanceCode"];
-                    item.MonitorUnitName = (string)reader["MonitorUnitName"];
-                    item.TemplateId = (int)reader["StockTemplateId"];
-                    item.BearContract = (string)reader["BearContract"];
-                    item.PortfolioId = (int)reader["PortfolioId"];
-                    item.PortfolioCode = (string)reader["PortfolioCode"];
-                    item.PortfolioName = (string)reader["PortfolioName"];
-                    item.AccountCode = (string)reader["AccountCode"];
-                    item.AccountName = (string)reader["AccountName"];
-                    item.Notes = (string)reader["Notes"];
-
-                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
-                    {
-                        item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    }
-
-                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
-                    {
-                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
-                    }
-
-                    if (reader["StartDate"] != null && reader["StartDate"] != DBNull.Value)
-                    {
-                        item.DStartDate = (DateTime)reader["StartDate"];
-                    }
-
-                    if (reader["EndDate"] != null && reader["EndDate"] != DBNull.Value)
-                    {
-                        item.DEndDate = (DateTime)reader["EndDate"];
-                    }
+                    item = GetTradeCommand(reader);
                 }
             }
             reader.Close();
@@ -207,50 +166,7 @@ namespace DBAccess.TradeCommand
             {
                 while (reader.Read())
                 {
-                    var item = new Model.Database.TradeCommand();
-                    item.CommandId = (int)reader["CommandId"];
-                    item.InstanceId = (int)reader["InstanceId"];
-                    item.CommandNum = (int)reader["CommandNum"];
-                    item.ECommandStatus = (CommandStatus)reader["CommandStatus"];
-                    item.ModifiedTimes = (int)reader["ModifiedTimes"];
-                    item.ECommandType = (CommandType)reader["CommandType"];
-                    item.EExecuteType = (ExecuteType)reader["ExecuteType"];
-                    item.EStockDirection = (EntrustDirection)(int)reader["StockDirection"];
-                    item.EFuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
-                    item.EEntrustStatus = (EntrustStatus)reader["EntrustStatus"];
-                    item.EDealStatus = (DealStatus)reader["DealStatus"];
-                    item.SubmitPerson = (int)reader["SubmitPerson"];
-                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
-                    item.InstanceCode = (string)reader["InstanceCode"];
-                    item.MonitorUnitName = (string)reader["MonitorUnitName"];
-                    item.TemplateId = (int)reader["StockTemplateId"];
-                    item.BearContract = (string)reader["BearContract"];
-                    item.PortfolioId = (int)reader["PortfolioId"];
-                    item.PortfolioCode = (string)reader["PortfolioCode"];
-                    item.PortfolioName = (string)reader["PortfolioName"];
-                    item.AccountCode = (string)reader["AccountCode"];
-                    item.AccountName = (string)reader["AccountName"];
-                    item.Notes = (string)reader["Notes"];
-
-                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
-                    {
-                        item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    }
-
-                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
-                    {
-                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
-                    }
-
-                    if (reader["StartDate"] != null && reader["StartDate"] != DBNull.Value)
-                    {
-                        item.DStartDate = (DateTime)reader["StartDate"];
-                    }
-
-                    if (reader["EndDate"] != null && reader["EndDate"] != DBNull.Value)
-                    {
-                        item.DEndDate = (DateTime)reader["EndDate"];
-                    }
+                    var item = GetTradeCommand(reader);
 
                     items.Add(item);
                 }
@@ -259,6 +175,57 @@ namespace DBAccess.TradeCommand
             _dbHelper.Close(dbCommand.Connection);
 
             return items;
+        }
+
+        private Model.Database.TradeCommand GetTradeCommand(DbDataReader reader)
+        {
+            var item = new Model.Database.TradeCommand();
+            item.CommandId = (int)reader["CommandId"];
+            item.InstanceId = (int)reader["InstanceId"];
+            item.CommandNum = (int)reader["CommandNum"];
+            item.ECommandStatus = (CommandStatus)reader["CommandStatus"];
+            item.ModifiedTimes = (int)reader["ModifiedTimes"];
+            item.ECommandType = (CommandType)reader["CommandType"];
+            item.EExecuteType = (ExecuteType)reader["ExecuteType"];
+            item.EStockDirection = (EntrustDirection)(int)reader["StockDirection"];
+            item.EFuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
+            item.EEntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+            item.EDealStatus = (DealStatus)reader["DealStatus"];
+            item.SubmitPerson = (int)reader["SubmitPerson"];
+            item.MonitorUnitId = (int)reader["MonitorUnitId"];
+            item.InstanceCode = (string)reader["InstanceCode"];
+            item.MonitorUnitName = (string)reader["MonitorUnitName"];
+            item.TemplateId = (int)reader["StockTemplateId"];
+            item.BearContract = (string)reader["BearContract"];
+            item.PortfolioId = (int)reader["PortfolioId"];
+            item.PortfolioCode = (string)reader["PortfolioCode"];
+            item.PortfolioName = (string)reader["PortfolioName"];
+            item.AccountCode = (string)reader["AccountCode"];
+            item.AccountName = (string)reader["AccountName"];
+            item.TemplateName = (string)reader["TemplateName"];
+            item.Notes = (string)reader["Notes"];
+
+            if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+            {
+                item.CreatedDate = (DateTime)reader["CreatedDate"];
+            }
+
+            if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+            {
+                item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+            }
+
+            if (reader["StartDate"] != null && reader["StartDate"] != DBNull.Value)
+            {
+                item.DStartDate = (DateTime)reader["StartDate"];
+            }
+
+            if (reader["EndDate"] != null && reader["EndDate"] != DBNull.Value)
+            {
+                item.DEndDate = (DateTime)reader["EndDate"];
+            }
+
+            return item;
         }
     }
 }

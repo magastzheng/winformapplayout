@@ -221,6 +221,15 @@
 		},{
 			"id": "transferholdingcannotsameinstance",
 			"text": "目标交易实例不能与源交易实例相同！"
+		},{
+			"id": "tradecommandmodifynoselected",
+			"text": "请勾选交易指令！"
+		},{
+			"id": "tradecommandmodifycaneditonlyone",
+			"text": "每次仅能修改一条交易指令！"
+		},{
+			"id": "tradecommandmodifyinvalidselected",
+			"text": "勾选无效交易指令！"
 		}
 	]
 }

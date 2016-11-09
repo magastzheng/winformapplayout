@@ -20,6 +20,9 @@ namespace Model.UI
         [BindingAttribute("secucode")]
         public string SecuCode { get; set; }
 
+        [BindingAttribute("secuname")]
+        public string SecuName { get; set; }
+
         [BindingAttribute("longshort")]
         public string LongShort
         { 
@@ -92,6 +95,8 @@ namespace Model.UI
         }
 
         public string ExchangeCode { get; set; }
+
+        public SecurityType SecuType { get; set; }
 
         public EntrustDirection EDirection { get; set; }
 

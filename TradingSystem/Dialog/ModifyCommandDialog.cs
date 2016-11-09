@@ -3,6 +3,8 @@ using Config;
 using Controls.Entity;
 using Controls.GridView;
 using Model.Binding.BindingUtil;
+using Model.Constant;
+using Model.SecurityInfo;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -11,6 +13,10 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Linq;
+using BLL.SecurityInfo;
+using Quote;
+using TradingSystem.TradeUtil;
 
 namespace TradingSystem.Dialog
 {
@@ -117,8 +123,8 @@ namespace TradingSystem.Dialog
             this.tbExecuteStage.Text = string.Empty;
             this.tbInstNo.Text = string.Format("{0}", cmdMngItem.InstanceId);
             this.tbInstCode.Text = string.Format("{0}", cmdMngItem.InstanceCode);
-            this.tbSubmitDate.Text = cmdMngItem.CommandSubmitDate;
-            this.tbSubmitTime.Text = cmdMngItem.CommandSubmitTime;
+            this.tbSubmitDate.Text = DateFormat.Format(cmdMngItem.DDate, ConstVariable.DateFormat);
+            this.tbSubmitTime.Text = DateFormat.Format(cmdMngItem.DDate, ConstVariable.TimeFormat);
         }
 
         private void FillEdit(CommandManagementItem cmdMngItem)
@@ -145,16 +151,58 @@ namespace TradingSystem.Dialog
                 {
                     Selection = true,
                     SecuCode = security.SecuCode,
+                    SecuType = security.SecuType,
                     Fund = cmdMngItem.FundName,
                     Portfolio = cmdMngItem.PortfolioDisplay,
                     OriginCommandAmount = security.CommandAmount,
                     EDirection = security.EDirection,
                     OriginCommandPrice = security.CommandPrice,
                     EntrustDirection = string.Format("{0}", (int)security.EDirection),
-                    //EPriceType = security.
+                    NewCommandAmount = security.CommandAmount,
                 };
 
                 _dataSource.Add(item);
+            }
+
+            Quote();
+        }
+
+        private void Quote()
+        {
+            //query the price and set it
+            List<SecurityItem> secuList = new List<SecurityItem>();
+            var uniqueSecuItems = _dataSource.GroupBy(p => p.SecuCode).Select(p => p.First());
+            foreach (var secuItem in uniqueSecuItems)
+            {
+                var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
+                secuList.Add(findItem);
+            }
+
+            foreach (var secuItem in _dataSource)
+            {
+                var targetItem = secuList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
+                var marketData = QuoteCenter2.Instance.GetMarketData(targetItem);
+                //secuItem.EntrustPrice = QuotePriceHelper.GetPrice(priceType, marketData);
+                secuItem.OriginCommandMoney = secuItem.OriginCommandAmount * marketData.CurrentPrice;
+                secuItem.NewCommandPrice = marketData.CurrentPrice;
+                secuItem.NewCommandMoney = secuItem.NewCommandAmount * secuItem.NewCommandPrice;
+                secuItem.ESuspendFlag = marketData.SuspendFlag;
+                secuItem.ELimitUpDownFlag = QuotePriceHelper.GetLimitUpDownFlag(marketData.CurrentPrice, marketData.LowLimitPrice, marketData.HighLimitPrice);
+
+                secuItem.SecuName = targetItem.SecuName;
+                secuItem.ExchangeCode = targetItem.ExchangeCode;
+                if (secuItem.SecuType == SecurityType.Stock)
+                {
+                    secuItem.PositionType = Model.EnumType.PositionType.SpotLong;
+                }
+                else if (secuItem.SecuType == SecurityType.Futures)
+                {
+                    secuItem.PositionType = Model.EnumType.PositionType.FuturesShort;
+                }
+                else
+                { 
+                    //do nothing
+                }
             }
         }
 

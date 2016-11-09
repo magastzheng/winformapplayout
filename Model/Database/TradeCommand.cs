@@ -59,6 +59,8 @@ namespace Model.Database
 
         public int TemplateId { get; set; }
 
+        public string TemplateName { get; set; }
+
         //空头合约
         public string BearContract { get; set; }
 

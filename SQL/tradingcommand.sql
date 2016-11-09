@@ -314,6 +314,7 @@ begin
 			,d.PortfolioName
 			,d.AccountCode
 			,d.AccountName
+			,e.TemplateName
 		from tradingcommand a
 		inner join tradinginstance b
 		on a.InstanceId = b.InstanceId
@@ -321,6 +322,8 @@ begin
 		on b.MonitorUnitId = c.MonitorUnitId
 		inner join ufxportfolio d
 		on c.PortfolioId=d.PortfolioId
+		inner join stocktemplate e
+		on c.StockTemplateId = e.TemplateId
 		where CommandId=@CommandId
 	end
 	else
@@ -353,6 +356,7 @@ begin
 			,d.PortfolioName
 			,d.AccountCode
 			,d.AccountName
+			,e.TemplateName
 		from tradingcommand a
 		inner join tradinginstance b
 		on a.InstanceId = b.InstanceId
@@ -360,5 +364,7 @@ begin
 		on b.MonitorUnitId = c.MonitorUnitId
 		inner join ufxportfolio d
 		on c.PortfolioId=d.PortfolioId
+		inner join stocktemplate e
+		on c.StockTemplateId = e.TemplateId
 	end
 end

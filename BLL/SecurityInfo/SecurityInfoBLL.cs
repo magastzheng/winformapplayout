@@ -71,6 +71,9 @@ namespace BLL.SecurityInfo
                     SecuType = secuType,
                     ExchangeCode = SecurityItemHelper.GetExchangeCode(secuCode),
                 };
+
+                string investmentID = CodeHelper.GetWindCode(secuItem);
+                Add(investmentID, secuItem);
             }
 
             return secuItem;
@@ -90,7 +93,8 @@ namespace BLL.SecurityInfo
                     ExchangeCode = SecurityItemHelper.GetExchangeCode(secuCode),
                 };
 
-                
+                string investmentID = CodeHelper.GetWindCode(secuItem);
+                Add(investmentID, secuItem);
             }
 
             return secuItem;
@@ -102,6 +106,15 @@ namespace BLL.SecurityInfo
             return _quote.GetSecurities();
         }
 
-        public static SecurityInfoManager Instance { get { return _instance; } } 
+        public static SecurityInfoManager Instance { get { return _instance; } }
+
+        #region private method
+
+        public void Add(string investmentID, SecurityItem secuItem)
+        {
+            _quote.AddSecurity(investmentID, secuItem);
+        }
+
+        #endregion
     }
 }

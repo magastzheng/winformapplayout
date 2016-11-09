@@ -3474,7 +3474,7 @@ readonly:
 		},{
 		"name": "commandid",
 		"text": "指令序号",
-		"width": 150,
+		"width": 80,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -3482,7 +3482,7 @@ readonly:
 		},{
 		"name": "commandmodifiedtimes",
 		"text": "指令修改次数",
-		"width": 150,
+		"width": 100,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -3490,7 +3490,7 @@ readonly:
 		},{
 		"name": "funddisplay",
 		"text": "基金编号",
-		"width": 80,
+		"width": 150,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -3498,7 +3498,7 @@ readonly:
 		},{
 		"name": "portfoliodisplay",
 		"text": "组合序号",
-		"width": 80,
+		"width": 150,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -3506,7 +3506,7 @@ readonly:
 		},{
 		"name": "instanceid",
 		"text": "交易实例序号",
-		"width": 150,
+		"width": 100,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -3522,7 +3522,7 @@ readonly:
 		},{
 		"name": "arbitragetype",
 		"text": "套利类型",
-		"width": 150,
+		"width": 80,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -3530,7 +3530,7 @@ readonly:
 		},{
 		"name": "arbitrageexecutestage",
 		"text": "套利执行阶段",
-		"width": 150,
+		"width": 100,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -3538,7 +3538,7 @@ readonly:
 		},{
 		"name": "investmenttype",
 		"text": "投资类型",
-		"width": 150,
+		"width": 80,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -3570,7 +3570,7 @@ readonly:
 		},{
 		"name": "templatename",
 		"text": "现货模板名称",
-		"width": 80,
+		"width": 150,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -3975,7 +3975,7 @@ readonly:
 		},{
 		"name": "fund",
 		"text": "基金",
-		"width": 80,
+		"width": 150,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -3991,7 +3991,15 @@ readonly:
 		},{
 		"name": "secucode",
 		"text": "证券代码",
-		"width": 150,
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "secuname",
+		"text": "证券名称",
+		"width": 80,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -4015,7 +4023,7 @@ readonly:
 		},{
 		"name": "origincommandamount",
 		"text": "原指令数量",
-		"width": 150,
+		"width": 100,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -4023,7 +4031,7 @@ readonly:
 		},{
 		"name": "entrustedamount",
 		"text": "已委托数量",
-		"width": 150,
+		"width": 100,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -4031,7 +4039,7 @@ readonly:
 		},{
 		"name": "availableamount",
 		"text": "可用数量",
-		"width": 150,
+		"width": 100,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -4039,7 +4047,7 @@ readonly:
 		},{
 		"name": "newcommandamount",
 		"text": "新指令数量",
-		"width": 150,
+		"width": 100,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -4047,7 +4055,7 @@ readonly:
 		},{
 		"name": "entrustdirection",
 		"text": "委托方向",
-		"width": 150,
+		"width": 80,
 		"columntype": 3,
 		"valuetype": 0,
 		"visible": 1,
@@ -4055,7 +4063,7 @@ readonly:
 		},{
 		"name": "origincommandprice",
 		"text": "原指令价格",
-		"width": 150,
+		"width": 100,
 		"columntype": 0,
 		"valuetype": 1,
 		"visible": 1,
@@ -4063,7 +4071,7 @@ readonly:
 		},{
 		"name": "newcommandprice",
 		"text": "新指令价格",
-		"width": 150,
+		"width": 100,
 		"columntype": 0,
 		"valuetype": 1,
 		"visible": 1,
@@ -4071,7 +4079,7 @@ readonly:
 		},{
 		"name": "lastprice",
 		"text": "最新价",
-		"width": 150,
+		"width": 80,
 		"columntype": 0,
 		"valuetype": 1,
 		"visible": 1,
@@ -4079,7 +4087,7 @@ readonly:
 		},{
 		"name": "suspendflag",
 		"text": "停牌标志",
-		"width": 150,
+		"width": 80,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -4087,7 +4095,7 @@ readonly:
 		},{
 		"name": "origincommandmoney",
 		"text": "原指令金额",
-		"width": 150,
+		"width": 100,
 		"columntype": 0,
 		"valuetype": 1,
 		"visible": 1,
@@ -4095,7 +4103,7 @@ readonly:
 		},{
 		"name": "newcommandmoney",
 		"text": "新指令金额",
-		"width": 150,
+		"width": 100,
 		"columntype": 0,
 		"valuetype": 1,
 		"visible": 1,
@@ -4103,7 +4111,7 @@ readonly:
 		},{
 		"name": "pricetype",
 		"text": "价格类型",
-		"width": 150,
+		"width": 80,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -4111,7 +4119,7 @@ readonly:
 		},{
 		"name": "investmenttype",
 		"text": "投资类型",
-		"width": 150,
+		"width": 80,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -4119,7 +4127,7 @@ readonly:
 		},{
 		"name": "limitupdown",
 		"text": "涨跌停",
-		"width": 150,
+		"width": 80,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
