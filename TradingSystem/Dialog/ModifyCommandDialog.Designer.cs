@@ -210,6 +210,7 @@
             // 
             // tbFutures
             // 
+            this.tbFutures.Enabled = false;
             this.tbFutures.Location = new System.Drawing.Point(534, 43);
             this.tbFutures.Name = "tbFutures";
             this.tbFutures.Size = new System.Drawing.Size(93, 21);
@@ -226,6 +227,7 @@
             // 
             // tbTemplate
             // 
+            this.tbTemplate.Enabled = false;
             this.tbTemplate.Location = new System.Drawing.Point(534, 13);
             this.tbTemplate.Name = "tbTemplate";
             this.tbTemplate.Size = new System.Drawing.Size(93, 21);
@@ -304,6 +306,7 @@
             // 
             // cbSubmitPerson
             // 
+            this.cbSubmitPerson.Enabled = false;
             this.cbSubmitPerson.FormattingEnabled = true;
             this.cbSubmitPerson.Location = new System.Drawing.Point(78, 35);
             this.cbSubmitPerson.Name = "cbSubmitPerson";
@@ -542,6 +545,7 @@
             this.Controls.Add(this.bottomPanel);
             this.Controls.Add(this.topPanel);
             this.Name = "ModifyCommandDialog";
+            this.Text = "指令修改";
             this.bottomPanel.ResumeLayout(false);
             this.mainPanel.ResumeLayout(false);
             this.childMainPanel.ResumeLayout(false);

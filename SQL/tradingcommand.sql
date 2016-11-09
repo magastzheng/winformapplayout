@@ -309,6 +309,7 @@ begin
 			,c.PortfolioId
 			,c.MonitorUnitName	
 			,c.StockTemplateId
+			,c.BearContract
 			,d.PortfolioCode
 			,d.PortfolioName
 			,d.AccountCode
@@ -347,6 +348,7 @@ begin
 			,c.PortfolioId
 			,c.MonitorUnitName	
 			,c.StockTemplateId
+			,c.BearContract
 			,d.PortfolioCode
 			,d.PortfolioName
 			,d.AccountCode

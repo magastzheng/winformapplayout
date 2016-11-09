@@ -47,10 +47,12 @@ namespace Model.UI
         [BindingAttribute("entrustdirection")]
         public string EntrustDirection
         {
-            get
-            {
-                return EnumTypeDisplayHelper.GetEntrustDirection(EDirection);
-            }
+            //get
+            //{
+            //    return EnumTypeDisplayHelper.GetEntrustDirection(EDirection);
+            //}
+            get;
+            set;
         }
 
         [BindingAttribute("origincommandprice")]

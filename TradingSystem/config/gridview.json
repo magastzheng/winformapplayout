@@ -1,6 +1,6 @@
 ﻿/*
 grid: 用于定义grid
-background: 如果为0则只读列不设置背景色，为1则只读列设置背景色
+background: 如果为0则只读列不设置背景色，为1则只读列设置背景色;不影响可编辑列
 columns: 数组，表示本grid中的所有列
 
 列属性说明
@@ -3963,7 +3963,7 @@ readonly:
 	]
 },{
 	"grid": "modifycommanddialog",
-	"background": 0,
+	"background": 1,
 	"columns": [{
 		"name": "selection",
 		"text": "选择",
@@ -4067,7 +4067,7 @@ readonly:
 		"columntype": 0,
 		"valuetype": 1,
 		"visible": 1,
-		"readonly": 1
+		"readonly": 0
 		},{
 		"name": "lastprice",
 		"text": "最新价",

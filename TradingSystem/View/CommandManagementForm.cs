@@ -7,6 +7,8 @@ using Model.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
+using TradingSystem.Dialog;
 
 namespace TradingSystem.View
 {
@@ -61,7 +63,29 @@ namespace TradingSystem.View
                 return;
             }
 
+            var invalidItems = selectedItems.Where(p => p.ECommandStatus != Model.EnumType.CommandStatus.Effective
+                && p.ECommandStatus != Model.EnumType.CommandStatus.Modified).ToList();
+            if (invalidItems.Count > 0)
+            {
+                //TODO: there is invalid item
+                return;
+            }
 
+            var selectedItem = selectedItems.First();
+            ModifyCommandDialog dialog = new ModifyCommandDialog(_gridConfig);
+            dialog.Owner = this;
+            dialog.StartPosition = FormStartPosition.CenterParent;
+            dialog.OnLoadControl(dialog, null);
+            dialog.OnLoadData(dialog, selectedItem);
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+
+            }
+            else
+            { 
+                //do nothing
+            }
+            dialog.Dispose();
         }
 
         private void ToolStripButton_Click_Cancel(object sender, System.EventArgs e)
@@ -73,19 +97,45 @@ namespace TradingSystem.View
                 return;
             }
 
-            foreach (var selectedItem in selectedItems)
+            var invalidItems = selectedItems.Where(p => p.ECommandStatus != Model.EnumType.CommandStatus.Effective
+                && p.ECommandStatus != Model.EnumType.CommandStatus.Modified).ToList();
+            if (invalidItems.Count > 0)
             {
-                Model.Database.TradeCommand cmdItem = new Model.Database.TradeCommand 
-                {
-                    CommandId = selectedItem.CommandId,
-                    ECommandStatus = Model.EnumType.CommandStatus.Canceled,
-                    ModifiedDate = DateTime.Now,
-                    DStartDate = selectedItem.DStartDate,
-                    DEndDate = selectedItem.DEndDate,
-                };
-
-                _tradeCommandBLL.Update(cmdItem);
+                //TODO: there is invalid item.
+                return;
             }
+
+            CancelCommandDialog dialog = new CancelCommandDialog();
+            dialog.Owner = this;
+            dialog.StartPosition = FormStartPosition.CenterParent;
+            dialog.OnLoadControl(dialog, null);
+            dialog.OnLoadData(dialog, null);
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string notes = (string)dialog.GetData();
+
+                foreach (var selectedItem in selectedItems)
+                {
+                    Model.Database.TradeCommand cmdItem = new Model.Database.TradeCommand
+                    {
+                        CommandId = selectedItem.CommandId,
+                        ECommandStatus = Model.EnumType.CommandStatus.Canceled,
+                        ModifiedDate = DateTime.Now,
+                        DStartDate = selectedItem.DStartDate,
+                        DEndDate = selectedItem.DEndDate,
+                        Notes = notes,
+                    };
+
+                    _tradeCommandBLL.Update(cmdItem);
+                }
+            }
+            else
+            { 
+                //do nothing
+            }
+
+            //dialog.Close();
+            dialog.Dispose();
         }
 
         #endregion
@@ -139,6 +189,7 @@ namespace TradingSystem.View
                     PortfolioCode = item.PortfolioCode,
                     PortfolioName = item.PortfolioName,
                     TemplateId = item.TemplateId,
+                    BearContract = item.BearContract,
                     FundCode = item.AccountCode,
                     FundName = item.AccountName,
                     Notes = item.Notes,

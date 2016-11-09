@@ -1,4 +1,5 @@
-﻿using Config;
+﻿using BLL.TradeCommand;
+using Config;
 using Controls.Entity;
 using Controls.GridView;
 using Model.Binding.BindingUtil;
@@ -19,22 +20,45 @@ namespace TradingSystem.Dialog
         GridConfig _gridConfig;
 
         private SortableBindingList<ModifySecurityItem> _dataSource = new SortableBindingList<ModifySecurityItem>(new List<ModifySecurityItem>());
-    
+
+        private TradeCommandSecurityBLL _tradeCommandSecurityBLL = new TradeCommandSecurityBLL();
 
         public ModifyCommandDialog()
             :base()
         {
             InitializeComponent();
+
+            this.LoadControl += new FormLoadHandler(Form_LoadControl);
+            this.LoadData += new FormLoadHandler(Form_LoadData);
+            this.btnCalc.Click += new EventHandler(Button_Click_Calc);
+            this.btnConfirm.Click += new EventHandler(Button_Click_Confirm);
+            this.btnCancel.Click += new EventHandler(Button_Click_Cancel);
         }
 
         public ModifyCommandDialog(GridConfig gridConfig)
             : this()
         {
             _gridConfig = gridConfig;
-
-            LoadControl += new FormLoadHandler(Form_LoadControl);
-            LoadData += new FormLoadHandler(Form_LoadData);
         }
+
+        #region button click event handler
+
+        private void Button_Click_Calc(object sender, EventArgs e)
+        {
+            //TODO: cancel by the last price
+        }
+
+        private void Button_Click_Confirm(object sender, EventArgs e)
+        {
+            DialogResult = System.Windows.Forms.DialogResult.OK;
+        }
+
+        private void Button_Click_Cancel(object sender, EventArgs e)
+        {
+            DialogResult = System.Windows.Forms.DialogResult.Cancel;
+        }
+
+        #endregion
 
         #region LoadControl
 
@@ -46,7 +70,15 @@ namespace TradingSystem.Dialog
 
             this.gridView.DataSource = _dataSource;
 
+            LoadEntrustDirectionOption();
+
             return true;
+        }
+
+        private void LoadEntrustDirectionOption()
+        {
+            var entrustDirectionOption = ConfigManager.Instance.GetComboConfig().GetComboOption("entrustdirection");
+            TSDataGridViewHelper.SetDataBinding(this.gridView, "entrustdirection", entrustDirectionOption);
         }
 
         #endregion
@@ -105,9 +137,27 @@ namespace TradingSystem.Dialog
         }
 
         private void FillGridView(CommandManagementItem cmdMngItem)
-        { 
-            
+        {
+            var securities = _tradeCommandSecurityBLL.GetTradeCommandSecurities(cmdMngItem.CommandId);
+            foreach (var security in securities)
+            {
+                var item = new ModifySecurityItem 
+                {
+                    Selection = true,
+                    SecuCode = security.SecuCode,
+                    Fund = cmdMngItem.FundName,
+                    Portfolio = cmdMngItem.PortfolioDisplay,
+                    OriginCommandAmount = security.CommandAmount,
+                    EDirection = security.EDirection,
+                    OriginCommandPrice = security.CommandPrice,
+                    EntrustDirection = string.Format("{0}", (int)security.EDirection),
+                    //EPriceType = security.
+                };
+
+                _dataSource.Add(item);
+            }
         }
+
         #endregion
     }
 }

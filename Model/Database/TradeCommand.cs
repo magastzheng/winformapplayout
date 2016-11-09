@@ -59,6 +59,9 @@ namespace Model.Database
 
         public int TemplateId { get; set; }
 
+        //空头合约
+        public string BearContract { get; set; }
+
         public int PortfolioId { get; set; }
 
         public string PortfolioCode { get; set; }

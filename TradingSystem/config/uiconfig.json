@@ -1,4 +1,8 @@
-﻿[{
+﻿/*
+*
+*tradedirection和entrustdirection来源于EntrustDirection枚举，前者用于控制交易实例的买卖方向，或者用于控制具体证券的委托方向
+*/
+[{
 	"name": "spotprice",
 	"selected": "Market",
 	"items":[{
@@ -352,6 +356,27 @@
 				"id": "3",
 				"code": "3",
 				"name": "调整到[买卖]"
+			}]
+	},{
+		"name": "entrustdirection",
+		"selected": "1",
+		"items":[
+			{
+				"id": "10",
+				"code": "1",
+				"name": "买入"
+			},{
+				"id": "11",
+				"code": "2",
+				"name": "卖出"
+			},{
+				"id": "12",
+				"code": "3",
+				"name": "开仓"
+			},{
+				"id": "13",
+				"code": "4",
+				"name": "平仓"
 			}]
 	},{
 		"name": "longshort",

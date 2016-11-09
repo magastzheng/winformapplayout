@@ -160,6 +160,7 @@ namespace DBAccess.TradeCommand
                     item.InstanceCode = (string)reader["InstanceCode"];
                     item.MonitorUnitName = (string)reader["MonitorUnitName"];
                     item.TemplateId = (int)reader["StockTemplateId"];
+                    item.BearContract = (string)reader["BearContract"];
                     item.PortfolioId = (int)reader["PortfolioId"];
                     item.PortfolioCode = (string)reader["PortfolioCode"];
                     item.PortfolioName = (string)reader["PortfolioName"];
@@ -223,6 +224,7 @@ namespace DBAccess.TradeCommand
                     item.InstanceCode = (string)reader["InstanceCode"];
                     item.MonitorUnitName = (string)reader["MonitorUnitName"];
                     item.TemplateId = (int)reader["StockTemplateId"];
+                    item.BearContract = (string)reader["BearContract"];
                     item.PortfolioId = (int)reader["PortfolioId"];
                     item.PortfolioCode = (string)reader["PortfolioCode"];
                     item.PortfolioName = (string)reader["PortfolioName"];
