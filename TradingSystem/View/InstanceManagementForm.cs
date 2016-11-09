@@ -30,6 +30,8 @@ namespace TradingSystem.View
 
             this.LoadControl += new FormLoadHandler(Form_LoadControl);
             this.LoadData += new FormLoadHandler(Form_LoadData);
+
+            
         }
 
         private bool Form_LoadControl(object sender, object data)

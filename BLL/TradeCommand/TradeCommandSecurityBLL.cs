@@ -3,6 +3,7 @@ using BLL.SecurityInfo;
 using DBAccess;
 using DBAccess.TradeCommand;
 using log4net;
+using Model.Database;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -25,10 +26,15 @@ namespace BLL.TradeCommand
         
         }
 
+        public List<TradeCommandSecurity> GetTradeCommandSecurities(int commandId)
+        {
+            return _tradecmdsecudao.Get(commandId);
+        }
+
         public List<CommandSecurityItem> GetCommandSecurityItems(TradingCommandItem cmdItem)
         {
             List<CommandSecurityItem> finalSecuItems = new List<CommandSecurityItem>();
-            var cmdSecuItems = _tradecmdsecudao.Get(cmdItem.CommandId);
+            var cmdSecuItems = GetTradeCommandSecurities(cmdItem.CommandId);
             var entrustSecuItems = _entrustSecurityBLL.GetByCommandId(cmdItem.CommandId);
 
             int weightAmount = 0;

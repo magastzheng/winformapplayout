@@ -16,6 +16,7 @@ namespace Config
         private ButtonConfig _buttonConfig;
         private TDFAPIConfig _tdfAPIConfig;
         private DefaultSettingConfig _defaultSettingConfig;
+        private CodeMappingConfig _codeMappingConfig;
 
         private ConfigManager()
         {
@@ -41,7 +42,8 @@ namespace Config
                 _buttonConfig = new ButtonConfig();
                 _tdfAPIConfig = new TDFAPIConfig();
                 _defaultSettingConfig = new DefaultSettingConfig();
-                
+                _codeMappingConfig = new CodeMappingConfig();    
+
                 _terminalConfig = new TerminalConfig(_systemConfig);
             //}
             //catch (Exception e)
@@ -110,6 +112,11 @@ namespace Config
         public DefaultSettingConfig GetDefaultSettingConfig()
         {
             return _instance._defaultSettingConfig;
+        }
+
+        public CodeMappingConfig GetCodeMappingConfig()
+        {
+            return _instance._codeMappingConfig;
         }
     }
 }

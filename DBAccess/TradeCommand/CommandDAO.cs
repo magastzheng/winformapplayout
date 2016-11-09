@@ -12,7 +12,9 @@ namespace DBAccess.TradeCommand
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const string SP_CreateTradeCommand = "procTradingCommandInsert";
+        private const string SP_ModifyTradeCommand = "procTradingCommandUpdate";
         private const string SP_CreateTradingSecurity = "procTradingCommandSecurityInsert";
+        private const string SP_ModifyTradingSecurity = "procTradingCommandSecurityUpdate";
 
         public CommandDAO()
             : base()
@@ -99,6 +101,71 @@ namespace DBAccess.TradeCommand
 
                         secuItem.CommandId = commandId;
                         _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, secuItem.CommandId);
+                        _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, secuItem.SecuCode);
+                        _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, (int)secuItem.SecuType);
+                        //_dbHelper.AddInParameter(dbCommand, "@WeightAmount", System.Data.DbType.Int32, secuItem.WeightAmount);
+                        _dbHelper.AddInParameter(dbCommand, "@CommandAmount", System.Data.DbType.Int32, secuItem.CommandAmount);
+                        _dbHelper.AddInParameter(dbCommand, "@CommandDirection", System.Data.DbType.Int32, (int)secuItem.EDirection);
+                        _dbHelper.AddInParameter(dbCommand, "@CommandPrice", System.Data.DbType.Double, secuItem.CommandPrice);
+
+                        //string newid = string.Empty;
+                        ret = dbCommand.ExecuteNonQuery();
+                    }
+                }
+
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                //TODO: add log
+                logger.Error(ex);
+                ret = -1;
+                throw;
+            }
+            finally
+            {
+                _dbHelper.Close(dbCommand.Connection);
+                transaction.Dispose();
+            }
+
+            return commandId;
+        }
+
+        public int Update(Model.Database.TradeCommand cmdItem, List<TradeCommandSecurity> secuItems)
+        {
+            var dbCommand = _dbHelper.GetCommand();
+            _dbHelper.Open(_dbHelper.Connection);
+
+            //use transaction to execute
+            DbTransaction transaction = dbCommand.Connection.BeginTransaction();
+            dbCommand.Transaction = transaction;
+            dbCommand.CommandType = System.Data.CommandType.StoredProcedure;
+            int ret = -1;
+            int commandId = cmdItem.CommandId;
+            try
+            {
+                dbCommand.CommandText = SP_ModifyTradeCommand;
+
+                _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+                _dbHelper.AddInParameter(dbCommand, "@CommandStatus", System.Data.DbType.Int32, (int)cmdItem.ECommandStatus);
+                _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, cmdItem.ModifiedDate);
+                _dbHelper.AddInParameter(dbCommand, "@StartDate", System.Data.DbType.DateTime, cmdItem.DStartDate);
+                _dbHelper.AddInParameter(dbCommand, "@EndDate", System.Data.DbType.DateTime, cmdItem.DEndDate);
+                string notes = (cmdItem.Notes != null) ? cmdItem.Notes : string.Empty;
+                _dbHelper.AddInParameter(dbCommand, "@Notes", System.Data.DbType.String, notes);
+
+                ret = dbCommand.ExecuteNonQuery();
+
+                if (ret >= 0)
+                {
+                    foreach (var secuItem in secuItems)
+                    {
+                        dbCommand.Parameters.Clear();
+                        dbCommand.CommandText = SP_CreateTradingSecurity;
+
+                        secuItem.CommandId = commandId;
+                        _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
                         _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, secuItem.SecuCode);
                         _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, (int)secuItem.SecuType);
                         //_dbHelper.AddInParameter(dbCommand, "@WeightAmount", System.Data.DbType.Int32, secuItem.WeightAmount);

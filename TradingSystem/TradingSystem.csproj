@@ -82,6 +82,12 @@
       <DependentUpon>ClosePositionDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialog\MessageDialog.cs" />
+    <Compile Include="Dialog\ModifyCommandDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\ModifyCommandDialog.Designer.cs">
+      <DependentUpon>ModifyCommandDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialog\MonitorUnitDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -229,6 +235,9 @@
     <EmbeddedResource Include="Dialog\ClosePositionDialog.resx">
       <DependentUpon>ClosePositionDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dialog\ModifyCommandDialog.resx">
+      <DependentUpon>ModifyCommandDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialog\MonitorUnitDialog.resx">
       <DependentUpon>MonitorUnitDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -306,6 +315,9 @@
       <DependentUpon>WarnForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="config\buttons.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="config\codemapping.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="config\defaultsetting.json">

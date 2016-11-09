@@ -238,6 +238,25 @@ namespace BLL.Frontend
 
         #endregion
 
+        #region update
+
+        public int Update(Model.Database.TradeCommand cmdItem, List<TradeCommandSecurity> secuItems)
+        {
+            return _commanddao.Update(cmdItem, secuItems);
+        }
+
+        public int Update(Model.Database.TradeCommand cmdItem)
+        {
+            return _tradecommandao.Update(cmdItem);
+        }
+
+        public int UpdateStatus(Model.Database.TradeCommand cmdItem)
+        {
+            return _tradecommandao.UpdateStatus(cmdItem);
+        }
+
+        #endregion
+
         #region private
 
         private List<TradeCommandSecurity> GetSelectCommandSecurities(ClosePositionItem closePositionItem, List<ClosePositionSecurityItem> closeSecuItems)

@@ -51,6 +51,29 @@ begin
 	)
 end
 
+go
+if exists (select name from sysobjects where name='procTradingCommandSecurityUpdate')
+drop proc procTradingCommandSecurityUpdate
+
+go
+create proc procTradingCommandSecurityUpdate(
+	@CommandId			int 
+	,@SecuCode			varchar(10) 
+	,@SecuType			int
+	,@CommandAmount		int
+	,@CommandDirection	int
+	,@CommandPrice		numeric(20, 4) --如果不限价，则价格设置为0
+)
+as
+begin
+	update tradingcommandsecurity
+	set CommandAmount = @CommandAmount
+		,CommandDirection = @CommandDirection
+		,CommandPrice = @CommandPrice
+	where CommandId = @CommandId
+		and SecuCode = @SecuCode
+		and SecuType = @SecuType
+end
 --go
 --if exists (select name from sysobjects where name='procTradingCommandSecurityUpdateEntrustAmount')
 --drop proc procTradingCommandSecurityUpdateEntrustAmount

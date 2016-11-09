@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ButtonConfig.cs" />
+    <Compile Include="CodeMappingConfig.cs" />
     <Compile Include="ComboConfig.cs" />
     <Compile Include="ConfigManager.cs" />
     <Compile Include="DefaultSettingConfig.cs" />

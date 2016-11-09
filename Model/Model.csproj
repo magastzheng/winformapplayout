@@ -51,6 +51,7 @@
     <Compile Include="Binding\UFXDataAttribute.cs" />
     <Compile Include="BLL\BLLResponse.cs" />
     <Compile Include="config\Benchmark.cs" />
+    <Compile Include="config\CodeMappingItem.cs" />
     <Compile Include="config\ComboOption.cs" />
     <Compile Include="config\FunctionItem.cs" />
     <Compile Include="config\Label.cs" />
@@ -144,6 +145,7 @@
     <Compile Include="UI\HistStockTemplate.cs" />
     <Compile Include="UI\HistTemplateStock.cs" />
     <Compile Include="UI\InstanceItem.cs" />
+    <Compile Include="UI\ModifySecurityItem.cs" />
     <Compile Include="UI\SourceHoldingItem.cs" />
     <Compile Include="UI\TradingCommandItem.cs" />
     <Compile Include="UI\AssetUnit.cs" />

@@ -9,6 +9,7 @@ namespace DBAccess.TradeCommand
     public class TradingCommandSecurityDAO: BaseDAO
     {
         private const string SP_Create = "procTradingCommandSecurityInsert";
+        private const string SP_Modify = "procTradingCommandSecurityUpdate";
         //private const string SP_ModifyEntrustAmount = "procTradingCommandSecurityUpdateEntrustAmount";
         private const string SP_Delete = "procTradingCommandSecurityDelete";
         private const string SP_Get = "procTradingCommandSecuritySelect";
@@ -35,6 +36,19 @@ namespace DBAccess.TradeCommand
             _dbHelper.AddInParameter(dbCommand, "@CommandDirection", System.Data.DbType.Int32, (int)secItem.EDirection);
             _dbHelper.AddInParameter(dbCommand, "@CommandPrice", System.Data.DbType.Double, secItem.CommandPrice);
      
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int Update(TradeCommandSecurity secItem)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Modify);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, secItem.CommandId);
+            _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, secItem.SecuCode);
+            _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, (int)secItem.SecuType);
+            _dbHelper.AddInParameter(dbCommand, "@CommandAmount", System.Data.DbType.Int32, secItem.CommandAmount);
+            _dbHelper.AddInParameter(dbCommand, "@CommandDirection", System.Data.DbType.Int32, (int)secItem.EDirection);
+            _dbHelper.AddInParameter(dbCommand, "@CommandPrice", System.Data.DbType.Double, secItem.CommandPrice);
+
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 

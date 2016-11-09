@@ -3456,6 +3456,14 @@ readonly:
 	"grid": "commandmanagement",
 	"background": 0,
 	"columns": [{
+		"name": "selection",
+		"text": "选择",
+		"width": 50,
+		"columntype": 1,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
 		"name": "date",
 		"text": "日期",
 		"width": 80,
@@ -3941,6 +3949,179 @@ readonly:
 		"width": 80,
 		"columntype": 0,
 		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "last",
+		"text": "",
+		"width": 5,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},{
+	"grid": "modifycommanddialog",
+	"background": 0,
+	"columns": [{
+		"name": "selection",
+		"text": "选择",
+		"width": 50,
+		"columntype": 1,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "fund",
+		"text": "基金",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "portfolio",
+		"text": "组合",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "secucode",
+		"text": "证券代码",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "longshort",
+		"text": "多空",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "exchange",
+		"text": "交易市场",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "origincommandamount",
+		"text": "原指令数量",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "entrustedamount",
+		"text": "已委托数量",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "availableamount",
+		"text": "可用数量",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "newcommandamount",
+		"text": "新指令数量",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "entrustdirection",
+		"text": "委托方向",
+		"width": 150,
+		"columntype": 3,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "origincommandprice",
+		"text": "原指令价格",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "newcommandprice",
+		"text": "新指令价格",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "lastprice",
+		"text": "最新价",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "suspendflag",
+		"text": "停牌标志",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "origincommandmoney",
+		"text": "原指令金额",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "newcommandmoney",
+		"text": "新指令金额",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "pricetype",
+		"text": "价格类型",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "investmenttype",
+		"text": "投资类型",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "limitupdown",
+		"text": "涨跌停",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
 		"visible": 1,
 		"readonly": 1
 		},{

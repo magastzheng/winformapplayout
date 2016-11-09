@@ -1441,7 +1441,7 @@ namespace TradingSystem.View
                 }
                 else
                 {
-                    exchangeCode = SecurityInfoHelper.GetExchangeCode(secuItem.SecuCode);
+                    exchangeCode = Quote.SecurityInfoHelper.GetExchangeCode(secuItem.SecuCode);
                 }
 
                 entrustSecurityItem.EntrustPriceType = EntrustPriceType.FixedPrice;

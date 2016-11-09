@@ -1,10 +1,6 @@
 ﻿using Model.Quote;
 using Model.SecurityInfo;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Quote
 {
@@ -26,7 +22,7 @@ namespace Quote
 
         public MarketData GetMarketData(SecurityItem secuItem)
         {
-            string windCode = QueryHelper.GetWindCode(secuItem);
+            string windCode = CodeHelper.GetWindCode(secuItem);
 
             MarketData marketData = new MarketData
             {

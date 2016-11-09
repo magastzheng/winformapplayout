@@ -101,7 +101,7 @@ namespace Quote
             {
                 foreach (var secuItem in secuItemList)
                 {
-                    secuCodeList.Add(GetWindCode(secuItem));
+                    secuCodeList.Add(CodeHelper.GetWindCode(secuItem));
                 }
             }
 
@@ -127,7 +127,7 @@ namespace Quote
 
                 foreach (var secuItem in secuItems)
                 {
-                    var windcode = GetWindCode(secuItem);
+                    var windcode = CodeHelper.GetWindCode(secuItem);
                     if (!secuCodeList.Contains(windcode))
                     {
                         secuCodeList.Add(windcode);
@@ -143,7 +143,7 @@ namespace Quote
             List<string> secuCodeList = new List<string>();
             foreach (var secuItem in secuItems)
             {
-                var windcode = GetWindCode(secuItem);
+                var windcode = CodeHelper.GetWindCode(secuItem);
                 if (!secuCodeList.Contains(windcode))
                 {
                     secuCodeList.Add(windcode);
@@ -157,31 +157,7 @@ namespace Quote
 
         #region static method
 
-        public static string GetWindCode(SecurityItem secuItem)
-        {
-            string windCode = secuItem.SecuCode;
-            if (!string.IsNullOrEmpty(secuItem.ExchangeCode))
-            {
-                if (secuItem.ExchangeCode.Equals(Exchange.SHSE, StringComparison.OrdinalIgnoreCase))
-                {
-                    windCode += ".SH";
-                }
-                else if (secuItem.ExchangeCode.Equals(Exchange.SZSE, StringComparison.OrdinalIgnoreCase))
-                {
-                    windCode += ".SZ";
-                }
-                else if (secuItem.ExchangeCode.Equals(Exchange.CFFEX, StringComparison.OrdinalIgnoreCase))
-                {
-                    windCode += ".CF";
-                }
-            }
-            else
-            { 
-                
-            }
-
-            return windCode;
-        }
+        
 
         public static Dictionary<string, int> GetFieldIndex(List<string> fieldList)
         {

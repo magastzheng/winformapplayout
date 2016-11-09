@@ -684,10 +684,10 @@ namespace Quote.TDF
                     securityItem.SecuName = codeArr[i].CNName;
                     securityItem.SecuType = SecurityType.Stock;
 
-                    if (codeArr[i].WindCode.Equals("002109.SZ", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        Console.WriteLine(codeArr[i].WindCode);
-                    }
+                    //if (codeArr[i].WindCode.Equals("002109.SZ", StringComparison.InvariantCultureIgnoreCase))
+                    //{
+                    //    Console.WriteLine(codeArr[i].WindCode);
+                    //}
 
                     if (codeArr[i].Market.Equals("SZ", System.StringComparison.InvariantCultureIgnoreCase))
                     {

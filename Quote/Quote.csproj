@@ -47,6 +47,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeHelper.cs" />
     <Compile Include="IPublisher.cs" />
     <Compile Include="IQuote.cs" />
     <Compile Include="ISubscriber.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="Quote.cs" />
     <Compile Include="QuoteCenter.cs" />
     <Compile Include="QuoteCenter2.cs" />
+    <Compile Include="SecurityInfoHelper.cs" />
     <Compile Include="TDF\TDFImp.cs" />
     <Compile Include="TDF\TDFQuote.cs" />
     <Compile Include="TDF\TDFService.cs" />

@@ -8,6 +8,9 @@ namespace Model.UI
 {
     public class CommandManagementItem
     {
+        [BindingAttribute("selection")]
+        public bool Selection { get; set; }
+
         [BindingAttribute("date")]
         public string Date 
         {

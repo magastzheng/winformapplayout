@@ -4,7 +4,9 @@ using Controls.Entity;
 using Controls.GridView;
 using Model.Binding.BindingUtil;
 using Model.UI;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TradingSystem.View
 {
@@ -31,7 +33,62 @@ namespace TradingSystem.View
 
             this.LoadControl += new FormLoadHandler(Form_LoadControl);
             this.LoadData += new FormLoadHandler(Form_LoadData);
+
+            this.tsbRefresh.Click += new System.EventHandler(ToolStripButton_Click_Refresh);
+            this.tsbModify.Click += new System.EventHandler(ToolStripButton_Click_Modify);
+            this.tsbCancel.Click += new System.EventHandler(ToolStripButton_Click_Cancel);
         }
+
+        #region ToolStripButton click event handler
+
+        private void ToolStripButton_Click_Refresh(object sender, System.EventArgs e)
+        {
+            LoadTradeCommand();
+        }
+
+        private void ToolStripButton_Click_Modify(object sender, System.EventArgs e)
+        {
+            var selectedItems = _dataSource.Where(p => p.Selection).ToList();
+            if (selectedItems.Count == 0)
+            {
+                //TODO: there is no item selected
+                return;
+            }
+
+            if (selectedItems.Count > 1)
+            {
+                //TODO: only can select one item
+                return;
+            }
+
+
+        }
+
+        private void ToolStripButton_Click_Cancel(object sender, System.EventArgs e)
+        {
+            var selectedItems = _dataSource.Where(p => p.Selection).ToList();
+            if (selectedItems.Count == 0)
+            {
+                //TODO: there is no item selected
+                return;
+            }
+
+            foreach (var selectedItem in selectedItems)
+            {
+                Model.Database.TradeCommand cmdItem = new Model.Database.TradeCommand 
+                {
+                    CommandId = selectedItem.CommandId,
+                    ECommandStatus = Model.EnumType.CommandStatus.Canceled,
+                    ModifiedDate = DateTime.Now,
+                    DStartDate = selectedItem.DStartDate,
+                    DEndDate = selectedItem.DEndDate,
+                };
+
+                _tradeCommandBLL.Update(cmdItem);
+            }
+        }
+
+        #endregion
 
         #region LoadControl
 
@@ -52,8 +109,6 @@ namespace TradingSystem.View
 
         private bool Form_LoadData(object sender, object data)
         {
-            _dataSource.Clear();
-
             LoadTradeCommand();
 
             return true;
@@ -61,6 +116,8 @@ namespace TradingSystem.View
 
         private void LoadTradeCommand()
         {
+            _dataSource.Clear();
+
             var tradeCommandItems = _tradeCommandBLL.GetAll();
             foreach(var item in tradeCommandItems)
             {

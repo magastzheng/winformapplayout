@@ -1,0 +1,55 @@
+﻿/*
+*仅需要对指数代码做转换
+*宏汇文档中提供了以下指数原始代码（交易所）和wind代码的映射关系
+*不包含在以下代码表中的部分，转换规则是：指数代码前两位改为99.例如：000999对应的wind代码是990999
+*/
+{	"name": "windcode",
+	"mapping": [
+		{
+			"secucode": "000001",
+			"windcode": "999999"
+		},{
+			"secucode": "000002",
+			"windcode": "999998"
+		},{
+			"secucode": "000003",
+			"windcode": "999997"
+		},{
+			"secucode": "000004",
+			"windcode": "999996"
+		},{
+			"secucode": "000005",
+			"windcode": "999995"
+		},{
+			"secucode": "000006",
+			"windcode": "999994"
+		},{
+			"secucode": "000007",
+			"windcode": "999993"
+		},{
+			"secucode": "000008",
+			"windcode": "999992"
+		},{
+			"secucode": "000010",
+			"windcode": "999991"
+		},{
+			"secucode": "000011",
+			"windcode": "999990"
+		},{
+			"secucode": "000012",
+			"windcode": "999989"
+		},{
+			"secucode": "000013",
+			"windcode": "999988"
+		},{
+			"secucode": "000016",
+			"windcode": "999987"
+		},{
+			"secucode": "000015",
+			"windcode": "999986"
+		},{
+			"secucode": "000300",
+			"windcode": "000300"
+		}
+	]
+}

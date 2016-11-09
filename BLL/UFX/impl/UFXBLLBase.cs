@@ -211,6 +211,7 @@ namespace BLL.UFX.impl
             object obj = type.GetProperty(dataField.Name).GetValue(request);
             if (fieldItem.Name.Equals("entrust_amount"))
             {
+                //TODO: 委托数量字段跟文档定义不一样，文档定义是N12(整型)，但测试时传入整型出错。
                 if (obj != null)
                 {
                     packer.AddDouble((double)(int)obj);

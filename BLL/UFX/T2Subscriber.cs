@@ -117,7 +117,7 @@ namespace BLL.UFX
 
             if (ret > 0)
             {
-                string msg = string.Format("主推业务订阅创建成功: {0}", _conn.GetMCLastError());
+                string msg = string.Format("主推业务订阅创建成功, 返回码: {0}, 消息: {1}", ret, _conn.GetMCLastError());
                 logger.Info(msg);
                 return ConnectionCode.SuccessSubscribe;
             }
@@ -129,7 +129,7 @@ namespace BLL.UFX
                     unpacker.Dispose();
                 }
 
-                string msg = string.Format("主推业务订阅创建失败: {0}", _conn.GetMCLastError());
+                string msg = string.Format("主推业务订阅创建失败,返回码: {0}, 消息: {1}", ret, _conn.GetMCLastError());
                 logger.Error(msg);
                 return ConnectionCode.ErrorFailSubscribe;
             }
