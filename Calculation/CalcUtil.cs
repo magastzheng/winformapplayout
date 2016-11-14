@@ -38,7 +38,7 @@ namespace Calculation
         //计算每份个股数量
         //每份个股数量=每份总金额*个股权重/个股最价格
         //直接向上取整，获取100股整数倍
-        public static int[] CalcStockAmountPerCopy(double totalMoney, double[] weights, double[] prices)
+        public static int[] CalcStockAmountPerCopyCeiling(double totalMoney, double[] weights, double[] prices)
         {
             if (double.IsNaN(totalMoney))
             {
@@ -58,6 +58,35 @@ namespace Calculation
             {
                 double dValue = totalMoney * weights[i] / prices[i];
                 int iValue = (int)Math.Ceiling(dValue / 100) * 100;
+                amounts[i] = iValue;
+            }
+
+            return amounts;
+        }
+
+        //计算每份个股数量
+        //每份个股数量=每份总金额*个股权重/个股最价格
+        //直接向下取整，获取100股整数倍
+        public static int[] CalcStockAmountPerCopyFloor(double totalMoney, double[] weights, double[] prices)
+        {
+            if (double.IsNaN(totalMoney))
+            {
+                throw new ArgumentException("The totalMoney is invalid!");
+            }
+            if (weights == null || prices == null)
+            {
+                throw new ArgumentException("Invalid input stock weights or stock prices.");
+            }
+            if (weights.Length != prices.Length)
+            {
+                throw new ArgumentException("Invalid input stock weights or stock prices length.");
+            }
+
+            int[] amounts = new int[weights.Length];
+            for (int i = 0, count = weights.Length; i < count; i++)
+            {
+                double dValue = totalMoney * weights[i] / prices[i];
+                int iValue = (int)Math.Floor(dValue / 100) * 100;
                 amounts[i] = iValue;
             }
 
