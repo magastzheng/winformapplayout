@@ -52,10 +52,11 @@ namespace Quote
 
         public static string GetWindCode(SecurityItem secuItem)
         {
-            string windCode = secuItem.SecuCode.Trim();
+            string secuCode = secuItem.SecuCode.Trim();
+            string windCode = secuCode;
             if (secuItem.SecuType == SecurityType.Index)
             {
-                windCode = CodeHelper.GetIndexWindCode(windCode);
+                windCode = CodeHelper.GetIndexWindCode(secuCode);
             }
 
             string exchangeCode = secuItem.ExchangeCode;

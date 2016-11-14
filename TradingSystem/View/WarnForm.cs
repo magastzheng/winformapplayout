@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 
 namespace TradingSystem.View
 {
@@ -19,17 +20,22 @@ namespace TradingSystem.View
             //this.BeginInvoke(new OnUpdateText(UpdateRichTextBox), text);
             //UpdateRichTextBox(text);
             this.rtBoxMessage.Text = text;
-            //this.Invoke(new Action<string>(
-            //        delegate(string message) {
-            //            try
+            //if (IsHandleCreated)
+            //{
+            //    this.Invoke(new Action<string>(
+            //            delegate(string message)
             //            {
-            //                UpdateRichTextBox(message);
-            //            }
-            //            catch (Exception e)
-            //            { 
-                            
-            //            }
-            //        }), text);
+            //                try
+            //                {
+            //                    UpdateRichTextBox(message);
+            //                }
+            //                catch (Exception e)
+            //                {
+
+            //                }
+            //            }), text);
+            //}
+            //this.Invoke(new Action<string>());
         }
 
         private void UpdateRichTextBox(string message)

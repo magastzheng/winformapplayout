@@ -62,7 +62,7 @@ namespace BLL.SecurityInfo
         {
             //return _secuInfoBLL.Get(secuCode, secuType);
             var allSecuItems = Get();
-            var secuItem = allSecuItems.Find(p => p.SecuCode.Equals(secuCode));
+            var secuItem = allSecuItems.Find(p => p.SecuCode.Equals(secuCode) && p.SecuType == secuType);
             if (secuItem == null)
             {
                 secuItem = new SecurityItem
@@ -83,7 +83,7 @@ namespace BLL.SecurityInfo
         {
             //return _secuInfoBLL.Get(secuCode);
             var allSecuItems = Get();
-            var secuItem = allSecuItems.Find(p => p.SecuCode.Equals(secuCode));
+            var secuItem = allSecuItems.Find(p => p.SecuCode.Equals(secuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
             if (secuItem == null)
             {
                 secuItem = new SecurityItem 

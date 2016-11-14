@@ -25,6 +25,7 @@ namespace Model
         ErrorSendMsg = -4,
         ErrorFailContent = -5,
         ErrorRecvMsg = -6,
+        ErrorFailStartService = -7,
         ErrorLogin = -10001,
         ErrorNoLogin = -10002,
         ErrorNoCallback = -30001,
@@ -50,5 +51,6 @@ namespace Model
         FailTimeoutQueryEntrust = -310,
         FailTimeoutQueryDeal = -311,
         FailTimeoutQueryHolding = -312,
+
     }
 }

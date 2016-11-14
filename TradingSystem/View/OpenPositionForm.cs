@@ -322,6 +322,7 @@ namespace TradingSystem.View
                 if (stockItems.Count > 0)
                 {
                     openItem.StockMktCap = stockItems.Sum(p => p.CommandMoney);
+                    openItem.StockNumbers = stockItems.Count;
                 }
             }
         }

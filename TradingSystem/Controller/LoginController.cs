@@ -6,7 +6,7 @@ using BLL.UFX.impl;
 using Config;
 using Model;
 using Model.strategy;
-using Service;
+using ServiceInterface;
 using System.Threading;
 using TradingSystem.View;
 
@@ -55,13 +55,13 @@ namespace TradingSystem.Controller
             int retCode = (int)BLLManager.Instance.LoginBLL.Login(user);
             if (retCode == (int)ConnectionCode.Success)
             {
-                LoginSuccess();
+                retCode = (int)LoginSuccess();
             }
 
             return retCode;
         }
 
-        private void LoginSuccess()
+        private ConnectionCode LoginSuccess()
         {
             //get or create the user into the database.
             var user = _userBLL.GetUser(LoginManager.Instance.LoginUser.Operator);
@@ -81,11 +81,27 @@ namespace TradingSystem.Controller
 
             //Subscribe the message from UFX.
             BLLManager.Instance.Subscriber.Subscribe(LoginManager.Instance.LoginUser);
+            ServiceManager.Instance.Init();
+
+            //TODO: register the notify/callback method
+            //Add another form the show the message???
+
+            //ServiceManager.Instance.
             ServiceManager.Instance.Start();
-            var gridConfig = ConfigManager.Instance.GetGridConfig();
-            MainForm mainForm = new MainForm(gridConfig, this._t2SDKWrap);
-            MainController mainController = new MainController(mainForm, this._t2SDKWrap);
-            Program._s_mainfrmController = mainController;
+            if (ServiceManager.Instance.Wait())
+            {
+                //TODO: waiting for the services. 
+                var gridConfig = ConfigManager.Instance.GetGridConfig();
+                MainForm mainForm = new MainForm(gridConfig, this._t2SDKWrap);
+                MainController mainController = new MainController(mainForm, this._t2SDKWrap);
+                Program._s_mainfrmController = mainController;
+
+                return ConnectionCode.Success;
+            }
+            else
+            {
+                return ConnectionCode.ErrorFailStartService;
+            }
         }
 
         public void Logout()

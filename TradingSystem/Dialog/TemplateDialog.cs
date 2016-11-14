@@ -66,6 +66,7 @@ namespace TradingSystem.Dialog
                 ComboOptionItem item = new ComboOptionItem
                 {
                     Id = benchmark.BenchmarkId,
+                    Code = benchmark.BenchmarkId,
                     Name = benchmark.BenchmarkName
                 };
 

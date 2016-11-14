@@ -135,22 +135,22 @@ namespace TradingSystem.View
 
         private void MenuItem_Click_System(object sender, System.EventArgs e)
         {
-            throw new System.NotImplementedException();
+            
         }
 
         private void MenuItem_Click_View(object sender, System.EventArgs e)
         {
-            throw new System.NotImplementedException();
+            
         }
 
         private void MenuItem_Click_Tool(object sender, System.EventArgs e)
         {
-            throw new System.NotImplementedException();
+            
         }
 
         private void MenuItem_Click_Help(object sender, System.EventArgs e)
         {
-            throw new System.NotImplementedException();
+            
         }
 
         #endregion
@@ -159,18 +159,24 @@ namespace TradingSystem.View
 
         private void ToolStripButton_Click_Open(object sender, System.EventArgs e)
         {
-            throw new System.NotImplementedException();
+            
         }
 
         private void ToolStripButton_Click_Save(object sender, System.EventArgs e)
         {
-            throw new System.NotImplementedException();
+            
         }
 
         private void ToolStripButton_Click_Refresh(object sender, System.EventArgs e)
         {
-            throw new System.NotImplementedException();
+            
         }
+
+        #endregion
+
+        #region message notify
+
+        //TODO
 
         #endregion
     }

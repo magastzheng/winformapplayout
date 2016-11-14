@@ -1,4 +1,5 @@
 ﻿using Config;
+using ServiceInterface;
 using log4net;
 using Model.Constant;
 using Model.Quote;
@@ -24,6 +25,9 @@ namespace Quote.TDF
         //private Thread _startThread = null;
         //private Thread _stopThread = null;
         //private Thread _subscriptionThread = null;
+
+        private Connected _connectCallback;
+        private Notify _notify = null;
 
         public IQuote Quote
         {
@@ -59,6 +63,15 @@ namespace Quote.TDF
             SetSubscription(type, windCodes);
         }
 
+        public void Connected(Connected cb)
+        {
+            _connectCallback = cb;
+        }
+
+        public void Notify(Notify notify)
+        {
+            _notify = notify;
+        }
         #endregion
         
         private void Close()
@@ -90,8 +103,25 @@ namespace Quote.TDF
             TDFERRNO openRet = _dataSource.Open();
             if (openRet != TDFERRNO.TDF_ERR_SUCCESS)
             {
-                var errorMessage = openRet.ToString();
-                logger.Error("宏汇行情初始化失败: " + errorMessage);
+                var msg = string.Format("宏汇行情初始化失败:{0}", openRet.ToString());
+                logger.Error(msg);
+
+                if (_connectCallback != null)
+                {
+                    _connectCallback(ServiceType.TDFQuote, (int)openRet, msg);
+                }
+
+                if (_notify != null)
+                {
+                    NotifyArgs args = new NotifyArgs 
+                    {
+                        ServiceType = ServiceInterface.ServiceType.TDFQuote,
+                        Code = (int)openRet,
+                        Message = msg,
+                    };
+
+                    _notify(args);
+                }
 
                 Close();
 
@@ -99,8 +129,13 @@ namespace Quote.TDF
             }
             else
             {
-                logger.Info("宏汇行情初始化成功!");
+                var msg = "宏汇行情初始化成功!";
+                logger.Info(msg);
 
+                if (_connectCallback != null)
+                {
+                    _connectCallback(ServiceType.TDFQuote, (int)openRet, msg);
+                }
                 //_waitHandle.WaitOne();
 
                 //Close();
@@ -504,6 +539,8 @@ namespace Quote.TDF
 
                             marketData.CurrentPrice = (double)data.LastIndex / 10000;
                             marketData.PreClose = (double)data.PreCloseIndex / 10000;
+
+                            _quote.Add(windCode, marketData);
                         }
                     }
                     break;
@@ -706,6 +743,7 @@ namespace Quote.TDF
                 }
                 else if (codeArr[i].Type == 0x70)
                 {
+                    //股指期货
                     SecurityItem securityItem = new SecurityItem();
                     securityItem.SecuCode = codeArr[i].Code;
                     securityItem.SecuName = codeArr[i].CNName;
@@ -715,8 +753,9 @@ namespace Quote.TDF
                 }
                 else if (codeArr[i].Type == 0x01)
                 {
+                    //指数
                     SecurityItem securityItem = new SecurityItem();
-                    securityItem.SecuCode = codeArr[i].Code;
+                    securityItem.SecuCode = CodeHelper.GetIndexSecuCode(codeArr[i].Code);
                     securityItem.SecuName = codeArr[i].CNName;
                     securityItem.SecuType = SecurityType.Index;
 

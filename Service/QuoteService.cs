@@ -1,6 +1,8 @@
-﻿using log4net;
+﻿using ServiceInterface;
+using log4net;
 using Quote;
 using Quote.TDF;
+using System;
 using System.Threading;
 
 namespace Service
@@ -16,10 +18,13 @@ namespace Service
         private Thread _stopThread = null;
 
         private TDFQuote _tdfQuote = null;
-
-        public QuoteService(IQuote quote)
+        //private Connected _connectCallback;
+        //private Notify _notify = null;
+        public QuoteService(IQuote quote, Connected cb, Notify notify)
         {
             _tdfQuote = new TDFQuote(quote);
+            _tdfQuote.Connected(cb);
+            _tdfQuote.Notify(notify);
         }
 
         #region IService Interface
@@ -36,6 +41,15 @@ namespace Service
             _stopThread.Start();
         }
 
+        //public void Connected(Connected cb)
+        //{
+        //    _connectCallback = cb;
+        //}
+
+        //public void Notify(Notify notify)
+        //{
+        //    _notify = notify;
+        //}
         #endregion
 
         private void InitServiceThread(object obj)

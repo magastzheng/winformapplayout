@@ -1,5 +1,7 @@
 ﻿using BLL;
+using ServiceInterface;
 using log4net;
+using System;
 using System.Timers;
 
 namespace Service
@@ -10,14 +12,19 @@ namespace Service
 
         private int _interval = 60 * 1000; //1m
         private Timer _timer;
+        private Connected _connectCallback;
+        private Notify _notify;
 
-        public UFXHeartBeatService()
+        public UFXHeartBeatService(Connected cb, Notify notify)
         {
+            _connectCallback = cb;
+            _notify = notify;
             _timer = new Timer(_interval);
             _timer.Elapsed += new ElapsedEventHandler(TimerHandler);
             _timer.AutoReset = true;
         }
 
+        #region IService interface
         public void Start()
         {
             _timer.Enabled = true;
@@ -29,6 +36,18 @@ namespace Service
             _timer.Stop();
         }
 
+        //public void Connected(Connected cb)
+        //{
+        //    _connectCallback = cb;
+        //}
+
+        //public void Notify(Notify notify)
+        //{
+        //    _notify = notify;
+        //}
+
+        #endregion
+
         private void TimerHandler(object sender, ElapsedEventArgs e)
         {
             //Send the heartbeat message
@@ -37,6 +56,17 @@ namespace Service
             { 
                 //TODO: to reconnnect
                 logger.Error("Fail to check heartbeat");
+
+                if (_notify != null)
+                {
+                    NotifyArgs arg = new NotifyArgs 
+                    {
+                        Code = (int)result,
+                        Message = "UFX心跳检测失败！",
+                    };
+
+                    _notify(arg);
+                }
             }
         }
     }
