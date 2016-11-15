@@ -19,9 +19,10 @@ namespace ServiceInterface
         private event Action<NotifyArgs> NotifyHandler;
 
         private CountdownEvent _cdEvent = null;
+        //private Dictionary<ServiceType, AutoResetEvent> _eventMap;
 
-        private List<IService> _services;
-        private Dictionary<ServiceType, int> _serviceConnectedMap;
+        private List<IService> _services = new List<IService>();
+        private Dictionary<ServiceType, int> _serviceConnectedMap = new Dictionary<ServiceType, int>();
 
         private ServiceManager()
         {
@@ -30,8 +31,10 @@ namespace ServiceInterface
 
         public void Init()
         {
-            _services = new List<IService>();
-            _serviceConnectedMap = new Dictionary<ServiceType, int>();
+            Stop();
+            //_eventMap = new Dictionary<ServiceType, AutoResetEvent>();
+            //_services = new List<IService>();
+            //_serviceConnectedMap = new Dictionary<ServiceType, int>();
 
             var ufxService = new UFXHeartBeatService(Connected, Notify);
             //ufxService.Connected(Connected);
@@ -50,7 +53,7 @@ namespace ServiceInterface
 
         public void Start()
         {
-            _cdEvent = new CountdownEvent(1);
+            _cdEvent = new CountdownEvent(2);
             foreach (var service in _services)
             {
                 service.Start();

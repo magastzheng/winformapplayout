@@ -45,7 +45,6 @@ namespace TradingSystem.Controller
 
         public int Login(string userName, string password)
         {
-
             LoginUser user = new LoginUser
             {
                 Operator = userName,
@@ -80,7 +79,12 @@ namespace TradingSystem.Controller
             _productBLL.Create(LoginManager.Instance.Accounts, LoginManager.Instance.Assets, LoginManager.Instance.Portfolios);
 
             //Subscribe the message from UFX.
-            BLLManager.Instance.Subscriber.Subscribe(LoginManager.Instance.LoginUser);
+            var subRet = BLLManager.Instance.Subscriber.Subscribe(LoginManager.Instance.LoginUser);
+            if (subRet != ConnectionCode.SuccessSubscribe)
+            {
+                return subRet;
+            }
+
             ServiceManager.Instance.Init();
 
             //TODO: register the notify/callback method

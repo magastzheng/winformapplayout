@@ -29,6 +29,10 @@ namespace Service
         {
             _timer.Enabled = true;
             _timer.Start();
+            if (_connectCallback != null)
+            {
+                _connectCallback(ServiceType.UFXHeart, 0, "Start timer");
+            }
         }
 
         public void Stop()
