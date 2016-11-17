@@ -36,11 +36,20 @@ namespace BLL.Product
                     portfolio.FundName = fund.AccountName;
                     portfolio.EAccountType = fund.AccountType;
                 }
+                else
+                {
+                    portfolio.FundName = string.Empty;
+                    portfolio.EAccountType = Model.EnumType.FundAccountType.OpenEndFund;
+                }
 
                 var asset = assets.Find(o => o.AssetNo.Equals(portfolio.AssetNo));
                 if (asset != null)
                 {
                     portfolio.AssetName = asset.AssetName;
+                }
+                else
+                {
+                    portfolio.AssetName = string.Empty;
                 }
 
                 portfolios.Add(portfolio);

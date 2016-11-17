@@ -19,6 +19,9 @@ namespace DBAccessTest
             DbHelper dbHelper = new DbHelper();
             string sqlInsert = @"insert into account values(1, 'Magast Zheng', 'magastzheng@163.com', 1, 'Test123')";
             var cmd = dbHelper.GetSqlStringCommand(sqlInsert);
+
+            //var sqlText = DbHelper.GetCommandSql(cmd);
+
             int ret = dbHelper.ExecuteNonQuery(cmd);
 
             sqlInsert = @"select * from account";

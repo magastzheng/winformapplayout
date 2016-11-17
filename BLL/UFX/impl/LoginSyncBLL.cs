@@ -106,6 +106,7 @@ namespace BLL.UFX.impl
             if (ret == ConnectionCode.Success)
             {
                 string token = string.Empty;
+                string version = string.Empty;
                 var response = T2ErrorHandler.Handle(parser);
                 if (T2ErrorHandler.Success(response.ErrorCode))
                 {
@@ -113,6 +114,14 @@ namespace BLL.UFX.impl
                     {
                         token = parser.DataSets[1].Rows[0].Columns["user_token"].GetStr();
                     }
+
+                    if (parser.DataSets[1].Rows[0].Columns.ContainsKey("version_no"))
+                    {
+                        version = parser.DataSets[1].Rows[0].Columns["version_no"].GetStr();
+                    }
+
+                    string msg = string.Format("Login success - token: [{0}], version: [{1}]", token, version);
+                    logger.Error(msg);
                 }
                 else
                 {

@@ -290,10 +290,14 @@ namespace TradingSystem.View
 
             var accoutOption = new ComboOption
             {
-                Name = optionList[0].Name,
-                Selected = optionList[0].Id,
                 Items = optionList
             };
+
+            if (optionList.Count > 0)
+            {
+                accoutOption.Name = optionList[0].Name;
+                accoutOption.Selected = optionList[0].Id;
+            }
 
             return accoutOption;
         }
@@ -320,9 +324,13 @@ namespace TradingSystem.View
 
             var portfolioOption = new ComboOption
             {
-                Name = optionList[0].Name,
-                Selected = optionList[0].Id,
                 Items = optionList
+            };
+
+            if(optionList.Count > 0)
+            {
+                portfolioOption.Name = optionList[0].Name;
+                portfolioOption.Selected = optionList[0].Id;
             };
 
             var portfolios = LoginManager.Instance.Portfolios;
@@ -393,9 +401,13 @@ namespace TradingSystem.View
 
             var tradeInstOption = new ComboOption
             {
-                Name = optionList[0].Name,
-                Selected = optionList[0].Id,
                 Items = optionList
+            };
+
+            if(optionList.Count > 0)
+            {
+                tradeInstOption.Name = optionList[0].Name;
+                tradeInstOption.Selected = optionList[0].Id;
             };
 
             return tradeInstOption;
@@ -422,9 +434,13 @@ namespace TradingSystem.View
 
             var templateOption = new ComboOption
             {
-                Name = optionList[0].Name,
-                Selected = optionList[0].Id,
                 Items = optionList
+            };
+
+            if(optionList.Count > 0)
+            {
+                templateOption.Name = optionList[0].Name;
+                templateOption.Selected = optionList[0].Id;
             };
 
             ComboBoxUtil.SetComboBox(this.cbTemplate, templateOption);

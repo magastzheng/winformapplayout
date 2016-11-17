@@ -188,8 +188,7 @@ namespace Model.UI
         [BindingAttribute("commandstatus")]
         public string CommandStatus 
         {
-            //TODO
-            get { return ECommandStatus.ToString(); }
+            get { return CommandStatusHelper.GetCommandStatusName(ECommandStatus); }
         }
 
         [BindingAttribute("commandtype")]

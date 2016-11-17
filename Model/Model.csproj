@@ -59,7 +59,6 @@
     <Compile Include="Constant\DateFormat.cs" />
     <Compile Include="Converter\EnumAttributeHelper.cs" />
     <Compile Include="Converter\StringEnumConverter.cs" />
-    <Compile Include="Converter\UFXMarketConverter.cs" />
     <Compile Include="Converter\UFXTypeConverter.cs" />
     <Compile Include="Database\TemplateItem.cs" />
     <Compile Include="Database\TradeCommand.cs" />
@@ -68,6 +67,7 @@
     <Compile Include="EnumType\AdjustmentType.cs" />
     <Compile Include="EnumType\CommandStatus.cs" />
     <Compile Include="EnumType\DispatchStatus.cs" />
+    <Compile Include="EnumType\EnumTypeConverter\CommandStatusHelper.cs" />
     <Compile Include="EnumType\EnumTypeConverter\EntrustPriceTypeConverter.cs" />
     <Compile Include="EnumType\EnumTypeConverter\PositionTypeHelper.cs" />
     <Compile Include="EnumType\FundAccountType.cs" />

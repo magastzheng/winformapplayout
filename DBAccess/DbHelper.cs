@@ -2,6 +2,8 @@
 using System.Configuration;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
+using System.Text;
 
 namespace DBAccess
 {
@@ -134,6 +136,9 @@ namespace DBAccess
         public int ExecuteNonQuery(DbCommand cmd)
         {
             Open(cmd);
+
+            //logger.Info(DbHelper.GetCommandSql(cmd));
+
             int ret = cmd.ExecuteNonQuery();
             Close(cmd.Connection);
 
@@ -181,6 +186,10 @@ namespace DBAccess
                     logger.Error("Cannot open database connection " + conn.ConnectionString);
                     throw;
                 }
+                finally
+                {
+                    //logger.Info(DbHelper.GetCommandSql(conn.));
+                }
             }
         }
 
@@ -196,6 +205,10 @@ namespace DBAccess
                 {
                     logger.Error("Cannot open database connection " + cmd.Connection.ConnectionString);
                     throw;
+                }
+                finally
+                {
+                    logger.Info(DbHelper.GetCommandSql(cmd));
                 }
             }
         }
@@ -215,6 +228,81 @@ namespace DBAccess
                 }
             }
         }   
+        #endregion
+
+        #region 输出sql语句
+
+        public static string GetCommandSql(DbCommand cmd)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("use " + cmd.Connection.Database + ";");
+            //sb.Append(cmd.CommandText);
+            switch (cmd.CommandType)
+            {
+                case CommandType.StoredProcedure:
+                    {
+                        sb.AppendLine("declare @return_value int;");
+                        foreach (SqlParameter sp in cmd.Parameters)
+                        {
+                            if ((sp.Direction == ParameterDirection.InputOutput) || (sp.Direction == ParameterDirection.Output))
+                            {
+                                sb.AppendLine("declare " + sp.ParameterName + "\t" + sp.SqlDbType.ToString() + "\t= ");
+                                //TODO: generate different value type of parameter
+                                sb.AppendLine(((sp.Direction == ParameterDirection.Output) ? "null" : sp.Value.ToString()) + ";");
+                            }
+                        }
+
+                        sb.AppendLine("exec [" + cmd.CommandText + "]");
+
+                        bool haveSp = false;
+                        foreach (SqlParameter sp in cmd.Parameters)
+                        {
+                            if (sp.Direction != ParameterDirection.ReturnValue)
+                            {
+                                if (!haveSp)
+                                {
+                                    haveSp = true;
+                                }
+
+                                if (sp.Direction == ParameterDirection.Input)
+                                {
+                                    sb.AppendLine(sp.ParameterName + " = " + sp.Value.ToString());
+                                }
+                                else
+                                {
+                                    sb.AppendLine(sp.ParameterName + " = " + sp.ParameterName + " output");
+                                }
+
+                                sb.Append(",");
+                            }
+                        }
+
+                        if (haveSp)
+                        {
+                            sb.Remove(sb.Length - 1, 1);
+                        }
+
+                        sb.AppendLine(";");
+                        sb.AppendLine("select 'Return Value' = convert(varchar, @return_value);");
+
+                        foreach (SqlParameter sp in cmd.Parameters)
+                        {
+                            if ((sp.Direction == ParameterDirection.InputOutput) || (sp.Direction == ParameterDirection.Output))
+                            {
+                                sb.AppendLine("select '" + sp.ParameterName + "' = convert(varchar, " + sp.ParameterName + ");");
+                            }
+                        }
+                    }
+                    break;
+                case CommandType.Text:
+                    sb.AppendLine(cmd.CommandText);
+                    break;
+            }
+
+            return sb.ToString();
+        }
+
         #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using hundsun.mcapi;
+﻿using BLL.UFX.impl;
+using hundsun.mcapi;
 using hundsun.t2sdk;
 using log4net;
 using Model;
@@ -114,22 +115,28 @@ namespace BLL.UFX
             CT2UnPacker unpacker = null;
             int ret = subcribe.SubscribeTopicEx(args, 50000, out unpacker, req);
             req.Dispose();
-
+            //根据文档说明，返回值大于0表示有效的订阅标识，否则其他表示错误。
             if (ret > 0)
             {
-                string msg = string.Format("主推业务订阅创建成功, 返回码: {0}, 消息: {1}", ret, _conn.GetMCLastError());
+                string msg = string.Format("主推业务订阅创建成功, 返回码: {0}, 消息: {1}", ret, _conn.GetErrorMsg(ret));
                 logger.Info(msg);
                 return ConnectionCode.SuccessSubscribe;
             }
             else
             {
+                string outMsg = string.Empty;
                 if (unpacker != null)
                 {
                     //Show(back);
+                    DataParser parser = new DataParser();
+                    parser.Parse(unpacker);
                     unpacker.Dispose();
+
+                    var errResponse = T2ErrorHandler.Handle(parser);
+                    outMsg = errResponse.MessageDetail;
                 }
 
-                string msg = string.Format("主推业务订阅创建失败,返回码: {0}, 消息: {1}", ret, _conn.GetMCLastError());
+                string msg = string.Format("主推业务订阅创建失败,返回码: {0}, 消息: {1}, 返回数据包消息: {2}", ret, _conn.GetErrorMsg(ret), outMsg);
                 logger.Error(msg);
                 return ConnectionCode.ErrorFailSubscribe;
             }
