@@ -7,6 +7,7 @@ using Model.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using TradingSystem.Dialog;
 
@@ -117,7 +118,13 @@ namespace TradingSystem.View
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 string notes = (string)dialog.GetData();
+                StringBuilder sbSuccess = new StringBuilder();
+                StringBuilder sbFailure = new StringBuilder();
 
+                sbSuccess.Append("撤销成功指令：");
+                sbFailure.Append("撤销失败指令：");
+                List<int> lsSuccess = new List<int>();
+                List<int> lsFailure = new List<int>();
                 foreach (var selectedItem in selectedItems)
                 {
                     Model.Database.TradeCommand cmdItem = new Model.Database.TradeCommand
@@ -130,8 +137,31 @@ namespace TradingSystem.View
                         Notes = notes,
                     };
 
-                    _tradeCommandBLL.Update(cmdItem);
+                    if (_tradeCommandBLL.Update(cmdItem) > 0)
+                    {
+                        lsSuccess.Add(cmdItem.CommandId);
+                    }
+                    else
+                    {
+                        lsFailure.Add(cmdItem.CommandId);
+                    }
                 }
+
+                string msg = string.Empty;
+                if (lsSuccess.Count > 0)
+                { 
+                    sbSuccess.Append(string.Join(",", lsSuccess));
+                    msg = sbSuccess.ToString();
+                }
+
+                if (lsFailure.Count > 0)
+                {
+                    sbFailure.Append(string.Join(",", lsFailure));
+
+                    msg += sbFailure.ToString();
+                }
+
+                MessageDialog.Info(this, msg);
             }
             else
             { 

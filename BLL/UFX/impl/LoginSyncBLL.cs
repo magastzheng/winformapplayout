@@ -19,7 +19,8 @@ namespace BLL.UFX.impl
 
         public ConnectionCode Login(LoginUser user)
         {
-            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.Login);
+            FunctionCode functionCode = FunctionCode.Login;
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
                 return ConnectionCode.ErrorLogin;
@@ -28,7 +29,7 @@ namespace BLL.UFX.impl
             LoginManager.Instance.LoginUser = user;
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化
-            bizMessage.SetFunction((int)FunctionCode.Login);
+            bizMessage.SetFunction((int)functionCode);
             bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
 
             //业务包
@@ -121,12 +122,11 @@ namespace BLL.UFX.impl
                     }
 
                     string msg = string.Format("Login success - token: [{0}], version: [{1}]", token, version);
-                    logger.Error(msg);
+                    UFXLogger.Info(logger, functionCode, msg);
                 }
                 else
                 {
-                    string msg = string.Format("Code: [{0}], Message: {1}", response.ErrorCode, response.ErrorMessage);
-                    logger.Error(msg);
+                    UFXLogger.Error(logger, functionCode, response);
                 }
 
                 if (!string.IsNullOrEmpty(token))
@@ -145,7 +145,8 @@ namespace BLL.UFX.impl
 
         public ConnectionCode Logout()
         {
-            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.Logout);
+            FunctionCode functionCode = FunctionCode.Logout;
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
                 return ConnectionCode.ErrorLogin;
@@ -153,7 +154,7 @@ namespace BLL.UFX.impl
 
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化
-            bizMessage.SetFunction((int)FunctionCode.Logout);
+            bizMessage.SetFunction((int)functionCode);
             bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
 
             //业务包
@@ -193,14 +194,13 @@ namespace BLL.UFX.impl
                 var response = T2ErrorHandler.Handle(parser);
                 if (!T2ErrorHandler.Success(response.ErrorCode))
                 {
-                    string msg = string.Format("Code: [{0}], Message: {1}", response.ErrorCode, response.ErrorMessage);
-                    logger.Error(msg);
+                    UFXLogger.Error(logger, functionCode, response);
                     return ConnectionCode.ErrorFailContent;
                 }
             }
             else
             {
-                logger.Error("退出登录失败!");
+                UFXLogger.Error(logger, functionCode, "退出登录失败!");
             }
 
             return ret;
@@ -208,7 +208,8 @@ namespace BLL.UFX.impl
 
         public ConnectionCode HeartBeat()
         {
-            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.HeartBeat);
+            FunctionCode functionCode = FunctionCode.HeartBeat;
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
                 return ConnectionCode.ErrorLogin;
@@ -216,7 +217,7 @@ namespace BLL.UFX.impl
 
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化
-            bizMessage.SetFunction((int)FunctionCode.HeartBeat);
+            bizMessage.SetFunction((int)functionCode);
             bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
 
             //业务包
@@ -255,15 +256,13 @@ namespace BLL.UFX.impl
                 var response = T2ErrorHandler.Handle(parser);
                 if (!T2ErrorHandler.Success(response.ErrorCode))
                 {
-                    string msg = string.Format("Code: [{0}], Message: {1}", response.ErrorCode, response.ErrorMessage);
-                    logger.Error(msg);
+                    UFXLogger.Error(logger, functionCode, response);
                     return ConnectionCode.ErrorFailContent;
                 }
             }
             else
             {
-                logger.Error("心跳检测失败");
-
+                UFXLogger.Error(logger, functionCode, "心跳检测失败");
                 return ConnectionCode.ErrorConn;
             }
 

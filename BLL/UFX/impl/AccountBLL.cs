@@ -21,7 +21,8 @@ namespace BLL.UFX.impl
 
         public ConnectionCode QueryAccount()
         {
-            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.QueryAccount);
+            FunctionCode functionCode = FunctionCode.QueryAccount;
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
                 return ConnectionCode.ErrorLogin;
@@ -29,7 +30,7 @@ namespace BLL.UFX.impl
 
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化
-            bizMessage.SetFunction((int)FunctionCode.QueryAccount);
+            bizMessage.SetFunction((int)functionCode);
             bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
 
             //业务包
@@ -66,7 +67,14 @@ namespace BLL.UFX.impl
             packer.Dispose();
             bizMessage.Dispose();
 
-            if (parser.ErrorCode == ConnectionCode.Success)
+            if (parser.ErrorCode != ConnectionCode.Success)
+            {
+                UFXLogger.Error(logger, functionCode, "账户查询失败");
+                return ConnectionCode.ErrorConn;
+            }
+
+            var response = T2ErrorHandler.Handle(parser);
+            if (T2ErrorHandler.Success(response.ErrorCode))
             {
                 if(parser.DataSets.Count > 1)
                 {
@@ -92,14 +100,15 @@ namespace BLL.UFX.impl
             }
             else
             {
-                logger.Error("账户查询失败");
-                return ConnectionCode.ErrorConn;
+                UFXLogger.Error(logger, functionCode, response);
+                return ConnectionCode.ErrorFailContent;
             }
         }
 
         public ConnectionCode QueryAssetUnit()
         {
-            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.QueryAssetUnit);
+            FunctionCode functionCode = FunctionCode.QueryAssetUnit;
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
                 return ConnectionCode.ErrorLogin;
@@ -107,7 +116,7 @@ namespace BLL.UFX.impl
 
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化
-            bizMessage.SetFunction((int)FunctionCode.QueryAssetUnit);
+            bizMessage.SetFunction((int)functionCode);
             bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
 
             //业务包
@@ -150,7 +159,14 @@ namespace BLL.UFX.impl
             packer.Dispose();
             bizMessage.Dispose();
 
-            if (parser.ErrorCode == ConnectionCode.Success)
+            if (parser.ErrorCode != ConnectionCode.Success)
+            {
+                UFXLogger.Error(logger, functionCode, "资产单元查询失败");
+                return parser.ErrorCode;
+            }
+
+            var response = T2ErrorHandler.Handle(parser);
+            if (T2ErrorHandler.Success(response.ErrorCode))
             {
                 if(parser.DataSets.Count > 1)
                 {
@@ -171,15 +187,15 @@ namespace BLL.UFX.impl
             }
             else
             {
-                logger.Error("资产单元查询失败");
-
-                return parser.ErrorCode;
+                UFXLogger.Error(logger, functionCode, response);
+                return ConnectionCode.ErrorFailContent;
             }
         }
 
         public ConnectionCode QueryPortfolio()
         {
-            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.QueryPortfolio);
+            FunctionCode functionCode = FunctionCode.QueryPortfolio;
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
                 return ConnectionCode.ErrorLogin;
@@ -187,7 +203,7 @@ namespace BLL.UFX.impl
 
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化
-            bizMessage.SetFunction((int)FunctionCode.QueryPortfolio);
+            bizMessage.SetFunction((int)functionCode);
             bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
 
             //业务包
@@ -234,36 +250,45 @@ namespace BLL.UFX.impl
             bizMessage.Dispose();
             if (parser.ErrorCode != ConnectionCode.Success)
             {
-                logger.Error("组合查询失败失败");
-
+                UFXLogger.Error(logger, functionCode, "组合查询失败");
                 return parser.ErrorCode;
             }
 
-            if(parser.DataSets.Count > 1)
-            {
-                var dataSet = parser.DataSets[1];
-                foreach (var dataRow in dataSet.Rows)
-                {
-                    PortfolioItem p = new PortfolioItem();
-                    p.AccountCode = dataRow.Columns["account_code"].GetStr();
-                    p.AssetNo = dataRow.Columns["asset_no"].GetStr();
-                    p.CombiNo = dataRow.Columns["combi_no"].GetStr();
-                    p.CombiName = dataRow.Columns["combi_name"].GetStr();
-                    p.CapitalAccount = dataRow.Columns["capital_account"].GetStr();
-                    p.MarketNoList = dataRow.Columns["market_no_list"].GetStr();
-                    p.FutuInvestType = dataRow.Columns["futu_invest_type"].GetStr();
-                    p.EntrustDirectionList = dataRow.Columns["entrust_direction_list"].GetStr();
+             var response = T2ErrorHandler.Handle(parser);
+             if (T2ErrorHandler.Success(response.ErrorCode))
+             {
+                 if (parser.DataSets.Count > 1)
+                 {
+                     var dataSet = parser.DataSets[1];
+                     foreach (var dataRow in dataSet.Rows)
+                     {
+                         PortfolioItem p = new PortfolioItem();
+                         p.AccountCode = dataRow.Columns["account_code"].GetStr();
+                         p.AssetNo = dataRow.Columns["asset_no"].GetStr();
+                         p.CombiNo = dataRow.Columns["combi_no"].GetStr();
+                         p.CombiName = dataRow.Columns["combi_name"].GetStr();
+                         p.CapitalAccount = dataRow.Columns["capital_account"].GetStr();
+                         p.MarketNoList = dataRow.Columns["market_no_list"].GetStr();
+                         p.FutuInvestType = dataRow.Columns["futu_invest_type"].GetStr();
+                         p.EntrustDirectionList = dataRow.Columns["entrust_direction_list"].GetStr();
 
-                    LoginManager.Instance.AddPortfolio(p);
-                }
-            }
+                         LoginManager.Instance.AddPortfolio(p);
+                     }
+                 }
 
-            return ConnectionCode.Success;
+                 return ConnectionCode.Success;
+             }
+             else
+             {
+                 UFXLogger.Error(logger, functionCode, response);
+                 return ConnectionCode.ErrorFailContent;
+             }
         }
 
         public ConnectionCode QueryHolder()
         {
-            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.QueryHolder);
+            FunctionCode functionCode = FunctionCode.QueryHolder;
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
                 return ConnectionCode.ErrorLogin;
@@ -271,7 +296,7 @@ namespace BLL.UFX.impl
 
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化
-            bizMessage.SetFunction((int)FunctionCode.QueryHolder);
+            bizMessage.SetFunction((int)functionCode);
             bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
 
             //业务包
@@ -319,8 +344,7 @@ namespace BLL.UFX.impl
 
             if (parser.ErrorCode != ConnectionCode.Success)
             {
-                logger.Error("交易股东查询失败");
-
+                UFXLogger.Error(logger, functionCode, "交易股东查询失败");
                 return parser.ErrorCode;
             }
 
@@ -347,7 +371,7 @@ namespace BLL.UFX.impl
             }
             else
             {
-                logger.Error(response.ErrorMessage);
+                UFXLogger.Error(logger, functionCode, response);
                 return ConnectionCode.ErrorFailContent;
             }
         }

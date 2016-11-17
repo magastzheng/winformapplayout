@@ -213,6 +213,9 @@
 			"id": "transferholdingnosecurityselected",
 			"text": "请勾选要调整的证券！"
 		},{
+			"id": "transferholdingnotransferamount",
+			"text": "请设置要划转的证券数量！"
+		},{
 			"id": "transferholdingnoemptydest",
 			"text": "目标组合或实例不能为空！"
 		},{

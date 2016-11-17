@@ -27,6 +27,7 @@ namespace TradingSystem.View
     public partial class HoldingTransferedForm : Forms.BaseForm
     {
         private const string msgNoSecuritySelected = "transferholdingnosecurityselected";
+        private const string msgNoTransferAmount = "transferholdingnotransferamount";
         private const string msgNoEmptyDest = "transferholdingnoemptydest";
         private const string msgSuccess = "transferholdingsuccess";
         private const string msgInvalidAmount = "transferholdinginvalidamount";
@@ -131,10 +132,18 @@ namespace TradingSystem.View
 
             //TODO: update the price
             var targetItem = _secuList.Find(p => p.SecuCode.Equals(selectedItem.SecuCode));
-            var marketData = QuoteCenter2.Instance.GetMarketData(targetItem);
-            if (marketData != null)
+            if (targetItem == null)
             {
-                selectedItem.TransferedPrice = marketData.CurrentPrice;
+                targetItem = SecurityInfoManager.Instance.Get(selectedItem.SecuCode, selectedItem.SecuType);
+            }
+
+            if (targetItem != null)
+            {
+                var marketData = QuoteCenter2.Instance.GetMarketData(targetItem);
+                if (marketData != null)
+                {
+                    selectedItem.TransferedPrice = marketData.CurrentPrice;
+                }
             }
         }
 
@@ -569,7 +578,7 @@ namespace TradingSystem.View
                         FillSrcGridView(_srcDataSource, securities, instance);
 
                         //Quote the price
-                        //QueryQuote();
+                        QueryQuote();
                     }
                     break;
                 case "cbDestTradeInst":
@@ -778,10 +787,17 @@ namespace TradingSystem.View
                 return;
             }
 
-            var selectedItems = _srcDataSource.Where(p => p.Seletion && p.TransferedAmount > 0).ToList();
+            var selectedItems = _srcDataSource.Where(p => p.Seletion).ToList();
             if (selectedItems.Count == 0)
             {
                 MessageDialog.Warn(this, msgNoSecuritySelected);
+                return;
+            }
+
+            var selectedAmountItems = selectedItems.Where(p => p.TransferedAmount <= 0).ToList();
+            if (selectedAmountItems.Count > 0)
+            {
+                MessageDialog.Warn(this, msgNoTransferAmount);
                 return;
             }
 

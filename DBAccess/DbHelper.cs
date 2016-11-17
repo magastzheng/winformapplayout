@@ -137,8 +137,6 @@ namespace DBAccess
         {
             Open(cmd);
 
-            //logger.Info(DbHelper.GetCommandSql(cmd));
-
             int ret = cmd.ExecuteNonQuery();
             Close(cmd.Connection);
 
@@ -204,12 +202,11 @@ namespace DBAccess
                 catch
                 {
                     logger.Error("Cannot open database connection " + cmd.Connection.ConnectionString);
+                    logger.Error(DbHelper.GetCommandSql(cmd));
+
                     throw;
                 }
-                finally
-                {
-                    logger.Info(DbHelper.GetCommandSql(cmd));
-                }
+
             }
         }
 

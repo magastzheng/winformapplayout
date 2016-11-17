@@ -305,7 +305,7 @@ namespace TradingSystem.View
                 _instDataSource.Add(closeItem);
             }
 
-            LoadHolding();
+            //LoadHolding();
 
             return true;
         }
@@ -316,7 +316,7 @@ namespace TradingSystem.View
             //UFXQueryMultipleHoldingBLL holdingBLL = new UFXQueryMultipleHoldingBLL();
             //holdingBLL.Query();
 
-            Debug.WriteLine("Only test for the holding!");
+            //Debug.WriteLine("Only test for the holding!");
         }
 
         private void AddFuturesContract(string futuresCode)
@@ -572,6 +572,7 @@ namespace TradingSystem.View
                 return;
             }
 
+            //TODO: show the success message and failure message
             foreach (var cmdItem in cmdItems)
             {
                 var tdcmdItem = GetTradeCommandItem(cmdItem);
