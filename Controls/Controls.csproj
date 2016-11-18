@@ -75,6 +75,7 @@
     <Compile Include="GridView\DataGridViewNumericUpDownEditingControl.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="GridView\DataGridViewRowHeaderCellEx.cs" />
     <Compile Include="GridView\HSGridView.cs" />
     <Compile Include="GridView\HSGridView.Designer.cs">
       <DependentUpon>HSGridView.cs</DependentUpon>

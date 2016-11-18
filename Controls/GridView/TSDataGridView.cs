@@ -38,6 +38,9 @@ namespace Controls.GridView
         {
             InitializeComponent();
 
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+            this.RowTemplate.HeaderCell = new DataGridViewRowHeaderCellEx();
+
             this.AllowUserToAddRows = false;
             this.AllowUserToDeleteRows = false;
             //设置AutoGenerateColumns以阻止数据绑定时自动添加新列 
