@@ -236,6 +236,12 @@
 		},{
 			"id": "tradecommandmodifyinvalidselected",
 			"text": "勾选无效交易指令！"
+		},{
+			"id": "tradecommandmodifysuccess",
+			"text": "指令修改成功！"
+		},{
+			"id": "tradecommandmodifyfailure",
+			"text": "指令修改失败！"
 		}
 	]
 }

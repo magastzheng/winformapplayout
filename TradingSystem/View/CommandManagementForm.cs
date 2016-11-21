@@ -1,8 +1,10 @@
 ﻿using BLL.Frontend;
+using BLL.TradeInstance;
 using Config;
 using Controls.Entity;
 using Controls.GridView;
 using Model.Binding.BindingUtil;
+using Model.Database;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -21,8 +23,11 @@ namespace TradingSystem.View
         private const string msgNoSelected = "tradecommandmodifynoselected";
         private const string msgCanEditOnlyOne = "tradecommandmodifycaneditonlyone";
         private const string msgInvalidSelected = "tradecommandmodifyinvalidselected";
+        private const string msgModifySuccess = "tradecommandmodifysuccess";
+        private const string msgModifyFailure = "tradecommandmodifyfailure";
 
         private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
+        private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
 
         private SortableBindingList<CommandManagementItem> _dataSource = new SortableBindingList<CommandManagementItem>(new List<CommandManagementItem>());
         
@@ -84,12 +89,28 @@ namespace TradingSystem.View
             dialog.OnLoadData(dialog, selectedItem);
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                object resData = dialog.GetData();
+                if (resData != null && resData is List<ModifySecurityItem>)
+                {
+                    var secuItems = resData as List<ModifySecurityItem>;
+                    //secuItems.ForEach(p => p.CommandId = selectedItem.CommandId);
 
+                    //TODO: update the tradeinstance item
+                    //if (UpdateItem(selectedItem, secuItems) > 0)
+                    //{
+                    //    MessageDialog.Info(this, msgModifySuccess);
+                    //}
+                    //else
+                    //{
+                    //    MessageDialog.Fail(this, msgModifyFailure);
+                    //}
+                }
             }
             else
             { 
                 //do nothing
             }
+
             dialog.Dispose();
         }
 
@@ -137,6 +158,7 @@ namespace TradingSystem.View
                         Notes = notes,
                     };
 
+                    //TODO: update the security in tradinginstance table
                     if (_tradeCommandBLL.Update(cmdItem) > 0)
                     {
                         lsSuccess.Add(cmdItem.CommandId);
@@ -220,6 +242,7 @@ namespace TradingSystem.View
                     //DDispatchDate = item.d
                     InstanceId = item.InstanceId,
                     InstanceCode = item.InstanceCode,
+                    PortfolioId = item.PortfolioId,
                     PortfolioCode = item.PortfolioCode,
                     PortfolioName = item.PortfolioName,
                     TemplateId = item.TemplateId,
@@ -232,6 +255,65 @@ namespace TradingSystem.View
 
                 _dataSource.Add(cmdItem);
             }
+        }
+
+        #endregion
+
+
+        #region modified command item
+
+        private int UpdateItem(CommandManagementItem cmdMngItem, List<ModifySecurityItem> modifiedSecuItems)
+        {
+            TradeCommand cmdItem = new TradeCommand 
+            {
+                CommandId = cmdMngItem.CommandId,
+                ECommandStatus = Model.EnumType.CommandStatus.Modified,
+                ModifiedDate = DateTime.Now,
+                Notes = cmdMngItem.Notes,
+            };
+
+            List<TradeCommandSecurity> tradeModifiedSecuItems = new List<TradeCommandSecurity>();
+            List<TradeCommandSecurity> tradeCancelSecuItems = new List<TradeCommandSecurity>();
+            var selectedModifiedSecuItems = modifiedSecuItems.Where(p => p.Selection).ToList();
+            foreach (var secuItem in selectedModifiedSecuItems)
+            {
+                TradeCommandSecurity tradeSecuItem = new TradeCommandSecurity 
+                {
+                    CommandId = cmdItem.CommandId,
+                    SecuCode = secuItem.SecuCode,
+                    SecuType = secuItem.SecuType,
+                    EDirection = secuItem.EDirection,
+                    CommandAmount = secuItem.NewCommandAmount,
+                    CommandPrice = secuItem.NewCommandPrice,
+                };
+
+                if (secuItem.Selection)
+                {
+                    tradeModifiedSecuItems.Add(tradeSecuItem);       
+                }
+                else
+                {
+                    tradeCancelSecuItems.Add(tradeSecuItem);
+                }
+            }
+
+            int result = _tradeCommandBLL.Update(cmdItem, tradeModifiedSecuItems, tradeCancelSecuItems);
+            if (result > 0)
+            {
+                //TODO: add more parameters
+                TradingInstance tradeInstance = new TradingInstance 
+                {
+                    InstanceId = cmdMngItem.InstanceId,
+                    InstanceCode = cmdMngItem.InstanceCode,
+                };
+
+                List<TradingInstanceSecurity> modifiedInstSecuItems = new List<TradingInstanceSecurity>();
+                List<TradingInstanceSecurity> cancelInstSecuItems = new List<TradingInstanceSecurity>();
+
+                result = _tradeInstanceBLL.Update(tradeInstance, modifiedInstSecuItems, cancelInstSecuItems);
+            }
+
+            return result;
         }
 
         #endregion

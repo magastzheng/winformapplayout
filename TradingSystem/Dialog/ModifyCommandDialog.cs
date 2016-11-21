@@ -47,6 +47,16 @@ namespace TradingSystem.Dialog
             _gridConfig = gridConfig;
         }
 
+
+        #region get data
+
+        public override object GetData()
+        {
+            return _dataSource.ToList();
+        }
+
+        #endregion
+
         #region button click event handler
 
         private void Button_Click_Calc(object sender, EventArgs e)

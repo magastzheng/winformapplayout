@@ -62,10 +62,12 @@ namespace DBAccess.TradeCommand
         //    return _dbHelper.ExecuteNonQuery(dbCommand);
         //}
 
-        public int Delete(int commandId, string secuCode)
+        public int Delete(int commandId, string secuCode, SecurityType secuType)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Delete);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+            _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, secuCode);
+            _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, (int)secuType);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }

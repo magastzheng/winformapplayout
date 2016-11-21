@@ -240,9 +240,9 @@ namespace BLL.Frontend
 
         #region update
 
-        public int Update(Model.Database.TradeCommand cmdItem, List<TradeCommandSecurity> secuItems)
+        public int Update(Model.Database.TradeCommand cmdItem, List<TradeCommandSecurity> modifiedSecuItems, List<TradeCommandSecurity> cancelSecuItems)
         {
-            return _commanddao.Update(cmdItem, secuItems);
+            return _commanddao.Update(cmdItem, modifiedSecuItems, cancelSecuItems);
         }
 
         public int Update(Model.Database.TradeCommand cmdItem)

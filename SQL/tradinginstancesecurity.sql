@@ -80,6 +80,86 @@ begin
 end
 
 go
+if exists (select name from sysobjects where name='procTradingInstanceSecurityInsertOrUpdate')
+drop proc procTradingInstanceSecurityInsertOrUpdate
+
+go
+create proc procTradingInstanceSecurityInsertOrUpdate(
+	@InstanceId				int
+	,@SecuCode				varchar(10)
+	,@SecuType				int
+	,@PositionType			int
+	,@InstructionPreBuy		int
+	,@InstructionPreSell	int
+	,@RowId	varchar(20) output
+)
+as
+begin
+	declare @Total int
+
+	set @Total=(select count(SecuCode) as Total from tradinginstancesecurity 
+		where InstanceId=@InstanceId and SecuCode=@SecuCode)
+	
+	if @Total = 0
+	begin
+		insert into tradinginstancesecurity(
+			InstanceId
+			,SecuCode
+			,SecuType
+			,PositionType
+			,InstructionPreBuy
+			,InstructionPreSell
+			,PositionAmount
+			,BuyBalance
+			,SellBalance
+			,DealFee
+			,BuyToday
+			,SellToday
+			,CreatedDate
+			,ModifiedDate
+			,LastDate
+		)
+		values(@InstanceId
+				,@SecuCode
+				,@SecuType
+				,@PositionType
+				,@InstructionPreBuy
+				,@InstructionPreSell
+				,0
+				,0.0
+				,0.0
+				,0.0
+				,0
+				,0
+				,getdate()
+				,NULL
+				,getdate()
+			)
+	end
+	else
+	begin
+		declare @PreBuy int
+		declare @PreSell int
+
+		select @PreBuy = InstructionPreBuy, @PreSell = InstructionPreSell
+		from tradinginstancesecurity
+		where InstanceId=@InstanceId and SecuCode=@SecuCode
+		--更新预买和预卖数量
+		set @PreBuy = @PreBuy+@InstructionPreBuy
+		set @PreSell = @PreSell+@InstructionPreSell
+
+		update tradinginstancesecurity
+		set InstructionPreBuy = @PreBuy
+			,InstructionPreSell = @PreSell
+			,ModifiedDate = getdate()
+			,LastDate = getdate()
+		where InstanceId=@InstanceId and SecuCode=@SecuCode
+	end
+
+	set @RowId=@SecuCode+';'+cast(@InstanceId as varchar)
+end
+
+go
 if exists (select name from sysobjects where name='procTradingInstanceSecurityTransfer')
 drop proc procTradingInstanceSecurityTransfer
 
@@ -104,6 +184,7 @@ begin
 		update tradinginstancesecurity
 		set PositionAmount = @PositionAmount
 			,ModifiedDate = getdate()
+			,LastDate = getdate()
 		where InstanceId=@InstanceId
 			and SecuCode = @SecuCode
 			and SecuType = @SecuType
@@ -328,6 +409,56 @@ end
 --		,InstructionPreSell = @InstructionPreSell
 --	where InstanceId=@InstanceId and SecuCode=@SecuCode
 --end
+
+go
+if exists (select name from sysobjects where name='procTradingInstanceSecurityValidDelete')
+drop proc procTradingInstanceSecurityValidDelete
+
+go
+create proc procTradingInstanceSecurityValidDelete(
+	@InstanceId int
+	,@SecuCode	varchar(10)
+	,@SecuType				int
+	,@InstructionPreBuy		int
+	,@InstructionPreSell	int
+)
+as
+begin
+	--只有在持仓为0，没有预买和预卖情况下，才能删除该股票
+	declare @PositionAmount int
+	declare @PreBuy int
+	declare @PreSell int
+	declare @Result int
+
+	select @PositionAmount = PositionAmount
+		,@PreBuy = InstructionPreBuy
+		,@PreSell = InstructionPreSell
+	from tradinginstancesecurity
+	where InstanceId=@InstanceId 
+	and SecuCode=@SecuCode
+	and SecuType=@SecuType
+
+	set @PreBuy = @PreBuy - @InstructionPreBuy
+	set @PreSell = @PreSell - @InstructionPreSell
+
+	if (@PositionAmount is null or @PositionAmount = 0) 
+	and (@PreBuy is null or @PreBuy = 0)
+	and (@PreSell is null or @PreSell = 0)
+	begin 
+		delete from tradinginstancesecurity
+		where InstanceId=@InstanceId 
+		and SecuCode=@SecuCode 
+		and SecuType=@SecuType
+
+		set @Result = 1
+	end
+	else
+	begin
+		set @Result = 0
+	end
+
+	return @Result
+end
 
 go
 if exists (select name from sysobjects where name='procTradingInstanceSecurityDelete')

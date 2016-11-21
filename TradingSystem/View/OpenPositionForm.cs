@@ -359,6 +359,7 @@ namespace TradingSystem.View
                     TradingInstance tradeInstance = new TradingInstance
                     {
                         InstanceCode = instanceCode,
+                        PortfolioId = newOpenItem.PortfolioId,
                         MonitorUnitId = newOpenItem.MonitorId,
                         StockDirection = EntrustDirection.BuySpot,
                         FuturesContract = newOpenItem.FuturesContract,

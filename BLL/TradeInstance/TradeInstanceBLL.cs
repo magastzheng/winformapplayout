@@ -56,6 +56,19 @@ namespace BLL.TradeInstance
             }
         }
 
+        public int Update(TradingInstance tradeInstance, List<TradingInstanceSecurity> modifiedSecuItems, List<TradingInstanceSecurity> cancelSecuItems)
+        { 
+            int userId = LoginManager.Instance.GetUserId();
+            if (_permissionManager.HasPermission(userId, tradeInstance.InstanceId, ResourceType.TradeInstance, PermissionMask.Edit))
+            {
+                return _tradeinstancedao.Update(tradeInstance, modifiedSecuItems, cancelSecuItems);
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
         //public int Update(TradingInstance tradeInstance, ClosePositionItem closeItem, List<ClosePositionSecurityItem> secuItems)
         //{
         //    return -1;

@@ -32,6 +32,7 @@ namespace DBAccess.TradeInstance
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
             _dbHelper.AddInParameter(dbCommand, "@InstanceCode", System.Data.DbType.String, securityItem.InstanceCode);
+            _dbHelper.AddInParameter(dbCommand, "@PortfolioId", System.Data.DbType.Int32, securityItem.PortfolioId);
             _dbHelper.AddInParameter(dbCommand, "@MonitorUnitId", System.Data.DbType.Int32, securityItem.MonitorUnitId);
             _dbHelper.AddInParameter(dbCommand, "@StockDirection", System.Data.DbType.Int32, (int)securityItem.StockDirection);
             _dbHelper.AddInParameter(dbCommand, "@FuturesContract", System.Data.DbType.String, securityItem.FuturesContract);
@@ -108,6 +109,7 @@ namespace DBAccess.TradeInstance
                     TradingInstance item = new TradingInstance();
                     item.InstanceId = (int)reader["InstanceId"];
                     item.InstanceCode = (string)reader["InstanceCode"];
+                    item.PortfolioId = (int)reader["PortfolioId"];
                     item.MonitorUnitId = (int)reader["MonitorUnitId"];
                     item.StockDirection = (EntrustDirection)(int)reader["StockDirection"];
                     item.FuturesContract = (string)reader["FuturesContract"];
@@ -150,6 +152,7 @@ namespace DBAccess.TradeInstance
                     TradingInstance item = new TradingInstance();
                     item.InstanceId = (int)reader["InstanceId"];
                     item.InstanceCode = (string)reader["InstanceCode"];
+                    item.PortfolioId = (int)reader["PortfolioId"];
                     item.MonitorUnitId = (int)reader["MonitorUnitId"];
                     item.StockDirection = (EntrustDirection)(int)reader["StockDirection"];
                     item.FuturesContract = (string)reader["FuturesContract"];
@@ -197,6 +200,7 @@ namespace DBAccess.TradeInstance
                 {
                     item.InstanceId = (int)reader["InstanceId"];
                     item.InstanceCode = (string)reader["InstanceCode"];
+                    item.PortfolioId = (int)reader["PortfolioId"];
                     item.MonitorUnitId = (int)reader["MonitorUnitId"];
                     item.StockDirection = (EntrustDirection)(int)reader["StockDirection"];
                     item.FuturesContract = (string)reader["FuturesContract"];
@@ -253,6 +257,10 @@ namespace DBAccess.TradeInstance
                     item.PortfolioId = (int)reader["PortfolioId"];
                     item.PortfolioCode = (string)reader["PortfolioCode"];
                     item.PortfolioName = (string)reader["PortfolioName"];
+                    item.AccountCode = (string)reader["AccountCode"];
+                    item.AccountName = (string)reader["AccountName"];
+                    item.AssetNo = (string)reader["AssetNo"];
+                    item.AssetName = (string)reader["AssetName"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {
@@ -302,6 +310,10 @@ namespace DBAccess.TradeInstance
                     item.PortfolioId = (int)reader["PortfolioId"];
                     item.PortfolioCode = (string)reader["PortfolioCode"];
                     item.PortfolioName = (string)reader["PortfolioName"];
+                    item.AccountCode = (string)reader["AccountCode"];
+                    item.AccountName = (string)reader["AccountName"];
+                    item.AssetNo = (string)reader["AssetNo"];
+                    item.AssetName = (string)reader["AssetName"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {
@@ -352,6 +364,10 @@ namespace DBAccess.TradeInstance
                     item.PortfolioId = (int)reader["PortfolioId"];
                     item.PortfolioCode = (string)reader["PortfolioCode"];
                     item.PortfolioName = (string)reader["PortfolioName"];
+                    item.AccountCode = (string)reader["AccountCode"];
+                    item.AccountName = (string)reader["AccountName"];
+                    item.AssetNo = (string)reader["AssetNo"];
+                    item.AssetName = (string)reader["AssetName"];
 
                     if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {

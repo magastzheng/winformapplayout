@@ -267,6 +267,8 @@ namespace Model.UI
 
         public string FundName { get; set; }
 
+        public int PortfolioId { get; set; }
+
         public string PortfolioCode { get; set; }
 
         public string PortfolioName { get; set; }

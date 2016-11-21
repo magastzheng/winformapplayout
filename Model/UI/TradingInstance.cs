@@ -42,5 +42,13 @@ namespace Model.UI
         public string PortfolioCode { get; set; }
 
         public string PortfolioName { get; set; }
+
+        public string AccountCode { get; set; }
+
+        public string AccountName { get; set; }
+
+        public string AssetNo { get; set; }
+
+        public string AssetName { get; set; }
     }
 }

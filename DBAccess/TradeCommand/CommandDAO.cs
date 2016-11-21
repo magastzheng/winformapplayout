@@ -15,6 +15,7 @@ namespace DBAccess.TradeCommand
         private const string SP_ModifyTradeCommand = "procTradingCommandUpdate";
         private const string SP_CreateTradingSecurity = "procTradingCommandSecurityInsert";
         private const string SP_ModifyTradingSecurity = "procTradingCommandSecurityUpdate";
+        private const string SP_DeleteTradingSecurity = "procTradingCommandSecurityDelete";
 
         public CommandDAO()
             : base()
@@ -132,7 +133,7 @@ namespace DBAccess.TradeCommand
             return commandId;
         }
 
-        public int Update(Model.Database.TradeCommand cmdItem, List<TradeCommandSecurity> secuItems)
+        public int Update(Model.Database.TradeCommand cmdItem, List<TradeCommandSecurity> modifiedSecuItems, List<TradeCommandSecurity> cancelSecuItems)
         {
             var dbCommand = _dbHelper.GetCommand();
             _dbHelper.Open(_dbHelper.Connection);
@@ -159,7 +160,7 @@ namespace DBAccess.TradeCommand
 
                 if (ret >= 0)
                 {
-                    foreach (var secuItem in secuItems)
+                    foreach (var secuItem in modifiedSecuItems)
                     {
                         dbCommand.Parameters.Clear();
                         dbCommand.CommandText = SP_CreateTradingSecurity;
@@ -172,6 +173,20 @@ namespace DBAccess.TradeCommand
                         _dbHelper.AddInParameter(dbCommand, "@CommandAmount", System.Data.DbType.Int32, secuItem.CommandAmount);
                         _dbHelper.AddInParameter(dbCommand, "@CommandDirection", System.Data.DbType.Int32, (int)secuItem.EDirection);
                         _dbHelper.AddInParameter(dbCommand, "@CommandPrice", System.Data.DbType.Double, secuItem.CommandPrice);
+
+                        //string newid = string.Empty;
+                        ret = dbCommand.ExecuteNonQuery();
+                    }
+
+                    foreach (var secuItem in cancelSecuItems)
+                    {
+                        dbCommand.Parameters.Clear();
+                        dbCommand.CommandText = SP_DeleteTradingSecurity;
+
+                        secuItem.CommandId = commandId;
+                        _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+                        _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, secuItem.SecuCode);
+                        _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, (int)secuItem.SecuType);
 
                         //string newid = string.Empty;
                         ret = dbCommand.ExecuteNonQuery();

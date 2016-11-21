@@ -6,7 +6,8 @@ drop table tradinginstance
 create table tradinginstance(
 	InstanceId			int identity(1, 1) primary key	--交易实例ID
 	,InstanceCode		varchar(20)						--交易实例代码
-	,MonitorUnitId		int								--监控单元ID
+	,PortfolioId		int								--组合ID,唯一确定交易实例和组合之间的关系
+	,MonitorUnitId		int								--监控单元ID，监控单元可以改变
 	,StockDirection		int			--股票委托方向：1 - 买入， 2 - 卖出， 3 - 调整到[买卖]， 4 - 调整到[只买]， 5 - 调整到[只卖], 10 -- 买入现货，11--卖出现货，12-卖出开仓，13 -买入平仓
 	,FuturesContract	varchar(10)	--股指期货合约代码
 	,FuturesDirection	int			--股指期货委托方向：12-卖出开仓，13 -买入平仓
@@ -29,6 +30,7 @@ drop proc procTradingInstanceInsert
 go
 create proc procTradingInstanceInsert(
 	@InstanceCode		varchar(20)
+	,@PortfolioId		int
 	,@MonitorUnitId		int
 	,@StockDirection	int
 	,@FuturesContract	varchar(10)
@@ -44,7 +46,8 @@ as
 begin
 	declare @newid int
 	insert into tradinginstance(
-		InstanceCode		
+		InstanceCode	
+		,PortfolioId	
 		,MonitorUnitId		
 		,StockDirection		
 		,FuturesContract	
@@ -57,7 +60,8 @@ begin
 		,CreatedDate			
 	)
 	values(
-		@InstanceCode		
+		@InstanceCode	
+		,@PortfolioId	
 		,@MonitorUnitId		
 		,@StockDirection	
 		,@FuturesContract	
@@ -95,6 +99,7 @@ create proc procTradingInstanceUpdate(
 )
 as
 begin
+	--不可修改PortfolioId
 	update tradinginstance
 	set			
 		InstanceCode		= @InstanceCode
@@ -125,7 +130,8 @@ begin
 	begin
 		select
 			InstanceId			
-			,InstanceCode		
+			,InstanceCode
+			,PortfolioId		
 			,MonitorUnitId		
 			,StockDirection		
 			,FuturesContract	
@@ -144,7 +150,8 @@ begin
 	begin
 		select
 			InstanceId			
-			,InstanceCode		
+			,InstanceCode	
+			,PortfolioId	
 			,MonitorUnitId		
 			,StockDirection		
 			,FuturesContract	
@@ -185,7 +192,8 @@ as
 begin
 	select 
 		InstanceId			
-		,InstanceCode		
+		,InstanceCode	
+		,PortfolioId	
 		,MonitorUnitId		
 		,StockDirection		
 		,FuturesContract	
@@ -232,7 +240,8 @@ begin
 	begin
 		select
 			a.InstanceId			
-			,a.InstanceCode		
+			,a.InstanceCode	
+			,a.PortfolioId	
 			,a.MonitorUnitId		
 			,a.StockDirection		
 			,a.FuturesContract	
@@ -244,26 +253,30 @@ begin
 			,a.Owner				
 			,a.CreatedDate		
 			,a.ModifiedDate	
-			,b.MonitorUnitName	
-			,c.TemplateId
-			,c.TemplateName
-			,d.PortfolioId
-			,d.PortfolioCode
-			,d.PortfolioName
+			,b.PortfolioCode
+			,b.PortfolioName
+			,b.AccountCode
+			,b.AccountName
+			,b.AssetNo
+			,b.AssetName
+			,c.MonitorUnitName	
+			,d.TemplateId
+			,d.TemplateName
 		from tradinginstance a
-		inner join monitorunit b
-		on a.MonitorUnitId = b.MonitorUnitId
-		inner join stocktemplate c
-		on b.StockTemplateId = c.TemplateId
-		inner join ufxportfolio d
-		on b.PortfolioId=d.PortfolioId
+		inner join ufxportfolio b
+		on a.PortfolioId=b.PortfolioId
+		inner join monitorunit c
+		on a.MonitorUnitId = c.MonitorUnitId
+		inner join stocktemplate d
+		on c.StockTemplateId = d.TemplateId
 		where a.InstanceId=@InstanceId
 	end
 	else
 	begin
 		select
 			a.InstanceId			
-			,a.InstanceCode		
+			,a.InstanceCode	
+			,a.PortfolioId	
 			,a.MonitorUnitId		
 			,a.StockDirection		
 			,a.FuturesContract	
@@ -275,19 +288,22 @@ begin
 			,a.Owner				
 			,a.CreatedDate		
 			,a.ModifiedDate	
-			,b.MonitorUnitName	
-			,c.TemplateId
-			,c.TemplateName
-			,d.PortfolioId
-			,d.PortfolioCode
-			,d.PortfolioName
+			,b.PortfolioCode
+			,b.PortfolioName
+			,b.AccountCode
+			,b.AccountName
+			,b.AssetNo
+			,b.AssetName
+			,c.MonitorUnitName	
+			,d.TemplateId
+			,d.TemplateName
 		from tradinginstance a
-		inner join monitorunit b
-		on a.MonitorUnitId = b.MonitorUnitId
-		inner join stocktemplate c
-		on b.StockTemplateId = c.TemplateId
-		inner join ufxportfolio d
-		on b.PortfolioId=d.PortfolioId
+		inner join ufxportfolio b
+		on a.PortfolioId=b.PortfolioId
+		inner join monitorunit c
+		on a.MonitorUnitId = c.MonitorUnitId
+		inner join stocktemplate d
+		on c.StockTemplateId = d.TemplateId
 	end
 end
 
@@ -302,31 +318,35 @@ create proc procTradingInstanceSelectCombineByCode(
 as
 begin
 	select
-			a.InstanceId			
-			,a.InstanceCode		
-			,a.MonitorUnitId		
-			,a.StockDirection		
-			,a.FuturesContract	
-			,a.FuturesDirection	
-			,a.OperationCopies	
-			,a.StockPriceType		
-			,a.FuturesPriceType	
-			,a.Status
-			,a.Owner				
-			,a.CreatedDate		
-			,a.ModifiedDate	
-			,b.MonitorUnitName	
-			,c.TemplateId
-			,c.TemplateName
-			,d.PortfolioId
-			,d.PortfolioCode
-			,d.PortfolioName
-		from tradinginstance a
-		inner join monitorunit b
-		on a.MonitorUnitId = b.MonitorUnitId
-		inner join stocktemplate c
-		on b.StockTemplateId = c.TemplateId
-		inner join ufxportfolio d
-		on b.PortfolioId=d.PortfolioId
-		where a.InstanceCode=@InstanceCode
+		a.InstanceId			
+		,a.InstanceCode	
+		,a.PortfolioId	
+		,a.MonitorUnitId		
+		,a.StockDirection		
+		,a.FuturesContract	
+		,a.FuturesDirection	
+		,a.OperationCopies	
+		,a.StockPriceType		
+		,a.FuturesPriceType	
+		,a.Status
+		,a.Owner				
+		,a.CreatedDate		
+		,a.ModifiedDate	
+		,b.PortfolioCode
+		,b.PortfolioName
+		,b.AccountCode
+		,b.AccountName
+		,b.AssetNo
+		,b.AssetName
+		,c.MonitorUnitName	
+		,d.TemplateId
+		,d.TemplateName
+	from tradinginstance a
+	inner join ufxportfolio b
+	on a.PortfolioId=b.PortfolioId
+	inner join monitorunit c
+	on a.MonitorUnitId = c.MonitorUnitId
+	inner join stocktemplate d
+	on c.StockTemplateId = d.TemplateId
+	where a.InstanceCode=@InstanceCode
 end

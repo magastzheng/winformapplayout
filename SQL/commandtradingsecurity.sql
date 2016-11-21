@@ -104,10 +104,14 @@ go
 create proc procTradingCommandSecurityDelete(
 	@CommandId			int 
 	,@SecuCode			varchar(10) 
+	,@SecuType			int
 )
 as
 begin
-	delete from tradingcommandsecurity where CommandId=@CommandId and SecuCode=@SecuCode
+	delete from tradingcommandsecurity 
+	where CommandId=@CommandId 
+	and SecuCode=@SecuCode
+	and SecuType=@SecuType
 end
 
 go
