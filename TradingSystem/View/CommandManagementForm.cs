@@ -309,6 +309,52 @@ namespace TradingSystem.View
 
                 List<TradingInstanceSecurity> modifiedInstSecuItems = new List<TradingInstanceSecurity>();
                 List<TradingInstanceSecurity> cancelInstSecuItems = new List<TradingInstanceSecurity>();
+                foreach (var secuItem in selectedModifiedSecuItems)
+                {
+                    int modifiedAmount = secuItem.NewCommandAmount - secuItem.OriginCommandAmount;
+
+                    TradingInstanceSecurity tradeInstSecuItem = new TradingInstanceSecurity 
+                    {
+                        SecuCode = secuItem.SecuCode,
+                        SecuType = secuItem.SecuType,
+                        InstructionPreBuy = 0,
+                        InstructionPreSell = 0,
+                    };
+
+                    //TODO::::::how to handle the case???
+                    switch (secuItem.EDirection)
+                    {
+                        case Model.EnumType.EntrustDirection.BuySpot:
+                            {
+                                tradeInstSecuItem.InstructionPreBuy = modifiedAmount;
+                            }
+                            break;
+                        case Model.EnumType.EntrustDirection.SellSpot:
+                            {
+                                tradeInstSecuItem.InstructionPreSell = modifiedAmount;
+                            }
+                            break;
+                        case Model.EnumType.EntrustDirection.SellOpen:
+                            {
+                                tradeInstSecuItem.InstructionPreSell = modifiedAmount;
+                            }
+                            break;
+                        case Model.EnumType.EntrustDirection.BuyClose:
+                            {
+                                tradeInstSecuItem.InstructionPreBuy = modifiedAmount;
+                            }
+                            break;
+                    }
+
+                    if (secuItem.Selection)
+                    {
+                        modifiedInstSecuItems.Add(tradeInstSecuItem);
+                    }
+                    else
+                    {
+                        cancelInstSecuItems.Add(tradeInstSecuItem);
+                    }
+                }
 
                 result = _tradeInstanceBLL.Update(tradeInstance, modifiedInstSecuItems, cancelInstSecuItems);
             }

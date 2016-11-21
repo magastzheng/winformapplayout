@@ -6,6 +6,7 @@ using Model.Binding.BindingUtil;
 using Model.config;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace BLL.UFX.impl
 {
@@ -144,6 +145,7 @@ namespace BLL.UFX.impl
             //业务包
             CT2Packer packer = new CT2Packer(2);
             packer.BeginPack();
+
             foreach (FieldItem item in functionItem.RequestFields)
             {
                 if (item.Name.Equals("entrust_amount"))
@@ -173,6 +175,9 @@ namespace BLL.UFX.impl
             }
             packer.EndPack();
 
+#if _DEBUG
+            OutputParam<T>(functionCode, requests);
+#endif
             unsafe
             {
                 bizMessage.SetContent(packer.GetPackBuf(), packer.GetPackLen());
@@ -198,6 +203,70 @@ namespace BLL.UFX.impl
             bizMessage.Dispose();
             
             return retCode;
+        }
+
+        private void OutputParam<T>(FunctionCode functionCode, List<T> requests)
+        {
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("=========================================================");
+            sb.AppendLine("FunctionCode: " + (int)functionCode);
+            foreach (FieldItem item in functionItem.RequestFields)
+            {
+                if (item.Name.Equals("entrust_amount"))
+                {
+                    sb.AppendFormat("{0}\t{1}\t{2}\t{3}\n", item.Name, PackFieldType.FloatType, item.Width, item.Scale);
+                }
+                else
+                {
+                    sb.AppendFormat("{0}\t{1}\t{2}\t{3}\n", item.Name, item.Type, item.Width, item.Scale);
+                }
+            }
+
+            var dataFieldMap = UFXDataBindingHelper.GetProperty<T>();
+            foreach (var request in requests)
+            {
+                foreach (FieldItem item in functionItem.RequestFields)
+                {
+                    if (dataFieldMap.ContainsKey(item.Name))
+                    {
+                        var dataField = dataFieldMap[item.Name];
+                        Type type = request.GetType();
+
+                        object obj = type.GetProperty(dataField.Name).GetValue(request);
+                        sb.AppendFormat("{0}\t{1}", item.Name, obj);
+                    }
+                    else
+                    {
+                        switch (item.Name)
+                        {
+                            case "user_token":
+                                {
+                                    sb.AppendFormat("{0}\t{1}\n", item.Name, LoginManager.Instance.LoginUser.Token);
+                                }
+                                break;
+                            default:
+                                if (item.Type == PackFieldType.IntType)
+                                {
+                                    sb.AppendFormat("{0}\t{1}\n", item.Name, -1);
+                                }
+                                else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                                {
+                                    sb.AppendFormat("{0}\t{1}\n", item.Name, item.Name);
+                                }
+                                else
+                                {
+                                    sb.AppendFormat("{0}\t{1}\n", item.Name, item.Name);
+                                }
+                                break;
+                        }
+                    }
+                }
+            }
+
+            sb.AppendLine("=========================================================");
+            logger.Info(sb.ToString());
         }
 
         #endregion
