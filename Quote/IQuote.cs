@@ -12,5 +12,6 @@ namespace Quote
         List<SecurityItem> GetSecurities();
         void AddSecurity(string investmentID, SecurityItem securityItem);
         SecurityItem GetSecurity(string investmentID);
+        List<SecurityItem> GetFuturesContract();
     }
 }

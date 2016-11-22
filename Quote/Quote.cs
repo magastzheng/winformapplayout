@@ -102,6 +102,18 @@ namespace Quote
             return _securityDatas[investmentID];
         }
 
+        public List<SecurityItem> GetFuturesContract()
+        {
+            List<SecurityItem> futuresItems = new List<SecurityItem>();
+
+            var futures = _securityDatas.Values.Where(p => p.SecuType == SecurityType.Futures).ToList();
+            if (futures != null)
+            {
+                futuresItems.AddRange(futures);
+            }
+
+            return futuresItems;
+        }
         #endregion
 
     }

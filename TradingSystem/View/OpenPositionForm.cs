@@ -36,7 +36,7 @@ namespace TradingSystem.View
         private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
         private TemplateBLL _templateBLL = new TemplateBLL();
         private MonitorUnitBLL _monitorUnitBLL = new MonitorUnitBLL();
-        private FuturesContractBLL _futuresContractBLL = new FuturesContractBLL();
+        //private FuturesContractBLL _futuresContractBLL = new FuturesContractBLL();
 
         private SortableBindingList<OpenPositionItem> _monitorDataSource;
         private SortableBindingList<OpenPositionSecurityItem> _securityDataSource;
@@ -300,7 +300,7 @@ namespace TradingSystem.View
                 }
                 else if (secuItem.SecuType == SecurityType.Futures)
                 {
-                    secuItem.CommandMoney = _futuresContractBLL.GetMoney(secuItem.SecuCode, secuItem.EntrustAmount, secuItem.LastPrice);
+                    secuItem.CommandMoney = FuturesContractManager.Instance.GetMoney(secuItem.SecuCode, secuItem.EntrustAmount, secuItem.LastPrice);
                 }
                 else
                 {

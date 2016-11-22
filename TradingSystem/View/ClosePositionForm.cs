@@ -44,7 +44,7 @@ namespace TradingSystem.View
 
         private GridConfig _gridConfig;
 
-        private FuturesContractBLL _futuresBLL = new FuturesContractBLL();
+        //private FuturesContractBLL _futuresBLL = new FuturesContractBLL();
         private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
         private TemplateBLL _templateBLL = new TemplateBLL();
         private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
@@ -219,7 +219,7 @@ namespace TradingSystem.View
 
         private void LoadFuturesContractOption()
         {
-            var futures = _futuresBLL.GetAll();
+            var futures = FuturesContractManager.Instance.GetAll();
             if (futures != null && futures.Count > 0)
             {
                 var items = new List<ComboOptionItem>();
@@ -227,8 +227,8 @@ namespace TradingSystem.View
                 {
                     ComboOptionItem option = new ComboOptionItem
                     {
-                        Id = future.Code,
-                        Name = future.Code
+                        Id = future.SecuCode,
+                        Name = future.SecuName
                     };
 
                     items.Add(option);
@@ -479,7 +479,7 @@ namespace TradingSystem.View
                 }
                 else if (secuItem.SecuType == SecurityType.Futures)
                 {
-                    secuItem.CommandMoney = _futuresBLL.GetMoney(secuItem.SecuCode, secuItem.EntrustAmount, secuItem.LastPrice);
+                    secuItem.CommandMoney = FuturesContractManager.Instance.GetMoney(secuItem.SecuCode, secuItem.EntrustAmount, secuItem.LastPrice);
                     int totalAmount = 0;
                     switch (secuItem.EDirection)
                     {
@@ -497,7 +497,7 @@ namespace TradingSystem.View
                             break;
                     }
 
-                    secuItem.TargetMktCap = _futuresBLL.GetMoney(secuItem.SecuCode, totalAmount, secuItem.LastPrice);
+                    secuItem.TargetMktCap = FuturesContractManager.Instance.GetMoney(secuItem.SecuCode, totalAmount, secuItem.LastPrice);
                 }
                 else
                 {

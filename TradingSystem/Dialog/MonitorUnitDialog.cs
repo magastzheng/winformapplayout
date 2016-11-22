@@ -6,6 +6,7 @@ using Controls.Entity;
 using Forms;
 using Model.config;
 using Model.EnumType;
+using Model.SecurityInfo;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace TradingSystem.Dialog
     {
         private const string msgNoEmptyNameContract = "monitornoemptynameandcontract";
 
-        private FuturesContractBLL _futureBLL = new FuturesContractBLL();
+        //private FuturesContractBLL _futureBLL = new FuturesContractBLL();
         private ProductBLL _productBLL = new ProductBLL();
         private TemplateBLL _templateBLL = new TemplateBLL();
 
@@ -36,14 +37,14 @@ namespace TradingSystem.Dialog
         {
             //FuturesContracts
             acFuturesContracts.SetDropdownList(lbDropdown);
-            List<FuturesContract> itemList = _futureBLL.GetAll();
+            List<SecurityItem> itemList = FuturesContractManager.Instance.GetAll(); //_futureBLL.GetAll();
             IList<AutoItem> dataSource = new List<AutoItem>();
             foreach (var fcItem in itemList)
             {
                 AutoItem autoItem = new AutoItem 
                 {
-                    Id = fcItem.Code,
-                    Name = fcItem.Code
+                    Id = fcItem.SecuCode,
+                    Name = fcItem.SecuName
                 };
 
                 dataSource.Add(autoItem);
