@@ -4,10 +4,14 @@ using Model.UI;
 using System;
 using System.Collections.Generic;
 
-namespace BLL.Frontend
+namespace BLL.SecurityInfo
 {
     public class FuturesContractBLL
     {
+        private const int MultipleIH = 300;
+        private const int MultipleIF = 300;
+        private const int MultipleIC = 200;
+
         private FuturesContractDAO _fcdbdao = new FuturesContractDAO();
         private BenchmarkBLL _benchmarkBLL = new BenchmarkBLL();
 
@@ -46,13 +50,21 @@ namespace BLL.Frontend
                 {
                     multiple = findItem.ContractMultiple;
                 }
+                else
+                {
+                    multiple = MultipleIC;
+                }
             }
             else if (futuresContract.StartsWith("IF"))
             {
                 var findItem = benchmarks.Find(p => p.BenchmarkId.Equals("000300") || p.BenchmarkId.Equals("399300"));
-                if(findItem != null)
+                if (findItem != null)
                 {
                     multiple = findItem.ContractMultiple;
+                }
+                else
+                {
+                    multiple = MultipleIF;
                 }
             }
             else if (futuresContract.StartsWith("IH"))
@@ -61,6 +73,10 @@ namespace BLL.Frontend
                 if (findItem != null)
                 {
                     multiple = findItem.ContractMultiple;
+                }
+                else
+                {
+                    multiple = MultipleIH;
                 }
             }
             else

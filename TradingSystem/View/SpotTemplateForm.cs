@@ -777,19 +777,26 @@ namespace TradingSystem.View
             {
                 var stock = _spotDataSource[i];
                 var secuItem = secuList.Find(p => p.SecuCode.Equals(stock.SecuCode) && p.SecuType == SecurityType.Stock);
-                var secuData = QuoteCenter2.Instance.GetMarketData(secuItem);
+                if (secuItem != null)
+                {
+                    var secuData = QuoteCenter2.Instance.GetMarketData(secuItem);
 
-                if (!FloatUtil.IsZero(secuData.CurrentPrice))
-                {
-                    prices[i] = secuData.CurrentPrice;
-                }
-                else if (!FloatUtil.IsZero(secuData.PreClose))
-                {
-                    prices[i] = secuData.PreClose;
+                    if (!FloatUtil.IsZero(secuData.CurrentPrice))
+                    {
+                        prices[i] = secuData.CurrentPrice;
+                    }
+                    else if (!FloatUtil.IsZero(secuData.PreClose))
+                    {
+                        prices[i] = secuData.PreClose;
+                    }
+                    else
+                    {
+                        prices[i] = secuData.LowLimitPrice;
+                    }
                 }
                 else
                 {
-                    prices[i] = secuData.LowLimitPrice;
+                    prices[i] = 0f;
                 }
             }
 

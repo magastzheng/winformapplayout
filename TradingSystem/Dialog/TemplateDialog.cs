@@ -1,5 +1,5 @@
 ﻿using BLL.Permission;
-using BLL.Template;
+using BLL.SecurityInfo;
 using Config;
 using Forms;
 using Model.config;
@@ -9,7 +9,6 @@ using Model.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
 
 namespace TradingSystem.Dialog
 {

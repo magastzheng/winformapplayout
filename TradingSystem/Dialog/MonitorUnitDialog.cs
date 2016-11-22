@@ -1,5 +1,5 @@
-﻿using BLL.Frontend;
-using BLL.Product;
+﻿using BLL.Product;
+using BLL.SecurityInfo;
 using BLL.Template;
 using Config;
 using Controls.Entity;
@@ -9,7 +9,6 @@ using Model.EnumType;
 using Model.UI;
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 
 namespace TradingSystem.Dialog
 {

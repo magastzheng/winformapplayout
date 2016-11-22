@@ -2,7 +2,7 @@
 using Model.config;
 using System.Collections.Generic;
 
-namespace BLL.Template
+namespace BLL.SecurityInfo
 {
     public class BenchmarkBLL
     {
