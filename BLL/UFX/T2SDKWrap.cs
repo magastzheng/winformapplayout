@@ -80,7 +80,8 @@ namespace BLL.UFX
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                //Console.WriteLine(e.Message);
+                logger.Error(e.Message);
             }
             if (iRet != 0)
             {
@@ -245,7 +246,7 @@ namespace BLL.UFX
             if (iRetCode != 0)
             {
                 string msg = string.Format("同步接收数据出错： {0}, {1}", iErrorCode, bizMessage.GetErrorInfo());
-                Console.WriteLine(msg);
+                //Console.WriteLine(msg);
                 logger.Error(msg);
 
                 dataParser.ErrorCode = ConnectionCode.ErrorRecvMsg;
@@ -371,27 +372,27 @@ namespace BLL.UFX
         public override void OnClose(CT2Connection lpConnection)
         {
             //_conn.Close();
-            logger.Info("OnClose: 连接断开！");
+            UFXLogger.Info(logger, "OnClose: 连接断开！");
         }
 
         public override void OnConnect(CT2Connection lpConnection)
         {
-            logger.Info("OnConnect:连接成功建立！");
+            UFXLogger.Info(logger, "OnConnect:连接成功建立！");
         }
 
         public override void OnReceivedBiz(CT2Connection lpConnection, int hSend, string lppStr, CT2UnPacker lppUnPacker, int nResult)
         {
-            logger.Info("OnReceivedBiz:成功触发回调接收数据！");
+            UFXLogger.Info(logger, "OnReceivedBiz:成功触发回调接收数据！");
         }
 
         public override void OnReceivedBizEx(CT2Connection lpConnection, int hSend, CT2RespondData lpRetData, string lppStr, CT2UnPacker lppUnPacker, int nResult)
         {
-            logger.Info("OnReceivedBizEx:成功触发回调接收数据！");
+            UFXLogger.Info(logger, "OnReceivedBizEx:成功触发回调接收数据！");
         }
 
         public override void OnReceivedBizMsg(CT2Connection lpConnection, int hSend, CT2BizMessage lpMsg)
         {
-            logger.Info("OnReceivedBizMsg: 成功触发回调接收数据！");
+            UFXLogger.Info(logger, "OnReceivedBizMsg: 成功触发回调接收数据！");
             //获取返回码
             int iRetCode = lpMsg.GetReturnCode();
 
@@ -412,12 +413,12 @@ namespace BLL.UFX
 
         public override void OnRegister(CT2Connection lpConnection)
         {
-            logger.Info("OnRegister: 服务端成功注册！");
+            UFXLogger.Info(logger, "OnRegister: 服务端成功注册！");
         }
 
         public override void OnSafeConnect(CT2Connection lpConnection)
         {
-            logger.Info("OnSafeConnect: 成功建立安全连接！");
+            UFXLogger.Info(logger, "OnSafeConnect: 成功建立安全连接！");
         }
 
         //public override void OnSent(CT2Connection lpConnection, int hSend, IntPtr lpData, int nLength, int nQueuingData)
@@ -426,7 +427,7 @@ namespace BLL.UFX
         //}
         public override void OnSent(CT2Connection lpConnection, int hSend, void* lpData, int nLength, int nQueuingData)
         {
-            logger.Info("OnSend: 发送数据成功！");
+            UFXLogger.Info(logger, "OnSend: 发送数据成功！");
         }
         #endregion
 
@@ -458,7 +459,6 @@ namespace BLL.UFX
             if (iRetCode != 0)
             {
                 string msg = string.Format("同步接收数据出错： {0}, {1}", iErrorCode, bizMessage.GetErrorInfo());
-                Console.WriteLine(msg);
                 logger.Error(msg);
                 return iRetCode;
             }

@@ -175,7 +175,7 @@ namespace BLL.UFX.impl
             }
             packer.EndPack();
 
-#if _DEBUG
+#if DEBUG
             OutputParam<T>(functionCode, requests);
 #endif
             unsafe

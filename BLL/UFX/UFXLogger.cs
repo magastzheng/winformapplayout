@@ -20,8 +20,17 @@ namespace BLL.UFX
 
         public static void Info(ILog logger, FunctionCode functionCode, string info)
         {
+#if DEBUG
             string msg = string.Format("功能号: [{0}], {1}", (int)functionCode, info);
             logger.Info(msg);
+#endif
+        }
+
+        public static void Info(ILog logger, string info)
+        { 
+#if DEBUG
+            logger.Info(info);
+#endif
         }
     }
 }

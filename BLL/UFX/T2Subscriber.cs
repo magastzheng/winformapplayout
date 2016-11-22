@@ -56,13 +56,12 @@ namespace BLL.UFX
             {
                 string msg = e.Message;
                 logger.Error(msg);
-                Console.WriteLine(msg);
             }
             if (iRet != 0)
             {
                 string msg = string.Format("主推业务连接失败: {0}, {1}", iRet, _conn.GetErrorMsg(iRet));
                 logger.Error(msg);
-                Console.WriteLine(msg);
+
                 return ConnectionCode.ErrorConn;
             }
             else
@@ -146,27 +145,27 @@ namespace BLL.UFX
         public override void OnClose(CT2Connection lpConnection)
         {
             //_conn.Close();
-            logger.Info("OnClose: 连接断开！");
+            UFXLogger.Info(logger, "OnClose: 连接断开！");
         }
 
         public override void OnConnect(CT2Connection lpConnection)
         {
-            logger.Info("OnConnect:连接成功建立！");
+            UFXLogger.Info(logger, "OnConnect:连接成功建立！");
         }
 
         public override void OnReceivedBiz(CT2Connection lpConnection, int hSend, string lppStr, CT2UnPacker lppUnPacker, int nResult)
         {
-            logger.Info("OnReceivedBiz:成功触发回调接收数据！");
+            UFXLogger.Info(logger, "OnReceivedBiz:成功触发回调接收数据！");
         }
 
         public override void OnReceivedBizEx(CT2Connection lpConnection, int hSend, CT2RespondData lpRetData, string lppStr, CT2UnPacker lppUnPacker, int nResult)
         {
-            logger.Info("OnReceivedBizEx:成功触发回调接收数据！");
+            UFXLogger.Info(logger, "OnReceivedBizEx:成功触发回调接收数据！");
         }
 
         public override void OnReceivedBizMsg(CT2Connection lpConnection, int hSend, CT2BizMessage lpMsg)
         {
-            logger.Info("OnReceivedBizMsg: 成功触发回调接收数据！");
+            UFXLogger.Info(logger, "OnReceivedBizMsg: 成功触发回调接收数据！");
             //获取返回码
             int iRetCode = lpMsg.GetReturnCode();
 
@@ -181,7 +180,7 @@ namespace BLL.UFX
             }
             else
             {
-                Console.WriteLine("主推业务订阅 - 返回码：{0}, 错误码： {1}, 功能号： {2}", iRetCode, iErrorCode, iFunction);
+                //Console.WriteLine("主推业务订阅 - 返回码：{0}, 错误码： {1}, 功能号： {2}", iRetCode, iErrorCode, iFunction);
                 if (Enum.IsDefined(typeof(FunctionCode), iFunction))
                 {
                     FunctionCode functionCode = (FunctionCode)Enum.ToObject(typeof(FunctionCode), iFunction);
@@ -207,17 +206,17 @@ namespace BLL.UFX
 
         public override void OnRegister(CT2Connection lpConnection)
         {
-            logger.Info("OnRegister: 服务端成功注册！");
+            UFXLogger.Info(logger, "OnRegister: 服务端成功注册！");
         }
 
         public override void OnSafeConnect(CT2Connection lpConnection)
         {
-            logger.Info("OnSafeConnect: 成功建立安全连接！");
+            UFXLogger.Info(logger, "OnSafeConnect: 成功建立安全连接！");
         }
 
         public override void OnSent(CT2Connection lpConnection, int hSend, void* lpData, int nLength, int nQueuingData)
         {
-            logger.Info("OnSend: 发送数据成功！");
+            UFXLogger.Info(logger, "OnSend: 发送数据成功！");
         }
         #endregion
 
