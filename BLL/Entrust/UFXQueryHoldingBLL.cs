@@ -1,6 +1,7 @@
 ﻿using BLL.Product;
 using BLL.UFX;
 using BLL.UFX.impl;
+using Config;
 using log4net;
 using Model;
 using Model.Binding.BindingUtil;
@@ -23,6 +24,7 @@ namespace BLL.Entrust
         public UFXQueryHoldingBLL()
         {
             _securityBLL = BLLManager.Instance.SecurityBLL;
+            _timeOut = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.Timeout;
         }
 
         public List<UFXHoldingResponse> Query(CallerCallback callback)

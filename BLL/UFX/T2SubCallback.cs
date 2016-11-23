@@ -2,6 +2,7 @@
 using BLL.UFX.impl;
 using hundsun.mcapi;
 using hundsun.t2sdk;
+using log4net;
 using Model.UFX;
 using System;
 using System.Runtime.InteropServices;
@@ -11,6 +12,8 @@ namespace BLL.UFX
     //订阅回调
     public unsafe class T2SubCallback : CT2SubCallbackInterface
     {
+        private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private UFXFilterBLL _filterBLL = new UFXFilterBLL();
 
         public T2SubCallback()
@@ -41,9 +44,10 @@ namespace BLL.UFX
                 parser.Parse(lpUnpacker);
 
 
-                Console.WriteLine("====推送=====过滤字段部分=====开始");
+                Log("====推送=====过滤字段部分=====开始");
                 //parser.Output();
-                Console.WriteLine("====推送=====过滤字段部分=====结束");
+                Log(parser);
+                Log("====推送=====过滤字段部分=====结束");
                 lpUnpacker.Dispose();
 
                 messageType = _filterBLL.GetMessageType(parser);
@@ -59,9 +63,10 @@ namespace BLL.UFX
                     //....
                     DataParser parser = new DataParser();
                     parser.Parse(lpUnpacker1);
-                    Console.WriteLine("====推送*****数据部分=====开始");
+                    Log("====推送*****数据部分=====开始");
                     //parser.Output();
-                    Console.WriteLine("====推送*****数据部分=====结束");
+                    Log(parser);
+                    Log("====推送*****数据部分=====结束");
                     lpUnpacker1.Dispose();
 
                     if (subscriberBLL != null)
@@ -77,6 +82,21 @@ namespace BLL.UFX
         public override void OnRecvTickMsg(CT2SubscribeInterface lpSub, int subscribeIndex, string TickMsgInfo)
         {
             Console.WriteLine("T2SubCallback.OnRecvTickMsg");
+        }
+
+        private void Log(string msg)
+        { 
+#if DEBUG
+            logger.Info(msg);
+#endif
+        }
+
+        private void Log(DataParser parser)
+        {
+#if DEBUG
+            string msg = parser.GetOutputStr();
+            logger.Info(msg);
+#endif
         }
     }
 }

@@ -52,11 +52,11 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procTradingCommandSecurityUpdate')
-drop proc procTradingCommandSecurityUpdate
+if exists (select name from sysobjects where name='procTradingCommandSecurityInsertOrUpdate')
+drop proc procTradingCommandSecurityInsertOrUpdate
 
 go
-create proc procTradingCommandSecurityUpdate(
+create proc procTradingCommandSecurityInsertOrUpdate(
 	@CommandId			int 
 	,@SecuCode			varchar(10) 
 	,@SecuType			int
@@ -66,13 +66,45 @@ create proc procTradingCommandSecurityUpdate(
 )
 as
 begin
-	update tradingcommandsecurity
-	set CommandAmount = @CommandAmount
-		,CommandDirection = @CommandDirection
-		,CommandPrice = @CommandPrice
-	where CommandId = @CommandId
+
+	declare @Total int
+
+	set @Total=(select count(SecuCode) as Total 
+		from tradingcommandsecurity 
+		where CommandId = @CommandId
 		and SecuCode = @SecuCode
-		and SecuType = @SecuType
+		and SecuType = @SecuType)
+	
+	if @Total = 0
+	begin
+		insert into tradingcommandsecurity(
+			CommandId			
+			,SecuCode			
+			,SecuType		
+			,CommandAmount	
+			,CommandDirection	
+			,CommandPrice		
+			,EntrustStatus		
+		)values(
+			@CommandId			
+			,@SecuCode			
+			,@SecuType	
+			,@CommandAmount	
+			,@CommandDirection
+			,@CommandPrice		
+			,1		
+		)
+	end
+	else
+	begin
+		update tradingcommandsecurity
+		set CommandAmount = @CommandAmount
+			,CommandDirection = @CommandDirection
+			,CommandPrice = @CommandPrice
+		where CommandId = @CommandId
+			and SecuCode = @SecuCode
+			and SecuType = @SecuType
+	end
 end
 --go
 --if exists (select name from sysobjects where name='procTradingCommandSecurityUpdateEntrustAmount')

@@ -62,7 +62,7 @@ namespace BLL.Frontend
                     //set the status as EntrustStatus.CancelToDB in database
                     _entrustdao.UpdateOneEntrustStatus(entrustCmdItem.SubmitId, EntrustStatus.CancelToDB);
 
-                    var bllResponse = _ufxBasketWithdrawBLL.Cancel(entrustCmdItem, entrustSecuCancelItems, callerCallback);
+                    var bllResponse = _ufxBasketWithdrawBLL.Withdraw(entrustCmdItem, callerCallback);
                     if (BLLResponse.Success(bllResponse))
                     {
                         copies += entrustCmdItem.Copies;
@@ -102,7 +102,7 @@ namespace BLL.Frontend
                 return cancelSecuItems;
             }
 
-            var bllResponse = _ufxWithdrawBLL.Cancel(submitId, commandId, entrustedSecuItems, callerCallback);
+            var bllResponse = _ufxWithdrawBLL.Withdraw(submitId, commandId, entrustedSecuItems, callerCallback);
             if (BLLResponse.Success(bllResponse))
             {
                 //int copies = cmdItem.Copies;
@@ -135,7 +135,7 @@ namespace BLL.Frontend
                 return cancelSecuItems;
             }
 
-            var bllResponse = _ufxWithdrawBLL.Cancel(submitId, commandId, entrustedSecuItems, callerCallback);
+            var bllResponse = _ufxWithdrawBLL.Withdraw(submitId, commandId, entrustedSecuItems, callerCallback);
             if (BLLResponse.Success(bllResponse))
             {
                 //int copies = cmdItem.Copies;

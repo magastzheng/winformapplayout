@@ -343,74 +343,16 @@ namespace TradingSystem.View
                 }
 
                 var newOpenItem = GetOpenPositionItem(orderItem);
+                var selectedSecuItems = _securityDataSource.Where(p => p.Selection && p.MonitorId == newOpenItem.MonitorId).ToList();
+                int ret = _tradeCommandBLL.SubmitOpenPosition(newOpenItem, selectedSecuItems, orderItem.StartDate, orderItem.EndDate);
 
-                int instanceId = -1;
-                string instanceCode = newOpenItem.InstanceCode;
-                var instance = _tradeInstanceBLL.GetInstance(instanceCode);
-                if (instance != null && !string.IsNullOrEmpty(instance.InstanceCode) && instance.InstanceCode.Equals(instanceCode))
+                if (ret > 0)
                 {
-                    instanceId = instance.InstanceId;
-                    instance.OperationCopies += newOpenItem.Copies;
-                    var secuItems = _securityDataSource.Where(p => p.MonitorId == newOpenItem.MonitorId).ToList();
-                    _tradeInstanceBLL.Update(instance, newOpenItem, secuItems);
+
                 }
                 else
-                {
-                    TradingInstance tradeInstance = new TradingInstance
-                    {
-                        InstanceCode = instanceCode,
-                        PortfolioId = newOpenItem.PortfolioId,
-                        MonitorUnitId = newOpenItem.MonitorId,
-                        StockDirection = EntrustDirection.BuySpot,
-                        FuturesContract = newOpenItem.FuturesContract,
-                        FuturesDirection = EntrustDirection.SellOpen,
-                        OperationCopies = newOpenItem.Copies,
-                        StockPriceType = StockPriceType.NoLimit,
-                        FuturesPriceType = FuturesPriceType.NoLimit,
-                        Status = TradingInstanceStatus.Active,
-                    };
-
-                    tradeInstance.Owner = LoginManager.Instance.GetUserId();
-                    
-                    var secuItems = _securityDataSource.Where(p => p.MonitorId == newOpenItem.MonitorId).ToList();
-
-                    instanceId = _tradeInstanceBLL.Create(tradeInstance, newOpenItem, secuItems);
-                }
-
-                if (instanceId > 0)
-                {
-                    //success! Will send generate TradingCommand
-                    TradeCommand cmdItem = new TradeCommand
-                    {
-                        InstanceId = instanceId,
-                        ECommandType = CommandType.Arbitrage,
-                        EExecuteType = ExecuteType.OpenPosition,
-                        CommandNum = newOpenItem.Copies,
-                        EStockDirection = EntrustDirection.BuySpot,
-                        EFuturesDirection = EntrustDirection.SellOpen,
-                        EEntrustStatus = EntrustStatus.NoExecuted,
-                        EDealStatus = DealStatus.NoDeal,
-                        ModifiedTimes = 1,
-                        DStartDate = orderItem.StartDate,
-                        DEndDate = orderItem.EndDate,
-                    };
-
-                    var cmdSecuItems = GetSelectCommandSecurities(newOpenItem, -1);
-
-                    int ret = _tradeCommandBLL.Submit(cmdItem, cmdSecuItems);
-
-                    if (ret > 0)
-                    {
-                        //Success
-                    }
-                    else
-                    {
-                        //Some item fail
-                    }
-                }
-                else
-                {
-                    //TODO: error message
+                { 
+                    //TODO: fail to submit
                 }
             }
         }
@@ -478,10 +420,10 @@ namespace TradingSystem.View
             return newOpenItem;
         }
 
-        private List<TradeCommandSecurity> GetSelectCommandSecurities(OpenPositionItem openItem, int commandId)
+        private List<TradeCommandSecurity> GetSelectCommandSecurities(OpenPositionItem openItem, int commandId, List<OpenPositionSecurityItem> selectedSecuItems)
         {
             List<TradeCommandSecurity> cmdSecuItems = new List<TradeCommandSecurity>();
-            foreach (var item in _securityDataSource)
+            foreach (var item in selectedSecuItems)
             {
                 if (item.Selection && item.MonitorId == openItem.MonitorId)
                 {

@@ -1,5 +1,6 @@
 ﻿using BLL.UFX;
 using BLL.UFX.impl;
+using Config;
 using DBAccess;
 using DBAccess.Entrust;
 using log4net;
@@ -29,9 +30,19 @@ namespace BLL.Entrust
         public UFXWithdrawBLL()
         {
             _securityBLL = BLLManager.Instance.SecurityBLL;
+            _timeOut = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.Timeout;
         }
 
-        public BLLResponse Cancel(int submitId, int commandId, List<EntrustSecurityItem> entrustItems, CallerCallback callerCallback)
+        /// <summary>
+        /// Withdraw the entrusted securites.
+        /// NOTE: the entrust_no is  necessary.
+        /// </summary>
+        /// <param name="submitId">The entrustsecurity SubmitId.</param>
+        /// <param name="commandId">The tradingcommand CommandId.</param>
+        /// <param name="entrustItems">The entrustsecurity item.</param>
+        /// <param name="callerCallback"></param>
+        /// <returns></returns>
+        public BLLResponse Withdraw(int submitId, int commandId, List<EntrustSecurityItem> entrustItems, CallerCallback callerCallback)
         {
             BLLResponse bllResponse = new BLLResponse();
 

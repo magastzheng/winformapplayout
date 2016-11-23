@@ -89,15 +89,9 @@ namespace Util
             int minute = 0;
             int second = 0;
 
-            year = ymd / 10000;
-            month = (ymd % 10000) / 100;
-            day = ymd % 100;
-            hour = hms / 10000;
-            minute = (hms % 10000) / 100;
-            second = hms % 100;
-
-            if (IsValidDay(year, month, day) && IsValidTime(hour, minute, second))
-            { 
+            if (GetYMD(ymd, out year, out month, out day) 
+                && GetHMS(hms, out hour, out minute, out second))
+            {
                 dt = new DateTime(year, month, day, hour, minute, second);
             }
 
@@ -118,6 +112,90 @@ namespace Util
             bool isValid = DateTime.TryParseExact(str, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
 
             return isValid;
+        }
+
+        /// <summary>
+        /// Validate whether the given integer value can be converted to a valid date.
+        /// </summary>
+        /// <param name="ymd">An integer value.</param>
+        /// <returns>It will return true if the ymd can be converted to a valid date(year, month, day), otherwise it will return false.</returns>
+        public static bool IsValidDate(int ymd)
+        {
+            int year;
+            int month;
+            int day;
+
+            return GetYMD(ymd, out year, out month, out day);
+        }
+
+        /// <summary>
+        /// Validate whether the given integer value can be converted to a valid time.
+        /// </summary>
+        /// <param name="hms">An integer value.</param>
+        /// <returns>It will return true if the hms can be converted to a valid time(hour, minute, second), otherwise it will return false.</returns>
+        public static bool IsValidTime(int hms)
+        {
+            int hour;
+            int minute;
+            int second;
+
+            return GetHMS(hms, out hour, out minute, out second);
+        }
+
+        /// <summary>
+        /// Get the year, month, day from an integer value.
+        /// </summary>
+        /// <param name="ymd">An integer value from datetime YMD = year * 10000 + month * 100 + day.</param>
+        /// <param name="year">The output value of the year.</param>
+        /// <param name="month">The output value of the month.</param>
+        /// <param name="day">The output value of the day.</param>
+        /// <returns>It will return true if the ymd can be converted to an valid date(year, month, day), otherwise return false.</returns>
+        private static bool GetYMD(int ymd, out int year, out int month, out int day)
+        {
+            if (ymd < 0)
+            {
+                year = 0;
+                month = 0;
+                day = 0;
+
+                return false;
+            }
+            else
+            {
+                year = ymd / 10000;
+                month = (ymd % 10000) / 100;
+                day = ymd % 100;
+
+                return IsValidDay(year, month, day);
+            }
+        }
+
+        /// <summary>
+        /// Get the hour, minute, second from an integer value.
+        /// </summary>
+        /// <param name="hms">An integer value of HMS = 10000 * hour + 100 * minute + second.</param>
+        /// <param name="hour">The output value of the hour.</param>
+        /// <param name="minute">The output value of the minute.</param>
+        /// <param name="second">The output value of the second.</param>
+        /// <returns>It will return true if the hms can be converted to valid time(hour, minute, second), otherwise return false. </returns>
+        private static bool GetHMS(int hms, out int hour, out int minute, out int second)
+        {
+            if (hms < 0)
+            {
+                hour = 0;
+                minute = 0;
+                second = 0;
+
+                return false;
+            }
+            else
+            {
+                hour = hms / 10000;
+                minute = (hms % 10000) / 100;
+                second = hms % 100;
+
+                return IsValidTime(hour, minute, second);
+            }
         }
 
         private static bool IsValidDay(int year, int month, int day)

@@ -1,5 +1,6 @@
 ﻿using BLL.UFX;
 using BLL.UFX.impl;
+using Config;
 using log4net;
 using Model.Binding.BindingUtil;
 using Model.UFX;
@@ -19,6 +20,7 @@ namespace BLL.Entrust
         public UFXQueryMultipleHoldingBLL()
         {
             _securityBLL = BLLManager.Instance.SecurityBLL;
+            _timeOut = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.Timeout;
         }
 
         public int Query()

@@ -92,8 +92,8 @@ namespace TradingSystem.View
             {
                 case UpdateDirection.Select:
                     {
-                        LoadSecurity(closeItem);
                         LoadCloseCommand(closeItem);
+                        LoadSecurity(closeItem);
                     }
                     break;
                 case UpdateDirection.UnSelect:
@@ -130,27 +130,41 @@ namespace TradingSystem.View
 
         private void LoadSecurity(ClosePositionItem closeItem)
         {
+            var closeCmdItem = _cmdDataSource.ToList().Find(p => p.InstanceId == closeItem.InstanceId);
+            if (closeCmdItem == null)
+                return;
+            EntrustDirection direction = EntrustDirectionUtil.GetEntrustDirection(closeCmdItem.TradeDirection);
+
             var secuItems = _tradeInstanceSecuBLL.Get(closeItem.InstanceId);
-            var tempstockitems = _templateBLL.GetStocks(closeItem.TemplateId);
+            
             if (secuItems != null)
             {
+                if (direction == EntrustDirection.Sell)
+                {
+                    secuItems = secuItems.Where(p => p.PositionAmount > 0 || p.InstructionPreBuy > 0 || p.InstructionPreSell > 0).ToList();
+                }
+
                 foreach (var secuItem in secuItems)
                 {
                     AddSecurity(secuItem, closeItem);
                 }
             }
 
-            if(tempstockitems != null)
+            if (direction != EntrustDirection.Sell)
             {
-                var noIncludedStocks = from p in tempstockitems
-                                       where secuItems.Find(o => o.SecuCode.Equals(p.SecuCode)) == null
-                                       select p;
-
-                var noIncludedList = noIncludedStocks.ToList();
-                //AddSecurity();
-                foreach (var stockItem in noIncludedList)
+                var tempstockitems = _templateBLL.GetStocks(closeItem.TemplateId);
+                if (tempstockitems != null)
                 {
-                    AddSecurity(stockItem, closeItem);
+                    var noIncludedStocks = from p in tempstockitems
+                                           where secuItems.Find(o => o.SecuCode.Equals(p.SecuCode)) == null
+                                           select p;
+
+                    var noIncludedList = noIncludedStocks.ToList();
+                    //AddSecurity();
+                    foreach (var stockItem in noIncludedList)
+                    {
+                        AddSecurity(stockItem, closeItem);
+                    }
                 }
             }
         }

@@ -1,6 +1,7 @@
 ﻿using BLL.EntrustCommand;
 using BLL.UFX;
 using BLL.UFX.impl;
+using Config;
 using DBAccess.Entrust;
 using log4net;
 using Model.Binding.BindingUtil;
@@ -30,9 +31,10 @@ namespace BLL.Entrust
         public UFXBasketWithdrawBLL()
         {
             _securityBLL = BLLManager.Instance.SecurityBLL;
+            _timeOut = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.Timeout;
         }
 
-        public BLLResponse Cancel(EntrustCommandItem cmdItem, List<EntrustSecurityItem> entrustItems, CallerCallback callerCallback)
+        public BLLResponse Withdraw(EntrustCommandItem cmdItem, CallerCallback callerCallback)
         {
             BLLResponse bllResponse = new BLLResponse();
 

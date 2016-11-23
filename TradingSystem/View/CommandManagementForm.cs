@@ -87,31 +87,36 @@ namespace TradingSystem.View
             dialog.StartPosition = FormStartPosition.CenterParent;
             dialog.OnLoadControl(dialog, null);
             dialog.OnLoadData(dialog, selectedItem);
-            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            var dialogResult = dialog.ShowDialog();
+            if (dialogResult == System.Windows.Forms.DialogResult.OK)
             {
-                object resData = dialog.GetData();
-                if (resData != null && resData is List<ModifySecurityItem>)
-                {
-                    var secuItems = resData as List<ModifySecurityItem>;
-                    //secuItems.ForEach(p => p.CommandId = selectedItem.CommandId);
+                //object resData = dialog.GetData();
+                //if (resData != null && resData is List<ModifySecurityItem>)
+                //{
+                //    var secuItems = resData as List<ModifySecurityItem>;
+                    
+                //    //TODO: update the tradeinstance item
+                //    if (UpdateItem(selectedItem, secuItems) > 0)
+                //    {
+                        MessageDialog.Info(this, msgModifySuccess);
+                //    }
+                //    else
+                //    {
+                //        MessageDialog.Fail(this, msgModifyFailure);
+                //    }
+                //}
 
-                    //TODO: update the tradeinstance item
-                    //if (UpdateItem(selectedItem, secuItems) > 0)
-                    //{
-                    //    MessageDialog.Info(this, msgModifySuccess);
-                    //}
-                    //else
-                    //{
-                    //    MessageDialog.Fail(this, msgModifyFailure);
-                    //}
-                }
+                        dialog.Dispose();
             }
-            else
+            else if(dialogResult == System.Windows.Forms.DialogResult.No)
             { 
                 //do nothing
+                MessageDialog.Fail(this, msgModifyFailure);
+
+                dialog.Dispose();
             }
 
-            dialog.Dispose();
+            
         }
 
         private void ToolStripButton_Click_Cancel(object sender, System.EventArgs e)
@@ -157,6 +162,8 @@ namespace TradingSystem.View
                         DEndDate = selectedItem.DEndDate,
                         Notes = notes,
                     };
+
+                    //call the UFX interface to withdraw the entrust securities
 
                     //TODO: update the security in tradinginstance table
                     if (_tradeCommandBLL.Update(cmdItem) > 0)
@@ -260,108 +267,108 @@ namespace TradingSystem.View
         #endregion
 
 
-        #region modified command item
+        //#region modified command item
 
-        private int UpdateItem(CommandManagementItem cmdMngItem, List<ModifySecurityItem> modifiedSecuItems)
-        {
-            TradeCommand cmdItem = new TradeCommand 
-            {
-                CommandId = cmdMngItem.CommandId,
-                ECommandStatus = Model.EnumType.CommandStatus.Modified,
-                ModifiedDate = DateTime.Now,
-                Notes = cmdMngItem.Notes,
-            };
+        //private int UpdateItem(CommandManagementItem cmdMngItem, List<ModifySecurityItem> modifiedSecuItems)
+        //{
+        //    TradeCommand cmdItem = new TradeCommand 
+        //    {
+        //        CommandId = cmdMngItem.CommandId,
+        //        ECommandStatus = Model.EnumType.CommandStatus.Modified,
+        //        ModifiedDate = DateTime.Now,
+        //        Notes = cmdMngItem.Notes,
+        //    };
 
-            List<TradeCommandSecurity> tradeModifiedSecuItems = new List<TradeCommandSecurity>();
-            List<TradeCommandSecurity> tradeCancelSecuItems = new List<TradeCommandSecurity>();
-            var selectedModifiedSecuItems = modifiedSecuItems.Where(p => p.Selection).ToList();
-            foreach (var secuItem in selectedModifiedSecuItems)
-            {
-                TradeCommandSecurity tradeSecuItem = new TradeCommandSecurity 
-                {
-                    CommandId = cmdItem.CommandId,
-                    SecuCode = secuItem.SecuCode,
-                    SecuType = secuItem.SecuType,
-                    EDirection = secuItem.EDirection,
-                    CommandAmount = secuItem.NewCommandAmount,
-                    CommandPrice = secuItem.NewCommandPrice,
-                };
+        //    List<TradeCommandSecurity> tradeModifiedSecuItems = new List<TradeCommandSecurity>();
+        //    List<TradeCommandSecurity> tradeCancelSecuItems = new List<TradeCommandSecurity>();
+        //    var selectedModifiedSecuItems = modifiedSecuItems.Where(p => p.Selection).ToList();
+        //    foreach (var secuItem in selectedModifiedSecuItems)
+        //    {
+        //        TradeCommandSecurity tradeSecuItem = new TradeCommandSecurity 
+        //        {
+        //            CommandId = cmdItem.CommandId,
+        //            SecuCode = secuItem.SecuCode,
+        //            SecuType = secuItem.SecuType,
+        //            EDirection = secuItem.EDirection,
+        //            CommandAmount = secuItem.NewCommandAmount,
+        //            CommandPrice = secuItem.NewCommandPrice,
+        //        };
 
-                if (secuItem.Selection)
-                {
-                    tradeModifiedSecuItems.Add(tradeSecuItem);       
-                }
-                else
-                {
-                    tradeCancelSecuItems.Add(tradeSecuItem);
-                }
-            }
+        //        if (secuItem.Selection)
+        //        {
+        //            tradeModifiedSecuItems.Add(tradeSecuItem);       
+        //        }
+        //        else
+        //        {
+        //            tradeCancelSecuItems.Add(tradeSecuItem);
+        //        }
+        //    }
 
-            int result = _tradeCommandBLL.Update(cmdItem, tradeModifiedSecuItems, tradeCancelSecuItems);
-            if (result > 0)
-            {
-                //TODO: add more parameters
-                TradingInstance tradeInstance = new TradingInstance 
-                {
-                    InstanceId = cmdMngItem.InstanceId,
-                    InstanceCode = cmdMngItem.InstanceCode,
-                };
+        //    int result = _tradeCommandBLL.Update(cmdItem, tradeModifiedSecuItems, tradeCancelSecuItems);
+        //    if (result > 0)
+        //    {
+        //        //TODO: add more parameters
+        //        TradingInstance tradeInstance = new TradingInstance 
+        //        {
+        //            InstanceId = cmdMngItem.InstanceId,
+        //            InstanceCode = cmdMngItem.InstanceCode,
+        //        };
 
-                List<TradingInstanceSecurity> modifiedInstSecuItems = new List<TradingInstanceSecurity>();
-                List<TradingInstanceSecurity> cancelInstSecuItems = new List<TradingInstanceSecurity>();
-                foreach (var secuItem in selectedModifiedSecuItems)
-                {
-                    int modifiedAmount = secuItem.NewCommandAmount - secuItem.OriginCommandAmount;
+        //        List<TradingInstanceSecurity> modifiedInstSecuItems = new List<TradingInstanceSecurity>();
+        //        List<TradingInstanceSecurity> cancelInstSecuItems = new List<TradingInstanceSecurity>();
+        //        foreach (var secuItem in selectedModifiedSecuItems)
+        //        {
+        //            int modifiedAmount = secuItem.NewCommandAmount - secuItem.OriginCommandAmount;
 
-                    TradingInstanceSecurity tradeInstSecuItem = new TradingInstanceSecurity 
-                    {
-                        SecuCode = secuItem.SecuCode,
-                        SecuType = secuItem.SecuType,
-                        InstructionPreBuy = 0,
-                        InstructionPreSell = 0,
-                    };
+        //            TradingInstanceSecurity tradeInstSecuItem = new TradingInstanceSecurity 
+        //            {
+        //                SecuCode = secuItem.SecuCode,
+        //                SecuType = secuItem.SecuType,
+        //                InstructionPreBuy = 0,
+        //                InstructionPreSell = 0,
+        //            };
 
-                    //TODO::::::how to handle the case???
-                    switch (secuItem.EDirection)
-                    {
-                        case Model.EnumType.EntrustDirection.BuySpot:
-                            {
-                                tradeInstSecuItem.InstructionPreBuy = modifiedAmount;
-                            }
-                            break;
-                        case Model.EnumType.EntrustDirection.SellSpot:
-                            {
-                                tradeInstSecuItem.InstructionPreSell = modifiedAmount;
-                            }
-                            break;
-                        case Model.EnumType.EntrustDirection.SellOpen:
-                            {
-                                tradeInstSecuItem.InstructionPreSell = modifiedAmount;
-                            }
-                            break;
-                        case Model.EnumType.EntrustDirection.BuyClose:
-                            {
-                                tradeInstSecuItem.InstructionPreBuy = modifiedAmount;
-                            }
-                            break;
-                    }
+        //            //TODO::::::how to handle the case???
+        //            switch (secuItem.EDirection)
+        //            {
+        //                case Model.EnumType.EntrustDirection.BuySpot:
+        //                    {
+        //                        tradeInstSecuItem.InstructionPreBuy = modifiedAmount;
+        //                    }
+        //                    break;
+        //                case Model.EnumType.EntrustDirection.SellSpot:
+        //                    {
+        //                        tradeInstSecuItem.InstructionPreSell = modifiedAmount;
+        //                    }
+        //                    break;
+        //                case Model.EnumType.EntrustDirection.SellOpen:
+        //                    {
+        //                        tradeInstSecuItem.InstructionPreSell = modifiedAmount;
+        //                    }
+        //                    break;
+        //                case Model.EnumType.EntrustDirection.BuyClose:
+        //                    {
+        //                        tradeInstSecuItem.InstructionPreBuy = modifiedAmount;
+        //                    }
+        //                    break;
+        //            }
 
-                    if (secuItem.Selection)
-                    {
-                        modifiedInstSecuItems.Add(tradeInstSecuItem);
-                    }
-                    else
-                    {
-                        cancelInstSecuItems.Add(tradeInstSecuItem);
-                    }
-                }
+        //            if (secuItem.Selection)
+        //            {
+        //                modifiedInstSecuItems.Add(tradeInstSecuItem);
+        //            }
+        //            else
+        //            {
+        //                cancelInstSecuItems.Add(tradeInstSecuItem);
+        //            }
+        //        }
 
-                result = _tradeInstanceBLL.Update(tradeInstance, modifiedInstSecuItems, cancelInstSecuItems);
-            }
+        //        result = _tradeInstanceBLL.Update(tradeInstance, modifiedInstSecuItems, cancelInstSecuItems);
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
-        #endregion
+        //#endregion
     }
 }

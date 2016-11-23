@@ -216,11 +216,11 @@ namespace BLL.UFX.impl
             {
                 if (item.Name.Equals("entrust_amount"))
                 {
-                    sb.AppendFormat("{0}\t{1}\t{2}\t{3}\n", item.Name, PackFieldType.FloatType, item.Width, item.Scale);
+                    sb.AppendFormat("{0}|{1}|{2}|{3}\n", item.Name, PackFieldType.FloatType, item.Width, item.Scale);
                 }
                 else
                 {
-                    sb.AppendFormat("{0}\t{1}\t{2}\t{3}\n", item.Name, item.Type, item.Width, item.Scale);
+                    sb.AppendFormat("{0}|{1}|{2}|{3}\n", item.Name, item.Type, item.Width, item.Scale);
                 }
             }
 
@@ -235,7 +235,7 @@ namespace BLL.UFX.impl
                         Type type = request.GetType();
 
                         object obj = type.GetProperty(dataField.Name).GetValue(request);
-                        sb.AppendFormat("{0}\t{1}", item.Name, obj);
+                        sb.AppendFormat("{0}:{1}|", item.Name, obj);
                     }
                     else
                     {
@@ -243,26 +243,27 @@ namespace BLL.UFX.impl
                         {
                             case "user_token":
                                 {
-                                    sb.AppendFormat("{0}\t{1}\n", item.Name, LoginManager.Instance.LoginUser.Token);
+                                    sb.AppendFormat("{0}:{1}|", item.Name, LoginManager.Instance.LoginUser.Token);
                                 }
                                 break;
                             default:
                                 if (item.Type == PackFieldType.IntType)
                                 {
-                                    sb.AppendFormat("{0}\t{1}\n", item.Name, -1);
+                                    sb.AppendFormat("{0}:{1}|", item.Name, -1);
                                 }
                                 else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
                                 {
-                                    sb.AppendFormat("{0}\t{1}\n", item.Name, item.Name);
+                                    sb.AppendFormat("{0}:{1}|", item.Name, item.Name);
                                 }
                                 else
                                 {
-                                    sb.AppendFormat("{0}\t{1}\n", item.Name, item.Name);
+                                    sb.AppendFormat("{0}:{1}|", item.Name, item.Name);
                                 }
                                 break;
                         }
                     }
                 }
+                sb.Append("\n");
             }
 
             sb.AppendLine("=========================================================");

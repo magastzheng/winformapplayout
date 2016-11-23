@@ -9,7 +9,7 @@ namespace DBAccess.TradeCommand
     public class TradingCommandSecurityDAO: BaseDAO
     {
         private const string SP_Create = "procTradingCommandSecurityInsert";
-        private const string SP_Modify = "procTradingCommandSecurityUpdate";
+        private const string SP_Modify = "procTradingCommandSecurityInsertOrUpdate";
         //private const string SP_ModifyEntrustAmount = "procTradingCommandSecurityUpdateEntrustAmount";
         private const string SP_Delete = "procTradingCommandSecurityDelete";
         private const string SP_Get = "procTradingCommandSecuritySelect";

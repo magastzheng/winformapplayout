@@ -14,7 +14,7 @@ namespace DBAccess.TradeCommand
         private const string SP_CreateTradeCommand = "procTradingCommandInsert";
         private const string SP_ModifyTradeCommand = "procTradingCommandUpdate";
         private const string SP_CreateTradingSecurity = "procTradingCommandSecurityInsert";
-        private const string SP_ModifyTradingSecurity = "procTradingCommandSecurityUpdate";
+        private const string SP_ModifyTradingSecurity = "procTradingCommandSecurityInsertOrUpdate";
         private const string SP_DeleteTradingSecurity = "procTradingCommandSecurityDelete";
 
         public CommandDAO()
@@ -163,7 +163,7 @@ namespace DBAccess.TradeCommand
                     foreach (var secuItem in modifiedSecuItems)
                     {
                         dbCommand.Parameters.Clear();
-                        dbCommand.CommandText = SP_CreateTradingSecurity;
+                        dbCommand.CommandText = SP_ModifyTradingSecurity;
 
                         secuItem.CommandId = commandId;
                         _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);

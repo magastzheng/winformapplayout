@@ -99,6 +99,40 @@ create proc procTradingInstanceUpdate(
 )
 as
 begin
+	declare @OldMonitorUnitId int
+	declare @OldStockDirection int
+	declare @OldFuturesDirection int
+	declare @OldOperationCopies int
+	--declare @OldStockPriceType int
+
+	select @OldMonitorUnitId = MonitorUnitId
+		,@OldStockDirection = StockDirection
+		,@OldFuturesDirection = FuturesDirection
+		,@OldOperationCopies = OperationCopies
+		--,@OldStockPriceType = StockPriceType
+	from tradinginstance
+	where InstanceId=@InstanceId 
+
+	if @MonitorUnitId = 0 or @MonitorUnitId < 0
+	begin
+		set @MonitorUnitId = @OldMonitorUnitId
+	end
+
+	if @OperationCopies = 0 or @OperationCopies < 0
+	begin
+		set @OperationCopies = @OldOperationCopies
+	end
+
+	if @StockDirection = 0 or @StockDirection < 0
+	begin
+		set @StockDirection = @OldStockDirection
+	end
+
+	if @FuturesDirection = 0 or @FuturesDirection < 0
+	begin
+		set @FuturesDirection = @OldFuturesDirection
+	end
+
 	--不可修改PortfolioId
 	update tradinginstance
 	set			

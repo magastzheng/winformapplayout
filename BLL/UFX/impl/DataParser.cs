@@ -3,6 +3,7 @@ using Model;
 using Model.Data;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace BLL.UFX.impl
 {
@@ -100,11 +101,77 @@ namespace BLL.UFX.impl
 
         public void Output()
         {
-            for(int k = 0; k < 1; k++)
+            //for(int k = 0; k < 1; k++)
+            //{
+            //    var dataSet = _dataSets[k];
+            //    if (dataSet == null || dataSet.Rows == null || dataSet.Rows.Count == 0)
+            //        return;
+
+            //    for (int i = 0; i < 1; i++)
+            //    {
+            //        var header = dataSet.Rows[0];
+            //        string strName = string.Empty, strValue = string.Empty;
+            //        foreach (var kv in header.Columns)
+            //        {
+            //            strName += kv.Key;
+            //            strName += "\t";
+            //            strValue += kv.Value.Value.ToString();
+            //            strValue += "\t";
+            //        }
+            //        Console.WriteLine(strName);
+            //        Console.WriteLine(strValue);
+            //    }
+            //}
+
+            //for(int k = 1; k < _dataSets.Count; k++)
+            //{
+            //    var dataSet = _dataSets[k];
+            //    string strDataName = string.Empty;
+            //    for (int i = 0; i < dataSet.Rows.Count; i++)
+            //    {
+            //        var row = dataSet.Rows[i];
+            //        string strDataValue = string.Empty;
+            //        foreach (var kv in row.Columns)
+            //        {
+            //            if (i == 0)
+            //            {
+            //                strDataName += kv.Key;
+            //                strDataName += "\t";
+            //            }
+                        
+            //            strDataValue += kv.Value.Value.ToString();
+            //            strDataValue += "\t";
+            //        }
+            //        if (i == 0)
+            //        {
+            //            Console.WriteLine(strDataName);
+            //        }
+                    
+            //        Console.WriteLine(strDataValue);
+            //    }
+            //}
+
+            string output = GetOutputStr();
+            Console.WriteLine(output);
+        }
+
+        public string GetOutputStr()
+        {
+            StringBuilder sb = new StringBuilder();
+            if (_dataSets == null || _dataSets.Count == 0)
+            {
+                sb.AppendLine("Empty data.");
+                return sb.ToString();
+            }
+
+            for (int k = 0; k < 1; k++)
             {
                 var dataSet = _dataSets[k];
                 if (dataSet == null || dataSet.Rows == null || dataSet.Rows.Count == 0)
-                    return;
+                {
+                    sb.AppendLine("Empty data.");
+                    return sb.ToString();
+                }
 
                 for (int i = 0; i < 1; i++)
                 {
@@ -117,38 +184,43 @@ namespace BLL.UFX.impl
                         strValue += kv.Value.Value.ToString();
                         strValue += "\t";
                     }
-                    Console.WriteLine(strName);
-                    Console.WriteLine(strValue);
+
+                    sb.AppendFormat("{0}{1}\n", strName, strValue);
                 }
             }
 
-            for(int k = 1; k < _dataSets.Count; k++)
+            if (_dataSets.Count > 1)
             {
-                var dataSet = _dataSets[k];
-                string strDataName = string.Empty;
-                for (int i = 0; i < dataSet.Rows.Count; i++)
+                for (int k = 1; k < _dataSets.Count; k++)
                 {
-                    var row = dataSet.Rows[i];
-                    string strDataValue = string.Empty;
-                    foreach (var kv in row.Columns)
+                    var dataSet = _dataSets[k];
+                    string strDataName = string.Empty;
+                    for (int i = 0; i < dataSet.Rows.Count; i++)
                     {
+                        var row = dataSet.Rows[i];
+                        string strDataValue = string.Empty;
+                        foreach (var kv in row.Columns)
+                        {
+                            if (i == 0)
+                            {
+                                strDataName += kv.Key;
+                                strDataName += "\t";
+                            }
+
+                            strDataValue += kv.Value.Value.ToString();
+                            strDataValue += "\t";
+                        }
                         if (i == 0)
                         {
-                            strDataName += kv.Key;
-                            strDataName += "\t";
+                            sb.AppendLine(strDataName);
                         }
-                        
-                        strDataValue += kv.Value.Value.ToString();
-                        strDataValue += "\t";
+
+                        sb.AppendLine(strDataValue);
                     }
-                    if (i == 0)
-                    {
-                        Console.WriteLine(strDataName);
-                    }
-                    
-                    Console.WriteLine(strDataValue);
                 }
             }
+
+            return sb.ToString();
         }
     }
 }

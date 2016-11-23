@@ -56,6 +56,20 @@ namespace BLL.TradeInstance
             }
         }
 
+        public int Update(TradingInstance tradeInstance, ClosePositionItem closeItem, List<ClosePositionSecurityItem> secuItems)
+        {
+            int userId = LoginManager.Instance.GetUserId();
+            if (_permissionManager.HasPermission(userId, tradeInstance.InstanceId, ResourceType.TradeInstance, PermissionMask.Edit))
+            {
+                var tradeinstSecus = GetTradingInstanceSecurities(tradeInstance, closeItem, secuItems);
+                return _tradeinstancedao.Update(tradeInstance, tradeinstSecus);
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
         public int Update(TradingInstance tradeInstance, List<TradingInstanceSecurity> modifiedSecuItems, List<TradingInstanceSecurity> cancelSecuItems)
         { 
             int userId = LoginManager.Instance.GetUserId();
@@ -68,11 +82,6 @@ namespace BLL.TradeInstance
                 return -1;
             }
         }
-
-        //public int Update(TradingInstance tradeInstance, ClosePositionItem closeItem, List<ClosePositionSecurityItem> secuItems)
-        //{
-        //    return -1;
-        //}
 
         public TradingInstance GetInstance(int instanceId)
         {
@@ -198,37 +207,7 @@ namespace BLL.TradeInstance
 
                 if (item.Selection)
                 {
-                    switch (tiSecuItem.SecuType)
-                    {
-                        case SecurityType.Stock:
-                            {
-                                tiSecuItem.InstructionPreBuy = openItem.Copies * item.WeightAmount;
-                                if (item.EDirection == EntrustDirection.BuySpot)
-                                {
-                                    tiSecuItem.PositionType = PositionType.SpotLong;
-                                }
-                                else if (item.EDirection == EntrustDirection.SellSpot)
-                                {
-                                    tiSecuItem.PositionType = PositionType.SpotShort;
-                                }
-                            }
-                            break;
-                        case SecurityType.Futures:
-                            {
-                                tiSecuItem.InstructionPreSell = openItem.Copies * item.WeightAmount;
-                                if (item.EDirection == EntrustDirection.SellOpen)
-                                {
-                                    tiSecuItem.PositionType = PositionType.FuturesShort;
-                                }
-                                else if (item.EDirection == EntrustDirection.BuyClose)
-                                {
-                                    tiSecuItem.PositionType = PositionType.FuturesLong;
-                                }
-                            }
-                            break;
-                        default:
-                            break;
-                    }
+                    SetPreItem(tiSecuItem, item.EDirection, item.EntrustAmount);
                 }
 
                 tradeInstanceSecuItems.Add(tiSecuItem);
@@ -253,46 +232,57 @@ namespace BLL.TradeInstance
                 {
                     tiSecuItem.SecuType = findItem.SecuType;
                 }
+                else
+                {
+                    tiSecuItem.SecuType = item.SecuType;
+                }
 
                 if (item.Selection)
                 {
-                    switch (tiSecuItem.SecuType)
-                    {
-                        case SecurityType.Stock:
-                            {
-                                //tiSecuItem.InstructionPreBuy = closeItem.Copies * item.WeightAmount;
-                                //if (item.EntrustDirection == EntrustDirection.BuySpot)
-                                //{
-                                //    tiSecuItem.PositionType = PositionType.StockLong;
-                                //}
-                                //else if (item.DirectionType == EntrustDirection.SellSpot)
-                                //{
-                                //    tiSecuItem.PositionType = PositionType.StockShort;
-                                //}
-                            }
-                            break;
-                        case SecurityType.Futures:
-                            {
-                                //tiSecuItem.InstructionPreSell = openItem.Copies * item.WeightAmount;
-                                //if (item.DirectionType == EntrustDirection.SellOpen)
-                                //{
-                                //    tiSecuItem.PositionType = PositionType.FuturesShort;
-                                //}
-                                //else if (item.DirectionType == EntrustDirection.BuyClose)
-                                //{
-                                //    tiSecuItem.PositionType = PositionType.FuturesLong;
-                                //}
-                            }
-                            break;
-                        default:
-                            break;
-                    }
+                    SetPreItem(tiSecuItem, item.EDirection, item.EntrustAmount);
                 }
 
                 tradeInstanceSecuItems.Add(tiSecuItem);
             }
 
             return tradeInstanceSecuItems;
+        }
+
+        private void SetPreItem(TradingInstanceSecurity tiSecuItem, EntrustDirection direction, int entrustAmount)
+        {
+            switch (tiSecuItem.SecuType)
+            {
+                case SecurityType.Stock:
+                    {
+                        if (direction == EntrustDirection.BuySpot)
+                        {
+                            tiSecuItem.InstructionPreBuy = entrustAmount;
+                            tiSecuItem.PositionType = PositionType.SpotLong;
+                        }
+                        else if (direction == EntrustDirection.SellSpot)
+                        {
+                            tiSecuItem.InstructionPreSell = entrustAmount;
+                            tiSecuItem.PositionType = PositionType.SpotShort;
+                        }
+                    }
+                    break;
+                case SecurityType.Futures:
+                    {
+                        if (direction == EntrustDirection.SellOpen)
+                        {
+                            tiSecuItem.InstructionPreBuy = entrustAmount;
+                            tiSecuItem.PositionType = PositionType.FuturesShort;
+                        }
+                        else if (direction == EntrustDirection.BuyClose)
+                        {
+                            tiSecuItem.InstructionPreSell = entrustAmount;
+                            tiSecuItem.PositionType = PositionType.FuturesLong;
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
         #endregion
     }

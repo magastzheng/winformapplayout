@@ -1,4 +1,5 @@
 ﻿using BLL.Permission;
+using BLL.TradeInstance;
 using BLL.UsageTracking;
 using Config;
 using DBAccess.Template;
@@ -29,6 +30,7 @@ namespace BLL.Frontend
         private TradingCommandDAO _tradecommandao = new TradingCommandDAO();
         private TradingCommandSecurityDAO _tradecmdsecudao = new TradingCommandSecurityDAO();
 
+        private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
         private UserActionTrackingBLL _userActionTrackingBLL = new UserActionTrackingBLL();
         private PermissionManager _permissionManager = new PermissionManager();
         private QueryBLL _queryBLL = new QueryBLL();
@@ -38,110 +40,159 @@ namespace BLL.Frontend
         }
 
         #region submit
-        public int Submit(Model.Database.TradeCommand cmdItem, List<TradeCommandSecurity> secuItems)
+
+        public int SubmitOpenPosition(OpenPositionItem openItem, List<OpenPositionSecurityItem> secuItems, DateTime startDate, DateTime endDate)
         {
-            int userId = LoginManager.Instance.GetUserId();
-            cmdItem.SubmitPerson = userId;
-            //TODO: add the permission control
-            int commandId = _commanddao.Create(cmdItem, secuItems);
-            if (commandId > 0)
+            int instanceId = -1;
+            string instanceCode = openItem.InstanceCode;
+            var instance = _tradeInstanceBLL.GetInstance(instanceCode);
+            if (instance != null && !string.IsNullOrEmpty(instance.InstanceCode) && instance.InstanceCode.Equals(instanceCode))
             {
-                Tracking(ActionType.Submit, ResourceType.TradeCommand, commandId, cmdItem);
+                instanceId = instance.InstanceId;
+                instance.OperationCopies += openItem.Copies;
+                _tradeInstanceBLL.Update(instance, openItem, secuItems);
+            }
+            else
+            {
+                TradingInstance tradeInstance = new TradingInstance
+                {
+                    InstanceCode = instanceCode,
+                    PortfolioId = openItem.PortfolioId,
+                    MonitorUnitId = openItem.MonitorId,
+                    StockDirection = EntrustDirection.BuySpot,
+                    FuturesContract = openItem.FuturesContract,
+                    FuturesDirection = EntrustDirection.SellOpen,
+                    OperationCopies = openItem.Copies,
+                    StockPriceType = StockPriceType.NoLimit,
+                    FuturesPriceType = FuturesPriceType.NoLimit,
+                    Status = TradingInstanceStatus.Active,
+                };
 
-                var perm = _permissionManager.GetOwnerPermission();
-                _permissionManager.GrantPermission(userId, commandId, ResourceType.TradeCommand, perm);
-
-                //对管理员和交易员进行授权
-                var dealPerms = new List<PermissionMask> { PermissionMask.View, PermissionMask.Execute};
-                _permissionManager.GrantByRole(RoleType.Administrator, commandId, ResourceType.TradeCommand, dealPerms);
-                _permissionManager.GrantByRole(RoleType.Dealer, commandId, ResourceType.TradeCommand, dealPerms);
+                tradeInstance.Owner = LoginManager.Instance.GetUserId();
+                instanceId = _tradeInstanceBLL.Create(tradeInstance, openItem, secuItems);
             }
 
-            return commandId;
+            int ret = -1;
+            if (instanceId > 0)
+            {
+                //success! Will send generate TradingCommand
+                Model.Database.TradeCommand cmdItem = new Model.Database.TradeCommand
+                {
+                    InstanceId = instanceId,
+                    ECommandType = CommandType.Arbitrage,
+                    EExecuteType = ExecuteType.OpenPosition,
+                    CommandNum = openItem.Copies,
+                    EStockDirection = EntrustDirection.BuySpot,
+                    EFuturesDirection = EntrustDirection.SellOpen,
+                    EEntrustStatus = EntrustStatus.NoExecuted,
+                    EDealStatus = DealStatus.NoDeal,
+                    ModifiedTimes = 1,
+                    DStartDate = startDate,
+                    DEndDate = endDate,
+                };
+
+                var cmdSecuItems = GetSelectCommandSecurities(openItem, -1, secuItems);
+
+                ret = Submit(cmdItem, cmdSecuItems);
+            }
+            else
+            {
+                //TODO: error message
+            }
+
+            return ret;
         }
 
-        public int SubmitClosePosition(Model.Database.TradeCommand cmdItem, ClosePositionItem closePositionItem, List<ClosePositionSecurityItem> closeSecuItems)
+        public int SubmitClosePosition(Model.Database.TradeCommand cmdItem, ClosePositionItem closeItem, List<ClosePositionSecurityItem> selectedSecuItems)
         {
-            var secuItems = GetSelectCommandSecurities(closePositionItem, closeSecuItems);
+            var secuItems = GetSelectCommandSecurities(closeItem, selectedSecuItems);
+            //TODO: update the TradingInstance
+            string instanceCode = closeItem.InstanceCode;
+            var instance = _tradeInstanceBLL.GetInstance(closeItem.InstanceCode);
+            if (instance != null && !string.IsNullOrEmpty(instance.InstanceCode) && instance.InstanceCode.Equals(instanceCode))
+            {
+                _tradeInstanceBLL.Update(instance, closeItem, selectedSecuItems);
+            }
 
             return Submit(cmdItem, secuItems);
         }
 
-        public int SubmitCloseAll(ClosePositionItem closeItem, List<ClosePositionSecurityItem> closeSecuItems)
-        {
-            var instance = _tradeinstdao.GetCombine(closeItem.InstanceId);
-            var tccmdItem = new Model.Database.TradeCommand
-            {
-                InstanceId = closeItem.InstanceId,
-                ECommandType = CommandType.Arbitrage,
-                EExecuteType = ExecuteType.ClosePosition,
-                EEntrustStatus = EntrustStatus.NoExecuted,
-                EDealStatus = DealStatus.NoDeal,
-                ModifiedTimes = 1
-            };
+        //public int SubmitCloseAll(ClosePositionItem closeItem, List<ClosePositionSecurityItem> closeSecuItems)
+        //{
+        //    var instance = _tradeInstanceBLL.GetInstance(closeItem.InstanceId);
+        //    //var instance = _tradeinstdao.GetCombine(closeItem.InstanceId);
+        //    var tccmdItem = new Model.Database.TradeCommand
+        //    {
+        //        InstanceId = closeItem.InstanceId,
+        //        ECommandType = CommandType.Arbitrage,
+        //        EExecuteType = ExecuteType.ClosePosition,
+        //        EEntrustStatus = EntrustStatus.NoExecuted,
+        //        EDealStatus = DealStatus.NoDeal,
+        //        ModifiedTimes = 1
+        //    };
 
-            if (instance.FuturesDirection == EntrustDirection.SellOpen)
-            {
-                tccmdItem.EFuturesDirection = EntrustDirection.BuyClose;
-            }
-            else if (instance.FuturesDirection == EntrustDirection.BuyClose)
-            {
-                tccmdItem.EFuturesDirection = EntrustDirection.SellOpen;
-            }
+        //    if (instance.FuturesDirection == EntrustDirection.SellOpen)
+        //    {
+        //        tccmdItem.EFuturesDirection = EntrustDirection.BuyClose;
+        //    }
+        //    else if (instance.FuturesDirection == EntrustDirection.BuyClose)
+        //    {
+        //        tccmdItem.EFuturesDirection = EntrustDirection.SellOpen;
+        //    }
 
-            if (instance.StockDirection == EntrustDirection.BuySpot)
-            {
-                tccmdItem.EStockDirection = EntrustDirection.SellSpot;
-            }
-            else if (instance.StockDirection == EntrustDirection.SellSpot)
-            {
-                tccmdItem.EStockDirection = EntrustDirection.BuySpot;
-            }
+        //    if (instance.StockDirection == EntrustDirection.BuySpot)
+        //    {
+        //        tccmdItem.EStockDirection = EntrustDirection.SellSpot;
+        //    }
+        //    else if (instance.StockDirection == EntrustDirection.SellSpot)
+        //    {
+        //        tccmdItem.EStockDirection = EntrustDirection.BuySpot;
+        //    }
 
-            //var tradeinstSecuItems = _tradeinstsecudbo.Get(closeItem.InstanceId);
-            var tempStockItems = _tempstockdao.Get(closeItem.TemplateId);
+        //    //var tradeinstSecuItems = _tradeinstsecudbo.Get(closeItem.InstanceId);
+        //    var tempStockItems = _tempstockdao.Get(closeItem.TemplateId);
 
-            List<TradeCommandSecurity> cmdSecuItems = new List<TradeCommandSecurity>();
+        //    List<TradeCommandSecurity> cmdSecuItems = new List<TradeCommandSecurity>();
 
-            foreach (var item in closeSecuItems)
-            {
-                TradeCommandSecurity secuItem = new TradeCommandSecurity
-                {
-                    SecuCode = item.SecuCode,
-                    SecuType = item.SecuType,
-                    CommandAmount = item.EntrustAmount,
-                    CommandPrice = item.CommandPrice,
-                    //EDirection = (EntrustDirection)item.EntrustDirection,
-                    EntrustStatus = EntrustStatus.NoExecuted
-                };
+        //    foreach (var item in closeSecuItems)
+        //    {
+        //        TradeCommandSecurity secuItem = new TradeCommandSecurity
+        //        {
+        //            SecuCode = item.SecuCode,
+        //            SecuType = item.SecuType,
+        //            CommandAmount = item.EntrustAmount,
+        //            CommandPrice = item.CommandPrice,
+        //            //EDirection = (EntrustDirection)item.EntrustDirection,
+        //            EntrustStatus = EntrustStatus.NoExecuted
+        //        };
 
-                if (secuItem.SecuType == Model.SecurityInfo.SecurityType.Stock)
-                {
-                    secuItem.EDirection = tccmdItem.EStockDirection;
-                }
-                else if (secuItem.SecuType == Model.SecurityInfo.SecurityType.Futures)
-                {
-                    secuItem.EDirection = tccmdItem.EFuturesDirection;
-                }
+        //        if (secuItem.SecuType == Model.SecurityInfo.SecurityType.Stock)
+        //        {
+        //            secuItem.EDirection = tccmdItem.EStockDirection;
+        //        }
+        //        else if (secuItem.SecuType == Model.SecurityInfo.SecurityType.Futures)
+        //        {
+        //            secuItem.EDirection = tccmdItem.EFuturesDirection;
+        //        }
 
-                //var availItem = tradeinstSecuItems.Find(p => p.SecuCode.Equals(secuItem.SecuCode));
-                //if (availItem != null)
-                //{
-                //    secuItem.CommandAmount = availItem.AvailableAmount;
-                //}
+        //        //var availItem = tradeinstSecuItems.Find(p => p.SecuCode.Equals(secuItem.SecuCode));
+        //        //if (availItem != null)
+        //        //{
+        //        //    secuItem.CommandAmount = availItem.AvailableAmount;
+        //        //}
 
-                //var tempStockItem = tempStockItems.Find(p => p.SecuCode.Equals(secuItem.SecuCode));
-                //if (tempStockItem != null)
-                //{
-                //    secuItem.WeightAmount = tempStockItem.Amount;
-                //}
+        //        //var tempStockItem = tempStockItems.Find(p => p.SecuCode.Equals(secuItem.SecuCode));
+        //        //if (tempStockItem != null)
+        //        //{
+        //        //    secuItem.WeightAmount = tempStockItem.Amount;
+        //        //}
 
-                cmdSecuItems.Add(secuItem);
-            }
+        //        cmdSecuItems.Add(secuItem);
+        //    }
 
 
-            return Submit(tccmdItem, cmdSecuItems);
-        }
+        //    return Submit(tccmdItem, cmdSecuItems);
+        //}
 
         #endregion
 
@@ -176,7 +227,7 @@ namespace BLL.Frontend
             var allItems = GetAll();
             foreach (var item in allItems)
             {
-                if (item.ECommandStatus == CommandStatus.Effective || item.ECommandStatus == CommandStatus.Entrusted)
+                if (IsValidCommand(item))
                 {
                     validTradeCommands.Add(item);
                 }
@@ -259,11 +310,73 @@ namespace BLL.Frontend
 
         #region private
 
+        private int Submit(Model.Database.TradeCommand cmdItem, List<TradeCommandSecurity> secuItems)
+        {
+            int userId = LoginManager.Instance.GetUserId();
+            cmdItem.SubmitPerson = userId;
+            //TODO: add the permission control
+            int commandId = _commanddao.Create(cmdItem, secuItems);
+            if (commandId > 0)
+            {
+                Tracking(ActionType.Submit, ResourceType.TradeCommand, commandId, cmdItem);
+
+                var perm = _permissionManager.GetOwnerPermission();
+                _permissionManager.GrantPermission(userId, commandId, ResourceType.TradeCommand, perm);
+
+                //对管理员和交易员进行授权
+                var dealPerms = new List<PermissionMask> { PermissionMask.View, PermissionMask.Execute };
+                _permissionManager.GrantByRole(RoleType.Administrator, commandId, ResourceType.TradeCommand, dealPerms);
+                _permissionManager.GrantByRole(RoleType.Dealer, commandId, ResourceType.TradeCommand, dealPerms);
+            }
+
+            return commandId;
+        }
+
+        private bool IsValidCommand(Model.Database.TradeCommand tradeCommand)
+        {
+            return tradeCommand.ECommandStatus == CommandStatus.Effective
+                || tradeCommand.ECommandStatus == CommandStatus.Entrusted
+                || tradeCommand.ECommandStatus == CommandStatus.Modified;
+        }
+
+        private List<TradeCommandSecurity> GetSelectCommandSecurities(OpenPositionItem openItem, int commandId, List<OpenPositionSecurityItem> selectedSecuItems)
+        {
+            List<TradeCommandSecurity> cmdSecuItems = new List<TradeCommandSecurity>();
+            foreach (var item in selectedSecuItems)
+            {
+                if (item.Selection && item.MonitorId == openItem.MonitorId)
+                {
+                    TradeCommandSecurity secuItem = new TradeCommandSecurity 
+                    {
+                        CommandId = commandId,
+                        SecuCode = item.SecuCode,
+                        SecuType = item.SecuType,
+                        CommandAmount = item.EntrustAmount,
+                        CommandPrice = item.CommandPrice,
+                        EntrustStatus = EntrustStatus.NoExecuted
+                    };
+
+                    if(secuItem.SecuType == SecurityType.Stock)
+                    {
+                        secuItem.EDirection = EntrustDirection.BuySpot;
+                    }
+                    else
+                    {
+                        secuItem.EDirection = EntrustDirection.SellOpen;
+                    }
+                       
+                    cmdSecuItems.Add(secuItem);
+                }
+            }
+
+            return cmdSecuItems;
+        }
+
         private List<TradeCommandSecurity> GetSelectCommandSecurities(ClosePositionItem closePositionItem, List<ClosePositionSecurityItem> closeSecuItems)
         {
             List<TradeCommandSecurity> cmdSecuItems = new List<TradeCommandSecurity>();
 
-            var tempStockItems = _tempstockdao.Get(closePositionItem.TemplateId);
+            //var tempStockItems = _tempstockdao.Get(closePositionItem.TemplateId);
             var selectedSecuItems = closeSecuItems.Where(p => p.InstanceId.Equals(closePositionItem.InstanceId)).ToList();
             foreach (var item in selectedSecuItems)
             {
