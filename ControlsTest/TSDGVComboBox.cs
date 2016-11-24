@@ -18,6 +18,19 @@ namespace ControlsTest
 
             this.Load += new EventHandler(Form_Load);
             this.tsDataGridView1.DataError += new DataGridViewDataErrorEventHandler(GridView_DataError);
+            this.tsDataGridView1.ComboBoxSelectionChangeCommitHandler += new ComboBoxSelectionChangeCommitHandler(GridView_ComboBoxSelectionChangeCommit);
+        }
+
+        private void GridView_ComboBoxSelectionChangeCommit(ComboBox comboBox, object selectedItem, int columnIndex, int rowIndex)
+        {
+            if (selectedItem != null && selectedItem is ComboOptionItem)
+            {
+                var cbItem = selectedItem as ComboOptionItem;
+                {
+                    string msg = string.Format("({0},{1}) {2} - {3}", columnIndex, rowIndex, cbItem.Id, cbItem.Name);
+                    MessageBox.Show(this, msg);
+                }
+            }
         }
 
         private void GridView_DataError(object sender, DataGridViewDataErrorEventArgs e)

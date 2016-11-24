@@ -74,6 +74,8 @@ namespace TradingSystem.View
             this.LoadData += new FormLoadHandler(Form_LoadData);
 
             this.closeGridView.UpdateRelatedDataGridHandler += new UpdateRelatedDataGrid(GridView_Close_UpdateRelatedDataGridHandler);
+            this.cmdGridView.ComboBoxSelectionChangeCommitHandler += new ComboBoxSelectionChangeCommitHandler(GridView_Command_ComboBoxSelectionChangeCommit);
+
             this.btnCalc.Click += new EventHandler(Button_Calc_Click);
             this.btnCloseAll.Click += new EventHandler(Button_CloseAll_Click);
             this.btnChgPosition.Click += new EventHandler(Button_ChgPosition_Click);
@@ -81,6 +83,37 @@ namespace TradingSystem.View
 
             this.btnSelectAll.Click += new EventHandler(Button_SelectAll_Click);
             this.btnUnSelectAll.Click += new EventHandler(Button_UnSelectAll_Click);
+        }
+
+        private void GridView_Command_ComboBoxSelectionChangeCommit(ComboBox comboBox, object selectedItem, int columnIndex, int rowIndex)
+        {
+            if (selectedItem == null || !(selectedItem is ComboOptionItem))
+            {
+                return;
+            }
+
+            if (rowIndex < 0 || rowIndex >= _cmdDataSource.Count)
+            {
+                return;
+            }
+
+            var cbItem = selectedItem as ComboOptionItem;
+            EntrustDirection direction = EntrustDirectionUtil.GetEntrustDirection(cbItem.Id);
+
+            var cmdItem = _cmdDataSource[rowIndex];
+            var closeItem = _instDataSource.ToList().Find(p => p.InstanceId == cmdItem.InstanceId);
+            if (closeItem != null)
+            {
+                for (int i = _secuDataSource.Count - 1; i >= 0; i--)
+                {
+                    if (_secuDataSource[i].InstanceId == cmdItem.InstanceId)
+                    {
+                        _secuDataSource.RemoveAt(i);
+                    }
+                }
+
+                LoadSecurity(closeItem, direction);
+            }
         }
 
         #region select/unselect
@@ -156,10 +189,15 @@ namespace TradingSystem.View
             var closeCmdItem = _cmdDataSource.ToList().Find(p => p.InstanceId == closeItem.InstanceId);
             if (closeCmdItem == null)
                 return;
-            EntrustDirection direction = EntrustDirectionUtil.GetEntrustDirection(closeCmdItem.TradeDirection);
 
+            EntrustDirection direction = EntrustDirectionUtil.GetEntrustDirection(closeCmdItem.TradeDirection);
+            LoadSecurity(closeItem, direction);
+        }
+
+        private void LoadSecurity(ClosePositionItem closeItem, EntrustDirection direction)
+        {
             var secuItems = _tradeInstanceSecuBLL.Get(closeItem.InstanceId);
-            
+
             if (secuItems != null)
             {
                 if (direction == EntrustDirection.Sell)

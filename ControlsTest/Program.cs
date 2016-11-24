@@ -24,12 +24,12 @@ namespace ControlsTest
             //Application.Run(new TreeViewForm());
             //Application.Run(new ButtonContainerForm());
 
-            //Application.Run(new TSDGVComboBox());
+            Application.Run(new TSDGVComboBox());
             //Application.Run(new TSDGVComboBoxVarRowForm());
 
             //Application.Run(new TSDGVNumericColumnForm());
 
-            Application.Run(new CheckComboBoxForm());
+            //Application.Run(new CheckComboBoxForm());
         }
     }
 }

@@ -18,6 +18,7 @@ namespace Controls.GridView
     public delegate void ClickRowHandler(object sender, int rowIndex);
     public delegate void NumericUpDownValueChanged(int newValue, int rowIndex, int columnIndex);
     public delegate void CellEndEditHandler(int rowIndex, int columnIndex, string columnName); 
+    public delegate void ComboBoxSelectionChangeCommitHandler(ComboBox comboBox, object selectedItem, int rowIndex, int columnIndex);
 
     public partial class TSDataGridView : DataGridView
     {
@@ -26,8 +27,11 @@ namespace Controls.GridView
         public event ClickRowHandler DoubleClickRow;
         public event NumericUpDownValueChanged NumericUpDownValueChanged;
         public event CellEndEditHandler CellEndEditHandler;
+        public event ComboBoxSelectionChangeCommitHandler ComboBoxSelectionChangeCommitHandler; 
 
         public KeyPressEventHandler CopiesCheckHandler = new KeyPressEventHandler(CopiesCheck);
+
+        private DataGridViewComboBoxEditingControl _dgvComboBox = null;
 
         private static void CopiesCheck(object sender, KeyPressEventArgs e)
         {
@@ -70,11 +74,6 @@ namespace Controls.GridView
             }
         }
 
-        //private void DataGridView_CurrentCellChanged(object sender, EventArgs e)
-        //{
-        //    Console.WriteLine("test");
-        //}
-
         private void DataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0)
@@ -90,6 +89,13 @@ namespace Controls.GridView
             {
                 CellEndEditHandler(e.RowIndex, e.ColumnIndex, dgv.Columns[e.ColumnIndex].Name);
             }
+
+            if (_dgvComboBox != null)
+            {
+                _dgvComboBox.SelectionChangeCommitted -= new System.EventHandler(DataGridViewComboBox_SelectionChangeCommitted);
+                _dgvComboBox = null;
+            }
+
             //DataGridViewColumn column = dgv.Columns[e.ColumnIndex];
 
             //if (column is DataGridViewComboBoxColumn)
@@ -155,6 +161,33 @@ namespace Controls.GridView
             {
                 e.Control.KeyPress -= CopiesCheck;
                 e.Control.KeyPress += CopiesCheck;
+            }
+            else if (e.Control is DataGridViewComboBoxEditingControl 
+                && !Columns[columnIndex].ReadOnly
+                && CurrentCell.RowIndex != -1
+                )
+            {
+                _dgvComboBox = (DataGridViewComboBoxEditingControl)e.Control;
+
+                //add event handler for ComboBox selection 
+                _dgvComboBox.SelectionChangeCommitted += new System.EventHandler(DataGridViewComboBox_SelectionChangeCommitted);
+            }
+        }
+
+        private void DataGridViewComboBox_SelectionChangeCommitted(object sender, System.EventArgs e)
+        {
+            //handle the business
+            //how to get the ColumnIndex, RowIndex??
+            if (ComboBoxSelectionChangeCommitHandler != null)
+            { 
+                ComboBox comboBox = (ComboBox)sender;
+                if(comboBox != null)
+                {
+                    int columnIndex = CurrentCell.ColumnIndex;
+                    int rowIndex = CurrentCell.RowIndex;
+
+                    ComboBoxSelectionChangeCommitHandler(comboBox, comboBox.SelectedItem, columnIndex, rowIndex);
+                }
             }
         }
 
