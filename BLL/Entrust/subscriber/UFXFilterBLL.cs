@@ -1,4 +1,5 @@
-﻿using BLL.UFX.impl;
+﻿using BLL.UFX;
+using BLL.UFX.impl;
 using log4net;
 using Model.Binding.BindingUtil;
 using Model.UFX;

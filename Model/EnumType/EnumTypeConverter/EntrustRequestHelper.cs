@@ -94,6 +94,48 @@ namespace Config.ParamConverter
             return string.Format("{0};{1};{2}", commandId, submitId, requestId);
         }
 
+        public static bool TryParseThirdReff(string str, out int commandId, out int submitId, out int requestId)
+        {
+            commandId = 0;
+            submitId = 0;
+            requestId = 0;
+
+            bool result = false;
+            if(str.Contains(";"))
+            {
+                var arr = str.Split(',');
+                int[] intArr = new int[arr.Length];
+                for(int i = 0, count = arr.Length; i < count; i++)
+                {
+                    int temp = 0;
+                    if(int.TryParse(arr[i], out temp))
+                    {
+                        intArr[i] = temp;
+                    }
+                    else
+                    {
+                        intArr[i] = 0;
+                    }
+
+                }
+
+                if (arr.Length == 3)
+                {
+                    commandId = intArr[0];
+                    submitId = intArr[1];
+                    requestId = intArr[2];
+
+                    result = true;
+                }
+                else
+                {
+                    result = false;
+                }
+            }
+
+            return result;
+        }
+
         public static string GetExchangeCode(string marketNo)
         {
             string exchangeCode = string.Empty;

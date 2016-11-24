@@ -148,14 +148,7 @@ namespace BLL.UFX.impl
 
             foreach (FieldItem item in functionItem.RequestFields)
             {
-                if (item.Name.Equals("entrust_amount"))
-                {
-                    packer.AddField(item.Name, PackFieldType.FloatType, item.Width, item.Scale);
-                }
-                else
-                {
-                    packer.AddField(item.Name, item.Type, item.Width, item.Scale);
-                }
+                packer.AddField(item.Name, item.Type, item.Width, item.Scale);
             }
 
             var dataFieldMap = UFXDataBindingHelper.GetProperty<T>();
@@ -203,6 +196,73 @@ namespace BLL.UFX.impl
             bizMessage.Dispose();
             
             return retCode;
+        }
+
+        public DataParser SubmitSync<T>(FunctionCode functionCode, List<T> requests)
+        {
+            DataParser parser = new DataParser();
+
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
+            if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
+            {
+                string msg = string.Format("提交UFX请求号[{0}]未定义！", functionCode);
+                logger.Error(msg);
+                parser.ErrorCode = ConnectionCode.ErrorNoFunctionCode;
+
+                return parser;
+            }
+
+            string userToken = LoginManager.Instance.LoginUser.Token;
+            if (string.IsNullOrEmpty(userToken))
+            {
+                string msg = string.Format("提交UFX请求[{0}]令牌失效！", functionCode);
+                logger.Error(msg);
+                parser.ErrorCode = ConnectionCode.ErrorLogin;
+
+                return parser;
+            }
+
+            CT2BizMessage bizMessage = new CT2BizMessage();
+            //初始化
+            bizMessage.SetFunction((int)functionCode);
+            bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
+
+            //业务包
+            CT2Packer packer = new CT2Packer(2);
+            packer.BeginPack();
+
+            foreach (FieldItem item in functionItem.RequestFields)
+            {
+                packer.AddField(item.Name, item.Type, item.Width, item.Scale);
+            }
+
+            var dataFieldMap = UFXDataBindingHelper.GetProperty<T>();
+            foreach (var request in requests)
+            {
+                foreach (FieldItem item in functionItem.RequestFields)
+                {
+                    if (dataFieldMap.ContainsKey(item.Name))
+                    {
+                        SetRequestField<T>(ref packer, request, item, dataFieldMap);
+                    }
+                    else
+                    {
+                        SetRequestDefaultField(ref packer, item, userToken);
+                    }
+                }
+            }
+            packer.EndPack();
+
+#if DEBUG
+            OutputParam<T>(functionCode, requests);
+#endif
+            unsafe
+            {
+                bizMessage.SetContent(packer.GetPackBuf(), packer.GetPackLen());
+            }
+
+            parser = _t2SDKWrap.SendSync2(bizMessage);
+            return parser;
         }
 
         private void OutputParam<T>(FunctionCode functionCode, List<T> requests)
@@ -282,6 +342,7 @@ namespace BLL.UFX.impl
             if (fieldItem.Name.Equals("entrust_amount"))
             {
                 //TODO: 委托数量字段跟文档定义不一样，文档定义是N12(整型)，但测试时传入整型出错。
+                //恒生确认: 该字段将会被更新为：N16.2
                 if (obj != null)
                 {
                     packer.AddDouble((double)(int)obj);

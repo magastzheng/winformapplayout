@@ -7,7 +7,7 @@ namespace Quote
         public static SecurityType GetSecurityType(string secuCode)
         {
             secuCode = secuCode.Trim();
-            if (secuCode.StartsWith("IF") || secuCode.StartsWith("IH") || secuCode.StartsWith("IC"))
+            if (SecurityItemHelper.IsFutures(secuCode))
             {
                 return SecurityType.Futures;
             }
@@ -29,7 +29,7 @@ namespace Quote
         public static string GetExchangeCode(string secuCode)
         {
             secuCode = secuCode.Trim();
-            if (secuCode.StartsWith("IF") || secuCode.StartsWith("IH") || secuCode.StartsWith("IC"))
+            if (SecurityItemHelper.IsFutures(secuCode))
             {
                 return Exchange.CFFEX;
             }

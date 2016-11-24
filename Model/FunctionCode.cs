@@ -50,6 +50,9 @@ namespace Model
         //证券成交查询（历史）
         QuerySecurityDealHistorical = 33101,
 
+        //账户资金查询
+        QueryAccountMoney = 34001,
+
         //组合持仓查询
         QueryHolding = 35001,
 

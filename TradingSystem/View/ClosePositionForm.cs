@@ -78,7 +78,30 @@ namespace TradingSystem.View
             this.btnCloseAll.Click += new EventHandler(Button_CloseAll_Click);
             this.btnChgPosition.Click += new EventHandler(Button_ChgPosition_Click);
             this.btnSubmit.Click += new EventHandler(Button_Submit_Click);
+
+            this.btnSelectAll.Click += new EventHandler(Button_SelectAll_Click);
+            this.btnUnSelectAll.Click += new EventHandler(Button_UnSelectAll_Click);
         }
+
+        #region select/unselect
+
+        private void Button_SelectAll_Click(object sender, EventArgs e)
+        {
+            _secuDataSource.ToList()
+                .ForEach(p => p.Selection = true);
+
+            this.securityGridView.Invalidate();
+        }
+
+        private void Button_UnSelectAll_Click(object sender, EventArgs e)
+        {
+            _secuDataSource.ToList()
+                .ForEach(p => p.Selection = false);
+
+            this.securityGridView.Invalidate();
+        }
+
+        #endregion
 
         #region GridView UpdateRelated
 
@@ -375,6 +398,7 @@ namespace TradingSystem.View
             //询价
             QueryQuote();
 
+            this.closeGridView.Invalidate();
             this.cmdGridView.Invalidate();
             this.securityGridView.Invalidate();
         }
@@ -517,6 +541,22 @@ namespace TradingSystem.View
                 {
                     string msg = string.Format("存在不支持的证券类型: {0}", secuItem.SecuCode);
                     throw new NotSupportedException(msg);
+                }
+            }
+
+            var selectedItems = _instDataSource.Where(p => p.Selection).ToList();
+            foreach (var instItem in selectedItems)
+            {
+                var futureItems = _secuDataSource.Where(p => p.InstanceId == instItem.InstanceId && p.SecuType == SecurityType.Futures).ToList();
+                if (futureItems != null)
+                {
+                    instItem.FuturesMktCap = futureItems.Sum(p => p.HoldingAmount * p.LastPrice);
+                }
+
+                var secuItems = _secuDataSource.Where(p => p.InstanceId == instItem.InstanceId && p.SecuType == SecurityType.Stock).ToList();
+                if (secuItems != null)
+                {
+                    instItem.StockMktCap = secuItems.Sum(p => p.HoldingAmount * p.LastPrice);
                 }
             }
         }

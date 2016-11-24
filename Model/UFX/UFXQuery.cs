@@ -173,8 +173,8 @@ namespace Model.UFX
         [UFXDataAttribute("entrust_no", Data.DataValueType.Int)]
         public int EntrustNo { get; set; }
 
-        [UFXDataAttribute("deal_no", Data.DataValueType.Int)]
-        public int DealNo { get; set; }
+        [UFXDataAttribute("deal_no")]
+        public string DealNo { get; set; }
 
         [UFXDataAttribute("stockholder_id")]
         public string StockHolderId { get; set; }
@@ -206,8 +206,8 @@ namespace Model.UFX
         [UFXDataAttribute("deal_date", Data.DataValueType.Int)]
         public int DealDate { get; set; }
 
-        [UFXDataAttribute("deal_no", Data.DataValueType.Int)]
-        public int DealNo { get; set; }
+        [UFXDataAttribute("deal_no")]
+        public string DealNo { get; set; }
 
         [UFXDataAttribute("entrust_no", Data.DataValueType.Int)]
         public int EntrustNo { get; set; }
@@ -257,7 +257,7 @@ namespace Model.UFX
         [UFXDataAttribute("deal_time", Data.DataValueType.Int)]
         public int DealTime { get; set; }
 
-        [UFXDataAttribute("position_str", Data.DataValueType.Int)]
+        [UFXDataAttribute("position_str")]
         public string PositionStr { get; set; }
     }
 

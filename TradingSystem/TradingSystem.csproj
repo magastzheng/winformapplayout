@@ -109,7 +109,6 @@
     <Compile Include="TradeUtil\EntrustPriceTypeHelper.cs" />
     <Compile Include="TradeUtil\PriceTypeHelper.cs" />
     <Compile Include="TradeUtil\QuotePriceHelper.cs" />
-    <Compile Include="TradeUtil\SecurityInfoHelper.cs" />
     <Compile Include="Dialog\CancelRedoDialog.cs">
       <SubType>Form</SubType>
     </Compile>

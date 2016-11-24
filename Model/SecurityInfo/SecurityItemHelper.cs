@@ -18,10 +18,10 @@ namespace Model.SecurityInfo
                     exchange = "中金所";
                     break;
                 case Exchange.SHSE:
-                    exchange = "深交所";
+                    exchange = "上交所";
                     break;
                 case Exchange.SZSE:
-                    exchange = "上交所";
+                    exchange = "深交所";
                     break;
             }
 
@@ -31,7 +31,7 @@ namespace Model.SecurityInfo
         public static SecurityType GetSecurityType(string secuCode)
         {
             secuCode = secuCode.Trim();
-            if (secuCode.StartsWith("IF") || secuCode.StartsWith("IH") || secuCode.StartsWith("IC"))
+            if (IsFutures(secuCode))
             {
                 return SecurityType.Futures;
             }
@@ -53,7 +53,7 @@ namespace Model.SecurityInfo
         public static string GetExchangeCode(string secuCode)
         {
             secuCode = secuCode.Trim();
-            if (secuCode.StartsWith("IF") || secuCode.StartsWith("IH") || secuCode.StartsWith("IC"))
+            if (IsFutures(secuCode))
             {
                 return Exchange.CFFEX;
             }
@@ -74,6 +74,11 @@ namespace Model.SecurityInfo
             }
 
             return string.Empty;
+        }
+
+        public static bool IsFutures(string secuCode)
+        {
+            return secuCode.StartsWith("IF") || secuCode.StartsWith("IH") || secuCode.StartsWith("IC");
         }
     }
 }

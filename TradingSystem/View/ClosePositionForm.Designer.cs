@@ -34,6 +34,8 @@
             this.mainSplitter = new System.Windows.Forms.SplitContainer();
             this.closeGridView = new Controls.GridView.TSDataGridView();
             this.closeBottomPanel = new System.Windows.Forms.Panel();
+            this.btnUnSelectAll = new System.Windows.Forms.Button();
+            this.btnSelectAll = new System.Windows.Forms.Button();
             this.securityGridView = new Controls.GridView.TSDataGridView();
             this.panelCmdBotton = new System.Windows.Forms.Panel();
             this.nudCopies = new System.Windows.Forms.NumericUpDown();
@@ -52,6 +54,7 @@
             this.mainSplitter.Panel2.SuspendLayout();
             this.mainSplitter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.closeGridView)).BeginInit();
+            this.closeBottomPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.securityGridView)).BeginInit();
             this.panelCmdBotton.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCopies)).BeginInit();
@@ -132,11 +135,31 @@
             // 
             // closeBottomPanel
             // 
+            this.closeBottomPanel.Controls.Add(this.btnUnSelectAll);
+            this.closeBottomPanel.Controls.Add(this.btnSelectAll);
             this.closeBottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.closeBottomPanel.Location = new System.Drawing.Point(0, 135);
             this.closeBottomPanel.Name = "closeBottomPanel";
             this.closeBottomPanel.Size = new System.Drawing.Size(1125, 31);
             this.closeBottomPanel.TabIndex = 0;
+            // 
+            // btnUnSelectAll
+            // 
+            this.btnUnSelectAll.Location = new System.Drawing.Point(94, 5);
+            this.btnUnSelectAll.Name = "btnUnSelectAll";
+            this.btnUnSelectAll.Size = new System.Drawing.Size(75, 23);
+            this.btnUnSelectAll.TabIndex = 1;
+            this.btnUnSelectAll.Text = "反选";
+            this.btnUnSelectAll.UseVisualStyleBackColor = true;
+            // 
+            // btnSelectAll
+            // 
+            this.btnSelectAll.Location = new System.Drawing.Point(4, 5);
+            this.btnSelectAll.Name = "btnSelectAll";
+            this.btnSelectAll.Size = new System.Drawing.Size(75, 23);
+            this.btnSelectAll.TabIndex = 0;
+            this.btnSelectAll.Text = "全选";
+            this.btnSelectAll.UseVisualStyleBackColor = true;
             // 
             // securityGridView
             // 
@@ -254,6 +277,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitter)).EndInit();
             this.mainSplitter.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.closeGridView)).EndInit();
+            this.closeBottomPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.securityGridView)).EndInit();
             this.panelCmdBotton.ResumeLayout(false);
             this.panelCmdBotton.PerformLayout();
@@ -280,5 +304,7 @@
         private System.Windows.Forms.Button btnCalc;
         private System.Windows.Forms.Label lblCopies;
         private System.Windows.Forms.NumericUpDown nudCopies;
+        private System.Windows.Forms.Button btnUnSelectAll;
+        private System.Windows.Forms.Button btnSelectAll;
     }
 }

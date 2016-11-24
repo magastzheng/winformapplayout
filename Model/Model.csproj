@@ -122,6 +122,7 @@
     <Compile Include="UFX\UFXEntrust.cs" />
     <Compile Include="UFX\UFXMarketCode.cs" />
     <Compile Include="UFX\UFXHolding.cs" />
+    <Compile Include="UFX\UFXMoneyQuery.cs" />
     <Compile Include="UFX\UFXQuery.cs" />
     <Compile Include="UFX\UFXSubscriber.cs" />
     <Compile Include="TradingCommand\TradingCommandItem.cs" />

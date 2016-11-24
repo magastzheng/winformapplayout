@@ -1968,7 +1968,7 @@
 			},
 			{
 				"name": "entrust_amount",
-				"type": "N10",
+				"type": "N16.2",
 				"require": "Y"
 			},
 			{
@@ -2540,7 +2540,7 @@
 			"require": "Y"
 		},{
 			"name": "entrust_amount",
-			"type": "N12",
+			"type": "N16.2",
 			"require": "Y"
 		},{
 			"name": "limit_entrust_ratio",
@@ -3215,7 +3215,7 @@
 			"require": "Y"
 		},{
 			"name": "entrust_amount",
-			"type": "N12",
+			"type": "N16.2",
 			"require": "Y"
 		},{
 			"name": "limit_deal_amount",
@@ -3573,6 +3573,44 @@
 			},{
 			"name": "exchange_report_no",
 			"type": "C64"
+			}
+		]
+	},{
+		"code": 34001,
+		"name_en": "func_am_combofund_qry",
+		"name_zh": "账户资金查询",
+		"param": [{
+			"name": "user_token",
+			"type": "C512",
+			"require": "Y"
+		},{
+			"name": "account_code",
+			"type": "C32",
+			"require": "N"
+		},{
+			"name": "asset_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "combi_no",
+			"type": "C16",
+			"require": "N"
+		}],
+		"response":[{
+			"name": "account_code",
+			"type": "C32"
+			},{
+			"name": "asset_no",
+			"type": "C16"
+			},{
+			"name": "enable_balance_t0",
+			"type": "N16.2"
+			},{
+			"name": "enable_balance_t1",
+			"type": "N16.2"
+			},{
+			"name": "current_balance",
+			"type": "N16.2"
 			}
 		]
 	},

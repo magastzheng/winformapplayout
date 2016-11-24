@@ -2,6 +2,7 @@
 using BLL.UFX;
 using BLL.UFX.impl;
 using Config;
+using Config.ParamConverter;
 using log4net;
 using Model;
 using Model.Binding.BindingUtil;
@@ -38,16 +39,12 @@ namespace BLL.Entrust
                 List<UFXQueryDealRequest> requests = new List<UFXQueryDealRequest>();
 
                 UFXQueryDealRequest request = new UFXQueryDealRequest();
-                
-                //request.ExtSystemId = 100000999;
+
+                //request.AccountCode = "850010";
+                //request.CombiNo = "10000000";
                 request.AccountCode = portfolio.FundCode;
                 request.CombiNo = portfolio.PortfolioNo;
                 requests.Add(request);
-
-                //if (request.CombiNo == "30")
-                //{
-                //    request.EntrustNo = 197724;
-                //}
 
                 Callbacker callbacker = new Callbacker
                 {
@@ -55,7 +52,7 @@ namespace BLL.Entrust
                     {
                         SubmitId = 11111,
                         CommandId = 22222,
-                        InArgs = portfolio.PortfolioNo,
+                        InArgs = request.CombiNo,
                         WaitEvent = new AutoResetEvent(false),
                         Caller = callback,
                     },
@@ -153,9 +150,20 @@ namespace BLL.Entrust
                     var dealFlowItems = new List<DealFlowItem>();
                     foreach (var responseItem in responseItems)
                     {
+                        int commandId = 0;
+                        int submitId = 0;
+                        int requestId = 0;
+                        int temp1, temp2, temp3;
+                        if (EntrustRequestHelper.TryParseThirdReff(responseItem.ThirdReff, out temp1, out temp2, out temp3))
+                        {
+                            commandId = temp1;
+                            submitId = temp2;
+                            requestId = temp3;
+                        }
+
                         DealFlowItem efItem = new DealFlowItem
                         {
-                            CommandNo = token.CommandId,
+                            CommandNo = commandId,
                             SecuCode = responseItem.StockCode,
                             FundNo = responseItem.AccountCode,
                             PortfolioCode = responseItem.CombiNo,

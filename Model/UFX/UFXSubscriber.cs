@@ -156,7 +156,7 @@ namespace Model.UFX
     }
 
     /// <summary>
-    /// msgtype="a"
+    /// msgtype="g"
     /// </summary>
     public class UFXEntrustDealResponse
     {

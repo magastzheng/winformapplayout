@@ -65,7 +65,8 @@
     <Compile Include="Entrust\subscriber\UFXWithdrawCompletedBLL.cs" />
     <Compile Include="Entrust\UFXBasketEntrustBLL.cs" />
     <Compile Include="Entrust\UFXBasketWithdrawBLL.cs" />
-    <Compile Include="Entrust\UFXDataSetHelper.cs" />
+    <Compile Include="Entrust\UFXQueryMoneyBLL.cs" />
+    <Compile Include="UFX\UFXDataSetHelper.cs" />
     <Compile Include="Entrust\UFXQueryHoldingBLL.cs" />
     <Compile Include="Entrust\UFXQueryMultipleHoldingBLL.cs" />
     <Compile Include="Entrust\UFXWithdrawBLL.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="TradeInstance\TradingInstanceAdjustmentBLL.cs" />
     <Compile Include="UFX\impl\AccountBLL.cs" />
     <Compile Include="UFX\impl\LoginSyncBLL.cs" />
+    <Compile Include="UFX\impl\QuerySyncBLL.cs" />
     <Compile Include="UFX\T2ErrorHandler.cs" />
     <Compile Include="Entrust\UFXQueryDealBLL.cs" />
     <Compile Include="Entrust\UFXQueryEntrustBLL.cs" />

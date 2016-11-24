@@ -14,6 +14,7 @@ namespace BLL
         private AccountBLL _accountBLL;
         //private LoginBLL _loginBLL;
         private SecurityBLL _securityBLL;
+        private QuerySyncBLL _querySyncBLL;
         private StrategyBLL _strategyBLL;
         private T2Subscriber _subscriber;
 
@@ -30,6 +31,11 @@ namespace BLL
         public SecurityBLL SecurityBLL
         {
             get { return _securityBLL; }
+        }
+
+        public QuerySyncBLL QuerySyncBLL
+        {
+            get { return _querySyncBLL; }
         }
 
         public StrategyBLL StrategyBLL
@@ -55,6 +61,7 @@ namespace BLL
                 _accountBLL = new AccountBLL(t2SDKWrap);
                 //_loginBLL = new LoginBLL(t2SDKWrap);
                 _securityBLL = new SecurityBLL(t2SDKWrap);
+                _querySyncBLL = new UFX.impl.QuerySyncBLL(t2SDKWrap);
                 _strategyBLL = new StrategyBLL(t2SDKWrap);
             }
         }
