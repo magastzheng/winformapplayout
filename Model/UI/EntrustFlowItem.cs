@@ -166,5 +166,7 @@ namespace Model.UI
         public EntrustDirection EDirection { get; set; }
 
         public EntrustPriceType EEntrustPriceType { get; set; }
+
+        public string ExchangeCode { get; set; }
     }
 }

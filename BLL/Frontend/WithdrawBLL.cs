@@ -264,7 +264,7 @@ namespace BLL.Frontend
             }
             else
             {
-                cancelRedoItem.ExchangeCode = SecurityItemHelper.GetExchangeCode(p.SecuCode);
+                cancelRedoItem.ExchangeCode = SecurityItemHelper.GetExchangeCode(p.SecuCode, p.SecuType);
             }
 
             return cancelRedoItem;

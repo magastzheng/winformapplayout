@@ -79,7 +79,7 @@ namespace BLL.TradeCommand
                 //TODO:待补足数量=目标数量-已委托数量
                 //csItem.WaitAmount = csItem.TargetAmount - csItem.EntrustedAmount;
 
-                var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode);
+                var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
                 if (findItem != null)
                 {
                     csItem.SecuName = findItem.SecuName;

@@ -256,6 +256,8 @@ namespace BLL.Entrust
                     WithdrawCause = responseItem.WithdrawCause,
                 };
 
+                efItem.ExchangeCode = UFXTypeConverter.GetMarketCode(efItem.EMarketCode);
+
                 var findItem = entrustSecuItem.Find(p => p.SecuCode.Equals(efItem.SecuCode) && p.EntrustNo == efItem.EntrustNo);
                 if (findItem != null)
                 {

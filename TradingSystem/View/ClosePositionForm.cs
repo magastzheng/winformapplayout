@@ -1209,7 +1209,7 @@ namespace TradingSystem.View
                 PortfolioName = closeItem.PortfolioName,
             };
 
-            var secuInfo = SecurityInfoManager.Instance.Get(closeSecuItem.SecuCode);
+            var secuInfo = SecurityInfoManager.Instance.Get(closeSecuItem.SecuCode, closeSecuItem.SecuType);
             if (secuInfo != null)
             {
                 closeSecuItem.SecuName = secuInfo.SecuName;

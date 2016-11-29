@@ -97,5 +97,7 @@ namespace Model.UI
         //成交序号
         [BindingAttribute("dealno")]
         public string DealNo { get; set; }
+
+        public string ExchangeCode { get; set; }
     }
 }

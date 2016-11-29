@@ -901,7 +901,7 @@ namespace TradingSystem.View
             this.BeginInvoke(new Action(() =>
             {
                 dfItems.ForEach(p => {
-                    var secuInfo = SecurityInfoManager.Instance.Get(p.SecuCode);
+                    var secuInfo = SecurityInfoManager.Instance.Get(p.SecuCode, p.ExchangeCode);
                     if (secuInfo != null)
                     {
                         p.SecuName = secuInfo.SecuName;
@@ -947,7 +947,7 @@ namespace TradingSystem.View
             {
                 var entrustItems = _entrustSecurityBLL.GetAllCombine();
                 efItems.ForEach(p => {
-                    var secuInfo = SecurityInfoManager.Instance.Get(p.SecuCode);
+                    var secuInfo = SecurityInfoManager.Instance.Get(p.SecuCode, p.ExchangeCode);
                     if (secuInfo != null)
                     {
                         p.SecuName = secuInfo.SecuName;
@@ -1441,7 +1441,7 @@ namespace TradingSystem.View
                 }
                 else
                 {
-                    exchangeCode = Quote.SecurityInfoHelper.GetExchangeCode(secuItem.SecuCode);
+                    exchangeCode = SecurityItemHelper.GetExchangeCode(secuItem.SecuCode, secuItem.SecuType);
                 }
 
                 entrustSecurityItem.EntrustPriceType = EntrustPriceType.FixedPrice;

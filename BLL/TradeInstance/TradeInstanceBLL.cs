@@ -224,10 +224,10 @@ namespace BLL.TradeInstance
                 TradingInstanceSecurity tiSecuItem = new TradingInstanceSecurity
                 {
                     InstanceId = tradingInstance.InstanceId,
-                    SecuCode = item.SecuCode,
+                    SecuCode = item.SecuCode
                 };
 
-                var findItem = SecurityInfoManager.Instance.Get(item.SecuCode);
+                var findItem = SecurityInfoManager.Instance.Get(item.SecuCode, item.SecuType);
                 if (findItem != null)
                 {
                     tiSecuItem.SecuType = findItem.SecuType;

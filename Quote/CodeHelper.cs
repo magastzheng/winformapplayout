@@ -10,7 +10,7 @@ namespace Quote
 {
     public static class CodeHelper
     {
-        public static string GetIndexWindCode(string secuCode)
+        private static string GetIndexWindCode(string secuCode)
         {
             secuCode = secuCode.Trim();
             string windCode = string.Empty;
@@ -64,11 +64,12 @@ namespace Quote
             {
                 if (secuItem.SecuType == SecurityType.Index)
                 {
-                    exchangeCode = SecurityInfoHelper.GetIndexExchangeCode(secuItem.SecuCode);
+                    //exchangeCode = SecurityInfoHelper.GetIndexExchangeCode(secuItem.SecuCode);
+                    exchangeCode = SecurityItemHelper.GetExchangeCode(secuItem.SecuCode, secuItem.SecuType);
                 }
                 else
-                { 
-                    exchangeCode = SecurityInfoHelper.GetExchangeCode(secuItem.SecuCode);
+                {
+                    exchangeCode = SecurityItemHelper.GetExchangeCode(secuItem.SecuCode, secuItem.SecuType);
                 }
             }
 

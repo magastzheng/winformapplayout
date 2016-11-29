@@ -7,6 +7,7 @@ using log4net;
 using Model;
 using Model.Binding.BindingUtil;
 using Model.BLL;
+using Model.Converter;
 using Model.UFX;
 using Model.UI;
 using System;
@@ -161,6 +162,8 @@ namespace BLL.Entrust
                             requestId = temp3;
                         }
 
+                        var marketCode = UFXTypeConverter.GetMarketCode(responseItem.MarketNo);
+
                         DealFlowItem efItem = new DealFlowItem
                         {
                             CommandNo = commandId,
@@ -175,6 +178,7 @@ namespace BLL.Entrust
                             ShareHolderCode = responseItem.StockHolderId,
                             EntrustNo = string.Format("{0}", responseItem.EntrustNo),
                             DealNo = string.Format("{0}", responseItem.DealNo),
+                            ExchangeCode = UFXTypeConverter.GetMarketCode(marketCode),
                         };
 
                         dealFlowItems.Add(efItem);

@@ -29,7 +29,7 @@ namespace BLL.SecurityInfo
                 {
                     SecuCode = secuCode,
                     SecuType = secuType,
-                    ExchangeCode = SecurityItemHelper.GetExchangeCode(secuCode),
+                    ExchangeCode = SecurityItemHelper.GetExchangeCode(secuCode, secuType),
                 };
 
                 string investmentID = CodeHelper.GetWindCode(secuItem);
@@ -39,17 +39,19 @@ namespace BLL.SecurityInfo
             return secuItem;
         }
 
-        public SecurityItem Get(string secuCode)
+        public SecurityItem Get(string secuCode, string exchangeCode)
         {
             var allSecuItems = Get();
-            var secuItem = allSecuItems.Find(p => p.SecuCode.Equals(secuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
+            //var secuItem = allSecuItems.Find(p => p.SecuCode.Equals(secuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
+            var secuItem = allSecuItems.Find(p => p.SecuCode.Equals(secuCode) && p.ExchangeCode.Equals(exchangeCode));
             if (secuItem == null)
             {
                 secuItem = new SecurityItem
                 {
                     SecuCode = secuCode,
-                    SecuType = SecurityItemHelper.GetSecurityType(secuCode),
-                    ExchangeCode = SecurityItemHelper.GetExchangeCode(secuCode),
+                    SecuType = SecurityItemHelper.GetSecurityType(secuCode, exchangeCode),
+                    ExchangeCode = exchangeCode,
+                    //ExchangeCode = SecurityItemHelper.GetExchangeCode(secuCode),
                 };
 
                 string investmentID = CodeHelper.GetWindCode(secuItem);
