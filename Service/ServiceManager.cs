@@ -15,6 +15,7 @@ namespace ServiceInterface
             get { return _instance; }
         }
 
+        //TODO: update it to register the event handler from the outside.
         private event Action<ServiceType, int, string> ConnectedHandler;
         private event Action<NotifyArgs> NotifyHandler;
 

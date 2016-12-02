@@ -20,18 +20,21 @@ namespace BLL.Entrust.subscriber
             List<UFXWithdrawCompletedResponse> responseItems = new List<UFXWithdrawCompletedResponse>();
             var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXWithdrawCompletedResponse>();
             
-            //TODO:
-            for (int i = 0, count = dataParser.DataSets.Count; i < count; i++)
+            var errorResponse = T2ErrorHandler.Handle(dataParser);
+            if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
-                var dataSet = dataParser.DataSets[i];
-                foreach (var dataRow in dataSet.Rows)
+                //TODO:
+                for (int i = 0, count = dataParser.DataSets.Count; i < count; i++)
                 {
-                    UFXWithdrawCompletedResponse p = new UFXWithdrawCompletedResponse();
-                    UFXDataSetHelper.SetValue<UFXWithdrawCompletedResponse>(ref p, dataRow.Columns, dataFieldMap);
-                    responseItems.Add(p);
+                    var dataSet = dataParser.DataSets[i];
+                    foreach (var dataRow in dataSet.Rows)
+                    {
+                        UFXWithdrawCompletedResponse p = new UFXWithdrawCompletedResponse();
+                        UFXDataSetHelper.SetValue<UFXWithdrawCompletedResponse>(ref p, dataRow.Columns, dataFieldMap);
+                        responseItems.Add(p);
+                    }
                 }
             }
-
             //update the database
 
             return responseItems.Count;

@@ -16,16 +16,22 @@ namespace Model.UFX
         [StandardCode("SZSE")]
         ShenzhenSecurityExchange = 2,
         
+        //上海期货交易所
         [Description("上期所")]
+        [StandardCode("SHFE")]
         ShanghaiFuturesExchange = 3,
         
+        //郑州商品交易所
         [Description("郑商所")]
+        [StandardCode("CZCE")]
         ZhengzhouCommodityExchange = 4,
 
+        //中国金融期货交易所
         [Description("中金所")]
         [StandardCode("CFFEX")]
         ChinaFinancialFuturesExchange = 7,
 
+        //大连商品交易所
         [Description("大商所")]
         [StandardCode("DCE")]
         DalianCommodityExchange = 9,

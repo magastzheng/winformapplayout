@@ -6,6 +6,7 @@ using Config.ParamConverter;
 using DBAccess;
 using log4net;
 using Model.Binding.BindingUtil;
+using Model.Converter;
 using Model.UFX;
 using Model.UI;
 using System.Collections.Generic;
@@ -29,43 +30,47 @@ namespace BLL.Entrust.subscriber
             List<UFXEntrustDealResponse> responseItems = new List<UFXEntrustDealResponse>();
             var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXEntrustDealResponse>();
 
-            //TODO: check the count of dataset.
-            for (int i = 0, count = dataParser.DataSets.Count; i < count; i++)
+            var errorResponse = T2ErrorHandler.Handle(dataParser);
+            if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
-                var dataSet = dataParser.DataSets[i];
-                foreach (var dataRow in dataSet.Rows)
+                //TODO: check the count of dataset.
+                for (int i = 0, count = dataParser.DataSets.Count; i < count; i++)
                 {
-                    UFXEntrustDealResponse p = new UFXEntrustDealResponse();
-                    UFXDataSetHelper.SetValue<UFXEntrustDealResponse>(ref p, dataRow.Columns, dataFieldMap);
-                    responseItems.Add(p);
-                }
-            }
-
-            //update the database
-            if (responseItems.Count > 0)
-            {
-                List<EntrustSecurityItem> entrustSecuItems = new List<EntrustSecurityItem>();
-                foreach (var responseItem in responseItems)
-                {
-                    int commandId;
-                    int submitId;
-                    int requestId;
-
-                    if (EntrustRequestHelper.ParseThirdReff(responseItem.ThirdReff, out commandId, out submitId, out requestId))
+                    var dataSet = dataParser.DataSets[i];
+                    foreach (var dataRow in dataSet.Rows)
                     {
-                        _entrustSecurityBLL.UpdateDeal(submitId, commandId, responseItem.StockCode, responseItem.DealAmount, responseItem.DealBalance, responseItem.DealFee);
-
-                       //TODO: save into database
-                        var dealItem = Convert(responseItem);
-                        _dealsecudao.Create(dealItem);
-
-                        //Update the TradingInstanceSecurity
-                        _tradeInstanceSecuBLL.UpdateToday(dealItem.EntrustDirection, commandId, dealItem.SecuCode, dealItem.DealAmount, dealItem.DealBalance, dealItem.DealFee);
+                        UFXEntrustDealResponse p = new UFXEntrustDealResponse();
+                        UFXDataSetHelper.SetValue<UFXEntrustDealResponse>(ref p, dataRow.Columns, dataFieldMap);
+                        responseItems.Add(p);
                     }
-                    else
-                    { 
-                        string msg = string.Format("Fail to parse the third_reff: {0}", responseItem.ThirdReff);
-                        logger.Error(msg); 
+                }
+
+                //update the database
+                if (responseItems.Count > 0)
+                {
+                    List<EntrustSecurityItem> entrustSecuItems = new List<EntrustSecurityItem>();
+                    foreach (var responseItem in responseItems)
+                    {
+                        int commandId;
+                        int submitId;
+                        int requestId;
+
+                        if (EntrustRequestHelper.ParseThirdReff(responseItem.ThirdReff, out commandId, out submitId, out requestId))
+                        {
+                            _entrustSecurityBLL.UpdateDeal(submitId, commandId, responseItem.StockCode, responseItem.DealAmount, responseItem.DealBalance, responseItem.DealFee);
+
+                            //TODO: save into database
+                            var dealItem = Convert(responseItem);
+                            _dealsecudao.Create(dealItem);
+
+                            //Update the TradingInstanceSecurity
+                            _tradeInstanceSecuBLL.UpdateToday(dealItem.EntrustDirection, commandId, dealItem.SecuCode, dealItem.DealAmount, dealItem.DealBalance, dealItem.DealFee);
+                        }
+                        else
+                        {
+                            string msg = string.Format("Fail to parse the third_reff: {0}", responseItem.ThirdReff);
+                            logger.Error(msg);
+                        }
                     }
                 }
             }
@@ -110,7 +115,8 @@ namespace BLL.Entrust.subscriber
 
             dealItem.ExchangeCode = EntrustRequestHelper.GetExchangeCode(responseItem.MarketNo);
             dealItem.EntrustDirection = EntrustRequestHelper.GetEntrustDirectionType(responseItem.EntrustDirection, dealItem.ExchangeCode);
-            //dealItem.EntrustState = 
+            dealItem.EntrustState = Model.EnumType.EntrustStatus.Completed;
+            //dealItem.EntrustState = UFXTypeConverter.GetEntrustState(responseItem.EntrustState);
 
             return dealItem;
         }

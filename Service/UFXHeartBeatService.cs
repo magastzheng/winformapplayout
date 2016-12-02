@@ -54,6 +54,10 @@ namespace Service
 
         private void TimerHandler(object sender, ElapsedEventArgs e)
         {
+            //The timer trigger its callback every interval. It don't concern the real callback cost.
+            //So we need to stop the timer before running the task, and start it after finishing task.
+            _timer.Stop();
+
             //Send the heartbeat message
             var result = BLLManager.Instance.LoginBLL.HeartBeat();
             if (result != Model.ConnectionCode.Success)
@@ -72,6 +76,8 @@ namespace Service
                     _notify(arg);
                 }
             }
+
+            _timer.Start();
         }
     }
 }

@@ -20,14 +20,18 @@ namespace BLL.Entrust.subscriber
         {
             List<UFXEntrustCompletedResponse> responseItems = new List<UFXEntrustCompletedResponse>();
             var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXEntrustCompletedResponse>();
-            for (int i = 0, count = dataParser.DataSets.Count; i < count; i++)
+            var errorResponse = T2ErrorHandler.Handle(dataParser);
+            if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
-                var dataSet = dataParser.DataSets[i];
-                foreach (var dataRow in dataSet.Rows)
+                for (int i = 0, count = dataParser.DataSets.Count; i < count; i++)
                 {
-                    UFXEntrustCompletedResponse p = new UFXEntrustCompletedResponse();
-                    UFXDataSetHelper.SetValue<UFXEntrustCompletedResponse>(ref p, dataRow.Columns, dataFieldMap);
-                    responseItems.Add(p);
+                    var dataSet = dataParser.DataSets[i];
+                    foreach (var dataRow in dataSet.Rows)
+                    {
+                        UFXEntrustCompletedResponse p = new UFXEntrustCompletedResponse();
+                        UFXDataSetHelper.SetValue<UFXEntrustCompletedResponse>(ref p, dataRow.Columns, dataFieldMap);
+                        responseItems.Add(p);
+                    }
                 }
             }
 
