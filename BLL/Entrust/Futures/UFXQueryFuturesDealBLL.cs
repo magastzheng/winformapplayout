@@ -8,6 +8,7 @@ using Model;
 using Model.Binding.BindingUtil;
 using Model.BLL;
 using Model.Converter;
+using Model.EnumType;
 using Model.UFX;
 using Model.UI;
 using System;
@@ -20,13 +21,13 @@ using Util;
 
 namespace BLL.Entrust.Futures
 {
-    public class UFXQueryFutureDealBLL
+    public class UFXQueryFuturesDealBLL
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private SecurityBLL _securityBLL = null;
 
-        public UFXQueryFutureDealBLL()
+        public UFXQueryFuturesDealBLL()
         {
             _securityBLL = BLLManager.Instance.SecurityBLL;
         }
@@ -95,31 +96,70 @@ namespace BLL.Entrust.Futures
             return dealItems;
         }
 
-        public int QueryHistory(List<Portfolio> portfolios, DateTime startDate, DateTime endDate, int timeOut, CallerCallback callback)
+        public List<DealFlowItem> QueryHistory(List<Portfolio> portfolios, DateTime startDate, DateTime endDate, int timeOut, CallerCallback callback)
         {
-            List<UFXQueryFuturesHistDealRequest> requests = new List<UFXQueryFuturesHistDealRequest>();
-            UFXQueryFuturesHistDealRequest request = new UFXQueryFuturesHistDealRequest();
-            request.StartDate = DateUtil.GetIntDate(startDate);
-            request.EndDate = DateUtil.GetIntDate(endDate);
-            request.CombiNo = "30";
+             List<DealFlowItem> dealItems = new List<DealFlowItem>();
 
-            requests.Add(request);
+             foreach (var portfolio in portfolios)
+             {
 
-            Callbacker callbacker = new Callbacker
-            {
-                Token = new CallerToken
-                {
-                    SubmitId = -2,
-                    CommandId = -2,
-                    Caller = callback,
-                },
+                 List<UFXQueryFuturesHistDealRequest> requests = new List<UFXQueryFuturesHistDealRequest>();
+                 UFXQueryFuturesHistDealRequest request = new UFXQueryFuturesHistDealRequest();
+                 request.StartDate = DateUtil.GetIntDate(startDate);
+                 request.EndDate = DateUtil.GetIntDate(endDate);
 
-                DataHandler = QueryDataHandler,
-            };
+                 request.AccountCode = portfolio.FundCode;
+                 request.CombiNo = portfolio.PortfolioNo;
 
-            var result = _securityBLL.QueryFuturesDealHistory(requests, callbacker);
+                 requests.Add(request);
 
-            return 1;
+                 Callbacker callbacker = new Callbacker
+                 {
+                     Token = new CallerToken
+                     {
+                         SubmitId = -2,
+                         CommandId = -2,
+                         InArgs = request.CombiNo,
+                         OutArgs = dealItems,
+                         WaitEvent = new AutoResetEvent(false),
+                         Caller = callback,
+                     },
+
+                     DataHandler = QueryDataHandler,
+                 };
+
+                 var result = _securityBLL.QueryFuturesDealHistory(requests, callbacker);
+                 BLLResponse bllResponse = new BLLResponse();
+                 if (result == Model.ConnectionCode.Success)
+                 {
+                     if (callbacker.Token.WaitEvent.WaitOne(timeOut))
+                     {
+                         var errorResponse = callbacker.Token.ErrorResponse as UFXErrorResponse;
+                         if (errorResponse != null && T2ErrorHandler.Success(errorResponse.ErrorCode))
+                         {
+                             bllResponse.Code = ConnectionCode.Success;
+                             bllResponse.Message = "Success QueryHistory";
+                         }
+                         else
+                         {
+                             bllResponse.Code = ConnectionCode.FailQueryDeal;
+                             bllResponse.Message = "Fail QueryHistory: " + errorResponse.ErrorMessage;
+                         }
+                     }
+                     else
+                     {
+                         bllResponse.Code = ConnectionCode.FailTimeoutQueryDeal;
+                         bllResponse.Message = "Fail QueryHistory: Timeout!";
+                     }
+                 }
+                 else
+                 {
+                     bllResponse.Code = result;
+                     bllResponse.Message = "Fail to QueryHistory in ufx.";
+                 }
+             }
+
+             return dealItems;
         }
 
         private int QueryDataHandler(CallerToken token, DataParser dataParser)
@@ -193,6 +233,9 @@ namespace BLL.Entrust.Futures
                 }
 
                 var marketCode = UFXTypeConverter.GetMarketCode(responseItem.MarketNo);
+                var entrustDirection = UFXTypeConverter.GetEntrustDirection(responseItem.EntrustDirection);
+                var futuresDirection = UFXTypeConverter.GetFuturesDirection(responseItem.FuturesDirection);
+                EntrustDirection eDirection = EntrustDirectionConverter.GetFuturesEntrustDirection(entrustDirection, futuresDirection);
 
                 DealFlowItem efItem = new DealFlowItem
                 {
@@ -200,7 +243,7 @@ namespace BLL.Entrust.Futures
                     SecuCode = responseItem.StockCode,
                     FundNo = responseItem.AccountCode,
                     PortfolioCode = responseItem.CombiNo,
-                    EntrustDirection = responseItem.EntrustDirection,
+                    EDirection = eDirection,
                     DealPrice = responseItem.DealPrice,
                     DealAmount = responseItem.DealAmount,
                     DealMoney = responseItem.DealBalance,

@@ -1,4 +1,6 @@
 ﻿using Model.Binding;
+using Model.EnumType;
+using Model.EnumType.EnumTypeConverter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,7 +50,13 @@ namespace Model.UI
 
         //委托方向
         [BindingAttribute("entrustdirection")]
-        public string EntrustDirection { get; set; }
+        public string EntrustDirection
+        {
+            get 
+            {
+                return EnumTypeDisplayHelper.GetEntrustDirection(EDirection);
+            }
+        }
 
         //成交价格
         [BindingAttribute("dealprice")]
@@ -99,5 +107,7 @@ namespace Model.UI
         public string DealNo { get; set; }
 
         public string ExchangeCode { get; set; }
+
+        public EntrustDirection EDirection { get; set; }
     }
 }

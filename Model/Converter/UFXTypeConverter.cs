@@ -67,7 +67,7 @@ namespace Model.Converter
 
         #endregion
 
-        #region EntrustDirection
+        #region UFXEntrustDirection
 
         /// <summary>
         /// Get the UFXEntrustDirection type by a given string.
@@ -88,6 +88,30 @@ namespace Model.Converter
         public static string GetEntrustDirection(UFXEntrustDirection direction)
         {
             return EnumAttributeHelper.GetEnumDescription<UFXEntrustDirection>(direction);
+        }
+
+        #endregion
+
+        #region UFXFuturesDirection
+
+        /// <summary>
+        /// Get the UFXFuturesDirection type by a given string.
+        /// </summary>
+        /// <param name="direction">The UFX integer string.</param>
+        /// <returns>An enum type of UFXFuturesDirection.</returns>
+        public static UFXFuturesDirection GetFuturesDirection(string direction)
+        {
+            return StringEnumConverter.GetIntType<UFXFuturesDirection>(direction);
+        }
+
+        /// <summary>
+        /// Get the UFXFuturesDirection description name. It needs to add the Description label in enum type.
+        /// </summary>
+        /// <param name="direction">An enum type value of UFXFuturesDirection.</param>
+        /// <returns>A string value of the description name.</returns>
+        public static string GetFuturesDirection(UFXFuturesDirection direction)
+        {
+            return EnumAttributeHelper.GetEnumDescription<UFXFuturesDirection>(direction);
         }
 
         #endregion

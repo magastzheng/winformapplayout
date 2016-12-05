@@ -40,7 +40,7 @@ namespace Model.UI
         {
             get 
             {
-                return UFXTypeConverter.GetEntrustDirection(EEntrustDirection);
+                return EnumTypeDisplayHelper.GetEntrustDirection(EDirection);
             }
         }
 
@@ -159,7 +159,9 @@ namespace Model.UI
 
         public UFXMarketCode EMarketCode { get; set; }
 
-        public UFXEntrustDirection EEntrustDirection { get; set; }
+        //public UFXEntrustDirection EEntrustDirection { get; set; }
+
+        //public UFXFuturesDirection EFuturesDirection { get; set; }
 
         public UFXEntrustState EEntrustState { get; set; }
 

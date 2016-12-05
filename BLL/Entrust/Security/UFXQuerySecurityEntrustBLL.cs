@@ -219,6 +219,8 @@ namespace BLL.Entrust.Security
             var entrustSecuItems = _entrustSecuBLL.GetAllCombine();
             foreach (var responseItem in responseItems)
             {
+                var entrustDirection = UFXTypeConverter.GetEntrustDirection(responseItem.EntrustDirection);
+
                 EntrustFlowItem efItem = new EntrustFlowItem
                 {
                     CommandNo = token.CommandId,
@@ -242,7 +244,7 @@ namespace BLL.Entrust.Security
                     RequestId = responseItem.ExtSystemId,
                     FundCode = responseItem.AccountCode,
                     PortfolioCode = (string)token.InArgs,
-                    EEntrustDirection = UFXTypeConverter.GetEntrustDirection(responseItem.EntrustDirection),
+                    EDirection = EntrustDirectionConverter.GetSecurityEntrustDirection(entrustDirection),
                     EMarketCode = UFXTypeConverter.GetMarketCode(responseItem.MarketNo),
                     EEntrustState = UFXTypeConverter.GetEntrustState(responseItem.EntrustState),
                     WithdrawCause = responseItem.WithdrawCause,

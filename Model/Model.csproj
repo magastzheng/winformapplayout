@@ -58,6 +58,7 @@
     <Compile Include="Constant\ConstVariable.cs" />
     <Compile Include="Constant\DateFormat.cs" />
     <Compile Include="Converter\EnumAttributeHelper.cs" />
+    <Compile Include="Converter\EntrustDirectionConverter.cs" />
     <Compile Include="Converter\StringEnumConverter.cs" />
     <Compile Include="Converter\UFXTypeConverter.cs" />
     <Compile Include="Database\TemplateItem.cs" />

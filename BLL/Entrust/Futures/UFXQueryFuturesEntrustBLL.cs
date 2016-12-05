@@ -8,6 +8,7 @@ using Model;
 using Model.Binding.BindingUtil;
 using Model.BLL;
 using Model.Converter;
+using Model.EnumType;
 using Model.EnumType.EnumTypeConverter;
 using Model.UFX;
 using Model.UI;
@@ -38,9 +39,9 @@ namespace BLL.Entrust.Futures
             List<EntrustFlowItem> entrustItems = new List<EntrustFlowItem>();
             foreach (var portfolio in portfolios)
             {
-                List<UFXQueryEntrustRequest> requests = new List<UFXQueryEntrustRequest>();
+                List<UFXQueryFuturesEntrustRequest> requests = new List<UFXQueryFuturesEntrustRequest>();
 
-                UFXQueryEntrustRequest request = new UFXQueryEntrustRequest();
+                UFXQueryFuturesEntrustRequest request = new UFXQueryFuturesEntrustRequest();
                 request.AccountCode = portfolio.FundCode;
                 request.AssetNo = portfolio.AssetNo;
                 request.CombiNo = portfolio.PortfolioNo;
@@ -104,9 +105,9 @@ namespace BLL.Entrust.Futures
 
             foreach (var portfolio in portfolios)
             {
-                List<UFXQueryHistEntrustRequest> requests = new List<UFXQueryHistEntrustRequest>();
+                List<UFXQueryFuturesHistEntrustRequest> requests = new List<UFXQueryFuturesHistEntrustRequest>();
 
-                UFXQueryHistEntrustRequest request = new UFXQueryHistEntrustRequest();
+                UFXQueryFuturesHistEntrustRequest request = new UFXQueryFuturesHistEntrustRequest();
                 request.StartDate = intStart;
                 request.EndDate = intEnd;
                 request.CombiNo = portfolio.PortfolioNo;
@@ -165,20 +166,20 @@ namespace BLL.Entrust.Futures
 
         private int QueryDataHandler(CallerToken token, DataParser dataParser)
         {
-            List<UFXQueryEntrustResponse> responseItems = new List<UFXQueryEntrustResponse>();
+            List<UFXQueryFuturesEntrustResponse> responseItems = new List<UFXQueryFuturesEntrustResponse>();
             var errorResponse = T2ErrorHandler.Handle(dataParser);
             token.ErrorResponse = errorResponse;
 
             if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
-                var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXQueryEntrustResponse>();
+                var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXQueryFuturesEntrustResponse>();
                 for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
                 {
                     var dataSet = dataParser.DataSets[i];
                     foreach (var dataRow in dataSet.Rows)
                     {
-                        UFXQueryEntrustResponse p = new UFXQueryEntrustResponse();
-                        UFXDataSetHelper.SetValue<UFXQueryEntrustResponse>(ref p, dataRow.Columns, dataFieldMap);
+                        UFXQueryFuturesEntrustResponse p = new UFXQueryFuturesEntrustResponse();
+                        UFXDataSetHelper.SetValue<UFXQueryFuturesEntrustResponse>(ref p, dataRow.Columns, dataFieldMap);
                         responseItems.Add(p);
                     }
                 }
@@ -213,7 +214,7 @@ namespace BLL.Entrust.Futures
             return responseItems.Count();
         }
 
-        private List<EntrustFlowItem> GetFlowItems(CallerToken token, List<UFXQueryEntrustResponse> responseItems)
+        private List<EntrustFlowItem> GetFlowItems(CallerToken token, List<UFXQueryFuturesEntrustResponse> responseItems)
         {
             var entrustFlowItems = new List<EntrustFlowItem>();
             if (responseItems == null || responseItems.Count == 0)
@@ -224,6 +225,10 @@ namespace BLL.Entrust.Futures
             var entrustSecuItems = _entrustSecuBLL.GetAllCombine();
             foreach (var responseItem in responseItems)
             {
+                var entrustDirection = UFXTypeConverter.GetEntrustDirection(responseItem.EntrustDirection);
+                var futuresDirection = UFXTypeConverter.GetFuturesDirection(responseItem.FuturesDirection);
+                EntrustDirection eDirection = EntrustDirectionConverter.GetFuturesEntrustDirection(entrustDirection, futuresDirection);
+
                 EntrustFlowItem efItem = new EntrustFlowItem
                 {
                     CommandNo = token.CommandId,
@@ -247,7 +252,8 @@ namespace BLL.Entrust.Futures
                     RequestId = responseItem.ExtSystemId,
                     FundCode = responseItem.AccountCode,
                     PortfolioCode = (string)token.InArgs,
-                    EEntrustDirection = UFXTypeConverter.GetEntrustDirection(responseItem.EntrustDirection),
+                    EDirection = eDirection,
+                    //EEntrustDirection = UFXTypeConverter.GetEntrustDirection(responseItem.EntrustDirection),
                     EMarketCode = UFXTypeConverter.GetMarketCode(responseItem.MarketNo),
                     EEntrustState = UFXTypeConverter.GetEntrustState(responseItem.EntrustState),
                     WithdrawCause = responseItem.WithdrawCause,

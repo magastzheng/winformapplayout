@@ -165,6 +165,17 @@ namespace Model.UFX
         SellingCoupon = 76,
     }
 
+    public enum UFXFuturesDirection
+    { 
+        //开仓
+        [Description("开仓")]
+        Open = 1,
+
+        //平仓
+        [Description("平仓")]
+        Close = 2,
+    }
+
     //委托状态
     public enum UFXEntrustState
     { 

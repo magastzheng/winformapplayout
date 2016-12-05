@@ -67,7 +67,7 @@
     <Compile Include="Entrust\subscriber\UFXWithdrawCompletedBLL.cs" />
     <Compile Include="Entrust\UFXBasketEntrustBLL.cs" />
     <Compile Include="Entrust\UFXBasketWithdrawBLL.cs" />
-    <Compile Include="Entrust\Futures\UFXQueryFutureDealBLL.cs" />
+    <Compile Include="Entrust\Futures\UFXQueryFuturesDealBLL.cs" />
     <Compile Include="Entrust\Futures\UFXQueryFuturesEntrustBLL.cs" />
     <Compile Include="Entrust\UFXQueryMoneyBLL.cs" />
     <Compile Include="UFX\UFXDataSetHelper.cs" />

@@ -228,6 +228,7 @@ namespace BLL.Entrust.Security
                 }
 
                 var marketCode = UFXTypeConverter.GetMarketCode(responseItem.MarketNo);
+                var entrustDirection = UFXTypeConverter.GetEntrustDirection(responseItem.EntrustDirection);
 
                 DealFlowItem efItem = new DealFlowItem
                 {
@@ -235,7 +236,7 @@ namespace BLL.Entrust.Security
                     SecuCode = responseItem.StockCode,
                     FundNo = responseItem.AccountCode,
                     PortfolioCode = responseItem.CombiNo,
-                    EntrustDirection = responseItem.EntrustDirection,
+                    EDirection = EntrustDirectionConverter.GetSecurityEntrustDirection(entrustDirection),
                     DealPrice = responseItem.DealPrice,
                     DealAmount = responseItem.DealAmount,
                     DealMoney = responseItem.DealBalance,

@@ -270,6 +270,23 @@ namespace Model.UFX
         public int EndDate { get; set; }
     }
 
+    public class UFXQueryFuturesEntrustRequest : UFXQueryEntrustRequest
+    {
+        [UFXDataAttribute("futures_direction")]
+        public string FuturesDirection { get; set; }
+    }
+
+    public class UFXQueryFuturesEntrustResponse : UFXQueryEntrustResponse
+    {
+        [UFXDataAttribute("futures_direction")]
+        public string FuturesDirection { get; set; }
+    }
+
+    public class UFXQueryFuturesHistEntrustRequest : UFXQueryHistEntrustRequest
+    {
+        [UFXDataAttribute("futures_direction")]
+        public string FuturesDirection { get; set; }
+    }
 
     public class UFXQueryFuturesDealRequest : UFXQueryDealRequest
     {

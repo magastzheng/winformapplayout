@@ -83,14 +83,14 @@ namespace BLL.UFX.impl
 
         #region query futures entrust/deal
 
-        public ConnectionCode QueryFuturesEntrust(List<UFXQueryEntrustRequest> requests, Callbacker callbacker)
+        public ConnectionCode QueryFuturesEntrust(List<UFXQueryFuturesEntrustRequest> requests, Callbacker callbacker)
         {
-            return Submit<UFXQueryEntrustRequest>(FunctionCode.QueryFuturesEntrust, requests, callbacker);
+            return Submit<UFXQueryFuturesEntrustRequest>(FunctionCode.QueryFuturesEntrust, requests, callbacker);
         }
 
-        public ConnectionCode QueryFuturesEntrustHistory(List<UFXQueryHistEntrustRequest> requests, Callbacker callbacker)
+        public ConnectionCode QueryFuturesEntrustHistory(List<UFXQueryFuturesHistEntrustRequest> requests, Callbacker callbacker)
         {
-            return Submit<UFXQueryHistEntrustRequest>(FunctionCode.QueryFuturesEntrustHistorical, requests, callbacker);
+            return Submit<UFXQueryFuturesHistEntrustRequest>(FunctionCode.QueryFuturesEntrustHistorical, requests, callbacker);
         }
 
         public ConnectionCode QueryFuturesDeal(List<UFXQueryFuturesDealRequest> requests, Callbacker callbacker)
