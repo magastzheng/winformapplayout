@@ -27,7 +27,13 @@ namespace BLL.UFX.impl
             RegisterUFX(FunctionCode.QuerySecurityDealHistorical);
             RegisterUFX(FunctionCode.QuerySecurityHolding);
             RegisterUFX(FunctionCode.QueryMultipleHolding);
+            RegisterUFX(FunctionCode.QueryFuturesEntrust);
+            RegisterUFX(FunctionCode.QueryFuturesEntrustHistorical);
+            RegisterUFX(FunctionCode.QueryFuturesDeal);
+            RegisterUFX(FunctionCode.QueryFuturesDealHistorical);
         }
+
+        #region entrust/withdraw
 
         public ConnectionCode Entrust(List<UFXEntrustRequest> requests, Callbacker callbacker)
         {
@@ -49,6 +55,10 @@ namespace BLL.UFX.impl
             return Submit<UFXBasketWithdrawRequest>(FunctionCode.WithdrawBasket, requests, callbacker);
         }
 
+        #endregion
+
+        #region query normal security entrust/deal
+
         public ConnectionCode QueryEntrust(List<UFXQueryEntrustRequest> requests, Callbacker callbacker)
         {
             return Submit<UFXQueryEntrustRequest>(FunctionCode.QuerySecurityEntrust, requests, callbacker);
@@ -69,6 +79,34 @@ namespace BLL.UFX.impl
             return Submit<UFXQueryHistDealRequest>(FunctionCode.QuerySecurityDealHistorical, requests, callbacker);
         }
 
+        #endregion
+
+        #region query futures entrust/deal
+
+        public ConnectionCode QueryFuturesEntrust(List<UFXQueryEntrustRequest> requests, Callbacker callbacker)
+        {
+            return Submit<UFXQueryEntrustRequest>(FunctionCode.QueryFuturesEntrust, requests, callbacker);
+        }
+
+        public ConnectionCode QueryFuturesEntrustHistory(List<UFXQueryHistEntrustRequest> requests, Callbacker callbacker)
+        {
+            return Submit<UFXQueryHistEntrustRequest>(FunctionCode.QueryFuturesEntrustHistorical, requests, callbacker);
+        }
+
+        public ConnectionCode QueryFuturesDeal(List<UFXQueryFuturesDealRequest> requests, Callbacker callbacker)
+        {
+            return Submit<UFXQueryFuturesDealRequest>(FunctionCode.QueryFuturesDeal, requests, callbacker);
+        }
+
+        public ConnectionCode QueryFuturesDealHistory(List<UFXQueryFuturesHistDealRequest> requests, Callbacker callbacker)
+        {
+            return Submit<UFXQueryFuturesHistDealRequest>(FunctionCode.QueryFuturesDealHistorical, requests, callbacker);
+        }
+
+        #endregion
+
+        #region query holding
+
         public ConnectionCode QueryHolding(List<UFXHoldingRequest> requests, Callbacker callbacker)
         {
             return Submit<UFXHoldingRequest>(FunctionCode.QuerySecurityHolding, requests, callbacker);
@@ -78,5 +116,7 @@ namespace BLL.UFX.impl
         {
             return Submit<UFXHoldingRequest>(FunctionCode.QueryMultipleHolding, requests, callbacker);
         }
+
+        #endregion
     }
 }

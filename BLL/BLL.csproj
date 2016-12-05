@@ -57,6 +57,8 @@
   <ItemGroup>
     <Compile Include="EntrustCommand\EntrustCommandBLL.cs" />
     <Compile Include="EntrustCommand\EntrustSecurityBLL.cs" />
+    <Compile Include="Entrust\Security\UFXQuerySecurityDealBLL.cs" />
+    <Compile Include="Entrust\Security\UFXQuerySecurityEntrustBLL.cs" />
     <Compile Include="Entrust\subscriber\IUFXSubsriberBLLBase.cs" />
     <Compile Include="Entrust\subscriber\UFXEntrustCommitBLL.cs" />
     <Compile Include="Entrust\subscriber\UFXEntrustDealBLL.cs" />
@@ -65,6 +67,8 @@
     <Compile Include="Entrust\subscriber\UFXWithdrawCompletedBLL.cs" />
     <Compile Include="Entrust\UFXBasketEntrustBLL.cs" />
     <Compile Include="Entrust\UFXBasketWithdrawBLL.cs" />
+    <Compile Include="Entrust\Futures\UFXQueryFutureDealBLL.cs" />
+    <Compile Include="Entrust\Futures\UFXQueryFuturesEntrustBLL.cs" />
     <Compile Include="Entrust\UFXQueryMoneyBLL.cs" />
     <Compile Include="UFX\UFXDataSetHelper.cs" />
     <Compile Include="Entrust\UFXQueryHoldingBLL.cs" />

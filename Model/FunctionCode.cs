@@ -41,14 +41,26 @@ namespace Model
         //证券委托查询（当日）
         QuerySecurityEntrust = 32001,
 
+        //期货委托查询（当日）
+        QueryFuturesEntrust = 32003,
+
         //证券历史委托查询（历史）
         QuerySecurityEntrustHistorical = 32101,
+
+        //期货历史委托查询（历史）
+        QueryFuturesEntrustHistorical = 32103,
 
         //证券成交查询（当日）
         QuerySecurityDeal = 33001,
 
         //证券成交查询（历史）
         QuerySecurityDealHistorical = 33101,
+
+        //期货成交查询（当日）
+        QueryFuturesDeal = 33003,
+
+        //期货成交查询（历史）
+        QueryFuturesDealHistorical = 33103,
 
         //账户资金查询
         QueryAccountMoney = 34001,

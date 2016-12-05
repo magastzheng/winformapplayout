@@ -269,4 +269,23 @@ namespace Model.UFX
         [UFXDataAttribute("end_date", Data.DataValueType.Int)]
         public int EndDate { get; set; }
     }
+
+
+    public class UFXQueryFuturesDealRequest : UFXQueryDealRequest
+    {
+        [UFXDataAttribute("futures_direction")]
+        public string FuturesDirection { get; set; }
+    }
+
+    public class UFXQueryFuturesDealResponse : UFXQueryDealResponse
+    {
+        [UFXDataAttribute("futures_direction")]
+        public string FuturesDirection { get; set; }
+    }
+
+    public class UFXQueryFuturesHistDealRequest : UFXQueryHistDealRequest
+    {
+        [UFXDataAttribute("futures_direction")]
+        public string FuturesDirection { get; set; }
+    }
 }

@@ -33,22 +33,14 @@ namespace ServiceInterface
         public void Init()
         {
             Stop();
-            //_eventMap = new Dictionary<ServiceType, AutoResetEvent>();
-            //_services = new List<IService>();
-            //_serviceConnectedMap = new Dictionary<ServiceType, int>();
-
+            
             var ufxService = new UFXHeartBeatService(Connected, Notify);
-            //ufxService.Connected(Connected);
-            //ufxService.Notify(Notify);
             _services.Add(ufxService);
 
             //add other service
             //TODO: Init the QuoteCenter before using.
-            //var quote = QuoteCenter.Instance.Quote;
             var quote = QuoteCenter2.Instance.Quote;
             var quoteService = new QuoteService(quote, Connected, Notify);
-            //quoteService.Connected(Connected);
-            //quoteService.Notify(Notify);
             _services.Add(quoteService);
         }
 

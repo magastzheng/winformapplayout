@@ -111,17 +111,21 @@ namespace BLL.Entrust
             var errorResponse = T2ErrorHandler.Handle(dataParser);
             token.ErrorResponse = errorResponse;
 
-            if (dataParser.DataSets.Count > 1)
+            //Verify the dataParser before reading the data.
+            if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
-                var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXBasketWithdrawResponse>();
-                for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
+                if (dataParser.DataSets.Count > 1)
                 {
-                    var dataSet = dataParser.DataSets[i];
-                    foreach (var dataRow in dataSet.Rows)
+                    var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXBasketWithdrawResponse>();
+                    for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
                     {
-                        UFXBasketWithdrawResponse p = new UFXBasketWithdrawResponse();
-                        UFXDataSetHelper.SetValue<UFXBasketWithdrawResponse>(ref p, dataRow.Columns, dataFieldMap);
-                        responseItems.Add(p);
+                        var dataSet = dataParser.DataSets[i];
+                        foreach (var dataRow in dataSet.Rows)
+                        {
+                            UFXBasketWithdrawResponse p = new UFXBasketWithdrawResponse();
+                            UFXDataSetHelper.SetValue<UFXBasketWithdrawResponse>(ref p, dataRow.Columns, dataFieldMap);
+                            responseItems.Add(p);
+                        }
                     }
                 }
             }
@@ -130,6 +134,7 @@ namespace BLL.Entrust
             List<EntrustSecurityItem> entrustSecuItems = new List<EntrustSecurityItem>();
             if (token.SubmitId > 0)
             {
+                //TODO: check the withdraw status
                 foreach (var responseItem in responseItems)
                 {
                     var entrustItem = new EntrustSecurityItem

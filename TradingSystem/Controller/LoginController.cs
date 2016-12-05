@@ -84,27 +84,29 @@ namespace TradingSystem.Controller
             {
                 return subRet;
             }
-
-            ServiceManager.Instance.Init();
-
-            //TODO: register the notify/callback method
-            //Add another form the show the message???
-
-            //ServiceManager.Instance.
-            ServiceManager.Instance.Start();
-            if (ServiceManager.Instance.Wait())
-            {
-                //TODO: waiting for the services. 
-                var gridConfig = ConfigManager.Instance.GetGridConfig();
-                MainForm mainForm = new MainForm(gridConfig, this._t2SDKWrap);
-                MainController mainController = new MainController(mainForm, this._t2SDKWrap);
-                Program._s_mainfrmController = mainController;
-
-                return ConnectionCode.Success;
-            }
             else
             {
-                return ConnectionCode.ErrorFailStartService;
+                ServiceManager.Instance.Init();
+
+                //TODO: register the notify/callback method
+                //Add another form the show the message???
+
+                //ServiceManager.Instance.
+                ServiceManager.Instance.Start();
+                if (ServiceManager.Instance.Wait())
+                {
+                    //TODO: waiting for the services. 
+                    var gridConfig = ConfigManager.Instance.GetGridConfig();
+                    MainForm mainForm = new MainForm(gridConfig, this._t2SDKWrap);
+                    MainController mainController = new MainController(mainForm, this._t2SDKWrap);
+                    Program._s_mainfrmController = mainController;
+
+                    return ConnectionCode.Success;
+                }
+                else
+                {
+                    return ConnectionCode.ErrorFailStartService;
+                }
             }
         }
 
