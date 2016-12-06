@@ -22,6 +22,16 @@ namespace BLL.TradeInstance
 
         #region public method
 
+        public int Create(List<TradingInstanceAdjustmentItem> items)
+        {
+            foreach (var item in items)
+            {
+                Create(item);
+            }
+
+            return 1;
+        }
+
         //Add new record into the table and then add the permission for the user.
         public int Create(TradingInstanceAdjustmentItem item)
         {

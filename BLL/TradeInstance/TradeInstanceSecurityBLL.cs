@@ -13,6 +13,7 @@ namespace BLL.TradeInstance
 
         private TradingInstanceSecurityDAO _tradeinstsecudao = new TradingInstanceSecurityDAO();
         private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
+        private TradingInstanceAdjustmentBLL _tradeInstanceAdjustBLL = new TradingInstanceAdjustmentBLL();
 
         public TradeInstanceSecurityBLL()
         { 
@@ -162,15 +163,15 @@ namespace BLL.TradeInstance
                 }
                 else
                 {
-                    srcOutItem.PositionAmount = transferItem.TransferedAmount;
+                    destInItem.PositionAmount = transferItem.TransferedAmount;
                     //TODO:
                     if (transferItem.SecuType == Model.SecurityInfo.SecurityType.Stock)
                     {
-                        srcOutItem.PositionType = PositionType.SpotLong;
+                        destInItem.PositionType = PositionType.SpotLong;
                     }
                     else if (transferItem.SecuType == Model.SecurityInfo.SecurityType.Futures)
                     {
-                        srcOutItem.PositionType = PositionType.FuturesShort;
+                        destInItem.PositionType = PositionType.FuturesShort;
                     }
                 }
 
@@ -194,11 +195,14 @@ namespace BLL.TradeInstance
                 adjustItems.Add(adjustItem);
             }
 
-            //更新数据库,指向要更新变化部分即可,通过提交事务
-            int ret = _tradeinstsecudao.Transfer(destNewItems, srcNewItems);
-            //TODO: store the transfer record
+            int result = _tradeInstanceAdjustBLL.Create(adjustItems);
+            if (result > 0)
+            {
+                //更新数据库,指向要更新变化部分即可,通过提交事务
+                result = _tradeinstsecudao.Transfer(destNewItems, srcNewItems);
+            }
 
-            return ret;
+            return result;
         }
 
         #endregion

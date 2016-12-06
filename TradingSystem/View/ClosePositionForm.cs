@@ -76,6 +76,7 @@ namespace TradingSystem.View
             this.closeGridView.UpdateRelatedDataGridHandler += new UpdateRelatedDataGrid(GridView_Close_UpdateRelatedDataGridHandler);
             this.cmdGridView.ComboBoxSelectionChangeCommitHandler += new ComboBoxSelectionChangeCommitHandler(GridView_Command_ComboBoxSelectionChangeCommit);
 
+            this.cbCopies.CheckedChanged += new EventHandler(ComboBox_Copies_CheckedChanged);
             this.btnCalc.Click += new EventHandler(Button_Calc_Click);
             this.btnCloseAll.Click += new EventHandler(Button_CloseAll_Click);
             this.btnChgPosition.Click += new EventHandler(Button_ChgPosition_Click);
@@ -239,7 +240,7 @@ namespace TradingSystem.View
                 SpotTemplate = closeItem.TemplateId.ToString(),
                 MonitorName = closeItem.MonitorName,
                 FuturesContract = closeItem.FuturesContract,
-                TradeDirection = ((int)EntrustDirection.Buy).ToString(),
+                TradeDirection = ((int)EntrustDirection.Sell).ToString(),
                 Copies = 1,
             };
 
@@ -261,6 +262,9 @@ namespace TradingSystem.View
         #region load control
         private bool Form_LoadControl(object sender, object data)
         {
+            //set the default copies setting
+            SetCopiesState(this.cbCopies);
+
             //set the monitorGridView
             TSDataGridViewHelper.AddColumns(this.closeGridView, _gridConfig.GetGid(GridCloseId));
             Dictionary<string, string> closeColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(ClosePositionItem));
@@ -416,6 +420,26 @@ namespace TradingSystem.View
         #endregion
 
         #region Button Click Event
+
+        private void ComboBox_Copies_CheckedChanged(object sender, EventArgs e)
+        {
+            if (sender == null || !(sender is CheckBox))
+                return;
+            CheckBox cb = sender as CheckBox;
+            SetCopiesState(cb);
+        }
+
+        private void SetCopiesState(CheckBox cb)
+        {
+            if (cb.Checked)
+            {
+                this.nudCopies.Enabled = true;
+            }
+            else
+            {
+                this.nudCopies.Enabled = false;
+            }
+        }
 
         private void Button_Calc_Click(object sender, EventArgs e)
         {
@@ -700,22 +724,25 @@ namespace TradingSystem.View
 
         private bool ValidateCopies(List<ClosePositionCmdItem> closeCmdItems)
         {
-            int copies = (int)nudCopies.Value;
-            if (copies <= 0)
+            if (this.cbCopies.Checked)
             {
-                foreach (var cmdItem in closeCmdItems)
+                int copies = (int)nudCopies.Value;
+                if (copies <= 0)
                 {
-                    if (cmdItem.Copies <= 0)
+                    foreach (var cmdItem in closeCmdItems)
                     {
-                        return false;
+                        if (cmdItem.Copies <= 0)
+                        {
+                            return false;
+                        }
                     }
                 }
-            }
-            else
-            {
-                foreach (var cmdItem in closeCmdItems)
+                else
                 {
-                    cmdItem.Copies = copies;
+                    foreach (var cmdItem in closeCmdItems)
+                    {
+                        cmdItem.Copies = copies;
+                    }
                 }
             }
 

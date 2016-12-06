@@ -4,6 +4,7 @@ using Model.SecurityInfo;
 using Model.UI;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,70 @@ namespace DBAccess.TradeInstance
         {
 
         }
+
+        //need to handle the permission
+        //public int Create(List<TradingInstanceAdjustmentItem> items)
+        //{ 
+        //    var dbCommand = _dbHelper.GetCommand();
+        //    _dbHelper.Open(_dbHelper.Connection);
+
+        //    //use transaction to execute
+        //    DbTransaction transaction = dbCommand.Connection.BeginTransaction();
+        //    dbCommand.Transaction = transaction;
+        //    dbCommand.CommandType = System.Data.CommandType.StoredProcedure;
+        //    int ret = -1;
+        //    try
+        //    {
+        //        dbCommand.CommandText = SP_Create;
+
+        //        foreach (var item in items)
+        //        {
+        //            dbCommand.Parameters.Clear();
+
+        //            _dbHelper.AddInParameter(dbCommand, "@SourceInstanceId", System.Data.DbType.Int32, item.SourceInstanceId);
+        //            _dbHelper.AddInParameter(dbCommand, "@SourceFundCode", System.Data.DbType.String, item.SourceFundCode);
+        //            _dbHelper.AddInParameter(dbCommand, "@SourcePortfolioCode", System.Data.DbType.String, item.SourcePortfolioCode);
+        //            _dbHelper.AddInParameter(dbCommand, "@DestinationInstanceId", System.Data.DbType.Int32, item.DestinationInstanceId);
+        //            _dbHelper.AddInParameter(dbCommand, "@DestinationFundCode", System.Data.DbType.String, item.DestinationFundCode);
+        //            _dbHelper.AddInParameter(dbCommand, "@DestinationPortfolioCode", System.Data.DbType.String, item.DestinationPortfolioCode);
+        //            _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, item.SecuCode);
+        //            _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, (int)item.SecuType);
+        //            _dbHelper.AddInParameter(dbCommand, "@PositionType", System.Data.DbType.Int32, (int)item.PositionType);
+        //            _dbHelper.AddInParameter(dbCommand, "@Price", System.Data.DbType.Double, item.Price);
+        //            _dbHelper.AddInParameter(dbCommand, "@Amount", System.Data.DbType.Int32, item.Amount);
+        //            _dbHelper.AddInParameter(dbCommand, "@AdjustType", System.Data.DbType.Int32, (int)item.AdjustType);
+        //            _dbHelper.AddInParameter(dbCommand, "@Operator", System.Data.DbType.String, item.Operator);
+        //            _dbHelper.AddInParameter(dbCommand, "@StockHolderId", System.Data.DbType.String, item.StockHolderId);
+        //            _dbHelper.AddInParameter(dbCommand, "@SeatNo", System.Data.DbType.String, item.SeatNo);
+        //            _dbHelper.AddInParameter(dbCommand, "@Notes", System.Data.DbType.String, item.Notes);
+
+        //            _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
+
+        //            ret = dbCommand.ExecuteNonQuery();
+        //            int id = -1;
+        //            if (ret > 0)
+        //            {
+        //                id = (int)dbCommand.Parameters["@return"].Value;
+        //            }
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        transaction.Rollback();
+        //        //TODO: add log
+        //        logger.Error(ex);
+        //        ret = -1;
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //        _dbHelper.Close(dbCommand.Connection);
+        //        transaction.Dispose();
+        //    }
+
+        //    return ret;
+        //}
 
         public int Create(TradingInstanceAdjustmentItem item)
         {

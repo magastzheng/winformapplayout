@@ -43,8 +43,8 @@
             this.btnChgPosition = new System.Windows.Forms.Button();
             this.btnCloseAll = new System.Windows.Forms.Button();
             this.btnCalc = new System.Windows.Forms.Button();
-            this.lblCopies = new System.Windows.Forms.Label();
             this.cmdGridView = new Controls.GridView.TSDataGridView();
+            this.cbCopies = new System.Windows.Forms.CheckBox();
             this.panelTop.SuspendLayout();
             this.panelBottom.SuspendLayout();
             this.panelMain.SuspendLayout();
@@ -175,12 +175,12 @@
             // 
             // panelCmdBotton
             // 
+            this.panelCmdBotton.Controls.Add(this.cbCopies);
             this.panelCmdBotton.Controls.Add(this.nudCopies);
             this.panelCmdBotton.Controls.Add(this.btnSubmit);
             this.panelCmdBotton.Controls.Add(this.btnChgPosition);
             this.panelCmdBotton.Controls.Add(this.btnCloseAll);
             this.panelCmdBotton.Controls.Add(this.btnCalc);
-            this.panelCmdBotton.Controls.Add(this.lblCopies);
             this.panelCmdBotton.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panelCmdBotton.Location = new System.Drawing.Point(0, 156);
             this.panelCmdBotton.Name = "panelCmdBotton";
@@ -189,14 +189,14 @@
             // 
             // nudCopies
             // 
-            this.nudCopies.Location = new System.Drawing.Point(77, 8);
+            this.nudCopies.Location = new System.Drawing.Point(90, 8);
             this.nudCopies.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
             this.nudCopies.Name = "nudCopies";
-            this.nudCopies.Size = new System.Drawing.Size(61, 21);
+            this.nudCopies.Size = new System.Drawing.Size(48, 21);
             this.nudCopies.TabIndex = 6;
             this.nudCopies.Value = new decimal(new int[] {
             1,
@@ -240,15 +240,6 @@
             this.btnCalc.Text = "计算";
             this.btnCalc.UseVisualStyleBackColor = true;
             // 
-            // lblCopies
-            // 
-            this.lblCopies.AutoSize = true;
-            this.lblCopies.Location = new System.Drawing.Point(12, 13);
-            this.lblCopies.Name = "lblCopies";
-            this.lblCopies.Size = new System.Drawing.Size(59, 12);
-            this.lblCopies.TabIndex = 0;
-            this.lblCopies.Text = "操作份数:";
-            // 
             // cmdGridView
             // 
             this.cmdGridView.AllowUserToAddRows = false;
@@ -260,6 +251,18 @@
             this.cmdGridView.RowTemplate.Height = 23;
             this.cmdGridView.Size = new System.Drawing.Size(1125, 156);
             this.cmdGridView.TabIndex = 1;
+            // 
+            // cbCopies
+            // 
+            this.cbCopies.AutoSize = true;
+            this.cbCopies.Checked = true;
+            this.cbCopies.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbCopies.Location = new System.Drawing.Point(6, 10);
+            this.cbCopies.Name = "cbCopies";
+            this.cbCopies.Size = new System.Drawing.Size(72, 16);
+            this.cbCopies.TabIndex = 7;
+            this.cbCopies.Text = "操作份数";
+            this.cbCopies.UseVisualStyleBackColor = true;
             // 
             // ClosePositionForm
             // 
@@ -302,9 +305,9 @@
         private System.Windows.Forms.Button btnChgPosition;
         private System.Windows.Forms.Button btnCloseAll;
         private System.Windows.Forms.Button btnCalc;
-        private System.Windows.Forms.Label lblCopies;
         private System.Windows.Forms.NumericUpDown nudCopies;
         private System.Windows.Forms.Button btnUnSelectAll;
         private System.Windows.Forms.Button btnSelectAll;
+        private System.Windows.Forms.CheckBox cbCopies;
     }
 }
