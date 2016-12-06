@@ -89,7 +89,7 @@ namespace Model.UI
         [BindingAttribute("effectdate")]
         public string EffectDate { get; set; }
 
-        [BindingAttribute("entrustdate")]
+        [BindingAttribute("entrusteddate")]
         public string EntrustedDate
         {
             get { return DateFormat.Format(DEntrustDate, ConstVariable.DateFormat1); }

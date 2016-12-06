@@ -244,7 +244,6 @@ namespace BLL.Entrust.Futures
                     DealMoney = responseItem.DealBalance,
                     DealTimes = responseItem.DealTimes,
                     DEntrustDate = DateUtil.GetDateTimeFromInt(responseItem.EntrustDate, responseItem.EntrustTime),
-                    DFirstDealDate = DateUtil.GetDateTimeFromInt(responseItem.EntrustDate, responseItem.FirstDealTime),
                     EntrustBatchNo = responseItem.BatchNo,
                     EntrustNo = responseItem.EntrustNo,
                     DeclareSeat = responseItem.ReportSeat,
@@ -259,6 +258,11 @@ namespace BLL.Entrust.Futures
                     WithdrawCause = responseItem.WithdrawCause,
                 };
 
+                if (responseItem.FirstDealTime > 0)
+                {
+                    efItem.DFirstDealDate = DateUtil.GetDateTimeFromInt(responseItem.EntrustDate, responseItem.FirstDealTime);
+                }
+
                 efItem.ExchangeCode = UFXTypeConverter.GetMarketCode(efItem.EMarketCode);
 
                 var findItem = entrustSecuItems.Find(p => p.SecuCode.Equals(efItem.SecuCode) && p.EntrustNo == efItem.EntrustNo);
@@ -267,6 +271,8 @@ namespace BLL.Entrust.Futures
                     efItem.CommandNo = findItem.CommandId;
                     efItem.SubmitId = findItem.SubmitId;
                     efItem.EDirection = findItem.EntrustDirection;
+                    efItem.InstanceId = findItem.InstanceId;
+                    efItem.InstanceNo = findItem.InstanceCode;
                 }
                 else
                 {

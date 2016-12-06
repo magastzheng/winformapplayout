@@ -162,6 +162,12 @@
 			"id": "tradeentrustcommandselect",
 			"text": "请选择要委托的指令！"
 		},{
+			"id": "tradeentrustinvaliddate",
+			"text": "选中无效时间的指令！"
+		},{
+			"id": "tradeentrustnocommandselect",
+			"text": "选中不存在的指令！"
+		},{
 			"id": "tradeshouldcontainsecurity",
 			"text": "请确保委托指令中包含有效证券！"
 		},{

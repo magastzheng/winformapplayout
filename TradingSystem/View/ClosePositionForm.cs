@@ -1203,6 +1203,7 @@ namespace TradingSystem.View
                 Selection = true,
                 InstanceId = closeItem.InstanceId,
                 SecuCode = stock.SecuCode,
+                SecuType = SecurityType.Stock,
                 HoldingAmount = 0,
                 AvailableAmount = 0,
                 PortfolioId = closeItem.PortfolioId,

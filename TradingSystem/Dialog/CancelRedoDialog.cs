@@ -114,29 +114,10 @@ namespace TradingSystem.Dialog
             if (stockItems.Count > 0)
             {
                 stockItems.ForEach(p => { p.EPriceSetting = priceType; });
-
-                //TODO: update the price by setting
-
-                //query the price and set it
-                List<SecurityItem> secuList = new List<SecurityItem>();
-                var uniqueSecuItems = _secuDataSource.GroupBy(p => p.SecuCode).Select(p => p.First());
-                foreach (var secuItem in uniqueSecuItems)
-                {
-                    var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
-                    secuList.Add(findItem);
-                }
-
-                List<PriceType> priceTypes = new List<PriceType>() { priceType };
-                //QuoteCenter.Instance.Query(secuList, priceTypes);
-                foreach (var secuItem in stockItems)
-                {
-                    var targetItem = secuList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
-                    var marketData = QuoteCenter2.Instance.GetMarketData(targetItem);
-                    secuItem.EntrustPrice = QuotePriceHelper.GetPrice(priceType, marketData);
-                    secuItem.LimitDownPrice = marketData.LowLimitPrice;
-                    secuItem.LimitUpPrice = marketData.HighLimitPrice;
-                }
             }
+
+            //update the quote
+            QueryQuote();
 
             this.secuGridView.Invalidate();
         }
@@ -277,27 +258,9 @@ namespace TradingSystem.Dialog
                 _secuDataSource.Add(cancelRedoItem);
             }
 
-            //query the price and set it
-            List<SecurityItem> secuList = new List<SecurityItem>();
-            var uniqueSecuItems = _secuDataSource.GroupBy(p => p.SecuCode).Select(p => p.First());
-            foreach (var secuItem in uniqueSecuItems)
-            {
-                var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
-                secuList.Add(findItem);
-            }
-
-            foreach (var cancelRedoItem in _secuDataSource)
-            {
-                var findItem = secuList.Find(p => p.SecuCode.Equals(cancelRedoItem.SecuCode) && p.SecuType == cancelRedoItem.SecuType);
-                if (findItem != null)
-                {
-                    var marketData = QuoteCenter2.Instance.GetMarketData(findItem);
-                    cancelRedoItem.EntrustPrice = QuotePriceHelper.GetPrice(cancelRedoItem.EPriceSetting, marketData);
-                    cancelRedoItem.LimitDownPrice = marketData.LowLimitPrice;
-                    cancelRedoItem.LimitUpPrice = marketData.HighLimitPrice;
-                }
-            }
-
+            //update the quote
+            QueryQuote();
+            
             return true;
         }
 
@@ -497,28 +460,36 @@ namespace TradingSystem.Dialog
 
         #region query quote 
 
-        //private void QueryQuote(PriceType priceType)
-        //{
-        //    var stockItems = _secuDataSource.ToList();
-        //    if (stockItems.Count > 0)
-        //    {
-        //        //query the price and set it
-        //        List<SecurityItem> secuList = new List<SecurityItem>();
-        //        var uniqueSecuItems = _secuDataSource.GroupBy(p => p.SecuCode).Select(p => p.First());
-        //        foreach (var secuItem in uniqueSecuItems)
-        //        {
-        //            var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
-        //            secuList.Add(findItem);
-        //        }
+        private void QueryQuote()
+        {
+            //query the price and set it
+            List<SecurityItem> secuList = new List<SecurityItem>();
+            var uniqueSecuItems = _secuDataSource.GroupBy(p => p.SecuCode).Select(p => p.First());
+            foreach (var secuItem in uniqueSecuItems)
+            {
+                var findItem = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
+                secuList.Add(findItem);
+            }
 
-        //        foreach (var secuItem in stockItems)
-        //        {
-        //            var targetItem = secuList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
-        //            var marketData = QuoteCenter2.Instance.GetMarketData(targetItem);
-        //            secuItem.EntrustPrice = QuotePriceHelper.GetPrice(priceType, marketData);
-        //        }
-        //    }
-        //}
+            foreach (var cancelRedoItem in _secuDataSource)
+            {
+                var findItem = secuList.Find(p => p.SecuCode.Equals(cancelRedoItem.SecuCode) && p.SecuType == cancelRedoItem.SecuType);
+                if (findItem != null)
+                {
+                    SetItemPrice(cancelRedoItem, findItem, cancelRedoItem.EPriceSetting);
+                }
+            }
+
+        }
+
+        private void SetItemPrice(CancelRedoItem item, SecurityItem secuItem, PriceType priceType)
+        {
+            var marketData = QuoteCenter2.Instance.GetMarketData(secuItem);
+            item.EntrustPrice = QuotePriceHelper.GetPrice(priceType, marketData);
+            item.LastPrice = marketData.CurrentPrice;
+            item.LimitDownPrice = marketData.LowLimitPrice;
+            item.LimitUpPrice = marketData.HighLimitPrice;
+        }
 
         #endregion
     }
