@@ -209,7 +209,7 @@ namespace BLL.Entrust.Security
         {
             List<DealFlowItem> dealItems = new List<DealFlowItem>();
 
-            if (responseItems != null || responseItems.Count == 0)
+            if (responseItems == null || responseItems.Count == 0)
             {
                 return dealItems;
             }

@@ -103,7 +103,7 @@ namespace Config.ParamConverter
             bool result = false;
             if(str.Contains(";"))
             {
-                var arr = str.Split(',');
+                var arr = str.Split(';');
                 int[] intArr = new int[arr.Length];
                 for(int i = 0, count = arr.Length; i < count; i++)
                 {

@@ -175,10 +175,15 @@ namespace BLL.Frontend
                 return cancelItemList;
             }
 
+            DateTime now = DateTime.Now;
             foreach (var p in entrustSecuItems)
             {
-                var cancelRedoItem = Convert(p, tradeCommand);
-                cancelItemList.Add(cancelRedoItem);
+                //Only can cancel the entrusted security in the same entrusted day.
+                if (p.ModifiedDate != null && p.ModifiedDate.Date.Equals(now.Date))
+                {
+                    var cancelRedoItem = Convert(p, tradeCommand);
+                    cancelItemList.Add(cancelRedoItem);
+                }
             }
 
             return cancelItemList;
