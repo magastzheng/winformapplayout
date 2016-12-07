@@ -8,28 +8,15 @@ namespace DBAccess.Entrust
 {
     public class EntrustSecurityDAO: BaseDAO
     {
-        //private const string SP_Create = "procEntrustSecurityInsert";
-        //private const string SP_Modify = "procEntrustSecurityUpdate";
-        //private const string SP_ModifyEntrustStatus = "procEntrustSecurityUpdateEntrustStatus";
-        //private const string SP_ModifyEntrustResponse = "procEntrustSecurityUpdateEntrustResponse";
-        //private const string SP_ModifyEntrustResponseByRequestId = "procEntrustSecurityUpdateResponseByRequestId";
-        //private const string SP_ModifyEntrustStatusBySubmitId = "procEntrustSecurityUpdateEntrustStatusBySubmitId";
-        //private const string SP_ModifyEntrustStatusByRequestId = "procEntrustSecurityUpdateEntrustStatusByRequestId";
         private const string SP_ModifyDeal = "procEntrustSecurityUpdateDeal";
-        //private const string SP_ModifyDealByRequestId = "procEntrustSecurityUpdateDealByRequestId";
-        //private const string SP_ModifyCancel = "procEntrustSecurityUpdateCancel";
         private const string SP_Delete = "procEntrustSecurityDelete";
         private const string SP_DeleteBySubmitId = "procEntrustSecurityDeleteBySubmitId";
         private const string SP_DeleteByCommandId = "procEntrustSecurityDeleteByCommandId";
         private const string SP_DeleteByCommandIdEntrustStatus = "procEntrustSecurityDeleteByCommandIdEntrustStatus";
-        //private const string SP_Get = "procEntrustSecuritySelectAll";
         private const string SP_GetAllCombine = "procEntrustSecuritySelectAllCombine";
-        //private const string SP_GetBySubmitId = "procEntrustSecuritySelectBySubmitId";
         private const string SP_GetByCommandId = "procEntrustSecuritySelectByCommandId";
-        //private const string SP_GetByEntrustStatus = "procEntrustSecuritySelectByEntrustStatus";
         private const string SP_GetCancel = "procEntrustSecuritySelectCancel";
         private const string SP_GetCancelBySubmitId = "procEntrustSecuritySelectCancelBySubmitId";
-        //private const string SP_GetCancelCompletedRedo = "procEntrustSecuritySelectCancelCompletedRedo";
         private const string SP_GetCancelCompletedRedoBySubmitId = "procEntrustSecuritySelectCancelCompletedRedoBySubmitId";
         private const string SP_GetCombineByRequestId = "procEntrustSecuritySelectCombineByRequestId";
 

@@ -36,6 +36,8 @@ namespace TradingSystem.Dialog
         private TradeCommandSecurityBLL _tradeCommandSecurityBLL = new TradeCommandSecurityBLL();
         private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
         private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
+        private TradeInstanceSecurityBLL _tradeInstanceSecurityBLL = new TradeInstanceSecurityBLL();
+
         private CommandManagementItem _cmdMgnItem = null;
         public ModifyCommandDialog()
             :base()
@@ -74,6 +76,9 @@ namespace TradingSystem.Dialog
         private void Button_Click_Calc(object sender, EventArgs e)
         {
             //TODO: cancel by the last price
+            QueryQuote();
+
+            this.gridView.Invalidate();
         }
 
         private void Button_Click_Confirm(object sender, EventArgs e)
@@ -215,7 +220,9 @@ namespace TradingSystem.Dialog
 
         private void FillGridView(CommandManagementItem cmdMngItem)
         {
+            //TODO: query the trading instance security to get the position amount and available amount
             var securities = _tradeCommandSecurityBLL.GetTradeCommandSecurities(cmdMngItem.CommandId);
+            var instSecuItems = _tradeInstanceSecurityBLL.Get(cmdMngItem.InstanceId);
             foreach (var security in securities)
             {
                 var item = new ModifySecurityItem 
@@ -232,13 +239,24 @@ namespace TradingSystem.Dialog
                     NewCommandAmount = security.CommandAmount,
                 };
 
+                if (instSecuItems != null)
+                {
+                    var findItem = instSecuItems.Find(p => p.SecuCode.Equals(item.SecuCode) && p.SecuType == item.SecuType);
+                    if (findItem != null)
+                    {
+                        item.AvailableAmount = findItem.AvailableAmount;
+                    }
+                }
+
                 _dataSource.Add(item);
             }
 
-            Quote();
+            QueryQuote();
+
+            this.gridView.Invalidate();
         }
 
-        private void Quote()
+        private void QueryQuote()
         {
             //query the price and set it
             List<SecurityItem> secuList = new List<SecurityItem>();
@@ -254,6 +272,7 @@ namespace TradingSystem.Dialog
                 var targetItem = secuList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
                 var marketData = QuoteCenter2.Instance.GetMarketData(targetItem);
                 //secuItem.EntrustPrice = QuotePriceHelper.GetPrice(priceType, marketData);
+                secuItem.LastPrice = marketData.CurrentPrice;
                 secuItem.OriginCommandMoney = secuItem.OriginCommandAmount * marketData.CurrentPrice;
                 secuItem.NewCommandPrice = marketData.CurrentPrice;
                 secuItem.NewCommandMoney = secuItem.NewCommandAmount * secuItem.NewCommandPrice;

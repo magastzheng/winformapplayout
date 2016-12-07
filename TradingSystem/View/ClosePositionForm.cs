@@ -1170,7 +1170,7 @@ namespace TradingSystem.View
                 PositionType = secuItem.PositionType,
 
                 HoldingAmount = secuItem.PositionAmount,
-                AvailableAmount = secuItem.PositionAmount - secuItem.BuyToday,
+                AvailableAmount = secuItem.AvailableAmount,
 
                 PortfolioId = closeItem.PortfolioId,
                 PortfolioName = closeItem.PortfolioName,

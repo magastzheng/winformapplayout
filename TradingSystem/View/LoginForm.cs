@@ -86,7 +86,7 @@ namespace TradingSystem.View
             {
                 WarnForm warnForm = new WarnForm();
                 warnForm.Owner = this;
-                warnForm.UpdateText(ConfigManager.Instance.GetLabelConfig().GetErrorMessage(retCode));
+                warnForm.UpdateText(ConfigManager.Instance.GetLabelConfig().GetErrorMessage((int)retCode));
                 warnForm.ShowDialog();
             }
         }

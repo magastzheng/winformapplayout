@@ -20,6 +20,9 @@ namespace TradingSystem.Controller
         private UserBLL _userBLL;
         //private CountdownEvent _cdEvent = new CountdownEvent(4);
         //private LoginBLL _loginBLL;
+
+        private bool _isFirst = true;
+        private ConnectionCode _lastRetCode;
         
         public LoginForm LoginForm
         {
@@ -43,7 +46,33 @@ namespace TradingSystem.Controller
             this._loginForm.LoginController = this;
         }
 
-        public int Login(string userName, string password)
+        public ConnectionCode Login(string userName, string password)
+        {
+            if (_isFirst)
+            {
+                _isFirst = false;
+                _lastRetCode = LoginInternal(userName, password);
+            }
+            else if (_lastRetCode == ConnectionCode.ErrorFailStartService)
+            {
+                _lastRetCode = InitService();
+            }
+            else
+            {
+                _lastRetCode = LoginInternal(userName, password);
+            }
+
+            if (_lastRetCode == ConnectionCode.Success)
+            {
+                StartMainForm();
+            }
+
+            return _lastRetCode;
+        }
+
+        #region login private method
+
+        private ConnectionCode LoginInternal(string userName, string password)
         {
             LoginUser user = new LoginUser
             {
@@ -51,19 +80,28 @@ namespace TradingSystem.Controller
                 Password = password
             };
 
-            int retCode = (int)BLLManager.Instance.LoginBLL.Login(user);
-            if (retCode == (int)ConnectionCode.Success)
+            ConnectionCode retCode = BLLManager.Instance.LoginBLL.Login(user);
+            if (retCode == ConnectionCode.Success)
             {
-                retCode = (int)LoginSuccess();
+                InitializeAccount(LoginManager.Instance.LoginUser);
+                retCode = Subscribe(LoginManager.Instance.LoginUser);
+                if (retCode == ConnectionCode.SuccessSubscribe)
+                {
+                    retCode = InitService();
+                }
+                else
+                {
+                    retCode = ConnectionCode.ErrorFailSubscribe;
+                }
             }
 
             return retCode;
         }
 
-        private ConnectionCode LoginSuccess()
+        private void InitializeAccount(LoginUser loginUser)
         {
             //get or create the user into the database.
-            var user = _userBLL.GetUser(LoginManager.Instance.LoginUser.Operator);
+            var user = _userBLL.GetUser(loginUser.Operator);
             if (user != null && user.Id > 0)
             {
                 LoginManager.Instance.LoginUser.LocalUser = user;
@@ -77,38 +115,42 @@ namespace TradingSystem.Controller
 
             //sync the fund, AssetUnit, Portfolio into database.
             _productBLL.Create(LoginManager.Instance.Accounts, LoginManager.Instance.Assets, LoginManager.Instance.Portfolios);
+        }
 
-            //Subscribe the message from UFX.
-            var subRet = BLLManager.Instance.Subscriber.Subscribe(LoginManager.Instance.LoginUser);
-            if (subRet != ConnectionCode.SuccessSubscribe)
+        private ConnectionCode Subscribe(LoginUser loginUser)
+        {
+            return BLLManager.Instance.Subscriber.Subscribe(loginUser);
+        }
+
+        private ConnectionCode InitService()
+        {
+            ServiceManager.Instance.Init();
+
+            //TODO: register the notify/callback method
+            //Add another form the show the message???
+
+            //ServiceManager.Instance.
+            ServiceManager.Instance.Start();
+
+            if (ServiceManager.Instance.Wait())
             {
-                return subRet;
+                return ConnectionCode.Success;
             }
             else
             {
-                ServiceManager.Instance.Init();
-
-                //TODO: register the notify/callback method
-                //Add another form the show the message???
-
-                //ServiceManager.Instance.
-                ServiceManager.Instance.Start();
-                if (ServiceManager.Instance.Wait())
-                {
-                    //TODO: waiting for the services. 
-                    var gridConfig = ConfigManager.Instance.GetGridConfig();
-                    MainForm mainForm = new MainForm(gridConfig, this._t2SDKWrap);
-                    MainController mainController = new MainController(mainForm, this._t2SDKWrap);
-                    Program._s_mainfrmController = mainController;
-
-                    return ConnectionCode.Success;
-                }
-                else
-                {
-                    return ConnectionCode.ErrorFailStartService;
-                }
+                return ConnectionCode.ErrorFailStartService;
             }
         }
+
+        private void StartMainForm()
+        {
+            var gridConfig = ConfigManager.Instance.GetGridConfig();
+            MainForm mainForm = new MainForm(gridConfig, this._t2SDKWrap);
+            MainController mainController = new MainController(mainForm, this._t2SDKWrap);
+            Program._s_mainfrmController = mainController;
+        }
+
+        #endregion
 
         public void Logout()
         {

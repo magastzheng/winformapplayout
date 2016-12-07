@@ -55,6 +55,7 @@ namespace BLL.Entrust.subscriber
                         int submitId;
                         int requestId;
 
+                        //TODO: add log
                         if (EntrustRequestHelper.ParseThirdReff(responseItem.ThirdReff, out commandId, out submitId, out requestId))
                         {
                             _entrustSecurityBLL.UpdateDeal(submitId, commandId, responseItem.StockCode, responseItem.DealAmount, responseItem.DealBalance, responseItem.DealFee);

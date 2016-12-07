@@ -356,17 +356,15 @@ go
 create proc procTradingInstanceSecuritySettle
 as
 begin
-	--根据LastDate结算每支证券，统计持仓量，清空当天买量和卖量，并重新设置LastDate
-	update t
-	set t.PositionAmount = d.PositionAmount+d.BuyToday-d.SellToday
-		,t.BuyToday = 0.0
-		,t.SellToday = 0.0
-		,t.LastDate = getdate()
-		,t.ModifiedDate = getdate()
-	from tradinginstancesecurity t, tradinginstancesecurity d
-	where t.InstanceId=d.InstanceId
-		and t.SecuCode = d.SecuCode
-		and t.LastDate < convert(varchar, getdate(), 112)
+	--每次成交都会把增减持仓，所有不需要再把当天买量和卖量再加一次
+	--根据LastDate结算每支证券，清空当天买量和卖量，并重新设置LastDate
+	update tradinginstancesecurity
+	set BuyToday = 0.0
+		,SellToday = 0.0
+		,LastDate = getdate()
+		,ModifiedDate = getdate()
+	from tradinginstancesecurity
+	where LastDate < convert(varchar, getdate(), 112)
 end
 
 --go

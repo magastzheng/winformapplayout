@@ -20,7 +20,18 @@ namespace Model.UI
 
         public int PositionAmount { get; set; }
 
-        //public int AvailableAmount { get; set; }
+        public int AvailableAmount
+        {
+            get
+            {
+                if (PositionAmount > BuyToday)
+                {
+                    return PositionAmount - BuyToday;
+                }
+
+                return 0;
+            }
+        }
 
         public int InstructionPreBuy { get; set; }
 

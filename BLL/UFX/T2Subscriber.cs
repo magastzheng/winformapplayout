@@ -10,6 +10,7 @@ namespace BLL.UFX
     public unsafe class T2Subscriber : CT2CallbackInterface
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private const string SubscribeName = "ufx_subscribe";
 
         private CT2Configinterface _config = null;
         protected CT2Connection _conn = null;
@@ -90,7 +91,7 @@ namespace BLL.UFX
         public ConnectionCode Subscribe(LoginUser user)
         {
             callback = new T2SubCallback();
-            subcribe = _conn.NewSubscriber(callback, "ufx_subscribe", (int)_timeOut, 2000, 100);
+            subcribe = _conn.NewSubscriber(callback, SubscribeName, (int)_timeOut, 2000, 100);
             if (subcribe == null)
             {
                 string msg = string.Format("主推业务订阅创建失败: {0}", _conn.GetMCLastError());
