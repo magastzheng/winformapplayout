@@ -134,7 +134,10 @@
     <Compile Include="UI\ClosePositionInstanceItem.cs" />
     <Compile Include="UI\ClosePositionItem.cs" />
     <Compile Include="UI\ClosePositionSecurityItem.cs" />
+    <Compile Include="UI\CommandManagementDealItem.cs" />
+    <Compile Include="UI\CommandManagementEntrustItem.cs" />
     <Compile Include="UI\CommandManagementItem.cs" />
+    <Compile Include="UI\CommandManagementSecurityItem.cs" />
     <Compile Include="UI\CommandSecurityItem.cs" />
     <Compile Include="UI\DealFlowItem.cs" />
     <Compile Include="UI\DealSecurityItem.cs" />

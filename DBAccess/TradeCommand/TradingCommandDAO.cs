@@ -90,6 +90,10 @@ namespace DBAccess.TradeCommand
 
             string notes = (cmdItem.Notes != null) ? cmdItem.Notes : string.Empty;
             _dbHelper.AddInParameter(dbCommand, "@Notes", System.Data.DbType.String, notes);
+            string modifiedCause = (cmdItem.ModifiedCause != null) ? cmdItem.ModifiedCause : string.Empty;
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedCause", System.Data.DbType.String, modifiedCause);
+            string cancelCause = (cmdItem.CancelCause != null) ? cmdItem.CancelCause : string.Empty;
+            _dbHelper.AddInParameter(dbCommand, "@CancelCause", System.Data.DbType.String, cancelCause);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
@@ -223,6 +227,21 @@ namespace DBAccess.TradeCommand
             if (reader["EndDate"] != null && reader["EndDate"] != DBNull.Value)
             {
                 item.DEndDate = (DateTime)reader["EndDate"];
+            }
+
+            if (reader["CancelDate"] != null && reader["CancelDate"] != DBNull.Value)
+            { 
+                item.CancelDate = (DateTime)reader["CancelDate"];
+            }
+
+            if (reader["ModifiedCause"] != null && reader["ModifiedCause"] != DBNull.Value)
+            {
+                item.ModifiedCause = (string)reader["ModifiedCause"];
+            }
+
+            if (reader["CancelCause"] != null && reader["CancelCause"] != DBNull.Value)
+            {
+                item.CancelCause = (string)reader["CancelCause"];
             }
 
             return item;

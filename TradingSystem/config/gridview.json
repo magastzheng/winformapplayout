@@ -3712,7 +3712,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "commandsubmitreason",
+		"name": "commandsubmitcause",
 		"text": "指令下达原因",
 		"width": 80,
 		"columntype": 0,
@@ -3912,7 +3912,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "modifyreason",
+		"name": "modifycause",
 		"text": "修改原因",
 		"width": 80,
 		"columntype": 0,
@@ -3920,7 +3920,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "cancelreason",
+		"name": "cancelcause",
 		"text": "撤销原因",
 		"width": 80,
 		"columntype": 0,
@@ -3949,6 +3949,421 @@ readonly:
 		"width": 80,
 		"columntype": 0,
 		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "last",
+		"text": "",
+		"width": 5,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},{
+	"grid": "modifycommandsecurity",
+	"background": 1,
+	"columns": [{
+		"name": "fundname",
+		"text": "基金",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "portfolioname",
+		"text": "组合",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "secucode",
+		"text": "证券代码",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "secuname",
+		"text": "证券名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "entrustdirection",
+		"text": "委托方向",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "pricetype",
+		"text": "价格类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "commandamount",
+		"text": "指令数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "commandmoney",
+		"text": "指令金额",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "entruststatus",
+		"text": "委托执行状态",
+		"width": 100,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "dealstatus",
+		"text": "成交执行状态",
+		"width": 100,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "todayentrustamount",
+		"text": "当日已委托数量",
+		"width": 120,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "todaydealamount",
+		"text": "当日已成交数量",
+		"width": 120,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "totalentrustamount",
+		"text": "累计委托数量",
+		"width": 120,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "totaldealamount",
+		"text": "累计成交数量",
+		"width": 120,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "totaldealmoney",
+		"text": "累计成交金额",
+		"width": 12,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "todaydealmoney",
+		"text": "当日成交金额",
+		"width": 120,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "totalentrustmoney",
+		"text": "累计委托金额",
+		"width": 120,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "todayentrustmoney",
+		"text": "当日委托金额",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "averageprice",
+		"text": "平均价格",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "unentrustamount",
+		"text": "未委托数量",
+		"width": 100,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "undealamount",
+		"text": "未成交数量",
+		"width": 100,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "last",
+		"text": "",
+		"width": 5,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},{
+	"grid": "modifycommandentrust",
+	"background": 1,
+	"columns": [{
+		"name": "entrustno",
+		"text": "委托批号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "fundname",
+		"text": "基金",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "portfolioname",
+		"text": "组合",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "secucode",
+		"text": "证券代码",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "secuname",
+		"text": "证券名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "entrustdirection",
+		"text": "委托方向",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "pricetype",
+		"text": "价格类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "entrustprice",
+		"text": "委托价格",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "effectivedate",
+		"text": "有效日期",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "entrustamount",
+		"text": "委托数量",
+		"width": 100,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "entruststatus",
+		"text": "委托状态",
+		"width": 100,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "todaydealamount",
+		"text": "当日成交数量",
+		"width": 100,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "todaydealmoney",
+		"text": "当日成交金额",
+		"width": 100,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "entrusttime",
+		"text": "委托时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "dealpercent(%)",
+		"text": "成交比例",
+		"width": 100,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "last",
+		"text": "",
+		"width": 5,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},{
+	"grid": "modifycommanddeal",
+	"background": 1,
+	"columns": [{
+		"name": "dealno",
+		"text": "成交批号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "fundname",
+		"text": "基金",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "portfolioname",
+		"text": "组合",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "secucode",
+		"text": "证券代码",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "secuname",
+		"text": "证券名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "entrustdirection",
+		"text": "委托方向",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "pricetype",
+		"text": "价格类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "dealprice",
+		"text": "成交价格",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "dealamount",
+		"text": "成交数量",
+		"width": 100,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "dealmoney",
+		"text": "成交金额",
+		"width": 100,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "businesstime",
+		"text": "业务时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
 		"visible": 1,
 		"readonly": 1
 		},{

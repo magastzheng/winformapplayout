@@ -1,10 +1,13 @@
 ﻿using BLL.Frontend;
+using BLL.Permission;
 using BLL.TradeInstance;
 using Config;
 using Controls.Entity;
 using Controls.GridView;
 using Model.Binding.BindingUtil;
+using Model.Constant;
 using Model.Database;
+using Model.EnumType.EnumTypeConverter;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -18,6 +21,10 @@ namespace TradingSystem.View
     public partial class CommandManagementForm : Forms.DefaultForm
     {
         private const string GridId = "commandmanagement";
+        private const string GridSecurityId = "modifycommandsecurity";
+        private const string GridEntrustId = "modifycommandentrust";
+        private const string GridDealId = "modifycommanddeal";
+
         private GridConfig _gridConfig = null;
 
         private const string msgNoSelected = "tradecommandmodifynoselected";
@@ -28,9 +35,14 @@ namespace TradingSystem.View
 
         private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
         private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
+        private UserBLL _userBLL = new UserBLL();
 
         private SortableBindingList<CommandManagementItem> _dataSource = new SortableBindingList<CommandManagementItem>(new List<CommandManagementItem>());
+        private SortableBindingList<CommandManagementSecurityItem> _secuDataSource = new SortableBindingList<CommandManagementSecurityItem>(new List<CommandManagementSecurityItem>());
+        private SortableBindingList<CommandManagementEntrustItem> _entrustDataSource = new SortableBindingList<CommandManagementEntrustItem>(new List<CommandManagementEntrustItem>());
+        private SortableBindingList<CommandManagementDealItem> _dealDataSource = new SortableBindingList<CommandManagementDealItem>(new List<CommandManagementDealItem>());
         
+
         public CommandManagementForm()
             :base()
         {
@@ -207,11 +219,30 @@ namespace TradingSystem.View
 
         private bool Form_LoadControl(object sender, object data)
         {
+            //交易指令表
             TSDataGridViewHelper.AddColumns(this.gridView, _gridConfig.GetGid(GridId));
             Dictionary<string, string> colDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(CommandManagementItem));
             TSDataGridViewHelper.SetDataBinding(this.gridView, colDataMap);
 
+            //交易证券表
+            TSDataGridViewHelper.AddColumns(this.secuGridView, _gridConfig.GetGid(GridSecurityId));
+            colDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(CommandManagementSecurityItem));
+            TSDataGridViewHelper.SetDataBinding(this.secuGridView, colDataMap);
+
+            //委托证券表
+            TSDataGridViewHelper.AddColumns(this.entrustGridView, _gridConfig.GetGid(GridEntrustId));
+            colDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(CommandManagementEntrustItem));
+            TSDataGridViewHelper.SetDataBinding(this.entrustGridView, colDataMap);
+
+            //成交证券表
+            TSDataGridViewHelper.AddColumns(this.dealGridView, _gridConfig.GetGid(GridDealId));
+            colDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(CommandManagementDealItem));
+            TSDataGridViewHelper.SetDataBinding(this.dealGridView, colDataMap);
+
             this.gridView.DataSource = _dataSource;
+            this.secuGridView.DataSource = _secuDataSource;
+            this.entrustGridView.DataSource = _entrustDataSource;
+            this.dealGridView.DataSource = _dealDataSource;
 
             return true;
         }
@@ -258,10 +289,53 @@ namespace TradingSystem.View
                     FundCode = item.AccountCode,
                     FundName = item.AccountName,
                     Notes = item.Notes,
+                    ModifiedCause = item.ModifiedCause,
+                    CancelCause = item.CancelCause,
                 };
 
                 _dataSource.Add(cmdItem);
             }
+
+            if (tradeCommandItems.Count > 0)
+            {
+                LoadCommandSummary(_dataSource[0]);
+
+                //TODO: load the security/entrust/deal information
+            }
+        }
+
+        private void LoadCommandSummary(CommandManagementItem tradeCommand)
+        {
+            //var user = _userBLL.GetById(tradeCommand.SubmitPerson);
+            this.tbCommandId.Text = string.Format("{0}", tradeCommand.CommandId);
+            this.tbFundName.Text = tradeCommand.FundDisplay;
+            this.tbPortName.Text = tradeCommand.PortfolioDisplay;// string.Format("{0}--{1}", tradeCommand.PortfolioCode, tradeCommand.PortfolioName);
+            this.tbSecuName.Text = "N/A";
+            this.tbPriceMode.Text = "N/A";
+            this.tbCommandPrice.Text = "N/A";
+            //this.tbCommandAmount.Text = string.Format("{0}", tradeCommand.CommandNum);
+            //TODO:get the deal amount
+            this.tbDealAmount.Text = "0";
+            this.tbAveragePrice.Text = "N/A";
+            this.tbSubmitDate.Text = tradeCommand.CommandSubmitDate;
+            this.tbSubmitTime.Text = tradeCommand.CommandSubmitTime;
+            this.tbStartDate.Text = tradeCommand.StartDate;
+            this.tbStartTime.Text = tradeCommand.StartTime;
+            this.tbEndDate.Text = tradeCommand.EndDate;
+            this.tbEndTime.Text = tradeCommand.EndTime;
+            this.tbCommandStatus.Text = tradeCommand.CommandStatus;
+            this.tbEntrustStatus.Text = tradeCommand.EntrustExecuteStatus;// CommandStatusHelper.GetEntrustName(tradeCommand.EEntrustStatus);
+            this.tbDealStatus.Text = CommandStatusHelper.GetDealName(tradeCommand.EDealStatus);
+
+            this.tbSubmitPerson.Text = tradeCommand.CommandSubmitPerson;
+            this.tbModifyPerson.Text = tradeCommand.ModifyOperator;
+            this.tbCancelPerson.Text = tradeCommand.ModifyOperator;
+
+            this.tbModifyTime.Text = DateFormat.Format(tradeCommand.DModifiedDate, ConstVariable.TimeFormat);
+            this.tbCancelTime.Text = DateFormat.Format(tradeCommand.DCancelDate, ConstVariable.TimeFormat);
+            this.tbNotes.Text = tradeCommand.Notes;
+            this.tbModifyCause.Text = tradeCommand.ModifiedCause;
+            this.tbCancelCause.Text = tradeCommand.CancelCause;
         }
 
         #endregion

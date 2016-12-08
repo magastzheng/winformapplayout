@@ -33,6 +33,11 @@ namespace BLL.Permission
             return _userdao.Get(operatorNo);
         }
 
+        public User GetById(int userId)
+        {
+            return _userdao.GetById(userId);
+        }
+
         public List<User> GetAll()
         {
             return _userdao.Get();

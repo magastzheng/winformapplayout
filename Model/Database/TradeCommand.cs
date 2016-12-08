@@ -52,6 +52,8 @@ namespace Model.Database
 
         public DateTime ModifiedDate { get; set; }
 
+        public DateTime CancelDate { get; set; }
+
         public int MonitorUnitId { get; set; }
 
         //监控单元
@@ -76,5 +78,9 @@ namespace Model.Database
 
         //备注
         public string Notes { get; set; }
+
+        public string ModifiedCause { get; set; }
+
+        public string CancelCause { get; set; }
     }
 }

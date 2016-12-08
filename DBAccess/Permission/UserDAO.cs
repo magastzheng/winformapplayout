@@ -16,6 +16,7 @@ namespace DBAccess.Permission
         private const string SP_Modify = "procUsersUpdate";
         private const string SP_Delete = "procUsersDelete";
         private const string SP_Select = "procUsersSelect";
+        private const string SP_SelectById = "procUsersSelectById";
 
         public UserDAO()
             : base()
@@ -79,6 +80,31 @@ namespace DBAccess.Permission
                 item = new User();
             }
             
+            return item;
+        }
+
+        public User GetById(int id)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_SelectById);
+            _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, id);
+            User item = new User();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    item.Id = (int)reader["Id"];
+                    item.Operator = (string)reader["Operator"];
+                    item.Name = (string)reader["Name"];
+                    item.Status = (UserStatus)reader["Status"];
+
+                    break;
+                }
+            }
+
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
             return item;
         }
 

@@ -7,8 +7,6 @@ create table tradingcommand(
 	CommandId			int identity(1, 1) primary key	--指令序号
 	,InstanceId			int not null					--交易实例ID
 	,CommandNum			int								--指令份数
-	--,TargetNum			int	--目标份数
-	--,DealNum			int --成交份数
 	,CommandStatus		int								--指令状态： 1 - 有效指令，2 - 已修改，3 - 已撤销， 4 - 委托完成， 5 - 已完成成交
 	,ModifiedTimes		int								--修改次数
 	,CommandType		int								-- 1 - 期现套利
@@ -20,9 +18,12 @@ create table tradingcommand(
 	,SubmitPerson		int								--下达人
 	,CreatedDate		datetime						-- 下达指令时间
 	,ModifiedDate		datetime						-- 修改时间
+	,CancelDate			datetime						-- 撤销时间
 	,StartDate			datetime						-- 指令有效开始时间
 	,EndDate			datetime						-- 指令有效结束时间
 	,Notes				varchar(100)					-- 备注
+	,ModifiedCause		varchar(100)					-- 修改原因
+	,CancelCause		varchar(100)					-- 撤销原因
 )
 
 --====================================
@@ -102,6 +103,8 @@ create proc procTradingCommandUpdate(
 	,@StartDate			datetime
 	,@EndDate			datetime
 	,@Notes				varchar(100)
+	,@ModifiedCause		varchar(100) = NULL
+	,@CancelCause		varchar(100) = NULL
 )
 as
 begin
@@ -119,15 +122,33 @@ begin
 		set @ModifiedTimes = 1
 	end
 
-	update tradingcommand
-	set			
-		CommandStatus		= @CommandStatus
-		,ModifiedTimes		= @ModifiedTimes
-		,ModifiedDate		= @ModifiedDate
-		,StartDate			= @StartDate
-		,EndDate			= @EndDate
-		,Notes				= @Notes
-	where CommandId=@CommandId
+	if @CommandStatus = 3
+	begin
+		update tradingcommand
+		set			
+			CommandStatus		= @CommandStatus
+			,ModifiedTimes		= @ModifiedTimes
+			,ModifiedDate		= @ModifiedDate
+			,CancelDate			= @ModifiedDate
+			,StartDate			= @StartDate
+			,EndDate			= @EndDate
+			,Notes				= @Notes
+			,CancelCause		= @CancelCause
+		where CommandId=@CommandId
+	end
+	else
+	begin
+		update tradingcommand
+		set			
+			CommandStatus		= @CommandStatus
+			,ModifiedTimes		= @ModifiedTimes
+			,ModifiedDate		= @ModifiedDate
+			,StartDate			= @StartDate
+			,EndDate			= @EndDate
+			,Notes				= @Notes
+			,ModifiedCause		= @ModifiedCause
+		where CommandId=@CommandId
+	end
 end
 
 go
@@ -151,60 +172,6 @@ begin
 	where CommandId=@CommandId
 end
 
---go
---if exists (select name from sysobjects where name='procTradingCommandUpdateTargetNum')
---drop proc procTradingCommandUpdateTargetNum
-
---go
---create proc procTradingCommandUpdateTargetNum(
---	@CommandId			int
---	,@Copies			int		-- positive integer means ADD; negative integer means reduce
---	,@ModifiedDate		datetime
---)
---as
---begin
-	
---	declare @TargetNum int
---	set @TargetNum = (select TargetNum from tradingcommand where CommandId=@CommandId)
-
---	update tradingcommand
---	set	TargetNum	= @TargetNum+@Copies
---		,ModifiedDate = @ModifiedDate
---	where CommandId=@CommandId
---end
-
---go
---if exists (select name from sysobjects where name='procTradingCommandUpdateTargetNumBySubmitId')
---drop proc procTradingCommandUpdateTargetNumBySubmitId
-
---go
---create proc procTradingCommandUpdateTargetNumBySubmitId(
---	@CommandId			int
---	,@SubmitId			int
---	,@ModifiedDate		datetime
---)
---as
---begin
---	declare @TotalTargetNum int
---	declare @ThisTargetNum int
---	--
---	set @TotalTargetNum=(select TargetNum from tradingcommand where CommandId=@CommandId)
---	--从entrustcommand中获取本次委托份数
---	set @ThisTargetNum=(select Copies from entrustcommand where SubmitId=@SubmitId and EntrustStatus=12)
-
---	set @TotalTargetNum=@TotalTargetNum-@ThisTargetNum
-
---	if @TotalTargetNum < 0
---	begin
---		set @TotalTargetNum=0
---	end
-
---	update tradingcommand
---	set	TargetNum	= @TotalTargetNum
---		,ModifiedDate = @ModifiedDate
---	where CommandId=@CommandId
---end
-
 go
 if exists (select name from sysobjects where name='procTradingCommandDelete')
 drop proc procTradingCommandDelete
@@ -220,59 +187,6 @@ begin
 
 	delete from tradingcommand where CommandId=@CommandId
 end
-
---go
---if exists (select name from sysobjects where name='procTradingCommandSelect')
---drop proc procTradingCommandSelect
-
---go
---create proc procTradingCommandSelect(
---	@CommandId			int
---)
---as
---begin
---	if @CommandId is not null and @CommandId > 0
---	begin
---		select 
---			CommandId			
---			,InstanceId	
---			,CommandNum
---			,ModifiedTimes		
---			,CommandType		
---			,ExecuteType		
---			,StockDirection		
---			,FuturesDirection	
---			,EntrustStatus		
---			,DealStatus	
---			,SubmitPerson
---			,CreatedDate
---			,ModifiedDate		
---			,StartDate			
---			,EndDate			
---		from tradingcommand
---		where CommandId=@CommandId
---	end
---	else
---	begin
---		select 
---			CommandId			
---			,InstanceId	
---			,CommandNum		
---			,ModifiedTimes		
---			,CommandType		
---			,ExecuteType		
---			,StockDirection		
---			,FuturesDirection	
---			,EntrustStatus		
---			,DealStatus	
---			,SubmitPerson
---			,CreatedDate
---			,ModifiedDate			
---			,StartDate			
---			,EndDate			
---		from tradingcommand
---	end
---end
 
 go
 if exists (select name from sysobjects where name='procTradingCommandSelectCombine')
@@ -300,10 +214,13 @@ begin
 			,a.DealStatus
 			,a.SubmitPerson
 			,a.CreatedDate
-			,a.ModifiedDate				
+			,a.ModifiedDate	
+			,a.CancelDate			
 			,a.StartDate			
 			,a.EndDate	
 			,a.Notes
+			,a.ModifiedCause
+			,a.CancelCause
 			,b.MonitorUnitId
 			,b.InstanceCode
 			,c.PortfolioId
@@ -342,10 +259,13 @@ begin
 			,a.DealStatus
 			,a.SubmitPerson
 			,a.CreatedDate
-			,a.ModifiedDate				
+			,a.ModifiedDate	
+			,a.CancelDate			
 			,a.StartDate			
-			,a.EndDate		
-			,a.Notes		
+			,a.EndDate	
+			,a.Notes
+			,a.ModifiedCause
+			,a.CancelCause	
 			,b.MonitorUnitId
 			,b.InstanceCode
 			,c.PortfolioId

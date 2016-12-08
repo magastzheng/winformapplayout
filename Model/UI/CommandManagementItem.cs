@@ -84,14 +84,14 @@ namespace Model.UI
         public string EntrustExecuteStatus
         {
             //TODO
-            get { return "";}
+            get { return CommandStatusHelper.GetEntrustName(EEntrustStatus); }
         }
 
         [BindingAttribute("dealexecutestatus")]
         public string DealExecuteStatus 
         {
             //TODO
-            get { return ""; }
+            get { return CommandStatusHelper.GetDealName(EDealStatus); }
         }
 
         [BindingAttribute("executedescription")]
@@ -130,8 +130,8 @@ namespace Model.UI
         [BindingAttribute("thedayentrustmoney")]
         public int TheDayEntrustMoney { get; set; }
 
-        [BindingAttribute("commandsubmitreason")]
-        public string CommandSubmitReason { get; set; }
+        [BindingAttribute("commandsubmitcause")]
+        public string CommandSubmitCause { get; set; }
 
         [BindingAttribute("pendingnumber")]
         public int PendingNumber { get; set; }
@@ -243,11 +243,11 @@ namespace Model.UI
         [BindingAttribute("modifyoperator")]
         public string ModifyOperator { get; set; }
 
-        [BindingAttribute("modifyreason")]
-        public string ModifyReason { get; set; }
+        [BindingAttribute("modifycause")]
+        public string ModifiedCause { get; set; }
 
-        [BindingAttribute("cancelreason")]
-        public string CancelReason { get; set; }
+        [BindingAttribute("cancelcause")]
+        public string CancelCause { get; set; }
 
         [BindingAttribute("securitytargettype")]
         public string SecurityTargetType
@@ -292,6 +292,8 @@ namespace Model.UI
         public DateTime DApprovalDate { get; set; }
 
         public DateTime DDispatchDate { get; set; }
+
+        public DateTime DModifiedDate { get; set; }
 
         public DateTime DCancelDate { get; set; }
 

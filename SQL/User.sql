@@ -109,3 +109,22 @@ begin
 		from users
 	end
 end
+
+
+go
+if exists (select name from sysobjects where name='procUsersSelectById')
+drop proc procUsersSelectById
+
+go
+create proc procUsersSelectById(
+	@Id	int
+	)
+as
+begin
+	select Id
+		,Operator
+		,Name
+		,Status
+	from users
+	where Id=@Id
+end

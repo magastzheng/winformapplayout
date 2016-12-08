@@ -155,6 +155,10 @@ namespace DBAccess.TradeCommand
                 _dbHelper.AddInParameter(dbCommand, "@EndDate", System.Data.DbType.DateTime, cmdItem.DEndDate);
                 string notes = (cmdItem.Notes != null) ? cmdItem.Notes : string.Empty;
                 _dbHelper.AddInParameter(dbCommand, "@Notes", System.Data.DbType.String, notes);
+                string modifiedCause = (cmdItem.ModifiedCause != null) ? cmdItem.ModifiedCause : string.Empty;
+                _dbHelper.AddInParameter(dbCommand, "@ModifiedCause", System.Data.DbType.String, modifiedCause);
+                string cancelCause = (cmdItem.CancelCause != null) ? cmdItem.CancelCause : string.Empty;
+                _dbHelper.AddInParameter(dbCommand, "@CancelCause", System.Data.DbType.String, cancelCause);
 
                 ret = dbCommand.ExecuteNonQuery();
 
