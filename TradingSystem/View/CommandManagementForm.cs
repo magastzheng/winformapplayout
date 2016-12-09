@@ -1,15 +1,13 @@
-﻿using BLL.Frontend;
-using BLL.Permission;
+﻿using BLL.Permission;
+using BLL.TradeCommand;
 using BLL.TradeInstance;
 using Config;
 using Controls.Entity;
 using Controls.GridView;
 using Model.Binding.BindingUtil;
 using Model.Constant;
-using Model.Database;
 using Model.EnumType.EnumTypeConverter;
 using Model.UI;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,8 +31,9 @@ namespace TradingSystem.View
         private const string msgModifySuccess = "tradecommandmodifysuccess";
         private const string msgModifyFailure = "tradecommandmodifyfailure";
 
-        private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
+        private CommandManagemengBLL _commandManagementBLL = new CommandManagemengBLL();
         private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
+
         private UserBLL _userBLL = new UserBLL();
 
         private SortableBindingList<CommandManagementItem> _dataSource = new SortableBindingList<CommandManagementItem>(new List<CommandManagementItem>());
@@ -42,7 +41,6 @@ namespace TradingSystem.View
         private SortableBindingList<CommandManagementEntrustItem> _entrustDataSource = new SortableBindingList<CommandManagementEntrustItem>(new List<CommandManagementEntrustItem>());
         private SortableBindingList<CommandManagementDealItem> _dealDataSource = new SortableBindingList<CommandManagementDealItem>(new List<CommandManagementDealItem>());
         
-
         public CommandManagementForm()
             :base()
         {
@@ -61,7 +59,71 @@ namespace TradingSystem.View
             this.tsbRefresh.Click += new System.EventHandler(ToolStripButton_Click_Refresh);
             this.tsbModify.Click += new System.EventHandler(ToolStripButton_Click_Modify);
             this.tsbCancel.Click += new System.EventHandler(ToolStripButton_Click_Cancel);
+
+            //this.gridView.MouseClickRow += new ClickRowHandler(GridView_Command_MouseClickRow);
+            this.gridView.UpdateRelatedDataGridHandler += new UpdateRelatedDataGrid(GridView_Command_UpdateRelatedDataGridHandler);
         }
+
+        private void GridView_Command_UpdateRelatedDataGridHandler(UpdateDirection direction, int rowIndex, int columnIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= _dataSource.Count)
+                return;
+
+            CommandManagementItem cmdMngItem = _dataSource[rowIndex];
+            switch (direction)
+            {
+                case UpdateDirection.Select:
+                    {
+                        LoadCommandSecurities(cmdMngItem);
+
+                        var firstCmdItem = _dataSource.First(p => p.Selection);
+                        if (firstCmdItem != null)
+                        {
+                            LoadCommandSummary(firstCmdItem);
+                        }
+                    }
+                    break;
+                case UpdateDirection.UnSelect:
+                    {
+                        var secuItems = _secuDataSource.Where(p => p.CommandId == cmdMngItem.CommandId).ToList();
+                        foreach (var secuItem in secuItems)
+                        {
+                            _secuDataSource.Remove(secuItem);
+                        }
+
+                        var entrustItems = _entrustDataSource.Where(p => p.CommandId == cmdMngItem.CommandId).ToList();
+                        foreach (var entrustItem in entrustItems)
+                        {
+                            _entrustDataSource.Remove(entrustItem);
+                        }
+
+                        var dealItems = _dealDataSource.Where(p => p.CommandId == cmdMngItem.CommandId).ToList();
+                        foreach (var dealItem in dealItems)
+                        {
+                            _dealDataSource.Remove(dealItem);
+                        }
+
+                        var firstCmdItem = _dataSource.First(p => p.Selection);
+                        if (firstCmdItem != null)
+                        {
+                            LoadCommandSummary(firstCmdItem);
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        //private void GridView_Command_MouseClickRow(object sender, int rowIndex)
+        //{
+        //    //TODO: how to check the current selection items.
+        //    if (rowIndex < 0 || rowIndex >= _dataSource.Count)
+        //        return;
+
+        //    var cmdMngItem = _dataSource[rowIndex];
+        //    LoadCommandDetail(cmdMngItem);
+        //}
 
         #region ToolStripButton click event handler
 
@@ -165,26 +227,16 @@ namespace TradingSystem.View
                 List<int> lsFailure = new List<int>();
                 foreach (var selectedItem in selectedItems)
                 {
-                    Model.Database.TradeCommand cmdItem = new Model.Database.TradeCommand
-                    {
-                        CommandId = selectedItem.CommandId,
-                        ECommandStatus = Model.EnumType.CommandStatus.Canceled,
-                        ModifiedDate = DateTime.Now,
-                        DStartDate = selectedItem.DStartDate,
-                        DEndDate = selectedItem.DEndDate,
-                        Notes = notes,
-                    };
-
                     //call the UFX interface to withdraw the entrust securities
 
                     //TODO: update the security in tradinginstance table
-                    if (_tradeCommandBLL.Update(cmdItem) > 0)
+                    if (_commandManagementBLL.Update(selectedItem) > 0)
                     {
-                        lsSuccess.Add(cmdItem.CommandId);
+                        lsSuccess.Add(selectedItem.CommandId);
                     }
                     else
                     {
-                        lsFailure.Add(cmdItem.CommandId);
+                        lsFailure.Add(selectedItem.CommandId);
                     }
                 }
 
@@ -261,55 +313,38 @@ namespace TradingSystem.View
         private void LoadTradeCommand()
         {
             _dataSource.Clear();
-
-            var tradeCommandItems = _tradeCommandBLL.GetAll();
-            foreach(var item in tradeCommandItems)
+            var commandItems = _commandManagementBLL.GetCommandItems();
+            if (commandItems != null && commandItems.Count > 0)
             {
-                CommandManagementItem cmdItem = new CommandManagementItem
-                {
-                    DDate = item.CreatedDate,
-                    CommandId = item.CommandId,
-                    ECommandStatus = item.ECommandStatus,
-                    ArbitrageCopies = item.CommandNum,
-                    DStartDate = item.DStartDate,
-                    DEndDate = item.DEndDate,
-                    EExecutype = item.EExecuteType,
-                    EDealStatus = item.EDealStatus,
-                    EEntrustStatus = item.EEntrustStatus,
-                    CommandModifiedTimes = item.ModifiedTimes,
-                    //DDispatchDate = item.d
-                    InstanceId = item.InstanceId,
-                    InstanceCode = item.InstanceCode,
-                    PortfolioId = item.PortfolioId,
-                    PortfolioCode = item.PortfolioCode,
-                    PortfolioName = item.PortfolioName,
-                    TemplateId = item.TemplateId,
-                    TemplateName = item.TemplateName,
-                    BearContract = item.BearContract,
-                    FundCode = item.AccountCode,
-                    FundName = item.AccountName,
-                    Notes = item.Notes,
-                    ModifiedCause = item.ModifiedCause,
-                    CancelCause = item.CancelCause,
-                };
-
-                _dataSource.Add(cmdItem);
-            }
-
-            if (tradeCommandItems.Count > 0)
-            {
-                LoadCommandSummary(_dataSource[0]);
-
-                //TODO: load the security/entrust/deal information
+                commandItems.ForEach(p => _dataSource.Add(p));
+                var cmdMngItem = _dataSource[0];
+                LoadCommandDetail(cmdMngItem);
             }
         }
 
-        private void LoadCommandSummary(CommandManagementItem tradeCommand)
+        private void LoadCommandDetail(CommandManagementItem cmdMngItem)
+        {
+            LoadCommandSummary(cmdMngItem);
+
+            //TODO: load the security/entrust/deal information
+            LoadSecurityItems(cmdMngItem);
+            LoadEntrustItems(cmdMngItem);
+            LoadDealItems(cmdMngItem);
+        }
+
+        private void LoadCommandSecurities(CommandManagementItem cmdMngItem)
+        {
+            LoadSecurityItems(cmdMngItem);
+            LoadEntrustItems(cmdMngItem);
+            LoadDealItems(cmdMngItem);
+        }
+
+        private void LoadCommandSummary(CommandManagementItem cmdMngItem)
         {
             //var user = _userBLL.GetById(tradeCommand.SubmitPerson);
-            this.tbCommandId.Text = string.Format("{0}", tradeCommand.CommandId);
-            this.tbFundName.Text = tradeCommand.FundDisplay;
-            this.tbPortName.Text = tradeCommand.PortfolioDisplay;// string.Format("{0}--{1}", tradeCommand.PortfolioCode, tradeCommand.PortfolioName);
+            this.tbCommandId.Text = string.Format("{0}", cmdMngItem.CommandId);
+            this.tbFundName.Text = cmdMngItem.FundDisplay;
+            this.tbPortName.Text = cmdMngItem.PortfolioDisplay;// string.Format("{0}--{1}", tradeCommand.PortfolioCode, tradeCommand.PortfolioName);
             this.tbSecuName.Text = "N/A";
             this.tbPriceMode.Text = "N/A";
             this.tbCommandPrice.Text = "N/A";
@@ -317,25 +352,52 @@ namespace TradingSystem.View
             //TODO:get the deal amount
             this.tbDealAmount.Text = "0";
             this.tbAveragePrice.Text = "N/A";
-            this.tbSubmitDate.Text = tradeCommand.CommandSubmitDate;
-            this.tbSubmitTime.Text = tradeCommand.CommandSubmitTime;
-            this.tbStartDate.Text = tradeCommand.StartDate;
-            this.tbStartTime.Text = tradeCommand.StartTime;
-            this.tbEndDate.Text = tradeCommand.EndDate;
-            this.tbEndTime.Text = tradeCommand.EndTime;
-            this.tbCommandStatus.Text = tradeCommand.CommandStatus;
-            this.tbEntrustStatus.Text = tradeCommand.EntrustExecuteStatus;// CommandStatusHelper.GetEntrustName(tradeCommand.EEntrustStatus);
-            this.tbDealStatus.Text = CommandStatusHelper.GetDealName(tradeCommand.EDealStatus);
+            this.tbSubmitDate.Text = cmdMngItem.CommandSubmitDate;
+            this.tbSubmitTime.Text = cmdMngItem.CommandSubmitTime;
+            this.tbStartDate.Text = cmdMngItem.StartDate;
+            this.tbStartTime.Text = cmdMngItem.StartTime;
+            this.tbEndDate.Text = cmdMngItem.EndDate;
+            this.tbEndTime.Text = cmdMngItem.EndTime;
+            this.tbCommandStatus.Text = cmdMngItem.CommandStatus;
+            this.tbEntrustStatus.Text = cmdMngItem.EntrustExecuteStatus;// CommandStatusHelper.GetEntrustName(tradeCommand.EEntrustStatus);
+            this.tbDealStatus.Text = CommandStatusHelper.GetDealName(cmdMngItem.EDealStatus);
 
-            this.tbSubmitPerson.Text = tradeCommand.CommandSubmitPerson;
-            this.tbModifyPerson.Text = tradeCommand.ModifyOperator;
-            this.tbCancelPerson.Text = tradeCommand.ModifyOperator;
+            this.tbSubmitPerson.Text = cmdMngItem.CommandSubmitPerson;
+            this.tbModifyPerson.Text = cmdMngItem.ModifyOperator;
+            this.tbCancelPerson.Text = cmdMngItem.ModifyOperator;
 
-            this.tbModifyTime.Text = DateFormat.Format(tradeCommand.DModifiedDate, ConstVariable.TimeFormat);
-            this.tbCancelTime.Text = DateFormat.Format(tradeCommand.DCancelDate, ConstVariable.TimeFormat);
-            this.tbNotes.Text = tradeCommand.Notes;
-            this.tbModifyCause.Text = tradeCommand.ModifiedCause;
-            this.tbCancelCause.Text = tradeCommand.CancelCause;
+            this.tbModifyTime.Text = DateFormat.Format(cmdMngItem.DModifiedDate, ConstVariable.TimeFormat);
+            this.tbCancelTime.Text = DateFormat.Format(cmdMngItem.DCancelDate, ConstVariable.TimeFormat);
+            this.tbNotes.Text = cmdMngItem.Notes;
+            this.tbModifyCause.Text = cmdMngItem.ModifiedCause;
+            this.tbCancelCause.Text = cmdMngItem.CancelCause;
+        }
+
+        private void LoadSecurityItems(CommandManagementItem cmdMngItem)
+        {
+            var secuItems = _commandManagementBLL.GetSecurityItems(cmdMngItem);
+            if (secuItems != null)
+            {
+                secuItems.ForEach(p => _secuDataSource.Add(p));
+            }
+        }
+
+        private void LoadEntrustItems(CommandManagementItem cmdMngItem)
+        {
+            var entrustItems = _commandManagementBLL.GetEntrustItems(cmdMngItem);
+            if (entrustItems != null)
+            {
+                entrustItems.ForEach(p => _entrustDataSource.Add(p));
+            }
+        }
+
+        private void LoadDealItems(CommandManagementItem cmdMngItem)
+        {
+            var dealItems = _commandManagementBLL.GetDealItems(cmdMngItem);
+            if (dealItems != null)
+            { 
+                dealItems.ForEach(p => _dealDataSource.Add(p));
+            }
         }
 
         #endregion

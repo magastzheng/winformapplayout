@@ -70,6 +70,7 @@
     <Compile Include="Entrust\Futures\UFXQueryFuturesDealBLL.cs" />
     <Compile Include="Entrust\Futures\UFXQueryFuturesEntrustBLL.cs" />
     <Compile Include="Entrust\UFXQueryMoneyBLL.cs" />
+    <Compile Include="TradeCommand\CommandManagemengBLL.cs" />
     <Compile Include="UFX\UFXDataSetHelper.cs" />
     <Compile Include="Entrust\UFXQueryHoldingBLL.cs" />
     <Compile Include="Entrust\UFXQueryMultipleHoldingBLL.cs" />

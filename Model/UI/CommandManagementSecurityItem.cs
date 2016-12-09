@@ -1,4 +1,7 @@
 ﻿using Model.Binding;
+using Model.EnumType;
+using Model.EnumType.EnumTypeConverter;
+using Model.SecurityInfo;
 
 namespace Model.UI
 {
@@ -17,7 +20,10 @@ namespace Model.UI
         public string SecuName { get; set; }
 
         [BindingAttribute("entrustdirection")]
-        public string EntrustDirection { get; set; }
+        public string EntrustDirection
+        {
+            get { return EnumTypeDisplayHelper.GetEntrustDirection(EDirection); }
+        }
 
         [BindingAttribute("pricetype")]
         public string PriceType { get; set; }
@@ -29,10 +35,16 @@ namespace Model.UI
         public double CommandMoney { get; set; }
 
         [BindingAttribute("entruststatus")]
-        public string EntrustStatus { get; set; }
+        public string EntrustStatus
+        {
+            get { return CommandStatusHelper.GetEntrustName(EEntrustStatus); }
+        }
 
         [BindingAttribute("dealstatus")]
-        public string DealStatus { get; set; }
+        public string DealStatus
+        {
+            get { return CommandStatusHelper.GetDealName(EDealStatus); }
+        }
 
         [BindingAttribute("todayentrustamount")]
         public int TodayEntrustAmount { get; set; }
@@ -66,5 +78,15 @@ namespace Model.UI
 
         [BindingAttribute("undealamount")]
         public int UndealAmount { get; set; }
+
+        public SecurityType SecuType { get; set; }
+
+        public EntrustDirection EDirection { get; set; }
+
+        public EntrustStatus EEntrustStatus { get; set; }
+
+        public DealStatus EDealStatus { get; set; }
+
+        public int CommandId { get; set; }
     }
 }

@@ -26,6 +26,12 @@ namespace BLL.TradeCommand
         
         }
 
+        /// <summary>
+        /// Get raw TradeCommand securites. It only includes the command information, such as SecuCode, SecuType, Direction, Amount, Price
+        /// It does not contains those entrusted status information.
+        /// </summary>
+        /// <param name="commandId">The command id.</param>
+        /// <returns>A list of TradeCommandSecurity with the same commandId.</returns>
         public List<TradeCommandSecurity> GetTradeCommandSecurities(int commandId)
         {
             return _tradecmdsecudao.Get(commandId);
