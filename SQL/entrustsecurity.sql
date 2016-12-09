@@ -144,29 +144,6 @@ begin
 		and SecuCode=@SecuCode
 end
 
-go
-if exists (select name from sysobjects where name='procEntrustSecurityUpdateEntrustStatus')
-drop proc procEntrustSecurityUpdateEntrustStatus
-
-go
-create proc procEntrustSecurityUpdateEntrustStatus(
-	@SubmitId			int
-	,@CommandId			int
-	,@SecuCode			varchar(10)
-	,@EntrustStatus		int
-	,@ModifiedDate		datetime
-)
-as
-begin
-	update entrustsecurity
-	set EntrustStatus		= @EntrustStatus
-		,ModifiedDate		= @ModifiedDate
-	where SubmitId=@SubmitId
-		and CommandId=@CommandId 
-		and SecuCode=@SecuCode
-		and DealStatus != 3			--已完成成交的不可以撤单
-end
-
 --go
 --if exists (select name from sysobjects where name='procEntrustSecurityUpdateEntrustResponse')
 --drop proc procEntrustSecurityUpdateEntrustResponse
@@ -251,6 +228,48 @@ begin
 			,EntrustFailCause	= @EntrustFailCause
 		where RequestId=@RequestId
 	end
+end
+
+go
+if exists (select name from sysobjects where name='procEntrustSecurityUpdateEntrustStatus')
+drop proc procEntrustSecurityUpdateEntrustStatus
+
+go
+create proc procEntrustSecurityUpdateEntrustStatus(
+	@SubmitId			int
+	,@CommandId			int
+	,@SecuCode			varchar(10)
+	,@EntrustStatus		int
+	,@ModifiedDate		datetime
+)
+as
+begin
+	update entrustsecurity
+	set EntrustStatus		= @EntrustStatus
+		,ModifiedDate		= @ModifiedDate
+	where SubmitId=@SubmitId
+		and CommandId=@CommandId 
+		and SecuCode=@SecuCode
+		and DealStatus != 3			--已完成成交的不可以撤单
+end
+
+go
+if exists (select name from sysobjects where name='procEntrustSecurityUpdateEntrustStatusByEntrustNo')
+drop proc procEntrustSecurityUpdateEntrustStatusByEntrustNo
+
+go
+create proc procEntrustSecurityUpdateEntrustStatusByEntrustNo(
+	@EntrustNo			int
+	,@EntrustStatus		int
+	,@ModifiedDate		datetime
+)
+as
+begin
+	update entrustsecurity
+	set EntrustStatus		= @EntrustStatus
+		,ModifiedDate		= @ModifiedDate
+	where EntrustNo=@EntrustNo
+		and DealStatus != 3			--已完成成交的不可以改变委托状态
 end
 
 go

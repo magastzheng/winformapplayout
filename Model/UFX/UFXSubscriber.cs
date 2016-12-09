@@ -2,6 +2,9 @@
 
 namespace Model.UFX
 {
+    /// <summary>
+    /// filter data message
+    /// </summary>
     public class UFXFilterResponse
     {
         [UFXDataAttribute("msgtype")]
@@ -15,6 +18,7 @@ namespace Model.UFX
     }
 
     /// <summary>
+    /// 委托下达成功后推送本条委托消息
     /// msgtype="a"
     /// </summary>
     public class UFXEntrustCompletedResponse
@@ -87,6 +91,7 @@ namespace Model.UFX
     }
 
     /// <summary>
+    /// 对某条委托进行撤单，撤单成功后推送该委托信息
     /// msgtype="e"
     /// </summary>
     public class UFXWithdrawCompletedResponse
@@ -156,6 +161,7 @@ namespace Model.UFX
     }
 
     /// <summary>
+    /// 委托有成交，成交处理完成后推送成交信息
     /// msgtype="g"
     /// </summary>
     public class UFXEntrustDealResponse

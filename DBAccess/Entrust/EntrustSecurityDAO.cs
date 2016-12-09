@@ -9,6 +9,9 @@ namespace DBAccess.Entrust
     public class EntrustSecurityDAO: BaseDAO
     {
         private const string SP_ModifyDeal = "procEntrustSecurityUpdateDeal";
+        private const string SP_ModifyEntrustStatus = "procEntrustSecurityUpdateEntrustStatus";
+        private const string SP_ModifyEntrustStatusByEntrustNo = "procEntrustSecurityUpdateEntrustStatusByEntrustNo";
+
         private const string SP_Delete = "procEntrustSecurityDelete";
         private const string SP_DeleteBySubmitId = "procEntrustSecurityDeleteBySubmitId";
         private const string SP_DeleteByCommandId = "procEntrustSecurityDeleteByCommandId";
@@ -46,6 +49,28 @@ namespace DBAccess.Entrust
             _dbHelper.AddInParameter(dbCommand, "@DealAmount", System.Data.DbType.Int32, dealAmount);
             _dbHelper.AddInParameter(dbCommand, "@DealBalance", System.Data.DbType.Decimal, dealBalance);
             _dbHelper.AddInParameter(dbCommand, "@DealFee", System.Data.DbType.Decimal, dealFee);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int UpdateEntrustStatus(int submitId, int commandId, string secuCode, EntrustStatus entrustStatus)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustStatus);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+            _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, secuCode);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)entrustStatus);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int UpdateEntrustStatusByEntrustNo(int entrustNo, EntrustStatus entrustStatus)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustStatusByEntrustNo);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustNo", System.Data.DbType.Int32, entrustNo);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)entrustStatus);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);

@@ -22,6 +22,7 @@ namespace BLL.Entrust
 
         private EntrustDAO _entrustdao = new EntrustDAO();
 
+        //TODO:撤销是否要等到有返回结果之后，才可以继续进行。
         private int _timeOut = 30 * 1000;
 
         private readonly object _locker = new object();
@@ -114,6 +115,7 @@ namespace BLL.Entrust
                 }
             }
 
+            //TODO: It needs to verify the response data. Only the can set cancel successfully in those without no error.
             int ret = -1;
             List<EntrustSecurityItem> entrustSecuItems = new List<EntrustSecurityItem>();
             if (token.SubmitId > 0)

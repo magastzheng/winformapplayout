@@ -20,6 +20,16 @@ namespace BLL.EntrustCommand
             return _entrustsecudao.UpdateDeal(submitId, commandId, secuCode, dealAmount, dealBalance, dealFee);
         }
 
+        public int UpdateEntrustStatus(int submitId, int commandId, string secuCode, EntrustStatus entrustStatus)
+        {
+            return _entrustsecudao.UpdateEntrustStatus(submitId, commandId, secuCode, entrustStatus);
+        }
+
+        public int UpdateEntrustStatusByEntrustNo(int entrustNo, EntrustStatus entrustStatus)
+        {
+            return _entrustsecudao.UpdateEntrustStatusByEntrustNo(entrustNo, entrustStatus);
+        }
+
         #endregion
 
         #region delete

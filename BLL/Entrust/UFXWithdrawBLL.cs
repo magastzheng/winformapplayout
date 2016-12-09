@@ -25,6 +25,7 @@ namespace BLL.Entrust
 
         private EntrustDAO _entrustdao = new EntrustDAO();
 
+        //TODO: 撤单需要等待所有单都完成之后，才可以继续进行
         private int _timeOut = 30 * 1000;
 
         public UFXWithdrawBLL()

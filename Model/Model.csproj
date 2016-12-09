@@ -120,8 +120,8 @@
     <Compile Include="strategy\HolderItem.cs" />
     <Compile Include="strategy\PortfolioItem.cs" />
     <Compile Include="strategy\TradingInstance.cs" />
-    <Compile Include="UFX\UFXEntrust.cs" />
-    <Compile Include="UFX\UFXMarketCode.cs" />
+    <Compile Include="UFX\UFXEntrustTypes.cs" />
+    <Compile Include="UFX\UFXEnumTypes.cs" />
     <Compile Include="UFX\UFXHolding.cs" />
     <Compile Include="UFX\UFXMoneyQuery.cs" />
     <Compile Include="UFX\UFXQuery.cs" />
