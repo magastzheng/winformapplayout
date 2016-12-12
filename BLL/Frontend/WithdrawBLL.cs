@@ -22,7 +22,7 @@ namespace BLL.Frontend
     public class WithdrawBLL
     {
         private EntrustDAO _entrustdao = new EntrustDAO();
-        private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
+        private TradeCommandDAO _tradecmddao = new TradeCommandDAO();
 
         private UserActionTrackingBLL _userActionTrackingBLL = new UserActionTrackingBLL();
         private EntrustCommandBLL _entrustCommandBLL = new EntrustCommandBLL();
@@ -36,7 +36,7 @@ namespace BLL.Frontend
 
         #region cancel
 
-        public List<EntrustCommandItem> CancelOne(TradingCommandItem cmdItem, CallerCallback callerCallback)
+        public List<EntrustCommandItem> CancelOne(TradeCommandItem cmdItem, CallerCallback callerCallback)
         {
             Tracking(ActionType.Cancel, ResourceType.TradeCommand, cmdItem.CommandId, cmdItem);
             List<EntrustCommandItem> cancelEntrustCmdItems = new List<EntrustCommandItem>();
@@ -155,7 +155,7 @@ namespace BLL.Frontend
 
         #region get/fetch
 
-        public List<EntrustCommandItem> GetEntrustedCmdItems(TradingCommandItem cmdItem)
+        public List<EntrustCommandItem> GetEntrustedCmdItems(TradeCommandItem cmdItem)
         {
             return _entrustCommandBLL.GetCancel(cmdItem.CommandId);
         }
@@ -296,7 +296,7 @@ namespace BLL.Frontend
             return entrustItem;
         }
 
-        private int Tracking(ActionType actionType, ResourceType resourceType, int resourceId, TradingCommandItem cmdItem)
+        private int Tracking(ActionType actionType, ResourceType resourceType, int resourceId, TradeCommandItem cmdItem)
         {
             int userId = LoginManager.Instance.GetUserId();
 

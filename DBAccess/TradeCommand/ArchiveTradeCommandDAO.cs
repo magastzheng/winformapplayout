@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace DBAccess.TradeCommand
 {
-    public class ArchiveTradingCommandDAO : BaseDAO
+    public class ArchiveTradeCommandDAO : BaseDAO
     {
-        public ArchiveTradingCommandDAO()
+        public ArchiveTradeCommandDAO()
             : base()
         { 
         }
 
-        public ArchiveTradingCommandDAO(DbHelper dbHelper)
+        public ArchiveTradeCommandDAO(DbHelper dbHelper)
             : base(dbHelper)
         { 
             

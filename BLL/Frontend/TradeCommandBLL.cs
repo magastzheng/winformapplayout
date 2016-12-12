@@ -23,12 +23,12 @@ namespace BLL.Frontend
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private TradingInstanceDAO _tradeinstdao = new TradingInstanceDAO();
+        private TradeInstanceDAO _tradeinstdao = new TradeInstanceDAO();
         private CommandDAO _commanddao = new CommandDAO();
         private TemplateStockDAO _tempstockdao = new TemplateStockDAO();
         private TradingInstanceSecurityDAO _tradeinstsecudao = new TradingInstanceSecurityDAO();
-        private TradingCommandDAO _tradecommandao = new TradingCommandDAO();
-        private TradingCommandSecurityDAO _tradecmdsecudao = new TradingCommandSecurityDAO();
+        private TradeCommandDAO _tradecommandao = new TradeCommandDAO();
+        private TradeCommandSecurityDAO _tradecmdsecudao = new TradeCommandSecurityDAO();
 
         private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
         private UserActionTrackingBLL _userActionTrackingBLL = new UserActionTrackingBLL();
@@ -54,7 +54,7 @@ namespace BLL.Frontend
             }
             else
             {
-                TradingInstance tradeInstance = new TradingInstance
+                Model.UI.TradeInstance tradeInstance = new Model.UI.TradeInstance
                 {
                     InstanceCode = instanceCode,
                     PortfolioId = openItem.PortfolioId,
@@ -65,7 +65,7 @@ namespace BLL.Frontend
                     OperationCopies = openItem.Copies,
                     StockPriceType = StockPriceType.NoLimit,
                     FuturesPriceType = FuturesPriceType.NoLimit,
-                    Status = TradingInstanceStatus.Active,
+                    Status = TradeInstanceStatus.Active,
                 };
 
                 tradeInstance.Owner = LoginManager.Instance.GetUserId();
@@ -198,9 +198,9 @@ namespace BLL.Frontend
 
         #region get/fetch
 
-        public List<TradingCommandItem> GetTradeCommandUIAll()
+        public List<TradeCommandItem> GetTradeCommandUIAll()
         {
-            var uiCommands = new List<TradingCommandItem>();
+            var uiCommands = new List<TradeCommandItem>();
             var validTradeCommands = GetAll();
             
             var tradeSecuItems = GetCommandSecurityItems(validTradeCommands);
@@ -220,9 +220,9 @@ namespace BLL.Frontend
         /// 获取那些有效的，委托完成的，没有完成成交的指令。
         /// </summary>
         /// <returns></returns>
-        public List<TradingCommandItem> GetTradeCommand()
+        public List<TradeCommandItem> GetTradeCommand()
         {
-            var uiCommands = new List<TradingCommandItem>();
+            var uiCommands = new List<TradeCommandItem>();
             var validTradeCommands = new List<Model.Database.TradeCommand>();
             var allItems = GetAll();
             foreach (var item in allItems)
@@ -402,9 +402,9 @@ namespace BLL.Frontend
             return cmdSecuItems;
         }
 
-        private TradingCommandItem BuildUICommand(Model.Database.TradeCommand tradeCommand)
+        private TradeCommandItem BuildUICommand(Model.Database.TradeCommand tradeCommand)
         {
-            var uiCommand = new TradingCommandItem
+            var uiCommand = new TradeCommandItem
             {
                 CommandId = tradeCommand.CommandId,
                 InstanceId = tradeCommand.InstanceId,
@@ -434,7 +434,7 @@ namespace BLL.Frontend
             return uiCommand;
         }
 
-        private void CalculateUICommand(ref TradingCommandItem uiCommand, List<TradeCommandSecurity> tradeSecuItems, List<EntrustSecurityItem> entrustSecuItems)
+        private void CalculateUICommand(ref TradeCommandItem uiCommand, List<TradeCommandSecurity> tradeSecuItems, List<EntrustSecurityItem> entrustSecuItems)
         {
             int commandId = uiCommand.CommandId;
             var cmdSecuItems = tradeSecuItems.Where(p => p.CommandId == commandId).ToList();

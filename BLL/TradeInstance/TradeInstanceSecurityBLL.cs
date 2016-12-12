@@ -12,7 +12,7 @@ namespace BLL.TradeInstance
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private TradingInstanceSecurityDAO _tradeinstsecudao = new TradingInstanceSecurityDAO();
-        private TradingCommandDAO _tradecmddao = new TradingCommandDAO();
+        private TradeCommandDAO _tradecmddao = new TradeCommandDAO();
         private TradingInstanceAdjustmentBLL _tradeInstanceAdjustBLL = new TradingInstanceAdjustmentBLL();
 
         public TradeInstanceSecurityBLL()
@@ -58,7 +58,7 @@ namespace BLL.TradeInstance
 
         #region get security of instance
 
-        public List<TradingInstanceSecurity> Get(int instanceId)
+        public List<TradeInstanceSecurity> Get(int instanceId)
         {
             return _tradeinstsecudao.Get(instanceId);
         }
@@ -71,7 +71,7 @@ namespace BLL.TradeInstance
         {
             var tradeItem = _tradecmddao.Get(commandId);
 
-            var secuItem = new TradingInstanceSecurity
+            var secuItem = new TradeInstanceSecurity
             {
                 InstanceId = tradeItem.InstanceId,
                 SecuCode = secuCode,
@@ -87,7 +87,7 @@ namespace BLL.TradeInstance
         {
             var tradeItem = _tradecmddao.Get(commandId);
 
-            var secuItem = new TradingInstanceSecurity
+            var secuItem = new TradeInstanceSecurity
             {
                 InstanceId = tradeItem.InstanceId,
                 SecuCode = secuCode,
@@ -103,11 +103,11 @@ namespace BLL.TradeInstance
 
         #region transfer
 
-        public int Transfer(TradingInstance dest, TradingInstance src, List<SourceHoldingItem> transferItems)
+        public int Transfer(Model.UI.TradeInstance dest, Model.UI.TradeInstance src, List<SourceHoldingItem> transferItems)
         {
-            List<TradingInstanceSecurity> srcNewItems = new List<TradingInstanceSecurity>();
-            List<TradingInstanceSecurity> destNewItems = new List<TradingInstanceSecurity>();
-            List<TradingInstanceAdjustmentItem> adjustItems = new List<TradingInstanceAdjustmentItem>();
+            List<TradeInstanceSecurity> srcNewItems = new List<TradeInstanceSecurity>();
+            List<TradeInstanceSecurity> destNewItems = new List<TradeInstanceSecurity>();
+            List<TradeInstanceAdjustmentItem> adjustItems = new List<TradeInstanceAdjustmentItem>();
 
             //获取src中所有的持仓
             var srcItems = Get(src.InstanceId);
@@ -120,7 +120,7 @@ namespace BLL.TradeInstance
             foreach (var transferItem in transferItems)
             {
                 //对源实例中的证券进行更新
-                TradingInstanceSecurity srcOutItem = new TradingInstanceSecurity
+                TradeInstanceSecurity srcOutItem = new TradeInstanceSecurity
                 {
                     SecuCode = transferItem.SecuCode,
                     SecuType = transferItem.SecuType,
@@ -144,7 +144,7 @@ namespace BLL.TradeInstance
                 srcNewItems.Add(srcOutItem);
 
                 //对目标实例中的证券进行更新
-                TradingInstanceSecurity destInItem = new TradingInstanceSecurity 
+                TradeInstanceSecurity destInItem = new TradeInstanceSecurity 
                 {
                     SecuCode = transferItem.SecuCode,
                     SecuType = transferItem.SecuType,
@@ -178,7 +178,7 @@ namespace BLL.TradeInstance
                 destNewItems.Add(destInItem);
 
                 //对调整做记录
-                TradingInstanceAdjustmentItem adjustItem = new TradingInstanceAdjustmentItem 
+                TradeInstanceAdjustmentItem adjustItem = new TradeInstanceAdjustmentItem 
                 {
                     SourceInstanceId = src.InstanceId,
                     SourcePortfolioCode = src.PortfolioCode,

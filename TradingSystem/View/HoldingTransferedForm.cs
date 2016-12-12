@@ -379,7 +379,7 @@ namespace TradingSystem.View
             var tradeInstances = _tradeInstanceBLL.GetPortfolioInstance(portfolioCode);
             var optionList = new List<ComboOptionItem>();
 
-            TradingInstance emptyInstance = new TradingInstance 
+            TradeInstance emptyInstance = new TradeInstance 
             {
                 InstanceId = emptyInstanceId,
                 InstanceCode = emptyInstanceCode,
@@ -563,12 +563,12 @@ namespace TradingSystem.View
             var tradeInst = (ComboOptionItem)cb.SelectedItem;
             //if(string.IsNullOrEmpty(tradeInst.Id) || tradeInst.Id.StartsWith("empty"))
             //    return;
-            if (!(tradeInst.Data is TradingInstance))
+            if (!(tradeInst.Data is TradeInstance))
                 return;
             
 
             //TODO: cannot select the same TradingInstance
-            var instance = tradeInst.Data as TradingInstance;
+            var instance = tradeInst.Data as TradeInstance;
             var securities = _tradeInstanceSecuBLL.Get(instance.InstanceId);
             switch (cb.Name)
             {
@@ -613,7 +613,7 @@ namespace TradingSystem.View
             this.cbDestTradeInst.Focus();
         }
 
-        private void FillSrcGridView(SortableBindingList<SourceHoldingItem> dataSource, List<TradingInstanceSecurity> secuItems, TradingInstance tradeInstance)
+        private void FillSrcGridView(SortableBindingList<SourceHoldingItem> dataSource, List<TradeInstanceSecurity> secuItems, TradeInstance tradeInstance)
         {
             foreach (var secuItem in secuItems)
             {
@@ -638,7 +638,7 @@ namespace TradingSystem.View
             }
         }
 
-        private void FillDestGridView(SortableBindingList<DestinationHoldingItem> dataSource, List<TradingInstanceSecurity> secuItems, TradingInstance tradeInstance)
+        private void FillDestGridView(SortableBindingList<DestinationHoldingItem> dataSource, List<TradeInstanceSecurity> secuItems, TradeInstance tradeInstance)
         {
             foreach (var secuItem in secuItems)
             {
@@ -747,11 +747,11 @@ namespace TradingSystem.View
                 srcPortfolio = srcSelectPortfolio.Data as PortfolioItem;
             }
 
-            TradingInstance srcTradingInstance = null;
+            TradeInstance srcTradingInstance = null;
             var srcSelectInstance = cbSrcTradeInst.SelectedItem as ComboOptionItem;
             if (srcSelectInstance != null)
             {
-                srcTradingInstance = srcSelectInstance.Data as TradingInstance;
+                srcTradingInstance = srcSelectInstance.Data as TradeInstance;
             }
 
             //get the target portfolio, instance
@@ -768,11 +768,11 @@ namespace TradingSystem.View
                 destPortfolio = destSelectPortfolio.Data as PortfolioItem;
             }
 
-            TradingInstance destTradingInstance = null;
+            TradeInstance destTradingInstance = null;
             var destSelectInstance = cbDestTradeInst.SelectedItem as ComboOptionItem;
             if (destSelectInstance != null)
             {
-                destTradingInstance = destSelectInstance.Data as TradingInstance;
+                destTradingInstance = destSelectInstance.Data as TradeInstance;
             }
 
             if (!ValidatePortfolio(srcPortfolio) || !ValidatePortfolio(destPortfolio))
@@ -836,7 +836,7 @@ namespace TradingSystem.View
             }
         }
 
-        private bool ValidateTradingInstance(TradingInstance instance)
+        private bool ValidateTradingInstance(TradeInstance instance)
         {
             if (instance == null || instance.InstanceId == -1)
             {

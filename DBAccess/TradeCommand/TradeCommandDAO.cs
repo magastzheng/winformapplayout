@@ -8,24 +8,24 @@ using System.Data.Common;
 
 namespace DBAccess.TradeCommand
 {
-    public class TradingCommandDAO: BaseDAO
+    public class TradeCommandDAO: BaseDAO
     {
-        private const string SP_Create = "procTradingCommandInsert";
-        private const string SP_Modify = "procTradingCommandUpdate";
-        private const string SP_ModifyStatus = "procTradingCommandUpdateStatus";
-        //private const string SP_ModifyTargetNum = "procTradingCommandUpdateTargetNum";
-        //private const string SP_ModifyTargetNumBySumbitId = "procTradingCommandUpdateTargetNumBySubmitId";
-        private const string SP_Delete = "procTradingCommandDelete";
-        //private const string SP_Get = "procTradingCommandSelect";
-        private const string SP_Get = "procTradingCommandSelectCombine";
+        private const string SP_Create = "procTradeCommandInsert";
+        private const string SP_Modify = "procTradeCommandUpdate";
+        private const string SP_ModifyStatus = "procTradeCommandUpdateStatus";
+        //private const string SP_ModifyTargetNum = "procTradeCommandUpdateTargetNum";
+        //private const string SP_ModifyTargetNumBySumbitId = "procTradeCommandUpdateTargetNumBySubmitId";
+        private const string SP_Delete = "procTradeCommandDelete";
+        //private const string SP_Get = "procTradeCommandSelect";
+        private const string SP_Get = "procTradeCommandSelectCombine";
 
-        public TradingCommandDAO()
+        public TradeCommandDAO()
             : base()
         { 
             
         }
 
-        public TradingCommandDAO(DbHelper dbHelper)
+        public TradeCommandDAO(DbHelper dbHelper)
             : base(dbHelper)
         { 
             

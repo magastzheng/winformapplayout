@@ -348,7 +348,7 @@ namespace TradingSystem.Dialog
             if (result > 0)
             {
                 //TODO: add more parameters
-                TradingInstance tradeInstance = new TradingInstance
+                TradeInstance tradeInstance = new TradeInstance
                 {
                     InstanceId = cmdMngItem.InstanceId,
                     InstanceCode = cmdMngItem.InstanceCode,
@@ -359,13 +359,13 @@ namespace TradingSystem.Dialog
                     //FuturesPriceType = oldInstance.FuturesPriceType,
                 };
 
-                List<TradingInstanceSecurity> modifiedInstSecuItems = new List<TradingInstanceSecurity>();
-                List<TradingInstanceSecurity> cancelInstSecuItems = new List<TradingInstanceSecurity>();
+                List<TradeInstanceSecurity> modifiedInstSecuItems = new List<TradeInstanceSecurity>();
+                List<TradeInstanceSecurity> cancelInstSecuItems = new List<TradeInstanceSecurity>();
                 foreach (var secuItem in selectedModifiedSecuItems)
                 {
                     int modifiedAmount = secuItem.NewCommandAmount - secuItem.OriginCommandAmount;
 
-                    TradingInstanceSecurity tradeInstSecuItem = new TradingInstanceSecurity
+                    TradeInstanceSecurity tradeInstSecuItem = new TradeInstanceSecurity
                     {
                         SecuCode = secuItem.SecuCode,
                         SecuType = secuItem.SecuType,

@@ -1,24 +1,20 @@
-﻿using log4net;
-using Model.EnumType;
+﻿using Model.EnumType;
 using Model.UI;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DBAccess.TradeInstance
 {
-    public class TradeInstanceDAO: BaseDAO
+    public class  TradeInstanceDAO: BaseDAO
     {
-        private const string SP_CreateTradeInstance = "procTradingInstanceInsert";
-        private const string SP_CreateTradeInstanceSecurity = "procTradingInstanceSecurityInsert";
-        private const string SP_ModifyTradeInstance = "procTradingInstanceUpdate";
-        private const string SP_ModifyTradeInstanceSecurityInsertOrUpdate = "procTradingInstanceSecurityInsertOrUpdate";
-        private const string SP_ModifyTradeInstanceSecurityValidDelete = "procTradingInstanceSecurityValidDelete";
-
-        private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private const string SP_Create = "procTradeInstanceInsert";
+        private const string SP_Modify = "procTradeInstanceUpdate";
+        private const string SP_Delete = "procTradeInstanceDelete";
+        private const string SP_Get = "procTradeInstanceSelect";
+        private const string SP_GetByCode = "procTradeInstanceSelectByCode";
+        private const string SP_GetCombine = "procTradeInstanceSelectCombine";
+        private const string SP_GetCombineByCode = "procTradeInstanceSelectCombineByCode";
+        private const string SP_Exist = "procTradeInstanceExist";
 
         public TradeInstanceDAO()
             : base()
@@ -32,263 +28,381 @@ namespace DBAccess.TradeInstance
             
         }
 
-        public int Create(TradingInstance tradeInstance, List<TradingInstanceSecurity> tradeSecuItems)
+        public int Create(Model.UI.TradeInstance securityItem)
         {
-            var dbCommand = _dbHelper.GetCommand();
-            _dbHelper.Open(_dbHelper.Connection);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
+            _dbHelper.AddInParameter(dbCommand, "@InstanceCode", System.Data.DbType.String, securityItem.InstanceCode);
+            _dbHelper.AddInParameter(dbCommand, "@PortfolioId", System.Data.DbType.Int32, securityItem.PortfolioId);
+            _dbHelper.AddInParameter(dbCommand, "@MonitorUnitId", System.Data.DbType.Int32, securityItem.MonitorUnitId);
+            _dbHelper.AddInParameter(dbCommand, "@StockDirection", System.Data.DbType.Int32, (int)securityItem.StockDirection);
+            _dbHelper.AddInParameter(dbCommand, "@FuturesContract", System.Data.DbType.String, securityItem.FuturesContract);
+            _dbHelper.AddInParameter(dbCommand, "@FuturesDirection", System.Data.DbType.Int32, (int)securityItem.FuturesDirection);
+            _dbHelper.AddInParameter(dbCommand, "@OperationCopies", System.Data.DbType.Int32, securityItem.OperationCopies);
+            _dbHelper.AddInParameter(dbCommand, "@StockPriceType", System.Data.DbType.Int32, (int)securityItem.StockPriceType);
+            _dbHelper.AddInParameter(dbCommand, "@FuturesPriceType", System.Data.DbType.Int32, (int)securityItem.FuturesPriceType);
+            _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)TradeInstanceStatus.Active);
+            _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.Int32, (int)securityItem.Owner);
+            _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, DateTime.Now);
 
-            //use transaction to execute
-            DbTransaction transaction = dbCommand.Connection.BeginTransaction();
-            dbCommand.Transaction = transaction;
-            dbCommand.CommandType = System.Data.CommandType.StoredProcedure;
-            int ret = -1;
-            try
+            _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
+
+            int ret = _dbHelper.ExecuteNonQuery(dbCommand);
+            
+            int instanceId = -1;
+            if(ret > 0)
             {
-                //delete all old one
-                dbCommand.CommandText = SP_CreateTradeInstance;
-
-                _dbHelper.AddInParameter(dbCommand, "@InstanceCode", System.Data.DbType.String, tradeInstance.InstanceCode);
-                _dbHelper.AddInParameter(dbCommand, "@PortfolioId", System.Data.DbType.String, tradeInstance.PortfolioId);
-                _dbHelper.AddInParameter(dbCommand, "@MonitorUnitId", System.Data.DbType.Int32, tradeInstance.MonitorUnitId);
-                _dbHelper.AddInParameter(dbCommand, "@StockDirection", System.Data.DbType.Int32, (int)tradeInstance.StockDirection);
-                _dbHelper.AddInParameter(dbCommand, "@FuturesContract", System.Data.DbType.String, tradeInstance.FuturesContract);
-                _dbHelper.AddInParameter(dbCommand, "@FuturesDirection", System.Data.DbType.Int32, (int)tradeInstance.FuturesDirection);
-                _dbHelper.AddInParameter(dbCommand, "@OperationCopies", System.Data.DbType.Int32, tradeInstance.OperationCopies);
-                _dbHelper.AddInParameter(dbCommand, "@StockPriceType", System.Data.DbType.Int32, (int)tradeInstance.StockPriceType);
-                _dbHelper.AddInParameter(dbCommand, "@FuturesPriceType", System.Data.DbType.Int32, (int)tradeInstance.FuturesPriceType);
-                _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)TradingInstanceStatus.Active);
-                _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.Int32, (int)tradeInstance.Owner);
-                _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, DateTime.Now);
-
-                _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
-
-                ret = dbCommand.ExecuteNonQuery();
-                int instanceId = -1;
-                if (ret > 0)
-                {
-                    instanceId = (int)dbCommand.Parameters["@return"].Value;
-                    tradeInstance.InstanceId = instanceId;
-
-                    foreach (var tradeSecuItem in tradeSecuItems)
-                    {
-                        dbCommand.Parameters.Clear();
-                        dbCommand.CommandText = SP_CreateTradeInstanceSecurity;
-
-                        _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, instanceId);
-                        _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, tradeSecuItem.SecuCode);
-                        _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, (int)tradeSecuItem.SecuType);
-                        _dbHelper.AddInParameter(dbCommand, "@PositionType", System.Data.DbType.Int32, (int)tradeSecuItem.PositionType);
-                        _dbHelper.AddInParameter(dbCommand, "@InstructionPreBuy", System.Data.DbType.Int32, tradeSecuItem.InstructionPreBuy);
-                        _dbHelper.AddInParameter(dbCommand, "@InstructionPreSell", System.Data.DbType.Int32, tradeSecuItem.InstructionPreSell);
-
-                        _dbHelper.AddOutParameter(dbCommand, "@RowId", System.Data.DbType.String, 20);
-
-                        ret = dbCommand.ExecuteNonQuery();
-
-                        string rowId = string.Empty;
-                        if (ret > 0)
-                        {
-                            rowId = (string)dbCommand.Parameters["@RowId"].Value;
-                        }
-                    }
-                }
-
-                transaction.Commit();
-            }
-            catch (Exception ex)
-            {
-                transaction.Rollback();
-                //TODO: add log
-                logger.Error(ex);
-                ret = -1;
-                throw;
-            }
-            finally
-            {
-                _dbHelper.Close(dbCommand.Connection);
-                transaction.Dispose();
+                instanceId = (int)dbCommand.Parameters["@return"].Value;
             }
 
+            return instanceId;
+        }
+
+        public int Update(Model.UI.TradeInstance securityItem)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Modify);
+            _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, securityItem.InstanceId);
+            _dbHelper.AddInParameter(dbCommand, "@InstanceCode", System.Data.DbType.String, securityItem.InstanceCode);
+            _dbHelper.AddInParameter(dbCommand, "@MonitorUnitId", System.Data.DbType.Int32, securityItem.MonitorUnitId);
+            _dbHelper.AddInParameter(dbCommand, "@StockDirection", System.Data.DbType.Int32, (int)securityItem.StockDirection);
+            _dbHelper.AddInParameter(dbCommand, "@FuturesContract", System.Data.DbType.String, securityItem.FuturesContract);
+            _dbHelper.AddInParameter(dbCommand, "@FuturesDirection", System.Data.DbType.Int32, (int)securityItem.FuturesDirection);
+            _dbHelper.AddInParameter(dbCommand, "@OperationCopies", System.Data.DbType.Int32, securityItem.OperationCopies);
+            _dbHelper.AddInParameter(dbCommand, "@StockPriceType", System.Data.DbType.Int32, (int)securityItem.StockPriceType);
+            _dbHelper.AddInParameter(dbCommand, "@FuturesPriceType", System.Data.DbType.Int32, (int)securityItem.FuturesPriceType);
+            _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)securityItem.Status);
+            _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.Int32, (int)securityItem.Owner);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+
+            int ret = _dbHelper.ExecuteNonQuery(dbCommand);
             return ret;
         }
 
-        public int Update(TradingInstance tradeInstance, List<TradingInstanceSecurity> tradeSecuItems)
+        public int Delete(int instanceId)
         {
-            var dbCommand = _dbHelper.GetCommand();
-            _dbHelper.Open(_dbHelper.Connection);
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Delete);
+            _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, instanceId);
 
-            //use transaction to execute
-            DbTransaction transaction = dbCommand.Connection.BeginTransaction();
-            dbCommand.Transaction = transaction;
-            dbCommand.CommandType = System.Data.CommandType.StoredProcedure;
-            int ret = -1;
-            try
-            {
-                //delete all old one
-                dbCommand.CommandText = SP_ModifyTradeInstance;
-
-                //The @PortfolioId MUST not been modified
-                _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.String, tradeInstance.InstanceId);
-                _dbHelper.AddInParameter(dbCommand, "@InstanceCode", System.Data.DbType.String, tradeInstance.InstanceCode);
-                _dbHelper.AddInParameter(dbCommand, "@MonitorUnitId", System.Data.DbType.Int32, tradeInstance.MonitorUnitId);
-                _dbHelper.AddInParameter(dbCommand, "@StockDirection", System.Data.DbType.Int32, (int)tradeInstance.StockDirection);
-                _dbHelper.AddInParameter(dbCommand, "@FuturesContract", System.Data.DbType.String, tradeInstance.FuturesContract);
-                _dbHelper.AddInParameter(dbCommand, "@FuturesDirection", System.Data.DbType.Int32, (int)tradeInstance.FuturesDirection);
-                _dbHelper.AddInParameter(dbCommand, "@OperationCopies", System.Data.DbType.Int32, tradeInstance.OperationCopies);
-                _dbHelper.AddInParameter(dbCommand, "@StockPriceType", System.Data.DbType.Int32, (int)tradeInstance.StockPriceType);
-                _dbHelper.AddInParameter(dbCommand, "@FuturesPriceType", System.Data.DbType.Int32, (int)tradeInstance.FuturesPriceType);
-                _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)TradingInstanceStatus.Active);
-                _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.Int32, tradeInstance.Owner);
-                _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
-
-                ret = dbCommand.ExecuteNonQuery();
-                if (ret > 0)
-                {
-                    //TODO: FIXED if there is not secuitem, it will be error.
-                    foreach (var tradeSecuItem in tradeSecuItems)
-                    {
-                        dbCommand.Parameters.Clear();
-                        dbCommand.CommandText = SP_ModifyTradeInstanceSecurityInsertOrUpdate;
-
-                        _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, tradeInstance.InstanceId);
-                        _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, tradeSecuItem.SecuCode);
-                        _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, (int)tradeSecuItem.SecuType);
-                        _dbHelper.AddInParameter(dbCommand, "@PositionType", System.Data.DbType.Int32, (int)tradeSecuItem.PositionType);
-                        _dbHelper.AddInParameter(dbCommand, "@InstructionPreBuy", System.Data.DbType.Int32, tradeSecuItem.InstructionPreBuy);
-                        _dbHelper.AddInParameter(dbCommand, "@InstructionPreSell", System.Data.DbType.Int32, tradeSecuItem.InstructionPreSell);
-
-                        _dbHelper.AddOutParameter(dbCommand, "@RowId", System.Data.DbType.String, 20);
-
-                        ret = dbCommand.ExecuteNonQuery();
-
-                        string rowId = string.Empty;
-                        if (ret > 0)
-                        {
-                            rowId = (string)dbCommand.Parameters["@RowId"].Value;
-                        }
-                    }
-                }
-
-                transaction.Commit();
-            }
-            catch (Exception ex)
-            {
-                transaction.Rollback();
-                //TODO: add log
-                logger.Error(ex);
-                ret = -1;
-                throw;
-            }
-            finally
-            {
-                _dbHelper.Close(dbCommand.Connection);
-                transaction.Dispose();
-            }
-
+            int ret = _dbHelper.ExecuteNonQuery(dbCommand);
+            
             return ret;
         }
 
         /// <summary>
-        /// Modify the security in the tradinginstancesecurity table
+        /// Get all the TradingInstance if the input is not greater than 0. 
         /// </summary>
-        /// <param name="tradeInstance">The tradinginstance item</param>
-        /// <param name="modifiedSecuItems">Those security items only change the amount or entrust direction.</param>
-        /// <param name="cancelSecuItems">Those security items are canceled from the command.</param>
+        /// <param name="secuType"></param>
         /// <returns></returns>
-        public int Update(TradingInstance tradeInstance, List<TradingInstanceSecurity> modifiedSecuItems, List<TradingInstanceSecurity> cancelSecuItems)
+        public List<Model.UI.TradeInstance> Get(int instanceId)
         {
-            var dbCommand = _dbHelper.GetCommand();
-            _dbHelper.Open(_dbHelper.Connection);
-
-            //use transaction to execute
-            DbTransaction transaction = dbCommand.Connection.BeginTransaction();
-            dbCommand.Transaction = transaction;
-            dbCommand.CommandType = System.Data.CommandType.StoredProcedure;
-            int ret = -1;
-            try
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
+            if (instanceId > 0)
             {
-                //delete all old one
-                dbCommand.CommandText = SP_ModifyTradeInstance;
+                _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, instanceId);
+            }
 
-                _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.String, tradeInstance.InstanceId);
-                _dbHelper.AddInParameter(dbCommand, "@InstanceCode", System.Data.DbType.String, tradeInstance.InstanceCode);
-                _dbHelper.AddInParameter(dbCommand, "@MonitorUnitId", System.Data.DbType.Int32, tradeInstance.MonitorUnitId);
-                _dbHelper.AddInParameter(dbCommand, "@StockDirection", System.Data.DbType.Int32, (int)tradeInstance.StockDirection);
-                _dbHelper.AddInParameter(dbCommand, "@FuturesContract", System.Data.DbType.String, tradeInstance.FuturesContract);
-                _dbHelper.AddInParameter(dbCommand, "@FuturesDirection", System.Data.DbType.Int32, (int)tradeInstance.FuturesDirection);
-                _dbHelper.AddInParameter(dbCommand, "@OperationCopies", System.Data.DbType.Int32, tradeInstance.OperationCopies);
-                _dbHelper.AddInParameter(dbCommand, "@StockPriceType", System.Data.DbType.Int32, (int)tradeInstance.StockPriceType);
-                _dbHelper.AddInParameter(dbCommand, "@FuturesPriceType", System.Data.DbType.Int32, (int)tradeInstance.FuturesPriceType);
-                _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)TradingInstanceStatus.Active);
-                _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.Int32, tradeInstance.Owner);
-                _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
-
-                ret = dbCommand.ExecuteNonQuery();
-                if (ret > 0)
+            List<Model.UI.TradeInstance> items = new List<Model.UI.TradeInstance>();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
                 {
-                    foreach (var tradeSecuItem in modifiedSecuItems)
+                    Model.UI.TradeInstance item = new Model.UI.TradeInstance();
+                    item.InstanceId = (int)reader["InstanceId"];
+                    item.InstanceCode = (string)reader["InstanceCode"];
+                    item.PortfolioId = (int)reader["PortfolioId"];
+                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
+                    item.StockDirection = (EntrustDirection)(int)reader["StockDirection"];
+                    item.FuturesContract = (string)reader["FuturesContract"];
+                    item.FuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
+                    item.OperationCopies = (int)reader["OperationCopies"];
+                    item.StockPriceType = (StockPriceType)reader["StockPriceType"];
+                    item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
+                    item.Status = (TradeInstanceStatus)reader["Status"];
+                    item.Owner = (int)reader["Owner"];
+
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
                     {
-                        dbCommand.Parameters.Clear();
-                        dbCommand.CommandText = SP_ModifyTradeInstanceSecurityInsertOrUpdate;
-
-                        _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, tradeInstance.InstanceId);
-                        _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, tradeSecuItem.SecuCode);
-                        _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, (int)tradeSecuItem.SecuType);
-                        _dbHelper.AddInParameter(dbCommand, "@PositionType", System.Data.DbType.Int32, (int)tradeSecuItem.PositionType);
-                        _dbHelper.AddInParameter(dbCommand, "@InstructionPreBuy", System.Data.DbType.Int32, tradeSecuItem.InstructionPreBuy);
-                        _dbHelper.AddInParameter(dbCommand, "@InstructionPreSell", System.Data.DbType.Int32, tradeSecuItem.InstructionPreSell);
-
-                        _dbHelper.AddOutParameter(dbCommand, "@RowId", System.Data.DbType.String, 20);
-
-                        ret = dbCommand.ExecuteNonQuery();
-
-                        string rowId = string.Empty;
-                        if (ret > 0)
-                        {
-                            rowId = (string)dbCommand.Parameters["@RowId"].Value;
-                        }
+                        item.CreatedDate = (DateTime)reader["CreatedDate"];
                     }
 
-                    foreach (var cancelSecuItem in cancelSecuItems)
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
                     {
-                        dbCommand.Parameters.Clear();
-                        dbCommand.CommandText = SP_ModifyTradeInstanceSecurityInsertOrUpdate;
+                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+                    }
 
-                        _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, tradeInstance.InstanceId);
-                        _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, cancelSecuItem.SecuCode);
-                        _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, (int)cancelSecuItem.SecuType);
-                        _dbHelper.AddInParameter(dbCommand, "@InstructionPreBuy", System.Data.DbType.Int32, cancelSecuItem.InstructionPreBuy);
-                        _dbHelper.AddInParameter(dbCommand, "@InstructionPreSell", System.Data.DbType.Int32, cancelSecuItem.InstructionPreSell);
+                    items.Add(item);
+                }
+            }
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
 
-                        _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
+            return items;
+        }
 
-                        ret = dbCommand.ExecuteNonQuery();
+        public List<Model.UI.TradeInstance> GetAll()
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
 
-                        int id = -1;
-                        if (ret > 0)
-                        {
-                            id = (int)dbCommand.Parameters["@return"].Value;
-                        }
+            List<Model.UI.TradeInstance> items = new List<Model.UI.TradeInstance>();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    Model.UI.TradeInstance item = new Model.UI.TradeInstance();
+                    item.InstanceId = (int)reader["InstanceId"];
+                    item.InstanceCode = (string)reader["InstanceCode"];
+                    item.PortfolioId = (int)reader["PortfolioId"];
+                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
+                    item.StockDirection = (EntrustDirection)(int)reader["StockDirection"];
+                    item.FuturesContract = (string)reader["FuturesContract"];
+                    item.FuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
+                    item.OperationCopies = (int)reader["OperationCopies"];
+                    item.StockPriceType = (StockPriceType)reader["StockPriceType"];
+                    item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
+                    item.Status = (TradeInstanceStatus)reader["Status"];
+                    item.Owner = (int)reader["Owner"];
+
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+                    {
+                        item.CreatedDate = (DateTime)reader["CreatedDate"];
+                    }
+
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+                    {
+                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+                    }
+
+                    items.Add(item);
+                }
+            }
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return items;
+        }
+
+        /// <summary>
+        /// Get all the TradingInstance if the input is not greater than 0. 
+        /// </summary>
+        /// <param name="secuType"></param>
+        /// <returns></returns>
+        public Model.UI.TradeInstance Get(string instanceCode)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetByCode);
+            _dbHelper.AddInParameter(dbCommand, "@InstanceCode", System.Data.DbType.String, instanceCode);
+
+            Model.UI.TradeInstance item = new Model.UI.TradeInstance();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    item.InstanceId = (int)reader["InstanceId"];
+                    item.InstanceCode = (string)reader["InstanceCode"];
+                    item.PortfolioId = (int)reader["PortfolioId"];
+                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
+                    item.StockDirection = (EntrustDirection)(int)reader["StockDirection"];
+                    item.FuturesContract = (string)reader["FuturesContract"];
+                    item.FuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
+                    item.OperationCopies = (int)reader["OperationCopies"];
+                    item.StockPriceType = (StockPriceType)reader["StockPriceType"];
+                    item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
+                    item.Status = (TradeInstanceStatus)reader["Status"];
+                    item.Owner = (int)reader["Owner"];
+
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+                    {
+                        item.CreatedDate = (DateTime)reader["CreatedDate"];
+                    }
+
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+                    {
+                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
                     }
                 }
+            }
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
 
-                transaction.Commit();
-            }
-            catch (Exception ex)
+            return item;
+        }
+
+        public Model.UI.TradeInstance GetCombine(int instanceId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCombine);
+            _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, instanceId);
+
+            Model.UI.TradeInstance item = new Model.UI.TradeInstance();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
             {
-                transaction.Rollback();
-                //TODO: add log
-                logger.Error(ex);
-                ret = -1;
-                throw;
-            }
-            finally
-            {
-                _dbHelper.Close(dbCommand.Connection);
-                transaction.Dispose();
+                while (reader.Read())
+                {
+                    
+                    item.InstanceId = (int)reader["InstanceId"];
+                    item.InstanceCode = (string)reader["InstanceCode"];
+                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
+                    item.StockDirection = (EntrustDirection)(int)reader["StockDirection"];
+                    item.FuturesContract = (string)reader["FuturesContract"];
+                    item.FuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
+                    item.OperationCopies = (int)reader["OperationCopies"];
+                    item.StockPriceType = (StockPriceType)reader["StockPriceType"];
+                    item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
+                    item.Status = (TradeInstanceStatus)reader["Status"];
+                    item.Owner = (int)reader["Owner"];
+                    item.MonitorUnitName = (string)reader["MonitorUnitName"];
+                    item.TemplateId = (int)reader["TemplateId"];
+                    item.TemplateName = (string)reader["TemplateName"];
+                    item.PortfolioId = (int)reader["PortfolioId"];
+                    item.PortfolioCode = (string)reader["PortfolioCode"];
+                    item.PortfolioName = (string)reader["PortfolioName"];
+                    item.AccountCode = (string)reader["AccountCode"];
+                    item.AccountName = (string)reader["AccountName"];
+                    item.AssetNo = (string)reader["AssetNo"];
+                    item.AssetName = (string)reader["AssetName"];
+
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+                    {
+                        item.CreatedDate = (DateTime)reader["CreatedDate"];
+                    }
+
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+                    {
+                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+                    }
+
+                    break;
+                }
             }
 
-            return ret;
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return item;
+        }
+
+        public List<Model.UI.TradeInstance> GetCombineAll()
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCombine);
+
+            List<Model.UI.TradeInstance> items = new List<Model.UI.TradeInstance>();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    Model.UI.TradeInstance item = new Model.UI.TradeInstance();
+                    item.InstanceId = (int)reader["InstanceId"];
+                    item.InstanceCode = (string)reader["InstanceCode"];
+                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
+                    item.StockDirection = (EntrustDirection)(int)reader["StockDirection"];
+                    item.FuturesContract = (string)reader["FuturesContract"];
+                    item.FuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
+                    item.OperationCopies = (int)reader["OperationCopies"];
+                    item.StockPriceType = (StockPriceType)reader["StockPriceType"];
+                    item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
+                    item.Status = (TradeInstanceStatus)reader["Status"];
+                    item.Owner = (int)reader["Owner"];
+                    item.MonitorUnitName = (string)reader["MonitorUnitName"];
+                    item.TemplateId = (int)reader["TemplateId"];
+                    item.TemplateName = (string)reader["TemplateName"];
+                    item.PortfolioId = (int)reader["PortfolioId"];
+                    item.PortfolioCode = (string)reader["PortfolioCode"];
+                    item.PortfolioName = (string)reader["PortfolioName"];
+                    item.AccountCode = (string)reader["AccountCode"];
+                    item.AccountName = (string)reader["AccountName"];
+                    item.AssetNo = (string)reader["AssetNo"];
+                    item.AssetName = (string)reader["AssetName"];
+
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+                    {
+                        item.CreatedDate = (DateTime)reader["CreatedDate"];
+                    }
+
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+                    {
+                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+                    }
+
+                    items.Add(item);
+                }
+            }
+
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return items;
+        }
+
+        public Model.UI.TradeInstance GetCombineByCode(string instanceCode)
+        {
+            
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCombineByCode);
+            _dbHelper.AddInParameter(dbCommand, "@InstanceCode", System.Data.DbType.String, instanceCode);
+
+            Model.UI.TradeInstance item = new Model.UI.TradeInstance();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    item.InstanceId = (int)reader["InstanceId"];
+                    item.InstanceCode = (string)reader["InstanceCode"];
+                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
+                    item.StockDirection = (EntrustDirection)(int)reader["StockDirection"];
+                    item.FuturesContract = (string)reader["FuturesContract"];
+                    item.FuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
+                    item.OperationCopies = (int)reader["OperationCopies"];
+                    item.StockPriceType = (StockPriceType)reader["StockPriceType"];
+                    item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
+                    item.Status = (TradeInstanceStatus)reader["Status"];
+                    item.Owner = (int)reader["Owner"];
+                    item.MonitorUnitName = (string)reader["MonitorUnitName"];
+                    item.TemplateId = (int)reader["TemplateId"];
+                    item.TemplateName = (string)reader["TemplateName"];
+                    item.PortfolioId = (int)reader["PortfolioId"];
+                    item.PortfolioCode = (string)reader["PortfolioCode"];
+                    item.PortfolioName = (string)reader["PortfolioName"];
+                    item.AccountCode = (string)reader["AccountCode"];
+                    item.AccountName = (string)reader["AccountName"];
+                    item.AssetNo = (string)reader["AssetNo"];
+                    item.AssetName = (string)reader["AssetName"];
+
+                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+                    {
+                        item.CreatedDate = (DateTime)reader["CreatedDate"];
+                    }
+
+                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+                    {
+                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+                    }
+                }
+            }
+
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return item;
+        }
+
+        public int Exist(string instanceCode)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Exist);
+            _dbHelper.AddInParameter(dbCommand, "@InstanceCode", System.Data.DbType.String, instanceCode);
+
+            _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
+
+            int ret = _dbHelper.ExecuteNonQuery(dbCommand);
+
+            int existed = -1;
+            if (ret > 0)
+            {
+                existed = (int)dbCommand.Parameters["@return"].Value;
+            }
+
+            return existed;
         }
     }
 }

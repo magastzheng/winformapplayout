@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Model.UI
 {
-    public class TradingInstanceSecurity
+    public class TradeInstanceSecurity
     {
         public int InstanceId { get; set; }
 

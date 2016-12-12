@@ -11,11 +11,11 @@ namespace DBAccess.TradeCommand
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private const string SP_CreateTradeCommand = "procTradingCommandInsert";
-        private const string SP_ModifyTradeCommand = "procTradingCommandUpdate";
-        private const string SP_CreateTradingSecurity = "procTradingCommandSecurityInsert";
-        private const string SP_ModifyTradingSecurity = "procTradingCommandSecurityInsertOrUpdate";
-        private const string SP_DeleteTradingSecurity = "procTradingCommandSecurityDelete";
+        private const string SP_CreateTradeCommand = "procTradeCommandInsert";
+        private const string SP_ModifyTradeCommand = "procTradeCommandUpdate";
+        private const string SP_CreateTradingSecurity = "procTradeCommandSecurityInsert";
+        private const string SP_ModifyTradingSecurity = "procTradeCommandSecurityInsertOrUpdate";
+        private const string SP_DeleteTradingSecurity = "procTradeCommandSecurityDelete";
 
         public CommandDAO()
             : base()
@@ -30,7 +30,7 @@ namespace DBAccess.TradeCommand
         }
 
         /// <summary>
-        /// Create the TradingCommand and TradingCommandSecurity by Transaction.
+        /// Create the TradeCommand and TradeCommandSecurity by Transaction.
         /// </summary>
         /// <param name="cmdItem"></param>
         /// <param name="secuItems"></param>

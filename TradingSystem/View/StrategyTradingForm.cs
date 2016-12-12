@@ -66,7 +66,7 @@ namespace TradingSystem.View
         private EntrustSecurityBLL _entrustSecurityBLL = new EntrustSecurityBLL();
         private ProductBLL _productBLL = new ProductBLL();
 
-        private SortableBindingList<TradingCommandItem> _cmdDataSource = new SortableBindingList<TradingCommandItem>(new List<TradingCommandItem>());
+        private SortableBindingList<TradeCommandItem> _cmdDataSource = new SortableBindingList<TradeCommandItem>(new List<TradeCommandItem>());
         private SortableBindingList<EntrustFlowItem> _efDataSource = new SortableBindingList<EntrustFlowItem>(new List<EntrustFlowItem>());
         private SortableBindingList<DealFlowItem> _dfDataSource = new SortableBindingList<DealFlowItem>(new List<DealFlowItem>());
         private SortableBindingList<EntrustItem> _eiDataSource = new SortableBindingList<EntrustItem>(new List<EntrustItem>());
@@ -332,7 +332,7 @@ namespace TradingSystem.View
             //}
         }
 
-        private void GridView_Command_Cancel(TradingCommandItem cmdItem)
+        private void GridView_Command_Cancel(TradeCommandItem cmdItem)
         {
             var cancelEntrustCmdItems = _withdrawBLL.CancelOne(cmdItem, new CallerCallback(CancelOneCallback));
 
@@ -405,7 +405,7 @@ namespace TradingSystem.View
             this.securityGridView.Invalidate();
         }
 
-        private void GridView_Command_CancelAdd(TradingCommandItem cmdItem)
+        private void GridView_Command_CancelAdd(TradeCommandItem cmdItem)
         {
             //Reset some columns
             var secuItems = _secuDataSource.Where(p => p.CommandId == cmdItem.CommandId);
@@ -506,7 +506,7 @@ namespace TradingSystem.View
             if (rowIndex < 0 || rowIndex >= _cmdDataSource.Count)
                 return;
 
-            TradingCommandItem cmdItem = _cmdDataSource[rowIndex];
+            TradeCommandItem cmdItem = _cmdDataSource[rowIndex];
 
             switch (direction)
             {
@@ -553,7 +553,7 @@ namespace TradingSystem.View
             }
         }
 
-        private void GridView_Command_Select(TradingCommandItem cmdItem)
+        private void GridView_Command_Select(TradeCommandItem cmdItem)
         {
             var spotBuyPrice = PriceTypeHelper.GetPriceType(this.cbSpotBuyPrice);
             var spotSellPrice = PriceTypeHelper.GetPriceType(this.cbSpotSellPrice);
@@ -599,7 +599,7 @@ namespace TradingSystem.View
             }
         }
 
-        private void GridView_Command_UnSelect(TradingCommandItem cmdItem)
+        private void GridView_Command_UnSelect(TradeCommandItem cmdItem)
         {
             //Remove from Security GridView
             var secuItems = _secuDataSource.Where(p => p.CommandId == cmdItem.CommandId).ToList();
@@ -699,7 +699,7 @@ namespace TradingSystem.View
         {
             //Load Command Trading
             TSDataGridViewHelper.AddColumns(this.cmdGridView, _gridConfig.GetGid(GridCmdTradingId));
-            Dictionary<string, string> cmdColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(TradingCommandItem));
+            Dictionary<string, string> cmdColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(TradeCommandItem));
             TSDataGridViewHelper.SetDataBinding(this.cmdGridView, cmdColDataMap);           
 
             //Load EntrustFlow gridview

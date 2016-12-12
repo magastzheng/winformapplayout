@@ -1159,7 +1159,7 @@ namespace TradingSystem.View
 
         #region add security
 
-        private void AddSecurity(TradingInstanceSecurity secuItem, ClosePositionItem closeItem)
+        private void AddSecurity(TradeInstanceSecurity secuItem, ClosePositionItem closeItem)
         {
             ClosePositionSecurityItem closeSecuItem = new ClosePositionSecurityItem
             {

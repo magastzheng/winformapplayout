@@ -12,7 +12,7 @@ namespace BLL.TradeInstance
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private TradingInstanceAdjustmentDAO _tradeinstadjustmentdao = new TradingInstanceAdjustmentDAO();
+        private TradeInstanceAdjustmentDAO _tradeinstadjustmentdao = new TradeInstanceAdjustmentDAO();
         private PermissionManager _permissionManager = new PermissionManager();
 
         public TradingInstanceAdjustmentBLL()
@@ -22,7 +22,7 @@ namespace BLL.TradeInstance
 
         #region public method
 
-        public int Create(List<TradingInstanceAdjustmentItem> items)
+        public int Create(List<TradeInstanceAdjustmentItem> items)
         {
             foreach (var item in items)
             {
@@ -33,7 +33,7 @@ namespace BLL.TradeInstance
         }
 
         //Add new record into the table and then add the permission for the user.
-        public int Create(TradingInstanceAdjustmentItem item)
+        public int Create(TradeInstanceAdjustmentItem item)
         {
             int id = _tradeinstadjustmentdao.Create(item);
             int finalId = -1;
@@ -69,11 +69,11 @@ namespace BLL.TradeInstance
             }
         }
 
-        public List<TradingInstanceAdjustmentItem> GetAll()
+        public List<TradeInstanceAdjustmentItem> GetAll()
         {
             int userId = LoginManager.Instance.GetUserId();
             var allItems = _tradeinstadjustmentdao.GetAll();
-            var items = new List<TradingInstanceAdjustmentItem>();
+            var items = new List<TradeInstanceAdjustmentItem>();
             foreach (var item in allItems)
             {
                 if (_permissionManager.HasPermission(userId, item.Id, ResourceType.TradeInstanceAdjustment, PermissionMask.View))

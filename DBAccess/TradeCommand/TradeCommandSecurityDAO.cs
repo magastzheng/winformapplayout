@@ -6,21 +6,21 @@ using System.Collections.Generic;
 
 namespace DBAccess.TradeCommand
 {
-    public class TradingCommandSecurityDAO: BaseDAO
+    public class TradeCommandSecurityDAO: BaseDAO
     {
-        private const string SP_Create = "procTradingCommandSecurityInsert";
-        private const string SP_Modify = "procTradingCommandSecurityInsertOrUpdate";
-        //private const string SP_ModifyEntrustAmount = "procTradingCommandSecurityUpdateEntrustAmount";
-        private const string SP_Delete = "procTradingCommandSecurityDelete";
-        private const string SP_Get = "procTradingCommandSecuritySelect";
+        private const string SP_Create = "procTradeCommandSecurityInsert";
+        private const string SP_Modify = "procTradeCommandSecurityInsertOrUpdate";
+        //private const string SP_ModifyEntrustAmount = "procTradeCommandSecurityUpdateEntrustAmount";
+        private const string SP_Delete = "procTradeCommandSecurityDelete";
+        private const string SP_Get = "procTradeCommandSecuritySelect";
 
-        public TradingCommandSecurityDAO()
+        public TradeCommandSecurityDAO()
             : base()
         { 
             
         }
 
-        public TradingCommandSecurityDAO(DbHelper dbHelper)
+        public TradeCommandSecurityDAO(DbHelper dbHelper)
             : base(dbHelper)
         { 
             

@@ -1,9 +1,9 @@
 use tradingsystem
 
-if object_id('tradinginstance') is not null
-drop table tradinginstance
+if object_id('tradeinstance') is not null
+drop table tradeinstance
 
-create table tradinginstance(
+create table tradeinstance(
 	InstanceId			int identity(1, 1) primary key	--交易实例ID
 	,InstanceCode		varchar(20)						--交易实例代码
 	,PortfolioId		int								--组合ID,唯一确定交易实例和组合之间的关系
@@ -24,11 +24,11 @@ create table tradinginstance(
 )
 
 go
-if exists (select name from sysobjects where name='procTradingInstanceInsert')
-drop proc procTradingInstanceInsert
+if exists (select name from sysobjects where name='procTradeInstanceInsert')
+drop proc procTradeInstanceInsert
 
 go
-create proc procTradingInstanceInsert(
+create proc procTradeInstanceInsert(
 	@InstanceCode		varchar(20)
 	,@PortfolioId		int
 	,@MonitorUnitId		int
@@ -45,7 +45,7 @@ create proc procTradingInstanceInsert(
 as
 begin
 	declare @newid int
-	insert into tradinginstance(
+	insert into tradeinstance(
 		InstanceCode	
 		,PortfolioId	
 		,MonitorUnitId		
@@ -79,11 +79,11 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procTradingInstanceUpdate')
-drop proc procTradingInstanceUpdate
+if exists (select name from sysobjects where name='procTradeInstanceUpdate')
+drop proc procTradeInstanceUpdate
 
 go
-create proc procTradingInstanceUpdate(
+create proc procTradeInstanceUpdate(
 	@InstanceId			int
 	,@InstanceCode		varchar(20)
 	,@MonitorUnitId		int
@@ -110,7 +110,7 @@ begin
 		,@OldFuturesDirection = FuturesDirection
 		,@OldOperationCopies = OperationCopies
 		--,@OldStockPriceType = StockPriceType
-	from tradinginstance
+	from tradeinstance
 	where InstanceId=@InstanceId 
 
 	if @MonitorUnitId = 0 or @MonitorUnitId < 0
@@ -134,7 +134,7 @@ begin
 	end
 
 	--不可修改PortfolioId
-	update tradinginstance
+	update tradeinstance
 	set			
 		InstanceCode		= @InstanceCode
 		,MonitorUnitId		= @MonitorUnitId
@@ -151,11 +151,11 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procTradingInstanceSelect')
-drop proc procTradingInstanceSelect
+if exists (select name from sysobjects where name='procTradeInstanceSelect')
+drop proc procTradeInstanceSelect
 
 go
-create proc procTradingInstanceSelect(
+create proc procTradeInstanceSelect(
 	@InstanceId	int = NULL
 )
 as
@@ -177,7 +177,7 @@ begin
 			,Owner				
 			,CreatedDate		
 			,ModifiedDate		
-		from tradinginstance
+		from tradeinstance
 		where InstanceId=@InstanceId
 	end
 	else
@@ -197,29 +197,29 @@ begin
 			,Owner				
 			,CreatedDate		
 			,ModifiedDate		
-		from tradinginstance
+		from tradeinstance
 	end
 end
 
 go
-if exists (select name from sysobjects where name='procTradingInstanceDelete')
-drop proc procTradingInstanceDelete
+if exists (select name from sysobjects where name='procTradeInstanceDelete')
+drop proc procTradeInstanceDelete
 
 go
-create proc procTradingInstanceDelete(
+create proc procTradeInstanceDelete(
 	@InstanceId	int = NULL
 )
 as
 begin
-	delete from tradinginstance where InstanceId=@InstanceId
+	delete from tradeinstance where InstanceId=@InstanceId
 end
 
 go
-if exists (select name from sysobjects where name='procTradingInstanceSelectByCode')
-drop proc procTradingInstanceSelectByCode
+if exists (select name from sysobjects where name='procTradeInstanceSelectByCode')
+drop proc procTradeInstanceSelectByCode
 
 go
-create proc procTradingInstanceSelectByCode(
+create proc procTradeInstanceSelectByCode(
 	@InstanceCode varchar(20)
 )
 as
@@ -239,33 +239,33 @@ begin
 		,Owner				
 		,CreatedDate		
 		,ModifiedDate		
-	from tradinginstance
+	from tradeinstance
 	where InstanceCode=@InstanceCode
 end
 
 go
-if exists (select name from sysobjects where name='procTradingInstanceExist')
-drop proc procTradingInstanceExist
+if exists (select name from sysobjects where name='procTradeInstanceExist')
+drop proc procTradeInstanceExist
 
 go
-create proc procTradingInstanceExist(
+create proc procTradeInstanceExist(
 	@InstanceCode varchar(20)
 )
 as
 begin
 	declare @total int
 	set @total = (select count(InstanceId)		
-					from tradinginstance
+					from tradeinstance
 					where InstanceCode=@InstanceCode)
 	return @total
 end
 
 go
-if exists (select name from sysobjects where name='procTradingInstanceSelectCombine')
-drop proc procTradingInstanceSelectCombine
+if exists (select name from sysobjects where name='procTradeInstanceSelectCombine')
+drop proc procTradeInstanceSelectCombine
 
 go
-create proc procTradingInstanceSelectCombine(
+create proc procTradeInstanceSelectCombine(
 	@InstanceId	int = NULL
 )
 as
@@ -296,7 +296,7 @@ begin
 			,c.MonitorUnitName	
 			,d.TemplateId
 			,d.TemplateName
-		from tradinginstance a
+		from tradeinstance a
 		inner join ufxportfolio b
 		on a.PortfolioId=b.PortfolioId
 		inner join monitorunit c
@@ -331,7 +331,7 @@ begin
 			,c.MonitorUnitName	
 			,d.TemplateId
 			,d.TemplateName
-		from tradinginstance a
+		from tradeinstance a
 		inner join ufxportfolio b
 		on a.PortfolioId=b.PortfolioId
 		inner join monitorunit c
@@ -342,11 +342,11 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procTradingInstanceSelectCombineByCode')
-drop proc procTradingInstanceSelectCombineByCode
+if exists (select name from sysobjects where name='procTradeInstanceSelectCombineByCode')
+drop proc procTradeInstanceSelectCombineByCode
 
 go
-create proc procTradingInstanceSelectCombineByCode(
+create proc procTradeInstanceSelectCombineByCode(
 	@InstanceCode varchar(20)
 )
 as
@@ -375,7 +375,7 @@ begin
 		,c.MonitorUnitName	
 		,d.TemplateId
 		,d.TemplateName
-	from tradinginstance a
+	from tradeinstance a
 	inner join ufxportfolio b
 	on a.PortfolioId=b.PortfolioId
 	inner join monitorunit c

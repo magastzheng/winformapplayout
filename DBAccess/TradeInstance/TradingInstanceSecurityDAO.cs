@@ -33,7 +33,7 @@ namespace DBAccess.TradeInstance
             
         }
 
-        public string Create(TradingInstanceSecurity securityItem)
+        public string Create(TradeInstanceSecurity securityItem)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
             _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, securityItem.InstanceId);
@@ -56,7 +56,7 @@ namespace DBAccess.TradeInstance
             return rowId;
         }
 
-        public int UpdateBuyToday(TradingInstanceSecurity securityItem)
+        public int UpdateBuyToday(TradeInstanceSecurity securityItem)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyBuyToday);
             _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, securityItem.InstanceId);
@@ -68,7 +68,7 @@ namespace DBAccess.TradeInstance
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public int UpdateSellToday(TradingInstanceSecurity securityItem)
+        public int UpdateSellToday(TradeInstanceSecurity securityItem)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifySellToday);
             _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, securityItem.InstanceId);
@@ -80,7 +80,7 @@ namespace DBAccess.TradeInstance
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public int UpdatePreTrade(TradingInstanceSecurity securityItem)
+        public int UpdatePreTrade(TradeInstanceSecurity securityItem)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyPreTrade);
             _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, securityItem.InstanceId);
@@ -91,7 +91,7 @@ namespace DBAccess.TradeInstance
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public int Delete(TradingInstanceSecurity securityItem)
+        public int Delete(TradeInstanceSecurity securityItem)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Delete);
             _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, securityItem.InstanceId);
@@ -100,18 +100,18 @@ namespace DBAccess.TradeInstance
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public List<TradingInstanceSecurity> Get(int instanceId)
+        public List<TradeInstanceSecurity> Get(int instanceId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
             _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, instanceId);
 
-            List<TradingInstanceSecurity> items = new List<TradingInstanceSecurity>();
+            List<TradeInstanceSecurity> items = new List<TradeInstanceSecurity>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    TradingInstanceSecurity item = new TradingInstanceSecurity();
+                    TradeInstanceSecurity item = new TradeInstanceSecurity();
                     item.InstanceId = (int)reader["InstanceId"];
                     item.SecuCode = (string)reader["SecuCode"];
                     item.SecuType = (SecurityType)reader["SecuType"];
@@ -161,7 +161,7 @@ namespace DBAccess.TradeInstance
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public int Transfer(List<TradingInstanceSecurity> destSecuItem, List<TradingInstanceSecurity> srcSecuItem)
+        public int Transfer(List<TradeInstanceSecurity> destSecuItem, List<TradeInstanceSecurity> srcSecuItem)
         {
             var dbCommand = _dbHelper.GetCommand();
             _dbHelper.Open(_dbHelper.Connection);

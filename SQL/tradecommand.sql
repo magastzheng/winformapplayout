@@ -1,9 +1,9 @@
 use tradingsystem
 
-if object_id('tradingcommand') is not null
-drop table tradingcommand
+if object_id('tradecommand') is not null
+drop table tradecommand
 
-create table tradingcommand(
+create table tradecommand(
 	CommandId			int identity(1, 1) primary key	--指令序号
 	,InstanceId			int not null					--交易实例ID
 	,CommandNum			int								--指令份数
@@ -27,14 +27,14 @@ create table tradingcommand(
 )
 
 --====================================
---tradingcommand table
+--tradecommand table
 --====================================
 go
-if exists (select name from sysobjects where name='procTradingCommandInsert')
-drop proc procTradingCommandInsert
+if exists (select name from sysobjects where name='procTradeCommandInsert')
+drop proc procTradeCommandInsert
 
 go
-create proc procTradingCommandInsert(
+create proc procTradeCommandInsert(
 	@InstanceId			int	
 	,@CommandNum		int
 	,@CommandType		int	
@@ -52,7 +52,7 @@ create proc procTradingCommandInsert(
 as
 begin
 	declare @newid int
-	insert into tradingcommand(
+	insert into tradecommand(
 		InstanceId	
 		,CommandNum	
 		,CommandStatus
@@ -92,11 +92,11 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procTradingCommandUpdate')
-drop proc procTradingCommandUpdate
+if exists (select name from sysobjects where name='procTradeCommandUpdate')
+drop proc procTradeCommandUpdate
 
 go
-create proc procTradingCommandUpdate(
+create proc procTradeCommandUpdate(
 	@CommandId			int
 	,@CommandStatus		int	
 	,@ModifiedDate		datetime
@@ -111,7 +111,7 @@ begin
 
 	declare @ModifiedTimes int
 	set @ModifiedTimes = (select ModifiedTimes 
-						from tradingcommand
+						from tradecommand
 						where CommandId=@CommandId)
 	if @ModifiedTimes is not null
 	begin
@@ -124,7 +124,7 @@ begin
 
 	if @CommandStatus = 3
 	begin
-		update tradingcommand
+		update tradecommand
 		set			
 			CommandStatus		= @CommandStatus
 			,ModifiedTimes		= @ModifiedTimes
@@ -138,7 +138,7 @@ begin
 	end
 	else
 	begin
-		update tradingcommand
+		update tradecommand
 		set			
 			CommandStatus		= @CommandStatus
 			,ModifiedTimes		= @ModifiedTimes
@@ -152,11 +152,11 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procTradingCommandUpdateStatus')
-drop proc procTradingCommandUpdateStatus
+if exists (select name from sysobjects where name='procTradeCommandUpdateStatus')
+drop proc procTradeCommandUpdateStatus
 
 go
-create proc procTradingCommandUpdateStatus(
+create proc procTradeCommandUpdateStatus(
 	@CommandId			int
 	,@EntrustStatus		int
 	,@DealStatus		int	
@@ -164,7 +164,7 @@ create proc procTradingCommandUpdateStatus(
 )
 as
 begin
-	update tradingcommand
+	update tradecommand
 	set			
 		EntrustStatus		= @EntrustStatus
 		,DealStatus			= @DealStatus
@@ -173,27 +173,27 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procTradingCommandDelete')
-drop proc procTradingCommandDelete
+if exists (select name from sysobjects where name='procTradeCommandDelete')
+drop proc procTradeCommandDelete
 
 go
-create proc procTradingCommandDelete(
+create proc procTradeCommandDelete(
 	@CommandId			int
 )
 as
 begin
-	--TODO:delete the tradingcommandsecurity
-	delete from tradingcommandsecurity where CommandId=@CommandId
+	--TODO:delete the tradecommandsecurity
+	delete from tradecommandsecurity where CommandId=@CommandId
 
-	delete from tradingcommand where CommandId=@CommandId
+	delete from tradecommand where CommandId=@CommandId
 end
 
 go
-if exists (select name from sysobjects where name='procTradingCommandSelectCombine')
-drop proc procTradingCommandSelectCombine
+if exists (select name from sysobjects where name='procTradeCommandSelectCombine')
+drop proc procTradeCommandSelectCombine
 
 go
-create proc procTradingCommandSelectCombine(
+create proc procTradeCommandSelectCombine(
 	@CommandId			int
 )
 as
@@ -232,8 +232,8 @@ begin
 			,d.AccountCode
 			,d.AccountName
 			,e.TemplateName
-		from tradingcommand a
-		inner join tradinginstance b
+		from tradecommand a
+		inner join tradeinstance b
 		on a.InstanceId = b.InstanceId
 		inner join monitorunit c
 		on b.MonitorUnitId = c.MonitorUnitId
@@ -277,8 +277,8 @@ begin
 			,d.AccountCode
 			,d.AccountName
 			,e.TemplateName
-		from tradingcommand a
-		inner join tradinginstance b
+		from tradecommand a
+		inner join tradeinstance b
 		on a.InstanceId = b.InstanceId
 		inner join monitorunit c
 		on b.MonitorUnitId = c.MonitorUnitId

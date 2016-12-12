@@ -90,7 +90,7 @@
     <Compile Include="EntrustParam.cs" />
     <Compile Include="config\FieldConfigItem.cs" />
     <Compile Include="EnumType\TemplateStatus.cs" />
-    <Compile Include="EnumType\TradingInstanceStatus.cs" />
+    <Compile Include="EnumType\TradeInstanceStatus.cs" />
     <Compile Include="FieldRequireType.cs" />
     <Compile Include="FunctionCode.cs" />
     <Compile Include="config\FunctionConfigItem.cs" />
@@ -152,7 +152,7 @@
     <Compile Include="UI\InstanceItem.cs" />
     <Compile Include="UI\ModifySecurityItem.cs" />
     <Compile Include="UI\SourceHoldingItem.cs" />
-    <Compile Include="UI\TradingCommandItem.cs" />
+    <Compile Include="UI\TradeCommandItem.cs" />
     <Compile Include="UI\AssetUnit.cs" />
     <Compile Include="UI\Fund.cs" />
     <Compile Include="UI\FuturesContract.cs" />
@@ -163,10 +163,10 @@
     <Compile Include="UI\Portfolio.cs" />
     <Compile Include="UI\StockTemplate.cs" />
     <Compile Include="UI\TemplateStock.cs" />
-    <Compile Include="EnumType\TradingCommandType.cs" />
-    <Compile Include="UI\TradingInstance.cs" />
-    <Compile Include="UI\TradingInstanceAdjustmentItem.cs" />
-    <Compile Include="UI\TradingInstanceSecurity.cs" />
+    <Compile Include="EnumType\TradeCommandType.cs" />
+    <Compile Include="UI\TradeInstance.cs" />
+    <Compile Include="UI\TradeInstanceAdjustmentItem.cs" />
+    <Compile Include="UI\TradeInstanceSecurity.cs" />
     <Compile Include="UsageTracking\ActionType.cs" />
     <Compile Include="UsageTracking\UserActionTracking.cs" />
     <Compile Include="User.cs" />

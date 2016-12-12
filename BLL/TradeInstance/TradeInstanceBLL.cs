@@ -14,9 +14,9 @@ namespace BLL.TradeInstance
 {
     public class TradeInstanceBLL
     {
-        private TradingInstanceDAO _tradinginstancedao = new TradingInstanceDAO();
+        private TradeInstanceDAO _tradinginstancedao = new TradeInstanceDAO();
         private TradingInstanceSecurityDAO _tradeinstsecudao = new TradingInstanceSecurityDAO();
-        private TradeInstanceDAO _tradeinstancedao = new TradeInstanceDAO();
+        private TradeInstanceTransactionDAO _tradeinstancedao = new TradeInstanceTransactionDAO();
         private ProductBLL _productBLL = new ProductBLL();
         private PermissionManager _permissionManager = new PermissionManager();
 
@@ -24,7 +24,7 @@ namespace BLL.TradeInstance
         { 
         }
 
-        public int Create(TradingInstance tradeInstance, OpenPositionItem openItem, List<OpenPositionSecurityItem> secuItems)
+        public int Create(Model.UI.TradeInstance tradeInstance, OpenPositionItem openItem, List<OpenPositionSecurityItem> secuItems)
         {
             var tradeinstSecus = GetTradingInstanceSecurities(tradeInstance, openItem, secuItems);
             int ret = _tradeinstancedao.Create(tradeInstance, tradeinstSecus);
@@ -42,7 +42,7 @@ namespace BLL.TradeInstance
             }
         }
 
-        public int Update(TradingInstance tradeInstance, OpenPositionItem openItem, List<OpenPositionSecurityItem> secuItems)
+        public int Update(Model.UI.TradeInstance tradeInstance, OpenPositionItem openItem, List<OpenPositionSecurityItem> secuItems)
         {
             int userId = LoginManager.Instance.GetUserId();
             if (_permissionManager.HasPermission(userId, tradeInstance.InstanceId, ResourceType.TradeInstance, PermissionMask.Edit))
@@ -56,7 +56,7 @@ namespace BLL.TradeInstance
             }
         }
 
-        public int Update(TradingInstance tradeInstance, ClosePositionItem closeItem, List<ClosePositionSecurityItem> secuItems)
+        public int Update(Model.UI.TradeInstance tradeInstance, ClosePositionItem closeItem, List<ClosePositionSecurityItem> secuItems)
         {
             int userId = LoginManager.Instance.GetUserId();
             if (_permissionManager.HasPermission(userId, tradeInstance.InstanceId, ResourceType.TradeInstance, PermissionMask.Edit))
@@ -70,7 +70,7 @@ namespace BLL.TradeInstance
             }
         }
 
-        public int Update(TradingInstance tradeInstance, List<TradingInstanceSecurity> modifiedSecuItems, List<TradingInstanceSecurity> cancelSecuItems)
+        public int Update(Model.UI.TradeInstance tradeInstance, List<TradeInstanceSecurity> modifiedSecuItems, List<TradeInstanceSecurity> cancelSecuItems)
         { 
             int userId = LoginManager.Instance.GetUserId();
             if (_permissionManager.HasPermission(userId, tradeInstance.InstanceId, ResourceType.TradeInstance, PermissionMask.Edit))
@@ -83,7 +83,7 @@ namespace BLL.TradeInstance
             }
         }
 
-        public TradingInstance GetInstance(int instanceId)
+        public Model.UI.TradeInstance GetInstance(int instanceId)
         {
             int userId = LoginManager.Instance.GetUserId();
 
@@ -93,11 +93,11 @@ namespace BLL.TradeInstance
             }
             else
             {
-                return new TradingInstance();
+                return new Model.UI.TradeInstance();
             }
         }
 
-        public TradingInstance GetInstance(string instanceCode)
+        public Model.UI.TradeInstance GetInstance(string instanceCode)
         {
             int userId = LoginManager.Instance.GetUserId();
             var instance = _tradinginstancedao.GetCombineByCode(instanceCode);
@@ -107,15 +107,15 @@ namespace BLL.TradeInstance
             }
             else
             {
-                return new TradingInstance();
+                return new Model.UI.TradeInstance();
             }
         }
 
-        public List<TradingInstance> GetAllInstance()
+        public List<Model.UI.TradeInstance> GetAllInstance()
         {
             int userId = LoginManager.Instance.GetUserId();
             var allInstances = _tradinginstancedao.GetCombineAll();
-            var instances = new List<TradingInstance>();
+            var instances = new List<Model.UI.TradeInstance>();
             foreach (var instance in allInstances)
             {
                 if (_permissionManager.HasPermission(userId, instance.InstanceId, ResourceType.TradeInstance, PermissionMask.View))
@@ -127,7 +127,7 @@ namespace BLL.TradeInstance
             return instances;
         }
 
-        public List<TradingInstance> GetPortfolioInstance(string portfolioCode)
+        public List<Model.UI.TradeInstance> GetPortfolioInstance(string portfolioCode)
         {
             var allInstances = GetAllInstance();
             var portInstances = allInstances.Where(p => p.PortfolioCode.Equals(portfolioCode));
@@ -187,12 +187,12 @@ namespace BLL.TradeInstance
 
         #region
 
-        private List<TradingInstanceSecurity> GetTradingInstanceSecurities(TradingInstance tradingInstance, OpenPositionItem openItem, List<OpenPositionSecurityItem> secuItems)
+        private List<TradeInstanceSecurity> GetTradingInstanceSecurities(Model.UI.TradeInstance tradingInstance, OpenPositionItem openItem, List<OpenPositionSecurityItem> secuItems)
         {
-            List<TradingInstanceSecurity> tradeInstanceSecuItems = new List<TradingInstanceSecurity>();
+            List<TradeInstanceSecurity> tradeInstanceSecuItems = new List<TradeInstanceSecurity>();
             foreach (var item in secuItems)
             {
-                TradingInstanceSecurity tiSecuItem = new TradingInstanceSecurity
+                TradeInstanceSecurity tiSecuItem = new TradeInstanceSecurity
                 {
                     InstanceId = tradingInstance.InstanceId,
                     SecuCode = item.SecuCode,
@@ -216,12 +216,12 @@ namespace BLL.TradeInstance
             return tradeInstanceSecuItems;
         }
 
-        private List<TradingInstanceSecurity> GetTradingInstanceSecurities(TradingInstance tradingInstance, ClosePositionItem closeItem, List<ClosePositionSecurityItem> closeSecuItems)
+        private List<TradeInstanceSecurity> GetTradingInstanceSecurities(Model.UI.TradeInstance tradingInstance, ClosePositionItem closeItem, List<ClosePositionSecurityItem> closeSecuItems)
         {
-            List<TradingInstanceSecurity> tradeInstanceSecuItems = new List<TradingInstanceSecurity>();
+            List<TradeInstanceSecurity> tradeInstanceSecuItems = new List<TradeInstanceSecurity>();
             foreach (var item in closeSecuItems)
             {
-                TradingInstanceSecurity tiSecuItem = new TradingInstanceSecurity
+                TradeInstanceSecurity tiSecuItem = new TradeInstanceSecurity
                 {
                     InstanceId = tradingInstance.InstanceId,
                     SecuCode = item.SecuCode
@@ -248,7 +248,7 @@ namespace BLL.TradeInstance
             return tradeInstanceSecuItems;
         }
 
-        private void SetPreItem(TradingInstanceSecurity tiSecuItem, EntrustDirection direction, int entrustAmount)
+        private void SetPreItem(TradeInstanceSecurity tiSecuItem, EntrustDirection direction, int entrustAmount)
         {
             switch (tiSecuItem.SecuType)
             {

@@ -17,7 +17,7 @@ namespace BLL.TradeCommand
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private TradingCommandSecurityDAO _tradecmdsecudao = new TradingCommandSecurityDAO();
+        private TradeCommandSecurityDAO _tradecmdsecudao = new TradeCommandSecurityDAO();
 
         private EntrustSecurityBLL _entrustSecurityBLL = new EntrustSecurityBLL();
 
@@ -37,7 +37,7 @@ namespace BLL.TradeCommand
             return _tradecmdsecudao.Get(commandId);
         }
 
-        public List<CommandSecurityItem> GetCommandSecurityItems(TradingCommandItem cmdItem)
+        public List<CommandSecurityItem> GetCommandSecurityItems(TradeCommandItem cmdItem)
         {
             List<CommandSecurityItem> finalSecuItems = new List<CommandSecurityItem>();
             var cmdSecuItems = GetTradeCommandSecurities(cmdItem.CommandId);

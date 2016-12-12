@@ -3,7 +3,7 @@ using System;
 
 namespace Model.UI
 {
-    public class TradingInstance
+    public class TradeInstance
     {
         public int InstanceId { get; set; }
 
@@ -23,7 +23,7 @@ namespace Model.UI
 
         public FuturesPriceType FuturesPriceType { get; set; }
 
-        public TradingInstanceStatus Status { get; set; }
+        public TradeInstanceStatus Status { get; set; }
 
         public int Owner { get; set; }
 

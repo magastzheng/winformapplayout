@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Model.Database
 {
     /// <summary>
-    /// 对应数据库中的表：tradingcommandsecurity
+    /// 对应数据库中的表：tradecommandsecurity
     /// </summary>
     public class TradeCommandSecurity
     {

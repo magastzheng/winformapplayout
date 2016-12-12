@@ -1,7 +1,7 @@
 ﻿
 namespace Model.EnumType
 {
-    public enum TradingInstanceStatus
+    public enum TradeInstanceStatus
     {
         Inactive = 0,
         Active = 1,

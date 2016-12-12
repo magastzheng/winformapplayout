@@ -9,7 +9,7 @@ namespace Model.UI
     /// <summary>
     /// 对应数据库中的表：tradingcommand，并关联这些表tradinginstance，monitorunit，ufxportfolio获取辅助信息
     /// </summary>
-    public class TradingCommandItem
+    public class TradeCommandItem
     {
         //选中
         [BindingAttribute("selection")]

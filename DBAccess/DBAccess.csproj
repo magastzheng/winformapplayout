@@ -49,7 +49,7 @@
     <Compile Include="SecurityInfo\BenchmarkDAO.cs" />
     <Compile Include="Template\HistoricalTemplateDAO.cs" />
     <Compile Include="Template\HistoricalTemplateStockDAO.cs" />
-    <Compile Include="TradeCommand\ArchiveTradingCommandDAO.cs" />
+    <Compile Include="TradeCommand\ArchiveTradeCommandDAO.cs" />
     <Compile Include="TradeCommand\CommandDAO.cs" />
     <Compile Include="DbHelper.cs" />
     <Compile Include="DealSecurityDAO.cs" />
@@ -71,11 +71,11 @@
     <Compile Include="SecurityInfo\SecurityInfoDAO.cs" />
     <Compile Include="Template\StockTemplateDAO.cs" />
     <Compile Include="Template\TemplateStockDAO.cs" />
+    <Compile Include="TradeInstance\TradeInstanceTransactionDAO.cs" />
+    <Compile Include="TradeCommand\TradeCommandDAO.cs" />
+    <Compile Include="TradeCommand\TradeCommandSecurityDAO.cs" />
+    <Compile Include="TradeInstance\TradeInstanceAdjustmentDAO.cs" />
     <Compile Include="TradeInstance\TradeInstanceDAO.cs" />
-    <Compile Include="TradeCommand\TradingCommandDAO.cs" />
-    <Compile Include="TradeCommand\TradingCommandSecurityDAO.cs" />
-    <Compile Include="TradeInstance\TradingInstanceAdjustmentDAO.cs" />
-    <Compile Include="TradeInstance\TradingInstanceDAO.cs" />
     <Compile Include="TradeInstance\TradingInstanceSecurityDAO.cs" />
     <Compile Include="Product\UFXPortfolioDAO.cs" />
     <Compile Include="UsageTracking\UserActionTrackingDAO.cs" />

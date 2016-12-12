@@ -1,14 +1,14 @@
 use tradingsystem
 
-select * from tradinginstancesecurity
+select * from tradeinstancesecurity
 where SecuCode='000421'
 
-delete from tradinginstancesecurity
+delete from tradeinstancesecurity
 where InstanceId=4 and PositionType = 0
 
-update tradinginstancesecurity
+update tradeinstancesecurity
 set PositionAmount=InstructionPreBuy
 
 
-select * from tradinginstance
+select * from tradeinstance
 where InstanceId=20

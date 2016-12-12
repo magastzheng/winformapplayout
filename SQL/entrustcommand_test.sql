@@ -48,3 +48,5 @@ select c.* from entrustcommand c
 select d.* from entrustsecurity d
 
 exec procEntrustSecuritySelectAllCombine
+
+exec procEntrustCommandSelectCancel 3

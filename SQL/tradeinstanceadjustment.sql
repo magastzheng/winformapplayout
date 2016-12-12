@@ -1,9 +1,9 @@
 use tradingsystem
 
-if object_id('tradinginstanceadjustment') is not null
-drop table tradinginstanceadjustment
+if object_id('tradeinstanceadjustment') is not null
+drop table tradeinstanceadjustment
 
-create table tradinginstanceadjustment(
+create table tradeinstanceadjustment(
 	Id int identity(1, 1) primary key	--序号
 	,CreateDate datetime
 	,SourceInstanceId	int
@@ -25,11 +25,11 @@ create table tradinginstanceadjustment(
 )
 
 go
-if exists (select name from sysobjects where name='procTradingInstanceAdjustmentInsert')
-drop proc procTradingInstanceAdjustmentInsert
+if exists (select name from sysobjects where name='procTradeInstanceAdjustmentInsert')
+drop proc procTradeInstanceAdjustmentInsert
 
 go
-create proc procTradingInstanceAdjustmentInsert(
+create proc procTradeInstanceAdjustmentInsert(
 	@SourceInstanceId int
 	,@SourceFundCode	varchar(20)
 	,@SourcePortfolioCode varchar(20)
@@ -51,7 +51,7 @@ as
 begin
 	declare @newid int
 
-	insert into tradinginstanceadjustment(
+	insert into tradeinstanceadjustment(
 		CreateDate
 		,SourceInstanceId
 		,SourceFundCode
@@ -94,11 +94,11 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procTradingInstanceAdjustmentSelect')
-drop proc procTradingInstanceAdjustmentSelect
+if exists (select name from sysobjects where name='procTradeInstanceAdjustmentSelect')
+drop proc procTradeInstanceAdjustmentSelect
 
 go
-create proc procTradingInstanceAdjustmentSelect
+create proc procTradeInstanceAdjustmentSelect
 as
 begin
 	select
@@ -120,22 +120,22 @@ begin
 		,StockHolderId
 		,SeatNo
 		,Notes
-	from tradinginstanceadjustment
+	from tradeinstanceadjustment
 end
 
 go
-create proc procTradingInstanceAdjustmentDelete(
+create proc procTradeInstanceAdjustmentDelete(
 	@Id int
 )
 as
 begin
 	if @Id is not null and @Id > 0
 	begin
-		delete from tradinginstanceadjustment
+		delete from tradeinstanceadjustment
 		where Id=@Id
 	end
 	else
 	begin
-		truncate table tradinginstanceadjustment
+		truncate table tradeinstanceadjustment
 	end
 end

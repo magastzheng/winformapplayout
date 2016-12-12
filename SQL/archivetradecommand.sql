@@ -1,9 +1,9 @@
 use tradingsystem
 
-if object_id('archivetradingcommand') is not null
-drop table archivetradingcommand
+if object_id('archivetradecommand') is not null
+drop table archivetradecommand
 
-create table archivetradingcommand(
+create table archivetradecommand(
 	ArchiveId			int identity(1, 1) primary key
 	,CommandId			int not null					--指令序号
 	,InstanceId			int not null					--交易实例ID
@@ -13,7 +13,7 @@ create table archivetradingcommand(
 	,ExecuteType		int								-- 1 开仓， 2 - 平仓
 	,StockDirection		int								--10 -- 买入现货，11--卖出现货
 	,FuturesDirection	int								--12-卖出开仓，13 -买入平仓
-	,CommandStatus		int not null					--指令状态：1 - 有效指令，2 - 已修改，3 - 已撤销
+	,CommandStatus		int not null					--指令状态：1 - 有效指令，2 - 已修改，3 - 已撤销, 4 - 委托完成， 5 - 已完成成交
 	,DispatchStatus		int								--分发状态：1 - 未分发，2 - 已分发
 	,EntrustStatus		int								-- 1 - 未执行， 2 - 部分执行， 3- 已完成
 	,DealStatus			int								-- 1 - 未成交， 2 - 部分成交， 3 - 已完成
@@ -31,16 +31,16 @@ create table archivetradingcommand(
 	,CancelCause		varchar(100)					-- 撤销指令原因
 	,ApprovalCause		varchar(100)					-- 审批原因
 	,DispatchRejectCause	varchar(100)				-- 分发拒绝原因
-	,CommandNotes		varchar(100)					-- 指令备注
+	,Notes		varchar(100)					-- 指令备注
 )
 
 go
 
-if exists (select name from sysobjects where name='procArchiveTradingCommandInsert')
-drop proc procArchiveTradingCommandInsert
+if exists (select name from sysobjects where name='procArchiveTradeCommandInsert')
+drop proc procArchiveTradeCommandInsert
 
 go
-create proc procArchiveTradingCommandInsert(
+create proc procArchiveTradeCommandInsert(
 	@CommandId			int
 	,@InstanceId		int
 	,@CommandNum		int				
@@ -67,14 +67,14 @@ create proc procArchiveTradingCommandInsert(
 	,@CancelCause		varchar(100)	
 	,@ApprovalCause		varchar(100)	
 	,@DispatchRejectCause	varchar(100)
-	,@CommandNotes		varchar(100)	
+	,@Notes		varchar(100)	
 )
 as
 begin
 	
 	declare @newid int
 
-	insert into archivetradingcommand(
+	insert into archivetradecommand(
 		CommandId			
 		,InstanceId		
 		,CommandNum		
@@ -101,7 +101,7 @@ begin
 		,CancelCause		
 		,ApprovalCause		
 		,DispatchRejectCause
-		,CommandNotes		
+		,Notes		
 	)
 	values(
 		@CommandId			
@@ -130,7 +130,7 @@ begin
 		,@CancelCause		
 		,@ApprovalCause		
 		,@DispatchRejectCause
-		,@CommandNotes		
+		,@Notes		
 	)
 
 	set @newid = SCOPE_IDENTITY()
@@ -140,11 +140,11 @@ end
 
 go
 
-if exists (select name from sysobjects where name='procArchiveTradingCommandSelect')
-drop proc procArchiveTradingCommandSelect
+if exists (select name from sysobjects where name='procArchiveTradeCommandSelect')
+drop proc procArchiveTradeCommandSelect
 
 go
-create proc procArchiveTradingCommandSelect
+create proc procArchiveTradeCommandSelect
 as
 begin
 	select
@@ -175,6 +175,6 @@ begin
 		,CancelCause		
 		,ApprovalCause		
 		,DispatchRejectCause
-		,CommandNotes	
-	from archivetradingcommand
+		,Notes	
+	from archivetradecommand
 end
