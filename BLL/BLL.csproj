@@ -89,7 +89,7 @@
     <Compile Include="SecurityInfo\BenchmarkBLL.cs" />
     <Compile Include="SecurityInfo\FuturesContractManager.cs" />
     <Compile Include="SecurityInfo\SecurityInfoManager.cs" />
-    <Compile Include="Template\HistTemplateBLL.cs" />
+    <Compile Include="Archive\Template\HistTemplateBLL.cs" />
     <Compile Include="Template\MonitorUnitBLL.cs" />
     <Compile Include="TradeCommand\TradeCommandSecurityBLL.cs" />
     <Compile Include="TradeInstance\TradingInstanceAdjustmentBLL.cs" />

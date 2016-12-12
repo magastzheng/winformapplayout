@@ -4,7 +4,7 @@ using Model.UI;
 using System;
 using System.Collections.Generic;
 
-namespace DBAccess.Template
+namespace DBAccess.Archive.Template
 {
     public class HistoricalTemplateDAO: BaseDAO
     {

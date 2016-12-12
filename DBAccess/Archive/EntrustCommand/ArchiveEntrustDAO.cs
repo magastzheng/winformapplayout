@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DBAccess.EntrustCommand
+namespace DBAccess.Archive.EntrustCommand
 {
     public class ArchiveEntrustDAO : BaseDAO
     {

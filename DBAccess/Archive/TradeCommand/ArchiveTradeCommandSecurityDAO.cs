@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DBAccess.TradeCommand
+namespace DBAccess.Archive.TradeCommand
 {
     public class ArchiveTradeCommandSecurityDAO : BaseDAO
     {

@@ -1,16 +1,10 @@
-﻿using BLL.Template;
+﻿using BLL.Archive.Template;
 using Config;
 using Controls.Entity;
 using Controls.GridView;
 using Model.Binding.BindingUtil;
 using Model.UI;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 
 namespace TradingSystem.View
 {

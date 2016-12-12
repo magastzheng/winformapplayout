@@ -3,7 +3,7 @@ using Model.EnumType;
 using System;
 using System.Data.Common;
 
-namespace DBAccess.TradeCommand
+namespace DBAccess.Archive.TradeCommand
 {
     public class ArchiveTradeCommandDAO : BaseDAO
     {

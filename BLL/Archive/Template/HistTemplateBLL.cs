@@ -1,11 +1,12 @@
 ﻿using BLL.Permission;
 using Config;
+using DBAccess.Archive.Template;
 using DBAccess.Template;
 using Model.UI;
 using System;
 using System.Collections.Generic;
 
-namespace BLL.Template
+namespace BLL.Archive.Template
 {
     public class HistTemplateBLL
     {
