@@ -434,7 +434,7 @@ namespace BLL.Frontend
             return uiCommand;
         }
 
-        private void CalculateUICommand(ref TradeCommandItem uiCommand, List<TradeCommandSecurity> tradeSecuItems, List<EntrustSecurityItem> entrustSecuItems)
+        private void CalculateUICommand(ref TradeCommandItem uiCommand, List<TradeCommandSecurity> tradeSecuItems, List<EntrustSecurity> entrustSecuItems)
         {
             int commandId = uiCommand.CommandId;
             var cmdSecuItems = tradeSecuItems.Where(p => p.CommandId == commandId).ToList();

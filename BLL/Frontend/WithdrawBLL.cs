@@ -4,9 +4,10 @@ using BLL.SecurityInfo;
 using BLL.UFX.impl;
 using BLL.UsageTracking;
 using Config;
-using DBAccess.Entrust;
+using DBAccess.EntrustCommand;
 using DBAccess.TradeCommand;
 using Model.BLL;
+using Model.Database;
 using Model.EnumType;
 using Model.Permission;
 using Model.SecurityInfo;
@@ -14,8 +15,8 @@ using Model.UI;
 using Model.UsageTracking;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Util;
+using System.Linq;
 
 namespace BLL.Frontend
 {
@@ -36,10 +37,10 @@ namespace BLL.Frontend
 
         #region cancel
 
-        public List<EntrustCommandItem> CancelOne(TradeCommandItem cmdItem, CallerCallback callerCallback)
+        public List<Model.Database.EntrustCommand> CancelOne(TradeCommandItem cmdItem, CallerCallback callerCallback)
         {
             Tracking(ActionType.Cancel, ResourceType.TradeCommand, cmdItem.CommandId, cmdItem);
-            List<EntrustCommandItem> cancelEntrustCmdItems = new List<EntrustCommandItem>();
+            List<Model.Database.EntrustCommand> cancelEntrustCmdItems = new List<Model.Database.EntrustCommand>();
 
             var entrustCmdItems = _entrustCommandBLL.GetCancel(cmdItem.CommandId);
             if (entrustCmdItems == null || entrustCmdItems.Count == 0)
@@ -121,7 +122,7 @@ namespace BLL.Frontend
         public List<CancelSecurityItem> CancelSecuItem(int submitId, int commandId, List<CancelSecurityItem> cancelItems, CallerCallback callerCallback)
         {
             var cancelSecuItems = new List<CancelSecurityItem>();
-            var entrustedSecuItems = new List<EntrustSecurityItem>();
+            var entrustedSecuItems = new List<EntrustSecurity>();
             foreach (var cancelItem in cancelItems)
             {
                 var entrustSecuItem = ConvertBack(cancelItem);
@@ -155,12 +156,12 @@ namespace BLL.Frontend
 
         #region get/fetch
 
-        public List<EntrustCommandItem> GetEntrustedCmdItems(TradeCommandItem cmdItem)
+        public List<Model.Database.EntrustCommand> GetEntrustedCmdItems(TradeCommandItem cmdItem)
         {
             return _entrustCommandBLL.GetCancel(cmdItem.CommandId);
         }
 
-        public List<CancelRedoItem> GetEntrustedSecuItems(EntrustCommandItem cmdItem)
+        public List<CancelRedoItem> GetEntrustedSecuItems(Model.Database.EntrustCommand cmdItem)
         {
             var entrustSecuItems = _entrustSecurityBLL.GetCancelBySumbitId(cmdItem.SubmitId);
             var cancelItemList = new List<CancelRedoItem>();
@@ -189,7 +190,7 @@ namespace BLL.Frontend
             return cancelItemList;
         }
 
-        public List<CancelRedoItem> GetCancelRedoBySubmitId(EntrustCommandItem cmdItem)
+        public List<CancelRedoItem> GetCancelRedoBySubmitId(Model.Database.EntrustCommand cmdItem)
         {
             var entrustSecuItems = _entrustSecurityBLL.GetCancelRedoBySubmitId(cmdItem.SubmitId);
             var cancelItemList = new List<CancelRedoItem>();
@@ -216,9 +217,9 @@ namespace BLL.Frontend
 
         #endregion
 
-        private List<EntrustSecurityItem> ConvertToEntrustSecuItems(List<CancelRedoItem> cancelItems)
+        private List<EntrustSecurity> ConvertToEntrustSecuItems(List<CancelRedoItem> cancelItems)
         {
-            var entrustedSecuItems = new List<EntrustSecurityItem>();
+            var entrustedSecuItems = new List<EntrustSecurity>();
             foreach (var cancelItem in cancelItems)
             {
                 var entrustItem = ConvertBack(cancelItem);
@@ -228,7 +229,7 @@ namespace BLL.Frontend
             return entrustedSecuItems;
         }
 
-        private CancelRedoItem Convert(EntrustSecurityItem p, Model.Database.TradeCommand tradeCommand)
+        private CancelRedoItem Convert(EntrustSecurity p, Model.Database.TradeCommand tradeCommand)
         {
             CancelRedoItem cancelRedoItem = new CancelRedoItem
             {
@@ -275,9 +276,9 @@ namespace BLL.Frontend
             return cancelRedoItem;
         }
 
-        private EntrustSecurityItem ConvertBack(CancelSecurityItem cancelItem)
+        private EntrustSecurity ConvertBack(CancelSecurityItem cancelItem)
         {
-            var entrustItem = new EntrustSecurityItem 
+            var entrustItem = new EntrustSecurity 
             {
                 CommandId = cancelItem.CommandId,
                 SubmitId = cancelItem.SubmitId,

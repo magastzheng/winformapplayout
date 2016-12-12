@@ -25,6 +25,7 @@ using BLL.EntrustCommand;
 using BLL.Product;
 using Calculation;
 using Model.Converter;
+using Model.Database;
 
 namespace TradingSystem.View
 {
@@ -289,7 +290,7 @@ namespace TradingSystem.View
                 return;
             }
 
-            List<EntrustCommandItem> entrustedCmdItems = new List<EntrustCommandItem>();
+            List<EntrustCommand> entrustedCmdItems = new List<EntrustCommand>();
             foreach (var cmdItem in selectCmdItems)
             {
                 var oneEntrustedCmdItems = _withdrawBLL.GetEntrustedCmdItems(cmdItem);
@@ -349,7 +350,7 @@ namespace TradingSystem.View
             }
 
             //获取选中的所有可以撤销的证券
-            List<EntrustCommandItem> entrustedCmdItems = new List<EntrustCommandItem>();
+            List<EntrustCommand> entrustedCmdItems = new List<EntrustCommand>();
             foreach (var cmdItem in selectCmdItems)
             {
                 var oneEntrustedCmdItems = _withdrawBLL.GetEntrustedCmdItems(cmdItem);
@@ -1160,7 +1161,7 @@ namespace TradingSystem.View
             int successCount = 0;
             foreach (var eiItem in selectedEntrustItems)
             {
-                EntrustCommandItem eciItem = new EntrustCommandItem
+                EntrustCommand eciItem = new EntrustCommand
                 {
                     CommandId = eiItem.CommandNo,
                     Copies = eiItem.Copies,
@@ -1202,7 +1203,7 @@ namespace TradingSystem.View
             this.securityGridView.Invalidate();
         }
 
-        private void UpdateEntrustedAmount(List<EntrustSecurityItem> entrustedSecuItems)
+        private void UpdateEntrustedAmount(List<EntrustSecurity> entrustedSecuItems)
         {
             foreach (var entrustedSecuItem in entrustedSecuItems)
             {
@@ -1448,9 +1449,9 @@ namespace TradingSystem.View
             }
         }
 
-        private List<EntrustSecurityItem> GetEntrustSecurityItems(int submitId, int commandId)
+        private List<EntrustSecurity> GetEntrustSecurityItems(int submitId, int commandId)
         {
-            List<EntrustSecurityItem> entrustSecuItems = new List<EntrustSecurityItem>();
+            List<EntrustSecurity> entrustSecuItems = new List<EntrustSecurity>();
 
             var secuItems = _secuDataSource.Where(p => p.Selection && p.CommandId == commandId).ToList();
             if (secuItems == null || secuItems.Count == 0)
@@ -1461,7 +1462,7 @@ namespace TradingSystem.View
             foreach (var secuItem in secuItems)
             {
                 var priceType = PriceTypeHelper.GetPriceType(secuItem.PriceType);
-                EntrustSecurityItem entrustSecurityItem = new EntrustSecurityItem
+                EntrustSecurity entrustSecurityItem = new EntrustSecurity
                 {
                     SubmitId = submitId,
                     CommandId = commandId,

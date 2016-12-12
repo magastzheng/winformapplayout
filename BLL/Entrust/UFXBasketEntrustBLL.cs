@@ -5,11 +5,12 @@ using BLL.UFX;
 using BLL.UFX.impl;
 using Config;
 using Config.ParamConverter;
-using DBAccess.Entrust;
+using DBAccess.EntrustCommand;
 using log4net;
 using Model;
 using Model.Binding.BindingUtil;
 using Model.BLL;
+using Model.Database;
 using Model.UFX;
 using Model.UI;
 using System.Collections.Generic;
@@ -43,7 +44,7 @@ namespace BLL.Entrust
             _optLimitEntrustRatio = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.OptLimitEntrustRatio;
         }
 
-        public BLLResponse Submit(EntrustCommandItem cmdItem, List<EntrustSecurityItem> entrustItems, CallerCallback callerCallback)
+        public BLLResponse Submit(Model.Database.EntrustCommand cmdItem, List<EntrustSecurity> entrustItems, CallerCallback callerCallback)
         {
             var cmdEntrustItems = entrustItems.Where(p => p.CommandId == cmdItem.CommandId && p.SubmitId == cmdItem.SubmitId).ToList();
             if (cmdEntrustItems == null || cmdEntrustItems.Count == 0)
@@ -163,10 +164,10 @@ namespace BLL.Entrust
             }
 
             int ret = -1;
-            List<EntrustSecurityItem> entrustSecuItems = new List<EntrustSecurityItem>();
+            List<EntrustSecurity> entrustSecuItems = new List<EntrustSecurity>();
             foreach (var responseItem in responseItems)
             {
-                var entrustItem = new EntrustSecurityItem
+                var entrustItem = new EntrustSecurity
                 {
                     SubmitId = token.SubmitId,
                     RequestId = responseItem.ExtSystemId,

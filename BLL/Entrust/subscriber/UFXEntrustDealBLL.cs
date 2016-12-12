@@ -6,9 +6,8 @@ using Config.ParamConverter;
 using DBAccess;
 using log4net;
 using Model.Binding.BindingUtil;
-using Model.Converter;
+using Model.Database;
 using Model.UFX;
-using Model.UI;
 using System.Collections.Generic;
 
 namespace BLL.Entrust.subscriber
@@ -48,7 +47,7 @@ namespace BLL.Entrust.subscriber
                 //update the database
                 if (responseItems.Count > 0)
                 {
-                    List<EntrustSecurityItem> entrustSecuItems = new List<EntrustSecurityItem>();
+                    List<EntrustSecurity> entrustSecuItems = new List<EntrustSecurity>();
                     foreach (var responseItem in responseItems)
                     {
                         int commandId;
@@ -79,9 +78,9 @@ namespace BLL.Entrust.subscriber
             return responseItems.Count;
         }
 
-        private DealSecurityItem Convert(UFXEntrustDealResponse responseItem)
+        private DealSecurity Convert(UFXEntrustDealResponse responseItem)
         {
-            DealSecurityItem dealItem = new DealSecurityItem 
+            DealSecurity dealItem = new DealSecurity 
             { 
                 SecuCode = responseItem.StockCode,
                 DealNo = responseItem.DealNo,

@@ -43,6 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Archive\ArchiveEntrustCommand.cs" />
+    <Compile Include="Archive\ArchiveEntrustSecurity.cs" />
+    <Compile Include="Archive\ArchiveTradeCommandSecurity.cs" />
     <Compile Include="Binding\BindingAttribute.cs" />
     <Compile Include="Binding\BindingUtil\GridViewBindingHelper.cs" />
     <Compile Include="Binding\BindingUtil\UFXDataBindingHelper.cs" />
@@ -128,7 +131,7 @@
     <Compile Include="UFX\UFXSubscriber.cs" />
     <Compile Include="TradingCommand\TradingCommandItem.cs" />
     <Compile Include="TradingCommand\TradingCommandSecurityItem.cs" />
-    <Compile Include="UI\ArchiveTradeCommand.cs" />
+    <Compile Include="Archive\ArchiveTradeCommand.cs" />
     <Compile Include="UI\CancelRedoItem.cs" />
     <Compile Include="UI\ClosePositionCmdItem.cs" />
     <Compile Include="UI\ClosePositionInstanceItem.cs" />
@@ -140,13 +143,13 @@
     <Compile Include="UI\CommandManagementSecurityItem.cs" />
     <Compile Include="UI\CommandSecurityItem.cs" />
     <Compile Include="UI\DealFlowItem.cs" />
-    <Compile Include="UI\DealSecurityItem.cs" />
+    <Compile Include="Database\DealSecurity.cs" />
     <Compile Include="UI\DestinationHoldingItem.cs" />
-    <Compile Include="UI\EntrustSecurityCombineItem.cs" />
-    <Compile Include="UI\EntrustCommandItem.cs" />
+    <Compile Include="Database\EntrustSecurityCombine.cs" />
+    <Compile Include="Database\EntrustCommand.cs" />
     <Compile Include="UI\EntrustFlowItem.cs" />
     <Compile Include="UI\EntrustItem.cs" />
-    <Compile Include="UI\EntrustSecurityItem.cs" />
+    <Compile Include="Database\EntrustSecurity.cs" />
     <Compile Include="UI\HistStockTemplate.cs" />
     <Compile Include="UI\HistTemplateStock.cs" />
     <Compile Include="UI\InstanceItem.cs" />
@@ -165,8 +168,8 @@
     <Compile Include="UI\TemplateStock.cs" />
     <Compile Include="EnumType\TradeCommandType.cs" />
     <Compile Include="UI\TradeInstance.cs" />
-    <Compile Include="UI\TradeInstanceAdjustmentItem.cs" />
-    <Compile Include="UI\TradeInstanceSecurity.cs" />
+    <Compile Include="Database\TradeInstanceAdjustmentItem.cs" />
+    <Compile Include="Database\TradeInstanceSecurity.cs" />
     <Compile Include="UsageTracking\ActionType.cs" />
     <Compile Include="UsageTracking\UserActionTracking.cs" />
     <Compile Include="User.cs" />

@@ -1,16 +1,10 @@
-﻿using Model.config;
-using Model.Data;
-using Model.EnumType;
+﻿using Model.EnumType;
 using Model.SecurityInfo;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Model.UI
+namespace Model.Database
 {
-    public class EntrustSecurityItem
+    public class EntrustSecurity
     {
         public int RequestId { get; set; }
 

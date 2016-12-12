@@ -80,6 +80,20 @@ begin
 end
 
 go
+if exists (select name from sysobjects where name='procArchiveEntrustCommandDelete')
+drop proc procArchiveEntrustCommandDelete
+
+go
+create proc procArchiveEntrustCommandDelete(
+	@ArchiveId	int
+)
+as
+begin
+	delete from archiveentrustcommand
+	where ArchiveId=@ArchiveId
+end
+
+go
 if exists (select name from sysobjects where name='procArchiveEntrustCommandSelect')
 drop proc procArchiveEntrustCommandSelect
 

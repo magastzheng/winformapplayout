@@ -1,11 +1,11 @@
 ﻿using log4net;
+using Model.Database;
 using Model.EnumType;
-using Model.UI;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
 
-namespace DBAccess.Entrust
+namespace DBAccess.EntrustCommand
 {
     public class EntrustDAO : BaseDAO
     {
@@ -33,7 +33,7 @@ namespace DBAccess.Entrust
             
         }
 
-        public int Submit(EntrustCommandItem cmdItem, List<EntrustSecurityItem> entrustItems)
+        public int Submit(Model.Database.EntrustCommand cmdItem, List<EntrustSecurity> entrustItems)
         {
             var dbCommand = _dbHelper.GetCommand();
             _dbHelper.Open(_dbHelper.Connection);
@@ -177,7 +177,7 @@ namespace DBAccess.Entrust
             return ret;
         }
 
-        public int UpdateSecurityEntrustStatus(List<EntrustSecurityItem> entrustItems, EntrustStatus entrustStatus)
+        public int UpdateSecurityEntrustStatus(List<EntrustSecurity> entrustItems, EntrustStatus entrustStatus)
         { 
             var dbCommand = _dbHelper.GetCommand();
             _dbHelper.Open(dbCommand);
@@ -223,7 +223,7 @@ namespace DBAccess.Entrust
             return ret;
         }
 
-        public int UpdateSecurityEntrustResponseByRequestId(List<EntrustSecurityItem> entrustItems)
+        public int UpdateSecurityEntrustResponseByRequestId(List<EntrustSecurity> entrustItems)
         {
             var dbCommand = _dbHelper.GetCommand();
             _dbHelper.Open(dbCommand);
@@ -270,7 +270,7 @@ namespace DBAccess.Entrust
             return ret;
         }
 
-        public int UpdateCommandSecurityEntrustStatus(int submitId, List<EntrustSecurityItem> entrustItems, EntrustStatus entrustStatus)
+        public int UpdateCommandSecurityEntrustStatus(int submitId, List<EntrustSecurity> entrustItems, EntrustStatus entrustStatus)
         { 
             var dbCommand = _dbHelper.GetCommand();
             _dbHelper.Open(dbCommand);

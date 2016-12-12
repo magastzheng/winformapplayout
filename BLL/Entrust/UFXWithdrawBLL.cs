@@ -1,19 +1,14 @@
 ﻿using BLL.UFX;
 using BLL.UFX.impl;
 using Config;
-using DBAccess;
-using DBAccess.Entrust;
+using DBAccess.EntrustCommand;
 using log4net;
 using Model.Binding.BindingUtil;
 using Model.BLL;
+using Model.Database;
 using Model.UFX;
-using Model.UI;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace BLL.Entrust
 {
@@ -43,7 +38,7 @@ namespace BLL.Entrust
         /// <param name="entrustItems">The entrustsecurity item.</param>
         /// <param name="callerCallback"></param>
         /// <returns></returns>
-        public BLLResponse Withdraw(int submitId, int commandId, List<EntrustSecurityItem> entrustItems, CallerCallback callerCallback)
+        public BLLResponse Withdraw(int submitId, int commandId, List<EntrustSecurity> entrustItems, CallerCallback callerCallback)
         {
             BLLResponse bllResponse = new BLLResponse();
 
@@ -132,13 +127,13 @@ namespace BLL.Entrust
             }
 
             int ret = -1;
-            List<EntrustSecurityItem> entrustSecuItems = new List<EntrustSecurityItem>();
+            List<EntrustSecurity> entrustSecuItems = new List<EntrustSecurity>();
             if (token.SubmitId > 0)
             {
                 //TODO: check the withdraw status
                 foreach (var responseItem in responseItems)
                 {
-                    var entrustItem = new EntrustSecurityItem
+                    var entrustItem = new EntrustSecurity
                     {
                         SubmitId = token.SubmitId,
                         CommandId = token.CommandId,

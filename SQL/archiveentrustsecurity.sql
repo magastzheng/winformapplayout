@@ -5,7 +5,7 @@ if object_id('archiveentrustsecurity') is not null
 drop table archiveentrustsecurity
 
 create table archiveentrustsecurity(
-	ArchiveId			int identity(1, 1) primary key
+	ArchiveId			int not null
 	,RequestId			int not null					--请求ID
 	,SubmitId			int not null					--指令提交ID
 	,CommandId			int not null					--指令ID
@@ -24,7 +24,6 @@ create table archiveentrustsecurity(
 	,TotalDealBalance	numeric(20, 4) --累计成交金额
 	,TotalDealFee		numeric(20, 4) --累计费用
 	,DealTimes			int			 -- 成交次数
-	,ArchiveDate		datetime	 -- 归档时间
 	,EntrustDate		datetime	 -- 委托时间
 	,CreatedDate		datetime	 -- 委托时间	
 	,ModifiedDate		datetime	 -- 修改时间
@@ -41,7 +40,8 @@ drop proc procArchiveEntrustSecurityInsert
 
 go
 create proc procArchiveEntrustSecurityInsert(
-	@RequestId			int
+	@ArchiveId			int
+	,@RequestId			int
 	,@SubmitId			int
 	,@CommandId			int
 	,@SecuCode			varchar(10)
@@ -59,7 +59,6 @@ create proc procArchiveEntrustSecurityInsert(
 	,@TotalDealBalance	numeric(20, 4)
 	,@TotalDealFee		numeric(20, 4)
 	,@DealTimes			int			
-	,@ArchiveDate		datetime
 	,@EntrustDate		datetime
 	,@CreatedDate		datetime
 	,@ModifiedDate		datetime
@@ -68,10 +67,9 @@ create proc procArchiveEntrustSecurityInsert(
 )
 as
 begin
-	declare @newid int
-
 	insert into archiveentrustsecurity(
-		RequestId		
+		ArchiveId
+		,RequestId		
 		,SubmitId		
 		,CommandId		
 		,SecuCode		
@@ -89,14 +87,14 @@ begin
 		,TotalDealBalance
 		,TotalDealFee	
 		,DealTimes		
-		,ArchiveDate	
 		,EntrustDate	
 		,CreatedDate	
 		,ModifiedDate	
 		,EntrustFailCode
 		,EntrustFailCause
 	)values(
-		@RequestId		
+		@ArchiveId
+		,@RequestId		
 		,@SubmitId		
 		,@CommandId		
 		,@SecuCode		
@@ -114,16 +112,26 @@ begin
 		,@TotalDealBalance
 		,@TotalDealFee	
 		,@DealTimes		
-		,@ArchiveDate	
 		,@EntrustDate	
 		,@CreatedDate	
 		,@ModifiedDate	
 		,@EntrustFailCode
 		,@EntrustFailCause
 	)	
-	
-	set @newid = SCOPE_IDENTITY()
-	return @newid	
+end
+
+go
+if exists (select name from sysobjects where name='procArchiveEntrustSecurityDelete')
+drop proc procArchiveEntrustSecurityDelete
+
+go
+create proc procArchiveEntrustSecurityDelete(
+	@ArchiveId			int
+)
+as
+begin
+	delete from archiveentrustsecurity
+	where ArchiveId=@ArchiveId
 end
 
 go
@@ -132,7 +140,7 @@ drop proc procArchiveEntrustSecuritySelect
 
 go
 create proc procArchiveEntrustSecuritySelect(
-	@SubmitId			int
+	@ArchiveId			int
 )
 as
 begin
@@ -155,15 +163,14 @@ begin
 		,TotalDealAmount
 		,TotalDealBalance
 		,TotalDealFee	
-		,DealTimes		
-		,ArchiveDate	
+		,DealTimes			
 		,EntrustDate	
 		,CreatedDate	
 		,ModifiedDate	
 		,EntrustFailCode
 		,EntrustFailCause
 	from archiveentrustsecurity
-	where SubmitId=@SubmitId
+	where ArchiveId=@ArchiveId
 end
 
 

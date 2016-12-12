@@ -25,6 +25,7 @@ create table archivetradecommand(
 	,ExecutePerson		int								--执行人
 	,CreatedDate		datetime						-- 下达指令时间
 	,ModifiedDate		datetime						-- 修改时间
+	,ArchiveDate		datetime						-- 归档时间
 	,StartDate			datetime						-- 指令有效开始时间
 	,EndDate			datetime						-- 指令有效结束时间
 	,ModifiedCause		varchar(100)					-- 修改指令原因
@@ -61,6 +62,7 @@ create proc procArchiveTradeCommandInsert(
 	,@ExecutePerson		int				
 	,@CreatedDate		datetime		
 	,@ModifiedDate		datetime		
+	,@ArchiveDate		datetime
 	,@StartDate			datetime		
 	,@EndDate			datetime		
 	,@ModifiedCause		varchar(100)	
@@ -71,7 +73,6 @@ create proc procArchiveTradeCommandInsert(
 )
 as
 begin
-	
 	declare @newid int
 
 	insert into archivetradecommand(
@@ -94,7 +95,8 @@ begin
 		,DispatchPerson	
 		,ExecutePerson		
 		,CreatedDate		
-		,ModifiedDate		
+		,ModifiedDate	
+		,ArchiveDate	
 		,StartDate			
 		,EndDate			
 		,ModifiedCause		
@@ -123,7 +125,8 @@ begin
 		,@DispatchPerson	
 		,@ExecutePerson		
 		,@CreatedDate		
-		,@ModifiedDate		
+		,@ModifiedDate	
+		,@ArchiveDate	
 		,@StartDate			
 		,@EndDate			
 		,@ModifiedCause		
@@ -137,6 +140,33 @@ begin
 	return @newid
 end
 
+go
+
+if exists (select name from sysobjects where name='procArchiveTradeCommandDelete')
+drop proc procArchiveTradeCommandDelete
+
+go
+create proc procArchiveTradeCommandDelete(
+	@ArchiveId	int	= NULL	--两个参数必须传入一个
+	,@CommandId	int = NULL
+)
+as
+begin
+	if @ArchiveId is not null
+	begin
+		delete from archivetradecommand
+		where ArchiveId=@ArchiveId
+	end
+	else if @CommandId is not null
+	begin
+		delete from archivetradecommand
+		where CommandId=@CommandId
+	end
+	else
+	begin
+		raiserror('The parameter ArchiveId and CommandId are not NULL. It needs to pass one.', 16, -1)
+	end
+end
 
 go
 
@@ -144,7 +174,9 @@ if exists (select name from sysobjects where name='procArchiveTradeCommandSelect
 drop proc procArchiveTradeCommandSelect
 
 go
-create proc procArchiveTradeCommandSelect
+create proc procArchiveTradeCommandSelect(
+	@ArchiveId	int
+)
 as
 begin
 	select
@@ -168,7 +200,8 @@ begin
 		,DispatchPerson	
 		,ExecutePerson		
 		,CreatedDate		
-		,ModifiedDate		
+		,ModifiedDate	
+		,ArchiveDate	
 		,StartDate			
 		,EndDate			
 		,ModifiedCause		
@@ -177,4 +210,5 @@ begin
 		,DispatchRejectCause
 		,Notes	
 	from archivetradecommand
+	where ArchiveId=@ArchiveId
 end

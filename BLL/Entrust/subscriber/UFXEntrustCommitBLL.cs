@@ -2,8 +2,8 @@
 using BLL.UFX.impl;
 using log4net;
 using Model.Binding.BindingUtil;
+using Model.Database;
 using Model.UFX;
-using Model.UI;
 using System.Collections.Generic;
 
 namespace BLL.Entrust.subscriber
@@ -41,9 +41,9 @@ namespace BLL.Entrust.subscriber
             return responseItems.Count;
         }
 
-        private EntrustSecurityItem Convert(UFXEntrustCompletedResponse responseItem)
+        private EntrustSecurity Convert(UFXEntrustCompletedResponse responseItem)
         {
-            var entrustItem = new EntrustSecurityItem 
+            var entrustItem = new EntrustSecurity 
             {
                 RequestId = responseItem.ExtSystemId,
                 SecuCode = responseItem.StockCode,

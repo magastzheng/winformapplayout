@@ -1,10 +1,10 @@
-﻿using Model.EnumType;
+﻿using Model.Database;
+using Model.EnumType;
 using Model.SecurityInfo;
-using Model.UI;
 using System;
 using System.Collections.Generic;
 
-namespace DBAccess.Entrust
+namespace DBAccess.EntrustCommand
 {
     public class EntrustSecurityDAO: BaseDAO
     {
@@ -121,18 +121,18 @@ namespace DBAccess.Entrust
 
         #region get/fetch
 
-        public List<EntrustSecurityItem> GetByCommandId(int commandId)
+        public List<EntrustSecurity> GetByCommandId(int commandId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetByCommandId);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
 
-            List<EntrustSecurityItem> items = new List<EntrustSecurityItem>();
+            List<EntrustSecurity> items = new List<EntrustSecurity>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    EntrustSecurityItem item = new EntrustSecurityItem();
+                    EntrustSecurity item = new EntrustSecurity();
                     item.RequestId = (int)reader["RequestId"];
                     item.SubmitId = (int)reader["SubmitId"];
                     item.CommandId = (int)reader["CommandId"];
@@ -185,18 +185,18 @@ namespace DBAccess.Entrust
             return items;
         }
 
-        public List<EntrustSecurityItem> GetCancel(int commandId)
+        public List<EntrustSecurity> GetCancel(int commandId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCancel);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
 
-            List<EntrustSecurityItem> items = new List<EntrustSecurityItem>();
+            List<EntrustSecurity> items = new List<EntrustSecurity>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    EntrustSecurityItem item = new EntrustSecurityItem();
+                    EntrustSecurity item = new EntrustSecurity();
                     item.RequestId = (int)reader["RequestId"];
                     item.SubmitId = (int)reader["SubmitId"];
                     item.CommandId = (int)reader["CommandId"];
@@ -249,18 +249,18 @@ namespace DBAccess.Entrust
             return items;
         }
 
-        public List<EntrustSecurityItem> GetCancelBySumbitId(int submitId)
+        public List<EntrustSecurity> GetCancelBySumbitId(int submitId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCancelBySubmitId);
             _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
 
-            List<EntrustSecurityItem> items = new List<EntrustSecurityItem>();
+            List<EntrustSecurity> items = new List<EntrustSecurity>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    EntrustSecurityItem item = new EntrustSecurityItem();
+                    EntrustSecurity item = new EntrustSecurity();
                     item.RequestId = (int)reader["RequestId"];
                     item.SubmitId = (int)reader["SubmitId"];
                     item.CommandId = (int)reader["CommandId"];
@@ -313,18 +313,18 @@ namespace DBAccess.Entrust
             return items;
         }
 
-        public List<EntrustSecurityItem> GetCancelRedoBySubmitId(int submitId)
+        public List<EntrustSecurity> GetCancelRedoBySubmitId(int submitId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCancelCompletedRedoBySubmitId);
             _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
 
-            List<EntrustSecurityItem> items = new List<EntrustSecurityItem>();
+            List<EntrustSecurity> items = new List<EntrustSecurity>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    EntrustSecurityItem item = new EntrustSecurityItem();
+                    EntrustSecurity item = new EntrustSecurity();
                     item.RequestId = (int)reader["RequestId"];
                     item.SubmitId = (int)reader["SubmitId"];
                     item.CommandId = (int)reader["CommandId"];
@@ -386,17 +386,17 @@ namespace DBAccess.Entrust
 
         #region get combine
 
-        public List<EntrustSecurityCombineItem> GetAllCombine()
+        public List<EntrustSecurityCombine> GetAllCombine()
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetAllCombine);
 
-            List<EntrustSecurityCombineItem> items = new List<EntrustSecurityCombineItem>();
+            List<EntrustSecurityCombine> items = new List<EntrustSecurityCombine>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    EntrustSecurityCombineItem item = new EntrustSecurityCombineItem();
+                    EntrustSecurityCombine item = new EntrustSecurityCombine();
                     item.RequestId = (int)reader["RequestId"];
                     item.SubmitId = (int)reader["SubmitId"];
                     item.CommandId = (int)reader["CommandId"];
@@ -458,13 +458,13 @@ namespace DBAccess.Entrust
             return items;
         }
 
-        public EntrustSecurityCombineItem GetByRequestId(int requestId)
+        public EntrustSecurityCombine GetByRequestId(int requestId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCombineByRequestId);
             _dbHelper.AddInParameter(dbCommand, "@RequestId", System.Data.DbType.Int32, requestId);
             var reader = _dbHelper.ExecuteReader(dbCommand);
 
-            EntrustSecurityCombineItem item = new EntrustSecurityCombineItem();
+            EntrustSecurityCombine item = new EntrustSecurityCombine();
             if (reader.HasRows)
             {
                 while (reader.Read())

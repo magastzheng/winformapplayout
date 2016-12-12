@@ -1,13 +1,11 @@
 ﻿using BLL.UsageTracking;
 using Config;
-using DBAccess;
-using DBAccess.Entrust;
+using DBAccess.EntrustCommand;
+using Model.Database;
 using Model.EnumType;
 using Model.Permission;
-using Model.UI;
 using Model.UsageTracking;
 using System.Collections.Generic;
-using Util;
 
 namespace BLL.EntrustCommand
 {
@@ -61,7 +59,7 @@ namespace BLL.EntrustCommand
 
         #region get/fetch
 
-        public List<EntrustCommandItem> GetCancel(int commandId)
+        public List<Model.Database.EntrustCommand> GetCancel(int commandId)
         {
             Tracking(ActionType.Get, ResourceType.EntrustCommand, commandId, string.Empty);
             return _entrustcmddao.GetCancel(commandId);

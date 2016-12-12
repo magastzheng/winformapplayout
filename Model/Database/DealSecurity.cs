@@ -1,13 +1,8 @@
 ﻿using Model.EnumType;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Model.UI
+namespace Model.Database
 {
-    public class DealSecurityItem
+    public class DealSecurity
     {
         public int RequestId { get; set; }
 

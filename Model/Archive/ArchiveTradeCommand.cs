@@ -6,13 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.UI
+namespace Model.Archive
 {
     public class ArchiveTradeCommand : TradeCommand
     {
         public int ArchiveId { get; set; }
-
-        public CommandStatus CommandStatus { get; set; }
 
         public DispatchStatus DispatchStatus { get; set; }
 
@@ -26,14 +24,10 @@ namespace Model.UI
 
         public int ExecutePerson { get; set; }
 
-        public string ModifiedCause { get; set; }
-
-        public string CancelCause { get; set; }
-
         public string ApprovalCause { get; set; }
 
         public string DispatchRejectCause { get; set; }
 
-        public string CommandNotes { get; set; }
+        public DateTime ArchiveDate { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using DBAccess.Entrust;
+﻿using DBAccess.EntrustCommand;
+using Model.Database;
 using Model.EnumType;
 using Model.UI;
 using System.Collections.Generic;
@@ -57,22 +58,22 @@ namespace BLL.EntrustCommand
 
         #region fetch/get
 
-        public List<EntrustSecurityItem> GetByCommandId(int commandId)
+        public List<EntrustSecurity> GetByCommandId(int commandId)
         {
             return _entrustsecudao.GetByCommandId(commandId);
         }
 
-        public List<EntrustSecurityItem> GetCancel(int commandId)
+        public List<EntrustSecurity> GetCancel(int commandId)
         {
             return _entrustsecudao.GetCancel(commandId);
         }
 
-        public List<EntrustSecurityItem> GetCancelBySumbitId(int submitId)
+        public List<EntrustSecurity> GetCancelBySumbitId(int submitId)
         {
             return _entrustsecudao.GetCancelBySumbitId(submitId);
         }
 
-        public List<EntrustSecurityItem> GetCancelRedoBySubmitId(int submitId)
+        public List<EntrustSecurity> GetCancelRedoBySubmitId(int submitId)
         {
             return _entrustsecudao.GetCancelRedoBySubmitId(submitId);
         }
@@ -81,12 +82,12 @@ namespace BLL.EntrustCommand
 
         #region get combine
 
-        public List<EntrustSecurityCombineItem> GetAllCombine()
+        public List<EntrustSecurityCombine> GetAllCombine()
         {
             return _entrustsecudao.GetAllCombine();
         }
 
-        public EntrustSecurityCombineItem GetByRequestId(int requestId)
+        public EntrustSecurityCombine GetByRequestId(int requestId)
         {
             return _entrustsecudao.GetByRequestId(requestId);
         }

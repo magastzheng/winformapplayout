@@ -1,9 +1,9 @@
 ﻿using Model.EnumType;
 using System;
 
-namespace Model.UI
+namespace Model.Database
 {
-    public class EntrustCommandItem
+    public class EntrustCommand
     {
         public int SubmitId { get; set; }
 

@@ -19,6 +19,7 @@ using Model.BLL;
 using BLL.Frontend;
 using Model.Constant;
 using BLL.UFX.impl;
+using Model.Database;
 
 namespace TradingSystem.Dialog
 {
@@ -437,7 +438,7 @@ namespace TradingSystem.Dialog
         //TODO: validate before submit
         private string Submit(int commandId, List<CancelRedoItem> cancelRedoItems, CallerCallback callback)
         {
-            EntrustCommandItem cmdItem = new EntrustCommandItem 
+            EntrustCommand cmdItem = new EntrustCommand 
             {
                 CommandId = commandId,
                 Copies = 0,

@@ -1,10 +1,10 @@
 ﻿using log4net;
+using Model.Database;
 using Model.EnumType;
-using Model.UI;
 using System;
 using System.Collections.Generic;
 
-namespace DBAccess.Entrust
+namespace DBAccess.EntrustCommand
 {
     public class EntrustCommandDAO: BaseDAO
     {
@@ -366,18 +366,18 @@ namespace DBAccess.Entrust
         //    return items;
         //}
 
-        public List<EntrustCommandItem> GetCancel(int commandId)
+        public List<Model.Database.EntrustCommand> GetCancel(int commandId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCancel);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
 
-            List<EntrustCommandItem> items = new List<EntrustCommandItem>();
+            List<Model.Database.EntrustCommand> items = new List<Model.Database.EntrustCommand>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    EntrustCommandItem item = new EntrustCommandItem();
+                    var item = new Model.Database.EntrustCommand();
                     item.SubmitId = (int)reader["SubmitId"];
                     item.CommandId = (int)reader["CommandId"];
                     item.Copies = (int)reader["Copies"];

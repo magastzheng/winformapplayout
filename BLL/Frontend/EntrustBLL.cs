@@ -1,11 +1,10 @@
 ﻿using BLL.Entrust;
 using BLL.UFX.impl;
 using Config;
-using DBAccess;
-using DBAccess.Entrust;
-using DBAccess.TradeCommand;
+using DBAccess.EntrustCommand;
 using Model;
 using Model.BLL;
+using Model.Database;
 using Model.UI;
 using System;
 using System.Collections.Generic;
@@ -26,17 +25,17 @@ namespace BLL.Frontend
 
         #region create
 
-        public BLLResponse SubmitOne(EntrustCommandItem cmdItem, List<CancelRedoItem> cancelItems, CallerCallback callback)
+        public BLLResponse SubmitOne(Model.Database.EntrustCommand cmdItem, List<CancelRedoItem> cancelItems, CallerCallback callback)
         {
             //TODO: adjust the EntrustAmount
-            List<EntrustSecurityItem> entrustItems = new List<EntrustSecurityItem>();
+            List<EntrustSecurity> entrustItems = new List<EntrustSecurity>();
             DateTime now = DateTime.Now;
 
             //merge the same security in with the same commandId
             var uniqueSecuCodes = cancelItems.Select(p => p.SecuCode).Distinct().ToList();
             foreach (var secuCode in uniqueSecuCodes)
             {
-                EntrustSecurityItem item = new EntrustSecurityItem
+                EntrustSecurity item = new EntrustSecurity
                 {
                     CommandId = cmdItem.CommandId,
                     SecuCode = secuCode,
@@ -61,7 +60,7 @@ namespace BLL.Frontend
             return SubmitOne(cmdItem, entrustItems, callback);
         }
 
-        public BLLResponse SubmitOne(EntrustCommandItem cmdItem, List<EntrustSecurityItem> entrustItems, CallerCallback callback)
+        public BLLResponse SubmitOne(Model.Database.EntrustCommand cmdItem, List<EntrustSecurity> entrustItems, CallerCallback callback)
         {
             int ret = SumbitToDB(cmdItem, entrustItems);
             if (ret <= 0)
@@ -80,7 +79,7 @@ namespace BLL.Frontend
 
         #region private
 
-        private int SumbitToDB(EntrustCommandItem cmdItem, List<EntrustSecurityItem> entrustItems)
+        private int SumbitToDB(Model.Database.EntrustCommand cmdItem, List<EntrustSecurity> entrustItems)
         {
             int userId = LoginManager.Instance.GetUserId();
             cmdItem.SubmitPerson = userId;
@@ -88,12 +87,12 @@ namespace BLL.Frontend
             return _entrustdao.Submit(cmdItem, entrustItems);
         }
 
-        private EntrustCommandItem MergeEntrustCommandItem(List<EntrustCommandItem> oldCmdItems)
+        private Model.Database.EntrustCommand MergeEntrustCommandItem(List<Model.Database.EntrustCommand> oldCmdItems)
         {
             Debug.Assert(oldCmdItems.Select(p => p.CommandId).Distinct().Count() == 1, "撤销的委托指令不是同一指令号");
             var commandId = oldCmdItems.Select(p => p.CommandId).Distinct().Single();
             var copies = oldCmdItems.Where(p => p.CommandId == commandId).Select(o => o.Copies).Sum();
-            EntrustCommandItem cmdItem = new EntrustCommandItem
+            var cmdItem = new Model.Database.EntrustCommand
             {
                 CommandId = commandId,
                 Copies = copies,

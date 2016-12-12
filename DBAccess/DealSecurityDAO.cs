@@ -1,11 +1,7 @@
 ﻿using log4net;
+using Model.Database;
 using Model.EnumType;
-using Model.UI;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DBAccess
 {
@@ -29,7 +25,7 @@ namespace DBAccess
             
         }
 
-        public int Create(DealSecurityItem item)
+        public int Create(DealSecurity item)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
             _dbHelper.AddInParameter(dbCommand, "@RequestId", System.Data.DbType.Int32, item.RequestId);
@@ -68,17 +64,17 @@ namespace DBAccess
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public List<DealSecurityItem> GetAll()
+        public List<DealSecurity> GetAll()
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_SelectAll);
 
-            List<DealSecurityItem> items = new List<DealSecurityItem>();
+            List<DealSecurity> items = new List<DealSecurity>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    DealSecurityItem item = new DealSecurityItem();
+                    DealSecurity item = new DealSecurity();
                     item.RequestId = (int)reader["RequestId"];
                     item.SubmitId = (int)reader["SubmitId"];
                     item.CommandId = (int)reader["CommandId"];

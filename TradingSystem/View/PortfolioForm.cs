@@ -1,4 +1,5 @@
 ﻿using BLL;
+using BLL.Entrust;
 using BLL.UFX.impl;
 using Config;
 using Controls.Entity;
@@ -79,6 +80,9 @@ namespace TradingSystem.View
 
                 _dataSource.Add(portfolio);
             }
+
+            UFXQueryMoneyBLL queryMoneyBLL = new UFXQueryMoneyBLL();
+            queryMoneyBLL.Query();
 
             return true;
         }

@@ -1,15 +1,11 @@
 ﻿using BLL.EntrustCommand;
 using BLL.SecurityInfo;
-using DBAccess;
 using Model.Constant;
+using Model.Database;
 using Model.EnumType;
-using Model.EnumType.EnumTypeConverter;
 using Model.UI;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Frontend
 {
@@ -102,9 +98,9 @@ namespace BLL.Frontend
             return dfItems;
         }
 
-        public List<EntrustSecurityItem> GetEntrustSecurityItems(List<Model.Database.TradeCommand> cmdItems)
+        public List<EntrustSecurity> GetEntrustSecurityItems(List<Model.Database.TradeCommand> cmdItems)
         {
-            var entrustSecuItems = new List<EntrustSecurityItem>();
+            var entrustSecuItems = new List<EntrustSecurity>();
 
             foreach (var cmdItem in cmdItems)
             {

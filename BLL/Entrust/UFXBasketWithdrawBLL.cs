@@ -2,12 +2,12 @@
 using BLL.UFX;
 using BLL.UFX.impl;
 using Config;
-using DBAccess.Entrust;
+using DBAccess.EntrustCommand;
 using log4net;
 using Model.Binding.BindingUtil;
 using Model.BLL;
+using Model.Database;
 using Model.UFX;
-using Model.UI;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -35,7 +35,7 @@ namespace BLL.Entrust
             _timeOut = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.Timeout;
         }
 
-        public BLLResponse Withdraw(EntrustCommandItem cmdItem, CallerCallback callerCallback)
+        public BLLResponse Withdraw(Model.Database.EntrustCommand cmdItem, CallerCallback callerCallback)
         {
             BLLResponse bllResponse = new BLLResponse();
 
@@ -117,12 +117,12 @@ namespace BLL.Entrust
 
             //TODO: It needs to verify the response data. Only the can set cancel successfully in those without no error.
             int ret = -1;
-            List<EntrustSecurityItem> entrustSecuItems = new List<EntrustSecurityItem>();
+            List<EntrustSecurity> entrustSecuItems = new List<EntrustSecurity>();
             if (token.SubmitId > 0)
             {
                 foreach (var responseItem in responseItems)
                 {
-                    var entrustItem = new EntrustSecurityItem
+                    var entrustItem = new EntrustSecurity
                     {
                         SubmitId = token.SubmitId,
                         CommandId = token.CommandId,

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Model.UI
+﻿
+namespace Model.Database
 {
-    public class EntrustSecurityCombineItem : EntrustSecurityItem
+    public class EntrustSecurityCombine : EntrustSecurity
     {
         public int InstanceId { get; set; }
 
