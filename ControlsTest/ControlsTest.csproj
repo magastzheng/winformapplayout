@@ -59,6 +59,7 @@
     <Compile Include="ButtonContainerForm.Designer.cs">
       <DependentUpon>ButtonContainerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Entity\CBRowItem.cs" />
     <Compile Include="CheckComboBoxForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -102,6 +103,12 @@
     </Compile>
     <Compile Include="TSDGVComboBoxVarRowForm.Designer.cs">
       <DependentUpon>TSDGVComboBoxVarRowForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TSDGVEachRowForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TSDGVEachRowForm.Designer.cs">
+      <DependentUpon>TSDGVEachRowForm.cs</DependentUpon>
     </Compile>
     <Compile Include="TSDGVNumericColumnForm.cs">
       <SubType>Form</SubType>
@@ -150,6 +157,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="TSDGVComboBoxVarRowForm.resx">
       <DependentUpon>TSDGVComboBoxVarRowForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TSDGVEachRowForm.resx">
+      <DependentUpon>TSDGVEachRowForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TSDGVNumericColumnForm.resx">
       <DependentUpon>TSDGVNumericColumnForm.cs</DependentUpon>

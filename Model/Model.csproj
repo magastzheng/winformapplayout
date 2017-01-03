@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Archive\ArchiveEntrustCommand.cs" />
     <Compile Include="Archive\ArchiveEntrustSecurity.cs" />
+    <Compile Include="Archive\ArchiveDealSecurity.cs" />
     <Compile Include="Archive\ArchiveTradeCommandSecurity.cs" />
     <Compile Include="Binding\BindingAttribute.cs" />
     <Compile Include="Binding\BindingUtil\GridViewBindingHelper.cs" />

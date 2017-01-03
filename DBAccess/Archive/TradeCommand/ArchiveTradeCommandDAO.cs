@@ -105,14 +105,14 @@ namespace DBAccess.Archive.TradeCommand
             item.CommandId = (int)reader["CommandId"];
             item.InstanceId = (int)reader["InstanceId"];
             item.CommandNum = (int)reader["CommandNum"];
-            item.ECommandStatus = (CommandStatus)reader["CommandStatus"];
+            item.ECommandStatus = (CommandStatus)(int)reader["CommandStatus"];
             item.ModifiedTimes = (int)reader["ModifiedTimes"];
             item.ECommandType = (CommandType)reader["CommandType"];
             item.EExecuteType = (ExecuteType)reader["ExecuteType"];
             item.EStockDirection = (EntrustDirection)(int)reader["StockDirection"];
             item.EFuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
-            item.EEntrustStatus = (EntrustStatus)reader["EntrustStatus"];
-            item.EDealStatus = (DealStatus)reader["DealStatus"];
+            item.EEntrustStatus = (EntrustStatus)(int)reader["EntrustStatus"];
+            item.EDealStatus = (DealStatus)(int)reader["DealStatus"];
             item.SubmitPerson = (int)reader["SubmitPerson"];
             item.MonitorUnitId = (int)reader["MonitorUnitId"];
             item.InstanceCode = (string)reader["InstanceCode"];

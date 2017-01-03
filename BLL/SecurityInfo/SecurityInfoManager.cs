@@ -1,6 +1,7 @@
 ﻿using Model.SecurityInfo;
 using Quote;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BLL.SecurityInfo
 {
@@ -8,10 +9,12 @@ namespace BLL.SecurityInfo
     {
         private static readonly SecurityInfoManager _instance = new SecurityInfoManager();
         private IQuote _quote;
+        private SecurityInfoBLL _securityInfoBLL;
 
         private SecurityInfoManager()
         {
             _quote = QuoteCenter2.Instance.Quote;
+            _securityInfoBLL = new SecurityInfoBLL();
         }
 
         static SecurityInfoManager()
@@ -63,7 +66,24 @@ namespace BLL.SecurityInfo
 
         public List<SecurityItem> Get()
         {
-            return _quote.GetSecurities();
+            var allSecuItems = _quote.GetSecurities();
+            var dbSecuItems = _securityInfoBLL.GetAllItems();
+
+            //Use the stock name from database to fill those without name from quote service.
+            var noNameItems = allSecuItems.Where(p => string.IsNullOrEmpty(p.SecuName)).ToList();
+            if (noNameItems != null && noNameItems.Count > 0)
+            {
+                foreach (var item in noNameItems)
+                {
+                    var dbItem = dbSecuItems.Find(p => p.SecuCode.Equals(item.SecuCode) && p.SecuType == item.SecuType);
+                    if (dbItem != null)
+                    {
+                        item.SecuName = dbItem.SecuName;
+                    }
+                }
+            }
+
+            return allSecuItems;
         }
 
         public static SecurityInfoManager Instance { get { return _instance; } }

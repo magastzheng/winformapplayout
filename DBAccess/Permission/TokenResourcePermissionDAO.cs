@@ -64,11 +64,9 @@ namespace DBAccess.Permission
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public int Delete(int token, TokenType tokenType, int resourceId, ResourceType resourceType)
+        public int Delete(int resourceId, ResourceType resourceType)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Delete);
-            _dbHelper.AddInParameter(dbCommand, "@Token", System.Data.DbType.Int32, token);
-            _dbHelper.AddInParameter(dbCommand, "@TokenType", System.Data.DbType.Int32, (int)tokenType);
             _dbHelper.AddInParameter(dbCommand, "@ResourceId", System.Data.DbType.Int32, resourceId);
             _dbHelper.AddInParameter(dbCommand, "@ResourceType", System.Data.DbType.Int32, (int)resourceType);
 

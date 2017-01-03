@@ -304,8 +304,8 @@ namespace TradingSystem.Dialog
                     removeRights.Add(PermissionMask.View);
                 }
 
-                newPerm = _permissionManager.AddPermission(newPerm, addRights);
-                newPerm = _permissionManager.RemovePermission(newPerm, removeRights);
+                newPerm = _permissionManager.GetGrantPermission(newPerm, addRights);
+                newPerm = _permissionManager.GetRevokePermission(newPerm, removeRights);
 
                 TokenResourcePermission nurPerm = new TokenResourcePermission
                 {
@@ -337,7 +337,7 @@ namespace TradingSystem.Dialog
                     if (findPerm == null)
                     {
                         List<PermissionMask> rights = new List<PermissionMask>() { PermissionMask.Edit, PermissionMask.View };
-                        int newPerm = _permissionManager.RemovePermission(oldPerm.Permission, rights);
+                        int newPerm = _permissionManager.GetRevokePermission(oldPerm.Permission, rights);
                         TokenResourcePermission nurPerm = new TokenResourcePermission
                         {
                             Token = oldPerm.Token,
@@ -399,8 +399,14 @@ namespace TradingSystem.Dialog
             StockTemplate stockTemplate = GetTemplate();
             if (CheckInputValue(stockTemplate))
             {
-                OnSave(this, stockTemplate);
-                DialogResult = System.Windows.Forms.DialogResult.OK;
+                if (OnSave(this, stockTemplate))
+                {
+                    DialogResult = System.Windows.Forms.DialogResult.OK;
+                }
+                else
+                {
+                    DialogResult = System.Windows.Forms.DialogResult.No;
+                }
             }
             else
             {

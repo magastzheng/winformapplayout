@@ -2,9 +2,7 @@
 using BLL.TradeInstance;
 using BLL.UsageTracking;
 using Config;
-using DBAccess.Template;
 using DBAccess.TradeCommand;
-using DBAccess.TradeInstance;
 using log4net;
 using Model.Database;
 using Model.EnumType;
@@ -23,10 +21,7 @@ namespace BLL.Frontend
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private TradeInstanceDAO _tradeinstdao = new TradeInstanceDAO();
         private CommandDAO _commanddao = new CommandDAO();
-        private TemplateStockDAO _tempstockdao = new TemplateStockDAO();
-        private TradingInstanceSecurityDAO _tradeinstsecudao = new TradingInstanceSecurityDAO();
         private TradeCommandDAO _tradecommandao = new TradeCommandDAO();
         private TradeCommandSecurityDAO _tradecmdsecudao = new TradeCommandSecurityDAO();
 

@@ -202,7 +202,7 @@
 			"text": "确定要对选中的已委托证券撤补吗？"
 		},{
 			"id": "entrustcancelnoamount",
-			"text": "选择的证券中不存在可以撤销委托数量："
+			"text": "选择存在不可以撤销的证券,指令序号和委托序号为："
 		},{
 			"id": "entrustcancelredoconfirm",
 			"text": "确定要对选中的证券撤补吗？"

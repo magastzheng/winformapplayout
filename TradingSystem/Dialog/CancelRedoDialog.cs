@@ -382,13 +382,19 @@ namespace TradingSystem.Dialog
             List<CancelRedoItem> InvalidCancelItems = new List<CancelRedoItem>();
 
             //TODO: 未成交数量需要大于0
+            //只能撤销存在未成交的证券(委托数量减去成交数量大于0)
             foreach (var cancelRedoItem in cancelRedoItems)
             {
                 //选中的委托数量不能为0
-                if ((cancelRedoItem.EntrustAmount - cancelRedoItem.DealAmount) > 0)
+                if(cancelRedoItem.EntrustAmount == 0 || (cancelRedoItem.EntrustAmount - cancelRedoItem.DealAmount) == 0)
                 {
                     InvalidCancelItems.Add(cancelRedoItem);
                 }
+
+                //if ((cancelRedoItem.EntrustAmount - cancelRedoItem.DealAmount) > 0)
+                //{
+                //    InvalidCancelItems.Add(cancelRedoItem);
+                //}
             }
 
             if (InvalidCancelItems.Count == 0)
@@ -408,6 +414,7 @@ namespace TradingSystem.Dialog
                 msg = sb.ToString();
 
                 return false;
+
             }
             else
             {

@@ -7,8 +7,8 @@ namespace Quote
     public class QuoteCenter2
     {
         private readonly static QuoteCenter2 _instance = new QuoteCenter2();
-        private Quote _quote = new Quote();
-        public Quote Quote
+        private IQuote _quote = new Quote();
+        public IQuote Quote
         {
             get { return _quote; }
         }

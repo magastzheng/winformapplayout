@@ -13,9 +13,19 @@ namespace BLL.Permission
     /// There are two types of user and resource permission. One is that the user is a role and the role has the permission,
     /// then the user has the permission; the other is that the user has the permission directly. The later case is in the
     /// area where user generates the resource.
+    /// (user -->) role --> feature
     /// user --> role --> resource
     /// user --> resource
     /// A user is a role and the role has some permissions.
+    /// 
+    /// feature: the features are defines in configuration file navbar.json; The featureCode is directly comed from the navbar.js 'id;.
+    /// The featureId will be manually defined while insert into the database 'features' table. See the features_test.sql
+    /// 
+    /// RoleType is defined in RoleType.cs.
+    /// 
+    /// ResourceType is define in ResourceType.cs
+    /// 
+    /// TokenType is defined in TokenType.cs
     /// </summary>
     public class PermissionManager
     {
@@ -26,25 +36,15 @@ namespace BLL.Permission
         private PermissionCalculator _permCalculator = new PermissionCalculator();
         private UserActionTrackingBLL _userActionTrackingBLL = new UserActionTrackingBLL();
 
-        #region user role permission
+        #region user role feature permission
 
-        //public List<TokenResourcePermission> GetRolePermission(Role role)
-        //{
-        //    return _userResourcePermBLL.GetByToken(role.Id, TokenType.Role);
-        //}
-
-        //public List<TokenResourcePermission> GetUserRolePermission(User user)
-        //{
-        //    var roles = GetRoles(user);
-        //    var currentPerms = new List<TokenResourcePermission>();
-        //    foreach (var role in roles)
-        //    {
-        //        var rolePerm = GetRolePermission(role);
-        //    }
-
-        //    return currentPerms;
-        //}
-
+        /// <summary>
+        /// Check whether the user has specified permission to access the feature.
+        /// </summary>
+        /// <param name="userId">An integer value of the user id.</param>
+        /// <param name="featureCode">A string value of the feature code.</param>
+        /// <param name="mask">The permission mask to define the create/edit/remove/... permissions.</param>
+        /// <returns>It will return true if the user has the specified permission, otherwise it will return false.</returns>
         public bool HasFeaturePermission(int userId, string featureCode, PermissionMask mask)
         {
             bool hasPerm = false;
@@ -59,6 +59,13 @@ namespace BLL.Permission
             return hasPerm;
         }
 
+        /// <summary>
+        /// Grant the given feature permissions to the role.
+        /// </summary>
+        /// <param name="roleId">The role id.</param>
+        /// <param name="featureCode">The feature code.</param>
+        /// <param name="masks">The permission collection.</param>
+        /// <returns>A positive integer value indicates it successful. -1 if it fails.</returns>
         public int GrantFeaturePermission(int roleId, string featureCode, List<PermissionMask> masks)
         {
             var feature = GetFeature(featureCode);
@@ -72,6 +79,13 @@ namespace BLL.Permission
             }
         }
 
+        /// <summary>
+        /// Revoke the given feature permissions of the role.
+        /// </summary>
+        /// <param name="roleId">An integer value of the role id.</param>
+        /// <param name="featureCode">A string value of the feature code.</param>
+        /// <param name="masks">The permission collection.</param>
+        /// <returns>A positive value when it success to revoke the permission, otherwise it will return -1.</returns>
         public int RevokeFeaturePermission(int roleId, string featureCode, List<PermissionMask> masks)
         { 
             var feature = GetFeature(featureCode);
@@ -88,11 +102,27 @@ namespace BLL.Permission
 
         #region permission by on role
 
+        /// <summary>
+        /// Check whether the role has the specified permission for the given resource.
+        /// </summary>
+        /// <param name="roleId">An integer value of the role id.</param>
+        /// <param name="resourceId">An integer value of the resource id.</param>
+        /// <param name="resourceType">An enum type of the resource type.</param>
+        /// <param name="mask">An enum type of the permission.</param>
+        /// <returns>It will return true if it has the permission, otherwise it will return false.</returns>
         public bool HasRolePermission(RoleType roleId, int resourceId, ResourceType resourceType, PermissionMask mask)
         {
             return ValidatePermission(roleId, resourceId, resourceType, mask);
         }
 
+        /// <summary>
+        /// Grant the specified permissions of the resource to the given role.
+        /// </summary>
+        /// <param name="roleId">An integer value of the role id.</param>
+        /// <param name="resourceId">An integer value of the resource id.</param>
+        /// <param name="resourceType">An enum type of the resource type.</param>
+        /// <param name="masks">The specified permissions collection.</param>
+        /// <returns>A positive value if it success otherwise fail.</returns>
         public int GrantByRole(RoleType roleId, int resourceId, ResourceType resourceType, List<PermissionMask> masks)
         {
             return GrantByRole((int)roleId, resourceId, resourceType, masks);
@@ -312,6 +342,15 @@ namespace BLL.Permission
         }
         #endregion
 
+        #region delete permission row in the database
+
+        public int Delete(int resourceId, ResourceType resourceType)
+        {
+            return DeletePermission(resourceId, resourceType);
+        }
+
+        #endregion
+
         #region permission value
 
         public List<PermissionMask> GetOwnerPermission()
@@ -319,22 +358,22 @@ namespace BLL.Permission
             return new List<PermissionMask>() { PermissionMask.Edit, PermissionMask.Delete, PermissionMask.Owner, PermissionMask.View};
         }
 
-        public int AddPermission(int perm, PermissionMask mask)
+        public int GetGrantPermission(int perm, PermissionMask mask)
         {
             return _permCalculator.GrantPermission(perm, mask);
         }
 
-        public int AddPermission(int perm, List<PermissionMask> masks)
+        public int GetGrantPermission(int perm, List<PermissionMask> masks)
         {
             return _permCalculator.GrantPermission(perm, masks);
         }
 
-        public int RemovePermission(int perm, PermissionMask mask)
+        public int GetRevokePermission(int perm, PermissionMask mask)
         {
             return _permCalculator.RevokePermission(perm, mask);
         }
 
-        public int RemovePermission(int perm, List<PermissionMask> masks)
+        public int GetRevokePermission(int perm, List<PermissionMask> masks)
         {
             return _permCalculator.RevokePermission(perm, masks);
         }
@@ -375,6 +414,12 @@ namespace BLL.Permission
         {
             return _userResourcePermBLL.Get(token, tokenType, resourceId, resourceType);
         }
+
+        private int DeletePermission(int resourceId, ResourceType resourceType)
+        {
+            return _userResourcePermBLL.Delete(resourceId, resourceType);
+        }
+
         #endregion
 
         #region private method to get roles

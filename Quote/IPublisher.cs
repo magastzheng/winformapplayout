@@ -33,13 +33,13 @@ namespace Quote
             }
         }
 
-        public void Notify(PublishEvent ev)
+        public void Notify(PublishEvent ev, object data)
         {
             if (observerMap.ContainsKey(ev))
             {
                 foreach (var sub in observerMap[ev])
                 {
-                    sub.Handle(null);
+                    sub.Handle(data);
                 }
             }
         }

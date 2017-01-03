@@ -21,9 +21,9 @@ namespace BLL.Permission
             return _urpermissiondao.Update(urPermission);
         }
 
-        public int Delete(TokenResourcePermission urPermission)
+        public int Delete(int resourceId, ResourceType resourceType)
         {
-            return _urpermissiondao.Delete(urPermission.Token, urPermission.TokenType, urPermission.ResourceId, urPermission.ResourceType);
+            return _urpermissiondao.Delete(resourceId, resourceType);
         }
 
         public TokenResourcePermission Get(int token, TokenType tokenType, int resourceId, ResourceType resourceType)

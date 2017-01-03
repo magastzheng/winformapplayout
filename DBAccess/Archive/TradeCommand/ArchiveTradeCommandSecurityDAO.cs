@@ -65,11 +65,11 @@ namespace DBAccess.Archive.TradeCommand
                     item.ArchiveId = (int)reader["ArchiveId"];
                     item.CommandId = (int)reader["CommandId"];
                     item.SecuCode = (string)reader["SecuCode"];
-                    item.SecuType = (SecurityType)reader["SecuType"];
+                    item.SecuType = (SecurityType)(int)reader["SecuType"];
                     item.CommandAmount = (int)reader["CommandAmount"];
-                    item.EDirection = (EntrustDirection)reader["CommandDirection"];
+                    item.EDirection = (EntrustDirection)(int)reader["CommandDirection"];
                     item.CommandPrice = (double)(decimal)reader["CommandPrice"];
-                    item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+                    item.EntrustStatus = (EntrustStatus)(int)reader["EntrustStatus"];
 
                     items.Add(item);
                 }

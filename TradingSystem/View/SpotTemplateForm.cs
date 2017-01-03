@@ -188,7 +188,7 @@ namespace TradingSystem.View
 
         private void GridView_Template_MouseClickRow(object sender, int rowIndex)
         {
-            //
+            //检查点击事件是否触发在有效的表各项中
             if (rowIndex < 0 || rowIndex >= _tempDataSource.Count)
                 return;
 
@@ -404,13 +404,10 @@ namespace TradingSystem.View
             //update the row in the view
             if (stockTemplate.TemplateId > 0)
             {
-                for (int i = 0, count = _tempDataSource.Count; i < count; i++)
+                int targetIndex = _tempDataSource.ToList().FindIndex(p => p.TemplateId == stockTemplate.TemplateId);
+                if (targetIndex >= 0 && targetIndex < _tempDataSource.Count)
                 {
-                    if (_tempDataSource[i].TemplateId == stockTemplate.TemplateId)
-                    {
-                        _tempDataSource[i] = stockTemplate;
-                        break;
-                    }
+                    _tempDataSource[targetIndex] = stockTemplate;
                 }
             }
 
@@ -490,8 +487,7 @@ namespace TradingSystem.View
                 int rowIndex = selectIndex[i];
                 if(rowIndex >= 0 && rowIndex < _spotDataSource.Count)
                 {
-                    TemplateStock stock = _spotDataSource[rowIndex];
-                    _spotDataSource.Remove(stock);
+                    _spotDataSource.RemoveAt(rowIndex);
                 }
             }
 
@@ -697,7 +693,6 @@ namespace TradingSystem.View
             }
 
             List<SecurityItem> secuList = GetSecurityItems(template);
-            //QuoteCenter.Instance.Query(secuList);
 
             var benchmarkItem = _securityInfoList.Find(p => p.SecuCode.Equals(template.Benchmark) && p.SecuType == SecurityType.Index);
             var benchmarkData = QuoteCenter2.Instance.GetMarketData(benchmarkItem);
@@ -712,6 +707,9 @@ namespace TradingSystem.View
             {
                 bmkPrice = benchmarkData.PreClose;
             }
+
+            //指数基准当期总市值
+            //上证50、沪深300、中证500每一个点数对应不同的价格
             totalValue = bmkPrice * benchmark.ContractMultiple;
 
             var prices = GetPrices(secuList);

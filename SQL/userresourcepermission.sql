@@ -74,18 +74,15 @@ if exists (select name from sysobjects where name='procTokenResourcePermissionDe
 drop proc procTokenResourcePermissionDelete
 
 go
+--删除资源之后也要一起删除跟资源相关的权限
 create proc procTokenResourcePermissionDelete(
-	@Token			int
-	,@TokenType		int
-	,@ResourceId	int
+	@ResourceId	int
 	,@ResourceType	int
 )
 as
 begin
 	delete from tokenresourcepermission
-	where Token=@Token
-		and TokenType=@TokenType
-		and ResourceId=@ResourceId
+	where ResourceId=@ResourceId
 		and ResourceType=@ResourceType
 end
 

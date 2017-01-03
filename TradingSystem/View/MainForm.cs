@@ -6,6 +6,7 @@ using Controls.Entity;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using TradingSystem.Controller;
+using TradingSystem.Dialog;
 
 namespace TradingSystem.View
 {
@@ -135,22 +136,22 @@ namespace TradingSystem.View
 
         private void MenuItem_Click_System(object sender, System.EventArgs e)
         {
-            
+            MessageDialog.Info(this, "菜单未完成");
         }
 
         private void MenuItem_Click_View(object sender, System.EventArgs e)
         {
-            
+            MessageDialog.Info(this, "菜单未完成");
         }
 
         private void MenuItem_Click_Tool(object sender, System.EventArgs e)
         {
-            
+            MessageDialog.Info(this, "菜单未完成");
         }
 
         private void MenuItem_Click_Help(object sender, System.EventArgs e)
         {
-            
+            MessageDialog.Info(this, "菜单未完成");
         }
 
         #endregion
@@ -159,17 +160,17 @@ namespace TradingSystem.View
 
         private void ToolStripButton_Click_Open(object sender, System.EventArgs e)
         {
-            
+            MessageDialog.Info(this, "菜单未完成");
         }
 
         private void ToolStripButton_Click_Save(object sender, System.EventArgs e)
         {
-            
+            MessageDialog.Info(this, "菜单未完成");
         }
 
         private void ToolStripButton_Click_Refresh(object sender, System.EventArgs e)
         {
-            
+            MessageDialog.Info(this, "菜单未完成");
         }
 
         #endregion

@@ -32,8 +32,8 @@ namespace DBAccess.Archive.EntrustCommand
             _dbHelper.AddInParameter(dbCommand, "@Copies", System.Data.DbType.Int32, item.Copies);
             _dbHelper.AddInParameter(dbCommand, "@EntrustNo", System.Data.DbType.Int32, item.EntrustNo);
             _dbHelper.AddInParameter(dbCommand, "@BatchNo", System.Data.DbType.Int32, item.BatchNo);
-            _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, item.EntrustStatus);
-            _dbHelper.AddInParameter(dbCommand, "@DealStatus", System.Data.DbType.Int32, item.DealStatus);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)item.EntrustStatus);
+            _dbHelper.AddInParameter(dbCommand, "@DealStatus", System.Data.DbType.Int32, (int)item.DealStatus);
             _dbHelper.AddInParameter(dbCommand, "@SubmitPerson", System.Data.DbType.Int32, item.SubmitPerson);
             _dbHelper.AddInParameter(dbCommand, "@ArchiveDate", System.Data.DbType.DateTime, item.ArchiveDate);
             _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, item.CreatedDate);

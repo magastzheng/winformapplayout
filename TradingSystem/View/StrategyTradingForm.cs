@@ -60,12 +60,10 @@ namespace TradingSystem.View
 
         private EntrustBLL _entrustBLL = new EntrustBLL();
         private WithdrawBLL _withdrawBLL = new WithdrawBLL();
-        private QueryBLL _queryBLL = new QueryBLL();
 
         private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
         private TradeCommandSecurityBLL _tradeCommandSecuBLL = new TradeCommandSecurityBLL();
         private EntrustSecurityBLL _entrustSecurityBLL = new EntrustSecurityBLL();
-        private ProductBLL _productBLL = new ProductBLL();
 
         private SortableBindingList<TradeCommandItem> _cmdDataSource = new SortableBindingList<TradeCommandItem>(new List<TradeCommandItem>());
         private SortableBindingList<EntrustFlowItem> _efDataSource = new SortableBindingList<EntrustFlowItem>(new List<EntrustFlowItem>());
@@ -208,6 +206,7 @@ namespace TradingSystem.View
 
             if (cancelRedoItems.Count == 0)
             {
+                MessageDialog.Info(this, msgNoEntrustCancel);
                 return;
             }
 
@@ -269,6 +268,12 @@ namespace TradingSystem.View
                 calcItems.Add(calcItem);
             }
 
+            if (calcItems.Count == 0)
+            {
+                MessageDialog.Info(this, msgNoEntrustCancel);
+                return;
+            }
+
             var form = new CancelEntrustDialog(_gridConfig);
             form.Owner = this;
             form.OnLoadControl(form, null);
@@ -314,6 +319,12 @@ namespace TradingSystem.View
                 {
                     calcItems.Add(cancelRedoItem);
                 }
+            }
+
+            if (calcItems.Count == 0)
+            {
+                MessageDialog.Info(this, msgNoEntrustCancel);
+                return;
             }
 
             var form = new CancelEntrustDialog(_gridConfig);

@@ -1,5 +1,6 @@
 ﻿using Controls.Entity;
 using Controls.GridView;
+using ControlsTest.Entity;
 using Model.Binding;
 using Model.Binding.BindingUtil;
 using Model.config;
@@ -12,7 +13,7 @@ namespace ControlsTest
     public partial class TSDGVComboBoxVarRowForm : Form
     {
         private SortableBindingList<CBRowItem> _dataSource = new SortableBindingList<CBRowItem>(new List<CBRowItem>());
-        
+
         public TSDGVComboBoxVarRowForm()
         {
             InitializeComponent();
@@ -29,14 +30,14 @@ namespace ControlsTest
 
         private void Form_Load(object sender, EventArgs e)
         {
-            HSGrid hsGrid = GetGridConfig();
+            HSGrid hsGrid = CBRowItemHelper.GetGridConfig();
             TSDataGridViewHelper.AddColumns(this.tsDataGridView1, hsGrid);
             Dictionary<string, string> columnMap = GridViewBindingHelper.GetPropertyBinding(typeof(CBRowItem));
             TSDataGridViewHelper.SetDataBinding(this.tsDataGridView1, columnMap);
             this.tsDataGridView1.DataSource = _dataSource;
 
             //Load Data
-            var listData = GetData();
+            var listData = CBRowItemHelper.GetData();
             foreach (var item in listData)
             {
                 _dataSource.Add(item);
@@ -48,116 +49,5 @@ namespace ControlsTest
 
         }
 
-        private HSGrid GetGridConfig()
-        {
-            HSGrid hsGrid = new HSGrid
-            {
-                Columns = new List<HSGridColumn>()
-            };
-
-            HSGridColumn col1 = new HSGridColumn
-            {
-                Name = "name",
-                Text = "Name",
-                ColumnType = HSGridColumnType.Text,
-                ValueType = Model.Data.DataValueType.String,
-                Width = 60,
-                Visible = 1
-            };
-            hsGrid.Columns.Add(col1);
-
-
-            HSGridColumn col2 = new HSGridColumn
-            {
-                Name = "id",
-                Text = "Id",
-                ColumnType = HSGridColumnType.ComboBox,
-                ValueType = Model.Data.DataValueType.String,
-                Width = 60,
-                Visible = 1
-            };
-            hsGrid.Columns.Add(col2);
-
-            HSGridColumn col3 = new HSGridColumn
-            {
-                Name = "id_source",
-                Text = "IdSource",
-                ColumnType = HSGridColumnType.Text,
-                ValueType = Model.Data.DataValueType.String,
-                Width = 60,
-                Visible = 0
-            };
-            hsGrid.Columns.Add(col3);
-
-            return hsGrid;
-        }
-
-        private List<CBRowItem> GetData()
-        {
-            var listData = new List<CBRowItem>();
-            CBRowItem item = new CBRowItem 
-            {
-                Name = "Test 1",
-                Id = "Cb0_0",
-                IdSource = GetComboBoxData(0)
-            };
-            listData.Add(item);
-
-            item = new CBRowItem
-            {
-                Name = "Test 2",
-                Id = "Cb1_2",
-                IdSource = GetComboBoxData(1)
-            };
-            listData.Add(item);
-
-            item = new CBRowItem
-            {
-                Name = "Test 3",
-                Id = "Cb2_3",
-                IdSource = GetComboBoxData(2)
-            };
-            listData.Add(item);
-
-            return listData;
-        }
-
-        private ComboOption GetComboBoxData(int index)
-        {
-            string suffix = index.ToString();
-
-            ComboOption cbOption = new ComboOption
-            {
-                Name = "combobox" + suffix,
-                Items = new List<ComboOptionItem>()
-            };
-
-            for (int i = 0; i < 4; i++)
-            {
-                string id = string.Format("Cb{0}_{1}", index, i);
-                string text = string.Format("{0} Text", id);
-                ComboOptionItem item = new ComboOptionItem
-                {
-                    Id = id,
-                    Name = text,
-                    Order1 = i
-                };
-                cbOption.Items.Add(item);
-            }
-
-            return cbOption;
-        }
-    }
-
-    public class CBRowItem
-    {
-        [BindingAttribute("name")]
-        public string Name { get; set; }
-
-        [BindingAttribute("id")]
-        public string Id { get; set; }
-
-        [BindingAttribute("id_source")]
-        public ComboOption IdSource { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Model.config;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -96,33 +97,33 @@ namespace Controls.GridView
                 _dgvComboBox = null;
             }
 
-            //DataGridViewColumn column = dgv.Columns[e.ColumnIndex];
+            DataGridViewColumn column = dgv.Columns[e.ColumnIndex];
 
-            //if (column is DataGridViewComboBoxColumn)
-            //{
-            //    string cbSource = string.Format("{0}_{1}", column.Name, "source");
-            //    DataGridViewColumn srccolumn = dgv.Columns[cbSource];
-            //    if(srccolumn != null)
-            //    {
-            //        var cellSource = dgv.Rows[e.RowIndex].Cells[srccolumn.Name];
-            //        ComboOption cbOption = (ComboOption)cellSource.Value;
-            //        if (cbOption != null)
-            //        {
-            //            var cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
-            //            var cbCell = (DataGridViewComboBoxCell)cell;
-            //            if (cbCell != null)
-            //            {
-            //                //cbCell.DataSource = cbOption.Items;
-            //                //cbCell.DisplayMember = "Name";
-            //                //cbCell.ValueMember = "Id";
-            //                cbCell.Items.Clear();
-            //                cbCell.Items.AddRange(cbOption.Items);
-            //                cbCell.DisplayMember = "Name";
-            //                cbCell.ValueMember = "Id";
-            //            }
-            //        }
-            //    }
-            //}
+            if (column is DataGridViewComboBoxColumn)
+            {
+                string cbSource = string.Format("{0}_{1}", column.Name, "source");
+                DataGridViewColumn srccolumn = dgv.Columns[cbSource];
+                if (srccolumn != null)
+                {
+                    var cellSource = dgv.Rows[e.RowIndex].Cells[srccolumn.Name];
+                    ComboOption cbOption = (ComboOption)cellSource.Value;
+                    if (cbOption != null)
+                    {
+                        var theCell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                        var cbCell = (DataGridViewComboBoxCell)theCell;
+                        if (cbCell != null)
+                        {
+                            //cbCell.DataSource = cbOption.Items;
+                            //cbCell.DisplayMember = "Name";
+                            //cbCell.ValueMember = "Id";
+                            cbCell.Items.Clear();
+                            cbCell.Items.AddRange(cbOption.Items);
+                            cbCell.DisplayMember = "Name";
+                            cbCell.ValueMember = "Id";
+                        }
+                    }
+                }
+            }
         }
 
         private void DataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)

@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Archive\Deal\ArchiveDealSecurityDAO.cs" />
     <Compile Include="AssetUnitDAO.cs" />
     <Compile Include="BaseDAO.cs" />
     <Compile Include="Archive\EntrustCommand\ArchiveEntrustCommandDAO.cs" />

@@ -55,6 +55,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Archive\Deal\ArchiveDealSecurityBLL.cs" />
+    <Compile Include="Archive\EntrustCommand\ArchiveEntrustCommandBLL.cs" />
+    <Compile Include="Archive\EntrustCommand\ArchiveEntrustSecurityBLL.cs" />
+    <Compile Include="Archive\TradeCommand\ArchiveTradeCommandBLL.cs" />
+    <Compile Include="Archive\TradeCommand\ArchiveTradeCommandSecurityBLL.cs" />
     <Compile Include="EntrustCommand\EntrustCommandBLL.cs" />
     <Compile Include="EntrustCommand\EntrustSecurityBLL.cs" />
     <Compile Include="Entrust\Security\UFXQuerySecurityDealBLL.cs" />

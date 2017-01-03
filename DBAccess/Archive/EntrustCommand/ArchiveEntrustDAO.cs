@@ -49,8 +49,8 @@ namespace DBAccess.Archive.EntrustCommand
                 _dbHelper.AddInParameter(dbCommand, "@Copies", System.Data.DbType.Int32, cmdItem.Copies);
                 _dbHelper.AddInParameter(dbCommand, "@EntrustNo", System.Data.DbType.Int32, cmdItem.EntrustNo);
                 _dbHelper.AddInParameter(dbCommand, "@BatchNo", System.Data.DbType.Int32, cmdItem.BatchNo);
-                _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, cmdItem.EntrustStatus);
-                _dbHelper.AddInParameter(dbCommand, "@DealStatus", System.Data.DbType.Int32, cmdItem.DealStatus);
+                _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)cmdItem.EntrustStatus);
+                _dbHelper.AddInParameter(dbCommand, "@DealStatus", System.Data.DbType.Int32, (int)cmdItem.DealStatus);
                 _dbHelper.AddInParameter(dbCommand, "@SubmitPerson", System.Data.DbType.Int32, cmdItem.SubmitPerson);
                 _dbHelper.AddInParameter(dbCommand, "@ArchiveDate", System.Data.DbType.DateTime, cmdItem.ArchiveDate);
                 _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, cmdItem.CreatedDate);
@@ -81,7 +81,7 @@ namespace DBAccess.Archive.EntrustCommand
                         _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, entrustItem.SubmitId);
                         _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, entrustItem.CommandId);
                         _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, entrustItem.SecuCode);
-                        _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, entrustItem.SecuType);
+                        _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, (int)entrustItem.SecuType);
                         _dbHelper.AddInParameter(dbCommand, "@EntrustAmount", System.Data.DbType.Int32, entrustItem.EntrustAmount);
                         _dbHelper.AddInParameter(dbCommand, "@EntrustPrice", System.Data.DbType.Decimal, entrustItem.EntrustPrice);
                         _dbHelper.AddInParameter(dbCommand, "@EntrustDirection", System.Data.DbType.Int32, (int)entrustItem.EntrustDirection);
