@@ -20,12 +20,12 @@
         private void InitializeComponent()
         {
             this.topPanel = new System.Windows.Forms.Panel();
+            this.lblCaption = new System.Windows.Forms.Label();
             this.bottomPanel = new System.Windows.Forms.Panel();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.btnConfirm = new System.Windows.Forms.Button();
             this.mainPanel = new System.Windows.Forms.Panel();
             this.instGridView = new Controls.GridView.TSDataGridView();
-            this.btnConfirm = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.lblCaption = new System.Windows.Forms.Label();
             this.topPanel.SuspendLayout();
             this.bottomPanel.SuspendLayout();
             this.mainPanel.SuspendLayout();
@@ -42,6 +42,15 @@
             this.topPanel.Size = new System.Drawing.Size(710, 54);
             this.topPanel.TabIndex = 0;
             // 
+            // lblCaption
+            // 
+            this.lblCaption.AutoSize = true;
+            this.lblCaption.Location = new System.Drawing.Point(295, 18);
+            this.lblCaption.Name = "lblCaption";
+            this.lblCaption.Size = new System.Drawing.Size(149, 12);
+            this.lblCaption.TabIndex = 0;
+            this.lblCaption.Text = "期现套利平仓（调仓）确认";
+            // 
             // bottomPanel
             // 
             this.bottomPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -52,6 +61,24 @@
             this.bottomPanel.Name = "bottomPanel";
             this.bottomPanel.Size = new System.Drawing.Size(710, 35);
             this.bottomPanel.TabIndex = 1;
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.Location = new System.Drawing.Point(586, 7);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.TabIndex = 1;
+            this.btnCancel.Text = "取消";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            // 
+            // btnConfirm
+            // 
+            this.btnConfirm.Location = new System.Drawing.Point(489, 7);
+            this.btnConfirm.Name = "btnConfirm";
+            this.btnConfirm.Size = new System.Drawing.Size(75, 23);
+            this.btnConfirm.TabIndex = 0;
+            this.btnConfirm.Text = "确认";
+            this.btnConfirm.UseVisualStyleBackColor = true;
             // 
             // mainPanel
             // 
@@ -74,33 +101,6 @@
             this.instGridView.Size = new System.Drawing.Size(710, 302);
             this.instGridView.TabIndex = 0;
             // 
-            // btnConfirm
-            // 
-            this.btnConfirm.Location = new System.Drawing.Point(489, 7);
-            this.btnConfirm.Name = "btnConfirm";
-            this.btnConfirm.Size = new System.Drawing.Size(75, 23);
-            this.btnConfirm.TabIndex = 0;
-            this.btnConfirm.Text = "确认";
-            this.btnConfirm.UseVisualStyleBackColor = true;
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Location = new System.Drawing.Point(586, 7);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 1;
-            this.btnCancel.Text = "取消";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            // 
-            // lblCaption
-            // 
-            this.lblCaption.AutoSize = true;
-            this.lblCaption.Location = new System.Drawing.Point(295, 18);
-            this.lblCaption.Name = "lblCaption";
-            this.lblCaption.Size = new System.Drawing.Size(149, 12);
-            this.lblCaption.TabIndex = 0;
-            this.lblCaption.Text = "期现套利平仓（调仓）确认";
-            // 
             // ClosePositionDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -109,6 +109,7 @@
             this.Controls.Add(this.bottomPanel);
             this.Controls.Add(this.topPanel);
             this.Name = "ClosePositionDialog";
+            this.Text = "平仓（调仓）确认";
             this.topPanel.ResumeLayout(false);
             this.topPanel.PerformLayout();
             this.bottomPanel.ResumeLayout(false);

@@ -325,6 +325,7 @@ namespace TradingSystem.Dialog
             this.Controls.Add(this.lblTemplateNo);
             this.Controls.Add(this.panelTop);
             this.Name = "TemplateDialog";
+            this.Text = "组合模板信息";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();

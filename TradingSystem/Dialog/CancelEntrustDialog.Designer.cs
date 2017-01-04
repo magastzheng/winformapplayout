@@ -129,6 +129,7 @@
             this.Controls.Add(this.bottomPanel);
             this.Controls.Add(this.topPanel);
             this.Name = "CancelEntrustDialog";
+            this.Text = "委托撤单";
             this.topPanel.ResumeLayout(false);
             this.topPanel.PerformLayout();
             this.bottomPanel.ResumeLayout(false);

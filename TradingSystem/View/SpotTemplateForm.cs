@@ -663,7 +663,7 @@ namespace TradingSystem.View
                 return;
             }
 
-            var invalidSecuItem = _spotDataSource.Where(p => p.SettingWeight <= 0.0001 || p.Amount == 0).ToList();
+            var invalidSecuItem = _spotDataSource.Where(p => FloatUtil.IsZero(p.SettingWeight) || p.Amount == 0).ToList();
             if (invalidSecuItem != null && invalidSecuItem.Count() > 0)
             {
                 if (MessageDialog.Warn(this, msgSecurityZeroWeight, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)

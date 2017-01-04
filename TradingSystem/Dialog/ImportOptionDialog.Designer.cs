@@ -114,6 +114,7 @@
             this.Controls.Add(this.gbFormatDesc);
             this.Controls.Add(this.gbImportType);
             this.Name = "ImportOptionDialog";
+            this.Text = "Excel导入说明";
             this.gbImportType.ResumeLayout(false);
             this.gbImportType.PerformLayout();
             this.gbFormatDesc.ResumeLayout(false);

@@ -215,6 +215,7 @@
             this.Controls.Add(this.lblSecuCode);
             this.Controls.Add(this.panel1);
             this.Name = "PortfolioSecurityDialog";
+            this.Text = "组合证券信息";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();

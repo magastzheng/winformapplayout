@@ -310,9 +310,22 @@ namespace TradingSystem.View
             return true;
         }
 
-        private void LoadTradeCommand()
+        private void ClearCommandDetailData()
+        {
+            _secuDataSource.Clear();
+            _entrustDataSource.Clear();
+            _dealDataSource.Clear();
+        }
+
+        private void ClearCommandData()
         {
             _dataSource.Clear();
+        }
+
+        private void LoadTradeCommand()
+        {
+            ClearCommandData();
+
             var commandItems = _commandManagementBLL.GetCommandItems();
             if (commandItems != null && commandItems.Count > 0)
             {
@@ -327,13 +340,12 @@ namespace TradingSystem.View
             LoadCommandSummary(cmdMngItem);
 
             //TODO: load the security/entrust/deal information
-            LoadSecurityItems(cmdMngItem);
-            LoadEntrustItems(cmdMngItem);
-            LoadDealItems(cmdMngItem);
+            LoadCommandSecurities(cmdMngItem);
         }
 
         private void LoadCommandSecurities(CommandManagementItem cmdMngItem)
         {
+            ClearCommandDetailData();
             LoadSecurityItems(cmdMngItem);
             LoadEntrustItems(cmdMngItem);
             LoadDealItems(cmdMngItem);
