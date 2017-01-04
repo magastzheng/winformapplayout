@@ -68,21 +68,13 @@ namespace DBAccess.Template
             return newid;
         }
 
-        public string Delete(int templateNo, string secuCode)
+        public int Delete(int templateNo, string secuCode)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Delete);
             _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, templateNo);
             _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, secuCode);
 
-            _dbHelper.AddOutParameter(dbCommand, "@ReturnValue", System.Data.DbType.String, 20);
-
-            string newid = string.Empty;
-            int ret = _dbHelper.ExecuteNonQuery(dbCommand);
-            if (ret >= 0)
-            {
-                newid = (string)dbCommand.Parameters["@ReturnValue"].Value;
-            }
-            return newid;
+            return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
         public int Delete(int templateNo)
@@ -91,6 +83,52 @@ namespace DBAccess.Template
             _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, templateNo);
 
             int ret = _dbHelper.ExecuteNonQuery(dbCommand);
+            return ret;
+        }
+
+        public int Delete(List<TemplateStock> stocks)
+        { 
+            var dbCommand = _dbHelper.GetCommand();
+            _dbHelper.Open(dbCommand);
+
+            //use transaction to execute
+            DbTransaction transaction = dbCommand.Connection.BeginTransaction();
+            dbCommand.Transaction = transaction;
+            dbCommand.CommandType = System.Data.CommandType.StoredProcedure;
+            int ret = 0;
+            try
+            {
+                foreach (var stock in stocks)
+                {
+                    dbCommand.Parameters.Clear();
+                    dbCommand.CommandText = SP_Delete;
+
+                    _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, stock.TemplateNo);
+                    _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, stock.SecuCode);
+
+                    int retDel = dbCommand.ExecuteNonQuery();
+                    if (retDel > 0)
+                    {
+                        ret++;
+                    }
+                }
+
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                //TODO: add log
+                logger.Error(ex);
+                ret = -1;
+                throw;
+            }
+            finally
+            {
+                _dbHelper.Close(dbCommand.Connection);
+                transaction.Dispose();
+            }
+
             return ret;
         }
 

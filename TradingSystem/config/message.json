@@ -87,6 +87,12 @@
 			"id": "tempsecuritymodifyselect",
 			"text": "请选择需要修改的证券！"
 		},{
+			"id": "tempsecuritydeletesuccess",
+			"text": "选中证券删除成功！"
+		},{
+			"id": "tempsecuritydeletefail",
+			"text": "选中证券删除失败！"
+		},{
 			"id": "tempsecuritymodifyonlyonce",
 			"text": "每次仅能对一支证券修改！"
 		},{

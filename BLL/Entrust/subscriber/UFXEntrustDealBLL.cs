@@ -1,9 +1,9 @@
-﻿using BLL.EntrustCommand;
+﻿using BLL.Deal;
+using BLL.EntrustCommand;
 using BLL.TradeInstance;
 using BLL.UFX;
 using BLL.UFX.impl;
 using Config.ParamConverter;
-using DBAccess;
 using log4net;
 using Model.Binding.BindingUtil;
 using Model.Database;
@@ -16,7 +16,7 @@ namespace BLL.Entrust.subscriber
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private DealSecurityDAO _dealsecudao = new DealSecurityDAO();
+        private DealSecurityBLL _dealSecurityBLL = new DealSecurityBLL();
         private EntrustSecurityBLL _entrustSecurityBLL = new EntrustSecurityBLL();
         private TradeInstanceSecurityBLL _tradeInstanceSecuBLL = new TradeInstanceSecurityBLL();
 
@@ -61,7 +61,7 @@ namespace BLL.Entrust.subscriber
 
                             //TODO: save into database
                             var dealItem = Convert(responseItem);
-                            _dealsecudao.Create(dealItem);
+                            _dealSecurityBLL.Create(dealItem);
 
                             //Update the TradingInstanceSecurity
                             _tradeInstanceSecuBLL.UpdateToday(dealItem.EntrustDirection, commandId, dealItem.SecuCode, dealItem.DealAmount, dealItem.DealBalance, dealItem.DealFee);

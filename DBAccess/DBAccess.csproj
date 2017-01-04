@@ -57,7 +57,7 @@
     <Compile Include="Archive\TradeCommand\ArchiveTradeCommandSecurityDAO.cs" />
     <Compile Include="TradeCommand\CommandDAO.cs" />
     <Compile Include="DbHelper.cs" />
-    <Compile Include="DealSecurityDAO.cs" />
+    <Compile Include="Deal\DealSecurityDAO.cs" />
     <Compile Include="EntrustCommand\EntrustCommandDAO.cs" />
     <Compile Include="EntrustCommand\EntrustDAO.cs" />
     <Compile Include="EntrustCommand\EntrustSecurityDAO.cs" />

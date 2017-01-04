@@ -320,15 +320,12 @@ go
 
 create proc procTemplateStockDelete(
 	@TemplateId int,
-	@SecuCode varchar(10),
-	@ReturnValue varchar(20) output
+	@SecuCode varchar(10)
 )
 as
 begin
 	delete from templatestock
 	where TemplateId = @TemplateId and SecuCode = @SecuCode
-
-	set @ReturnValue=@SecuCode+';'+convert(varchar, @TemplateId)
 end
 
 go

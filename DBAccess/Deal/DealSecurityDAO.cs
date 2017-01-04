@@ -3,7 +3,7 @@ using Model.Database;
 using Model.EnumType;
 using System.Collections.Generic;
 
-namespace DBAccess
+namespace DBAccess.Deal
 {
     public class DealSecurityDAO: BaseDAO
     {

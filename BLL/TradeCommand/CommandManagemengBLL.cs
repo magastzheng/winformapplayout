@@ -196,7 +196,10 @@ namespace BLL.TradeCommand
                             CommandId = cmdMngItem.CommandId,
                         };
 
-                        entrustItem.DealPercent = entrustItem.TodayDealAmount / entrustItem.EntrustAmount;
+                        if (entrustItem.EntrustAmount > 0)
+                        {
+                            entrustItem.DealPercent = entrustItem.TodayDealAmount / entrustItem.EntrustAmount;
+                        }
 
                         entrustItems.Add(entrustItem);
                     }

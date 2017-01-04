@@ -39,6 +39,8 @@ namespace TradingSystem.View
         private const string msgAddTempSelect = "tempaddselect";
         private const string msgInvalidSelect = "tempinvalidselect";
         private const string msgSecurityModifySelect = "tempsecuritymodifyselect";
+        private const string msgSecurityDeleteSuccess = "tempsecuritydeletesuccess";
+        private const string msgSecurityDeleteFail = "tempsecuritydeletefail";
         private const string msgSecurityModifyOnlyOnce = "tempsecuritymodifyonlyonce";
         private const string msgCannotAddSameSecurity = "tempcannotaddsamesecurity";
         private const string msgSecurityZeroWeight = "tempsecurityzeroweight";
@@ -482,16 +484,32 @@ namespace TradingSystem.View
                 return;
             }
 
-            for (int i = selectIndex.Count - 1; i >= 0; i--)
-            { 
+            List<TemplateStock> deleteItems = new List<TemplateStock>();
+            for (int i = 0, count = selectIndex.Count; i < count; i++)
+            {
                 int rowIndex = selectIndex[i];
-                if(rowIndex >= 0 && rowIndex < _spotDataSource.Count)
+                if (rowIndex >= 0 && rowIndex < _spotDataSource.Count)
                 {
-                    _spotDataSource.RemoveAt(rowIndex);
+                    deleteItems.Add(_spotDataSource[rowIndex]);
                 }
             }
 
-            SwitchTemplateStockSave(true);
+            int success = _templateBLL.DeleteStock(deleteItems);
+            if (success > 0)
+            {
+                foreach (var deleteItem in deleteItems)
+                {
+                    _spotDataSource.Remove(deleteItem);
+                }
+
+                MessageDialog.Info(this, msgSecurityDeleteSuccess);
+            }
+            else
+            {
+                MessageDialog.Info(this, msgSecurityDeleteFail);
+            }
+
+            SwitchTemplateStockSave(false);
         }
 
         private void ToolStripButton_AddStock_Click(object sender, EventArgs e)
@@ -711,19 +729,43 @@ namespace TradingSystem.View
             //指数基准当期总市值
             //上证50、沪深300、中证500每一个点数对应不同的价格
             totalValue = bmkPrice * benchmark.ContractMultiple;
+            totalValue = totalValue * template.MarketCapOpt;
 
             var prices = GetPrices(secuList);
             var amounts = CalcUtil.CalcStockAmountPerCopyRound(totalValue, weights, prices);
             var mktCaps = GetMarketCap(prices, amounts);
-            
-            double totalCap = mktCaps.Sum();
-            for (int i = 0, count = _spotDataSource.Count; i < count; i++)
+            switch (template.EWeightType)
             {
-                var stock = _spotDataSource[i];
-                stock.Amount = amounts[i];
-                stock.MarketCap = mktCaps[i];
-                stock.MarketCapWeight = 100 * stock.MarketCap / totalCap;
+                case Model.EnumType.WeightType.ProportionalWeight:
+                    {
+                        double totalCap = mktCaps.Sum();
+                        for (int i = 0, count = _spotDataSource.Count; i < count; i++)
+                        {
+                            var stock = _spotDataSource[i];
+                            stock.Amount = amounts[i];
+                            stock.MarketCap = mktCaps[i];
+                            stock.MarketCapWeight = 100 * stock.MarketCap / totalCap;
+                        }
+                    }
+                    break;
+                case Model.EnumType.WeightType.AmountWeight:
+                    {
+                        var totalAmount = amounts.Sum();
+                        double totalCap = mktCaps.Sum();
+                        for (int i = 0, count = _spotDataSource.Count; i < count; i++)
+                        {
+                            var stock = _spotDataSource[i];
+                            stock.Amount = amounts[i];
+                            stock.MarketCap = mktCaps[i];
+                            stock.MarketCapWeight = 100 * stock.MarketCap / totalCap;
+                            stock.SettingWeight = 100 * (double)stock.Amount / (double)totalAmount;
+                        }
+                    }
+                    break;
+                default:
+                    break;
             }
+            
         }
 
         private void CalculateAmount(StockTemplate template)
