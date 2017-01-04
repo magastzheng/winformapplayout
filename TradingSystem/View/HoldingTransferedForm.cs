@@ -244,8 +244,8 @@ namespace TradingSystem.View
             //TODO:
             LoadProductData();
 
-            UFXQueryHoldingBLL holdingBLL = new UFXQueryHoldingBLL();
-            holdingBLL.Query(null);
+            //UFXQueryHoldingBLL holdingBLL = new UFXQueryHoldingBLL();
+            //holdingBLL.Query(null);
 
             return true;
         }
