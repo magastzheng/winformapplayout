@@ -12,6 +12,9 @@ using System.Threading;
 
 namespace BLL.Entrust
 {
+    /// <summary>
+    /// 撤销必须使用同步请求吗
+    /// </summary>
     public class UFXWithdrawBLL
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);

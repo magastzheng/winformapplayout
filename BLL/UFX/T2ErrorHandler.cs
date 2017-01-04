@@ -12,7 +12,12 @@ namespace BLL.UFX
     {
         public static UFXErrorResponse Handle(DataParser dataParser)
         {
-            UFXErrorResponse errorResponse = new UFXErrorResponse();
+            //Set the default error code as -1, meaning failure
+            UFXErrorResponse errorResponse = new UFXErrorResponse
+            {
+                ErrorCode = -1
+            };
+
             if (dataParser.DataSets.Count == 0)
             {
                 return errorResponse;

@@ -19,9 +19,19 @@ namespace BLL.Entrust.subscriber
                         bll = new UFXEntrustCommitBLL();
                     }
                     break;
+                case UFXPushMessageType.EntrustFailed:
+                    {
+                        bll = new UFXEntrustFailedBLL();
+                    }
+                    break;
                 case UFXPushMessageType.EntrustWithdrawDone:
                     {
                         bll = new UFXWithdrawCompletedBLL();
+                    }
+                    break;
+                case UFXPushMessageType.EntrustWithdrawFailed:
+                    {
+                        bll = new UFXWithdrawFailedBLL();
                     }
                     break;
                 case UFXPushMessageType.EntrustDeal:

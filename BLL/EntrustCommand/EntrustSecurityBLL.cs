@@ -31,6 +31,11 @@ namespace BLL.EntrustCommand
             return _entrustsecudao.UpdateEntrustStatusByEntrustNo(entrustNo, entrustStatus);
         }
 
+        public int UpdateEntrustStatusByRequestId(int requestId, int entrustNo, int batchNo, int entrustFailCode, string entrustFailCause)
+        {
+            return _entrustsecudao.UpdateEntrustStatusByRequestId(requestId, entrustNo, batchNo, entrustFailCode, entrustFailCause);
+        }
+
         #endregion
 
         #region delete

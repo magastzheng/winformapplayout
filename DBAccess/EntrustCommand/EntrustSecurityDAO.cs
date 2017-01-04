@@ -11,6 +11,7 @@ namespace DBAccess.EntrustCommand
         private const string SP_ModifyDeal = "procEntrustSecurityUpdateDeal";
         private const string SP_ModifyEntrustStatus = "procEntrustSecurityUpdateEntrustStatus";
         private const string SP_ModifyEntrustStatusByEntrustNo = "procEntrustSecurityUpdateEntrustStatusByEntrustNo";
+        private const string SP_ModifyEntrustStatusByRequestId = "procEntrustSecurityUpdateResponseByRequestId";
 
         private const string SP_Delete = "procEntrustSecurityDelete";
         private const string SP_DeleteBySubmitId = "procEntrustSecurityDeleteBySubmitId";
@@ -72,6 +73,19 @@ namespace DBAccess.EntrustCommand
             _dbHelper.AddInParameter(dbCommand, "@EntrustNo", System.Data.DbType.Int32, entrustNo);
             _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)entrustStatus);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int UpdateEntrustStatusByRequestId(int requestId, int entrustNo, int batchNo, int entrustFailCode, string entrustFailCause)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyEntrustStatusByRequestId);
+            _dbHelper.AddInParameter(dbCommand, "@RequestId", System.Data.DbType.Int32, requestId);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustNo", System.Data.DbType.Int32, entrustNo);
+            _dbHelper.AddInParameter(dbCommand, "@BatchNo", System.Data.DbType.Int32, batchNo);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustFailCode", System.Data.DbType.Int32, entrustFailCode);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustFailCause", System.Data.DbType.String, entrustFailCause);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }

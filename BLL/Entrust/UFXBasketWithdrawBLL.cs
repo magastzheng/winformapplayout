@@ -44,9 +44,6 @@ namespace BLL.Entrust
                 BatchNo = cmdItem.BatchNo,
             };
 
-            List<UFXBasketWithdrawRequest> requests = new List<UFXBasketWithdrawRequest>();
-            requests.Add(request);
-
             Callbacker callbacker = new Callbacker
             {
                 Token = new CallerToken
@@ -60,7 +57,7 @@ namespace BLL.Entrust
                 DataHandler = WithdrawDataHandler,
             };
 
-            var result = _securityBLL.WithdrawBasket(requests, callbacker);
+            var result = _securityBLL.WithdrawBasket(request, callbacker);
             if (result == Model.ConnectionCode.Success)
             {
                 if (callbacker.Token.WaitEvent.WaitOne(_timeOut))

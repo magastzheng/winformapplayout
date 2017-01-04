@@ -9,21 +9,22 @@ using System.Collections.Generic;
 
 namespace BLL.Entrust.subscriber
 {
-    public class UFXWithdrawCompletedBLL : IUFXSubsriberBLLBase
+    public class UFXEntrustFailedBLL : IUFXSubsriberBLLBase
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private EntrustSecurityBLL _entrustSecurityBLL = new EntrustSecurityBLL();
 
-        public UFXWithdrawCompletedBLL()
+        public UFXEntrustFailedBLL()
         { 
+            
         }
 
         public int Handle(DataParser dataParser)
         {
-            List<UFXWithdrawCompletedResponse> responseItems = new List<UFXWithdrawCompletedResponse>();
-            var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXWithdrawCompletedResponse>();
-            
+            List<UFXEntrustFailedResponse> responseItems = new List<UFXEntrustFailedResponse>();
+            var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXEntrustFailedResponse>();
+
             var errorResponse = T2ErrorHandler.Handle(dataParser);
             if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
@@ -33,19 +34,18 @@ namespace BLL.Entrust.subscriber
                     var dataSet = dataParser.DataSets[i];
                     foreach (var dataRow in dataSet.Rows)
                     {
-                        UFXWithdrawCompletedResponse p = new UFXWithdrawCompletedResponse();
-                        UFXDataSetHelper.SetValue<UFXWithdrawCompletedResponse>(ref p, dataRow.Columns, dataFieldMap);
+                        UFXEntrustFailedResponse p = new UFXEntrustFailedResponse();
+                        UFXDataSetHelper.SetValue<UFXEntrustFailedResponse>(ref p, dataRow.Columns, dataFieldMap);
                         responseItems.Add(p);
                     }
                 }
             }
 
             //update the database
-            //handle in the message or in the return of the call place?
             if (responseItems.Count > 0)
             {
                 foreach (var responseItem in responseItems)
-                { 
+                {
                     int commandId;
                     int submitId;
                     int requestId;
@@ -53,7 +53,7 @@ namespace BLL.Entrust.subscriber
                     //TODO: add log
                     if (EntrustRequestHelper.ParseThirdReff(responseItem.ThirdReff, out commandId, out submitId, out requestId))
                     {
-                        _entrustSecurityBLL.UpdateEntrustStatusByRequestId(requestId, responseItem.EntrustNo, responseItem.BatchNo, 0, string.Empty);
+                        _entrustSecurityBLL.UpdateEntrustStatus(submitId, commandId, responseItem.StockCode, Model.EnumType.EntrustStatus.EntrustFailed);
                     }
                     else
                     {

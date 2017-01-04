@@ -293,7 +293,7 @@ namespace Model.UFX
         EntrustConfirm = 'b',
 
         //委托废单
-        EntrustScrap = 'c',
+        EntrustFailed = 'c',
 
         //委托撤单
         EntrustWithdraw = 'd',
@@ -302,7 +302,7 @@ namespace Model.UFX
         EntrustWithdrawDone = 'e',
 
         //委托撤废
-        EntrustWithdrawWaste = 'f',
+        EntrustWithdrawFailed = 'f',
 
         //委托成交
         EntrustDeal = 'g',

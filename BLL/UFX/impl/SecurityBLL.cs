@@ -50,8 +50,10 @@ namespace BLL.UFX.impl
             return Submit<UFXBasketEntrustRequest>(FunctionCode.EntrustBasket, requests, callbacker);
         }
 
-        public ConnectionCode WithdrawBasket(List<UFXBasketWithdrawRequest> requests, Callbacker callbacker)
+        public ConnectionCode WithdrawBasket(UFXBasketWithdrawRequest request, Callbacker callbacker)
         {
+            List<UFXBasketWithdrawRequest> requests = new List<UFXBasketWithdrawRequest> { request };
+
             return Submit<UFXBasketWithdrawRequest>(FunctionCode.WithdrawBasket, requests, callbacker);
         }
 

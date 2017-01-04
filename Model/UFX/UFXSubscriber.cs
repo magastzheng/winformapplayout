@@ -91,6 +91,170 @@ namespace Model.UFX
     }
 
     /// <summary>
+    /// 委托确认后推送本条委托信息
+    /// msgtype="b"
+    /// </summary>
+    public class UFXEntrustCommitConfirmResponse
+    {
+        [UFXDataAttribute("business_date", Data.DataValueType.Int)]
+        public int BusinessDate { get; set; }
+
+        [UFXDataAttribute("business_time", Data.DataValueType.Int)]
+        public int BusinessTime { get; set; }
+
+        [UFXDataAttribute("batch_no", Data.DataValueType.Int)]
+        public int BatchNo { get; set; }
+
+        [UFXDataAttribute("entrust_no", Data.DataValueType.Int)]
+        public int EntrustNo { get; set; }
+
+        [UFXDataAttribute("account_code")]
+        public string AccountCode { get; set; }
+
+        [UFXDataAttribute("combi_no")]
+        public string CombiNo { get; set; }
+
+        [UFXDataAttribute("instance_no")]
+        public string InstanceNo { get; set; }
+
+        [UFXDataAttribute("stockholder_id")]
+        public string StockHolderId { get; set; }
+
+        [UFXDataAttribute("report_seat")]
+        public string ReportSeat { get; set; }
+
+        [UFXDataAttribute("market_no")]
+        public string MarketNo { get; set; }
+
+        [UFXDataAttribute("stock_code")]
+        public string StockCode { get; set; }
+
+        [UFXDataAttribute("entrust_direction")]
+        public string EntrustDirection { get; set; }
+
+        [UFXDataAttribute("futures_direction")]
+        public string FuturesDirection { get; set; }
+
+        [UFXDataAttribute("price_type")]
+        public string PriceType { get; set; }
+
+        [UFXDataAttribute("entrust_price", Data.DataValueType.Float)]
+        public double EntrustPrice { get; set; }
+
+        [UFXDataAttribute("entrust_amount", Data.DataValueType.Int)]
+        public int EntrustAmount { get; set; }
+
+        [UFXDataAttribute("invest_type")]
+        public string InvestType { get; set; }
+
+        [UFXDataAttribute("entrust_state")]
+        public string EntrustState { get; set; }
+
+        [UFXDataAttribute("entrust_status")]
+        public string EntrustStatus { get; set; }
+
+        [UFXDataAttribute("extsystem_id", Data.DataValueType.Int)]
+        public int ExtSystemId { get; set; }
+
+        [UFXDataAttribute("third_reff")]
+        public string ThirdReff { get; set; }
+
+        [UFXDataAttribute("confirm_no")]
+        public string ConfirmNo { get; set; }
+    }
+
+    /// <summary>
+    /// 委托废单
+    /// msgtype="c"
+    /// </summary>
+    public class UFXEntrustFailedResponse
+    {
+        [UFXDataAttribute("business_date", Data.DataValueType.Int)]
+        public int BusinessDate { get; set; }
+
+        [UFXDataAttribute("batch_no", Data.DataValueType.Int)]
+        public int BatchNo { get; set; }
+
+        [UFXDataAttribute("entrust_no", Data.DataValueType.Int)]
+        public int EntrustNo { get; set; }
+
+        [UFXDataAttribute("entrust_state")]
+        public string EntrustState { get; set; }
+
+        [UFXDataAttribute("entrust_status")]
+        public string EntrustStatus { get; set; }
+
+        [UFXDataAttribute("extsystem_id", Data.DataValueType.Int)]
+        public int ExtSystemId { get; set; }
+
+        [UFXDataAttribute("third_reff")]
+        public string ThirdReff { get; set; }
+
+        //废单原因
+        [UFXDataAttribute("revoke_cause")]
+        public string RevokeCause { get; set; }
+
+        [UFXDataAttribute("market_no")]
+        public string MarketNo { get; set; }
+
+        [UFXDataAttribute("stock_code")]
+        public string StockCode { get; set; }
+
+        [UFXDataAttribute("entrust_direction")]
+        public string EntrustDirection { get; set; }
+
+        [UFXDataAttribute("futures_direction")]
+        public string FuturesDirection { get; set; }
+
+        [UFXDataAttribute("entrust_amount", Data.DataValueType.Int)]
+        public int EntrustAmount { get; set; }
+    }
+
+    /// <summary>
+    /// 委托撤单
+    /// msgtype="d"
+    /// 撤单也是一次委托，也会产生新的委托编号
+    /// </summary>
+    public class UFXEntrustCancelResponsed
+    {
+        [UFXDataAttribute("business_date", Data.DataValueType.Int)]
+        public int BusinessDate { get; set; }
+
+        [UFXDataAttribute("batch_no", Data.DataValueType.Int)]
+        public int BatchNo { get; set; }
+
+        //委托编号(撤单委托)
+        [UFXDataAttribute("entrust_no", Data.DataValueType.Int)]
+        public int EntrustNo { get; set; }
+
+        //委托编号(被撤委托)
+        [UFXDataAttribute("cancel_entrust_no", Data.DataValueType.Int)]
+        public int CancelEntrustNo { get; set; }
+
+        [UFXDataAttribute("entrust_state")]
+        public string EntrustState { get; set; }
+
+        [UFXDataAttribute("entrust_status")]
+        public string EntrustStatus { get; set; }
+
+        [UFXDataAttribute("extsystem_id", Data.DataValueType.Int)]
+        public int ExtSystemId { get; set; }
+
+        [UFXDataAttribute("third_reff")]
+        public string ThirdReff { get; set; }
+
+        //废单原因
+        [UFXDataAttribute("revoke_cause")]
+        public string RevokeCause { get; set; }
+
+        [UFXDataAttribute("market_no")]
+        public string MarketNo { get; set; }
+
+        [UFXDataAttribute("stock_code")]
+        public string StockCode { get; set; }
+    }
+
+    /// <summary>
     /// 对某条委托进行撤单，撤单成功后推送该委托信息
     /// msgtype="e"
     /// </summary>
@@ -158,6 +322,46 @@ namespace Model.UFX
 
         [UFXDataAttribute("third_reff")]
         public string ThirdReff { get; set; }
+    }
+
+    /// <summary>
+    /// 委托撤废(撤单失败)
+    /// msgtype="f"
+    /// </summary>
+    public class UFXWithdrawFailedResponse
+    {
+        [UFXDataAttribute("batch_no", Data.DataValueType.Int)]
+        public int BatchNo { get; set; }
+
+        //委托编号(撤单委托)
+        [UFXDataAttribute("entrust_no", Data.DataValueType.Int)]
+        public int EntrustNo { get; set; }
+
+        //委托编号(被撤委托)
+        [UFXDataAttribute("cancel_entrust_no", Data.DataValueType.Int)]
+        public int CancelEntrustNo { get; set; }
+
+        [UFXDataAttribute("entrust_state")]
+        public string EntrustState { get; set; }
+
+        [UFXDataAttribute("entrust_status")]
+        public string EntrustStatus { get; set; }
+
+        [UFXDataAttribute("extsystem_id", Data.DataValueType.Int)]
+        public int ExtSystemId { get; set; }
+
+        [UFXDataAttribute("third_reff")]
+        public string ThirdReff { get; set; }
+
+        //废单原因
+        [UFXDataAttribute("revoke_cause")]
+        public string RevokeCause { get; set; }
+
+        [UFXDataAttribute("market_no")]
+        public string MarketNo { get; set; }
+
+        [UFXDataAttribute("stock_code")]
+        public string StockCode { get; set; }
     }
 
     /// <summary>
