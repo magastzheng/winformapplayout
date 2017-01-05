@@ -1,6 +1,7 @@
 ﻿using BLL.EntrustCommand;
 using BLL.Frontend;
 using BLL.SecurityInfo;
+using BLL.TradeCommand;
 using BLL.UFX;
 using BLL.UFX.impl;
 using Config;
@@ -24,9 +25,9 @@ namespace BLL.Entrust
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private SecurityBLL _securityBLL = null;
-        private TradeCommandBLL _tradeCommandBLL = null;
+        private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
         private EntrustCommandBLL _entrustCommandBLL = new EntrustCommandBLL();
-        private EntrustDAO _entrustdao = new EntrustDAO();
+        private EntrustCombineBLL _entrustCombineBLL = new EntrustCombineBLL();
         private int _timeOut = 30 * 1000;
         
         private double _limitEntrustRatio = 100.0;
@@ -36,7 +37,6 @@ namespace BLL.Entrust
         public UFXBasketEntrustBLL()
         {
             _securityBLL = BLLManager.Instance.SecurityBLL;
-            _tradeCommandBLL = new TradeCommandBLL();
 
             _timeOut = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.Timeout;
             _limitEntrustRatio = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.LimitEntrustRatio;
@@ -181,7 +181,7 @@ namespace BLL.Entrust
                 entrustSecuItems.Add(entrustItem);
             }
 
-            ret = _entrustdao.UpdateSecurityEntrustResponseByRequestId(entrustSecuItems);
+            ret = _entrustCombineBLL.UpdateSecurityEntrustResponseByRequestId(entrustSecuItems);
 
             if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {

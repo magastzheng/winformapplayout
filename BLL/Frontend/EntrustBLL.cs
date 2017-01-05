@@ -1,4 +1,5 @@
 ﻿using BLL.Entrust;
+using BLL.EntrustCommand;
 using BLL.UFX.impl;
 using Config;
 using DBAccess.EntrustCommand;
@@ -15,7 +16,7 @@ namespace BLL.Frontend
 {
     public class EntrustBLL
     {
-        private EntrustDAO _entrustdao = new EntrustDAO();
+        private EntrustCombineBLL _entrustCombineBLL = new EntrustCombineBLL();
         
         private UFXBasketEntrustBLL _ufxBasketEntrustBLL = new UFXBasketEntrustBLL();
         
@@ -84,7 +85,7 @@ namespace BLL.Frontend
             int userId = LoginManager.Instance.GetUserId();
             cmdItem.SubmitPerson = userId;
 
-            return _entrustdao.Submit(cmdItem, entrustItems);
+            return _entrustCombineBLL.Submit(cmdItem, entrustItems);
         }
 
         private Model.Database.EntrustCommand MergeEntrustCommandItem(List<Model.Database.EntrustCommand> oldCmdItems)

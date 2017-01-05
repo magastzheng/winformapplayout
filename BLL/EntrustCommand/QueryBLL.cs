@@ -7,7 +7,7 @@ using Model.UI;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BLL.Frontend
+namespace BLL.EntrustCommand
 {
     public class QueryBLL
     {

@@ -1,4 +1,5 @@
-﻿using BLL.UFX;
+﻿using BLL.EntrustCommand;
+using BLL.UFX;
 using BLL.UFX.impl;
 using Config;
 using DBAccess.EntrustCommand;
@@ -21,7 +22,7 @@ namespace BLL.Entrust
 
         private SecurityBLL _securityBLL = null;
 
-        private EntrustDAO _entrustdao = new EntrustDAO();
+        private EntrustCombineBLL _entrustCombineBLL = new EntrustCombineBLL();
 
         //TODO: 撤单需要等待所有单都完成之后，才可以继续进行
         private int _timeOut = 30 * 1000;
@@ -149,7 +150,7 @@ namespace BLL.Entrust
 
                 if (entrustSecuItems.Count > 0)
                 {
-                    ret = _entrustdao.UpdateSecurityEntrustStatus(entrustSecuItems, Model.EnumType.EntrustStatus.CancelSuccess);
+                    ret = _entrustCombineBLL.UpdateSecurityEntrustStatus(entrustSecuItems, Model.EnumType.EntrustStatus.CancelSuccess);
                 }
             }
 

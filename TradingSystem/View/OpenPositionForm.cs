@@ -15,10 +15,10 @@ using Model.Binding.BindingUtil;
 using TradingSystem.TradeUtil;
 using Model.Database;
 using BLL.Template;
-using BLL.Frontend;
 using Model.Constant;
 using Model.Dialog;
 using BLL.TradeInstance;
+using BLL.TradeCommand;
 
 namespace TradingSystem.View
 {

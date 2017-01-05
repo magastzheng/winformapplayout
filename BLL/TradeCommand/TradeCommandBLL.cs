@@ -1,4 +1,5 @@
-﻿using BLL.Permission;
+﻿using BLL.EntrustCommand;
+using BLL.Permission;
 using BLL.TradeInstance;
 using BLL.UsageTracking;
 using Config;
@@ -15,7 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Util;
 
-namespace BLL.Frontend
+namespace BLL.TradeCommand
 {
     public class TradeCommandBLL
     {

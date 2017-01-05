@@ -16,12 +16,10 @@ using Model.EnumType;
 using Model.Binding.BindingUtil;
 using Quote;
 using TradingSystem.TradeUtil;
-using BLL.Entrust;
-using System.Diagnostics;
 using System.Text;
 using Model.Database;
-using BLL.Frontend;
 using BLL.TradeInstance;
+using BLL.TradeCommand;
 
 namespace TradingSystem.View
 {

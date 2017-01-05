@@ -19,9 +19,7 @@ namespace BLL.Entrust
 
         private SecurityBLL _securityBLL = null;
         private EntrustCommandBLL _entrustCommandBLL = new EntrustCommandBLL();
-
-        private EntrustDAO _entrustdao = new EntrustDAO();
-
+        private EntrustCombineBLL _entrustCombineBLL = new EntrustCombineBLL();
         //TODO:撤销是否要等到有返回结果之后，才可以继续进行。
         private int _timeOut = 30 * 1000;
 
@@ -132,7 +130,7 @@ namespace BLL.Entrust
 
                 if (entrustSecuItems.Count > 0)
                 {
-                    ret = _entrustdao.UpdateSecurityEntrustStatus(entrustSecuItems, Model.EnumType.EntrustStatus.CancelSuccess);
+                    ret = _entrustCombineBLL.UpdateSecurityEntrustStatus(entrustSecuItems, Model.EnumType.EntrustStatus.CancelSuccess);
                     ret = _entrustCommandBLL.UpdateEntrustCommandStatus(token.SubmitId, Model.EnumType.EntrustStatus.CancelSuccess);
                 }
             }

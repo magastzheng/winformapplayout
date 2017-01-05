@@ -61,6 +61,7 @@
     <Compile Include="Archive\TradeCommand\ArchiveTradeCommandBLL.cs" />
     <Compile Include="Archive\TradeCommand\ArchiveTradeCommandSecurityBLL.cs" />
     <Compile Include="Deal\DealSecurityBLL.cs" />
+    <Compile Include="EntrustCommand\EntrustCombineBLL.cs" />
     <Compile Include="EntrustCommand\EntrustCommandBLL.cs" />
     <Compile Include="EntrustCommand\EntrustSecurityBLL.cs" />
     <Compile Include="Entrust\Security\UFXQuerySecurityDealBLL.cs" />
@@ -85,7 +86,7 @@
     <Compile Include="Entrust\UFXQueryHoldingBLL.cs" />
     <Compile Include="Entrust\UFXQueryMultipleHoldingBLL.cs" />
     <Compile Include="Entrust\UFXWithdrawBLL.cs" />
-    <Compile Include="Frontend\QueryBLL.cs" />
+    <Compile Include="EntrustCommand\QueryBLL.cs" />
     <Compile Include="Frontend\WithdrawBLL.cs" />
     <Compile Include="Permission\FeatureBLL.cs" />
     <Compile Include="Permission\PermissionCalculator.cs" />
@@ -122,7 +123,7 @@
     <Compile Include="SecurityInfo\SecurityInfoBLL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UFX\impl\StrategyBLL.cs" />
-    <Compile Include="Frontend\TradeCommandBLL.cs" />
+    <Compile Include="TradeCommand\TradeCommandBLL.cs" />
     <Compile Include="TradeInstance\TradeInstanceBLL.cs" />
     <Compile Include="UFX\T2SDKWrap.cs" />
     <Compile Include="UFX\T2SubCallback.cs" />

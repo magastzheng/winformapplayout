@@ -17,14 +17,14 @@ using System;
 using System.Collections.Generic;
 using Util;
 using System.Linq;
+using BLL.TradeCommand;
 
 namespace BLL.Frontend
 {
     public class WithdrawBLL
     {
-        private EntrustDAO _entrustdao = new EntrustDAO();
-        private TradeCommandDAO _tradecmddao = new TradeCommandDAO();
-
+        private EntrustCombineBLL _entrustCombineBLL = new EntrustCombineBLL();
+        private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
         private UserActionTrackingBLL _userActionTrackingBLL = new UserActionTrackingBLL();
         private EntrustCommandBLL _entrustCommandBLL = new EntrustCommandBLL();
         private EntrustSecurityBLL _entrustSecurityBLL = new EntrustSecurityBLL();
@@ -61,19 +61,19 @@ namespace BLL.Frontend
                 if (entrustSecuCancelItems != null && entrustSecuCancelItems.Count > 0)
                 {
                     //set the status as EntrustStatus.CancelToDB in database
-                    _entrustdao.UpdateOneEntrustStatus(entrustCmdItem.SubmitId, EntrustStatus.CancelToDB);
+                    _entrustCombineBLL.UpdateOneEntrustStatus(entrustCmdItem.SubmitId, EntrustStatus.CancelToDB);
 
                     var bllResponse = _ufxBasketWithdrawBLL.Withdraw(entrustCmdItem, callerCallback);
                     if (BLLResponse.Success(bllResponse))
                     {
                         copies += entrustCmdItem.Copies;
-                        _entrustdao.UpdateOneEntrustStatus(entrustCmdItem.SubmitId, EntrustStatus.CancelSuccess);
+                        _entrustCombineBLL.UpdateOneEntrustStatus(entrustCmdItem.SubmitId, EntrustStatus.CancelSuccess);
 
                         cancelEntrustCmdItems.Add(entrustCmdItem);
                     }
                     else
                     {
-                        _entrustdao.UpdateOneEntrustStatus(entrustCmdItem.SubmitId, EntrustStatus.CancelFail);
+                        _entrustCombineBLL.UpdateOneEntrustStatus(entrustCmdItem.SubmitId, EntrustStatus.CancelFail);
                     }
                 }
             }
@@ -97,7 +97,7 @@ namespace BLL.Frontend
             var entrustedSecuItems = ConvertToEntrustSecuItems(cancelItems);
 
             //set the status as EntrustStatus.CancelToDB in database
-            int ret = _entrustdao.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelToDB);
+            int ret = _entrustCombineBLL.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelToDB);
             if (ret <= 0)
             {
                 return cancelSecuItems;
@@ -113,7 +113,7 @@ namespace BLL.Frontend
             }
             else
             {
-                ret = _entrustdao.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelFail);
+                ret = _entrustCombineBLL.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelFail);
             }
 
             return cancelSecuItems;
@@ -130,7 +130,7 @@ namespace BLL.Frontend
             }
 
             //set the status as EntrustStatus.CancelToDB in database
-            int ret = _entrustdao.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelToDB);
+            int ret = _entrustCombineBLL.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelToDB);
             if (ret <= 0)
             {
                 return cancelSecuItems;
@@ -146,7 +146,7 @@ namespace BLL.Frontend
             }
             else
             {
-                ret = _entrustdao.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelFail);
+                ret = _entrustCombineBLL.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelFail);
             }
 
             return cancelSecuItems;
@@ -170,7 +170,7 @@ namespace BLL.Frontend
                 return cancelItemList;
             }
 
-            var tradeCommand = _tradecmddao.Get(cmdItem.CommandId);
+            var tradeCommand = _tradeCommandBLL.GetTradeCommandItem(cmdItem.CommandId);
             if (tradeCommand == null)
             {
                 return cancelItemList;
@@ -199,7 +199,7 @@ namespace BLL.Frontend
                 return cancelItemList;
             }
 
-            var tradeCommand = _tradecmddao.Get(cmdItem.CommandId);
+            var tradeCommand = _tradeCommandBLL.GetTradeCommandItem(cmdItem.CommandId);
             if (tradeCommand == null)
             {
                 return cancelItemList;

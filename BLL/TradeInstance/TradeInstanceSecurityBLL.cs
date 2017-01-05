@@ -1,4 +1,5 @@
-﻿using DBAccess.TradeCommand;
+﻿using BLL.TradeCommand;
+using DBAccess.TradeCommand;
 using DBAccess.TradeInstance;
 using log4net;
 using Model.EnumType;
@@ -12,7 +13,8 @@ namespace BLL.TradeInstance
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private TradingInstanceSecurityDAO _tradeinstsecudao = new TradingInstanceSecurityDAO();
-        private TradeCommandDAO _tradecmddao = new TradeCommandDAO();
+        //private TradeCommandDAO _tradecmddao = new TradeCommandDAO();
+        private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
         private TradingInstanceAdjustmentBLL _tradeInstanceAdjustBLL = new TradingInstanceAdjustmentBLL();
 
         public TradeInstanceSecurityBLL()
@@ -69,7 +71,7 @@ namespace BLL.TradeInstance
 
         private int UpdateBuyToday(int commandId, string secuCode, int buyAmount, double buyBalance, double dealFee)
         {
-            var tradeItem = _tradecmddao.Get(commandId);
+            var tradeItem = _tradeCommandBLL.GetTradeCommandItem(commandId);
 
             var secuItem = new TradeInstanceSecurity
             {
@@ -85,7 +87,7 @@ namespace BLL.TradeInstance
 
         private int UpdateSellToday(int commandId, string secuCode, int sellAmount, double sellBalance, double dealFee)
         {
-            var tradeItem = _tradecmddao.Get(commandId);
+            var tradeItem = _tradeCommandBLL.GetTradeCommandItem(commandId);
 
             var secuItem = new TradeInstanceSecurity
             {
