@@ -27,6 +27,11 @@ namespace DBAccess.Product
 
         }
 
+        /// <summary>
+        /// Insert the Portfolio into the ufxportfolio table. It will return the new row id as PortfolioId if success, otherwise it will return -1.
+        /// </summary>
+        /// <param name="portfolio">An instance of Portfolio</param>
+        /// <returns>An integer value with positive value as new PortfolioId; -1 while there is a duplicated PortfolioCode.</returns>
         public int Create(Portfolio portfolio)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
@@ -76,7 +81,26 @@ namespace DBAccess.Product
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public List<Portfolio> Get(string portfolioCode)
+        public Portfolio Get(string portfolioCode)
+        {
+            Portfolio item = new Portfolio();
+            var items = GetInternal(portfolioCode);
+            if (items != null && items.Count > 0)
+            {
+                item = items[0];
+            }
+
+            return item;
+        }
+
+        public List<Portfolio> GetAll()
+        {
+            return GetInternal(string.Empty);
+        }
+
+        #region private methods
+
+        public List<Portfolio> GetInternal(string portfolioCode)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
             if (!string.IsNullOrEmpty(portfolioCode))
@@ -109,5 +133,7 @@ namespace DBAccess.Product
 
             return portfolios;
         }
+
+        #endregion
     }
 }

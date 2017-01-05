@@ -37,7 +37,26 @@ namespace DBAccess.SecurityInfo
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public List<FuturesContract> Get(string code)
+        public FuturesContract Get(string code)
+        {
+            FuturesContract item = new FuturesContract();
+            var items = GetInternal(code);
+            if (items != null && items.Count > 0)
+            {
+                item = items[0];
+            }
+
+            return item;
+        }
+
+        public List<FuturesContract> GetAll()
+        {
+            return GetInternal(string.Empty);
+        }
+
+        #region internal private method
+
+        public List<FuturesContract> GetInternal(string code)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
             if (!string.IsNullOrEmpty(code))
@@ -79,5 +98,7 @@ namespace DBAccess.SecurityInfo
 
             return itemList;
         }
+
+        #endregion
     }
 }

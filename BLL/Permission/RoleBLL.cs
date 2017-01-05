@@ -34,7 +34,7 @@ namespace BLL.Permission
 
         public List<Role> GetAll()
         {
-            return _roledao.Get();
+            return _roledao.GetAll();
         }
     }
 }

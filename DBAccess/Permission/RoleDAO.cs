@@ -68,11 +68,12 @@ namespace DBAccess.Permission
         public Role Get(RoleType roleType)
         {
             var items = GetInternal(roleType);
+            var matchItems = items.Where(p => p.Id == roleType).ToList();
 
             Role item = null;
-            if (items.Count > 0)
+            if (matchItems.Count > 0)
             {
-                item = items[0];
+                item = matchItems[0];
             }
             else
             {
@@ -82,7 +83,7 @@ namespace DBAccess.Permission
             return item;
         }
 
-        public List<Role> Get()
+        public List<Role> GetAll()
         {
             return GetInternal(RoleType.None);
         }

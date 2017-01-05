@@ -69,11 +69,12 @@ namespace DBAccess.Permission
         public Resource Get(int refId, ResourceType type)
         {
             var items = GetInternal(refId, type);
+            var matchItems = items.Where(p => p.RefId == refId && p.Type == type).ToList();
 
             Resource item = null;
-            if (items.Count > 0)
+            if (matchItems.Count > 0)
             {
-                item = items[0];
+                item = matchItems[0];
             }
             else
             {

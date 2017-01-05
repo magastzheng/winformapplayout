@@ -69,11 +69,12 @@ namespace DBAccess.Permission
         public RoleFeaturePermission Get(int roleId, int featureId)
         {
             var items = GetInternal(roleId, featureId);
+            var matchItems = items.Where(p => p.RoleId == roleId && p.FeatureId == featureId).ToList();
 
             RoleFeaturePermission item = null;
-            if (items.Count > 0)
+            if (matchItems.Count > 0)
             {
-                item = items[0];
+                item = matchItems[0];
             }
             else
             {
@@ -85,7 +86,8 @@ namespace DBAccess.Permission
 
         public List<RoleFeaturePermission> Get(int roleId)
         {
-            return GetInternal(roleId, -1);
+            var items = GetInternal(roleId, -1);
+            return items.Where(p => p.RoleId == roleId).ToList();
         }
 
         public List<RoleFeaturePermission> GetAll()

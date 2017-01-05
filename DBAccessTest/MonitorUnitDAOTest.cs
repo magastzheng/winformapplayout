@@ -30,9 +30,9 @@ namespace DBAccessTest
             int id = dao.Create(monitorUnit);
             Assert.IsNotNull(id);
 
-            List<MonitorUnit> monitorUnits = dao.Get(id);
-            Assert.IsNotNull(monitorUnits);
-            Assert.IsTrue(monitorUnits.Count > 0);
+            var actualItem = dao.Get(id);
+            Assert.IsNotNull(actualItem);
+            Assert.IsTrue(actualItem.MonitorUnitName == monitorUnit.MonitorUnitName);
         }
     }
 }

@@ -69,11 +69,12 @@ namespace DBAccess.Permission
         public User Get(string operatorNo)
         {
             var items = GetInternal(operatorNo);
+            var matchItems = items.Where(p => p.Operator.Equals(operatorNo)).ToList();
 
             User item = null;
-            if (items.Count > 0)
+            if (matchItems.Count > 0)
             {
-                item = items[0];
+                item = matchItems[0];
             }
             else
             {

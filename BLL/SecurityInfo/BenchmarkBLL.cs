@@ -28,7 +28,7 @@ namespace BLL.SecurityInfo
 
         public List<Benchmark> GetAll()
         {
-            return _benchmarkdao.Get(string.Empty);
+            return _benchmarkdao.GetAll();
         }
     }
 }

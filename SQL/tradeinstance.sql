@@ -151,57 +151,6 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procTradeInstanceSelect')
-drop proc procTradeInstanceSelect
-
-go
-create proc procTradeInstanceSelect(
-	@InstanceId	int = NULL
-)
-as
-begin
-	if @InstanceId is not null or @InstanceId > 0
-	begin
-		select
-			InstanceId			
-			,InstanceCode
-			,PortfolioId		
-			,MonitorUnitId		
-			,StockDirection		
-			,FuturesContract	
-			,FuturesDirection	
-			,OperationCopies	
-			,StockPriceType		
-			,FuturesPriceType	
-			,Status
-			,Owner				
-			,CreatedDate		
-			,ModifiedDate		
-		from tradeinstance
-		where InstanceId=@InstanceId
-	end
-	else
-	begin
-		select
-			InstanceId			
-			,InstanceCode	
-			,PortfolioId	
-			,MonitorUnitId		
-			,StockDirection		
-			,FuturesContract	
-			,FuturesDirection	
-			,OperationCopies	
-			,StockPriceType		
-			,FuturesPriceType
-			,Status	
-			,Owner				
-			,CreatedDate		
-			,ModifiedDate		
-		from tradeinstance
-	end
-end
-
-go
 if exists (select name from sysobjects where name='procTradeInstanceDelete')
 drop proc procTradeInstanceDelete
 
@@ -212,35 +161,6 @@ create proc procTradeInstanceDelete(
 as
 begin
 	delete from tradeinstance where InstanceId=@InstanceId
-end
-
-go
-if exists (select name from sysobjects where name='procTradeInstanceSelectByCode')
-drop proc procTradeInstanceSelectByCode
-
-go
-create proc procTradeInstanceSelectByCode(
-	@InstanceCode varchar(20)
-)
-as
-begin
-	select 
-		InstanceId			
-		,InstanceCode	
-		,PortfolioId	
-		,MonitorUnitId		
-		,StockDirection		
-		,FuturesContract	
-		,FuturesDirection	
-		,OperationCopies	
-		,StockPriceType		
-		,FuturesPriceType	
-		,Status				
-		,Owner				
-		,CreatedDate		
-		,ModifiedDate		
-	from tradeinstance
-	where InstanceCode=@InstanceCode
 end
 
 go

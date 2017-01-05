@@ -141,49 +141,6 @@ begin
 end
 
 go
-
-if exists (select name from sysobjects where name='procMonitorUnitSelect')
-drop proc procMonitorUnitSelect
-
-go
-
-create proc procMonitorUnitSelect(
-	@MonitorUnitId int = NULL
-)
-as
-begin
-	if @MonitorUnitId is not null or @MonitorUnitId=-1
-	begin
-		select MonitorUnitId
-			,MonitorUnitName
-			,AccountType
-			,PortfolioId
-			,BearContract
-			,StockTemplateId
-			,Active
-			,Owner
-			,CreatedDate
-			,ModifiedDate
-		from monitorunit
-		where MonitorUnitId=@MonitorUnitId
-	end
-	else
-	begin
-		select MonitorUnitId
-			,MonitorUnitName
-			,AccountType
-			,PortfolioId
-			,BearContract
-			,StockTemplateId
-			,Active
-			,Owner
-			,CreatedDate
-			,ModifiedDate
-		from monitorunit
-	end
-end
-
-go
 if exists (select name from sysobjects where name='procMonitorUnitSelectCombine')
 drop proc procMonitorUnitSelectCombine
 
@@ -235,32 +192,4 @@ begin
 		inner join stocktemplate c
 		on a.StockTemplateId = c.TemplateId
 	end
-end
-
-go
-if exists (select name from sysobjects where name='procMonitorUnitSelectActive')
-drop proc procMonitorUnitSelectActive
-
-go
-
-create proc procMonitorUnitSelectActive
-as
-begin
-	select a.MonitorUnitId
-		,a.MonitorUnitName
-		,a.AccountType
-		,a.PortfolioId
-		,a.BearContract
-		,a.StockTemplateId
-		,a.Owner
-		,a.CreatedDate
-		,a.ModifiedDate
-		,b.PortfolioName
-		,c.TemplateName
-	from monitorunit a
-	inner join ufxportfolio b
-	on a.PortfolioId = b.PortfolioId
-	inner join stocktemplate c
-	on a.StockTemplateId = c.TemplateId
-	where a.Active=1
 end

@@ -37,7 +37,7 @@ namespace BLL.Template
         public List<MonitorUnit> GetAll()
         {
             int userId = LoginManager.Instance.GetUserId();
-            var items = _monitorunitdao.GetCombine(-1);
+            var items = _monitorunitdao.GetAll();
             var validItems = new List<MonitorUnit>();
             foreach (var item in items)
             {

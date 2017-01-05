@@ -35,29 +35,41 @@ create proc procUFXPortfolioInsert(
 )
 as
 begin
+	declare @Total int
 	declare @newid int
-	insert into ufxportfolio(
-		PortfolioCode,
-		PortfolioName,
-		AccountCode,
-		AccountName,
-		AccountType,
-		AssetNo,
-		AssetName,
-		PortfolioStatus
-	)
-	values(
-		@PortfolioCode,
-		@PortfolioName,
-		@AccountCode,
-		@AccountName,
-		@AccountType,
-		@AssetNo,
-		@AssetName,
-		1
-	)
 
-	set @newid = SCOPE_IDENTITY()
+	set @Total=(select count(PortfolioCode) from ufxportfolio where PortfolioCode=@PortfolioCode)
+	--only insert new item if there is no
+	if @Total = 0
+		begin
+		insert into ufxportfolio(
+			PortfolioCode,
+			PortfolioName,
+			AccountCode,
+			AccountName,
+			AccountType,
+			AssetNo,
+			AssetName,
+			PortfolioStatus
+		)
+		values(
+			@PortfolioCode,
+			@PortfolioName,
+			@AccountCode,
+			@AccountName,
+			@AccountType,
+			@AssetNo,
+			@AssetName,
+			1
+		)
+
+		set @newid = SCOPE_IDENTITY()
+	end
+	else
+	begin
+		set @newid=-1
+	end
+
 	return @newid
 end
 

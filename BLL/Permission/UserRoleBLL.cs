@@ -1,6 +1,7 @@
 ﻿using DBAccess.Permission;
 using Model.Permission;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BLL.Permission
 {

@@ -133,6 +133,85 @@ begin
 	where DealNo=@DealNo
 end
 
+go 
+if exists (select name from sysobjects where name='procDealSecuritySelectByCommandId')
+drop proc procDealSecuritySelectByCommandId
+
+go
+create proc procDealSecuritySelectByCommandId(
+	@CommandId	int
+)
+as
+begin
+	select
+		RequestId			
+		,SubmitId			
+		,CommandId			
+		,SecuCode			
+		,DealNo				
+		,BatchNo			
+		,EntrustNo			
+		,ExchangeCode		
+		,AccountCode		
+		,PortfolioCode		
+		,StockHolderId		
+		,ReportSeat			
+		,DealDate			
+		,DealTime			
+		,EntrustDirection	
+		,EntrustAmount		
+		,EntrustState		
+		,DealAmount			
+		,DealPrice			
+		,DealBalance		
+		,DealFee			
+		,TotalDealAmount	
+		,TotalDealBalance	
+		,CancelAmount
+	from dealsecurity 
+	where CommandId=@CommandId
+end
+
+go 
+if exists (select name from sysobjects where name='procDealSecuritySelectBySubmitId')
+drop proc procDealSecuritySelectBySubmitId
+
+go
+create proc procDealSecuritySelectBySubmitId(
+	@SubmitId	int
+)
+as
+begin
+	select
+		RequestId			
+		,SubmitId			
+		,CommandId			
+		,SecuCode			
+		,DealNo				
+		,BatchNo			
+		,EntrustNo			
+		,ExchangeCode		
+		,AccountCode		
+		,PortfolioCode		
+		,StockHolderId		
+		,ReportSeat			
+		,DealDate			
+		,DealTime			
+		,EntrustDirection	
+		,EntrustAmount		
+		,EntrustState		
+		,DealAmount			
+		,DealPrice			
+		,DealBalance		
+		,DealFee			
+		,TotalDealAmount	
+		,TotalDealBalance	
+		,CancelAmount
+	from dealsecurity 
+	where SubmitId=@SubmitId
+end
+
+
 go
 if exists (select name from sysobjects where name='procDealSecuritySelectAll')
 drop proc procDealSecuritySelectAll

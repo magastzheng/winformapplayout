@@ -3,6 +3,7 @@ using Model.EnumType;
 using Model.SecurityInfo;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 
 namespace DBAccess.EntrustCommand
 {
@@ -140,60 +141,7 @@ namespace DBAccess.EntrustCommand
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetByCommandId);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
 
-            List<EntrustSecurity> items = new List<EntrustSecurity>();
-            var reader = _dbHelper.ExecuteReader(dbCommand);
-            if (reader.HasRows)
-            {
-                while (reader.Read())
-                {
-                    EntrustSecurity item = new EntrustSecurity();
-                    item.RequestId = (int)reader["RequestId"];
-                    item.SubmitId = (int)reader["SubmitId"];
-                    item.CommandId = (int)reader["CommandId"];
-                    item.SecuCode = (string)reader["SecuCode"];
-                    item.SecuType = (SecurityType)(int)reader["SecuType"];
-                    item.EntrustAmount = (int)reader["EntrustAmount"];
-                    item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
-                    item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
-                    item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
-                    item.EntrustPriceType = (EntrustPriceType)reader["EntrustPriceType"];
-                    item.PriceType = (PriceType)reader["PriceType"];
-                    item.EntrustNo = (int)reader["EntrustNo"];
-                    item.BatchNo = (int)reader["BatchNo"];
-                    item.DealStatus = (DealStatus)reader["DealStatus"];
-                    item.TotalDealAmount = (int)reader["TotalDealAmount"];
-                    item.TotalDealBalance = (double)(decimal)reader["TotalDealBalance"];
-                    item.TotalDealFee = (double)(decimal)reader["TotalDealFee"];
-
-                    if (reader["EntrustDate"] != null && reader["EntrustDate"] != DBNull.Value)
-                    {
-                        item.EntrustDate = (DateTime)reader["EntrustDate"];
-                    }
-
-                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
-                    {
-                        item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    }
-
-                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
-                    {
-                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
-                    }
-
-                    if (reader["EntrustFailCode"] != null && reader["EntrustFailCode"] != DBNull.Value)
-                    {
-                        item.EntrustFailCode = (int)reader["EntrustFailCode"];
-                    }
-
-                    if (reader["EntrustFailCause"] != null && reader["EntrustFailCause"] != DBNull.Value)
-                    {
-                        item.EntrustFailCause = (string)reader["EntrustFailCause"];
-                    }
-
-                    items.Add(item);
-                }
-            }
-            reader.Close();
+            List<EntrustSecurity> items = ExecuteEntrustSecurity(dbCommand);
             _dbHelper.Close(dbCommand.Connection);
 
             return items;
@@ -204,60 +152,7 @@ namespace DBAccess.EntrustCommand
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCancel);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
 
-            List<EntrustSecurity> items = new List<EntrustSecurity>();
-            var reader = _dbHelper.ExecuteReader(dbCommand);
-            if (reader.HasRows)
-            {
-                while (reader.Read())
-                {
-                    EntrustSecurity item = new EntrustSecurity();
-                    item.RequestId = (int)reader["RequestId"];
-                    item.SubmitId = (int)reader["SubmitId"];
-                    item.CommandId = (int)reader["CommandId"];
-                    item.SecuCode = (string)reader["SecuCode"];
-                    item.SecuType = (SecurityType)(int)reader["SecuType"];
-                    item.EntrustAmount = (int)reader["EntrustAmount"];
-                    item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
-                    item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
-                    item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
-                    item.EntrustPriceType = (EntrustPriceType)reader["EntrustPriceType"];
-                    item.PriceType = (PriceType)reader["PriceType"];
-                    item.EntrustNo = (int)reader["EntrustNo"];
-                    item.BatchNo = (int)reader["BatchNo"];
-                    item.DealStatus = (DealStatus)reader["DealStatus"];
-                    item.TotalDealAmount = (int)reader["TotalDealAmount"];
-                    item.TotalDealBalance = (double)(decimal)reader["TotalDealBalance"];
-                    item.TotalDealFee = (double)(decimal)reader["TotalDealFee"];
-
-                    if (reader["EntrustDate"] != null && reader["EntrustDate"] != DBNull.Value)
-                    {
-                        item.EntrustDate = (DateTime)reader["EntrustDate"];
-                    }
-
-                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
-                    {
-                        item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    }
-
-                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
-                    {
-                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
-                    }
-
-                    if (reader["EntrustFailCode"] != null && reader["EntrustFailCode"] != DBNull.Value)
-                    {
-                        item.EntrustFailCode = (int)reader["EntrustFailCode"];
-                    }
-
-                    if (reader["EntrustFailCause"] != null && reader["EntrustFailCause"] != DBNull.Value)
-                    {
-                        item.EntrustFailCause = (string)reader["EntrustFailCause"];
-                    }
-
-                    items.Add(item);
-                }
-            }
-            reader.Close();
+            List<EntrustSecurity> items = ExecuteEntrustSecurity(dbCommand);
             _dbHelper.Close(dbCommand.Connection);
 
             return items;
@@ -268,60 +163,7 @@ namespace DBAccess.EntrustCommand
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCancelBySubmitId);
             _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
 
-            List<EntrustSecurity> items = new List<EntrustSecurity>();
-            var reader = _dbHelper.ExecuteReader(dbCommand);
-            if (reader.HasRows)
-            {
-                while (reader.Read())
-                {
-                    EntrustSecurity item = new EntrustSecurity();
-                    item.RequestId = (int)reader["RequestId"];
-                    item.SubmitId = (int)reader["SubmitId"];
-                    item.CommandId = (int)reader["CommandId"];
-                    item.SecuCode = (string)reader["SecuCode"];
-                    item.SecuType = (SecurityType)(int)reader["SecuType"];
-                    item.EntrustAmount = (int)reader["EntrustAmount"];
-                    item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
-                    item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
-                    item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
-                    item.EntrustPriceType = (EntrustPriceType)reader["EntrustPriceType"];
-                    item.PriceType = (PriceType)reader["PriceType"];
-                    item.EntrustNo = (int)reader["EntrustNo"];
-                    item.BatchNo = (int)reader["BatchNo"];
-                    item.DealStatus = (DealStatus)reader["DealStatus"];
-                    item.TotalDealAmount = (int)reader["TotalDealAmount"];
-                    item.TotalDealBalance = (double)(decimal)reader["TotalDealBalance"];
-                    item.TotalDealFee = (double)(decimal)reader["TotalDealFee"];
-
-                    if (reader["EntrustDate"] != null && reader["EntrustDate"] != DBNull.Value)
-                    {
-                        item.EntrustDate = (DateTime)reader["EntrustDate"];
-                    }
-
-                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
-                    {
-                        item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    }
-
-                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
-                    {
-                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
-                    }
-
-                    if (reader["EntrustFailCode"] != null && reader["EntrustFailCode"] != DBNull.Value)
-                    {
-                        item.EntrustFailCode = (int)reader["EntrustFailCode"];
-                    }
-
-                    if (reader["EntrustFailCause"] != null && reader["EntrustFailCause"] != DBNull.Value)
-                    {
-                        item.EntrustFailCause = (string)reader["EntrustFailCause"];
-                    }
-
-                    items.Add(item);
-                }
-            }
-            reader.Close();
+            List<EntrustSecurity> items = ExecuteEntrustSecurity(dbCommand);
             _dbHelper.Close(dbCommand.Connection);
 
             return items;
@@ -332,60 +174,7 @@ namespace DBAccess.EntrustCommand
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCancelCompletedRedoBySubmitId);
             _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
 
-            List<EntrustSecurity> items = new List<EntrustSecurity>();
-            var reader = _dbHelper.ExecuteReader(dbCommand);
-            if (reader.HasRows)
-            {
-                while (reader.Read())
-                {
-                    EntrustSecurity item = new EntrustSecurity();
-                    item.RequestId = (int)reader["RequestId"];
-                    item.SubmitId = (int)reader["SubmitId"];
-                    item.CommandId = (int)reader["CommandId"];
-                    item.SecuCode = (string)reader["SecuCode"];
-                    item.SecuType = (SecurityType)(int)reader["SecuType"];
-                    item.EntrustAmount = (int)reader["EntrustAmount"];
-                    item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
-                    item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
-                    item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
-                    item.EntrustPriceType = (EntrustPriceType)reader["EntrustPriceType"];
-                    item.PriceType = (PriceType)reader["PriceType"];
-                    item.EntrustNo = (int)reader["EntrustNo"];
-                    item.BatchNo = (int)reader["BatchNo"];
-                    item.DealStatus = (DealStatus)reader["DealStatus"];
-                    item.TotalDealAmount = (int)reader["TotalDealAmount"];
-                    item.TotalDealBalance = (double)(decimal)reader["TotalDealBalance"];
-                    item.TotalDealFee = (double)(decimal)reader["TotalDealFee"];
-
-                    if (reader["EntrustDate"] != null && reader["EntrustDate"] != DBNull.Value)
-                    {
-                        item.EntrustDate = (DateTime)reader["EntrustDate"];
-                    }
-
-                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
-                    {
-                        item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    }
-
-                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
-                    {
-                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
-                    }
-
-                    if (reader["EntrustFailCode"] != null && reader["EntrustFailCode"] != DBNull.Value)
-                    {
-                        item.EntrustFailCode = (int)reader["EntrustFailCode"];
-                    }
-
-                    if (reader["EntrustFailCause"] != null && reader["EntrustFailCause"] != DBNull.Value)
-                    {
-                        item.EntrustFailCause = (string)reader["EntrustFailCause"];
-                    }
-
-                    items.Add(item);
-                }
-            }
-            reader.Close();
+            List<EntrustSecurity> items = ExecuteEntrustSecurity(dbCommand);
             _dbHelper.Close(dbCommand.Connection);
 
             return items;
@@ -410,60 +199,7 @@ namespace DBAccess.EntrustCommand
             {
                 while (reader.Read())
                 {
-                    EntrustSecurityCombine item = new EntrustSecurityCombine();
-                    item.RequestId = (int)reader["RequestId"];
-                    item.SubmitId = (int)reader["SubmitId"];
-                    item.CommandId = (int)reader["CommandId"];
-                    item.SecuCode = (string)reader["SecuCode"];
-                    item.SecuType = (SecurityType)(int)reader["SecuType"];
-                    item.EntrustAmount = (int)reader["EntrustAmount"];
-                    item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
-                    item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
-                    item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
-                    item.EntrustPriceType = (EntrustPriceType)reader["EntrustPriceType"];
-                    item.PriceType = (PriceType)reader["PriceType"];
-                    item.EntrustNo = (int)reader["EntrustNo"];
-                    item.DealStatus = (DealStatus)reader["DealStatus"];
-                    item.TotalDealAmount = (int)reader["TotalDealAmount"];
-                    item.TotalDealBalance = (double)(decimal)reader["TotalDealBalance"];
-                    item.TotalDealFee = (double)(decimal)reader["TotalDealFee"];
-
-                    if (reader["EntrustDate"] != null && reader["EntrustDate"] != DBNull.Value)
-                    {
-                        item.EntrustDate = (DateTime)reader["EntrustDate"];
-                    }
-
-                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
-                    {
-                        item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    }
-
-                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
-                    {
-                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
-                    }
-
-                    if (reader["EntrustFailCode"] != null && reader["EntrustFailCode"] != DBNull.Value)
-                    {
-                        item.EntrustFailCode = (int)reader["EntrustFailCode"];
-                    }
-
-                    if (reader["EntrustFailCause"] != null && reader["EntrustFailCause"] != DBNull.Value)
-                    {
-                        item.EntrustFailCause = (string)reader["EntrustFailCause"];
-                    }
-
-                    item.BatchNo = (int)reader["BatchNo"];
-                    item.InstanceId = (int)reader["InstanceId"];
-                    item.InstanceCode = (string)reader["InstanceCode"];
-                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
-                    item.PortfolioId = (int)reader["PortfolioId"];
-                    item.PortfolioCode = (string)reader["PortfolioCode"];
-                    item.PortfolioName = (string)reader["PortfolioName"];
-                    item.AccountCode = (string)reader["AccountCode"];
-                    item.AccountName = (string)reader["AccountName"];
-
-                    items.Add(item);
+                    EntrustSecurityCombine item = ParseData(reader);
                 }
             }
             reader.Close();
@@ -479,10 +215,30 @@ namespace DBAccess.EntrustCommand
             var reader = _dbHelper.ExecuteReader(dbCommand);
 
             EntrustSecurityCombine item = new EntrustSecurityCombine();
+            if (reader.HasRows && reader.Read())
+            {
+                item = ParseData(reader);
+            }
+
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return item;
+        }
+
+        #endregion
+
+        #region private method
+
+        private List<EntrustSecurity> ExecuteEntrustSecurity(DbCommand dbCommand)
+        {
+            List<EntrustSecurity> items = new List<EntrustSecurity>();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
+                    EntrustSecurity item = new EntrustSecurity();
                     item.RequestId = (int)reader["RequestId"];
                     item.SubmitId = (int)reader["SubmitId"];
                     item.CommandId = (int)reader["CommandId"];
@@ -495,6 +251,7 @@ namespace DBAccess.EntrustCommand
                     item.EntrustPriceType = (EntrustPriceType)reader["EntrustPriceType"];
                     item.PriceType = (PriceType)reader["PriceType"];
                     item.EntrustNo = (int)reader["EntrustNo"];
+                    item.BatchNo = (int)reader["BatchNo"];
                     item.DealStatus = (DealStatus)reader["DealStatus"];
                     item.TotalDealAmount = (int)reader["TotalDealAmount"];
                     item.TotalDealBalance = (double)(decimal)reader["TotalDealBalance"];
@@ -525,21 +282,68 @@ namespace DBAccess.EntrustCommand
                         item.EntrustFailCause = (string)reader["EntrustFailCause"];
                     }
 
-                    item.BatchNo = (int)reader["BatchNo"];
-                    item.InstanceId = (int)reader["InstanceId"];
-                    item.InstanceCode = (string)reader["InstanceCode"];
-                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
-                    item.PortfolioId = (int)reader["PortfolioId"];
-                    item.PortfolioCode = (string)reader["PortfolioCode"];
-                    item.PortfolioName = (string)reader["PortfolioName"];
-                    item.AccountCode = (string)reader["AccountCode"];
-                    item.AccountName = (string)reader["AccountName"];
-
-                    break;
+                    items.Add(item);
                 }
             }
+
             reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            return items;
+        }
+
+        private EntrustSecurityCombine ParseData(DbDataReader reader)
+        {
+            EntrustSecurityCombine item = new EntrustSecurityCombine();
+            item.RequestId = (int)reader["RequestId"];
+            item.SubmitId = (int)reader["SubmitId"];
+            item.CommandId = (int)reader["CommandId"];
+            item.SecuCode = (string)reader["SecuCode"];
+            item.SecuType = (SecurityType)(int)reader["SecuType"];
+            item.EntrustAmount = (int)reader["EntrustAmount"];
+            item.EntrustPrice = (double)(decimal)reader["EntrustPrice"];
+            item.EntrustDirection = (EntrustDirection)reader["EntrustDirection"];
+            item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
+            item.EntrustPriceType = (EntrustPriceType)reader["EntrustPriceType"];
+            item.PriceType = (PriceType)reader["PriceType"];
+            item.EntrustNo = (int)reader["EntrustNo"];
+            item.DealStatus = (DealStatus)reader["DealStatus"];
+            item.TotalDealAmount = (int)reader["TotalDealAmount"];
+            item.TotalDealBalance = (double)(decimal)reader["TotalDealBalance"];
+            item.TotalDealFee = (double)(decimal)reader["TotalDealFee"];
+
+            if (reader["EntrustDate"] != null && reader["EntrustDate"] != DBNull.Value)
+            {
+                item.EntrustDate = (DateTime)reader["EntrustDate"];
+            }
+
+            if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+            {
+                item.CreatedDate = (DateTime)reader["CreatedDate"];
+            }
+
+            if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+            {
+                item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+            }
+
+            if (reader["EntrustFailCode"] != null && reader["EntrustFailCode"] != DBNull.Value)
+            {
+                item.EntrustFailCode = (int)reader["EntrustFailCode"];
+            }
+
+            if (reader["EntrustFailCause"] != null && reader["EntrustFailCause"] != DBNull.Value)
+            {
+                item.EntrustFailCause = (string)reader["EntrustFailCause"];
+            }
+
+            item.BatchNo = (int)reader["BatchNo"];
+            item.InstanceId = (int)reader["InstanceId"];
+            item.InstanceCode = (string)reader["InstanceCode"];
+            item.MonitorUnitId = (int)reader["MonitorUnitId"];
+            item.PortfolioId = (int)reader["PortfolioId"];
+            item.PortfolioCode = (string)reader["PortfolioCode"];
+            item.PortfolioName = (string)reader["PortfolioName"];
+            item.AccountCode = (string)reader["AccountCode"];
+            item.AccountName = (string)reader["AccountName"];
 
             return item;
         }

@@ -135,13 +135,30 @@ namespace DBAccess.Template
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public List<TemplateItem> Get(int templateId)
+        public TemplateItem Get(int templateId)
+        {
+            var items = GetInternal(templateId);
+            var item = new TemplateItem();
+            if (items != null && items.Count > 0)
+            {
+                item = items[0];
+            }
+
+            return item;
+        }
+
+        public List<TemplateItem> GetAll()
+        {
+            return GetInternal(-1);
+        }
+
+        public List<TemplateItem> GetByUser(int userId)
         {
             List<TemplateItem> stockTemplates = new List<TemplateItem>();
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
-            if (templateId > 0)
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetByUser);
+            if (userId > 0)
             {
-                _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, templateId);
+                _dbHelper.AddInParameter(dbCommand, "@UserId", System.Data.DbType.Int32, userId);
             }
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
@@ -177,13 +194,13 @@ namespace DBAccess.Template
             return stockTemplates;
         }
 
-        public List<TemplateItem> GetByUser(int userId)
+        private List<TemplateItem> GetInternal(int templateId)
         {
             List<TemplateItem> stockTemplates = new List<TemplateItem>();
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetByUser);
-            if (userId > 0)
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
+            if (templateId > 0)
             {
-                _dbHelper.AddInParameter(dbCommand, "@UserId", System.Data.DbType.Int32, userId);
+                _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, templateId);
             }
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)

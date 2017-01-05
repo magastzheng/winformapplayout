@@ -110,7 +110,7 @@ namespace BLL.Template
 
         public List<StockTemplate> GetTemplates()
         {
-            var allTemplates = _tempdbdao.Get(-1);
+            var allTemplates = _tempdbdao.GetAll();
             int userId = LoginManager.Instance.GetUserId();
 
             _userActionTrackingBLL.Create(userId, Model.UsageTracking.ActionType.Get, ResourceType.SpotTemplate, -1, "Get all template");
@@ -132,9 +132,9 @@ namespace BLL.Template
             if (_permissionManager.HasPermission(loginUserId, templateId, ResourceType.SpotTemplate, PermissionMask.View))
             {
                 var template = _tempdbdao.Get(templateId);
-                if (template != null && template.Count == 1)
+                if (template != null && template.TemplateId == templateId)
                 {
-                    targetTemplate = ConvertToUIItem(template[0]);
+                    targetTemplate = ConvertToUIItem(template);
                 }
                 else
                 {

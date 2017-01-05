@@ -55,7 +55,26 @@ namespace DBAccess.SecurityInfo
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public List<Benchmark> Get(string benchmarkId)
+        public Benchmark Get(string benchmarkId)
+        {
+            Benchmark item = new Benchmark();
+            var items = GetInternal(benchmarkId);
+            if (items != null && items.Count > 0)
+            {
+                item = items[0];
+            }
+
+            return item;
+        }
+
+        public List<Benchmark> GetAll()
+        {
+            return GetInternal(string.Empty);
+        }
+
+        #region private method
+
+        public List<Benchmark> GetInternal(string benchmarkId)
         { 
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
             if (!string.IsNullOrEmpty(benchmarkId))
@@ -84,5 +103,7 @@ namespace DBAccess.SecurityInfo
 
             return items;
         }
+
+        #endregion
     }
 }

@@ -50,7 +50,7 @@ namespace BLL.SecurityInfo
                     _futuresItems.AddRange(quoteItems);
                 }
 
-                var dbItems = _futurescontractdao.Get(string.Empty);
+                var dbItems = _futurescontractdao.GetAll();
                 if (dbItems != null && dbItems.Count > 0)
                 {
                     foreach (var dbItem in dbItems)

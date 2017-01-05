@@ -57,23 +57,25 @@ namespace DBAccess.Permission
 
         public UserRole Get(int userId, RoleType roleId)
         {
+            UserRole item = new UserRole();;
             var items = GetInternal(userId, roleId);
-            UserRole item = null;
-            if (items.Count > 0)
+            if (items != null)
             {
-                item = items[0];
+                var matchItems = items.Where(p => p.UserId == userId && p.RoleId == roleId).ToList();
+                if (matchItems.Count > 0)
+                {
+                    item = matchItems[0];
+                }
             }
-            else
-            {
-                item = new UserRole();
-            }
-           
+
             return item;
         }
 
         public List<UserRole> GetByUser(int userId)
         {
-            return GetInternal(userId, RoleType.None);
+            var rawRoles = GetInternal(userId, RoleType.None);
+
+            return rawRoles.Where(p => p.UserId == userId).ToList();
         }
 
         public List<UserRole> GetAll()

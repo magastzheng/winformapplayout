@@ -10,8 +10,8 @@ create table entrustcommand(
 	,Copies			int								--指令份数
 	,EntrustNo		int								--委托之后，服务器返回的委托号
 	,BatchNo		int								--委托之后，服务器返回的批号
-	,EntrustStatus	int								--委托状态
-	,DealStatus		int								--成交状态
+	,EntrustStatus	int								--委托状态	 4-已完成
+	,DealStatus		int								--成交状态   1-未成交，2-部分成交，3-已完成
 	,SubmitPerson	int								--提交人
 	,CreatedDate	datetime						--提交时间	
 	,ModifiedDate	datetime						--修改时间	

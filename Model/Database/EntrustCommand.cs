@@ -3,6 +3,8 @@ using System;
 
 namespace Model.Database
 {
+    //使用篮子委托接口，委托之后，获得BatchNo
+    //如果使用普通委托接口，委托之后，仅能获得委托号EntrustNo
     public class EntrustCommand
     {
         public int SubmitId { get; set; }

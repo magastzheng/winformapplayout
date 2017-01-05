@@ -95,11 +95,12 @@ namespace DBAccess.Permission
         public Feature Get(int featureId)
         {
             var items = GetInternal(featureId);
+            var matchItems = items.Where(p => p.Id == featureId).ToList();
 
             Feature item = null;
-            if (items.Count > 0)
+            if (matchItems.Count > 0)
             {
-                item = items[0];
+                item = matchItems[0];
             }
             else
             {

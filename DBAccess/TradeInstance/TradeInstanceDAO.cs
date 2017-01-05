@@ -2,6 +2,7 @@
 using Model.UI;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 
 namespace DBAccess.TradeInstance
 {
@@ -10,8 +11,6 @@ namespace DBAccess.TradeInstance
         private const string SP_Create = "procTradeInstanceInsert";
         private const string SP_Modify = "procTradeInstanceUpdate";
         private const string SP_Delete = "procTradeInstanceDelete";
-        private const string SP_Get = "procTradeInstanceSelect";
-        private const string SP_GetByCode = "procTradeInstanceSelectByCode";
         private const string SP_GetCombine = "procTradeInstanceSelectCombine";
         private const string SP_GetCombineByCode = "procTradeInstanceSelectCombineByCode";
         private const string SP_Exist = "procTradeInstanceExist";
@@ -87,147 +86,6 @@ namespace DBAccess.TradeInstance
             return ret;
         }
 
-        /// <summary>
-        /// Get all the TradingInstance if the input is not greater than 0. 
-        /// </summary>
-        /// <param name="secuType"></param>
-        /// <returns></returns>
-        public List<Model.UI.TradeInstance> Get(int instanceId)
-        {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
-            if (instanceId > 0)
-            {
-                _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, instanceId);
-            }
-
-            List<Model.UI.TradeInstance> items = new List<Model.UI.TradeInstance>();
-            var reader = _dbHelper.ExecuteReader(dbCommand);
-            if (reader.HasRows)
-            {
-                while (reader.Read())
-                {
-                    Model.UI.TradeInstance item = new Model.UI.TradeInstance();
-                    item.InstanceId = (int)reader["InstanceId"];
-                    item.InstanceCode = (string)reader["InstanceCode"];
-                    item.PortfolioId = (int)reader["PortfolioId"];
-                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
-                    item.StockDirection = (EntrustDirection)(int)reader["StockDirection"];
-                    item.FuturesContract = (string)reader["FuturesContract"];
-                    item.FuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
-                    item.OperationCopies = (int)reader["OperationCopies"];
-                    item.StockPriceType = (StockPriceType)reader["StockPriceType"];
-                    item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
-                    item.Status = (TradeInstanceStatus)reader["Status"];
-                    item.Owner = (int)reader["Owner"];
-
-                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
-                    {
-                        item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    }
-
-                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
-                    {
-                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
-                    }
-
-                    items.Add(item);
-                }
-            }
-            reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
-
-            return items;
-        }
-
-        public List<Model.UI.TradeInstance> GetAll()
-        {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
-
-            List<Model.UI.TradeInstance> items = new List<Model.UI.TradeInstance>();
-            var reader = _dbHelper.ExecuteReader(dbCommand);
-            if (reader.HasRows)
-            {
-                while (reader.Read())
-                {
-                    Model.UI.TradeInstance item = new Model.UI.TradeInstance();
-                    item.InstanceId = (int)reader["InstanceId"];
-                    item.InstanceCode = (string)reader["InstanceCode"];
-                    item.PortfolioId = (int)reader["PortfolioId"];
-                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
-                    item.StockDirection = (EntrustDirection)(int)reader["StockDirection"];
-                    item.FuturesContract = (string)reader["FuturesContract"];
-                    item.FuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
-                    item.OperationCopies = (int)reader["OperationCopies"];
-                    item.StockPriceType = (StockPriceType)reader["StockPriceType"];
-                    item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
-                    item.Status = (TradeInstanceStatus)reader["Status"];
-                    item.Owner = (int)reader["Owner"];
-
-                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
-                    {
-                        item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    }
-
-                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
-                    {
-                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
-                    }
-
-                    items.Add(item);
-                }
-            }
-            reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
-
-            return items;
-        }
-
-        /// <summary>
-        /// Get all the TradingInstance if the input is not greater than 0. 
-        /// </summary>
-        /// <param name="secuType"></param>
-        /// <returns></returns>
-        public Model.UI.TradeInstance Get(string instanceCode)
-        {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetByCode);
-            _dbHelper.AddInParameter(dbCommand, "@InstanceCode", System.Data.DbType.String, instanceCode);
-
-            Model.UI.TradeInstance item = new Model.UI.TradeInstance();
-            var reader = _dbHelper.ExecuteReader(dbCommand);
-            if (reader.HasRows)
-            {
-                while (reader.Read())
-                {
-                    item.InstanceId = (int)reader["InstanceId"];
-                    item.InstanceCode = (string)reader["InstanceCode"];
-                    item.PortfolioId = (int)reader["PortfolioId"];
-                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
-                    item.StockDirection = (EntrustDirection)(int)reader["StockDirection"];
-                    item.FuturesContract = (string)reader["FuturesContract"];
-                    item.FuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
-                    item.OperationCopies = (int)reader["OperationCopies"];
-                    item.StockPriceType = (StockPriceType)reader["StockPriceType"];
-                    item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
-                    item.Status = (TradeInstanceStatus)reader["Status"];
-                    item.Owner = (int)reader["Owner"];
-
-                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
-                    {
-                        item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    }
-
-                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
-                    {
-                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
-                    }
-                }
-            }
-            reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
-
-            return item;
-        }
-
         public Model.UI.TradeInstance GetCombine(int instanceId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCombine);
@@ -235,45 +93,9 @@ namespace DBAccess.TradeInstance
 
             Model.UI.TradeInstance item = new Model.UI.TradeInstance();
             var reader = _dbHelper.ExecuteReader(dbCommand);
-            if (reader.HasRows)
+            if (reader.HasRows && reader.Read())
             {
-                while (reader.Read())
-                {
-                    
-                    item.InstanceId = (int)reader["InstanceId"];
-                    item.InstanceCode = (string)reader["InstanceCode"];
-                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
-                    item.StockDirection = (EntrustDirection)(int)reader["StockDirection"];
-                    item.FuturesContract = (string)reader["FuturesContract"];
-                    item.FuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
-                    item.OperationCopies = (int)reader["OperationCopies"];
-                    item.StockPriceType = (StockPriceType)reader["StockPriceType"];
-                    item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
-                    item.Status = (TradeInstanceStatus)reader["Status"];
-                    item.Owner = (int)reader["Owner"];
-                    item.MonitorUnitName = (string)reader["MonitorUnitName"];
-                    item.TemplateId = (int)reader["TemplateId"];
-                    item.TemplateName = (string)reader["TemplateName"];
-                    item.PortfolioId = (int)reader["PortfolioId"];
-                    item.PortfolioCode = (string)reader["PortfolioCode"];
-                    item.PortfolioName = (string)reader["PortfolioName"];
-                    item.AccountCode = (string)reader["AccountCode"];
-                    item.AccountName = (string)reader["AccountName"];
-                    item.AssetNo = (string)reader["AssetNo"];
-                    item.AssetName = (string)reader["AssetName"];
-
-                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
-                    {
-                        item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    }
-
-                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
-                    {
-                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
-                    }
-
-                    break;
-                }
+                item = ParseData(reader);
             }
 
             reader.Close();
@@ -292,39 +114,8 @@ namespace DBAccess.TradeInstance
             {
                 while (reader.Read())
                 {
-                    Model.UI.TradeInstance item = new Model.UI.TradeInstance();
-                    item.InstanceId = (int)reader["InstanceId"];
-                    item.InstanceCode = (string)reader["InstanceCode"];
-                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
-                    item.StockDirection = (EntrustDirection)(int)reader["StockDirection"];
-                    item.FuturesContract = (string)reader["FuturesContract"];
-                    item.FuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
-                    item.OperationCopies = (int)reader["OperationCopies"];
-                    item.StockPriceType = (StockPriceType)reader["StockPriceType"];
-                    item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
-                    item.Status = (TradeInstanceStatus)reader["Status"];
-                    item.Owner = (int)reader["Owner"];
-                    item.MonitorUnitName = (string)reader["MonitorUnitName"];
-                    item.TemplateId = (int)reader["TemplateId"];
-                    item.TemplateName = (string)reader["TemplateName"];
-                    item.PortfolioId = (int)reader["PortfolioId"];
-                    item.PortfolioCode = (string)reader["PortfolioCode"];
-                    item.PortfolioName = (string)reader["PortfolioName"];
-                    item.AccountCode = (string)reader["AccountCode"];
-                    item.AccountName = (string)reader["AccountName"];
-                    item.AssetNo = (string)reader["AssetNo"];
-                    item.AssetName = (string)reader["AssetName"];
-
-                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
-                    {
-                        item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    }
-
-                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
-                    {
-                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
-                    }
-
+                    Model.UI.TradeInstance item = ParseData(reader);
+                    
                     items.Add(item);
                 }
             }
@@ -343,42 +134,9 @@ namespace DBAccess.TradeInstance
 
             Model.UI.TradeInstance item = new Model.UI.TradeInstance();
             var reader = _dbHelper.ExecuteReader(dbCommand);
-            if (reader.HasRows)
+            if (reader.HasRows && reader.Read())
             {
-                while (reader.Read())
-                {
-                    item.InstanceId = (int)reader["InstanceId"];
-                    item.InstanceCode = (string)reader["InstanceCode"];
-                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
-                    item.StockDirection = (EntrustDirection)(int)reader["StockDirection"];
-                    item.FuturesContract = (string)reader["FuturesContract"];
-                    item.FuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
-                    item.OperationCopies = (int)reader["OperationCopies"];
-                    item.StockPriceType = (StockPriceType)reader["StockPriceType"];
-                    item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
-                    item.Status = (TradeInstanceStatus)reader["Status"];
-                    item.Owner = (int)reader["Owner"];
-                    item.MonitorUnitName = (string)reader["MonitorUnitName"];
-                    item.TemplateId = (int)reader["TemplateId"];
-                    item.TemplateName = (string)reader["TemplateName"];
-                    item.PortfolioId = (int)reader["PortfolioId"];
-                    item.PortfolioCode = (string)reader["PortfolioCode"];
-                    item.PortfolioName = (string)reader["PortfolioName"];
-                    item.AccountCode = (string)reader["AccountCode"];
-                    item.AccountName = (string)reader["AccountName"];
-                    item.AssetNo = (string)reader["AssetNo"];
-                    item.AssetName = (string)reader["AssetName"];
-
-                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
-                    {
-                        item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    }
-
-                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
-                    {
-                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
-                    }
-                }
+                item = ParseData(reader);
             }
 
             reader.Close();
@@ -404,5 +162,48 @@ namespace DBAccess.TradeInstance
 
             return existed;
         }
+
+        #region private methods
+
+        public Model.UI.TradeInstance ParseData(DbDataReader reader)
+        {
+            Model.UI.TradeInstance item = new Model.UI.TradeInstance();
+
+            item.InstanceId = (int)reader["InstanceId"];
+            item.InstanceCode = (string)reader["InstanceCode"];
+            item.MonitorUnitId = (int)reader["MonitorUnitId"];
+            item.StockDirection = (EntrustDirection)(int)reader["StockDirection"];
+            item.FuturesContract = (string)reader["FuturesContract"];
+            item.FuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
+            item.OperationCopies = (int)reader["OperationCopies"];
+            item.StockPriceType = (StockPriceType)reader["StockPriceType"];
+            item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
+            item.Status = (TradeInstanceStatus)reader["Status"];
+            item.Owner = (int)reader["Owner"];
+            item.MonitorUnitName = (string)reader["MonitorUnitName"];
+            item.TemplateId = (int)reader["TemplateId"];
+            item.TemplateName = (string)reader["TemplateName"];
+            item.PortfolioId = (int)reader["PortfolioId"];
+            item.PortfolioCode = (string)reader["PortfolioCode"];
+            item.PortfolioName = (string)reader["PortfolioName"];
+            item.AccountCode = (string)reader["AccountCode"];
+            item.AccountName = (string)reader["AccountName"];
+            item.AssetNo = (string)reader["AssetNo"];
+            item.AssetName = (string)reader["AssetName"];
+
+            if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+            {
+                item.CreatedDate = (DateTime)reader["CreatedDate"];
+            }
+
+            if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+            {
+                item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+            }
+
+            return item;
+        }
+
+        #endregion
     }
 }

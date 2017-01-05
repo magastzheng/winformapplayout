@@ -58,38 +58,6 @@ namespace BLL.Product
             return Create(portfolios);
         }
 
-        public int Create(List<Portfolio> portfolios)
-        {
-            int ret = -1;
-            var userId = LoginManager.Instance.GetUserId();
-            var oldPortfolios = GetAll();
-
-            foreach (var portfolio in portfolios)
-            {
-                var existedItem = oldPortfolios.Find(p => p.PortfolioNo.Equals(portfolio.PortfolioNo));
-                if (existedItem != null)
-                {
-                    oldPortfolios.Remove(existedItem);
-                }
-                else
-                {
-                    ret = _portfoliodao.Create(portfolio);
-                    _permissionManager.GrantPermission(userId, ret, ResourceType.Portfolio, PermissionMask.View);
-                }
-            }
-
-            if (oldPortfolios.Count > 0)
-            { 
-                //TODO: update the status
-                foreach (var portfolio in oldPortfolios)
-                {
-                    _permissionManager.GrantPermission(userId, portfolio.PortfolioId, ResourceType.Portfolio, PermissionMask.View);
-                }
-            }
-
-            return ret;
-        }
-
         public int Update(List<Portfolio> portfolios)
         {
             int ret = -1;
@@ -115,7 +83,7 @@ namespace BLL.Product
         public List<Portfolio> GetAll()
         {
             var userId = LoginManager.Instance.GetUserId();
-            var allPortfolios = _portfoliodao.Get(string.Empty);
+            var allPortfolios = _portfoliodao.GetAll();
             var validPortfolios = new List<Portfolio>();
             foreach (var portfolio in allPortfolios)
             {
@@ -130,31 +98,58 @@ namespace BLL.Product
 
         public Portfolio Get(string portfolioCode, int userId)
         {
-            Portfolio port = null;
-            var items = _portfoliodao.Get(portfolioCode);
-            if (items.Count > 0)
+            Portfolio portfolio = _portfoliodao.Get(portfolioCode);
+            if (HasPermission(userId, portfolio))
             {
-                foreach (var portfolio in items)
-                {
-                    if (HasPermission(userId, portfolio))
-                    {
-                        port = portfolio;
-                        break;
-                    }
-                }
+                return portfolio;
             }
-
-            if (port == null)
-            {
-                port = new Portfolio();
+            else
+            { 
+                return new Portfolio();
             }
-
-            return port;
         }
+        #region private methods
 
         private bool HasPermission(int userId, Portfolio portfolio)
         {
             return _permissionManager.HasPermission(userId, portfolio.PortfolioId, ResourceType.Portfolio, Model.Permission.PermissionMask.View);
         }
+
+        private int Create(List<Portfolio> portfolios)
+        {
+            int ret = -1;
+            var userId = LoginManager.Instance.GetUserId();
+            var oldPortfolios = GetAll();
+
+            foreach (var portfolio in portfolios)
+            {
+                var existedItem = oldPortfolios.Find(p => p.PortfolioNo.Equals(portfolio.PortfolioNo));
+                if (existedItem != null)
+                {
+                    oldPortfolios.Remove(existedItem);
+                }
+                else
+                {
+                    ret = _portfoliodao.Create(portfolio);
+                    if (ret > 0)
+                    {
+                        _permissionManager.GrantPermission(userId, ret, ResourceType.Portfolio, PermissionMask.View);
+                    }
+                }
+            }
+
+            if (oldPortfolios.Count > 0)
+            {
+                //TODO: update the status
+                foreach (var portfolio in oldPortfolios)
+                {
+                    _permissionManager.GrantPermission(userId, portfolio.PortfolioId, ResourceType.Portfolio, PermissionMask.View);
+                }
+            }
+
+            return ret;
+        }
+
+        #endregion
     }
 }

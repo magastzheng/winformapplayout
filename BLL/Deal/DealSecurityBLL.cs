@@ -14,7 +14,6 @@ namespace BLL.Deal
 
         public DealSecurityBLL()
         { 
-        
         }
 
         public int Create(DealSecurity item)
@@ -30,6 +29,16 @@ namespace BLL.Deal
         public List<DealSecurity> GetAll()
         {
             return _dealsecudao.GetAll();
+        }
+
+        public List<DealSecurity> GetByCommandId(int commandId)
+        {
+            return _dealsecudao.GetByCommandId(commandId);
+        }
+
+        public List<DealSecurity> GetBySubmitId(int submitId)
+        {
+            return _dealsecudao.GetBySubmitId(submitId);
         }
     }
 }

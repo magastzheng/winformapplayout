@@ -2,6 +2,7 @@
 using Model.Database;
 using Model.EnumType;
 using System.Collections.Generic;
+using System.Data.Common;
 
 namespace DBAccess.Deal
 {
@@ -12,6 +13,8 @@ namespace DBAccess.Deal
         private const string SP_Create = "procDealSecurityInsert";
         private const string SP_DeleteByDealNo = "procDealSecurityDeleteByDealNo";
         private const string SP_SelectAll = "procDealSecuritySelectAll";
+        private const string SP_SelectByCommandId = "procDealSecuritySelectByCommandId";
+        private const string SP_SelectBySubmitId = "procDealSecuritySelectBySubmitId";
 
         public DealSecurityDAO()
             : base()
@@ -67,9 +70,31 @@ namespace DBAccess.Deal
         public List<DealSecurity> GetAll()
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_SelectAll);
-
-            List<DealSecurity> items = new List<DealSecurity>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
+
+            return Execute(dbCommand);
+        }
+
+        public List<DealSecurity> GetByCommandId(int commandId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_SelectByCommandId);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+
+            return Execute(dbCommand);
+        }
+
+        public List<DealSecurity> GetBySubmitId(int submitId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_SelectBySubmitId);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
+
+            return Execute(dbCommand);
+        }
+
+        private List<DealSecurity> Execute(DbCommand dbCommand)
+        {
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            List<DealSecurity> items = new List<DealSecurity>();
             if (reader.HasRows)
             {
                 while (reader.Read())

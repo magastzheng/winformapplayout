@@ -2,6 +2,8 @@
 using Model.UI;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
+using System.Linq;
 
 namespace DBAccess
 {
@@ -11,9 +13,7 @@ namespace DBAccess
         private const string SP_Modify = "procMonitorUnitUpdate";
         private const string SP_Active = "procMonitorUnitActive";
         private const string SP_Delete = "procMonitorUnitDelete";
-        private const string SP_Get = "procMonitorUnitSelect";
         private const string SP_GetCombine = "procMonitorUnitSelectCombine";
-        private const string SP_GetActive = "procMonitorUnitSelectActive";
 
         public MonitorUnitDAO()
             : base()
@@ -103,43 +103,34 @@ namespace DBAccess
             return id;
         }
 
-        public List<MonitorUnit> Get(int monitorUnitId)
+        public MonitorUnit Get(int monitorUnitId)
         {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
-            if (monitorUnitId > 0)
+            MonitorUnit item = new MonitorUnit();
+            var items = GetCombineInternal(monitorUnitId);
+            if (items != null && items.Count > 0)
             {
-                _dbHelper.AddInParameter(dbCommand, "@MonitorUnitId", System.Data.DbType.String, monitorUnitId);
+                item = items[0];
             }
 
-            List<MonitorUnit> monitorUnits = new List<MonitorUnit>();
-            var reader = _dbHelper.ExecuteReader(dbCommand);
-            if (reader.HasRows)
-            {
-                while (reader.Read())
-                {
-                    MonitorUnit item = new MonitorUnit();
-                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
-                    item.MonitorUnitName = (string)reader["MonitorUnitName"];
-                    item.EAccountType = (MonitorUnitAccountType)reader["AccountType"];
-                    item.PortfolioId = (int)reader["PortfolioId"];
-                    item.BearContract = (string)reader["BearContract"];
-                    item.StockTemplateId = (int)reader["StockTemplateId"];
-                    item.Owner = (int)reader["Owner"];
-                    //item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    //if (reader["ModifiedDate"] != null)
-                    //{
-                    //    item.ModifiedDate = (DateTime)reader["ModifiedDate"];
-                    //}
-                    monitorUnits.Add(item);
-                }
-            }
-            reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
-
-            return monitorUnits;
+            return item;
         }
 
-        public List<MonitorUnit> GetCombine(int monitorUnitId)
+        public List<MonitorUnit> GetAll()
+        {
+            return GetCombineInternal(-1);
+        }
+
+        public List<MonitorUnit> GetActive()
+        {
+            var items = GetAll();
+            var activeItems = items.Where(p => p.Status == MonitorUnitStatus.Active).ToList();
+
+            return activeItems;
+        }
+
+        #region private methods
+
+        private List<MonitorUnit> GetCombineInternal(int monitorUnitId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCombine);
             if (monitorUnitId > 0)
@@ -153,27 +144,7 @@ namespace DBAccess
             {
                 while (reader.Read())
                 {
-                    MonitorUnit item = new MonitorUnit();
-                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
-                    item.MonitorUnitName = (string)reader["MonitorUnitName"];
-                    item.EAccountType = (MonitorUnitAccountType)reader["AccountType"];
-                    item.PortfolioId = (int)reader["PortfolioId"];
-                    item.PortfolioName = (string)reader["PortfolioName"];
-                    item.BearContract = (string)reader["BearContract"];
-                    item.StockTemplateId = (int)reader["StockTemplateId"];
-                    item.StockTemplateName = (string)reader["TemplateName"];
-                    item.Status = (MonitorUnitStatus)reader["Active"];
-                    item.Selection = ((int)reader["Active"] > 0) ? true : false;
-                    item.Owner = (int)reader["Owner"];
-                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
-                    {
-                        //item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    }
-
-                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
-                    {
-                        //item.ModifiedDate = (DateTime)reader["ModifiedDate"];
-                    }
+                    MonitorUnit item = ParseData(reader);
                     monitorUnits.Add(item);
                 }
             }
@@ -183,35 +154,40 @@ namespace DBAccess
             return monitorUnits;
         }
 
-        public List<MonitorUnit> GetActive()
+        private MonitorUnit ParseData(DbDataReader reader)
         {
-            List<MonitorUnit> activeItems = new List<MonitorUnit>();
+            MonitorUnit item = new MonitorUnit();
 
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetActive);
-
-            var reader = _dbHelper.ExecuteReader(dbCommand);
-            if (reader.HasRows)
+            item.MonitorUnitId = (int)reader["MonitorUnitId"];
+            item.MonitorUnitName = (string)reader["MonitorUnitName"];
+            item.EAccountType = (MonitorUnitAccountType)reader["AccountType"];
+            item.PortfolioId = (int)reader["PortfolioId"];
+            item.BearContract = (string)reader["BearContract"];
+            item.StockTemplateId = (int)reader["StockTemplateId"];
+            item.Owner = (int)reader["Owner"];
+            item.Status = (MonitorUnitStatus)reader["Active"];
+            if (item.Status == MonitorUnitStatus.Active)
             {
-                while (reader.Read())
-                {
-                    MonitorUnit item = new MonitorUnit();
-                    item.MonitorUnitId = (int)reader["MonitorUnitId"];
-                    item.MonitorUnitName = (string)reader["MonitorUnitName"];
-                    item.EAccountType = (MonitorUnitAccountType)reader["AccountType"];
-                    item.PortfolioId = (int)reader["PortfolioId"];
-                    item.PortfolioName = (string)reader["PortfolioName"];
-                    item.BearContract = (string)reader["BearContract"];
-                    item.StockTemplateId = (int)reader["StockTemplateId"];
-                    item.StockTemplateName = (string)reader["TemplateName"];
-                    item.Owner = (int)reader["Owner"];
-
-                    activeItems.Add(item);
-                }
+                item.Selection = true;
             }
-            reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            else
+            {
+                item.Selection = false;
+            }
 
-            return activeItems;
+            if (reader["PortfolioName"] != null && reader["PortfolioName"] != DBNull.Value)
+            {
+                item.PortfolioName = (string)reader["PortfolioName"];
+            }
+
+            if (reader["TemplateName"] != null && reader["TemplateName"] != DBNull.Value)
+            {
+                item.StockTemplateName = (string)reader["TemplateName"];
+            }
+
+            return item;
         }
+
+        #endregion
     }
 }
