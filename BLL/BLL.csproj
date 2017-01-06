@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Archive\ArchiveBLL.cs" />
     <Compile Include="Archive\Deal\ArchiveDealSecurityBLL.cs" />
     <Compile Include="Archive\EntrustCommand\ArchiveEntrustCommandBLL.cs" />
     <Compile Include="Archive\EntrustCommand\ArchiveEntrustSecurityBLL.cs" />
@@ -86,7 +87,7 @@
     <Compile Include="Entrust\UFXQueryHoldingBLL.cs" />
     <Compile Include="Entrust\UFXQueryMultipleHoldingBLL.cs" />
     <Compile Include="Entrust\UFXWithdrawBLL.cs" />
-    <Compile Include="EntrustCommand\QueryBLL.cs" />
+    <Compile Include="EntrustCommand\QueryEntrustBLL.cs" />
     <Compile Include="Frontend\WithdrawBLL.cs" />
     <Compile Include="Permission\FeatureBLL.cs" />
     <Compile Include="Permission\PermissionCalculator.cs" />

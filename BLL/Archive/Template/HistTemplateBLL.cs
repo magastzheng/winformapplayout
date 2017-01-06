@@ -44,7 +44,13 @@ namespace BLL.Archive.Template
 
         public int DeleteTemplate(int archiveId)
         {
-            return _templatedao.Delete(archiveId);
+            int ret = _templatedao.Delete(archiveId);
+            if (ret > 0)
+            {
+                ret = _permissionManager.Delete(archiveId, Model.Permission.ResourceType.HistoricalSpotTemplate);
+            }
+
+            return ret;
         }
 
         public List<HistStockTemplate> GetTemplates()

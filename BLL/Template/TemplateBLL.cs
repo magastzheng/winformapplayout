@@ -101,7 +101,7 @@ namespace BLL.Template
                     //Remove the permission row in the database directly. NOT revoke!!!!!
                     _permissionManager.Delete(template.TemplateId, ResourceType.SpotTemplate);
                     //add the usage tracking
-                    _userActionTrackingBLL.Create(userId, Model.UsageTracking.ActionType.Edit, ResourceType.SpotTemplate, template.TemplateId, JsonUtil.SerializeObject(template));
+                    _userActionTrackingBLL.Create(userId, Model.UsageTracking.ActionType.Delete, ResourceType.SpotTemplate, template.TemplateId, JsonUtil.SerializeObject(template));
                 }
             }
 

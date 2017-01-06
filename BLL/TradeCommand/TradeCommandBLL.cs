@@ -29,7 +29,7 @@ namespace BLL.TradeCommand
         private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
         private UserActionTrackingBLL _userActionTrackingBLL = new UserActionTrackingBLL();
         private PermissionManager _permissionManager = new PermissionManager();
-        private QueryBLL _queryBLL = new QueryBLL();
+        private QueryEntrustBLL _queryBLL = new QueryEntrustBLL();
 
         public TradeCommandBLL()
         { 

@@ -9,11 +9,11 @@ using System.Linq;
 
 namespace BLL.EntrustCommand
 {
-    public class QueryBLL
+    public class QueryEntrustBLL
     {
         private EntrustSecurityBLL _entrustSecurityBLL = new EntrustSecurityBLL();
 
-        public QueryBLL()
+        public QueryEntrustBLL()
         { 
         }
 
