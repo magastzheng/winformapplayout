@@ -10,6 +10,7 @@ using BLL.UFX;
 using WAPIWrapperCSharp;
 using System.Configuration;
 using BLL.TradeInstance;
+using System.IO;
 
 namespace TradingSystem
 {
@@ -28,7 +29,7 @@ namespace TradingSystem
             Application.SetCompatibleTextRenderingDefault(false);
 
             var log4net = ConfigurationManager.AppSettings["log4net"];
-            string logFilePath = Application.StartupPath + "\\" + log4net;
+            string logFilePath = Path.Combine(Application.StartupPath, log4net);
             //XmlConfigurator.Configure();
             XmlConfigurator.Configure(new Uri(logFilePath));
             logger.Info("Log4net initialize...: " + logFilePath);

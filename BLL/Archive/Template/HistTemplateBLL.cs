@@ -69,8 +69,7 @@ namespace BLL.Archive.Template
 
         public int CreateStocks(int archiveId, List<TemplateStock> tempStocks)
         {
-            var ret = _tempstockdao.Create(archiveId, tempStocks);
-            return ret;
+            return _tempstockdao.Create(archiveId, tempStocks);
         }
 
         public int DeleteStocks(int archiveId)

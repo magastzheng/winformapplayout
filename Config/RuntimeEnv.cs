@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace Config
 {
@@ -20,12 +21,23 @@ namespace Config
         private void Init()
         {
             _binDir = Environment.CurrentDirectory;
-            _configDir = _binDir+ "\\config\\";
+            _configDir = Path.Combine(_binDir, "config");
         }
 
         public static RuntimeEnv Instance { get { return _instance; } }
-        public string GetBinDir() { return _instance._binDir; }
-        public string GetConfigDir() { return _instance._configDir; }
-        public string GetConfigFile(string fileName) { return _instance._configDir + fileName; }
+        public string GetBinDir() 
+        { 
+            return _instance._binDir; 
+        }
+        
+        public string GetConfigDir() 
+        { 
+            return _instance._configDir; 
+        }
+
+        public string GetConfigFile(string fileName) 
+        {
+            return Path.Combine(_configDir, fileName); 
+        }
     }
 }
