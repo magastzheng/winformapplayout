@@ -45,7 +45,9 @@ namespace DBAccess.Archive.TradeCommand
             _dbHelper.AddInParameter(dbCommand, "@ExecutePerson", System.Data.DbType.Int32, item.ExecutePerson);
             _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, item.CreatedDate);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, item.ModifiedDate);
-            _dbHelper.AddInParameter(dbCommand, "@ArchiveDate", System.Data.DbType.DateTime, item.ArchiveDate);
+            
+            //if(item.ArchiveDate != null && 
+            _dbHelper.AddInParameter(dbCommand, "@ArchiveDate", System.Data.DbType.DateTime, DateTime.Now);
             _dbHelper.AddInParameter(dbCommand, "@StartDate", System.Data.DbType.DateTime, item.DStartDate);
             _dbHelper.AddInParameter(dbCommand, "@EndDate", System.Data.DbType.DateTime, item.DEndDate);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedCause", System.Data.DbType.String, item.ModifiedCause);

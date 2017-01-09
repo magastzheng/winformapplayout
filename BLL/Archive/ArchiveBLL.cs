@@ -1,5 +1,6 @@
 ﻿using BLL.Archive.TradeCommand;
 using BLL.TradeCommand;
+using Model.Archive;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,7 @@ namespace BLL.Archive
     {
         private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
         private TradeCommandSecurityBLL _tradeCommandSecurityBLL = new TradeCommandSecurityBLL();
-        private ArchiveTradeCommandBLL _archiveTradeCommandBLL = new ArchiveTradeCommandBLL();
-        private ArchiveTradeCommandSecurityBLL _archiveTradeCommandSecurityBLL = new ArchiveTradeCommandSecurityBLL();
+        private ArchiveTradeBLL _archiveTradeBLL = new ArchiveTradeBLL();
 
         public ArchiveBLL()
         { 
@@ -21,6 +21,7 @@ namespace BLL.Archive
 
         public int ArchiveTradeCommand(int commandId)
         {
+            int ret = -1;
             Model.Database.TradeCommand tradeCommand = null;
             List<Model.Database.TradeCommandSecurity> tradeSecuItems = null;
             tradeCommand = _tradeCommandBLL.GetTradeCommandItem(commandId);
@@ -29,7 +30,12 @@ namespace BLL.Archive
                 tradeSecuItems = _tradeCommandSecurityBLL.GetTradeCommandSecurities(commandId);
             }
 
-            return -1;
+            if (tradeSecuItems != null && tradeSecuItems.Count > 0)
+            {
+                ret = _archiveTradeBLL.Create(tradeCommand, tradeSecuItems);
+            }
+
+            return ret;
         }
 
         public int ArchiveEntrustCommand()

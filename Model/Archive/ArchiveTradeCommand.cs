@@ -10,6 +10,15 @@ namespace Model.Archive
 {
     public class ArchiveTradeCommand : TradeCommand
     {
+        public ArchiveTradeCommand()
+        { 
+        }
+
+        public ArchiveTradeCommand(TradeCommand tradeCommand)
+            : base(tradeCommand)
+        { 
+        }
+
         public int ArchiveId { get; set; }
 
         public DispatchStatus DispatchStatus { get; set; }

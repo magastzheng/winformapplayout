@@ -5,6 +5,47 @@ namespace Model.Database
 {
     public class TradeCommand
     {
+        public TradeCommand()
+        { 
+        
+        }
+
+        public TradeCommand(TradeCommand cmd)
+        {
+            this.CommandId = cmd.CommandId;
+            this.CommandNum = cmd.CommandNum;
+            this.ECommandStatus = cmd.ECommandStatus;
+            this.CommandAmount = cmd.CommandAmount;
+            this.InstanceId = cmd.InstanceId;
+            this.InstanceCode = cmd.InstanceCode;
+            this.ModifiedTimes = cmd.ModifiedTimes;
+            this.ECommandType = cmd.ECommandType;
+            this.EExecuteType = cmd.EExecuteType;
+            this.EStockDirection = cmd.EStockDirection;
+            this.EFuturesDirection = cmd.EFuturesDirection;
+            this.EEntrustStatus = cmd.EEntrustStatus;
+            this.EDealStatus = cmd.EDealStatus;
+            this.DStartDate = cmd.DStartDate;
+            this.DEndDate = cmd.DEndDate;
+            this.SubmitPerson = cmd.SubmitPerson;
+            this.CreatedDate = cmd.CreatedDate;
+            this.ModifiedDate = cmd.ModifiedDate;
+            this.CancelDate = cmd.CancelDate;
+            this.MonitorUnitId = cmd.MonitorUnitId;
+            this.MonitorUnitName = cmd.MonitorUnitName;
+            this.TemplateId = cmd.TemplateId;
+            this.TemplateName = cmd.TemplateName;
+            this.BearContract = cmd.BearContract;
+            this.PortfolioId = cmd.PortfolioId;
+            this.PortfolioCode = cmd.PortfolioCode;
+            this.PortfolioName = cmd.PortfolioName;
+            this.AccountCode = cmd.AccountCode;
+            this.AccountName = cmd.AccountName;
+            this.Notes = cmd.Notes;
+            this.ModifiedCause = cmd.ModifiedCause;
+            this.CancelCause = cmd.CancelCause;
+        }
+
         //指令序号
         public int CommandId { get; set; }
 

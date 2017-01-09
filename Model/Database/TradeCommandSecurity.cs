@@ -8,6 +8,22 @@ namespace Model.Database
     /// </summary>
     public class TradeCommandSecurity
     {
+        public TradeCommandSecurity()
+        { 
+        }
+
+        public TradeCommandSecurity(TradeCommandSecurity security)
+        {
+            this.SecuCode = security.SecuCode;
+            this.SecuName = security.SecuName;
+            this.CommandId = security.CommandId;
+            this.CommandPrice = security.CommandPrice;
+            this.CommandAmount = security.CommandAmount;
+            this.EDirection = security.EDirection;
+            this.SecuType = security.SecuType;
+            this.EntrustStatus = security.EntrustStatus;
+        }
+
         //证券代码
         public string SecuCode { get; set; }
 

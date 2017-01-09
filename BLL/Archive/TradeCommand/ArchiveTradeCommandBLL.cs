@@ -12,7 +12,6 @@ namespace BLL.Archive.TradeCommand
     public class ArchiveTradeCommandBLL
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         private ArchiveTradeCommandDAO _archivetradecommanddao = new ArchiveTradeCommandDAO();
 
         public ArchiveTradeCommandBLL()
