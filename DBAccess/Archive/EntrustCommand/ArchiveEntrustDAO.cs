@@ -1,5 +1,6 @@
 ﻿using log4net;
 using Model.Archive;
+using Model.Database;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -30,7 +31,7 @@ namespace DBAccess.Archive.EntrustCommand
         { 
         }
 
-        public int Create(ArchiveEntrustCommand cmdItem, List<ArchiveEntrustSecurity> entrustItems)
+        public int Create(Model.Database.EntrustCommand cmdItem, List<EntrustSecurity> entrustItems)
         {
             var dbCommand = _dbHelper.GetCommand();
             _dbHelper.Open(_dbHelper.Connection);
@@ -52,7 +53,7 @@ namespace DBAccess.Archive.EntrustCommand
                 _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)cmdItem.EntrustStatus);
                 _dbHelper.AddInParameter(dbCommand, "@DealStatus", System.Data.DbType.Int32, (int)cmdItem.DealStatus);
                 _dbHelper.AddInParameter(dbCommand, "@SubmitPerson", System.Data.DbType.Int32, cmdItem.SubmitPerson);
-                _dbHelper.AddInParameter(dbCommand, "@ArchiveDate", System.Data.DbType.DateTime, cmdItem.ArchiveDate);
+                _dbHelper.AddInParameter(dbCommand, "@ArchiveDate", System.Data.DbType.DateTime, DateTime.Now);
                 _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, cmdItem.CreatedDate);
                 _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, cmdItem.ModifiedDate);
                 _dbHelper.AddInParameter(dbCommand, "@EntrustFailCode", System.Data.DbType.Int32, cmdItem.EntrustFailCode);
@@ -68,7 +69,6 @@ namespace DBAccess.Archive.EntrustCommand
                     if (ret > 0)
                     {
                         archiveId = (int)dbCommand.Parameters["@return"].Value;
-                        cmdItem.ArchiveId = archiveId;
                     }
 
                     foreach (var entrustItem in entrustItems)

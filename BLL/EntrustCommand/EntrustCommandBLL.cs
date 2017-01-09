@@ -65,6 +65,11 @@ namespace BLL.EntrustCommand
             return _entrustcmddao.GetCancel(commandId);
         }
 
+        public List<Model.Database.EntrustCommand> GetByCommandId(int commandId)
+        {
+            return _entrustcmddao.GetByCommandId(commandId);
+        }
+
         #endregion
 
         #region user action tracking

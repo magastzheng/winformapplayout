@@ -73,6 +73,11 @@ namespace BLL.EntrustCommand
             return _entrustsecudao.GetCancel(commandId);
         }
 
+        public List<EntrustSecurity> GetBySubmitId(int submitId)
+        {
+            return _entrustsecudao.GetBySubmitId(submitId);
+        }
+
         public List<EntrustSecurity> GetCancelBySumbitId(int submitId)
         {
             return _entrustsecudao.GetCancelBySumbitId(submitId);

@@ -21,6 +21,7 @@ namespace DBAccess.EntrustCommand
         private const string SP_GetAllCombine = "procEntrustSecuritySelectAllCombine";
         private const string SP_GetByCommandId = "procEntrustSecuritySelectByCommandId";
         private const string SP_GetCancel = "procEntrustSecuritySelectCancel";
+        private const string SP_GetBySubmitId = "procEntrustSecuritySelectBySubmitId";
         private const string SP_GetCancelBySubmitId = "procEntrustSecuritySelectCancelBySubmitId";
         private const string SP_GetCancelCompletedRedoBySubmitId = "procEntrustSecuritySelectCancelCompletedRedoBySubmitId";
         private const string SP_GetCombineByRequestId = "procEntrustSecuritySelectCombineByRequestId";
@@ -151,6 +152,17 @@ namespace DBAccess.EntrustCommand
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCancel);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+
+            List<EntrustSecurity> items = ExecuteEntrustSecurity(dbCommand);
+            _dbHelper.Close(dbCommand.Connection);
+
+            return items;
+        }
+
+        public List<EntrustSecurity> GetBySubmitId(int submitId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetBySubmitId);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
 
             List<EntrustSecurity> items = ExecuteEntrustSecurity(dbCommand);
             _dbHelper.Close(dbCommand.Connection);

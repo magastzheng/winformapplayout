@@ -318,6 +318,32 @@ end
 --end
 
 go
+if exists (select name from sysobjects where name='procEntrustCommandSelectByCommandId')
+drop proc procEntrustCommandSelectByCommandId
+
+go
+create proc procEntrustCommandSelectByCommandId(
+	@CommandId int
+)
+as
+begin
+	select SubmitId
+		,CommandId
+		,Copies
+		,EntrustNo
+		,BatchNo
+		,EntrustStatus
+		,DealStatus
+		,SubmitPerson
+		,CreatedDate
+		,ModifiedDate
+		,EntrustFailCode
+		,EntrustFailCause
+	from entrustcommand
+	where CommandId = @CommandId 
+end
+
+go
 if exists (select name from sysobjects where name='procEntrustCommandSelectCancel')
 drop proc procEntrustCommandSelectCancel
 
@@ -328,17 +354,17 @@ create proc procEntrustCommandSelectCancel(
 as
 begin
 	select SubmitId
-		  ,CommandId
-		  ,Copies
-		  ,EntrustNo
-		  ,BatchNo
-		  ,EntrustStatus
-		  ,DealStatus
-		  ,SubmitPerson
-		  ,CreatedDate
-		  ,ModifiedDate
-		  ,EntrustFailCode
-		  ,EntrustFailCause
+		,CommandId
+		,Copies
+		,EntrustNo
+		,BatchNo
+		,EntrustStatus
+		,DealStatus
+		,SubmitPerson
+		,CreatedDate
+		,ModifiedDate
+		,EntrustFailCode
+		,EntrustFailCause
 	from entrustcommand
 	where CommandId = @CommandId 
 		and (DealStatus=1 or DealStatus=2)		--未成交或部分成交

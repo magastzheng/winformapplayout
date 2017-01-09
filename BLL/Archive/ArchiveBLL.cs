@@ -1,6 +1,9 @@
-﻿using BLL.Archive.TradeCommand;
+﻿using BLL.Archive.EntrustCommand;
+using BLL.Archive.TradeCommand;
+using BLL.EntrustCommand;
 using BLL.TradeCommand;
 using Model.Archive;
+using Model.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +17,10 @@ namespace BLL.Archive
         private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
         private TradeCommandSecurityBLL _tradeCommandSecurityBLL = new TradeCommandSecurityBLL();
         private ArchiveTradeBLL _archiveTradeBLL = new ArchiveTradeBLL();
+
+        private EntrustCommandBLL _entrustCommandBLL = new EntrustCommandBLL();
+        private EntrustSecurityBLL _entrustSecurityBLL = new EntrustSecurityBLL();
+        private ArchiveEntrustBLL _archiveEntrustBLL = new ArchiveEntrustBLL();
 
         public ArchiveBLL()
         { 
@@ -38,9 +45,26 @@ namespace BLL.Archive
             return ret;
         }
 
-        public int ArchiveEntrustCommand()
+        public int ArchiveEntrustCommand(int commandId)
         {
-            return -1;
+            int ret = -1;
+
+            List<Model.Database.EntrustCommand> entrustCommands = null;
+            List<EntrustSecurity> entrustSecurities = null;
+            entrustCommands = _entrustCommandBLL.GetByCommandId(commandId);
+            if (entrustCommands != null && entrustCommands.Count > 0)
+            {
+                foreach (var entrustCommand in entrustCommands)
+                {
+                    entrustSecurities = _entrustSecurityBLL.GetBySubmitId(entrustCommand.SubmitId);
+                    if (entrustSecurities != null && entrustSecurities.Count > 0)
+                    {
+                        ret = _archiveEntrustBLL.Create(entrustCommand, entrustSecurities);
+                    }
+                }
+            }
+
+            return ret;
         }
 
 

@@ -57,11 +57,10 @@
   <ItemGroup>
     <Compile Include="Archive\ArchiveBLL.cs" />
     <Compile Include="Archive\Deal\ArchiveDealSecurityBLL.cs" />
+    <Compile Include="Archive\EntrustCommand\ArchiveEntrustBLL.cs" />
     <Compile Include="Archive\EntrustCommand\ArchiveEntrustCommandBLL.cs" />
     <Compile Include="Archive\EntrustCommand\ArchiveEntrustSecurityBLL.cs" />
     <Compile Include="Archive\TradeCommand\ArchiveTradeBLL.cs" />
-    <Compile Include="Archive\TradeCommand\ArchiveTradeCommandBLL.cs" />
-    <Compile Include="Archive\TradeCommand\ArchiveTradeCommandSecurityBLL.cs" />
     <Compile Include="Deal\DealSecurityBLL.cs" />
     <Compile Include="EntrustCommand\EntrustCombineBLL.cs" />
     <Compile Include="EntrustCommand\EntrustCommandBLL.cs" />

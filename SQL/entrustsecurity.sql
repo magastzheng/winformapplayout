@@ -731,6 +731,44 @@ begin
 end
 
 go
+if exists (select name from sysobjects where name='procEntrustSecuritySelectBySubmitId')
+drop proc procEntrustSecuritySelectBySubmitId
+
+go
+create proc procEntrustSecuritySelectBySubmitId(
+	@SubmitId int
+)
+as
+begin
+	--通过提交号获取同一批提交的证券
+	select RequestId
+		,SubmitId 
+		,CommandId			
+		,SecuCode			
+		,SecuType			
+		,EntrustAmount	
+		,EntrustPrice		
+		,EntrustDirection	
+		,EntrustStatus
+		,EntrustPriceType
+		,PriceType
+		,EntrustNo
+		,BatchNo
+		,DealStatus
+		,TotalDealAmount
+		,TotalDealBalance
+		,TotalDealFee
+		,DealTimes
+		,EntrustDate
+		,CreatedDate
+		,ModifiedDate
+		,EntrustFailCode
+		,EntrustFailCause
+	from entrustsecurity
+	where SubmitId = @SubmitId
+end
+
+go
 if exists (select name from sysobjects where name='procEntrustSecuritySelectCancelBySubmitId')
 drop proc procEntrustSecuritySelectCancelBySubmitId
 

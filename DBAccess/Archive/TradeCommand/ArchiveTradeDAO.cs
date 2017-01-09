@@ -147,7 +147,8 @@ namespace DBAccess.Archive.TradeCommand
                     ret = dbCommand.ExecuteNonQuery();
                     if (ret < 0)
                     {
-                        logger.Error("Fail to delete the archive security");
+                        string msg = string.Format("Fail to delete the archive security: {0}", archiveId);
+                        logger.Error(msg);
                     }
                 }
 

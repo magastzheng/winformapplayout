@@ -3,6 +3,7 @@ using Model.Database;
 using Model.EnumType;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 
 namespace DBAccess.EntrustCommand
 {
@@ -23,6 +24,7 @@ namespace DBAccess.EntrustCommand
         //private const string SP_GetBySubmitId = "procEntrustCommandSelectBySubmitId";
         //private const string SP_GetByCommandId = "procEntrustCommandSelectByCommandId";
         //private const string SP_GetByCommandIdEntrustStatus = "procEntrustCommandSelectByCommandIdEntrustStatus";
+        private const string SP_GetByCommandId = "procEntrustCommandSelectByCommandId";
         private const string SP_GetCancel = "procEntrustCommandSelectCancel";
         //private const string SP_GetCancelCompletedRedo = "procEntrustCommandSelectCancelCompletedRedo";
 
@@ -371,8 +373,26 @@ namespace DBAccess.EntrustCommand
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCancel);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
 
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+
+            return ParseData(reader);
+        }
+
+        public List<Model.Database.EntrustCommand> GetByCommandId(int commandId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetByCommandId);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+
             List<Model.Database.EntrustCommand> items = new List<Model.Database.EntrustCommand>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
+
+            return ParseData(reader);
+        }
+
+        private List<Model.Database.EntrustCommand> ParseData(DbDataReader reader)
+        {
+            List<Model.Database.EntrustCommand> items = new List<Model.Database.EntrustCommand>();
+
             if (reader.HasRows)
             {
                 while (reader.Read())
@@ -417,8 +437,6 @@ namespace DBAccess.EntrustCommand
                     items.Add(item);
                 }
             }
-            reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
 
             return items;
         }
