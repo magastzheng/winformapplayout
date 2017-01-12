@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model
+namespace Model.UFX
 {
-    public enum FunctionCode
+    public enum UFXFunctionCode
     {
         //心跳
         HeartBeat = 10000,

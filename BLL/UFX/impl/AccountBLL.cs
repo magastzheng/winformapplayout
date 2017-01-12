@@ -5,6 +5,7 @@ using Model;
 using Model.config;
 using Model.EnumType;
 using Model.strategy;
+using Model.UFX;
 
 namespace BLL.UFX.impl
 {
@@ -21,7 +22,7 @@ namespace BLL.UFX.impl
 
         public ConnectionCode QueryAccount()
         {
-            FunctionCode functionCode = FunctionCode.QueryAccount;
+            UFXFunctionCode functionCode = UFXFunctionCode.QueryAccount;
             FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
@@ -107,7 +108,7 @@ namespace BLL.UFX.impl
 
         public ConnectionCode QueryAssetUnit()
         {
-            FunctionCode functionCode = FunctionCode.QueryAssetUnit;
+            UFXFunctionCode functionCode = UFXFunctionCode.QueryAssetUnit;
             FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
@@ -194,7 +195,7 @@ namespace BLL.UFX.impl
 
         public ConnectionCode QueryPortfolio()
         {
-            FunctionCode functionCode = FunctionCode.QueryPortfolio;
+            UFXFunctionCode functionCode = UFXFunctionCode.QueryPortfolio;
             FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
@@ -287,7 +288,7 @@ namespace BLL.UFX.impl
 
         public ConnectionCode QueryHolder()
         {
-            FunctionCode functionCode = FunctionCode.QueryHolder;
+            UFXFunctionCode functionCode = UFXFunctionCode.QueryHolder;
             FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {

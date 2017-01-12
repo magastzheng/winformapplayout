@@ -2,6 +2,7 @@
 using hundsun.t2sdk;
 using log4net;
 using Model;
+using Model.UFX;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace BLL.UFX
         protected CT2Connection _conn = null;
         protected uint _timeOut = 10000;
         protected bool _isInit = false;
-        private Dictionary<FunctionCode, DataHandlerCallback> _dataHandlerMap = new Dictionary<FunctionCode, DataHandlerCallback>();
+        private Dictionary<UFXFunctionCode, DataHandlerCallback> _dataHandlerMap = new Dictionary<UFXFunctionCode, DataHandlerCallback>();
         //private Dictionary<FunctionCode, Dictionary<int, DataHandlerCallback>> _dataHandlerMap = new Dictionary<FunctionCode, Dictionary<int, DataHandlerCallback>>();
 
         private TaskScheduler _taskScheduler = new LimitedConcurrencyLevelTaskScheduler(2);
@@ -123,7 +124,7 @@ namespace BLL.UFX
         /// </summary>
         /// <param name="functionCode">功能号</param>
         /// <param name="receiver">本功能号的委托</param>
-        public void Register(FunctionCode functionCode, DataHandlerCallback receiver)
+        public void Register(UFXFunctionCode functionCode, DataHandlerCallback receiver)
         {
             if (!_dataHandlerMap.ContainsKey(functionCode))
             {
@@ -135,7 +136,7 @@ namespace BLL.UFX
             }
         }
 
-        public void UnRegister(FunctionCode functionCode)
+        public void UnRegister(UFXFunctionCode functionCode)
         {
             if (!_dataHandlerMap.ContainsKey(functionCode))
             {
@@ -188,9 +189,9 @@ namespace BLL.UFX
             }
 
             int iFunction = bizMessage.GetFunction();
-            if (Enum.IsDefined(typeof(FunctionCode), iFunction))
+            if (Enum.IsDefined(typeof(UFXFunctionCode), iFunction))
             {
-                return HandleReceivedBizMsg(SendType.Sync, (FunctionCode)iFunction, retCode, bizMessage);
+                return HandleReceivedBizMsg(SendType.Sync, (UFXFunctionCode)iFunction, retCode, bizMessage);
             }
             else
             {
@@ -231,18 +232,18 @@ namespace BLL.UFX
             }
 
             int iFunction = bizMessage.GetFunction();
-            if (!Enum.IsDefined(typeof(FunctionCode), iFunction))
+            if (!Enum.IsDefined(typeof(UFXFunctionCode), iFunction))
             {
                 dataParser.ErrorCode = ConnectionCode.ErrorNoFunctionCode;
 
                 return dataParser;
             }
 
-            dataParser.FunctionCode = (FunctionCode)iFunction;
+            dataParser.FunctionCode = (UFXFunctionCode)iFunction;
 
             int iRetCode = bizMessage.GetReturnCode();
             int iErrorCode = bizMessage.GetErrorNo();
-            FunctionCode functionCode = (FunctionCode)iFunction;
+            UFXFunctionCode functionCode = (UFXFunctionCode)iFunction;
             if (iRetCode != 0)
             {
                 string msg = string.Format("同步接收数据出错： {0}, {1}", iErrorCode, bizMessage.GetErrorInfo());
@@ -407,7 +408,7 @@ namespace BLL.UFX
             }
             else
             {
-                HandleReceivedBizMsg(SendType.Async, (FunctionCode)iFunction, hSend, lpMsg);
+                HandleReceivedBizMsg(SendType.Async, (UFXFunctionCode)iFunction, hSend, lpMsg);
             }
         }
 
@@ -450,7 +451,7 @@ namespace BLL.UFX
 
         #region private
 
-        private int HandleReceivedBizMsg(SendType sendType, FunctionCode functionCode, int hSend, CT2BizMessage bizMessage)
+        private int HandleReceivedBizMsg(SendType sendType, UFXFunctionCode functionCode, int hSend, CT2BizMessage bizMessage)
         {
             int iRetCode = bizMessage.GetReturnCode();
             int iErrorCode = bizMessage.GetErrorNo();

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model
+namespace Model.UFX
 {
-    public class PackFieldType
+    public class UFXPackFieldType
     {
         public static sbyte IntType = Convert.ToSByte('I');
         public static sbyte FloatType = Convert.ToSByte('F');

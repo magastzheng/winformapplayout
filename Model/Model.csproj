@@ -95,11 +95,11 @@
     <Compile Include="config\FieldConfigItem.cs" />
     <Compile Include="EnumType\TemplateStatus.cs" />
     <Compile Include="EnumType\TradeInstanceStatus.cs" />
-    <Compile Include="FieldRequireType.cs" />
-    <Compile Include="FunctionCode.cs" />
+    <Compile Include="UFX\UFXFieldRequireType.cs" />
+    <Compile Include="UFX\UFXFunctionCode.cs" />
     <Compile Include="config\FunctionConfigItem.cs" />
     <Compile Include="PackageType.cs" />
-    <Compile Include="PackFieldType.cs" />
+    <Compile Include="UFX\UFXPackFieldType.cs" />
     <Compile Include="Permission\Feature.cs" />
     <Compile Include="Permission\RoleStatus.cs" />
     <Compile Include="Permission\RoleType.cs" />

@@ -1,8 +1,5 @@
-﻿using System;
+﻿using Model.UFX;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Model.config
 {
@@ -12,7 +9,7 @@ namespace Model.config
         public sbyte Type { get; set; }
         public int Width { get; set; }
         public int Scale { get; set; }
-        public FieldRequireType Require { get; set; }    //0 - No; 1 - Yes
+        public UFXFieldRequireType Require { get; set; }    //0 - No; 1 - Yes
     }
 
     public class FunctionItem

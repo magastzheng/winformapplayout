@@ -4,6 +4,7 @@ using log4net;
 using Model;
 using Model.config;
 using Model.strategy;
+using Model.UFX;
 using System;
 
 namespace BLL.UFX.impl
@@ -30,7 +31,7 @@ namespace BLL.UFX.impl
 
         public ConnectionCode QueryInstance(AccountItem account)
         {
-            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.QueryTradingInstance1);
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(UFXFunctionCode.QueryTradingInstance1);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
                 return ConnectionCode.ErrorNoFunctionCode;
@@ -44,7 +45,7 @@ namespace BLL.UFX.impl
 
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化
-            bizMessage.SetFunction((int)FunctionCode.QueryTradingInstance1);
+            bizMessage.SetFunction((int)UFXFunctionCode.QueryTradingInstance1);
             bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
 
             //业务包
@@ -119,11 +120,11 @@ namespace BLL.UFX.impl
                             }
                             break;
                         default:
-                            if (item.Type == PackFieldType.IntType)
+                            if (item.Type == UFXPackFieldType.IntType)
                             {
                                 packer.AddInt(-1);
                             }
-                            else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                            else if (item.Type == UFXPackFieldType.StringType || item.Type == UFXPackFieldType.CharType)
                             {
                                 packer.AddStr(item.Name);
                             }
@@ -157,7 +158,7 @@ namespace BLL.UFX.impl
 
         public ConnectionCode QueryMonitorItem()
         {
-            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.QueryMonitorItem);
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(UFXFunctionCode.QueryMonitorItem);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
                 return ConnectionCode.ErrorNoFunctionCode;
@@ -171,7 +172,7 @@ namespace BLL.UFX.impl
 
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化
-            bizMessage.SetFunction((int)FunctionCode.QueryMonitorItem);
+            bizMessage.SetFunction((int)UFXFunctionCode.QueryMonitorItem);
             bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
 
             //业务包
@@ -206,11 +207,11 @@ namespace BLL.UFX.impl
                         }
                         break;
                     default:
-                        if (item.Type == PackFieldType.IntType)
+                        if (item.Type == UFXPackFieldType.IntType)
                         {
                             packer.AddInt(-1);
                         }
-                        else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                        else if (item.Type == UFXPackFieldType.StringType || item.Type == UFXPackFieldType.CharType)
                         {
                             packer.AddStr(item.Name);
                         }
@@ -268,14 +269,14 @@ namespace BLL.UFX.impl
             {
                 Console.WriteLine("功能号：" + iFunction);
                 _t2SDKWrap.PrintUnPack(unpacker);
-                switch ((FunctionCode)iFunction)
+                switch ((UFXFunctionCode)iFunction)
                 {
-                    case FunctionCode.QueryTradingInstance1:
+                    case UFXFunctionCode.QueryTradingInstance1:
                         {
 
                         }
                         break;
-                    case FunctionCode.QueryMonitorItem:
+                    case UFXFunctionCode.QueryMonitorItem:
                         { 
                             
                         }

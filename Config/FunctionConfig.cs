@@ -1,6 +1,7 @@
 ﻿using log4net;
 using Model;
 using Model.config;
+using Model.UFX;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -35,7 +36,7 @@ namespace Config
             return 0;
         }
 
-        public FunctionItem GetFunctionItem(FunctionCode code)
+        public FunctionItem GetFunctionItem(UFXFunctionCode code)
         {
             int key = (int)code;
             if (!functionItemDict.ContainsKey(key))
@@ -105,7 +106,7 @@ namespace Config
                         FieldItem fieldItem = new FieldItem
                         {
                             Name = paramitem.Name,
-                            Require = (paramitem.Require == "N") ? FieldRequireType.No : FieldRequireType.Yes
+                            Require = (paramitem.Require == "N") ? UFXFieldRequireType.No : UFXFieldRequireType.Yes
                         };
 
                         var fieldType = paramitem.Type;
@@ -164,32 +165,32 @@ namespace Config
 
             if (fieldConfigItem.Type == "C")
             {
-                fieldItem.Type = PackFieldType.StringType;
+                fieldItem.Type = UFXPackFieldType.StringType;
             }
             else if (fieldConfigItem.Type == "I")
             {
-                fieldItem.Type = PackFieldType.IntType;
+                fieldItem.Type = UFXPackFieldType.IntType;
             }
             else if (fieldConfigItem.Type == "F")
             {
-                fieldItem.Type = PackFieldType.FloatType;
+                fieldItem.Type = UFXPackFieldType.FloatType;
             }
             else if (strReg.IsMatch(fieldType))
             {
-                fieldItem.Type = PackFieldType.StringType;
+                fieldItem.Type = UFXPackFieldType.StringType;
             }
             else if (floatReg.IsMatch(fieldType))
             {
                 //note the order it should be before integer type
-                fieldItem.Type = PackFieldType.FloatType;
+                fieldItem.Type = UFXPackFieldType.FloatType;
             }
             else if (intReg.IsMatch(fieldType))
             {
-                fieldItem.Type = PackFieldType.IntType;
+                fieldItem.Type = UFXPackFieldType.IntType;
             }
             else
             {
-                fieldItem.Type = PackFieldType.BinaryType;
+                fieldItem.Type = UFXPackFieldType.BinaryType;
             }
         }
         #endregion

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Model.UFX;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -89,7 +90,7 @@ namespace Model.Data
     //The raw data from UFX - t2sdk set
     public class RawDataSet
     {
-        public FunctionCode FunctionCode { get; set; }
+        public UFXFunctionCode FunctionCode { get; set; }
         public List<RawDataRow> Rows { get; set; }
     }
 }

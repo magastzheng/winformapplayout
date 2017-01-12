@@ -3,6 +3,7 @@ using hundsun.mcapi;
 using hundsun.t2sdk;
 using log4net;
 using Model;
+using Model.UFX;
 using System;
 
 namespace BLL.UFX
@@ -182,16 +183,16 @@ namespace BLL.UFX
             else
             {
                 //Console.WriteLine("主推业务订阅 - 返回码：{0}, 错误码： {1}, 功能号： {2}", iRetCode, iErrorCode, iFunction);
-                if (Enum.IsDefined(typeof(FunctionCode), iFunction))
+                if (Enum.IsDefined(typeof(UFXFunctionCode), iFunction))
                 {
-                    FunctionCode functionCode = (FunctionCode)Enum.ToObject(typeof(FunctionCode), iFunction);
+                    UFXFunctionCode functionCode = (UFXFunctionCode)Enum.ToObject(typeof(UFXFunctionCode), iFunction);
                     switch (functionCode)
                     { 
-                        case FunctionCode.MCHeartBeat:
+                        case UFXFunctionCode.MCHeartBeat:
                             break;
-                        case FunctionCode.MCRecvSubscribe:
+                        case UFXFunctionCode.MCRecvSubscribe:
                             break;
-                        case FunctionCode.MCRecvUnsubscribe:
+                        case UFXFunctionCode.MCRecvUnsubscribe:
                             break;
                         default:
                             break;

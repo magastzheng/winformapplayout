@@ -4,6 +4,7 @@ using log4net;
 using Model;
 using Model.Binding.BindingUtil;
 using Model.config;
+using Model.UFX;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,7 +17,7 @@ namespace BLL.UFX.impl
 
         protected T2SDKWrap _t2SDKWrap;
         protected DataHandlerCallback _dataHandler;
-        protected Dictionary<FunctionCode, Dictionary<int, Callbacker>> _dataHandlerMap = new Dictionary<FunctionCode, Dictionary<int, Callbacker>>();
+        protected Dictionary<UFXFunctionCode, Dictionary<int, Callbacker>> _dataHandlerMap = new Dictionary<UFXFunctionCode, Dictionary<int, Callbacker>>();
 
         public UFXBLLBase(T2SDKWrap t2SDKWrap)
         {
@@ -24,7 +25,7 @@ namespace BLL.UFX.impl
             _dataHandler = HandlData;
         }
 
-        public int HandlData(FunctionCode functionCode, int hSend, DataParser parser)
+        public int HandlData(UFXFunctionCode functionCode, int hSend, DataParser parser)
         {
             //FunctionCode functionCode = (FunctionCode)parser.FunctionCode;
             if (_dataHandlerMap.ContainsKey(functionCode))
@@ -60,17 +61,17 @@ namespace BLL.UFX.impl
 
         #region protect method
 
-        protected void RegisterUFX(FunctionCode functionCode)
+        protected void RegisterUFX(UFXFunctionCode functionCode)
         {
             _t2SDKWrap.Register(functionCode, _dataHandler);
         }
 
-        protected void UnRegisterUFX(FunctionCode functionCode)
+        protected void UnRegisterUFX(UFXFunctionCode functionCode)
         {
             _t2SDKWrap.UnRegister(functionCode);
         }
 
-        protected void AddDataHandler(FunctionCode functionCode, int hSend, Callbacker callbacker)
+        protected void AddDataHandler(UFXFunctionCode functionCode, int hSend, Callbacker callbacker)
         {
             if (_dataHandlerMap.ContainsKey(functionCode))
             {
@@ -98,7 +99,7 @@ namespace BLL.UFX.impl
         //    }
         //}
 
-        protected Callbacker GetDataHandler(FunctionCode functionCode, int hSend)
+        protected Callbacker GetDataHandler(UFXFunctionCode functionCode, int hSend)
         {
             Callbacker callbacker = null;
 
@@ -119,7 +120,7 @@ namespace BLL.UFX.impl
 
         #region send request
 
-        public ConnectionCode Submit<T>(FunctionCode functionCode, List<T> requests, Callbacker callbacker)
+        public ConnectionCode Submit<T>(UFXFunctionCode functionCode, List<T> requests, Callbacker callbacker)
         {
             FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
@@ -198,7 +199,7 @@ namespace BLL.UFX.impl
             return retCode;
         }
 
-        public DataParser SubmitSync<T>(FunctionCode functionCode, List<T> requests)
+        public DataParser SubmitSync<T>(UFXFunctionCode functionCode, List<T> requests)
         {
             DataParser parser = new DataParser();
 
@@ -265,7 +266,7 @@ namespace BLL.UFX.impl
             return parser;
         }
 
-        private void OutputParam<T>(FunctionCode functionCode, List<T> requests)
+        private void OutputParam<T>(UFXFunctionCode functionCode, List<T> requests)
         {
             FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
 
@@ -276,7 +277,7 @@ namespace BLL.UFX.impl
             {
                 if (item.Name.Equals("entrust_amount"))
                 {
-                    sb.AppendFormat("{0}|{1}|{2}|{3}\n", item.Name, PackFieldType.FloatType, item.Width, item.Scale);
+                    sb.AppendFormat("{0}|{1}|{2}|{3}\n", item.Name, UFXPackFieldType.FloatType, item.Width, item.Scale);
                 }
                 else
                 {
@@ -307,11 +308,11 @@ namespace BLL.UFX.impl
                                 }
                                 break;
                             default:
-                                if (item.Type == PackFieldType.IntType)
+                                if (item.Type == UFXPackFieldType.IntType)
                                 {
                                     sb.AppendFormat("{0}:{1}|", item.Name, -1);
                                 }
-                                else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                                else if (item.Type == UFXPackFieldType.StringType || item.Type == UFXPackFieldType.CharType)
                                 {
                                     sb.AppendFormat("{0}:{1}|", item.Name, item.Name);
                                 }
@@ -354,7 +355,7 @@ namespace BLL.UFX.impl
                     //packer.AddInt(0);
                 }
             }
-            else if (fieldItem.Type == PackFieldType.IntType)
+            else if (fieldItem.Type == UFXPackFieldType.IntType)
             {
                 if (obj != null)
                 {
@@ -365,7 +366,7 @@ namespace BLL.UFX.impl
                     packer.AddInt(-1);
                 }
             }
-            else if (fieldItem.Type == PackFieldType.FloatType)
+            else if (fieldItem.Type == UFXPackFieldType.FloatType)
             {
                 if (obj != null)
                 {
@@ -376,7 +377,7 @@ namespace BLL.UFX.impl
                     packer.AddDouble(0f);
                 }
             }
-            else if (fieldItem.Type == PackFieldType.StringType)
+            else if (fieldItem.Type == UFXPackFieldType.StringType)
             {
                 if (obj != null)
                 {
@@ -403,11 +404,11 @@ namespace BLL.UFX.impl
                     }
                     break;
                 default:
-                    if (fieldItem.Type == PackFieldType.IntType)
+                    if (fieldItem.Type == UFXPackFieldType.IntType)
                     {
                         packer.AddInt(-1);
                     }
-                    else if (fieldItem.Type == PackFieldType.StringType || fieldItem.Type == PackFieldType.CharType)
+                    else if (fieldItem.Type == UFXPackFieldType.StringType || fieldItem.Type == UFXPackFieldType.CharType)
                     {
                         packer.AddStr(fieldItem.Name);
                     }

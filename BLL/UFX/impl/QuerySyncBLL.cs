@@ -24,7 +24,7 @@ namespace BLL.UFX.impl
         {
             List<UFXQueryMoneyResponse> responseItems = new List<UFXQueryMoneyResponse>();
 
-            DataParser parser = SubmitSync<UFXQueryMoneyRequest>(FunctionCode.QueryAccountMoney, requests);
+            DataParser parser = SubmitSync<UFXQueryMoneyRequest>(UFXFunctionCode.QueryAccountMoney, requests);
             var errorResponse = T2ErrorHandler.Handle(parser);
             if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {

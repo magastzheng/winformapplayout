@@ -1,12 +1,11 @@
 ﻿
-using Model;
-using System.Threading;
+using Model.UFX;
 namespace BLL.UFX.impl
 {
-    public delegate int DataHandlerCallback(FunctionCode functionCode, int hSend, DataParser dataParser);
+    public delegate int DataHandlerCallback(UFXFunctionCode functionCode, int hSend, DataParser dataParser);
 
     public interface IDataHandler
     {
-        int Handle(FunctionCode functionCode, int hSend, DataParser dataParser);
+        int Handle(UFXFunctionCode functionCode, int hSend, DataParser dataParser);
     }
 }

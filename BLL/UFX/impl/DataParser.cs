@@ -1,6 +1,7 @@
 ﻿using hundsun.t2sdk;
 using Model;
 using Model.Data;
+using Model.UFX;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,7 +20,7 @@ namespace BLL.UFX.impl
 
         public ConnectionCode ErrorCode { get; set; }
 
-        public FunctionCode FunctionCode { get; set; } 
+        public UFXFunctionCode FunctionCode { get; set; } 
 
         public void Parse(CT2UnPacker lpUnPack)
         {

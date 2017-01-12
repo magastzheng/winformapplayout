@@ -3,7 +3,7 @@ using hundsun.t2sdk;
 using log4net;
 using Model;
 using Model.config;
-using System;
+using Model.UFX;
 
 namespace BLL.UFX.impl
 {
@@ -14,17 +14,17 @@ namespace BLL.UFX.impl
         public StrategyBLL(T2SDKWrap t2SDKWrap)
             : base(t2SDKWrap)
         {
-            RegisterUFX(FunctionCode.QueryTradingInstance);
-            RegisterUFX(FunctionCode.EntrustInstanceBasket);
-            RegisterUFX(FunctionCode.QueryEntrustInstance);
-            RegisterUFX(FunctionCode.QueryDealInstance);
-            RegisterUFX(FunctionCode.QuerySpotTemplate);
-            RegisterUFX(FunctionCode.QuerySpotTemplateStock);
+            RegisterUFX(UFXFunctionCode.QueryTradingInstance);
+            RegisterUFX(UFXFunctionCode.EntrustInstanceBasket);
+            RegisterUFX(UFXFunctionCode.QueryEntrustInstance);
+            RegisterUFX(UFXFunctionCode.QueryDealInstance);
+            RegisterUFX(UFXFunctionCode.QuerySpotTemplate);
+            RegisterUFX(UFXFunctionCode.QuerySpotTemplateStock);
         }
 
         public ConnectionCode QueryTrading()
         {
-            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.QueryTradingInstance);
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(UFXFunctionCode.QueryTradingInstance);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
                 return ConnectionCode.ErrorNoFunctionCode;
@@ -38,7 +38,7 @@ namespace BLL.UFX.impl
 
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化
-            bizMessage.SetFunction((int)FunctionCode.QueryTradingInstance);
+            bizMessage.SetFunction((int)UFXFunctionCode.QueryTradingInstance);
             bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
 
             //业务包
@@ -116,7 +116,7 @@ namespace BLL.UFX.impl
 
         public ConnectionCode EntrustBasket()
         {
-            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.EntrustInstanceBasket);
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(UFXFunctionCode.EntrustInstanceBasket);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
                 return ConnectionCode.ErrorNoFunctionCode;
@@ -130,7 +130,7 @@ namespace BLL.UFX.impl
 
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化
-            bizMessage.SetFunction((int)FunctionCode.EntrustInstanceBasket);
+            bizMessage.SetFunction((int)UFXFunctionCode.EntrustInstanceBasket);
             bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
 
             //业务包
@@ -221,11 +221,11 @@ namespace BLL.UFX.impl
                         }
                         break;
                     default:
-                        if (item.Type == PackFieldType.IntType)
+                        if (item.Type == UFXPackFieldType.IntType)
                         {
                             packer.AddInt(-1);
                         }
-                        else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                        else if (item.Type == UFXPackFieldType.StringType || item.Type == UFXPackFieldType.CharType)
                         {
                             packer.AddStr(item.Name);
                         }
@@ -258,7 +258,7 @@ namespace BLL.UFX.impl
 
         public ConnectionCode QueryEntrust()
         {
-            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.QueryEntrustInstance);
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(UFXFunctionCode.QueryEntrustInstance);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
                 return ConnectionCode.ErrorNoFunctionCode;
@@ -272,7 +272,7 @@ namespace BLL.UFX.impl
 
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化
-            bizMessage.SetFunction((int)FunctionCode.QueryEntrustInstance);
+            bizMessage.SetFunction((int)UFXFunctionCode.QueryEntrustInstance);
             bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
 
             //业务包
@@ -363,11 +363,11 @@ namespace BLL.UFX.impl
                         }
                         break;
                     default:
-                        if (item.Type == PackFieldType.IntType)
+                        if (item.Type == UFXPackFieldType.IntType)
                         {
                             packer.AddInt(-1);
                         }
-                        else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                        else if (item.Type == UFXPackFieldType.StringType || item.Type == UFXPackFieldType.CharType)
                         {
                             packer.AddStr(item.Name);
                         }
@@ -400,7 +400,7 @@ namespace BLL.UFX.impl
 
         public ConnectionCode QueryDeal()
         {
-            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.QueryDealInstance);
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(UFXFunctionCode.QueryDealInstance);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
                 return ConnectionCode.ErrorNoFunctionCode;
@@ -414,7 +414,7 @@ namespace BLL.UFX.impl
 
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化
-            bizMessage.SetFunction((int)FunctionCode.QueryDealInstance);
+            bizMessage.SetFunction((int)UFXFunctionCode.QueryDealInstance);
             bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
 
             //业务包
@@ -500,11 +500,11 @@ namespace BLL.UFX.impl
                         }
                         break;
                     default:
-                        if (item.Type == PackFieldType.IntType)
+                        if (item.Type == UFXPackFieldType.IntType)
                         {
                             packer.AddInt(-1);
                         }
-                        else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                        else if (item.Type == UFXPackFieldType.StringType || item.Type == UFXPackFieldType.CharType)
                         {
                             packer.AddStr(item.Name);
                         }
@@ -537,7 +537,7 @@ namespace BLL.UFX.impl
 
         public ConnectionCode WithdrawBasket()
         {
-            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.WithdrawBasket);
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(UFXFunctionCode.WithdrawBasket);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
                 return ConnectionCode.ErrorNoFunctionCode;
@@ -551,7 +551,7 @@ namespace BLL.UFX.impl
 
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化
-            bizMessage.SetFunction((int)FunctionCode.WithdrawBasket);
+            bizMessage.SetFunction((int)UFXFunctionCode.WithdrawBasket);
             bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
 
             //业务包
@@ -577,11 +577,11 @@ namespace BLL.UFX.impl
                         }
                         break;
                     default:
-                        if (item.Type == PackFieldType.IntType)
+                        if (item.Type == UFXPackFieldType.IntType)
                         {
                             packer.AddInt(-1);
                         }
-                        else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                        else if (item.Type == UFXPackFieldType.StringType || item.Type == UFXPackFieldType.CharType)
                         {
                             packer.AddStr(item.Name);
                         }
@@ -614,7 +614,7 @@ namespace BLL.UFX.impl
 
         public ConnectionCode QueryTemplate()
         {
-            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.QuerySpotTemplate);
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(UFXFunctionCode.QuerySpotTemplate);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
                 return ConnectionCode.ErrorNoFunctionCode;
@@ -628,7 +628,7 @@ namespace BLL.UFX.impl
 
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化
-            bizMessage.SetFunction((int)FunctionCode.QuerySpotTemplate);
+            bizMessage.SetFunction((int)UFXFunctionCode.QuerySpotTemplate);
             bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
 
             //业务包
@@ -654,11 +654,11 @@ namespace BLL.UFX.impl
                         }
                         break;
                     default:
-                        if (item.Type == PackFieldType.IntType)
+                        if (item.Type == UFXPackFieldType.IntType)
                         {
                             packer.AddInt(-1);
                         }
-                        else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                        else if (item.Type == UFXPackFieldType.StringType || item.Type == UFXPackFieldType.CharType)
                         {
                             packer.AddStr(item.Name);
                         }
@@ -691,7 +691,7 @@ namespace BLL.UFX.impl
 
         public ConnectionCode QueryTemplateStock(int templateNo)
         {
-            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.QuerySpotTemplateStock);
+            FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(UFXFunctionCode.QuerySpotTemplateStock);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
                 return ConnectionCode.ErrorNoFunctionCode;
@@ -705,7 +705,7 @@ namespace BLL.UFX.impl
 
             CT2BizMessage bizMessage = new CT2BizMessage();
             //初始化
-            bizMessage.SetFunction((int)FunctionCode.QuerySpotTemplateStock);
+            bizMessage.SetFunction((int)UFXFunctionCode.QuerySpotTemplateStock);
             bizMessage.SetPacketType(CT2tag_def.REQUEST_PACKET);
 
             //业务包
@@ -731,11 +731,11 @@ namespace BLL.UFX.impl
                         }
                         break;
                     default:
-                        if (item.Type == PackFieldType.IntType)
+                        if (item.Type == UFXPackFieldType.IntType)
                         {
                             packer.AddInt(-1);
                         }
-                        else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                        else if (item.Type == UFXPackFieldType.StringType || item.Type == UFXPackFieldType.CharType)
                         {
                             packer.AddStr(item.Name);
                         }

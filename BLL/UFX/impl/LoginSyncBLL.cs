@@ -3,6 +3,7 @@ using hundsun.t2sdk;
 using log4net;
 using Model;
 using Model.config;
+using Model.UFX;
 
 namespace BLL.UFX.impl
 {
@@ -19,7 +20,7 @@ namespace BLL.UFX.impl
 
         public ConnectionCode Login(LoginUser user)
         {
-            FunctionCode functionCode = FunctionCode.Login;
+            UFXFunctionCode functionCode = UFXFunctionCode.Login;
             FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
@@ -77,11 +78,11 @@ namespace BLL.UFX.impl
                         }
                         break;
                     default:
-                        if (item.Type == PackFieldType.IntType)
+                        if (item.Type == UFXPackFieldType.IntType)
                         {
                             packer.AddInt(-1);
                         }
-                        else if (item.Type == PackFieldType.StringType || item.Type == PackFieldType.CharType)
+                        else if (item.Type == UFXPackFieldType.StringType || item.Type == UFXPackFieldType.CharType)
                         {
                             packer.AddStr(item.Name);
                         }
@@ -145,7 +146,7 @@ namespace BLL.UFX.impl
 
         public ConnectionCode Logout()
         {
-            FunctionCode functionCode = FunctionCode.Logout;
+            UFXFunctionCode functionCode = UFXFunctionCode.Logout;
             FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {
@@ -208,7 +209,7 @@ namespace BLL.UFX.impl
 
         public ConnectionCode HeartBeat()
         {
-            FunctionCode functionCode = FunctionCode.HeartBeat;
+            UFXFunctionCode functionCode = UFXFunctionCode.HeartBeat;
             FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)
             {

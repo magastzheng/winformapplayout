@@ -1,11 +1,7 @@
 ﻿using Config;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Model;
+using Model.UFX;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HSUnitTest
 {
@@ -15,7 +11,7 @@ namespace HSUnitTest
         [TestMethod]
         public void TestConfigManager()
         {
-            var functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(FunctionCode.QueryDealInstance);
+            var functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(UFXFunctionCode.QueryDealInstance);
             Console.WriteLine(functionItem.Code);
         }
     }

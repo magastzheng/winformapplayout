@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model
+namespace Model.UFX
 {
-    public enum FieldRequireType
+    public enum UFXFieldRequireType
     {
         No = 0,
         Yes = 1,

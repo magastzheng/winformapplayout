@@ -25,7 +25,7 @@ namespace BLL.UFX.impl
         /// <returns></returns>
         public List<UFXBasketWithdrawResponse> Withdraw(List<UFXWithdrawRequest> requests)
         {
-            DataParser parser = SubmitSync<UFXWithdrawRequest>(Model.FunctionCode.Withdraw, requests);
+            DataParser parser = SubmitSync<UFXWithdrawRequest>(UFXFunctionCode.Withdraw, requests);
 
             return ParseData(parser);
         }
@@ -38,7 +38,7 @@ namespace BLL.UFX.impl
         public List<UFXBasketWithdrawResponse> WithdrawBasket(UFXBasketWithdrawRequest request)
         {
             List<UFXBasketWithdrawRequest> requests = new List<UFXBasketWithdrawRequest> { request };
-            DataParser parser = SubmitSync<UFXBasketWithdrawRequest>(Model.FunctionCode.WithdrawBasket, requests);
+            DataParser parser = SubmitSync<UFXBasketWithdrawRequest>(UFXFunctionCode.WithdrawBasket, requests);
 
             return ParseData(parser);
         }
