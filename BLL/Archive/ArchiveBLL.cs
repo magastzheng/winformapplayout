@@ -1,5 +1,7 @@
-﻿using BLL.Archive.EntrustCommand;
+﻿using BLL.Archive.Deal;
+using BLL.Archive.EntrustCommand;
 using BLL.Archive.TradeCommand;
+using BLL.Deal;
 using BLL.EntrustCommand;
 using BLL.TradeCommand;
 using Model.Archive;
@@ -12,6 +14,14 @@ using System.Threading.Tasks;
 
 namespace BLL.Archive
 {
+    /// <summary>
+    /// Archive order:
+    /// TradeCommand -> TradeCommandSecurity [archive those ineffective command]
+    /// EntrustCommand -> EntrustSecurity   [archive those ineffective command id]
+    /// DealSecurity    [archive those submit id in archive EntrustCommand]
+    /// 
+    /// While success to archive, does it need to delete the old item?
+    /// </summary>
     public class ArchiveBLL
     {
         private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
@@ -21,11 +31,21 @@ namespace BLL.Archive
         private EntrustCommandBLL _entrustCommandBLL = new EntrustCommandBLL();
         private EntrustSecurityBLL _entrustSecurityBLL = new EntrustSecurityBLL();
         private ArchiveEntrustBLL _archiveEntrustBLL = new ArchiveEntrustBLL();
+     
+        private DealSecurityBLL _dealSecurityBLL = new DealSecurityBLL();
+        private ArchiveDealSecurityBLL _archiveDealSecurityBLL = new ArchiveDealSecurityBLL();
 
         public ArchiveBLL()
         { 
         }
 
+        #region TradeCommand
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandId"></param>
+        /// <returns></returns>
         public int ArchiveTradeCommand(int commandId)
         {
             int ret = -1;
@@ -44,6 +64,15 @@ namespace BLL.Archive
 
             return ret;
         }
+
+        public int DeleteTradeCommand(int archiveId)
+        {
+            return _archiveTradeBLL.Delete(archiveId);
+        }
+
+        #endregion
+
+        #region EntrustCommand
 
         public int ArchiveEntrustCommand(int commandId)
         {
@@ -67,6 +96,49 @@ namespace BLL.Archive
             return ret;
         }
 
+        public int DeleteEntrustCommand(int archiveId)
+        {
+            return _archiveEntrustBLL.Delete(archiveId);
+        }
 
+        #endregion
+
+        #region DealSecurity
+
+        /// <summary>
+        /// SumbitId -> ArchiveId, ArchiveDate from ArchiveEntrustCommand
+        /// 
+        /// 
+        /// </summary>
+        /// <param name="submitId"></param>
+        /// <returns></returns>
+        public int ArchiveDealSecurity()
+        {
+            int ret = -1;
+            var dealSecurites = _dealSecurityBLL.GetAll();
+
+            var submitIds = dealSecurites.Select(p => p.SubmitId).Distinct().ToList();
+            foreach (var submitId in submitIds)
+            {
+                var archiveCommand = _archiveEntrustBLL.GetCommandBySubmitId(submitId);
+                if (archiveCommand != null && archiveCommand.SubmitId == submitId)
+                {
+                    var sameDealItems = dealSecurites.Where(p => p.SubmitId == submitId).ToList();
+                    ret = _archiveDealSecurityBLL.Create(archiveCommand.ArchiveId, archiveCommand.ArchiveDate, sameDealItems);
+                    if (ret > 0)
+                    {
+                        //success
+                    }
+                    else
+                    { 
+                        //failure
+                    }
+                }
+            }
+
+            return ret;
+        }
+
+        #endregion
     }
 }

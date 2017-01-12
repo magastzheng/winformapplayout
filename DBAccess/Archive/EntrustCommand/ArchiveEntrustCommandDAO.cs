@@ -2,6 +2,7 @@
 using Model.EnumType;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace DBAccess.Archive.EntrustCommand
         private const string SP_Create = "procArchiveEntrustCommandInsert";
         private const string SP_Delete = "procArchiveEntrustCommandDelete";
         private const string SP_Select = "procArchiveEntrustCommandSelect";
+        private const string SP_SelectBySubmitId = "procArchiveEntrustCommandSelectBySubmitId";
 
         public ArchiveEntrustCommandDAO()
             : base()
@@ -73,48 +75,7 @@ namespace DBAccess.Archive.EntrustCommand
             {
                 while (reader.Read())
                 {
-                    var item = new ArchiveEntrustCommand();
-                    item.ArchiveId = (int)reader["ArchiveId"];
-                    item.SubmitId = (int)reader["SubmitId"];
-                    item.CommandId = (int)reader["CommandId"];
-                    item.Copies = (int)reader["Copies"];
-                    if (reader["EntrustNo"] != null && reader["EntrustNo"] != DBNull.Value)
-                    {
-                        item.EntrustNo = (int)reader["EntrustNo"];
-                    }
-
-                    if (reader["BatchNo"] != null && reader["BatchNo"] != DBNull.Value)
-                    {
-                        item.BatchNo = (int)reader["BatchNo"];
-                    }
-                    item.EntrustStatus = (EntrustStatus)(int)reader["EntrustStatus"];
-                    item.DealStatus = (DealStatus)(int)reader["DealStatus"];
-                    item.SubmitPerson = (int)reader["SubmitPerson"];
-
-                    if (reader["ArchiveDate"] != null && reader["ArchiveDate"] != DBNull.Value)
-                    { 
-                        item.ArchiveDate = (DateTime)reader["ArchiveDate"];
-                    }
-
-                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
-                    {
-                        item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    }
-
-                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
-                    {
-                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
-                    }
-
-                    if (reader["EntrustFailCode"] != null && reader["EntrustFailCode"] != DBNull.Value)
-                    {
-                        item.EntrustFailCode = (int)reader["EntrustFailCode"];
-                    }
-
-                    if (reader["EntrustFailCause"] != null && reader["EntrustFailCause"] != DBNull.Value)
-                    {
-                        item.EntrustFailCause = (string)reader["EntrustFailCause"];
-                    }
+                    ArchiveEntrustCommand item = ParseData(reader);
 
                     items.Add(item);
                 }
@@ -124,5 +85,72 @@ namespace DBAccess.Archive.EntrustCommand
 
             return items;
         }
+
+        public ArchiveEntrustCommand GetBySubmitId(int submitId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_SelectBySubmitId);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
+
+            ArchiveEntrustCommand item = new ArchiveEntrustCommand();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows && reader.Read())
+            {
+                item = ParseData(reader);
+            }
+
+            return item;
+        }
+
+        #region ParseData
+
+        private ArchiveEntrustCommand ParseData(DbDataReader reader)
+        {
+            var item = new ArchiveEntrustCommand();
+            item.ArchiveId = (int)reader["ArchiveId"];
+            item.SubmitId = (int)reader["SubmitId"];
+            item.CommandId = (int)reader["CommandId"];
+            item.Copies = (int)reader["Copies"];
+            if (reader["EntrustNo"] != null && reader["EntrustNo"] != DBNull.Value)
+            {
+                item.EntrustNo = (int)reader["EntrustNo"];
+            }
+
+            if (reader["BatchNo"] != null && reader["BatchNo"] != DBNull.Value)
+            {
+                item.BatchNo = (int)reader["BatchNo"];
+            }
+            item.EntrustStatus = (EntrustStatus)(int)reader["EntrustStatus"];
+            item.DealStatus = (DealStatus)(int)reader["DealStatus"];
+            item.SubmitPerson = (int)reader["SubmitPerson"];
+
+            if (reader["ArchiveDate"] != null && reader["ArchiveDate"] != DBNull.Value)
+            {
+                item.ArchiveDate = (DateTime)reader["ArchiveDate"];
+            }
+
+            if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+            {
+                item.CreatedDate = (DateTime)reader["CreatedDate"];
+            }
+
+            if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+            {
+                item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+            }
+
+            if (reader["EntrustFailCode"] != null && reader["EntrustFailCode"] != DBNull.Value)
+            {
+                item.EntrustFailCode = (int)reader["EntrustFailCode"];
+            }
+
+            if (reader["EntrustFailCause"] != null && reader["EntrustFailCause"] != DBNull.Value)
+            {
+                item.EntrustFailCause = (string)reader["EntrustFailCause"];
+            }
+
+            return item;
+        }
+
+        #endregion
     }
 }

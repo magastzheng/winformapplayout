@@ -121,3 +121,32 @@ begin
 	from archiveentrustcommand
 	where CommandId=@CommandId
 end
+
+go
+if exists (select name from sysobjects where name='procArchiveEntrustCommandSelectBySubmitId')
+drop proc procArchiveEntrustCommandSelectBySubmitId
+
+go
+create proc procArchiveEntrustCommandSelectBySubmitId(
+	@SubmitId	int
+)
+as
+begin
+	select
+		ArchiveId
+		,SubmitId
+		,CommandId
+		,Copies
+		,EntrustNo
+		,BatchNo
+		,EntrustStatus
+		,DealStatus
+		,SubmitPerson
+		,ArchiveDate
+		,CreatedDate
+		,ModifiedDate
+		,EntrustFailCode
+		,EntrustFailCause
+	from archiveentrustcommand
+	where SubmitId=@SubmitId
+end
