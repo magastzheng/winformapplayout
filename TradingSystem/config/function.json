@@ -369,6 +369,239 @@
 		]
 	},
 	{
+		"code": 31003,
+		"name_en": "func_am_uft_unitstk_qry",
+		"name_zh": "期货持仓查询",
+		"param": [{
+			"name": "user_token",
+			"type": "C512",
+			"require": "Y"
+		},{
+			"name": "account_code",
+			"type": "C32",
+			"require": "N"
+		},{
+			"name": "asset_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "combi_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "market_no",
+			"type": "C3",
+			"require": "N"
+		},{
+			"name": "stock_code",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "stockholder_id",
+			"type": "C20",
+			"require": "N"
+		},{
+			"name": "hold_seat",
+			"type": "C6",
+			"require": "N"
+		},{
+			"name": "invest_type",
+			"type": "C1",
+			"require": "N"
+		},{
+			"name": "position_flag",
+			"type": "C1",
+			"require": "N"
+		}],
+		"response":[{
+			"name": "account_code",
+			"type": "C32"
+			},{
+			"name": "asset_no",
+			"type": "C16"
+			},{
+			"name": "combi_no",
+			"type": "C8"
+			},{
+			"name": "market_no",
+			"type": "C3"
+			},{
+			"name": "stock_code",
+			"type": "C16"
+			},{
+			"name": "stockholder_id",
+			"type": "C20"
+			},{
+			"name": "hold_seat",
+			"type": "C6"
+			},{
+			"name": "position_flag",
+			"type": "C1"
+			},{
+			"name": "invest_type",
+			"type": "C1"
+			},{
+			"name": "current_amount",
+			"type": "N16"
+			},{
+			"name": "today_amount",
+			"type": "N16"
+			},{
+			"name": "lastday_amount",
+			"type": "N16"
+			},{
+			"name": "enable_amount",
+			"type": "N16"
+			},{
+			"name": "today_enable_amount",
+			"type": "N16"
+			},{
+			"name": "lastday_enable_amount",
+			"type": "N16"
+			},{
+			"name": "begin_const",
+			"type": "N16.2"
+			},{
+			"name": "current_cost",
+			"type": "N16.2"
+			},{
+			"name": "current_cost_price",
+			"type": "N9.3"
+			},{
+			"name": "pre_buy_amount",
+			"type": "N16"
+			},{
+			"name": "pre_sell_amount",
+			"type": "N16"
+			},{
+			"name": "pre_buy_balance",
+			"type": "N16.2"
+			},{
+			"name": "pre_sell_balance",
+			"type": "N16.2"
+			},{
+			"name": "today_buy_amount",
+			"type": "N16"
+			},{
+			"name": "today_sell_amount",
+			"type": "N16"
+			},{
+			"name": "today_buy_balance",
+			"type": "N16.2"
+			},{
+			"name": "today_sell_balance",
+			"type": "N16.2"
+			},{
+			"name": "today_buy_fee",
+			"type": "N16.2"
+			},{
+			"name": "today_sell_fee",
+			"type": "N16.2"
+			}
+		]
+	},
+	{
+		"code": 31013,
+		"name_en": "func_am_unitstk_detail_qry",
+		"name_zh": "证券持仓明细查询",
+		"param": [{
+			"name": "user_token",
+			"type": "C512",
+			"require": "Y"
+		},{
+			"name": "account_code",
+			"type": "C32",
+			"require": "N"
+		},{
+			"name": "asset_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "combi_no",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "market_no",
+			"type": "C3",
+			"require": "N"
+		},{
+			"name": "stock_code",
+			"type": "C16",
+			"require": "N"
+		},{
+			"name": "stockholder_id",
+			"type": "C20",
+			"require": "N"
+		},{
+			"name": "invest_type",
+			"type": "C1",
+			"require": "N"
+		},{
+			"name": "position_flag",
+			"type": "C1",
+			"require": "N"
+		}],
+		"response":[{
+			"name": "account_code",
+			"type": "C32"
+			},{
+			"name": "asset_no",
+			"type": "C16"
+			},{
+			"name": "combi_no",
+			"type": "C8"
+			},{
+			"name": "market_no",
+			"type": "C3"
+			},{
+			"name": "stock_code",
+			"type": "C16"
+			},{
+			"name": "stockholder_id",
+			"type": "C20"
+			},{
+			"name": "position_flag",
+			"type": "C1"
+			},{
+			"name": "invest_type",
+			"type": "C1"
+			},{
+			"name": "stock_open_date",
+			"type": "N8"
+			},{
+			"name": "deal_no",
+			"type": "C64"
+			},{
+			"name": "open_amount",
+			"type": "N16"
+			},{
+			"name": "current_amount",
+			"type": "N16"
+			},{
+			"name": "drop_amount",
+			"type": "N16"
+			},{
+			"name": "occupy_deposit_balance",
+			"type": "N16.2"
+			},{
+			"name": "open_price",
+			"type": "N11.4"
+			},{
+			"name": "drop_income",
+			"type": "N16.2"
+			},{
+			"name": "total_fee",
+			"type": "N16.2"
+			},{
+			"name": "pre_settlement_price",
+			"type": "N11.4"
+			},{
+			"name": "multiple",
+			"type": "N10"
+			}
+		]
+	},
+	{
 		"code": 31005,
 		"name_en": "func_am_comb_unitstk_qry",
 		"name_zh": "多业务持仓查询",

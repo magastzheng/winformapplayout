@@ -81,18 +81,8 @@ namespace BLL.Entrust
             List<UFXMultipleHoldingResponse> responseItems = new List<UFXMultipleHoldingResponse>();
             if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
-                var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXMultipleHoldingResponse>();
-                for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
-                {
-                    var dataSet = dataParser.DataSets[i];
-                    foreach (var dataRow in dataSet.Rows)
-                    {
-                        UFXMultipleHoldingResponse p = new UFXMultipleHoldingResponse();
-                        UFXDataSetHelper.SetValue<UFXMultipleHoldingResponse>(ref p, dataRow.Columns, dataFieldMap);
-                        responseItems.Add(p);
-                    }
-                }
-
+                responseItems = UFXDataSetHelper.ParseData<UFXMultipleHoldingResponse>(dataParser);
+                
                 var futures = responseItems.Where(p => p.MarketNo == "7").ToList();
 
                 var validItems = responseItems.Where(p => p.CurrentAmount > 0).ToList();

@@ -23,26 +23,15 @@ namespace BLL.Entrust.subscriber
         public int Handle(DataParser dataParser)
         {
             List<UFXEntrustFailedResponse> responseItems = new List<UFXEntrustFailedResponse>();
-            var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXEntrustFailedResponse>();
-
+            
             var errorResponse = T2ErrorHandler.Handle(dataParser);
             if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
-                //TODO:
-                for (int i = 0, count = dataParser.DataSets.Count; i < count; i++)
-                {
-                    var dataSet = dataParser.DataSets[i];
-                    foreach (var dataRow in dataSet.Rows)
-                    {
-                        UFXEntrustFailedResponse p = new UFXEntrustFailedResponse();
-                        UFXDataSetHelper.SetValue<UFXEntrustFailedResponse>(ref p, dataRow.Columns, dataFieldMap);
-                        responseItems.Add(p);
-                    }
-                }
+                responseItems = UFXDataSetHelper.ParseSubscribeData<UFXEntrustFailedResponse>(dataParser);
             }
 
             //update the database
-            if (responseItems.Count > 0)
+            if (responseItems != null && responseItems.Count > 0)
             {
                 foreach (var responseItem in responseItems)
                 {

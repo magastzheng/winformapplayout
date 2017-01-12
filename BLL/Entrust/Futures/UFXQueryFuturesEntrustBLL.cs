@@ -172,17 +172,7 @@ namespace BLL.Entrust.Futures
 
             if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
-                var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXQueryFuturesEntrustResponse>();
-                for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
-                {
-                    var dataSet = dataParser.DataSets[i];
-                    foreach (var dataRow in dataSet.Rows)
-                    {
-                        UFXQueryFuturesEntrustResponse p = new UFXQueryFuturesEntrustResponse();
-                        UFXDataSetHelper.SetValue<UFXQueryFuturesEntrustResponse>(ref p, dataRow.Columns, dataFieldMap);
-                        responseItems.Add(p);
-                    }
-                }
+                responseItems = UFXDataSetHelper.ParseData<UFXQueryFuturesEntrustResponse>(dataParser);
             }
 
             try

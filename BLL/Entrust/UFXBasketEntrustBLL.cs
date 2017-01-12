@@ -1,19 +1,16 @@
 ﻿using BLL.EntrustCommand;
-using BLL.Frontend;
 using BLL.SecurityInfo;
 using BLL.TradeCommand;
 using BLL.UFX;
 using BLL.UFX.impl;
 using Config;
 using Config.ParamConverter;
-using DBAccess.EntrustCommand;
 using log4net;
 using Model;
 using Model.Binding.BindingUtil;
 using Model.BLL;
 using Model.Database;
 using Model.UFX;
-using Model.UI;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -149,20 +146,9 @@ namespace BLL.Entrust
         {
             var errorResponse = T2ErrorHandler.Handle(dataParser);
             token.ErrorResponse = errorResponse;
-            
-            List<UFXBasketEntrustResponse> responseItems = new List<UFXBasketEntrustResponse>();
-            var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXBasketEntrustResponse>();
-            for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
-            {
-                var dataSet = dataParser.DataSets[i];
-                foreach (var dataRow in dataSet.Rows)
-                {
-                    UFXBasketEntrustResponse p = new UFXBasketEntrustResponse();
-                    UFXDataSetHelper.SetValue<UFXBasketEntrustResponse>(ref p, dataRow.Columns, dataFieldMap);
-                    responseItems.Add(p);
-                }
-            }
 
+            List<UFXBasketEntrustResponse> responseItems = UFXDataSetHelper.ParseData<UFXBasketEntrustResponse>(dataParser);
+            
             int ret = -1;
             List<EntrustSecurity> entrustSecuItems = new List<EntrustSecurity>();
             foreach (var responseItem in responseItems)

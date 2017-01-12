@@ -166,17 +166,7 @@ namespace BLL.Entrust.Security
 
             if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
-                var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXQueryEntrustResponse>();
-                for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
-                {
-                    var dataSet = dataParser.DataSets[i];
-                    foreach (var dataRow in dataSet.Rows)
-                    {
-                        UFXQueryEntrustResponse p = new UFXQueryEntrustResponse();
-                        UFXDataSetHelper.SetValue<UFXQueryEntrustResponse>(ref p, dataRow.Columns, dataFieldMap);
-                        responseItems.Add(p);
-                    }
-                }
+                responseItems = UFXDataSetHelper.ParseData<UFXQueryEntrustResponse>(dataParser);
             }
 
             try

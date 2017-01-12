@@ -27,50 +27,39 @@ namespace BLL.Entrust.subscriber
         public int Handle(DataParser dataParser)
         {
             List<UFXEntrustDealResponse> responseItems = new List<UFXEntrustDealResponse>();
-            var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXEntrustDealResponse>();
-
             var errorResponse = T2ErrorHandler.Handle(dataParser);
             if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
                 //TODO: check the count of dataset.
-                for (int i = 0, count = dataParser.DataSets.Count; i < count; i++)
+                responseItems = UFXDataSetHelper.ParseSubscribeData<UFXEntrustDealResponse>(dataParser);
+            }
+
+            //update the database
+            if (responseItems != null && responseItems.Count > 0)
+            {
+                List<EntrustSecurity> entrustSecuItems = new List<EntrustSecurity>();
+                foreach (var responseItem in responseItems)
                 {
-                    var dataSet = dataParser.DataSets[i];
-                    foreach (var dataRow in dataSet.Rows)
+                    int commandId;
+                    int submitId;
+                    int requestId;
+
+                    //TODO: add log
+                    if (EntrustRequestHelper.ParseThirdReff(responseItem.ThirdReff, out commandId, out submitId, out requestId))
                     {
-                        UFXEntrustDealResponse p = new UFXEntrustDealResponse();
-                        UFXDataSetHelper.SetValue<UFXEntrustDealResponse>(ref p, dataRow.Columns, dataFieldMap);
-                        responseItems.Add(p);
+                        _entrustSecurityBLL.UpdateDeal(submitId, commandId, responseItem.StockCode, responseItem.DealAmount, responseItem.DealBalance, responseItem.DealFee);
+
+                        //TODO: save into database
+                        var dealItem = Convert(responseItem);
+                        _dealSecurityBLL.Create(dealItem);
+
+                        //Update the TradingInstanceSecurity
+                        _tradeInstanceSecuBLL.UpdateToday(dealItem.EntrustDirection, commandId, dealItem.SecuCode, dealItem.DealAmount, dealItem.DealBalance, dealItem.DealFee);
                     }
-                }
-
-                //update the database
-                if (responseItems.Count > 0)
-                {
-                    List<EntrustSecurity> entrustSecuItems = new List<EntrustSecurity>();
-                    foreach (var responseItem in responseItems)
+                    else
                     {
-                        int commandId;
-                        int submitId;
-                        int requestId;
-
-                        //TODO: add log
-                        if (EntrustRequestHelper.ParseThirdReff(responseItem.ThirdReff, out commandId, out submitId, out requestId))
-                        {
-                            _entrustSecurityBLL.UpdateDeal(submitId, commandId, responseItem.StockCode, responseItem.DealAmount, responseItem.DealBalance, responseItem.DealFee);
-
-                            //TODO: save into database
-                            var dealItem = Convert(responseItem);
-                            _dealSecurityBLL.Create(dealItem);
-
-                            //Update the TradingInstanceSecurity
-                            _tradeInstanceSecuBLL.UpdateToday(dealItem.EntrustDirection, commandId, dealItem.SecuCode, dealItem.DealAmount, dealItem.DealBalance, dealItem.DealFee);
-                        }
-                        else
-                        {
-                            string msg = string.Format("Fail to parse the third_reff: {0}", responseItem.ThirdReff);
-                            logger.Error(msg);
-                        }
+                        string msg = string.Format("Fail to parse the third_reff: {0}", responseItem.ThirdReff);
+                        logger.Error(msg);
                     }
                 }
             }

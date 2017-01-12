@@ -90,25 +90,10 @@ namespace BLL.Entrust
 
         private int WithdrawDataHandler(CallerToken token, DataParser dataParser)
         {
-            List<UFXBasketWithdrawResponse> responseItems = new List<UFXBasketWithdrawResponse>();
-
             var errorResponse = T2ErrorHandler.Handle(dataParser);
             token.ErrorResponse = errorResponse;
 
-            if (dataParser.DataSets.Count > 1)
-            {
-                var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXBasketWithdrawResponse>();
-                for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
-                {
-                    var dataSet = dataParser.DataSets[i];
-                    foreach (var dataRow in dataSet.Rows)
-                    {
-                        UFXBasketWithdrawResponse p = new UFXBasketWithdrawResponse();
-                        UFXDataSetHelper.SetValue<UFXBasketWithdrawResponse>(ref p, dataRow.Columns, dataFieldMap);
-                        responseItems.Add(p);
-                    }
-                }
-            }
+            List<UFXBasketWithdrawResponse> responseItems = UFXDataSetHelper.ParseData<UFXBasketWithdrawResponse>(dataParser);
 
             //TODO: It needs to verify the response data. Only the can set cancel successfully in those without no error.
             int ret = -1;

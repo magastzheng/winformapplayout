@@ -22,27 +22,15 @@ namespace BLL.Entrust.subscriber
         public int Handle(DataParser dataParser)
         {
             List<UFXWithdrawCompletedResponse> responseItems = new List<UFXWithdrawCompletedResponse>();
-            var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXWithdrawCompletedResponse>();
-            
             var errorResponse = T2ErrorHandler.Handle(dataParser);
             if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
-                //TODO:
-                for (int i = 0, count = dataParser.DataSets.Count; i < count; i++)
-                {
-                    var dataSet = dataParser.DataSets[i];
-                    foreach (var dataRow in dataSet.Rows)
-                    {
-                        UFXWithdrawCompletedResponse p = new UFXWithdrawCompletedResponse();
-                        UFXDataSetHelper.SetValue<UFXWithdrawCompletedResponse>(ref p, dataRow.Columns, dataFieldMap);
-                        responseItems.Add(p);
-                    }
-                }
+                responseItems = UFXDataSetHelper.ParseSubscribeData<UFXWithdrawCompletedResponse>(dataParser);
             }
 
             //update the database
             //handle in the message or in the return of the call place?
-            if (responseItems.Count > 0)
+            if (responseItems != null && responseItems.Count > 0)
             {
                 foreach (var responseItem in responseItems)
                 { 

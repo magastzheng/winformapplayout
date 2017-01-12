@@ -23,18 +23,9 @@ namespace BLL.Entrust.subscriber
             var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXFilterResponse>();
 
             //TODO: check the count of dataset.
-            for (int i = 0, count = dataParser.DataSets.Count; i < count; i++)
-            {
-                var dataSet = dataParser.DataSets[i];
-                foreach (var dataRow in dataSet.Rows)
-                {
-                    UFXFilterResponse p = new UFXFilterResponse();
-                    UFXDataSetHelper.SetValue<UFXFilterResponse>(ref p, dataRow.Columns, dataFieldMap);
-                    responseItems.Add(p);
-                }
-            }
+            responseItems = UFXDataSetHelper.ParseSubscribeData<UFXFilterResponse>(dataParser);
 
-            if (responseItems.Count == 1)
+            if (responseItems != null && responseItems.Count == 1)
             {
                 var typeChar = Char.Parse(responseItems[0].MsgType);
                 UFXPushMessageType tempType;

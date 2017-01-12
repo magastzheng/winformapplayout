@@ -27,20 +27,11 @@ namespace BLL.Entrust.subscriber
             var errorResponse = T2ErrorHandler.Handle(dataParser);
             if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
-                for (int i = 0, count = dataParser.DataSets.Count; i < count; i++)
-                {
-                    var dataSet = dataParser.DataSets[i];
-                    foreach (var dataRow in dataSet.Rows)
-                    {
-                        UFXEntrustCompletedResponse p = new UFXEntrustCompletedResponse();
-                        UFXDataSetHelper.SetValue<UFXEntrustCompletedResponse>(ref p, dataRow.Columns, dataFieldMap);
-                        responseItems.Add(p);
-                    }
-                }
+                responseItems = UFXDataSetHelper.ParseSubscribeData<UFXEntrustCompletedResponse>(dataParser);
             }
 
             //update the database
-            if (responseItems.Count > 0)
+            if (responseItems != null && responseItems.Count > 0)
             {
                 foreach (var responseItem in responseItems)
                 {

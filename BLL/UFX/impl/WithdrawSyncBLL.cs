@@ -27,7 +27,7 @@ namespace BLL.UFX.impl
         {
             DataParser parser = SubmitSync<UFXWithdrawRequest>(UFXFunctionCode.Withdraw, requests);
 
-            return ParseData(parser);
+            return UFXDataSetHelper.ParseData<UFXBasketWithdrawResponse>(parser);
         }
 
         /// <summary>
@@ -40,33 +40,7 @@ namespace BLL.UFX.impl
             List<UFXBasketWithdrawRequest> requests = new List<UFXBasketWithdrawRequest> { request };
             DataParser parser = SubmitSync<UFXBasketWithdrawRequest>(UFXFunctionCode.WithdrawBasket, requests);
 
-            return ParseData(parser);
-        }
-
-        private List<UFXBasketWithdrawResponse> ParseData(DataParser parser)
-        {
-            List<UFXBasketWithdrawResponse> responseItems = new List<UFXBasketWithdrawResponse>();
-
-            var errorResponse = T2ErrorHandler.Handle(parser);
-            if (T2ErrorHandler.Success(errorResponse.ErrorCode))
-            {
-                if (parser.DataSets.Count > 1)
-                {
-                    var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXBasketWithdrawResponse>();
-                    for (int i = 1, count = parser.DataSets.Count; i < count; i++)
-                    {
-                        var dataSet = parser.DataSets[i];
-                        foreach (var dataRow in dataSet.Rows)
-                        {
-                            UFXBasketWithdrawResponse p = new UFXBasketWithdrawResponse();
-                            UFXDataSetHelper.SetValue<UFXBasketWithdrawResponse>(ref p, dataRow.Columns, dataFieldMap);
-                            responseItems.Add(p);
-                        }
-                    }
-                }
-            }
-
-            return responseItems;
+            return UFXDataSetHelper.ParseData<UFXBasketWithdrawResponse>(parser);
         }
     }
 }

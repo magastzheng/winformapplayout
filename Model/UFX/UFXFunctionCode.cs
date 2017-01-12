@@ -18,7 +18,7 @@ namespace Model.UFX
         Logout = 10002,
 
         //内存数据查询
-        QuerymemoryData = 10009,
+        //QuerymemoryData = 10009,
 
         //账户查询
         QueryAccount = 30001,
@@ -32,10 +32,16 @@ namespace Model.UFX
         //交易股东查询
         QueryHolder = 30004,
 
-        //证券持仓查询
+        //证券持仓查询(仅能查询股票)
         QuerySecurityHolding = 31001,
 
-        //多业务持仓查询
+        //期货持仓查询
+        QueryFutureHolding = 31003,
+
+        //期货持仓明细查询
+        QueryFutureDetailHolding = 31013,
+
+        //多业务持仓查询（现货、期货、期权）
         QueryMultipleHolding = 31005,
 
         //证券委托查询（当日）

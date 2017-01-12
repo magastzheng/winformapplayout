@@ -114,20 +114,7 @@ namespace BLL.Entrust
             //Verify the dataParser before reading the data.
             if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
-                if (dataParser.DataSets.Count > 1)
-                {
-                    var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXBasketWithdrawResponse>();
-                    for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
-                    {
-                        var dataSet = dataParser.DataSets[i];
-                        foreach (var dataRow in dataSet.Rows)
-                        {
-                            UFXBasketWithdrawResponse p = new UFXBasketWithdrawResponse();
-                            UFXDataSetHelper.SetValue<UFXBasketWithdrawResponse>(ref p, dataRow.Columns, dataFieldMap);
-                            responseItems.Add(p);
-                        }
-                    }
-                }
+                responseItems = UFXDataSetHelper.ParseData<UFXBasketWithdrawResponse>(dataParser);
             }
 
             int ret = -1;

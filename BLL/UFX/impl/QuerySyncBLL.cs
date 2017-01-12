@@ -17,31 +17,36 @@ namespace BLL.UFX.impl
         public QuerySyncBLL(T2SDKWrap t2SDKWrap)
             :base(t2SDKWrap)
         {
-
         }
 
         public List<UFXQueryMoneyResponse> QueryAccountMoney(List<UFXQueryMoneyRequest> requests)
         {
-            List<UFXQueryMoneyResponse> responseItems = new List<UFXQueryMoneyResponse>();
-
             DataParser parser = SubmitSync<UFXQueryMoneyRequest>(UFXFunctionCode.QueryAccountMoney, requests);
-            var errorResponse = T2ErrorHandler.Handle(parser);
-            if (T2ErrorHandler.Success(errorResponse.ErrorCode))
-            {
-                var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXQueryEntrustResponse>();
-                for (int i = 1, count = parser.DataSets.Count; i < count; i++)
-                {
-                    var dataSet = parser.DataSets[i];
-                    foreach (var dataRow in dataSet.Rows)
-                    {
-                        UFXQueryMoneyResponse p = new UFXQueryMoneyResponse();
-                        UFXDataSetHelper.SetValue<UFXQueryMoneyResponse>(ref p, dataRow.Columns, dataFieldMap);
-                        responseItems.Add(p);
-                    }
-                }
-            }
+            return UFXDataSetHelper.ParseData<UFXQueryMoneyResponse>(parser);
+        }
 
-            return responseItems;
+        public List<UFXHoldingResponse> QuerySecurityHolding(List<UFXHoldingRequest> requests)
+        {
+            DataParser parser = SubmitSync<UFXHoldingRequest>(UFXFunctionCode.QuerySecurityHolding, requests);
+            return UFXDataSetHelper.ParseData<UFXHoldingResponse>(parser);
+        }
+
+        public List<UFXFutureHoldingResponse> QueryFutureHolding(List<UFXFutureHoldingRequest> requests)
+        {
+            DataParser parser = SubmitSync<UFXFutureHoldingRequest>(UFXFunctionCode.QueryFutureHolding, requests);
+            return UFXDataSetHelper.ParseData<UFXFutureHoldingResponse>(parser);
+        }
+
+        public List<UFXFutureHoldingDetailResponse> QueryFutureHoldingDetail(List<UFXFutureHoldingDetailRequest> requests)
+        {
+            DataParser parser = SubmitSync<UFXFutureHoldingDetailRequest>(UFXFunctionCode.QueryFutureDetailHolding, requests);
+            return UFXDataSetHelper.ParseData<UFXFutureHoldingDetailResponse>(parser);
+        }
+
+        public List<UFXMultipleHoldingResponse> QueryMultipleHolding(List<UFXHoldingRequest> requests)
+        {
+            DataParser parser = SubmitSync<UFXHoldingRequest>(UFXFunctionCode.QueryMultipleHolding, requests);
+            return UFXDataSetHelper.ParseData<UFXMultipleHoldingResponse>(parser);
         }
     }
 }

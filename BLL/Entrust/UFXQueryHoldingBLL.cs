@@ -101,18 +101,8 @@ namespace BLL.Entrust
             List<UFXHoldingResponse> responseItems = new List<UFXHoldingResponse>();
             if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
-                var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXHoldingResponse>();
-                for (int i = 1, count = dataParser.DataSets.Count; i < count; i++)
-                {
-                    var dataSet = dataParser.DataSets[i];
-                    foreach (var dataRow in dataSet.Rows)
-                    {
-                        UFXHoldingResponse p = new UFXHoldingResponse();
-                        UFXDataSetHelper.SetValue<UFXHoldingResponse>(ref p, dataRow.Columns, dataFieldMap);
-                        responseItems.Add(p);
-                    }
-                }
-
+                responseItems = UFXDataSetHelper.ParseData<UFXHoldingResponse>(dataParser);
+               
                 var futures = responseItems.Where(p => p.MarketNo == "7").ToList();
 
                 var validItems = responseItems.Where(p => p.CurrentAmount > 0).ToList();
