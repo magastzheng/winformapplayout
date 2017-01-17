@@ -63,6 +63,7 @@
     <Compile Include="Entity\ButtonItem.cs" />
     <Compile Include="Entity\CheckComboBoxItem.cs" />
     <Compile Include="Entity\ColumnConverter.cs" />
+    <Compile Include="Entity\ControlConstVariable.cs" />
     <Compile Include="Entity\PropertyComparer.cs" />
     <Compile Include="Entity\SortableBindingList.cs" />
     <Compile Include="Entity\TSGridViewRowPropertyDescriptor.cs" />

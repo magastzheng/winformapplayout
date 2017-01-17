@@ -202,6 +202,20 @@ begin
 end
 
 go
+if exists (select name from sysobjects where name='procEntrustCommandDeleteBySubmitId')
+drop proc procEntrustCommandDeleteBySubmitId
+
+go
+create proc procEntrustCommandDeleteBySubmitId(
+	@SubmitId		int
+)
+as
+begin
+	delete from entrustcommand
+	where SubmitId=@SubmitId
+end
+
+go
 if exists (select name from sysobjects where name='procEntrustCommandDeleteByCommandIdEntrustStatus')
 drop proc procEntrustCommandDeleteByCommandIdEntrustStatus
 

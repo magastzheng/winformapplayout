@@ -26,6 +26,11 @@ namespace BLL.Deal
             return _dealsecudao.DeleteByDealNo(dealNo);
         }
 
+        public int DeleteBySubmitId(int submitId)
+        {
+            return _dealsecudao.DeleteBySubmitId(submitId);
+        }
+
         public List<DealSecurity> GetAll()
         {
             return _dealsecudao.GetAll();

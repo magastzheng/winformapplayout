@@ -74,8 +74,8 @@ namespace Controls
             this.Scrollable = true;
             this.ItemHeight = 30;
 
-            _backgroundBrush = new SolidBrush(Color.FromArgb(90, Color.FromArgb(205, 226, 252)));
-            _backgroundPen = new Pen(Color.FromArgb(130, 249, 252), 1);
+            _backgroundBrush = new SolidBrush(Color.FromArgb(90, Color.FromArgb(176, 176, 208)));
+            _backgroundPen = new Pen(Color.FromArgb(192, 192, 192), 1);
             _nodeFont = new Font("微软雅黑", 12, FontStyle.Regular);
 
             _nodeExpandedImage = null;
@@ -159,7 +159,7 @@ namespace Controls
                 g.FillRectangle(_backgroundBrush, 2, node.Bounds.Y, Width, node.Bounds.Height);
 
                 //绘制TreeNode选择后的边框线条
-                g.DrawRectangle(_backgroundPen, 1, node.Bounds.Y, Width, node.Bounds.Height);
+                //g.DrawRectangle(_backgroundPen, 1, node.Bounds.Y, Width, node.Bounds.Height);
             }
 
             //绘制节点图片

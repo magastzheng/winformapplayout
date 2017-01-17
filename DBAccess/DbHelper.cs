@@ -13,8 +13,8 @@ namespace DBAccess
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static string dbProviderName = ConfigurationManager.AppSettings["DbHelperProvider"];
-        private static string dbConnectionString = ConfigurationManager.AppSettings["DbHelperConnectionString"];
+        private static string s_dbProviderName = ConfigurationManager.AppSettings["DbHelperProvider"];
+        private static string s_dbConnectionString = ConfigurationManager.AppSettings["DbHelperConnectionString"];
         private DbConnection connection;
 
         public DbConnection Connection
@@ -24,7 +24,7 @@ namespace DBAccess
 
         public DbHelper()
         {
-            this.connection = CreateConnection(dbConnectionString);
+            this.connection = CreateConnection(s_dbConnectionString);
         }
 
         public DbHelper(string connectionString)
@@ -34,7 +34,7 @@ namespace DBAccess
 
         public static DbConnection CreateConnection(string dbConnectionString)
         {
-            DbProviderFactory dbFactory = DbProviderFactories.GetFactory(DbHelper.dbProviderName);
+            DbProviderFactory dbFactory = DbProviderFactories.GetFactory(DbHelper.s_dbProviderName);
             DbConnection dbConn = dbFactory.CreateConnection();
             dbConn.ConnectionString = dbConnectionString;
             return dbConn;
@@ -116,7 +116,7 @@ namespace DBAccess
 
         public DataTable ExecuteDataTable(DbCommand cmd)
         {
-            DbProviderFactory dbFactor = DbProviderFactories.GetFactory(DbHelper.dbProviderName);
+            DbProviderFactory dbFactor = DbProviderFactories.GetFactory(DbHelper.s_dbProviderName);
             DbDataAdapter dbDataAdapter = dbFactor.CreateDataAdapter();
             dbDataAdapter.SelectCommand = cmd;
             DataTable dataTable = new DataTable();

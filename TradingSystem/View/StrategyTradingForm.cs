@@ -870,7 +870,7 @@ namespace TradingSystem.View
             _secuDataSource.Clear();
             _eiDataSource.Clear();
 
-            var tradingcmds = _tradeCommandBLL.GetTradeCommand();
+            var tradingcmds = _tradeCommandBLL.GetTradeCommandItems();
             if (tradingcmds != null)
             {
                 tradingcmds.ForEach( p => _cmdDataSource.Add(p));
@@ -1425,6 +1425,7 @@ namespace TradingSystem.View
                 secuItem.LimitUpPrice = marketData.HighLimitPrice;
                 secuItem.LimitDownPrice = marketData.LowLimitPrice;
                 secuItem.ESuspendFlag = marketData.SuspendFlag;
+                secuItem.ELimitUpDownFlag = marketData.LimitUpDownFlag;
 
                 if (secuItem.EPriceType != PriceType.Assign)
                 {

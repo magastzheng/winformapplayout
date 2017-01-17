@@ -54,6 +54,11 @@ namespace Model.Quote
                         flag = "停牌一天";
                     }
                     break;
+                case SuspendFlag.SuspendLimit:
+                    {
+                        flag = "停牌";
+                    }
+                    break;
                 default:
                     break;
             }

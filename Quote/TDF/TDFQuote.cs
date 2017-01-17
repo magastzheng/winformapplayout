@@ -366,7 +366,8 @@ namespace Quote.TDF
 
                             MarketData marketData = new MarketData
                             {
-                                InstrumentID = windCode
+                                InstrumentID = windCode,
+                                LimitUpDownFlag = LimitUpDownFlag.Normal,
                             };
 
                             char status = (char)data.Status;
@@ -376,6 +377,7 @@ namespace Quote.TDF
                                     {
                                         marketData.TradingStatus = TradingStatus.Suspend;
                                         marketData.SuspendFlag = SuspendFlag.Suspend1Day;
+                                        
                                     }
                                     break;
                                 case 'C':
@@ -410,7 +412,25 @@ namespace Quote.TDF
                                     }
                                     break;
                             }
-                            
+
+                            if (data.Match == 0)
+                            {
+                                marketData.TradingStatus = TradingStatus.Suspend;
+                                marketData.SuspendFlag = SuspendFlag.Suspend1Day;
+                            }
+                            else if (data.Match >= data.HighLimited)
+                            {
+                                marketData.TradingStatus = TradingStatus.Normal;
+                                marketData.SuspendFlag = SuspendFlag.SuspendLimit;
+                                marketData.LimitUpDownFlag = LimitUpDownFlag.LimitUp;
+                            }
+                            else if (data.Match <= data.LowLimited)
+                            {
+                                marketData.TradingStatus = TradingStatus.Normal;
+                                marketData.SuspendFlag = SuspendFlag.SuspendLimit;
+                                marketData.LimitUpDownFlag = LimitUpDownFlag.LimitDown;
+                            }
+
                             marketData.CurrentPrice = (double)data.Match / 10000;
                             marketData.PreClose = data.PreClose / 10000;
                             if (data.AskPrice != null && data.AskPrice.Length >= 5)
@@ -495,6 +515,24 @@ namespace Quote.TDF
                                         marketData.SuspendFlag = SuspendFlag.NoSuspension;
                                     }
                                     break;
+                            }
+
+                            if (data.Match == 0)
+                            {
+                                marketData.TradingStatus = TradingStatus.Suspend;
+                                marketData.SuspendFlag = SuspendFlag.Suspend1Day;
+                            }
+                            else if (data.Match >= data.HighLimited)
+                            {
+                                marketData.TradingStatus = TradingStatus.Normal;
+                                marketData.SuspendFlag = SuspendFlag.Suspend1Day;
+                                marketData.LimitUpDownFlag = LimitUpDownFlag.LimitUp;
+                            }
+                            else if (data.Match <= data.LowLimited)
+                            {
+                                marketData.TradingStatus = TradingStatus.Normal;
+                                marketData.SuspendFlag = SuspendFlag.Suspend1Day;
+                                marketData.LimitUpDownFlag = LimitUpDownFlag.LimitDown;
                             }
 
                             marketData.CurrentPrice = (double)data.Match / 10000;

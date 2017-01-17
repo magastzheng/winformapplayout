@@ -4,6 +4,7 @@ using BLL.Archive.TradeCommand;
 using BLL.Deal;
 using BLL.EntrustCommand;
 using BLL.TradeCommand;
+using log4net;
 using Model.Archive;
 using Model.Database;
 using System;
@@ -24,10 +25,13 @@ namespace BLL.Archive
     /// </summary>
     public class ArchiveBLL
     {
+        private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
         private TradeCommandSecurityBLL _tradeCommandSecurityBLL = new TradeCommandSecurityBLL();
         private ArchiveTradeBLL _archiveTradeBLL = new ArchiveTradeBLL();
 
+        private EntrustCombineBLL _entrustCombineBLL = new EntrustCombineBLL();
         private EntrustCommandBLL _entrustCommandBLL = new EntrustCommandBLL();
         private EntrustSecurityBLL _entrustSecurityBLL = new EntrustSecurityBLL();
         private ArchiveEntrustBLL _archiveEntrustBLL = new ArchiveEntrustBLL();
@@ -41,17 +45,45 @@ namespace BLL.Archive
 
         #region TradeCommand
 
+        public int Archive()
+        {
+            int total = -1;
+            var tradeCommands = _tradeCommandBLL.GetInvalidTradeCommands();
+            if (tradeCommands == null || tradeCommands.Count == 0)
+            {
+                return total;
+            }
+
+            foreach (var tradeCommand in tradeCommands)
+            {
+                int ret = ArchiveTradeCommand(tradeCommand.CommandId);
+                if (ret > 0)
+                {
+                    total++;
+                    _tradeCommandBLL.Delete(tradeCommand.CommandId);
+
+                }
+                else
+                { 
+                    string msg = string.Format("Fail to archive the TradeCommand - CommandId: {0}", tradeCommand.CommandId);
+                    logger.Error(msg);
+                }
+            }
+
+            return total;
+        }
+
         /// <summary>
-        /// 
+        /// Archive the TradeCommand item.
         /// </summary>
-        /// <param name="commandId"></param>
-        /// <returns></returns>
+        /// <param name="commandId">An integer value of the TradeCommand ID.</param>
+        /// <returns>An positive value if it success otherwise it fails.</returns>
         public int ArchiveTradeCommand(int commandId)
         {
             int ret = -1;
             Model.Database.TradeCommand tradeCommand = null;
             List<Model.Database.TradeCommandSecurity> tradeSecuItems = null;
-            tradeCommand = _tradeCommandBLL.GetTradeCommandItem(commandId);
+            tradeCommand = _tradeCommandBLL.GetTradeCommand(commandId);
             if (tradeCommand != null && tradeCommand.CommandId == commandId)
             {
                 tradeSecuItems = _tradeCommandSecurityBLL.GetTradeCommandSecurities(commandId);
@@ -62,6 +94,20 @@ namespace BLL.Archive
                 ret = _archiveTradeBLL.Create(tradeCommand, tradeSecuItems);
             }
 
+            if (ret > 0)
+            {
+                ret = ArchiveEntrustCommand(commandId);
+                if (ret > 0)
+                {
+                    _entrustCommandBLL.DeleteByCommandId(commandId);
+                }
+                else
+                {
+                    string msg = string.Format("Fail to archive the EntrustCommand - CommandId: {0}", commandId);
+                    logger.Error(msg);
+                }
+            }
+            
             return ret;
         }
 
@@ -76,7 +122,7 @@ namespace BLL.Archive
 
         public int ArchiveEntrustCommand(int commandId)
         {
-            int ret = -1;
+            int total = -1;
 
             List<Model.Database.EntrustCommand> entrustCommands = null;
             List<EntrustSecurity> entrustSecurities = null;
@@ -85,15 +131,23 @@ namespace BLL.Archive
             {
                 foreach (var entrustCommand in entrustCommands)
                 {
+                    int ret = -1;
                     entrustSecurities = _entrustSecurityBLL.GetBySubmitId(entrustCommand.SubmitId);
                     if (entrustSecurities != null && entrustSecurities.Count > 0)
                     {
                         ret = _archiveEntrustBLL.Create(entrustCommand, entrustSecurities);
+                        if (ret > 0)
+                        {
+                            total++;
+                            ret = _entrustCombineBLL.Delete(entrustCommand.SubmitId);
+
+                            ret = ArchiveDealSecurity(entrustCommand.SubmitId);
+                        }
                     }
                 }
             }
 
-            return ret;
+            return total;
         }
 
         public int DeleteEntrustCommand(int archiveId)
@@ -106,37 +160,39 @@ namespace BLL.Archive
         #region DealSecurity
 
         /// <summary>
-        /// SumbitId -> ArchiveId, ArchiveDate from ArchiveEntrustCommand
-        /// 
-        /// 
+        /// Archive the deal security by the submitId.
         /// </summary>
-        /// <param name="submitId"></param>
-        /// <returns></returns>
-        public int ArchiveDealSecurity()
+        /// <param name="submitId">An integer value of the submitId.</param>
+        /// <returns>A positive value to indicate the total deal securities archiving. -1 if it fail to archive.</returns>
+        public int ArchiveDealSecurity(int submitId)
         {
             int ret = -1;
-            var dealSecurites = _dealSecurityBLL.GetAll();
-
-            var submitIds = dealSecurites.Select(p => p.SubmitId).Distinct().ToList();
-            foreach (var submitId in submitIds)
+            var dealSecurities = _dealSecurityBLL.GetBySubmitId(submitId);
+            if (dealSecurities != null && dealSecurities.Count > 0)
             {
                 var archiveCommand = _archiveEntrustBLL.GetCommandBySubmitId(submitId);
                 if (archiveCommand != null && archiveCommand.SubmitId == submitId)
                 {
-                    var sameDealItems = dealSecurites.Where(p => p.SubmitId == submitId).ToList();
-                    ret = _archiveDealSecurityBLL.Create(archiveCommand.ArchiveId, archiveCommand.ArchiveDate, sameDealItems);
-                    if (ret > 0)
+                    ret = _archiveDealSecurityBLL.Create(archiveCommand.ArchiveId, archiveCommand.ArchiveDate, dealSecurities);
+                    if (ret < 0)
                     {
-                        //success
+                        string msg = string.Format("Fail to archive the deal security - submitId: {0}, ArchiveId: {1}, ArchiveDate: {2}, Count: {3}",
+                            archiveCommand.SubmitId, archiveCommand.ArchiveId, archiveCommand.ArchiveDate, dealSecurities.Count);
+                        logger.Error(msg);
                     }
                     else
-                    { 
-                        //failure
+                    {
+                        _dealSecurityBLL.DeleteBySubmitId(submitId);
                     }
                 }
             }
 
             return ret;
+        }
+
+        public int DeleteDealSecurity(int submitId)
+        {
+            return _archiveDealSecurityBLL.Delete(submitId);
         }
 
         #endregion

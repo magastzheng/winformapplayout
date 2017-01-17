@@ -143,7 +143,7 @@ namespace BLL.TradeCommand
                     cmdMngSecuItem.EEntrustStatus = Model.EnumType.EntrustStatus.NoExecuted;
                 }
 
-                if (cmdMngSecuItem.UndealAmount == 0)
+                if (cmdMngSecuItem.UndealAmount == 0 && cmdMngSecuItem.EEntrustStatus == Model.EnumType.EntrustStatus.Completed)
                 {
                     cmdMngSecuItem.EDealStatus = Model.EnumType.DealStatus.Completed;
                 }

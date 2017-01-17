@@ -133,6 +133,20 @@ begin
 	where DealNo=@DealNo
 end
 
+go
+if exists (select name from sysobjects where name='procDealSecurityDeleteBySubmitId')
+drop proc procDealSecurityDeleteBySubmitId
+
+go
+create proc procDealSecurityDeleteBySubmitId(
+	@SubmitId	int
+)
+as
+begin
+	delete from dealsecurity 
+	where SubmitId=@SubmitId
+end
+
 go 
 if exists (select name from sysobjects where name='procDealSecuritySelectByCommandId')
 drop proc procDealSecuritySelectByCommandId

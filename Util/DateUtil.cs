@@ -12,6 +12,9 @@ namespace Util
     {
         private static int[] days = new int[13]{0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
+        public static DateTime OpenDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 9, 15, 0);
+        public static DateTime CloseDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 15, 15, 0);
+
         /// <summary>
         /// Convert the specified DateTime value year, month, day parts into an integer value like the format 'yyyyMMdd'.
         /// NOTE: the year should be nonnegative.

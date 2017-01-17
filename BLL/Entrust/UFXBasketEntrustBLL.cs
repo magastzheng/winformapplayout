@@ -48,7 +48,7 @@ namespace BLL.Entrust
             {
                 return new BLLResponse(ConnectionCode.EmptyEntrustItem, "Empty EntrustCommandItem or EntrustSecurityItem.");
             }
-            var tradeCommandItem = _tradeCommandBLL.GetTradeCommandItem(cmdItem.CommandId);
+            var tradeCommandItem = _tradeCommandBLL.GetTradeCommand(cmdItem.CommandId);
             var portfolio = LoginManager.Instance.GetPortfolio(tradeCommandItem.PortfolioCode);
             //var stockholder = LoginManager.Instance.GetHolder(tradeCommandItem.
 

@@ -165,6 +165,11 @@ namespace Controls.GridView
 
         public static void CellFormatting(TSDataGridView dgv, DataGridViewCellFormattingEventArgs e)
         {
+            int columnIndex = e.ColumnIndex;
+            int rowIndex = e.RowIndex;
+            if(columnIndex < 0 || columnIndex > dgv.Columns.Count || rowIndex < 0 || rowIndex > dgv.Rows.Count)
+                return;
+
             DataGridViewColumn column = dgv.Columns[e.ColumnIndex];
             if (column != null)
             {
@@ -174,6 +179,30 @@ namespace Controls.GridView
                     Image image = Image.FromFile((string)column.Tag);
                     Bitmap bitmap = new Bitmap(image, new Size(20, 20));
                     e.Value = bitmap;
+                }
+                else if (dgv.Columns["limitupdown"] != null && columnIndex == dgv.Columns["limitupdown"].Index)
+                {
+                    var row = dgv.Rows[rowIndex];
+                    var cell = row.Cells[columnIndex];
+                    if (cell.Value.ToString() == "涨停")
+                    { 
+                        e.CellStyle.ForeColor = ControlConstVariable.LimitForeColor;
+                        e.CellStyle.BackColor = ControlConstVariable.LimitUpColor;
+                    }
+                    else if (cell.Value.ToString() == "跌停")
+                    {
+                        e.CellStyle.ForeColor = ControlConstVariable.LimitForeColor;
+                        e.CellStyle.BackColor = ControlConstVariable.LimitDownColor;
+                    }
+                }
+                else if (dgv.Columns["suspensionflag"] != null && columnIndex == dgv.Columns["suspensionflag"].Index)
+                { 
+                    var row = dgv.Rows[rowIndex];
+                    var cell = row.Cells[columnIndex];
+                    if (cell.Value.ToString().Contains("停牌"))
+                    {
+                        row.DefaultCellStyle.ForeColor = ControlConstVariable.LimitSuspensionColor;
+                    }
                 }
                 //else if (column is DataGridViewComboBoxColumn)
                 //{

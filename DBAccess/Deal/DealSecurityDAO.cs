@@ -12,6 +12,7 @@ namespace DBAccess.Deal
 
         private const string SP_Create = "procDealSecurityInsert";
         private const string SP_DeleteByDealNo = "procDealSecurityDeleteByDealNo";
+        private const string SP_DeleteBySubmitId = "procDealSecurityDeleteBySubmitId";
         private const string SP_SelectAll = "procDealSecuritySelectAll";
         private const string SP_SelectByCommandId = "procDealSecuritySelectByCommandId";
         private const string SP_SelectBySubmitId = "procDealSecuritySelectBySubmitId";
@@ -63,6 +64,14 @@ namespace DBAccess.Deal
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_DeleteByDealNo);
             _dbHelper.AddInParameter(dbCommand, "@DealNo", System.Data.DbType.String, dealNo);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int DeleteBySubmitId(int submitId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_DeleteBySubmitId);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }

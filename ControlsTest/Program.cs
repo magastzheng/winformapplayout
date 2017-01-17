@@ -21,13 +21,13 @@ namespace ControlsTest
             //Application.Run(new TSDataGridViewForm());
             //Application.Run(new TSDataGridVieweFormWithoutBinding());
             //Application.Run(new TSDGVSortableBindingForm());
-            //Application.Run(new TreeViewForm());
+            Application.Run(new TreeViewForm());
             //Application.Run(new ButtonContainerForm());
 
             //Application.Run(new TSDGVComboBox());
             //Application.Run(new TSDGVComboBoxVarRowForm());
 
-            Application.Run(new TSDGVEachRowForm());
+            //Application.Run(new TSDGVEachRowForm());
 
             //Application.Run(new TSDGVNumericColumnForm());
 

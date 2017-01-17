@@ -103,10 +103,14 @@ namespace TradingSystem.View
                             _dealDataSource.Remove(dealItem);
                         }
 
-                        var firstCmdItem = _dataSource.First(p => p.Selection);
-                        if (firstCmdItem != null)
+                        var selectedItems = _dataSource.Where(p => p.Selection).ToList();
+                        if (selectedItems != null && selectedItems.Count > 0)
                         {
-                            LoadCommandSummary(firstCmdItem);
+                            LoadCommandSummary(selectedItems[0]);
+                        }
+                        else
+                        {
+                            LoadCommandSummary(_dataSource[0]);
                         }
                     }
                     break;

@@ -46,5 +46,10 @@ namespace BLL.EntrustCommand
         //{
         //    return _entrustdao.UpdateCommandSecurityEntrustStatus(submitId, entrustItems, entrustStatus);
         //}
+
+        public int Delete(int submitId)
+        {
+            return _entrustdao.Delete(submitId);
+        }
     }
 }

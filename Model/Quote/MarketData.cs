@@ -28,6 +28,9 @@ namespace Model.Quote
 
         //停牌一天
         Suspend1Day = 9,
+
+        //涨跌停
+        SuspendLimit = 10,
     }
 
     public enum TradingStatus
@@ -101,6 +104,8 @@ namespace Model.Quote
         public SuspendFlag SuspendFlag;
 
         public TradingStatus TradingStatus;
+
+        public LimitUpDownFlag LimitUpDownFlag;
 
         public double HighLimitPrice;
 

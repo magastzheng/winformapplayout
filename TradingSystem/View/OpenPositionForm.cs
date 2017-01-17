@@ -292,8 +292,8 @@ namespace TradingSystem.View
                 secuItem.BuyAmount = marketData.BuyAmount;
                 secuItem.SellAmount = marketData.SellAmount;
                 secuItem.ESuspendFlag = marketData.SuspendFlag;
-                secuItem.ELimitUpDownFlag = QuotePriceHelper.GetLimitUpDownFlag(marketData.CurrentPrice, marketData.LowLimitPrice, marketData.HighLimitPrice);
-
+                secuItem.ELimitUpDownFlag = marketData.LimitUpDownFlag; 
+                
                 if (secuItem.SecuType == SecurityType.Stock)
                 {
                     secuItem.CommandMoney = secuItem.LastPrice * secuItem.EntrustAmount;
@@ -363,7 +363,6 @@ namespace TradingSystem.View
 
             openItem.InstanceCode = instanceCode;
 
-            //OpenPositionItem newOpenItem = null;
             OrderConfirmItem orderItem = null;
             //Open the dialog
             OpenPositionDialog dialog = new OpenPositionDialog();
@@ -380,24 +379,6 @@ namespace TradingSystem.View
             {
                 dialog.Dispose();
             }
-
-            //if (orderItem != null)
-            //{
-            //    newOpenItem = new OpenPositionItem 
-            //    {
-            //        MonitorId = orderItem.MonitorId,
-            //        MonitorName = orderItem.MonitorName,
-            //        PortfolioId = orderItem.PortfolioId,
-            //        PortfolioName = orderItem.PortfolioName,
-            //        TemplateId = orderItem.TemplateId,
-            //        TemplateName = orderItem.TemplateName,
-            //        Copies = orderItem.Copies,
-            //        FuturesContract = orderItem.FuturesContract,
-            //        InstanceCode = orderItem.InstanceCode,
-            //    };
-            //}
-
-            //return newOpenItem;
 
             return orderItem;
         }

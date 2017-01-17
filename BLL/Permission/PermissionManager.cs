@@ -161,6 +161,20 @@ namespace BLL.Permission
             var roles = GetRoles(userId);
             foreach (var role in roles)
             {
+                //管理员具有所有权限
+                if (role.RoleId == RoleType.Administrator)
+                {
+                    hasPerm = true;
+                    break;
+                }
+                //交易员具有查看和执行交易指令的权限
+                if (resourceType == ResourceType.TradeCommand && role.RoleId == RoleType.Dealer
+                    && (mask == PermissionMask.View || mask == PermissionMask.Execute)
+                    )
+                {
+                    hasPerm = true;
+                    break;
+                }
                 if(ValidatePermission(role.RoleId, resourceId, resourceType, mask))
                 {
                     hasPerm = true;
@@ -173,6 +187,11 @@ namespace BLL.Permission
 
         private bool ValidatePermission(RoleType roleId, int resourceId, ResourceType resourceType, PermissionMask mask)
         {
+            if (roleId == RoleType.Administrator)
+            {
+                return true;
+            }
+
             var roleFeaturePerm = GetPermission((int)roleId, TokenType.Role, resourceId, resourceType);
             if (_permCalculator.HasPermission(roleFeaturePerm.Permission, mask))
             {

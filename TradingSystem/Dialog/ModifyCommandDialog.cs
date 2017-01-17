@@ -277,7 +277,7 @@ namespace TradingSystem.Dialog
                 secuItem.NewCommandPrice = marketData.CurrentPrice;
                 secuItem.NewCommandMoney = secuItem.NewCommandAmount * secuItem.NewCommandPrice;
                 secuItem.ESuspendFlag = marketData.SuspendFlag;
-                secuItem.ELimitUpDownFlag = QuotePriceHelper.GetLimitUpDownFlag(marketData.CurrentPrice, marketData.LowLimitPrice, marketData.HighLimitPrice);
+                secuItem.ELimitUpDownFlag = marketData.LimitUpDownFlag;
 
                 secuItem.SecuName = targetItem.SecuName;
                 secuItem.ExchangeCode = targetItem.ExchangeCode;

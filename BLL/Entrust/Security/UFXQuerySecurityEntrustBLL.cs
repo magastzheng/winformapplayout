@@ -1,6 +1,7 @@
 ﻿using BLL.EntrustCommand;
 using BLL.UFX;
 using BLL.UFX.impl;
+using Config.ParamConverter;
 using log4net;
 using Model;
 using Model.Binding.BindingUtil;
@@ -22,8 +23,6 @@ namespace BLL.Entrust.Security
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private SecurityBLL _securityBLL = null;
-        private EntrustSecurityBLL _entrustSecuBLL = new EntrustSecurityBLL();
-
         public UFXQuerySecurityEntrustBLL()
         {
             this._securityBLL = BLLManager.Instance.SecurityBLL;
@@ -206,9 +205,19 @@ namespace BLL.Entrust.Security
                 return entrustFlowItems;
             }
 
-            var entrustSecuItems = _entrustSecuBLL.GetAllCombine();
             foreach (var responseItem in responseItems)
             {
+                int commandId = 0;
+                int submitId = 0;
+                int requestId = 0;
+                int temp1, temp2, temp3;
+                if (EntrustRequestHelper.TryParseThirdReff(responseItem.ThirdReff, out temp1, out temp2, out temp3))
+                {
+                    commandId = temp1;
+                    submitId = temp2;
+                    requestId = temp3;
+                }
+
                 var entrustDirection = UFXTypeConverter.GetEntrustDirection(responseItem.EntrustDirection);
 
                 EntrustFlowItem efItem = new EntrustFlowItem
@@ -245,22 +254,9 @@ namespace BLL.Entrust.Security
                 }
 
                 efItem.ExchangeCode = UFXTypeConverter.GetMarketCode(efItem.EMarketCode);
-
-                var findItem = entrustSecuItems.Find(p => p.SecuCode.Equals(efItem.SecuCode) && p.EntrustNo == efItem.EntrustNo);
-                if (findItem != null)
-                {
-                    efItem.CommandNo = findItem.CommandId;
-                    efItem.SubmitId = findItem.SubmitId;
-                    efItem.EDirection = findItem.EntrustDirection;
-                    efItem.InstanceId = findItem.InstanceId;
-                    efItem.InstanceNo = findItem.InstanceCode;
-                }
-                else
-                {
-                    efItem.CommandNo = -1;
-                    efItem.SubmitId = -1;
-                }
-
+                efItem.CommandNo = commandId;
+                efItem.SubmitId = submitId;
+                efItem.RequestId = requestId;
                 entrustFlowItems.Add(efItem);
             }
 

@@ -170,7 +170,7 @@ namespace BLL.Frontend
                 return cancelItemList;
             }
 
-            var tradeCommand = _tradeCommandBLL.GetTradeCommandItem(cmdItem.CommandId);
+            var tradeCommand = _tradeCommandBLL.GetTradeCommand(cmdItem.CommandId);
             if (tradeCommand == null)
             {
                 return cancelItemList;
@@ -199,7 +199,7 @@ namespace BLL.Frontend
                 return cancelItemList;
             }
 
-            var tradeCommand = _tradeCommandBLL.GetTradeCommandItem(cmdItem.CommandId);
+            var tradeCommand = _tradeCommandBLL.GetTradeCommand(cmdItem.CommandId);
             if (tradeCommand == null)
             {
                 return cancelItemList;

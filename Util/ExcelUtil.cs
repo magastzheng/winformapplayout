@@ -320,7 +320,8 @@ namespace Util
                 }
             }
 
-            for (int rowIndex = startRow + 1; rowIndex < sheet.LastRowNum; rowIndex++)
+            //最后一行也要读进来
+            for (int rowIndex = startRow + 1; rowIndex <= sheet.LastRowNum; rowIndex++)
             {
                 row = sheet.GetRow(rowIndex);
                 if (row == null)

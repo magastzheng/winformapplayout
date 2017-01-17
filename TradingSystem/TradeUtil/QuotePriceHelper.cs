@@ -65,26 +65,26 @@ namespace TradingSystem.TradeUtil
             return price;
         }
 
-        public static LimitUpDownFlag GetLimitUpDownFlag(double current, double downPrice, double upPrice)
-        {
-            if (FloatUtil.IsZero(current))
-            {
-                return LimitUpDownFlag.Suspend;
-            }
+        //public static LimitUpDownFlag GetLimitUpDownFlag(double current, double downPrice, double upPrice)
+        //{
+        //    if (FloatUtil.IsZero(current))
+        //    {
+        //        return LimitUpDownFlag.Suspend;
+        //    }
 
-            var flag = LimitUpDownFlag.Normal;
-            int retDown = FloatUtil.Compare(current, downPrice);
-            int retUp = FloatUtil.Compare(current, upPrice);
-            if (retDown == 0)
-            {
-                flag = LimitUpDownFlag.LimitDown;
-            }
-            else if (retUp == 0)
-            {
-                flag = LimitUpDownFlag.LimitUp;
-            }
+        //    var flag = LimitUpDownFlag.Normal;
+        //    int retDown = FloatUtil.Compare(current, downPrice);
+        //    int retUp = FloatUtil.Compare(current, upPrice);
+        //    if (retDown == 0)
+        //    {
+        //        flag = LimitUpDownFlag.LimitDown;
+        //    }
+        //    else if (retUp == 0)
+        //    {
+        //        flag = LimitUpDownFlag.LimitUp;
+        //    }
 
-            return flag;
-        }
+        //    return flag;
+        //}
     }
 }

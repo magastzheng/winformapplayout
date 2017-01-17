@@ -71,7 +71,7 @@ namespace BLL.TradeInstance
 
         private int UpdateBuyToday(int commandId, string secuCode, int buyAmount, double buyBalance, double dealFee)
         {
-            var tradeItem = _tradeCommandBLL.GetTradeCommandItem(commandId);
+            var tradeItem = _tradeCommandBLL.GetTradeCommand(commandId);
 
             var secuItem = new TradeInstanceSecurity
             {
@@ -87,7 +87,7 @@ namespace BLL.TradeInstance
 
         private int UpdateSellToday(int commandId, string secuCode, int sellAmount, double sellBalance, double dealFee)
         {
-            var tradeItem = _tradeCommandBLL.GetTradeCommandItem(commandId);
+            var tradeItem = _tradeCommandBLL.GetTradeCommand(commandId);
 
             var secuItem = new TradeInstanceSecurity
             {

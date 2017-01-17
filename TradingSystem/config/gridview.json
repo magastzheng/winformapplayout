@@ -3658,7 +3658,7 @@ readonly:
 		},{
 		"name": "cumulativedealamount",
 		"text": "累计成交数量",
-		"width": 80,
+		"width": 120,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -3666,7 +3666,7 @@ readonly:
 		},{
 		"name": "unentrustamount",
 		"text": "未委托数量",
-		"width": 80,
+		"width": 120,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -3674,7 +3674,7 @@ readonly:
 		},{
 		"name": "undealamount",
 		"text": "未成交数量",
-		"width": 80,
+		"width": 120,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -3682,7 +3682,7 @@ readonly:
 		},{
 		"name": "cumulativedealmoney",
 		"text": "累计成交金额",
-		"width": 80,
+		"width": 160,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -3690,7 +3690,7 @@ readonly:
 		},{
 		"name": "thedaydealmoney",
 		"text": "当日成交金额",
-		"width": 80,
+		"width": 160,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -3698,7 +3698,7 @@ readonly:
 		},{
 		"name": "cumulativeentrustmoney",
 		"text": "累计委托金额",
-		"width": 80,
+		"width": 160,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -3706,7 +3706,7 @@ readonly:
 		},{
 		"name": "thedayentrustmoney",
 		"text": "当日委托金额",
-		"width": 80,
+		"width": 160,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -3714,7 +3714,7 @@ readonly:
 		},{
 		"name": "commandsubmitcause",
 		"text": "指令下达原因",
-		"width": 80,
+		"width": 160,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -3730,7 +3730,7 @@ readonly:
 		},{
 		"name": "undealmoney",
 		"text": "未成交金额",
-		"width": 80,
+		"width": 120,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -3738,7 +3738,7 @@ readonly:
 		},{
 		"name": "commandsubmitdate",
 		"text": "指令下达日期",
-		"width": 80,
+		"width": 160,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -3746,7 +3746,7 @@ readonly:
 		},{
 		"name": "commandsubmittime",
 		"text": "指令下达时间",
-		"width": 80,
+		"width": 160,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -3754,7 +3754,7 @@ readonly:
 		},{
 		"name": "commandsubmitperson",
 		"text": "指令下达人员",
-		"width": 80,
+		"width": 160,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -3762,7 +3762,7 @@ readonly:
 		},{
 		"name": "commandwaitsubmitperson",
 		"text": "指令待下达人",
-		"width": 80,
+		"width": 160,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -3882,7 +3882,7 @@ readonly:
 		},{
 		"name": "refusalreasonofapproval",
 		"text": "审批拒绝原因",
-		"width": 80,
+		"width": 160,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -3890,7 +3890,7 @@ readonly:
 		},{
 		"name": "refusalreasonofdispatch",
 		"text": "分发拒绝原因",
-		"width": 80,
+		"width": 160,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -3930,7 +3930,7 @@ readonly:
 		},{
 		"name": "securitytargettype",
 		"text": "证券目标类型",
-		"width": 80,
+		"width": 160,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -4079,7 +4079,7 @@ readonly:
 		},{
 		"name": "totaldealmoney",
 		"text": "累计成交金额",
-		"width": 12,
+		"width": 120,
 		"columntype": 0,
 		"valuetype": 1,
 		"visible": 1,

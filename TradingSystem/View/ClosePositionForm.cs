@@ -554,7 +554,7 @@ namespace TradingSystem.View
                 secuItem.LastPrice = marketData.CurrentPrice;
                
                 //secuItem.ESuspendFlag = marketData.SuspendFlag;
-                secuItem.ELimitUpDownFlag = QuotePriceHelper.GetLimitUpDownFlag(marketData.CurrentPrice, marketData.LowLimitPrice, marketData.HighLimitPrice);
+                secuItem.ELimitUpDownFlag = marketData.LimitUpDownFlag;
 
                 if (secuItem.SecuType == SecurityType.Stock)
                 {
@@ -1014,6 +1014,15 @@ namespace TradingSystem.View
             foreach (var secuItem in secuItems)
             {
                 secuItem.EntrustAmount = secuItem.AvailableAmount;
+                if (secuItem.EntrustAmount > 0)
+                {
+                    secuItem.Selection = true;
+                }
+                else
+                {
+                    secuItem.Selection = false;
+                }
+
                 switch (secuItem.SecuType)
                 {
                     case SecurityType.Stock:

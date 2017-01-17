@@ -47,19 +47,16 @@ namespace BLL.UFX
         public static List<T> ParseData<T>(DataParser parser) where T : new()
         {
             List<T> responseItems = new List<T>();
-            var errorResponse = T2ErrorHandler.Handle(parser);
-            if (T2ErrorHandler.Success(errorResponse.ErrorCode))
+
+            var dataFieldMap = UFXDataBindingHelper.GetProperty<T>();
+            for (int i = 1, count = parser.DataSets.Count; i < count; i++)
             {
-                var dataFieldMap = UFXDataBindingHelper.GetProperty<T>();
-                for (int i = 1, count = parser.DataSets.Count; i < count; i++)
+                var dataSet = parser.DataSets[i];
+                foreach (var dataRow in dataSet.Rows)
                 {
-                    var dataSet = parser.DataSets[i];
-                    foreach (var dataRow in dataSet.Rows)
-                    {
-                        T p = new T();
-                        UFXDataSetHelper.SetValue<T>(ref p, dataRow.Columns, dataFieldMap);
-                        responseItems.Add(p);
-                    }
+                    T p = new T();
+                    UFXDataSetHelper.SetValue<T>(ref p, dataRow.Columns, dataFieldMap);
+                    responseItems.Add(p);
                 }
             }
 
@@ -69,22 +66,19 @@ namespace BLL.UFX
         public static List<T> ParseSubscribeData<T>(DataParser parser) where T : new()
         {
             List<T> responseItems = new List<T>();
-            var errorResponse = T2ErrorHandler.Handle(parser);
-            if (T2ErrorHandler.Success(errorResponse.ErrorCode))
+
+            var dataFieldMap = UFXDataBindingHelper.GetProperty<T>();
+            for (int i = 0, count = parser.DataSets.Count; i < count; i++)
             {
-                var dataFieldMap = UFXDataBindingHelper.GetProperty<T>();
-                for (int i = 0, count = parser.DataSets.Count; i < count; i++)
+                var dataSet = parser.DataSets[i];
+                foreach (var dataRow in dataSet.Rows)
                 {
-                    var dataSet = parser.DataSets[i];
-                    foreach (var dataRow in dataSet.Rows)
-                    {
-                        T p = new T();
-                        UFXDataSetHelper.SetValue<T>(ref p, dataRow.Columns, dataFieldMap);
-                        responseItems.Add(p);
-                    }
+                    T p = new T();
+                    UFXDataSetHelper.SetValue<T>(ref p, dataRow.Columns, dataFieldMap);
+                    responseItems.Add(p);
                 }
             }
-
+  
             return responseItems;
         }
     }

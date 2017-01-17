@@ -729,7 +729,7 @@ namespace TradingSystem.View
             //指数基准当期总市值
             //上证50、沪深300、中证500每一个点数对应不同的价格
             totalValue = bmkPrice * benchmark.ContractMultiple;
-            totalValue = totalValue * template.MarketCapOpt;
+            totalValue = totalValue * template.MarketCapOpt / 100;
 
             var prices = GetPrices(secuList);
             var amounts = CalcUtil.CalcStockAmountPerCopyRound(totalValue, weights, prices);

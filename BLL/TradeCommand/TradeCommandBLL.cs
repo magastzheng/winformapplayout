@@ -194,36 +194,36 @@ namespace BLL.TradeCommand
 
         #region get/fetch
 
-        public List<TradeCommandItem> GetTradeCommandUIAll()
-        {
-            var uiCommands = new List<TradeCommandItem>();
-            var validTradeCommands = GetAll();
+        //public List<TradeCommandItem> GetTradeCommandUIAll()
+        //{
+        //    var uiCommands = new List<TradeCommandItem>();
+        //    var validTradeCommands = GetAll();
             
-            var tradeSecuItems = GetCommandSecurityItems(validTradeCommands);
-            var entrustSecuItems = _queryBLL.GetEntrustSecurityItems(validTradeCommands);
+        //    var tradeSecuItems = GetCommandSecurityItems(validTradeCommands);
+        //    var entrustSecuItems = _queryBLL.GetEntrustSecurityItems(validTradeCommands);
 
-            foreach (var tradeCommand in validTradeCommands)
-            {
-                var uiCommand = BuildUICommand(tradeCommand);
-                CalculateUICommand(ref uiCommand, tradeSecuItems, entrustSecuItems);
+        //    foreach (var tradeCommand in validTradeCommands)
+        //    {
+        //        var uiCommand = BuildUICommand(tradeCommand);
+        //        CalculateUICommand(ref uiCommand, tradeSecuItems, entrustSecuItems);
 
-                uiCommands.Add(uiCommand);
-            }
-            return uiCommands;
-        }
+        //        uiCommands.Add(uiCommand);
+        //    }
+        //    return uiCommands;
+        //}
 
         /// <summary>
         /// 获取那些有效的，委托完成的，没有完成成交的指令。
         /// </summary>
         /// <returns></returns>
-        public List<TradeCommandItem> GetTradeCommand()
+        public List<TradeCommandItem> GetTradeCommandItems()
         {
             var uiCommands = new List<TradeCommandItem>();
             var validTradeCommands = new List<Model.Database.TradeCommand>();
             var allItems = GetAll();
             foreach (var item in allItems)
             {
-                if (IsValidCommand(item))
+                if (IsValidCommand(item) && IsValidTime(item))
                 {
                     validTradeCommands.Add(item);
                 }
@@ -240,6 +240,24 @@ namespace BLL.TradeCommand
                 uiCommands.Add(uiCommand);
             }
             return uiCommands;
+        }
+
+        public List<Model.Database.TradeCommand> GetInvalidTradeCommands()
+        {
+            var invalidTradeCommands = new List<Model.Database.TradeCommand>();
+            var tradeCommands = _tradecommandao.GetAll();
+            if (tradeCommands != null && tradeCommands.Count > 0)
+            {
+                foreach (var tradeCommand in tradeCommands)
+                {
+                    if (!IsValidCommand(tradeCommand) || IsExpireTime(tradeCommand))
+                    {
+                        invalidTradeCommands.Add(tradeCommand);
+                    }
+                }
+            }
+
+            return invalidTradeCommands;
         }
 
         public List<Model.Database.TradeCommand> GetAll()
@@ -263,7 +281,7 @@ namespace BLL.TradeCommand
             return validTradeCommands;
         }
 
-        public Model.Database.TradeCommand GetTradeCommandItem(int commandId)
+        public Model.Database.TradeCommand GetTradeCommand(int commandId)
         {
             Tracking(ActionType.Get, ResourceType.TradeCommand, commandId, null);
             return _tradecommandao.Get(commandId);
@@ -304,6 +322,15 @@ namespace BLL.TradeCommand
 
         #endregion
 
+        #region Delete
+
+        public int Delete(int commandId)
+        {
+            return _tradecommandao.Delete(commandId);
+        }
+
+        #endregion
+
         #region private
 
         private int Submit(Model.Database.TradeCommand cmdItem, List<TradeCommandSecurity> secuItems)
@@ -318,11 +345,6 @@ namespace BLL.TradeCommand
 
                 var perm = _permissionManager.GetOwnerPermission();
                 _permissionManager.GrantPermission(userId, commandId, ResourceType.TradeCommand, perm);
-
-                //对管理员和交易员进行授权
-                var dealPerms = new List<PermissionMask> { PermissionMask.View, PermissionMask.Execute };
-                _permissionManager.GrantByRole(RoleType.Administrator, commandId, ResourceType.TradeCommand, dealPerms);
-                _permissionManager.GrantByRole(RoleType.Dealer, commandId, ResourceType.TradeCommand, dealPerms);
             }
 
             return commandId;
@@ -333,6 +355,16 @@ namespace BLL.TradeCommand
             return tradeCommand.ECommandStatus == CommandStatus.Effective
                 || tradeCommand.ECommandStatus == CommandStatus.Entrusted
                 || tradeCommand.ECommandStatus == CommandStatus.Modified;
+        }
+
+        private bool IsValidTime(Model.Database.TradeCommand tradeCommand)
+        {
+            return tradeCommand.DEndDate > tradeCommand.DStartDate && tradeCommand.DEndDate > DateUtil.OpenDate && tradeCommand.DStartDate < DateUtil.CloseDate;
+        }
+
+        private bool IsExpireTime(Model.Database.TradeCommand tradeCommand)
+        {
+            return tradeCommand.DEndDate < DateUtil.OpenDate;
         }
 
         private List<TradeCommandSecurity> GetSelectCommandSecurities(OpenPositionItem openItem, int commandId, List<OpenPositionSecurityItem> selectedSecuItems)

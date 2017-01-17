@@ -1013,7 +1013,7 @@ begin
 	from entrustsecurity a
 	--inner join entrustcommand b
 	--on a.CommandId=b.CommandId and a.SubmitId=b.SubmitId
-	inner join tradingcommand c
+	inner join tradecommand c
 	on a.CommandId=c.CommandId
 	inner join tradinginstance d
 	on c.InstanceId=d.InstanceId
@@ -1067,7 +1067,7 @@ begin
 	from entrustsecurity a
 	--inner join entrustcommand b
 	--on a.CommandId=b.CommandId and a.SubmitId=b.SubmitId
-	inner join tradingcommand c
+	inner join tradecommand c
 	on a.CommandId=c.CommandId
 	inner join tradinginstance d
 	on c.InstanceId=d.InstanceId
