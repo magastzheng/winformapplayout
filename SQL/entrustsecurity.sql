@@ -13,7 +13,7 @@ create table entrustsecurity(
 	,EntrustAmount		int								--委托数量
 	,EntrustPrice		numeric(20, 4)					--委托价格
 	,EntrustDirection	int			 --委托方向：10 - 买入股票， 11 - 卖出股票， 12 - 卖出开仓， 13 - 买入平仓
-	,EntrustStatus		int			 --委托状态： 0 - 提交到DB, 1 - 提交到UFX， 2 - 未执行， 3 - 部分执行， 4 - 已完成， 10 - 撤单DB, 11 - 撤单UFX, 12 - 撤单成功， 13 - 撤单失败
+	,EntrustStatus		int			 --委托状态： 0 - 提交到DB, 1 - 提交到UFX， 2 - 未执行， 3 - 部分执行， 4 - 已完成， 10 - 撤单DB, 11 - 撤单UFX, 12 - 撤单成功，(-4) - 委托失败， (-12) - 撤单失败
 	,EntrustPriceType	int			 --委托价格类型： 0 - 限价，'a'五档即成剩撤(上交所市价)， 'A'五档即成剩撤(深交所市价)
 	,PriceType			int			 --价格类型：委卖一， 委买一 ....
 	,EntrustNo			int			 --委托之后，服务器返回的委托号
@@ -805,7 +805,10 @@ begin
 	from entrustsecurity
 	where SubmitId = @SubmitId
 		and (DealStatus = 1 or DealStatus = 2)		--未成交或部分成交
-		and EntrustStatus = 4 --已完成委托
+		and (EntrustStatus = 4		--已完成委托
+			or EntrustStatus = 10	--撤单到DB
+			or EntrustStatus = 11	--撤单到UFX
+			or EntrustStatus = -12)	--撤单失败  
 end
 
 --go

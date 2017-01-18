@@ -11,6 +11,7 @@ using Quote;
 using Model.SecurityInfo;
 using System;
 using Model.Quote;
+using BLL.Manager;
 
 namespace TradingSystem.Dialog
 {

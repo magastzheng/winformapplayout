@@ -15,6 +15,7 @@ namespace TradingSystem.Dialog
     {
         private const string msgNoSecuritySelected = "nosecurityselected";
         private const string msgPartialSecurityFail = "entrustcancelpartialsecurityfail";
+        private const string msgCancelSuccess = "tradecancelsuccess";
 
         private const string GridId = "entrustcancel";
 
@@ -77,13 +78,12 @@ namespace TradingSystem.Dialog
                 return;
             }
 
-            //if(MessageBox.Show(this, ""
-
+            //only cancel the selected items
             var failedCancelItems = new List<CancelSecurityItem>();
-            var submitIds = _secuDataSource.ToList().Select(p => p.SubmitId).Distinct().ToList();
+            var submitIds = selectedItems.ToList().Select(p => p.SubmitId).Distinct().ToList();
             foreach (var submitId in submitIds)
             {
-                var submitCalcItems = _secuDataSource.Where(p => p.SubmitId == submitId).ToList();
+                var submitCalcItems = selectedItems.Where(p => p.SubmitId == submitId).ToList();
                 var commandIds = submitCalcItems.Select(p => p.CommandId).Distinct().ToList();
                 if (commandIds != null && commandIds.Count > 0)
                 {
@@ -112,6 +112,7 @@ namespace TradingSystem.Dialog
             }
             else
             {
+                MessageDialog.Info(this, msgCancelSuccess);
                 DialogResult = System.Windows.Forms.DialogResult.OK;
             }
 

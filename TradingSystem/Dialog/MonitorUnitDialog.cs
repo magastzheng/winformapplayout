@@ -1,4 +1,5 @@
-﻿using BLL.Product;
+﻿using BLL.FuturesContractManager;
+using BLL.Product;
 using BLL.SecurityInfo;
 using BLL.Template;
 using Config;

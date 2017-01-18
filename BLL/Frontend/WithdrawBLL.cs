@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using Util;
 using System.Linq;
 using BLL.TradeCommand;
+using BLL.Manager;
 
 namespace BLL.Frontend
 {
@@ -28,65 +29,13 @@ namespace BLL.Frontend
         private UserActionTrackingBLL _userActionTrackingBLL = new UserActionTrackingBLL();
         private EntrustCommandBLL _entrustCommandBLL = new EntrustCommandBLL();
         private EntrustSecurityBLL _entrustSecurityBLL = new EntrustSecurityBLL();
-        private UFXBasketWithdrawBLL _ufxBasketWithdrawBLL = new UFXBasketWithdrawBLL();
-        private UFXWithdrawBLL _ufxWithdrawBLL = new UFXWithdrawBLL();
+        private UFXWithdrawSyncBLL _ufxWithdrawSyncBLL = new UFXWithdrawSyncBLL();
 
         public WithdrawBLL()
         { 
         }
 
         #region cancel
-
-        public List<Model.Database.EntrustCommand> CancelOne(TradeCommandItem cmdItem, CallerCallback callerCallback)
-        {
-            Tracking(ActionType.Cancel, ResourceType.TradeCommand, cmdItem.CommandId, cmdItem);
-            List<Model.Database.EntrustCommand> cancelEntrustCmdItems = new List<Model.Database.EntrustCommand>();
-
-            var entrustCmdItems = _entrustCommandBLL.GetCancel(cmdItem.CommandId);
-            if (entrustCmdItems == null || entrustCmdItems.Count == 0)
-            {
-                return cancelEntrustCmdItems;
-            }
-
-            var entrustSecuItems = _entrustSecurityBLL.GetCancel(cmdItem.CommandId);
-            if (entrustSecuItems == null || entrustSecuItems.Count == 0)
-            {
-                return cancelEntrustCmdItems;
-            }
-
-            int copies = 0;
-            foreach (var entrustCmdItem in entrustCmdItems)
-            {
-                var entrustSecuCancelItems = entrustSecuItems.Where(p => p.SubmitId == entrustCmdItem.SubmitId).ToList();
-                if (entrustSecuCancelItems != null && entrustSecuCancelItems.Count > 0)
-                {
-                    //set the status as EntrustStatus.CancelToDB in database
-                    _entrustCombineBLL.UpdateOneEntrustStatus(entrustCmdItem.SubmitId, EntrustStatus.CancelToDB);
-
-                    var bllResponse = _ufxBasketWithdrawBLL.Withdraw(entrustCmdItem, callerCallback);
-                    if (BLLResponse.Success(bllResponse))
-                    {
-                        copies += entrustCmdItem.Copies;
-                        _entrustCombineBLL.UpdateOneEntrustStatus(entrustCmdItem.SubmitId, EntrustStatus.CancelSuccess);
-
-                        cancelEntrustCmdItems.Add(entrustCmdItem);
-                    }
-                    else
-                    {
-                        _entrustCombineBLL.UpdateOneEntrustStatus(entrustCmdItem.SubmitId, EntrustStatus.CancelFail);
-                    }
-                }
-            }
-
-            //Update the tradingcommand table TargetNum
-            //if (copies > 0)
-            //{
-            //    copies = 0 - copies;
-            //    int ret = _tradecmddao.UpdateTargetNum(cmdItem.CommandId, copies);
-            //}
-
-            return cancelEntrustCmdItems;
-        }
 
         public List<CancelRedoItem> CancelSecuItem(int submitId, int commandId, List<CancelRedoItem> cancelItems, CallerCallback callerCallback)
         {
@@ -103,12 +52,10 @@ namespace BLL.Frontend
                 return cancelSecuItems;
             }
 
-            var bllResponse = _ufxWithdrawBLL.Withdraw(submitId, commandId, entrustedSecuItems, callerCallback);
+            var bllResponse = _ufxWithdrawSyncBLL.Withdraw(submitId, commandId, entrustedSecuItems);
             if (BLLResponse.Success(bllResponse))
             {
-                //int copies = cmdItem.Copies;
-                //_entrustdao.UpdateOneEntrustStatus(cmdItem.SubmitId, EntrustStatus.CancelSuccess);
-
+                ret = _entrustCombineBLL.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelSuccess);
                 cancelSecuItems.AddRange(cancelItems);
             }
             else
@@ -136,12 +83,10 @@ namespace BLL.Frontend
                 return cancelSecuItems;
             }
 
-            var bllResponse = _ufxWithdrawBLL.Withdraw(submitId, commandId, entrustedSecuItems, callerCallback);
+            var bllResponse = _ufxWithdrawSyncBLL.Withdraw(submitId, commandId, entrustedSecuItems);
             if (BLLResponse.Success(bllResponse))
             {
-                //int copies = cmdItem.Copies;
-                //_entrustdao.UpdateOneEntrustStatus(cmdItem.SubmitId, EntrustStatus.CancelSuccess);
-
+                ret = _entrustCombineBLL.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelSuccess);
                 cancelSecuItems.AddRange(cancelItems);
             }
             else

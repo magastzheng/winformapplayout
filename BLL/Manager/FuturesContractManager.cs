@@ -1,14 +1,12 @@
-﻿using DBAccess.SecurityInfo;
+﻿using BLL.SecurityInfo;
+using DBAccess.SecurityInfo;
 using Model.config;
 using Model.SecurityInfo;
 using Quote;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BLL.SecurityInfo
+namespace BLL.FuturesContractManager
 {
     public class FuturesContractManager
     {

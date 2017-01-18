@@ -1,13 +1,10 @@
-﻿using BLL;
+﻿using BLL.Manager;
 using BLL.Permission;
 using BLL.Product;
 using BLL.UFX;
-using BLL.UFX.impl;
 using Config;
 using Model;
-using Model.strategy;
 using ServiceInterface;
-using System.Threading;
 using TradingSystem.View;
 
 namespace TradingSystem.Controller
@@ -80,7 +77,7 @@ namespace TradingSystem.Controller
                 Password = password
             };
 
-            ConnectionCode retCode = BLLManager.Instance.LoginBLL.Login(user);
+            ConnectionCode retCode = UFXBLLManager.Instance.LoginBLL.Login(user);
             if (retCode == ConnectionCode.Success)
             {
                 InitializeAccount(LoginManager.Instance.LoginUser);
@@ -108,10 +105,10 @@ namespace TradingSystem.Controller
             }
 
             //fetch the Fund, AssetUnit, Portfolio, Holder by UFX.
-            BLLManager.Instance.AccountBLL.QueryAccount();
-            BLLManager.Instance.AccountBLL.QueryAssetUnit();
-            BLLManager.Instance.AccountBLL.QueryPortfolio();
-            BLLManager.Instance.AccountBLL.QueryHolder();
+            UFXBLLManager.Instance.AccountBLL.QueryAccount();
+            UFXBLLManager.Instance.AccountBLL.QueryAssetUnit();
+            UFXBLLManager.Instance.AccountBLL.QueryPortfolio();
+            UFXBLLManager.Instance.AccountBLL.QueryHolder();
 
             //sync the fund, AssetUnit, Portfolio into database.
             _productBLL.Create(LoginManager.Instance.Accounts, LoginManager.Instance.Assets, LoginManager.Instance.Portfolios);
@@ -119,7 +116,7 @@ namespace TradingSystem.Controller
 
         private ConnectionCode Subscribe(LoginUser loginUser)
         {
-            return BLLManager.Instance.Subscriber.Subscribe(loginUser);
+            return UFXBLLManager.Instance.Subscriber.Subscribe(loginUser);
         }
 
         private ConnectionCode InitService()
@@ -157,7 +154,7 @@ namespace TradingSystem.Controller
             ServiceManager.Instance.Stop();
             if (LoginManager.Instance.LoginUser != null && !string.IsNullOrEmpty(LoginManager.Instance.LoginUser.Token))
             {
-                BLLManager.Instance.LoginBLL.Logout();
+                UFXBLLManager.Instance.LoginBLL.Logout();
             }
         }
     }

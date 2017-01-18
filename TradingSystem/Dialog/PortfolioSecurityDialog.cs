@@ -1,4 +1,5 @@
-﻿using BLL.SecurityInfo;
+﻿using BLL.Manager;
+using BLL.SecurityInfo;
 using Controls.Entity;
 using Model.SecurityInfo;
 using Model.UI;

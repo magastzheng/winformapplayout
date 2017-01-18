@@ -81,6 +81,8 @@
     <Compile Include="Entrust\Futures\UFXQueryFuturesEntrustBLL.cs" />
     <Compile Include="Entrust\UFXQueryMoneyBLL.cs" />
     <Compile Include="Entrust\UFXWithdrawSyncBLL.cs" />
+    <Compile Include="Manager\SettingManager.cs" />
+    <Compile Include="Setting\UserSettingBLL.cs" />
     <Compile Include="TradeCommand\CommandManagemengBLL.cs" />
     <Compile Include="UFX\impl\WithdrawSyncBLL.cs" />
     <Compile Include="UFX\UFXDataSetHelper.cs" />
@@ -99,8 +101,8 @@
     <Compile Include="Permission\TokenResourcePermissionBLL.cs" />
     <Compile Include="Permission\UserRoleBLL.cs" />
     <Compile Include="SecurityInfo\BenchmarkBLL.cs" />
-    <Compile Include="SecurityInfo\FuturesContractManager.cs" />
-    <Compile Include="SecurityInfo\SecurityInfoManager.cs" />
+    <Compile Include="Manager\FuturesContractManager.cs" />
+    <Compile Include="Manager\SecurityInfoManager.cs" />
     <Compile Include="Archive\Template\HistTemplateBLL.cs" />
     <Compile Include="Template\MonitorUnitBLL.cs" />
     <Compile Include="TradeCommand\TradeCommandSecurityBLL.cs" />
@@ -113,7 +115,7 @@
     <Compile Include="Entrust\UFXQueryEntrustBLL.cs" />
     <Compile Include="TradeInstance\TradeInstanceSecurityBLL.cs" />
     <Compile Include="UFX\impl\ArbitrageBLL.cs" />
-    <Compile Include="UFX\BLLManager.cs" />
+    <Compile Include="Manager\UFXBLLManager.cs" />
     <Compile Include="UFX\impl\UFXBLLBase.cs" />
     <Compile Include="UFX\impl\UFXDataHandlerCallback.cs" />
     <Compile Include="UFX\impl\DataParser.cs" />

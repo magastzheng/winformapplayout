@@ -95,6 +95,8 @@
     <Compile Include="config\FieldConfigItem.cs" />
     <Compile Include="EnumType\TemplateStatus.cs" />
     <Compile Include="EnumType\TradeInstanceStatus.cs" />
+    <Compile Include="Setting\BuySellEntrustOrder.cs" />
+    <Compile Include="Setting\OddShareMode.cs" />
     <Compile Include="UFX\UFXFieldRequireType.cs" />
     <Compile Include="UFX\UFXFunctionCode.cs" />
     <Compile Include="config\FunctionConfigItem.cs" />

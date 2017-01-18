@@ -1,4 +1,4 @@
-﻿using BLL;
+﻿using BLL.Manager;
 using BLL.UFX.impl;
 using Config;
 using Controls.Entity;
@@ -23,7 +23,7 @@ namespace TradingSystem.View
             InitializeComponent();
         }
 
-        public AssetUnitForm(GridConfig gridConfig, BLLManager bLLManager)
+        public AssetUnitForm(GridConfig gridConfig, UFXBLLManager bLLManager)
             : this()
         {
             _gridConfig = gridConfig;

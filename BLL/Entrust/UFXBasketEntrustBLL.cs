@@ -1,4 +1,5 @@
 ﻿using BLL.EntrustCommand;
+using BLL.Manager;
 using BLL.SecurityInfo;
 using BLL.TradeCommand;
 using BLL.UFX;
@@ -33,7 +34,7 @@ namespace BLL.Entrust
 
         public UFXBasketEntrustBLL()
         {
-            _securityBLL = BLLManager.Instance.SecurityBLL;
+            _securityBLL = UFXBLLManager.Instance.SecurityBLL;
 
             _timeOut = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.Timeout;
             _limitEntrustRatio = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.LimitEntrustRatio;

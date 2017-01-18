@@ -20,6 +20,7 @@ using BLL.Frontend;
 using Model.Constant;
 using BLL.UFX.impl;
 using Model.Database;
+using BLL.Manager;
 
 namespace TradingSystem.Dialog
 {
@@ -397,7 +398,7 @@ namespace TradingSystem.Dialog
                 //}
             }
 
-            if (InvalidCancelItems.Count == 0)
+            if (InvalidCancelItems.Count > 0)
             {
                 string format = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgEntrustCancelNoAmount);
                 StringBuilder sb = new StringBuilder();

@@ -1,4 +1,5 @@
-﻿using BLL.Product;
+﻿using BLL.Manager;
+using BLL.Product;
 using BLL.UFX.impl;
 using log4net;
 using Model.UFX;
@@ -15,7 +16,7 @@ namespace BLL.Entrust
 
         public UFXQueryMoneyBLL()
         {
-            _querySyncBLL = BLLManager.Instance.QuerySyncBLL;
+            _querySyncBLL = UFXBLLManager.Instance.QuerySyncBLL;
         }
 
         public void Query()

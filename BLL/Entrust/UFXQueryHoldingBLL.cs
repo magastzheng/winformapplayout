@@ -1,4 +1,5 @@
-﻿using BLL.Product;
+﻿using BLL.Manager;
+using BLL.Product;
 using BLL.UFX;
 using BLL.UFX.impl;
 using Config;
@@ -23,7 +24,7 @@ namespace BLL.Entrust
 
         public UFXQueryHoldingBLL()
         {
-            _securityBLL = BLLManager.Instance.SecurityBLL;
+            _securityBLL = UFXBLLManager.Instance.SecurityBLL;
             _timeOut = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.Timeout;
         }
 

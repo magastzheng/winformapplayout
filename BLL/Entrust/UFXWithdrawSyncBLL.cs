@@ -1,4 +1,5 @@
-﻿using BLL.UFX.impl;
+﻿using BLL.Manager;
+using BLL.UFX.impl;
 using log4net;
 using Model.BLL;
 using Model.Database;
@@ -14,8 +15,8 @@ namespace BLL.Entrust
         private WithdrawSyncBLL _withdrawSyncBLL = null;
 
         public UFXWithdrawSyncBLL()
-        { 
-
+        {
+            _withdrawSyncBLL = UFXBLLManager.Instance.WithdrawSyncBLL;
         }
 
         public BLLResponse Withdraw(int submitId, int commandId, List<EntrustSecurity> entrustItems)
@@ -54,7 +55,7 @@ namespace BLL.Entrust
 
             var successItems = responseItems.Where(p => p.SuccessFlag.Equals("1")).ToList();
             var failItems = responseItems.Where(p => p.SuccessFlag.Equals("2")).ToList();
-            if (responseItems.Count > 0 && successItems.Count == responseItems.Count)
+            if (responseItems.Count > 0 && ((successItems.Count == responseItems.Count) || failItems.Count == 0))
             {
                 bllResponse = new BLLResponse { Code = Model.ConnectionCode.Success, Message = "Withdraw success!" };
             }

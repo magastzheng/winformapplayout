@@ -16,11 +16,12 @@
 *	sellspotprice: 现货委卖价
 *	buysellentrustorder: 买卖委托顺序
 *	automatichandicapratio: 自动盘口系数
-*	fragmentedstockmode: 委托数量零股处理模式
+*	oddsharemode: 委托数量零股处理模式
 *	szseentrustpricetype: 深交所市价委托方式
 *	sseentrustpricetype: 上交所市价委托方式
 */
 {
+	"timeout": 10000,
 	"ufxsetting":
 	{
 		"timeout": 30000,
@@ -36,7 +37,7 @@
 		"sellspotprice": "Market",
 		"buysellentrustorder": 1,
 		"automatichandicapratio": 100,
-		"fragmentedstockmode": 3,
+		"oddsharemode": 3,
 		"szseentrustpricetype": "0",
 		"sseentrustpricetype": "0"
 	}

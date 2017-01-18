@@ -1,4 +1,5 @@
 ﻿using BLL.EntrustCommand;
+using BLL.Manager;
 using BLL.Product;
 using BLL.UFX;
 using BLL.UFX.impl;
@@ -32,7 +33,7 @@ namespace BLL.Entrust.Futures
 
         public UFXQueryFuturesEntrustBLL()
         {
-            this._securityBLL = BLLManager.Instance.SecurityBLL;
+            this._securityBLL = UFXBLLManager.Instance.SecurityBLL;
         }
 
         public List<EntrustFlowItem> QueryToday(List<Portfolio> portfolios, int timeOut, CallerCallback callback)

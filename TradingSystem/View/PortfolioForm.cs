@@ -1,5 +1,5 @@
-﻿using BLL;
-using BLL.Entrust;
+﻿using BLL.Entrust;
+using BLL.Manager;
 using BLL.UFX.impl;
 using Config;
 using Controls.Entity;
@@ -24,7 +24,7 @@ namespace TradingSystem.View
             InitializeComponent();
         }
 
-        public PortfolioForm(GridConfig gridConfig, BLLManager bLLManager)
+        public PortfolioForm(GridConfig gridConfig, UFXBLLManager bLLManager)
             : this()
         {
             _gridConfig = gridConfig;

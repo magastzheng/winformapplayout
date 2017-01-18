@@ -1,5 +1,4 @@
-﻿using BLL;
-using Config;
+﻿using Config;
 using TradingSystem.Controller;
 using log4net;
 using System;
@@ -7,10 +6,10 @@ using System.Windows.Forms;
 using TradingSystem.View;
 using log4net.Config;
 using BLL.UFX;
-using WAPIWrapperCSharp;
 using System.Configuration;
 using BLL.TradeInstance;
 using System.IO;
+using BLL.Manager;
 
 namespace TradingSystem
 {
@@ -68,8 +67,8 @@ namespace TradingSystem
                 return;
             }
 
-            BLLManager.Instance.Init(t2SDKWrap);
-            BLLManager.Instance.Subscriber = t2Subscriber;
+            UFXBLLManager.Instance.Init(t2SDKWrap);
+            UFXBLLManager.Instance.Subscriber = t2Subscriber;
 
             //启动wind行情服务
             //WindAPIWrap.Instance.Start();

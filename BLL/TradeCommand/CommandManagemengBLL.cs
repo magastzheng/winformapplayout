@@ -1,5 +1,6 @@
 ﻿using BLL.EntrustCommand;
 using BLL.Frontend;
+using BLL.Manager;
 using BLL.SecurityInfo;
 using log4net;
 using Model.Database;

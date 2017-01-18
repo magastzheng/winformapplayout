@@ -1,4 +1,4 @@
-﻿using BLL;
+﻿using BLL.Manager;
 using BLL.Permission;
 using BLL.UFX;
 using Config;
@@ -78,7 +78,7 @@ namespace TradingSystem.View
                     featureId = validNodes[index].Children[0].Id;
 
                     _navBarContainer.ExpandDefaultBar(index);
-                    FormManager.Instance.ActiveForm(this, _panelMain, featureId, _gridConfig, BLLManager.Instance);
+                    FormManager.Instance.ActiveForm(this, _panelMain, featureId, _gridConfig, UFXBLLManager.Instance);
                 }
             }
         }
@@ -90,7 +90,7 @@ namespace TradingSystem.View
                 return;
             }
 
-            Forms.BaseForm form = FormManager.Instance.ActiveForm(this, _panelMain, e.TreeNodeEvent.Name, _gridConfig, BLLManager.Instance);
+            Forms.BaseForm form = FormManager.Instance.ActiveForm(this, _panelMain, e.TreeNodeEvent.Name, _gridConfig, UFXBLLManager.Instance);
 
             //TODO:
         }

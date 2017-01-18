@@ -1,12 +1,12 @@
 ﻿using BLL.UFX;
 using BLL.UFX.impl;
 
-namespace BLL
+namespace BLL.Manager
 {
-    public class BLLManager
+    public class UFXBLLManager
     {
-        private readonly static BLLManager _instance = new BLLManager();
-        public static BLLManager Instance { get { return _instance; } }
+        private readonly static UFXBLLManager _instance = new UFXBLLManager();
+        public static UFXBLLManager Instance { get { return _instance; } }
 
         private readonly object _locker = new object();
 
@@ -15,6 +15,7 @@ namespace BLL
         //private LoginBLL _loginBLL;
         private SecurityBLL _securityBLL;
         private QuerySyncBLL _querySyncBLL;
+        private WithdrawSyncBLL _withdrawSyncBLL;
         private StrategyBLL _strategyBLL;
         private T2Subscriber _subscriber;
 
@@ -38,6 +39,11 @@ namespace BLL
             get { return _querySyncBLL; }
         }
 
+        public WithdrawSyncBLL WithdrawSyncBLL
+        {
+            get { return _withdrawSyncBLL; }
+        }
+
         public StrategyBLL StrategyBLL
         {
             get { return _strategyBLL; }
@@ -49,7 +55,7 @@ namespace BLL
             set { _subscriber = value; }
         }
 
-        private BLLManager()
+        private UFXBLLManager()
         {
         }
 
@@ -62,6 +68,7 @@ namespace BLL
                 //_loginBLL = new LoginBLL(t2SDKWrap);
                 _securityBLL = new SecurityBLL(t2SDKWrap);
                 _querySyncBLL = new UFX.impl.QuerySyncBLL(t2SDKWrap);
+                _withdrawSyncBLL = new UFX.impl.WithdrawSyncBLL(t2SDKWrap);
                 _strategyBLL = new StrategyBLL(t2SDKWrap);
             }
         }

@@ -1,5 +1,4 @@
-﻿using BLL;
-using BLL.Product;
+﻿using BLL.Product;
 using BLL.UFX.impl;
 using Config;
 using Controls.Entity;
@@ -13,14 +12,12 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Linq;
 using BLL.Template;
-using BLL.Entrust;
 using TradingSystem.Dialog;
 using Model.strategy;
-using BLL.SecurityInfo;
 using BLL.TradeInstance;
 using Model.SecurityInfo;
-using Model.EnumType;
 using Quote;
+using BLL.Manager;
 
 namespace TradingSystem.View
 {
@@ -58,7 +55,7 @@ namespace TradingSystem.View
             InitializeComponent();
         }
 
-        public HoldingTransferedForm(GridConfig gridConfig, BLLManager bLLManager)
+        public HoldingTransferedForm(GridConfig gridConfig, UFXBLLManager bLLManager)
             : this()
         {
             _gridConfig = gridConfig;

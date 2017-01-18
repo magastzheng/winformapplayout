@@ -27,7 +27,7 @@ namespace BLL.UFX.impl
         {
             DataParser parser = SubmitSync<UFXWithdrawRequest>(UFXFunctionCode.Withdraw, requests);
 
-            return UFXDataSetHelper.ParseData<UFXBasketWithdrawResponse>(parser);
+            return GetResponse(parser);
         }
 
         /// <summary>
@@ -40,7 +40,24 @@ namespace BLL.UFX.impl
             List<UFXBasketWithdrawRequest> requests = new List<UFXBasketWithdrawRequest> { request };
             DataParser parser = SubmitSync<UFXBasketWithdrawRequest>(UFXFunctionCode.WithdrawBasket, requests);
 
-            return UFXDataSetHelper.ParseData<UFXBasketWithdrawResponse>(parser);
+            return GetResponse(parser);
+        }
+
+        private List<UFXBasketWithdrawResponse> GetResponse(DataParser parser)
+        {
+            var errorResponse = T2ErrorHandler.Handle(parser);
+            if (T2ErrorHandler.Success(errorResponse.ErrorCode))
+            {
+                return UFXDataSetHelper.ParseData<UFXBasketWithdrawResponse>(parser);
+            }
+            else
+            {
+                string msg = string.Format("Fail to withdraw - error code: {0}, message: {1}, detail: {2}", 
+                    errorResponse.ErrorCode, errorResponse.ErrorMessage, errorResponse.MessageDetail);
+                logger.Error(msg);
+
+                return new List<UFXBasketWithdrawResponse>();
+            }
         }
     }
 }

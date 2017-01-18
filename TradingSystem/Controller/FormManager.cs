@@ -1,4 +1,4 @@
-﻿using BLL;
+﻿using BLL.Manager;
 using Config;
 using Forms;
 using System;
@@ -33,7 +33,7 @@ namespace TradingSystem.Controller
 
         public static FormManager Instance { get { return _instance; } }
 
-        public BaseForm ActiveForm(Form parentForm, Panel parentPanel, string formKey, GridConfig gridConfig, BLLManager bLLManager)
+        public BaseForm ActiveForm(Form parentForm, Panel parentPanel, string formKey, GridConfig gridConfig, UFXBLLManager bLLManager)
         {
             Forms.BaseForm form = null;
             Type formType = null;

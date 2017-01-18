@@ -55,6 +55,7 @@ namespace Controls.GridView
             //this.CellParsing += new DataGridViewCellParsingEventHandler(DataGridView_CellParsing);
             this.CellFormatting += new DataGridViewCellFormattingEventHandler(DataGridView_CellFormatting);
             this.CellEnter += new DataGridViewCellEventHandler(DataGridView_CellEnter);
+            //this.DataBindingComplete += new DataGridViewBindingCompleteEventHandler(DataGridView_DataBindingComplete);
             //this.CellValidating += new DataGridViewCellValidatingEventHandler(DataGridView_CellValidating);
 
             //this.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(DataGridView_ColumnHeaderMouseClick);
@@ -66,6 +67,11 @@ namespace Controls.GridView
 
             //this.CurrentCellChanged += new EventHandler(DataGridView_CurrentCellChanged);
         }
+
+        //private void DataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        //{
+            
+        //}
 
         public void NotifyNumericUpDownValueChanged(decimal newValue)
         {

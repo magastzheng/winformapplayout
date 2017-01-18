@@ -159,6 +159,9 @@
 			"id": "tradecancelfail",
 			"text": "撤销指令号 [{0}] 提交序号 [{1}] 失败！"
 		},{
+			"id": "tradecancelsuccess",
+			"text": "撤销成功！"
+		},{
 			"id": "tradeentrustpricebeyondlimit",
 			"text": "委托价格必须在跌停价和涨停价之间！"
 		},{

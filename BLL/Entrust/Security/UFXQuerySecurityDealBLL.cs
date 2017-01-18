@@ -1,4 +1,5 @@
-﻿using BLL.Product;
+﻿using BLL.Manager;
+using BLL.Product;
 using BLL.UFX;
 using BLL.UFX.impl;
 using Config;
@@ -26,7 +27,7 @@ namespace BLL.Entrust.Security
 
         public UFXQuerySecurityDealBLL()
         {
-            _securityBLL = BLLManager.Instance.SecurityBLL;
+            _securityBLL = UFXBLLManager.Instance.SecurityBLL;
         }
 
         public List<DealFlowItem> QueryToday(List<Portfolio> portfolios, int timeOut, CallerCallback callback)

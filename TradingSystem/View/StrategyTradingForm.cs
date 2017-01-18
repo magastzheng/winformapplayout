@@ -26,6 +26,7 @@ using BLL.Product;
 using Calculation;
 using Model.Converter;
 using Model.Database;
+using BLL.Manager;
 
 namespace TradingSystem.View
 {
@@ -264,7 +265,6 @@ namespace TradingSystem.View
                     //ECommandPrice = canCancelItem.EntrustPrice,                    
                 };
 
-                //var marketData = QuoteCenter2.Instance.GetMarketData(
                 calcItems.Add(calcItem);
             }
 
@@ -278,7 +278,6 @@ namespace TradingSystem.View
             form.Owner = this;
             form.OnLoadControl(form, null);
             form.OnLoadData(form, calcItems);
-            //form.SaveData += new FormLoadHandler(Dialog_CancelRedoDialog_SaveData);
             form.ShowDialog();
         }
 
@@ -331,24 +330,7 @@ namespace TradingSystem.View
             form.Owner = this;
             form.OnLoadControl(form, null);
             form.OnLoadData(form, calcItems);
-            //form.SaveData += new FormLoadHandler(Dialog_CancelRedoDialog_SaveData);
             form.ShowDialog();
-
-            //var selectCmdItems = _cmdDataSource.Where(p => p.Selection);
-            //if (selectCmdItems != null && selectCmdItems.Count() > 0)
-            //{
-            //    foreach (var cmdItem in selectCmdItems)
-            //    {
-            //        GridView_Command_Cancel(cmdItem);
-            //    }
-            //}
-        }
-
-        private void GridView_Command_Cancel(TradeCommandItem cmdItem)
-        {
-            var cancelEntrustCmdItems = _withdrawBLL.CancelOne(cmdItem, new CallerCallback(CancelOneCallback));
-
-            this.cmdGridView.Invalidate();
         }
 
         private void ToolStripButton_Command_CancelRedo(object sender, EventArgs e)
@@ -845,12 +827,8 @@ namespace TradingSystem.View
         #region Load data
         private bool Form_LoadData(object sender, object data)
         {
-            //Clear();
-            
             //Load data here
             LoadDataTradeCommand();
-            //LoadDataEntrustFlow();
-            //LoadDataDealFlow();
 
             return true;
         }
@@ -958,7 +936,6 @@ namespace TradingSystem.View
                     if (secuInfo != null)
                     {
                         p.SecuName = secuInfo.SecuName;
-                        //p.Market = SecurityItemHelper.GetExchange(secuInfo.ExchangeCode);
                     }
 
                     var entrustItem = entrustItems.Find(o => o.RequestId == p.RequestId);

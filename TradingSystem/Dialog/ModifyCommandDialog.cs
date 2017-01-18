@@ -8,19 +8,12 @@ using Model.SecurityInfo;
 using Model.UI;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using System.Linq;
-using BLL.SecurityInfo;
 using Quote;
-using TradingSystem.TradeUtil;
-using BLL.Frontend;
 using BLL.TradeInstance;
 using Model.Database;
 using Util;
+using BLL.Manager;
 
 namespace TradingSystem.Dialog
 {

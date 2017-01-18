@@ -1,4 +1,5 @@
 ﻿using BLL.EntrustCommand;
+using BLL.Manager;
 using BLL.SecurityInfo;
 using Model.Constant;
 using Model.Database;

@@ -20,6 +20,8 @@ using System.Text;
 using Model.Database;
 using BLL.TradeInstance;
 using BLL.TradeCommand;
+using BLL.Manager;
+using BLL.FuturesContractManager;
 
 namespace TradingSystem.View
 {

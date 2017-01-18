@@ -1,4 +1,5 @@
 ﻿using BLL.EntrustCommand;
+using BLL.Manager;
 using BLL.UFX;
 using BLL.UFX.impl;
 using Config;
@@ -29,7 +30,7 @@ namespace BLL.Entrust
 
         public UFXBasketWithdrawBLL()
         {
-            _securityBLL = BLLManager.Instance.SecurityBLL;
+            _securityBLL = UFXBLLManager.Instance.SecurityBLL;
             _timeOut = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.Timeout;
         }
 

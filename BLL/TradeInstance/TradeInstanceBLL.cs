@@ -1,4 +1,5 @@
-﻿using BLL.Permission;
+﻿using BLL.Manager;
+using BLL.Permission;
 using BLL.Product;
 using BLL.SecurityInfo;
 using Config;

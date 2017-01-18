@@ -1,9 +1,10 @@
-﻿using Model.SecurityInfo;
+﻿using BLL.SecurityInfo;
+using Model.SecurityInfo;
 using Quote;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BLL.SecurityInfo
+namespace BLL.Manager
 {
     public class SecurityInfoManager
     {

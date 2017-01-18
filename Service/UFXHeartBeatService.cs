@@ -1,8 +1,7 @@
-﻿using BLL;
-using ServiceInterface;
+﻿using ServiceInterface;
 using log4net;
-using System;
 using System.Timers;
+using BLL.Manager;
 
 namespace Service
 {
@@ -59,7 +58,7 @@ namespace Service
             _timer.Stop();
 
             //Send the heartbeat message
-            var result = BLLManager.Instance.LoginBLL.HeartBeat();
+            var result = UFXBLLManager.Instance.LoginBLL.HeartBeat();
             if (result != Model.ConnectionCode.Success)
             { 
                 //TODO: to reconnnect

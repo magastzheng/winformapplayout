@@ -56,6 +56,7 @@
     <Compile Include="Archive\Template\HistoricalTemplateStockDAO.cs" />
     <Compile Include="Archive\TradeCommand\ArchiveTradeCommandDAO.cs" />
     <Compile Include="Archive\TradeCommand\ArchiveTradeCommandSecurityDAO.cs" />
+    <Compile Include="Setting\UserSettingDAO.cs" />
     <Compile Include="TradeCommand\CommandDAO.cs" />
     <Compile Include="DbHelper.cs" />
     <Compile Include="Deal\DealSecurityDAO.cs" />

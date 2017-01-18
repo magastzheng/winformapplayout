@@ -9,16 +9,16 @@ using System.Windows.Forms;
 using System.Linq;
 using Quote;
 using TradingSystem.Dialog;
-using BLL.SecurityInfo;
 using Model.EnumType;
 using Model.Binding.BindingUtil;
-using TradingSystem.TradeUtil;
 using Model.Database;
 using BLL.Template;
 using Model.Constant;
 using Model.Dialog;
 using BLL.TradeInstance;
 using BLL.TradeCommand;
+using BLL.FuturesContractManager;
+using BLL.Manager;
 
 namespace TradingSystem.View
 {

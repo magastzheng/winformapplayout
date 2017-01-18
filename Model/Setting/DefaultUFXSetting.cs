@@ -5,10 +5,10 @@ namespace Model.Setting
     {
         public int Timeout { get; set; }
 
-        public double LimitEntrustRatio { get; set; }
+        public int LimitEntrustRatio { get; set; }
 
-        public double FutuLimitEntrustRatio { get; set; }
+        public int FutuLimitEntrustRatio { get; set; }
 
-        public double OptLimitEntrustRatio { get; set; }
+        public int OptLimitEntrustRatio { get; set; }
     }
 }

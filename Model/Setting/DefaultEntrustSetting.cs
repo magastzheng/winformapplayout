@@ -12,11 +12,11 @@ namespace Model.Setting
 
         public PriceType SellSpotPrice { get; set; }
 
-        public int BuySellEntrustOrder { get; set; }
+        public BuySellEntrustOrder BuySellEntrustOrder { get; set; }
 
         public int AutoRatio { get; set; }
 
-        public int FragmentedStockMode { get; set; }
+        public OddShareMode OddShareMode { get; set; }
 
         public EntrustPriceType SzseEntrustPriceType { get; set; }
 

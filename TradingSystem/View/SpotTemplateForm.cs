@@ -18,6 +18,7 @@ using Model.Binding.BindingUtil;
 using BLL.SecurityInfo;
 using TradingSystem.Dialog;
 using BLL.Permission;
+using BLL.Manager;
 
 namespace TradingSystem.View
 {
