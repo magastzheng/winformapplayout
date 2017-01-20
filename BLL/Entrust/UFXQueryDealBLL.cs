@@ -1,22 +1,12 @@
 ﻿using BLL.Entrust.Futures;
 using BLL.Entrust.Security;
+using BLL.Manager;
 using BLL.Product;
-using BLL.UFX;
 using BLL.UFX.impl;
-using Config;
-using Config.ParamConverter;
 using log4net;
-using Model;
-using Model.Binding.BindingUtil;
-using Model.BLL;
-using Model.Converter;
-using Model.UFX;
 using Model.UI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using Util;
 
 namespace BLL.Entrust
 {
@@ -32,7 +22,7 @@ namespace BLL.Entrust
 
         public UFXQueryDealBLL()
         {
-            _timeOut = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.Timeout;
+            _timeOut = SettingManager.Instance.Get().UFXSetting.Timeout;
         }
 
         public List<DealFlowItem> QueryToday(CallerCallback callback)

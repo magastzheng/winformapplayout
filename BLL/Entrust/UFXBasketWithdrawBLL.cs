@@ -31,7 +31,7 @@ namespace BLL.Entrust
         public UFXBasketWithdrawBLL()
         {
             _securityBLL = UFXBLLManager.Instance.SecurityBLL;
-            _timeOut = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.Timeout;
+            _timeOut = SettingManager.Instance.Get().UFXSetting.Timeout;
         }
 
         public BLLResponse Withdraw(Model.Database.EntrustCommand cmdItem, CallerCallback callerCallback)

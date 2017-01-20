@@ -50,26 +50,6 @@ begin
 
 	if @Count = 0 or @Count is null
 	begin
-		update usersetting
-		set
-			ConnectTimeout				= @ConnectTimeout
-			,UFXTimeout					= @UFXTimeout
-			,UFXLimitEntrustRatio		= @UFXLimitEntrustRatio 
-			,UFXFutuLimitEntrustRatio	= @UFXFutuLimitEntrustRatio
-			,UFXOptLimitEntrustRatio	= @UFXOptLimitEntrustRatio
-			,BuyFutuPrice				= @BuyFutuPrice
-			,SellFutuPrice				= @SellFutuPrice
-			,BuySpotPrice				= @BuySpotPrice
-			,SellSpotPrice				= @SellSpotPrice
-			,BuySellEntrustOrder		= @BuySellEntrustOrder
-			,OddShareMode				= @OddShareMode
-			,SZSEEntrustPriceType		= @SZSEEntrustPriceType
-			,SSEEntrustPriceType		= @SSEEntrustPriceType
-			,ModifiedDate				= getdate()
-		where UserId=@UserId
-	end
-	else
-	begin
 		insert into usersetting(
 			UserId					
 			,ConnectTimeout			
@@ -104,6 +84,26 @@ begin
 			,@SSEEntrustPriceType	
 			,getdate()
 		)
+	end
+	else
+	begin
+		update usersetting
+		set
+			ConnectTimeout				= @ConnectTimeout
+			,UFXTimeout					= @UFXTimeout
+			,UFXLimitEntrustRatio		= @UFXLimitEntrustRatio 
+			,UFXFutuLimitEntrustRatio	= @UFXFutuLimitEntrustRatio
+			,UFXOptLimitEntrustRatio	= @UFXOptLimitEntrustRatio
+			,BuyFutuPrice				= @BuyFutuPrice
+			,SellFutuPrice				= @SellFutuPrice
+			,BuySpotPrice				= @BuySpotPrice
+			,SellSpotPrice				= @SellSpotPrice
+			,BuySellEntrustOrder		= @BuySellEntrustOrder
+			,OddShareMode				= @OddShareMode
+			,SZSEEntrustPriceType		= @SZSEEntrustPriceType
+			,SSEEntrustPriceType		= @SSEEntrustPriceType
+			,ModifiedDate				= getdate()
+		where UserId=@UserId
 	end
 end
 

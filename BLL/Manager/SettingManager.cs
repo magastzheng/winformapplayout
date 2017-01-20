@@ -13,7 +13,10 @@ namespace BLL.Manager
     {
         private static readonly SettingManager _instance = new SettingManager();
 
+        public static SettingManager Instance { get { return _instance; } }
+
         private UserSettingBLL _userSettingBLL = null;
+        private DefaultSetting _setting = null;
 
         private SettingManager()
         {
@@ -22,18 +25,42 @@ namespace BLL.Manager
 
         public DefaultSetting Get()
         {
-            DefaultSetting setting = _userSettingBLL.Get();
-            if (setting == null || setting.UFXSetting == null || setting.EntrustSetting == null)
-            {
-                setting = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting;
-            }
-
-            return setting;
+            return GetSetting();
         }
 
         public int Create(DefaultSetting setting)
         {
             return _userSettingBLL.Create(setting);
         }
+
+        public int Update(DefaultSetting setting)
+        {
+            _setting = setting;
+            return Create(setting);
+        }
+
+        #region private method
+
+        private DefaultSetting GetSetting()
+        {
+            if (_setting == null)
+            {
+                _setting = _userSettingBLL.Get();
+                if (_setting == null 
+                    || _setting.UFXSetting == null 
+                    || _setting.EntrustSetting == null
+                    || _setting.Timeout == 0
+                    || _setting.UFXSetting.Timeout == 0
+                    || _setting.EntrustSetting.BuyFutuPrice == Model.EnumType.PriceType.None
+                    )
+                {
+                    _setting = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting;
+                }
+            }
+
+            return _setting;
+        }
+
+        #endregion
     }
 }

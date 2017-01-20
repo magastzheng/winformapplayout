@@ -35,11 +35,11 @@ namespace BLL.Entrust
         public UFXBasketEntrustBLL()
         {
             _securityBLL = UFXBLLManager.Instance.SecurityBLL;
-
-            _timeOut = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.Timeout;
-            _limitEntrustRatio = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.LimitEntrustRatio;
-            _futuLimitEntrustRatio = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.FutuLimitEntrustRatio;
-            _optLimitEntrustRatio = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.OptLimitEntrustRatio;
+            var setting = SettingManager.Instance.Get();
+            _timeOut = setting.Timeout;
+            _limitEntrustRatio = setting.UFXSetting.LimitEntrustRatio;
+            _futuLimitEntrustRatio = setting.UFXSetting.FutuLimitEntrustRatio;
+            _optLimitEntrustRatio = setting.UFXSetting.OptLimitEntrustRatio;
         }
 
         public BLLResponse Submit(Model.Database.EntrustCommand cmdItem, List<EntrustSecurity> entrustItems, CallerCallback callerCallback)

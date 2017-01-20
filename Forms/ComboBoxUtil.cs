@@ -20,6 +20,21 @@ namespace Forms
             }
         }
 
+        public static void SetComboBox(ComboBox comboBox, ComboOption comboOption, string Id)
+        {
+            comboBox.ValueMember = "Id";
+            comboBox.DisplayMember = "Text";
+
+            foreach (var item in comboOption.Items)
+            {
+                comboBox.Items.Add(item);
+                if (item.Id.Equals(Id))
+                {
+                    comboBox.SelectedItem = item;
+                }
+            }
+        }
+
         public static void SetComboBoxSelect(ComboBox comboBox, string Id)
         {
             foreach (var item in comboBox.Items)

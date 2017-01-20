@@ -25,9 +25,9 @@
 	"ufxsetting":
 	{
 		"timeout": 30000,
-		"limitentrustratio": 100.0,
-		"futulimitentrustratio": 100.0,
-		"optlimitentrustratio": 100.0
+		"limitentrustratio": 100,
+		"futulimitentrustratio": 100,
+		"optlimitentrustratio": 100
 	},
 	"entrustsetting":
 	{
@@ -35,10 +35,10 @@
 		"sellfutuprice": "Market",
 		"buyspotprice": "Market",
 		"sellspotprice": "Market",
-		"buysellentrustorder": 1,
+		"buysellentrustorder": "CapitalHigh2Low",
 		"automatichandicapratio": 100,
-		"oddsharemode": 3,
-		"szseentrustpricetype": "0",
-		"sseentrustpricetype": "0"
+		"oddsharemode": "Floor",
+		"szseentrustpricetype": "FifthIsLeftOffSZ",
+		"sseentrustpricetype": "FifthIsLeftOffSH"
 	}
 }

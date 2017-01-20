@@ -1,9 +1,7 @@
 ﻿using BLL.Manager;
 using BLL.UFX;
 using BLL.UFX.impl;
-using Config;
 using log4net;
-using Model.Binding.BindingUtil;
 using Model.UFX;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +19,7 @@ namespace BLL.Entrust
         public UFXQueryMultipleHoldingBLL()
         {
             _securityBLL = UFXBLLManager.Instance.SecurityBLL;
-            _timeOut = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.Timeout;
+            _timeOut = SettingManager.Instance.Get().UFXSetting.Timeout;
         }
 
         public int Query()

@@ -449,35 +449,48 @@ namespace TradingSystem.View
             PriceType priceType = PriceTypeHelper.GetPriceType(cb);
             EntrustDirection direction = EntrustDirection.BuySpot;
             SecurityType secuType = SecurityType.All;
+
+            var setting = SettingManager.Instance.Get();
+
             switch (cb.Name)
             {
                 case "cbSpotBuyPrice":
                     { 
                         direction = EntrustDirection.BuySpot;
                         secuType = SecurityType.Stock;
+
+                        setting.EntrustSetting.BuySpotPrice = priceType;
                     }
                     break;
                 case "cbSpotSellPrice":
                     {
                         direction = EntrustDirection.SellSpot;
                         secuType = SecurityType.Stock;
+
+                        setting.EntrustSetting.SellSpotPrice = priceType;
                     }
                     break;
                 case "cbFuturesBuyPrice":
                     {
                         direction = EntrustDirection.BuyClose;
                         secuType = SecurityType.Futures;
+
+                        setting.EntrustSetting.BuyFutuPrice = priceType;
                     }
                     break;
                 case "cbFuturesSellPrice":
                     {
                         direction = EntrustDirection.SellOpen;
                         secuType = SecurityType.Futures;
+
+                        setting.EntrustSetting.SellFutuPrice = priceType;
                     }
                     break;
                 default:
                     break;
             }
+
+            SettingManager.Instance.Update(setting);
 
             var items = _secuDataSource.Where(p => p.SecuType == secuType && p.EDirection == direction).ToList();
             if (items != null && items.Count > 0)
@@ -731,8 +744,9 @@ namespace TradingSystem.View
 
         private void LoadEntrustControl()
         {
+            var setting = SettingManager.Instance.Get();
             var spotPrices = ConfigManager.Instance.GetComboConfig().GetComboOption("spotprice");
-            ComboBoxUtil.SetComboBox(this.cbSpotBuyPrice, spotPrices);
+            ComboBoxUtil.SetComboBox(this.cbSpotBuyPrice, spotPrices, setting.EntrustSetting.BuySpotPrice.ToString());
 
             var spotSellPrices = new ComboOption 
             {
@@ -740,10 +754,10 @@ namespace TradingSystem.View
                 Selected = spotPrices.Selected,
                 Items = spotPrices.Items.OrderBy(p => p.Order2).ToList()
             };
-            ComboBoxUtil.SetComboBox(this.cbSpotSellPrice, spotSellPrices);
+            ComboBoxUtil.SetComboBox(this.cbSpotSellPrice, spotSellPrices, setting.EntrustSetting.SellSpotPrice.ToString());
 
             var futurePrice = ConfigManager.Instance.GetComboConfig().GetComboOption("futureprice");
-            ComboBoxUtil.SetComboBox(this.cbFuturesBuyPrice, futurePrice);
+            ComboBoxUtil.SetComboBox(this.cbFuturesBuyPrice, futurePrice, setting.EntrustSetting.BuyFutuPrice.ToString());
 
             var futureSellPrices = new ComboOption
             {
@@ -752,7 +766,7 @@ namespace TradingSystem.View
                 Items = futurePrice.Items.OrderBy(p => p.Order2).ToList()
             };
 
-            ComboBoxUtil.SetComboBox(this.cbFuturesSellPrice, futureSellPrices);
+            ComboBoxUtil.SetComboBox(this.cbFuturesSellPrice, futureSellPrices, setting.EntrustSetting.SellFutuPrice.ToString());
         }
 
         #endregion

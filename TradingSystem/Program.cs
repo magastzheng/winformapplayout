@@ -43,13 +43,17 @@ namespace TradingSystem
             //处理非UI线程异常
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
+            //var setting = SettingManager.Instance.Get();
+            var settingConfig = ConfigManager.Instance.GetDefaultSettingConfig();
             var buttonConfig = ConfigManager.Instance.GetButtonConfig();
 
             //清算交易实例
             var tradeInstanceSecuBLL = new TradeInstanceSecurityBLL();
             tradeInstanceSecuBLL.SettlePosition();
 
-            T2SDKWrap t2SDKWrap = new T2SDKWrap();
+            uint timeOut = (uint)settingConfig.DefaultSetting.Timeout;
+
+            T2SDKWrap t2SDKWrap = new T2SDKWrap(timeOut);
             var conRet = t2SDKWrap.Connect();
             if (conRet != Model.ConnectionCode.Success)
             {
@@ -57,7 +61,7 @@ namespace TradingSystem
                 return;
             }
 
-            T2Subscriber t2Subscriber = new T2Subscriber();
+            T2Subscriber t2Subscriber = new T2Subscriber(timeOut);
             conRet = t2Subscriber.Connect();
 
             if (conRet != Model.ConnectionCode.Success)

@@ -87,6 +87,12 @@
     <Compile Include="Dialog\ClosePositionDialog.Designer.cs">
       <DependentUpon>ClosePositionDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialog\DefaultSettingDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\DefaultSettingDialog.Designer.cs">
+      <DependentUpon>DefaultSettingDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialog\MessageDialog.cs" />
     <Compile Include="Dialog\ModifyCommandDialog.cs">
       <SubType>Form</SubType>

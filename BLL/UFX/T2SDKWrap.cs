@@ -43,8 +43,9 @@ namespace BLL.UFX
             }
         }
 
-        public T2SDKWrap()
+        public T2SDKWrap(uint timeOut)
         {
+            _timeOut = timeOut;
         }
 
         /// <summary>

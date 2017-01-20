@@ -2,10 +2,7 @@
 using BLL.Manager;
 using BLL.UFX;
 using BLL.UFX.impl;
-using Config;
-using DBAccess.EntrustCommand;
 using log4net;
-using Model.Binding.BindingUtil;
 using Model.BLL;
 using Model.Database;
 using Model.UFX;
@@ -31,7 +28,7 @@ namespace BLL.Entrust
         public UFXWithdrawBLL()
         {
             _securityBLL = UFXBLLManager.Instance.SecurityBLL;
-            _timeOut = ConfigManager.Instance.GetDefaultSettingConfig().DefaultSetting.UFXSetting.Timeout;
+            _timeOut = SettingManager.Instance.Get().UFXSetting.Timeout;
         }
 
         /// <summary>

@@ -21,9 +21,9 @@ namespace BLL.UFX
         private T2SubCallback callback = null;
         private CT2SubscribeInterface subcribe = null;
 
-        public T2Subscriber()
-        { 
-            
+        public T2Subscriber(uint timeOut)
+        {
+            _timeOut = timeOut;
         }
 
         public ConnectionCode Connect()
