@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="DateUtil.cs" />
     <Compile Include="EntrustDirectionUtil.cs" />
+    <Compile Include="EnumHelper.cs" />
     <Compile Include="ExcelUtil.cs" />
     <Compile Include="JsonUtil.cs" />
     <Compile Include="LimitedConcurrencyLevelTaskScheduler.cs" />

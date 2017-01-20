@@ -15,11 +15,11 @@ namespace Model.Constant
         public const string TimeFormat1 = "HHmmss";
 
         //Exchange Abbr
-        public const string ShanghaiExchange = "SSE";
-        public const string ShenzhenExchange = "SZSE";
-        public const string ChinaFinancialFuturesExchange = "CFFEX";
-        public const string ShanghaiFuturesExchange = "SHFE";
-        public const string ZhengzhouCommodityExchange = "CZCE";
-        public const string DalianCommodityExchange = "DCE";
+        //public const string ShanghaiExchange = "SSE";
+        //public const string ShenzhenExchange = "SZSE";
+        //public const string ChinaFinancialFuturesExchange = "CFFEX";
+        //public const string ShanghaiFuturesExchange = "SHFE";
+        //public const string ZhengzhouCommodityExchange = "CZCE";
+        //public const string DalianCommodityExchange = "DCE";
     }
 }

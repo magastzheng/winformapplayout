@@ -87,11 +87,11 @@
     <Compile Include="Dialog\ClosePositionDialog.Designer.cs">
       <DependentUpon>ClosePositionDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Dialog\DefaultSettingDialog.cs">
+    <Compile Include="Dialog\GeneralSettingDailog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialog\DefaultSettingDialog.Designer.cs">
-      <DependentUpon>DefaultSettingDialog.cs</DependentUpon>
+    <Compile Include="Dialog\GeneralSettingDailog.Designer.cs">
+      <DependentUpon>GeneralSettingDailog.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialog\MessageDialog.cs" />
     <Compile Include="Dialog\ModifyCommandDialog.cs">
@@ -113,6 +113,7 @@
       <DependentUpon>OpenPositionDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="TradeUtil\EntrustPriceTypeHelper.cs" />
+    <Compile Include="TradeUtil\ComboBoxHelper.cs" />
     <Compile Include="TradeUtil\PriceTypeHelper.cs" />
     <Compile Include="TradeUtil\QuotePriceHelper.cs" />
     <Compile Include="Dialog\CancelRedoDialog.cs">
@@ -248,6 +249,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialog\ClosePositionDialog.resx">
       <DependentUpon>ClosePositionDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialog\GeneralSettingDailog.resx">
+      <DependentUpon>GeneralSettingDailog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialog\ModifyCommandDialog.resx">
       <DependentUpon>ModifyCommandDialog.cs</DependentUpon>

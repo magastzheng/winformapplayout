@@ -1,6 +1,12 @@
 ﻿/*
 *
 *tradedirection和entrustdirection来源于EntrustDirection枚举，前者用于控制交易实例的买卖方向，或者用于控制具体证券的委托方向
+*id: 下拉选项的主键
+*code: 下拉选项代码
+*order1: 显示顺序
+*order2: 显示顺序
+*name: 显示名字的文本
+*下拉项最终显示为： code+name
 */
 [{
 	"name": "spotprice",
@@ -263,44 +269,42 @@
 	]},
 	{
 		"name": "shanghaiexchangepricetype",
-		"selected": "shpt4",
+		"selected": "FifthIsLeftOffSH",
 		"items":[
 			{
-				"id": "shpt4",
+				"id": "FifthIsLeftOffSH",
 				"code": "a",
-				"name": "五档即成剩撤"
+				"name": "-五档即成剩撤"
 			},{
-				"id": "shpt5",
+				"id": "FifthIsLeftTurnSH",
 				"code": "b",
-				"name": "五档即成剩转"
-			}
-		]
+				"name": "-五档即成剩转"
+			}]
 	},{
 		"name": "shenzhenexchangepricetype",
-		"selected": "szpt1",
+		"selected": "FifthIsLeftOffSZ",
 		"items":[
 			{
-				"id": "szpt1",
+				"id": "FifthIsLeftOffSZ",
 				"code": "A",
-				"name": "五档即成剩撤"
+				"name": "-五档即成剩撤"
 			},{
-				"id": "szpt2",
+				"id": "LeftTurnSZ",
 				"code": "C",
-				"name": "即成剩撤"
+				"name": "-即成剩撤"
 			},{
-				"id": "szpt3",
+				"id": "OppSideOptSZ",
 				"code": "D",
-				"name": "对手方最优"
+				"name": "-对手方最优"
 			},{
-				"id": "szpt4",
+				"id": "BestBestSZ",
 				"code": "E",
-				"name": "本方最优"
+				"name": "-本方最优"
 			},{
-				"id": "szpt5",
+				"id": "FOKMarketSZ",
 				"code": "F",
-				"name": "全额成或撤"
-			}
-		]
+				"name": "-全额成或撤"
+			}]
 	},{
 		"name": "weighttype",
 		"selected": "2",
@@ -428,6 +432,23 @@
 				"id": "lastprice",
 				"code": "2",
 				"name": "-最新价"
+			}]
+	},{
+		"name": "oddsharemode",
+		"selected": "Floor",
+		"items":[
+			{
+				"id": "Round",
+				"code": "1",
+				"name": "-四舍五入"
+			},{
+				"id": "Ceiling",
+				"code": "2",
+				"name": "-直接入"
+			},{
+				"id": "Floor",
+				"code": "3",
+				"name": "-直接舍"
 			}]
 	}
 ]

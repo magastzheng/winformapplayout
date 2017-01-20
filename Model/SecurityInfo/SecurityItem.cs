@@ -19,6 +19,9 @@ namespace Model.SecurityInfo
         public const string SHSE = "SSE";
         public const string SZSE = "SZSE";
         public const string CFFEX = "CFFEX";
+        public const string SHFE = "SHFE";
+        public const string CZCE = "CZCE";
+        public const string DCE = "DCE";
     }
 
     public class SecurityItem

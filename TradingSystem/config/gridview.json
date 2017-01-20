@@ -1266,7 +1266,7 @@ readonly:
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
-		"readonly": 1
+		"readonly": 0
 		},{
 		"name": "pricetype",
 		"text": "价格类型",
@@ -1274,7 +1274,7 @@ readonly:
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
-		"readonly": 1
+		"readonly": 0
 		},{
 		"name": "entrustprice",
 		"text": "委托价格",
@@ -1282,7 +1282,7 @@ readonly:
 		"columntype": 0,
 		"valuetype": 1,
 		"visible": 1,
-		"readonly": 1
+		"readonly": 0
 		},{
 		"name": "entrustamount",
 		"text": "委托数量",

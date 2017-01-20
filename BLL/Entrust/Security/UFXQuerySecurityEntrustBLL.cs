@@ -2,6 +2,7 @@
 using BLL.Manager;
 using BLL.UFX;
 using BLL.UFX.impl;
+using Config;
 using Config.ParamConverter;
 using log4net;
 using Model;
@@ -48,7 +49,7 @@ namespace BLL.Entrust.Security
                     {
                         SubmitId = -1,
                         CommandId = -1,
-                        InArgs = portfolio.PortfolioNo,
+                        InArgs = portfolio,
                         OutArgs = entrustItems,
                         WaitEvent = new AutoResetEvent(false),
                         Caller = callback,
@@ -114,7 +115,7 @@ namespace BLL.Entrust.Security
                     {
                         SubmitId = -2,
                         CommandId = -2,
-                        InArgs = portfolio.PortfolioNo,
+                        InArgs = portfolio,
                         OutArgs = entrustItems,
                         WaitEvent = new AutoResetEvent(false),
                         Caller = callback,
@@ -206,6 +207,19 @@ namespace BLL.Entrust.Security
                 return entrustFlowItems;
             }
 
+            Portfolio portfolio = (Portfolio)token.InArgs;
+            string portfolioCode = string.Empty;
+            string portfolioName = string.Empty;
+            string fundCode = string.Empty;
+            string fundName = string.Empty;
+            if (portfolio != null)
+            {
+                portfolioCode = portfolio.PortfolioNo;
+                portfolioName = portfolio.PortfolioName;
+                fundCode = portfolio.FundCode;
+                fundName = portfolio.FundName;
+            }
+
             foreach (var responseItem in responseItems)
             {
                 int commandId = 0;
@@ -242,7 +256,9 @@ namespace BLL.Entrust.Security
                     DeclareNo = Convert.ToInt32(responseItem.ReportNo),
                     RequestId = responseItem.ExtSystemId,
                     FundCode = responseItem.AccountCode,
-                    PortfolioCode = (string)token.InArgs,
+                    FundName = fundName,
+                    PortfolioCode = portfolioCode,
+                    PortfolioName = portfolioName,
                     EDirection = EntrustDirectionConverter.GetSecurityEntrustDirection(entrustDirection),
                     EMarketCode = UFXTypeConverter.GetMarketCode(responseItem.MarketNo),
                     EEntrustState = UFXTypeConverter.GetEntrustState(responseItem.EntrustState),
@@ -258,6 +274,13 @@ namespace BLL.Entrust.Security
                 efItem.CommandNo = commandId;
                 efItem.SubmitId = submitId;
                 efItem.RequestId = requestId;
+
+                var secuInfo = SecurityInfoManager.Instance.Get(efItem.SecuCode, efItem.ExchangeCode);
+                if (secuInfo != null)
+                {
+                    efItem.SecuType = secuInfo.SecuType;
+                }
+
                 entrustFlowItems.Add(efItem);
             }
 

@@ -49,7 +49,7 @@ namespace BLL.Entrust.Security
                     {
                         SubmitId = -1,
                         CommandId = -1,
-                        InArgs = request.CombiNo,
+                        InArgs = portfolio,
                         OutArgs = dealItems,
                         WaitEvent = new AutoResetEvent(false),
                         Caller = callback,
@@ -114,7 +114,7 @@ namespace BLL.Entrust.Security
                     {
                         SubmitId = -2,
                         CommandId = -2,
-                        InArgs = request.CombiNo,
+                        InArgs = portfolio,
                         OutArgs = dealItems,
                         WaitEvent = new AutoResetEvent(false),
                         Caller = callback,
@@ -172,7 +172,7 @@ namespace BLL.Entrust.Security
             {
                 if (token.Caller != null)
                 {
-                    var dealFlowItems = GetDealItems(responseItems);
+                    var dealFlowItems = GetDealItems(token, responseItems);
                     
                     if (token.OutArgs != null
                         && token.OutArgs is List<DealFlowItem>
@@ -196,13 +196,26 @@ namespace BLL.Entrust.Security
             return responseItems.Count();
         }
 
-        private List<DealFlowItem> GetDealItems(List<UFXQueryDealResponse> responseItems)
+        private List<DealFlowItem> GetDealItems(CallerToken token, List<UFXQueryDealResponse> responseItems)
         {
             List<DealFlowItem> dealItems = new List<DealFlowItem>();
 
             if (responseItems == null || responseItems.Count == 0)
             {
                 return dealItems;
+            }
+
+            Portfolio portfolio = (Portfolio)token.InArgs;
+            string portfolioCode = string.Empty;
+            string portfolioName = string.Empty;
+            string fundCode = string.Empty;
+            string fundName = string.Empty;
+            if (portfolio != null)
+            {
+                portfolioCode = portfolio.PortfolioNo;
+                portfolioName = portfolio.PortfolioName;
+                fundCode = portfolio.FundCode;
+                fundName = portfolio.FundName;
             }
 
             foreach (var responseItem in responseItems)
@@ -226,7 +239,9 @@ namespace BLL.Entrust.Security
                     CommandNo = commandId,
                     SecuCode = responseItem.StockCode,
                     FundNo = responseItem.AccountCode,
+                    FundName = fundName,
                     PortfolioCode = responseItem.CombiNo,
+                    PortfolioName = portfolioName,
                     EDirection = EntrustDirectionConverter.GetSecurityEntrustDirection(entrustDirection),
                     DealPrice = responseItem.DealPrice,
                     DealAmount = responseItem.DealAmount,

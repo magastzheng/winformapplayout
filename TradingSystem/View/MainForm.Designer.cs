@@ -32,7 +32,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.panelTopContainer = new System.Windows.Forms.Panel();
             this._toolStrip = new System.Windows.Forms.ToolStrip();
+            this._tbOpen = new System.Windows.Forms.ToolStripButton();
+            this._tbSave = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this._tbRefresh = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this._menuStripMain = new System.Windows.Forms.MenuStrip();
@@ -41,29 +45,25 @@
             this._toolMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._helpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelBottomContainer = new System.Windows.Forms.Panel();
-            this._splitContainerMain = new System.Windows.Forms.SplitContainer();
-            this._panelMain = new System.Windows.Forms.Panel();
-            this._panelMainCaption = new System.Windows.Forms.Panel();
-            this._imageList = new System.Windows.Forms.ImageList(this.components);
             this._statusStrip = new System.Windows.Forms.StatusStrip();
+            this.tsslIcon = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsslCompany = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsslMiddle = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsslUser = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tsslIcon = new System.Windows.Forms.ToolStripStatusLabel();
-            this._tbOpen = new System.Windows.Forms.ToolStripButton();
-            this._tbSave = new System.Windows.Forms.ToolStripButton();
-            this._tbRefresh = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this._splitContainerMain = new System.Windows.Forms.SplitContainer();
             this._navBarContainer = new Controls.TSNavBarContainer();
+            this._panelMain = new System.Windows.Forms.Panel();
+            this._panelMainCaption = new System.Windows.Forms.Panel();
+            this._imageList = new System.Windows.Forms.ImageList(this.components);
             this.panelTopContainer.SuspendLayout();
             this._toolStrip.SuspendLayout();
             this._menuStripMain.SuspendLayout();
             this.panelBottomContainer.SuspendLayout();
+            this._statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._splitContainerMain)).BeginInit();
             this._splitContainerMain.Panel1.SuspendLayout();
             this._splitContainerMain.Panel2.SuspendLayout();
             this._splitContainerMain.SuspendLayout();
-            this._statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelTopContainer
@@ -93,10 +93,43 @@
             this._toolStrip.TabIndex = 1;
             this._toolStrip.Text = "_toolStrip";
             // 
+            // _tbOpen
+            // 
+            this._tbOpen.Image = global::TradingSystem.Properties.Resources.open;
+            this._tbOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._tbOpen.Name = "_tbOpen";
+            this._tbOpen.Size = new System.Drawing.Size(52, 22);
+            this._tbOpen.Text = "打开";
+            // 
+            // _tbSave
+            // 
+            this._tbSave.Image = global::TradingSystem.Properties.Resources.save;
+            this._tbSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._tbSave.Name = "_tbSave";
+            this._tbSave.Size = new System.Drawing.Size(52, 22);
+            this._tbSave.Text = "设置";
+            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // _tbRefresh
+            // 
+            this._tbRefresh.Image = global::TradingSystem.Properties.Resources.refresh;
+            this._tbRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._tbRefresh.Name = "_tbRefresh";
+            this._tbRefresh.Size = new System.Drawing.Size(52, 22);
+            this._tbRefresh.Text = "刷新";
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton1.Text = "toolStripButton1";
             // 
             // toolStripSeparator3
             // 
@@ -155,48 +188,6 @@
             this.panelBottomContainer.Size = new System.Drawing.Size(1212, 29);
             this.panelBottomContainer.TabIndex = 1;
             // 
-            // _splitContainerMain
-            // 
-            this._splitContainerMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._splitContainerMain.Location = new System.Drawing.Point(0, 50);
-            this._splitContainerMain.Name = "_splitContainerMain";
-            // 
-            // _splitContainerMain.Panel1
-            // 
-            this._splitContainerMain.Panel1.Controls.Add(this._navBarContainer);
-            // 
-            // _splitContainerMain.Panel2
-            // 
-            this._splitContainerMain.Panel2.Controls.Add(this._panelMain);
-            this._splitContainerMain.Panel2.Controls.Add(this._panelMainCaption);
-            this._splitContainerMain.Size = new System.Drawing.Size(1212, 553);
-            this._splitContainerMain.SplitterDistance = 169;
-            this._splitContainerMain.TabIndex = 2;
-            // 
-            // _panelMain
-            // 
-            this._panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._panelMain.Location = new System.Drawing.Point(0, 10);
-            this._panelMain.Name = "_panelMain";
-            this._panelMain.Size = new System.Drawing.Size(1039, 543);
-            this._panelMain.TabIndex = 1;
-            // 
-            // _panelMainCaption
-            // 
-            this._panelMainCaption.Dock = System.Windows.Forms.DockStyle.Top;
-            this._panelMainCaption.Location = new System.Drawing.Point(0, 0);
-            this._panelMainCaption.Name = "_panelMainCaption";
-            this._panelMainCaption.Size = new System.Drawing.Size(1039, 10);
-            this._panelMainCaption.TabIndex = 0;
-            // 
-            // _imageList
-            // 
-            this._imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("_imageList.ImageStream")));
-            this._imageList.TransparentColor = System.Drawing.Color.Transparent;
-            this._imageList.Images.SetKeyName(0, "right.png");
-            this._imageList.Images.SetKeyName(1, "down.png");
-            this._imageList.Images.SetKeyName(2, "item.png");
-            // 
             // _statusStrip
             // 
             this._statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -209,6 +200,17 @@
             this._statusStrip.Size = new System.Drawing.Size(1208, 26);
             this._statusStrip.TabIndex = 0;
             this._statusStrip.Text = "statusStrip1";
+            // 
+            // tsslIcon
+            // 
+            this.tsslIcon.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.tsslIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsslIcon.Image = global::TradingSystem.Properties.Resources.htsamc_logo;
+            this.tsslIcon.Name = "tsslIcon";
+            this.tsslIcon.Size = new System.Drawing.Size(20, 21);
+            this.tsslIcon.Text = "toolStripStatusLabel1";
             // 
             // tsslCompany
             // 
@@ -240,49 +242,23 @@
             this.tsslUser.Text = "用户";
             this.tsslUser.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // tsslIcon
+            // _splitContainerMain
             // 
-            this.tsslIcon.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-            this.tsslIcon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsslIcon.Image = global::TradingSystem.Properties.Resources.htsamc_logo;
-            this.tsslIcon.Name = "tsslIcon";
-            this.tsslIcon.Size = new System.Drawing.Size(20, 21);
-            this.tsslIcon.Text = "toolStripStatusLabel1";
+            this._splitContainerMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._splitContainerMain.Location = new System.Drawing.Point(0, 50);
+            this._splitContainerMain.Name = "_splitContainerMain";
             // 
-            // _tbOpen
+            // _splitContainerMain.Panel1
             // 
-            this._tbOpen.Image = global::TradingSystem.Properties.Resources.open;
-            this._tbOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this._tbOpen.Name = "_tbOpen";
-            this._tbOpen.Size = new System.Drawing.Size(52, 22);
-            this._tbOpen.Text = "打开";
+            this._splitContainerMain.Panel1.Controls.Add(this._navBarContainer);
             // 
-            // _tbSave
+            // _splitContainerMain.Panel2
             // 
-            this._tbSave.Image = global::TradingSystem.Properties.Resources.save;
-            this._tbSave.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this._tbSave.Name = "_tbSave";
-            this._tbSave.Size = new System.Drawing.Size(52, 22);
-            this._tbSave.Text = "保存";
-            // 
-            // _tbRefresh
-            // 
-            this._tbRefresh.Image = global::TradingSystem.Properties.Resources.refresh;
-            this._tbRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this._tbRefresh.Name = "_tbRefresh";
-            this._tbRefresh.Size = new System.Drawing.Size(52, 22);
-            this._tbRefresh.Text = "刷新";
-            // 
-            // toolStripButton1
-            // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton1.Text = "toolStripButton1";
+            this._splitContainerMain.Panel2.Controls.Add(this._panelMain);
+            this._splitContainerMain.Panel2.Controls.Add(this._panelMainCaption);
+            this._splitContainerMain.Size = new System.Drawing.Size(1212, 553);
+            this._splitContainerMain.SplitterDistance = 169;
+            this._splitContainerMain.TabIndex = 2;
             // 
             // _navBarContainer
             // 
@@ -297,6 +273,30 @@
             this._navBarContainer.Size = new System.Drawing.Size(169, 553);
             this._navBarContainer.TabIndex = 0;
             this._navBarContainer.LeafItemClick += new Controls.TreeViewItemClick(this.TreeView_ItemClick);
+            // 
+            // _panelMain
+            // 
+            this._panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._panelMain.Location = new System.Drawing.Point(0, 10);
+            this._panelMain.Name = "_panelMain";
+            this._panelMain.Size = new System.Drawing.Size(1039, 543);
+            this._panelMain.TabIndex = 1;
+            // 
+            // _panelMainCaption
+            // 
+            this._panelMainCaption.Dock = System.Windows.Forms.DockStyle.Top;
+            this._panelMainCaption.Location = new System.Drawing.Point(0, 0);
+            this._panelMainCaption.Name = "_panelMainCaption";
+            this._panelMainCaption.Size = new System.Drawing.Size(1039, 10);
+            this._panelMainCaption.TabIndex = 0;
+            // 
+            // _imageList
+            // 
+            this._imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("_imageList.ImageStream")));
+            this._imageList.TransparentColor = System.Drawing.Color.Transparent;
+            this._imageList.Images.SetKeyName(0, "right.png");
+            this._imageList.Images.SetKeyName(1, "down.png");
+            this._imageList.Images.SetKeyName(2, "item.png");
             // 
             // MainForm
             // 
@@ -319,12 +319,12 @@
             this._menuStripMain.PerformLayout();
             this.panelBottomContainer.ResumeLayout(false);
             this.panelBottomContainer.PerformLayout();
+            this._statusStrip.ResumeLayout(false);
+            this._statusStrip.PerformLayout();
             this._splitContainerMain.Panel1.ResumeLayout(false);
             this._splitContainerMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this._splitContainerMain)).EndInit();
             this._splitContainerMain.ResumeLayout(false);
-            this._statusStrip.ResumeLayout(false);
-            this._statusStrip.PerformLayout();
             this.ResumeLayout(false);
 
         }

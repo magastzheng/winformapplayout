@@ -19,7 +19,13 @@ namespace Model.UI
         public int EntrustNo { get; set; }
 
         [BindingAttribute("exchange")]
-        public string Exchange { get { return ExchangeCode; } }
+        public string Exchange 
+        { 
+            get 
+            {
+                return SecurityItemHelper.GetExchange(ExchangeCode); 
+            } 
+        }
 
         [BindingAttribute("secucode")]
         public string SecuCode { get; set; }

@@ -183,12 +183,14 @@ namespace TradingSystem.View
                     SubmitId = canCancelItem.SubmitId,
                     CommandId = canCancelItem.CommandNo,
                     SecuCode = canCancelItem.SecuCode,
+                    SecuType = canCancelItem.SecuType,
                     SecuName = canCancelItem.SecuName,
                     EntrustNo = canCancelItem.EntrustNo,
                     EntrustBatchNo = canCancelItem.EntrustBatchNo,
                     FirstDealDate = canCancelItem.DFirstDealDate,
                     EntrustDate = canCancelItem.DEntrustDate,
                     EDirection = canCancelItem.EDirection,
+                    EOriginPriceType = canCancelItem.EEntrustPriceType,
                     ExchangeCode = UFXTypeConverter.GetMarketCode(canCancelItem.EMarketCode),
                     FundName = canCancelItem.FundName,
                     PortfolioName = canCancelItem.PortfolioName,
@@ -450,47 +452,35 @@ namespace TradingSystem.View
             EntrustDirection direction = EntrustDirection.BuySpot;
             SecurityType secuType = SecurityType.All;
 
-            var setting = SettingManager.Instance.Get();
-
             switch (cb.Name)
             {
                 case "cbSpotBuyPrice":
                     { 
                         direction = EntrustDirection.BuySpot;
                         secuType = SecurityType.Stock;
-
-                        setting.EntrustSetting.BuySpotPrice = priceType;
                     }
                     break;
                 case "cbSpotSellPrice":
                     {
                         direction = EntrustDirection.SellSpot;
                         secuType = SecurityType.Stock;
-
-                        setting.EntrustSetting.SellSpotPrice = priceType;
                     }
                     break;
                 case "cbFuturesBuyPrice":
                     {
                         direction = EntrustDirection.BuyClose;
                         secuType = SecurityType.Futures;
-
-                        setting.EntrustSetting.BuyFutuPrice = priceType;
                     }
                     break;
                 case "cbFuturesSellPrice":
                     {
                         direction = EntrustDirection.SellOpen;
                         secuType = SecurityType.Futures;
-
-                        setting.EntrustSetting.SellFutuPrice = priceType;
                     }
                     break;
                 default:
                     break;
             }
-
-            SettingManager.Instance.Update(setting);
 
             var items = _secuDataSource.Where(p => p.SecuType == secuType && p.EDirection == direction).ToList();
             if (items != null && items.Count > 0)
@@ -730,7 +720,7 @@ namespace TradingSystem.View
             TSDataGridViewHelper.SetDataBinding(this.bsGridView, bsColDataMap); 
 
             //Load combobox
-            LoadEntrustControl();
+            //LoadEntrustControl();
 
             //Binding data
             this.cmdGridView.DataSource = _cmdDataSource;
@@ -841,6 +831,9 @@ namespace TradingSystem.View
         #region Load data
         private bool Form_LoadData(object sender, object data)
         {
+            //Load combobox. Move here to fix the global setting change, then the buy/sell setting update, too. 
+            LoadEntrustControl();
+
             //Load data here
             LoadDataTradeCommand();
 
@@ -1462,9 +1455,11 @@ namespace TradingSystem.View
                 return entrustSecuItems;
             }
 
+            var setting = SettingManager.Instance.Get();
             foreach (var secuItem in secuItems)
             {
-                var priceType = PriceTypeHelper.GetPriceType(secuItem.PriceType);
+                //var priceType = PriceTypeHelper.GetPriceType(secuItem.PriceType);
+                var priceType = secuItem.EPriceType;
                 EntrustSecurity entrustSecurityItem = new EntrustSecurity
                 {
                     SubmitId = submitId,
@@ -1490,8 +1485,23 @@ namespace TradingSystem.View
                     exchangeCode = SecurityItemHelper.GetExchangeCode(secuItem.SecuCode, secuItem.SecuType);
                 }
 
-                entrustSecurityItem.EntrustPriceType = EntrustPriceType.FixedPrice;
-               
+                //只有选择市价时设置市价委托方式
+                if (priceType == PriceType.Market && entrustSecurityItem.SecuType == SecurityType.Stock)
+                {
+                    if (exchangeCode.Equals(Exchange.SHSE))
+                    {
+                        entrustSecurityItem.EntrustPriceType = setting.EntrustSetting.SseEntrustPriceType;
+                    }
+                    else if (exchangeCode.Equals(Exchange.SZSE))
+                    {
+                        entrustSecurityItem.EntrustPriceType = setting.EntrustSetting.SzseEntrustPriceType;
+                    }
+                }
+                else
+                {
+                    entrustSecurityItem.EntrustPriceType = EntrustPriceType.FixedPrice;
+                }
+
                 entrustSecuItems.Add(entrustSecurityItem);
             }
 

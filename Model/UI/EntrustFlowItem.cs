@@ -3,6 +3,7 @@ using Model.Constant;
 using Model.Converter;
 using Model.EnumType;
 using Model.EnumType.EnumTypeConverter;
+using Model.SecurityInfo;
 using Model.UFX;
 using System;
 using System.Collections.Generic;
@@ -170,5 +171,7 @@ namespace Model.UI
         public EntrustPriceType EEntrustPriceType { get; set; }
 
         public string ExchangeCode { get; set; }
+
+        public SecurityType SecuType { get; set; }
     }
 }

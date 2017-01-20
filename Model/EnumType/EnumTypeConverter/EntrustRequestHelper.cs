@@ -1,6 +1,7 @@
 ﻿
 using Model.Constant;
 using Model.EnumType;
+using Model.SecurityInfo;
 using System.Text;
 namespace Config.ParamConverter
 {
@@ -11,13 +12,13 @@ namespace Config.ParamConverter
             string marketNo = string.Empty;
             switch (exchangeCode)
             {
-                case ConstVariable.ShanghaiExchange:
+                case Exchange.SHSE:
                     marketNo = "1";
                     break;
-                case ConstVariable.ShenzhenExchange:
+                case Exchange.SZSE:
                     marketNo = "2";
                     break;
-                case ConstVariable.ChinaFinancialFuturesExchange:
+                case Exchange.CFFEX:
                     marketNo = "7";
                     break;
                 default:
@@ -143,13 +144,13 @@ namespace Config.ParamConverter
             switch (marketNo)
             { 
                 case "1":
-                    exchangeCode = ConstVariable.ShanghaiExchange;
+                    exchangeCode = Exchange.SHSE;
                     break;
                 case "2":
-                    exchangeCode = ConstVariable.ShenzhenExchange;
+                    exchangeCode = Exchange.SZSE;
                     break;
                 case "7":
-                    exchangeCode = ConstVariable.ChinaFinancialFuturesExchange;
+                    exchangeCode = Exchange.CFFEX;
                     break;
                 default:
                     break;
@@ -166,11 +167,11 @@ namespace Config.ParamConverter
             {
                 case "1":
                     {
-                        if (exchangeCode.Equals(ConstVariable.ShanghaiExchange) || exchangeCode.Equals(ConstVariable.ShenzhenExchange))
+                        if (exchangeCode.Equals(Exchange.SHSE) || exchangeCode.Equals(Exchange.SZSE))
                         {
                             direction = EntrustDirection.BuySpot;
                         }
-                        else if (exchangeCode.Equals(ConstVariable.ChinaFinancialFuturesExchange))
+                        else if (exchangeCode.Equals(Exchange.CFFEX))
                         {
                             direction = EntrustDirection.SellOpen;
                         }
@@ -178,11 +179,11 @@ namespace Config.ParamConverter
                     break;
                 case "2":
                     {
-                        if (exchangeCode.Equals(ConstVariable.ShanghaiExchange) || exchangeCode.Equals(ConstVariable.ShenzhenExchange))
+                        if (exchangeCode.Equals(Exchange.SHSE) || exchangeCode.Equals(Exchange.SZSE))
                         {
                             direction = EntrustDirection.SellSpot;
                         }
-                        else if (exchangeCode.Equals(ConstVariable.ChinaFinancialFuturesExchange))
+                        else if (exchangeCode.Equals(Exchange.CFFEX))
                         {
                             direction = EntrustDirection.BuyClose;
                         }

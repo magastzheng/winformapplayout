@@ -55,7 +55,7 @@ namespace BLL.Entrust.Futures
                     {
                         SubmitId = -1,
                         CommandId = -1,
-                        InArgs = portfolio.PortfolioNo,
+                        InArgs = portfolio,
                         OutArgs = entrustItems,
                         WaitEvent = new AutoResetEvent(false),
                         Caller = callback,
@@ -122,7 +122,7 @@ namespace BLL.Entrust.Futures
                     {
                         SubmitId = -2,
                         CommandId = -2,
-                        InArgs = portfolio.PortfolioNo,
+                        InArgs = portfolio,
                         OutArgs = entrustItems,
                         WaitEvent = new AutoResetEvent(false),
                         Caller = callback,
@@ -214,6 +214,18 @@ namespace BLL.Entrust.Futures
                 return entrustFlowItems;
             }
 
+            Portfolio portfolio = (Portfolio)token.InArgs;
+            string portfolioCode = string.Empty;
+            string portfolioName = string.Empty;
+            string fundCode = string.Empty;
+            string fundName = string.Empty;
+            if (portfolio != null)
+            {
+                portfolioCode = portfolio.PortfolioNo;
+                portfolioName = portfolio.PortfolioName;
+                fundCode = portfolio.FundCode;
+                fundName = portfolio.FundName;
+            }
             //var entrustSecuItems = _entrustSecuBLL.GetAllCombine();
             foreach (var responseItem in responseItems)
             {
@@ -253,7 +265,9 @@ namespace BLL.Entrust.Futures
                     DeclareNo = Convert.ToInt32(responseItem.ReportNo),
                     RequestId = responseItem.ExtSystemId,
                     FundCode = responseItem.AccountCode,
-                    PortfolioCode = (string)token.InArgs,
+                    FundName = fundName,
+                    PortfolioCode = portfolioCode,
+                    PortfolioName = portfolioName,
                     EDirection = eDirection,
                     //EEntrustDirection = UFXTypeConverter.GetEntrustDirection(responseItem.EntrustDirection),
                     EMarketCode = UFXTypeConverter.GetMarketCode(responseItem.MarketNo),

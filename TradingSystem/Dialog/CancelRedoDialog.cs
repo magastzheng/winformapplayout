@@ -82,6 +82,9 @@ namespace TradingSystem.Dialog
             PriceType priceType = PriceTypeHelper.GetPriceType(cb);
             EntrustDirection direction = EntrustDirection.BuySpot;
             SecurityType secuType = SecurityType.All;
+            EntrustPriceType shPriceType = EntrustPriceTypeHelper.GetPriceType(this.cbSHExchangePrice);
+            EntrustPriceType szPriceType = EntrustPriceTypeHelper.GetPriceType(this.cbSZExchangePrice);
+
             switch (cb.Name)
             {
                 case "cbSpotBuyPrice":
@@ -115,7 +118,11 @@ namespace TradingSystem.Dialog
             var stockItems = _secuDataSource.Where(p => p.EDirection == direction && p.SecuType == secuType).ToList();
             if (stockItems.Count > 0)
             {
-                stockItems.ForEach(p => { p.EPriceSetting = priceType; });
+                stockItems.ForEach(p => 
+                { 
+                    p.EPriceSetting = priceType;
+                    SetEntrustPriceType(p, shPriceType, szPriceType);
+                });
             }
 
             //update the quote
@@ -131,7 +138,10 @@ namespace TradingSystem.Dialog
         private void ComboBox_SHExchangePrice_SelectedIndexChanged(object sender, EventArgs e)
         {
             EntrustPriceType priceType = EntrustPriceTypeHelper.GetPriceType(this.cbSHExchangePrice);
-            _secuDataSource.Where(p => p.SecuType == SecurityType.Stock && p.ExchangeCode.Equals(ConstVariable.ShanghaiExchange))
+            _secuDataSource.Where(p => p.SecuType == SecurityType.Stock 
+                && p.ExchangeCode.Equals(Exchange.SHSE)
+                && p.EPriceSetting == PriceType.Market
+                )
                 .ToList()
                 .ForEach(o => o.EEntrustPriceType = priceType);
 
@@ -142,7 +152,10 @@ namespace TradingSystem.Dialog
         {
             EntrustPriceType priceType = EntrustPriceTypeHelper.GetPriceType(this.cbSZExchangePrice);
 
-            _secuDataSource.Where(p => p.SecuType == SecurityType.Stock && p.ExchangeCode.Equals(ConstVariable.ShenzhenExchange))
+            _secuDataSource.Where(p => p.SecuType == SecurityType.Stock 
+                && p.ExchangeCode.Equals(Exchange.SZSE)
+                && p.EPriceSetting == PriceType.Market
+                )
                .ToList()
                .ForEach(o => o.EEntrustPriceType = priceType);
 
@@ -169,8 +182,16 @@ namespace TradingSystem.Dialog
 
         private void LoadEntrustControl()
         {
+            var setting = SettingManager.Instance.Get();
+
+            var shPrice = ConfigManager.Instance.GetComboConfig().GetComboOption("shanghaiexchangepricetype");
+            ComboBoxUtil.SetComboBox(this.cbSHExchangePrice, shPrice, setting.EntrustSetting.SseEntrustPriceType.ToString());
+
+            var szPrice = ConfigManager.Instance.GetComboConfig().GetComboOption("shenzhenexchangepricetype");
+            ComboBoxUtil.SetComboBox(this.cbSZExchangePrice, szPrice, setting.EntrustSetting.SzseEntrustPriceType.ToString());
+
             var spotPrices = ConfigManager.Instance.GetComboConfig().GetComboOption("spotprice");
-            ComboBoxUtil.SetComboBox(this.cbSpotBuyPrice, spotPrices);
+            ComboBoxUtil.SetComboBox(this.cbSpotBuyPrice, spotPrices, setting.EntrustSetting.BuySpotPrice.ToString());
 
             var spotSellPrices = new ComboOption
             {
@@ -178,10 +199,10 @@ namespace TradingSystem.Dialog
                 Selected = spotPrices.Selected,
                 Items = spotPrices.Items.OrderBy(p => p.Order2).ToList()
             };
-            ComboBoxUtil.SetComboBox(this.cbSpotSellPrice, spotSellPrices);
+            ComboBoxUtil.SetComboBox(this.cbSpotSellPrice, spotSellPrices, setting.EntrustSetting.SellSpotPrice.ToString());
 
             var futurePrice = ConfigManager.Instance.GetComboConfig().GetComboOption("futureprice");
-            ComboBoxUtil.SetComboBox(this.cbFuturesBuyPrice, futurePrice);
+            ComboBoxUtil.SetComboBox(this.cbFuturesBuyPrice, futurePrice, setting.EntrustSetting.BuyFutuPrice.ToString());
 
             var futureSellPrices = new ComboOption
             {
@@ -190,13 +211,7 @@ namespace TradingSystem.Dialog
                 Items = futurePrice.Items.OrderBy(p => p.Order2).ToList()
             };
 
-            ComboBoxUtil.SetComboBox(this.cbFuturesSellPrice, futureSellPrices);
-
-            var shPrice = ConfigManager.Instance.GetComboConfig().GetComboOption("shanghaiexchangepricetype");
-            ComboBoxUtil.SetComboBox(this.cbSHExchangePrice, shPrice);
-
-            var szPrice = ConfigManager.Instance.GetComboConfig().GetComboOption("shenzhenexchangepricetype");
-            ComboBoxUtil.SetComboBox(this.cbSZExchangePrice, szPrice);
+            ComboBoxUtil.SetComboBox(this.cbFuturesSellPrice, futureSellPrices, setting.EntrustSetting.SellFutuPrice.ToString());
         }
 
         #endregion
@@ -222,24 +237,11 @@ namespace TradingSystem.Dialog
             PriceType futureSellPrice = PriceTypeHelper.GetPriceType(this.cbFuturesSellPrice);
             EntrustPriceType shPriceType = EntrustPriceTypeHelper.GetPriceType(this.cbSHExchangePrice);
             EntrustPriceType szPriceType = EntrustPriceTypeHelper.GetPriceType(this.cbSZExchangePrice);
-
+            
             _secuDataSource.Clear();
             var cancelSecuItems = data as List<CancelRedoItem>;
             foreach (var cancelRedoItem in cancelSecuItems)
             {
-                if (cancelRedoItem.ExchangeCode.Equals(ConstVariable.ShenzhenExchange))
-                {
-                    cancelRedoItem.EEntrustPriceType = szPriceType;
-                }
-                else if (cancelRedoItem.ExchangeCode.Equals(ConstVariable.ShanghaiExchange))
-                {
-                    cancelRedoItem.EEntrustPriceType = shPriceType;
-                }
-                else
-                {
-                    cancelRedoItem.EEntrustPriceType = cancelRedoItem.EOriginPriceType;
-                }
-
                 if (cancelRedoItem.SecuType == SecurityType.Stock && cancelRedoItem.EDirection == EntrustDirection.BuySpot)
                 {
                     cancelRedoItem.EPriceSetting = spotBuyPrice;
@@ -257,6 +259,8 @@ namespace TradingSystem.Dialog
                     cancelRedoItem.EPriceSetting = futureBuyPrice;
                 }
 
+                SetEntrustPriceType(cancelRedoItem, shPriceType, szPriceType);
+
                 _secuDataSource.Add(cancelRedoItem);
             }
 
@@ -264,6 +268,30 @@ namespace TradingSystem.Dialog
             QueryQuote();
             
             return true;
+        }
+
+        private void SetEntrustPriceType(CancelRedoItem cancelRedoItem, EntrustPriceType shPriceType, EntrustPriceType szPriceType)
+        {
+            //只有选择市价时设置市价委托方式
+            if (cancelRedoItem.SecuType == SecurityType.Stock && cancelRedoItem.EPriceSetting == PriceType.Market)
+            {
+                if (cancelRedoItem.ExchangeCode.Equals(Exchange.SHSE))
+                {
+                    cancelRedoItem.EEntrustPriceType = shPriceType;
+                }
+                else if (cancelRedoItem.ExchangeCode.Equals(Exchange.SZSE))
+                {
+                    cancelRedoItem.EEntrustPriceType = szPriceType;
+                }
+                else
+                {
+                    //do nothing
+                }
+            }
+            else
+            {
+                cancelRedoItem.EEntrustPriceType = EntrustPriceType.FixedPrice;
+            }
         }
 
         #endregion

@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="DateUtilTest.cs" />
     <Compile Include="EntrustPriceTypeTest.cs" />
+    <Compile Include="EnumHelperTest.cs" />
     <Compile Include="ExcelUtilTest.cs" />
     <Compile Include="JsonUtilTest.cs" />
     <Compile Include="PermissionTest.cs" />

@@ -165,7 +165,19 @@ namespace TradingSystem.View
 
         private void ToolStripButton_Click_Save(object sender, System.EventArgs e)
         {
-            MessageDialog.Info(this, "菜单未完成");
+            //MessageDialog.Info(this, "菜单未完成");
+            GeneralSettingDailog dialog = new GeneralSettingDailog();
+            dialog.OnLoadControl(null, null);
+            dialog.OnLoadData(null, null);
+            dialog.ShowDialog();
+            if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+
+            }
+            else
+            { 
+                
+            }
         }
 
         private void ToolStripButton_Click_Refresh(object sender, System.EventArgs e)

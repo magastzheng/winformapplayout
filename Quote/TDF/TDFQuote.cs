@@ -766,11 +766,11 @@ namespace Quote.TDF
 
                     if (codeArr[i].Market.Equals("SZ", System.StringComparison.InvariantCultureIgnoreCase))
                     {
-                        securityItem.ExchangeCode = ConstVariable.ShenzhenExchange;
+                        securityItem.ExchangeCode = Exchange.SZSE;
                     }
                     else if (codeArr[i].Market.Equals("SH", System.StringComparison.InvariantCultureIgnoreCase))
                     {
-                        securityItem.ExchangeCode = ConstVariable.ShanghaiExchange;
+                        securityItem.ExchangeCode = Exchange.SHSE;
                     }
                     else
                     {
@@ -786,7 +786,7 @@ namespace Quote.TDF
                     securityItem.SecuCode = codeArr[i].Code;
                     securityItem.SecuName = codeArr[i].CNName;
                     securityItem.SecuType = SecurityType.Futures;
-                    securityItem.ExchangeCode = ConstVariable.ChinaFinancialFuturesExchange;
+                    securityItem.ExchangeCode = Exchange.CFFEX;
                     _quote.AddSecurity(codeArr[i].WindCode, securityItem);
                 }
                 else if (codeArr[i].Type == 0x01)
@@ -799,11 +799,11 @@ namespace Quote.TDF
 
                     if (codeArr[i].Market.Equals("SZ", System.StringComparison.InvariantCultureIgnoreCase))
                     {
-                        securityItem.ExchangeCode = ConstVariable.ShenzhenExchange;
+                        securityItem.ExchangeCode = Exchange.SZSE;
                     }
                     else if (codeArr[i].Market.Equals("SH", System.StringComparison.InvariantCultureIgnoreCase))
                     {
-                        securityItem.ExchangeCode = ConstVariable.ShanghaiExchange;
+                        securityItem.ExchangeCode = Exchange.SHSE;
                     }
                     else
                     {
