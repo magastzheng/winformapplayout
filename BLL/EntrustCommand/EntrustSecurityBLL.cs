@@ -63,6 +63,19 @@ namespace BLL.EntrustCommand
 
         #region fetch/get
 
+        public List<EntrustSecurity> GetEntrustSecurities(List<int> commandIds)
+        {
+            var entrustSecuItems = new List<EntrustSecurity>();
+
+            foreach (var commandId in commandIds)
+            {
+                var secuItem = GetByCommandId(commandId);
+                entrustSecuItems.AddRange(secuItem);
+            }
+
+            return entrustSecuItems;
+        }
+
         public List<EntrustSecurity> GetByCommandId(int commandId)
         {
             return _entrustsecudao.GetByCommandId(commandId);

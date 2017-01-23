@@ -27,16 +27,29 @@ namespace BLL.TradeCommand
         private TradeCommandSecurityDAO _tradecmdsecudao = new TradeCommandSecurityDAO();
 
         private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
+        private EntrustSecurityBLL _entrustSecurityBLL = new EntrustSecurityBLL();
+
         private UserActionTrackingBLL _userActionTrackingBLL = new UserActionTrackingBLL();
         private PermissionManager _permissionManager = new PermissionManager();
-        private QueryEntrustBLL _queryBLL = new QueryEntrustBLL();
-
+        
         public TradeCommandBLL()
         { 
         }
 
         #region submit
 
+        /// <summary>
+        /// Submit a new the TradeCommand to open the position. It will create a new row in the tradecommand table.
+        /// It will check whether the tradeinstance is existed and it will create a new tradeinstance if there is no one.
+        /// </summary>
+        /// <param name="openItem">An object of OpenPositionItem contains some basic information, such as portfolio,
+        /// monitor, instancecode, entrust direction. 
+        /// </param>
+        /// <param name="secuItems">A list of detailed securities will be entrusted.</param>
+        /// <param name="startDate">The trade command start date and time.</param>
+        /// <param name="endDate">The trade command end date and time.</param>
+        /// <returns>An integer value to indicate whether it is successful or fail. A positive value means success.
+        /// Otherwise failure.</returns>
         public int SubmitOpenPosition(OpenPositionItem openItem, List<OpenPositionSecurityItem> secuItems, DateTime startDate, DateTime endDate)
         {
             int instanceId = -1;
@@ -99,6 +112,12 @@ namespace BLL.TradeCommand
             return ret;
         }
 
+        /// <summary>
+        /// Submit to close the position.
+        /// </summary>
+        /// <param name="cmdItem"></param>
+        /// <param name="selectedSecuItems"></param>
+        /// <returns></returns>
         public int SubmitClosePosition(Model.Database.TradeCommand cmdItem, List<ClosePositionSecurityItem> selectedSecuItems)
         {
             int instanceId = cmdItem.InstanceId;
@@ -116,104 +135,9 @@ namespace BLL.TradeCommand
             return Submit(cmdItem, secuItems);
         }
 
-        //public int SubmitCloseAll(ClosePositionItem closeItem, List<ClosePositionSecurityItem> closeSecuItems)
-        //{
-        //    var instance = _tradeInstanceBLL.GetInstance(closeItem.InstanceId);
-        //    //var instance = _tradeinstdao.GetCombine(closeItem.InstanceId);
-        //    var tccmdItem = new Model.Database.TradeCommand
-        //    {
-        //        InstanceId = closeItem.InstanceId,
-        //        ECommandType = CommandType.Arbitrage,
-        //        EExecuteType = ExecuteType.ClosePosition,
-        //        EEntrustStatus = EntrustStatus.NoExecuted,
-        //        EDealStatus = DealStatus.NoDeal,
-        //        ModifiedTimes = 1
-        //    };
-
-        //    if (instance.FuturesDirection == EntrustDirection.SellOpen)
-        //    {
-        //        tccmdItem.EFuturesDirection = EntrustDirection.BuyClose;
-        //    }
-        //    else if (instance.FuturesDirection == EntrustDirection.BuyClose)
-        //    {
-        //        tccmdItem.EFuturesDirection = EntrustDirection.SellOpen;
-        //    }
-
-        //    if (instance.StockDirection == EntrustDirection.BuySpot)
-        //    {
-        //        tccmdItem.EStockDirection = EntrustDirection.SellSpot;
-        //    }
-        //    else if (instance.StockDirection == EntrustDirection.SellSpot)
-        //    {
-        //        tccmdItem.EStockDirection = EntrustDirection.BuySpot;
-        //    }
-
-        //    //var tradeinstSecuItems = _tradeinstsecudbo.Get(closeItem.InstanceId);
-        //    var tempStockItems = _tempstockdao.Get(closeItem.TemplateId);
-
-        //    List<TradeCommandSecurity> cmdSecuItems = new List<TradeCommandSecurity>();
-
-        //    foreach (var item in closeSecuItems)
-        //    {
-        //        TradeCommandSecurity secuItem = new TradeCommandSecurity
-        //        {
-        //            SecuCode = item.SecuCode,
-        //            SecuType = item.SecuType,
-        //            CommandAmount = item.EntrustAmount,
-        //            CommandPrice = item.CommandPrice,
-        //            //EDirection = (EntrustDirection)item.EntrustDirection,
-        //            EntrustStatus = EntrustStatus.NoExecuted
-        //        };
-
-        //        if (secuItem.SecuType == Model.SecurityInfo.SecurityType.Stock)
-        //        {
-        //            secuItem.EDirection = tccmdItem.EStockDirection;
-        //        }
-        //        else if (secuItem.SecuType == Model.SecurityInfo.SecurityType.Futures)
-        //        {
-        //            secuItem.EDirection = tccmdItem.EFuturesDirection;
-        //        }
-
-        //        //var availItem = tradeinstSecuItems.Find(p => p.SecuCode.Equals(secuItem.SecuCode));
-        //        //if (availItem != null)
-        //        //{
-        //        //    secuItem.CommandAmount = availItem.AvailableAmount;
-        //        //}
-
-        //        //var tempStockItem = tempStockItems.Find(p => p.SecuCode.Equals(secuItem.SecuCode));
-        //        //if (tempStockItem != null)
-        //        //{
-        //        //    secuItem.WeightAmount = tempStockItem.Amount;
-        //        //}
-
-        //        cmdSecuItems.Add(secuItem);
-        //    }
-
-
-        //    return Submit(tccmdItem, cmdSecuItems);
-        //}
-
         #endregion
 
         #region get/fetch
-
-        //public List<TradeCommandItem> GetTradeCommandUIAll()
-        //{
-        //    var uiCommands = new List<TradeCommandItem>();
-        //    var validTradeCommands = GetAll();
-            
-        //    var tradeSecuItems = GetCommandSecurityItems(validTradeCommands);
-        //    var entrustSecuItems = _queryBLL.GetEntrustSecurityItems(validTradeCommands);
-
-        //    foreach (var tradeCommand in validTradeCommands)
-        //    {
-        //        var uiCommand = BuildUICommand(tradeCommand);
-        //        CalculateUICommand(ref uiCommand, tradeSecuItems, entrustSecuItems);
-
-        //        uiCommands.Add(uiCommand);
-        //    }
-        //    return uiCommands;
-        //}
 
         /// <summary>
         /// 获取那些有效的，委托完成的，没有完成成交的指令。
@@ -232,13 +156,14 @@ namespace BLL.TradeCommand
                 }
             }
 
-            var tradeSecuItems = GetCommandSecurityItems(validTradeCommands);
-            var entrustSecuItems = _queryBLL.GetEntrustSecurityItems(validTradeCommands);
+            var commandIds = validTradeCommands.Select(p => p.CommandId).Distinct().ToList();
+            var cmdSecuItems = GetCommandSecurityItems(commandIds);
+            var entrustSecuItems = _entrustSecurityBLL.GetEntrustSecurities(commandIds);
 
             foreach (var tradeCommand in validTradeCommands)
             {
                 var uiCommand = BuildUICommand(tradeCommand);
-                CalculateUICommand(ref uiCommand, tradeSecuItems, entrustSecuItems);
+                CalculateUICommand(ref uiCommand, cmdSecuItems, entrustSecuItems);
 
                 uiCommands.Add(uiCommand);
             }
@@ -288,20 +213,6 @@ namespace BLL.TradeCommand
         {
             Tracking(ActionType.Get, ResourceType.TradeCommand, commandId, null);
             return _tradecommandao.Get(commandId);
-        }
-
-        public List<TradeCommandSecurity> GetCommandSecurityItems(List<Model.Database.TradeCommand> cmdItems)
-        {
-            var cmdSecuItems = new List<TradeCommandSecurity>();
-
-            foreach (var cmdItem in cmdItems)
-            {
-                var secuItems = _tradecmdsecudao.Get(cmdItem.CommandId);
-                
-                cmdSecuItems.AddRange(secuItems);
-            }
-
-            return cmdSecuItems;
         }
 
         #endregion
@@ -368,6 +279,20 @@ namespace BLL.TradeCommand
         private bool IsExpireTime(Model.Database.TradeCommand tradeCommand)
         {
             return tradeCommand.DEndDate < DateUtil.OpenDate;
+        }
+
+        private List<TradeCommandSecurity> GetCommandSecurityItems(List<int> commandIds)
+        {
+            var cmdSecuItems = new List<TradeCommandSecurity>();
+
+            foreach (var commandId in commandIds)
+            {
+                var secuItems = _tradecmdsecudao.Get(commandId);
+
+                cmdSecuItems.AddRange(secuItems);
+            }
+
+            return cmdSecuItems;
         }
 
         private List<TradeCommandSecurity> GetSelectCommandSecurities(int monitorId, int commandId, List<OpenPositionSecurityItem> selectedSecuItems)
@@ -465,10 +390,10 @@ namespace BLL.TradeCommand
             return uiCommand;
         }
 
-        private void CalculateUICommand(ref TradeCommandItem uiCommand, List<TradeCommandSecurity> tradeSecuItems, List<EntrustSecurity> entrustSecuItems)
+        private void CalculateUICommand(ref TradeCommandItem uiCommand, List<TradeCommandSecurity> rawCmdSecuItems, List<EntrustSecurity> entrustSecuItems)
         {
             int commandId = uiCommand.CommandId;
-            var cmdSecuItems = tradeSecuItems.Where(p => p.CommandId == commandId).ToList();
+            var cmdSecuItems = rawCmdSecuItems.Where(p => p.CommandId == commandId).ToList();
             var cmdEntrustSecuItems = entrustSecuItems.Where(p => p.CommandId == commandId).ToList();
 
 
@@ -521,6 +446,7 @@ namespace BLL.TradeCommand
 
             return 0.0f;
         }
+
         #endregion
 
         #region User action tracking

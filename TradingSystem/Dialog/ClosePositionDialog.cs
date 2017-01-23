@@ -81,8 +81,6 @@ namespace TradingSystem.Dialog
         {
             if (!ValidateDate())
             {
-                MessageDialog.Error(this, msgInvalidDate);
-
                 return;
             }
 
@@ -113,37 +111,57 @@ namespace TradingSystem.Dialog
 
         private bool ValidateDate()
         {
+            bool isDateValid = true;
+            bool isTimeValid = true;
             foreach (var item in _dataSource)
             {
                 if (!DateUtil.IsValidDate(item.StartDate))
                 {
-                    return false;
+                    isDateValid = false;
+                    break;
                 }
 
                 if (!DateUtil.IsValidDate(item.EndDate))
                 {
-                    return false;
+                    isDateValid = false;
+                    break;
                 }
 
                 if (!DateUtil.IsValidTime(item.StartTime))
                 {
-                    return false;
+                    isTimeValid = false;
+                    break;
                 }
 
                 if (!DateUtil.IsValidTime(item.EndTime))
                 {
-                    return false;
+                    isTimeValid = false;
+                    break;
                 }
 
                 if (item.StartDate > item.EndDate)
                 {
-                    return false;
+                    isDateValid = false;
+                    break;
                 }
 
                 if (item.StartDate == item.EndDate && item.StartTime >= item.EndTime)
                 {
-                    return false;
+                    isDateValid = false;
+                    isTimeValid = false;
+                    break;
                 }
+            }
+
+            if (!isDateValid)
+            {
+                MessageDialog.Error(this, msgInvalidDate);
+                return false;
+            }
+            else if (!isTimeValid)
+            {
+                MessageDialog.Error(this, msgInvalidTime);
+                return false;
             }
 
             return true;

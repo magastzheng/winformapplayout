@@ -398,26 +398,28 @@ namespace TradingSystem.View
                 }
             }
 
+            if (orderItemList.Count == 0)
+            {
+                return;
+            }
+
             List<OrderConfirmItem> successItems = new List<OrderConfirmItem>();
             List<OrderConfirmItem> failItems = new List<OrderConfirmItem>();
-            if (orderItemList.Count > 0)
+            foreach (var orderItem in orderItemList)
             {
-                foreach (var orderItem in orderItemList)
-                {
-                    var newOpenItem = GetOpenPositionItem(orderItem);
-                    var selectedSecuItems = _securityDataSource.Where(p => p.Selection && p.MonitorId == newOpenItem.MonitorId).ToList();
-                    DateTime startDate = DateUtil.GetDateTimeFromInt(orderItem.StartDate, orderItem.StartTime);
-                    DateTime endDate = DateUtil.GetDateTimeFromInt(orderItem.EndDate, orderItem.EndTime);
-                    int ret = _tradeCommandBLL.SubmitOpenPosition(newOpenItem, selectedSecuItems, startDate, endDate);
+                var newOpenItem = GetOpenPositionItem(orderItem);
+                var selectedSecuItems = _securityDataSource.Where(p => p.Selection && p.MonitorId == newOpenItem.MonitorId).ToList();
+                DateTime startDate = DateUtil.GetDateTimeFromInt(orderItem.StartDate, orderItem.StartTime);
+                DateTime endDate = DateUtil.GetDateTimeFromInt(orderItem.EndDate, orderItem.EndTime);
+                int ret = _tradeCommandBLL.SubmitOpenPosition(newOpenItem, selectedSecuItems, startDate, endDate);
 
-                    if (ret > 0)
-                    {
-                        successItems.Add(orderItem);
-                    }
-                    else
-                    {
-                        failItems.Add(orderItem);
-                    }
+                if (ret > 0)
+                {
+                    successItems.Add(orderItem);
+                }
+                else
+                {
+                    failItems.Add(orderItem);
                 }
             }
 
