@@ -41,6 +41,9 @@ namespace TradingSystem.View
         private const string msgCopies = "closecopiesinput";
         private const string msgZeroAmount = "closecannotzeroentrustamount";
         private const string msgSubmitInvalid = "closesubmitinvalid";
+        private const string msgCommandSuccess = "commandsuccess";
+        private const string msgCommandFail = "commandfail";
+        private const string msgCommandSuccessFail = "commandsuccessfail";
 
         private GridConfig _gridConfig;
 
@@ -683,16 +686,41 @@ namespace TradingSystem.View
                 return;
             }
 
-            if (!GetConfirmItems(cmdItems))
+            var confirmItems = GetConfirmItems(cmdItems);
+            if (confirmItems == null || confirmItems.Count == 0)
             {
                 return;
             }
 
+            List<ClosePositionInstanceItem> successItems = new List<ClosePositionInstanceItem>();
+            List<ClosePositionInstanceItem> failItems = new List<ClosePositionInstanceItem>();
             //TODO: show the success message and failure message
-            foreach (var cmdItem in cmdItems)
+            foreach (var cmdItem in confirmItems)
             {
-                var tdcmdItem = GetTradeCommandItem(cmdItem);
-                var futureItems = _secuDataSource.Where(p => p.Selection && p.InstanceId == cmdItem.InstanceId && p.SecuType == SecurityType.Futures).ToList();
+                var instItem = _instDataSource.ToList().Find(p => p.InstanceCode.Equals(cmdItem.InstanceCode));
+                if (instItem == null)
+                {
+                    continue;
+                }
+
+                int instanceId = instItem.InstanceId;
+                string instanceCode = cmdItem.InstanceCode;
+                var closeCmdItem = _cmdDataSource.ToList().Find(p => p.InstanceId == instanceId);
+                if (closeCmdItem == null)
+                {
+                    failItems.Add(cmdItem);
+                    continue;
+                }
+
+                EntrustDirection direction = EntrustDirectionUtil.GetEntrustDirection(closeCmdItem.TradeDirection);
+                var tdcmdItem = GetTradeCommandItem(instanceId, direction, cmdItem);
+                if (tdcmdItem == null)
+                {
+                    failItems.Add(cmdItem);
+                    continue;
+                }
+
+                var futureItems = _secuDataSource.Where(p => p.Selection && p.InstanceId == instanceId && p.SecuType == SecurityType.Futures).ToList();
                 if (futureItems != null && futureItems.Count > 0)
                 {
                     var minFutuAmount = futureItems.Select(p => p.EntrustAmount).Min();
@@ -707,19 +735,40 @@ namespace TradingSystem.View
                     tdcmdItem.CommandNum = 1;
                 }
 
-                var closeItem = _instDataSource.ToList().Find(p => p.InstanceId.Equals(tdcmdItem.InstanceId));
                 var selectedItems = _secuDataSource.Where(p => p.Selection && p.EntrustAmount > 0 && p.InstanceId.Equals(tdcmdItem.InstanceId)).ToList();
-                var result = _tradeCommandBLL.SubmitClosePosition(tdcmdItem, closeItem, selectedItems);
+                var result = _tradeCommandBLL.SubmitClosePosition(tdcmdItem, selectedItems);
                 if (result > 0)
                 {
-
+                    successItems.Add(cmdItem);
                 }
                 else
-                { 
+                {
                     //TODO:
+                    failItems.Add(cmdItem);
                 }
             }
 
+            if (successItems.Count == confirmItems.Count)
+            {
+                MessageDialog.Info(this, msgCommandSuccess);
+            }
+            else if (failItems.Count == confirmItems.Count)
+            {
+                MessageDialog.Fail(this, msgCommandFail);
+            }
+            else
+            {
+                StringBuilder sbSuccess = new StringBuilder();
+                StringBuilder sbFail = new StringBuilder();
+                successItems.ForEach(p => sbSuccess.AppendFormat("{0}|",p.MonitorId));
+                
+                failItems.ForEach(p => sbFail.AppendFormat("{0}|", p.MonitorId));
+
+                string format = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgCommandSuccessFail);
+                string msg = string.Format(format, sbSuccess.ToString().TrimEnd('|'), sbFail.ToString().TrimEnd('|'));
+
+                MessageDialog.Warn(this, msg);
+            }
         }
 
         private bool ValidateCopies(List<ClosePositionCmdItem> closeCmdItems)
@@ -1088,8 +1137,10 @@ namespace TradingSystem.View
 
         #region get confirm submitted items
 
-        private bool GetConfirmItems(List<ClosePositionCmdItem> cmdItems)
+        private List<ClosePositionInstanceItem> GetConfirmItems(List<ClosePositionCmdItem> cmdItems)
         {
+            DateTime startDate = DateUtil.OpenDate;
+            DateTime endDate = DateUtil.CloseDate;
             List<ClosePositionInstanceItem> instItems = new List<ClosePositionInstanceItem>();
             foreach (var cmdItem in cmdItems)
             {
@@ -1098,6 +1149,10 @@ namespace TradingSystem.View
                     InstanceCode = cmdItem.InstanceCode,
                     Copies = cmdItem.Copies,
                     FuturesList = new List<string>(),
+                    StartDate = DateUtil.GetIntDate(startDate),
+                    EndDate = DateUtil.GetIntDate(endDate),
+                    StartTime = DateUtil.GetIntTime(startDate),
+                    EndTime = DateUtil.GetIntTime(endDate),
                 };
 
                 var closeItem = _instDataSource.ToList().Find(p => p.InstanceId == cmdItem.InstanceId);
@@ -1145,7 +1200,8 @@ namespace TradingSystem.View
                 instItems.Add(instItem);
             }
 
-            bool ret = false;
+            List<ClosePositionInstanceItem> confirmItems = new List<ClosePositionInstanceItem>();
+
             ClosePositionDialog dialog = new ClosePositionDialog(_gridConfig);
             dialog.Owner = this;
             dialog.StartPosition = FormStartPosition.CenterParent;
@@ -1153,15 +1209,15 @@ namespace TradingSystem.View
             dialog.OnLoadData(dialog, instItems);
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                confirmItems = (List<ClosePositionInstanceItem>)dialog.GetData();
                 dialog.Dispose();
-                ret = true;
             }
             else
             {
                 dialog.Dispose();
             }
 
-            return ret;
+            return confirmItems;
         }
 
         #endregion
@@ -1274,21 +1330,27 @@ namespace TradingSystem.View
 
         #region
 
-        private TradeCommand GetTradeCommandItem(ClosePositionCmdItem closeCmdItem)
+        private TradeCommand GetTradeCommandItem(int instanceId, EntrustDirection direction, ClosePositionInstanceItem instItem)
         {
+            DateTime startDate = DateUtil.GetDateTimeFromInt(instItem.StartDate, instItem.StartTime);
+            DateTime endDate = DateUtil.GetDateTimeFromInt(instItem.EndDate, instItem.EndTime);
+
             TradeCommand tdcmdItem = new TradeCommand
             {
-                InstanceId = closeCmdItem.InstanceId,
+                InstanceId = instanceId,
+                InstanceCode = instItem.InstanceCode,
                 ECommandType = CommandType.Arbitrage,
                 //CommandNum = closeCmdItem.Copies,
                 //EStockDirection = Model.Data.EntrustDirection.BuySpot,
                 //EFuturesDirection = Model.Data.EntrustDirection.SellOpen,
                 EEntrustStatus = EntrustStatus.NoExecuted,
                 EDealStatus = DealStatus.NoDeal,
-                ModifiedTimes = 1
+                ModifiedTimes = 1,
+                DStartDate = startDate,
+                DEndDate = endDate,
+                Notes = instItem.Notes,
             };
 
-            EntrustDirection direction = EntrustDirectionUtil.GetEntrustDirection(closeCmdItem.TradeDirection);
             switch (direction)
             {
                 case EntrustDirection.Buy:

@@ -147,6 +147,15 @@
 			"id": "closesubmitinvalid",
 			"text": "证券未勾选或勾选证券均未设置委托数量, 交易实例为: {0}"
 		},{
+			"id": "commandsuccess",
+			"text": "指令下达成功！"
+		},{
+			"id": "commandfail",
+			"text": "指令下达失败！"
+		},{
+			"id": "commandsuccessfail",
+			"text": "下达成功指令:{0}, 下达失败指令:{1}"
+		},{
 			"id": "chgpositionconfirm",
 			"text": "请确认换仓证券有效（数量，价格）"
 		},{

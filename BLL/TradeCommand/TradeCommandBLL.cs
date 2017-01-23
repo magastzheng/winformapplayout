@@ -46,7 +46,7 @@ namespace BLL.TradeCommand
             {
                 instanceId = instance.InstanceId;
                 instance.OperationCopies += openItem.Copies;
-                _tradeInstanceBLL.Update(instance, openItem, secuItems);
+                _tradeInstanceBLL.Update(instance, secuItems);
             }
             else
             {
@@ -65,7 +65,7 @@ namespace BLL.TradeCommand
                 };
 
                 tradeInstance.Owner = LoginManager.Instance.GetUserId();
-                instanceId = _tradeInstanceBLL.Create(tradeInstance, openItem, secuItems);
+                instanceId = _tradeInstanceBLL.Create(tradeInstance, secuItems);
             }
 
             int ret = -1;
@@ -87,7 +87,7 @@ namespace BLL.TradeCommand
                     DEndDate = endDate,
                 };
 
-                var cmdSecuItems = GetSelectCommandSecurities(openItem, -1, secuItems);
+                var cmdSecuItems = GetSelectCommandSecurities(openItem.MonitorId, -1, secuItems);
 
                 ret = Submit(cmdItem, cmdSecuItems);
             }
@@ -99,15 +99,18 @@ namespace BLL.TradeCommand
             return ret;
         }
 
-        public int SubmitClosePosition(Model.Database.TradeCommand cmdItem, ClosePositionItem closeItem, List<ClosePositionSecurityItem> selectedSecuItems)
+        public int SubmitClosePosition(Model.Database.TradeCommand cmdItem, List<ClosePositionSecurityItem> selectedSecuItems)
         {
-            var secuItems = GetSelectCommandSecurities(closeItem, selectedSecuItems);
+            int instanceId = cmdItem.InstanceId;
+            string instanceCode = cmdItem.InstanceCode;
+
+            var secuItems = GetSelectCommandSecurities(instanceId, selectedSecuItems);
             //TODO: update the TradingInstance
-            string instanceCode = closeItem.InstanceCode;
-            var instance = _tradeInstanceBLL.GetInstance(closeItem.InstanceCode);
+            //string instanceCode = closeItem.InstanceCode;
+            var instance = _tradeInstanceBLL.GetInstance(instanceCode);
             if (instance != null && !string.IsNullOrEmpty(instance.InstanceCode) && instance.InstanceCode.Equals(instanceCode))
             {
-                _tradeInstanceBLL.Update(instance, closeItem, selectedSecuItems);
+                _tradeInstanceBLL.Update(instance, selectedSecuItems);
             }
 
             return Submit(cmdItem, secuItems);
@@ -367,12 +370,12 @@ namespace BLL.TradeCommand
             return tradeCommand.DEndDate < DateUtil.OpenDate;
         }
 
-        private List<TradeCommandSecurity> GetSelectCommandSecurities(OpenPositionItem openItem, int commandId, List<OpenPositionSecurityItem> selectedSecuItems)
+        private List<TradeCommandSecurity> GetSelectCommandSecurities(int monitorId, int commandId, List<OpenPositionSecurityItem> selectedSecuItems)
         {
             List<TradeCommandSecurity> cmdSecuItems = new List<TradeCommandSecurity>();
             foreach (var item in selectedSecuItems)
             {
-                if (item.Selection && item.MonitorId == openItem.MonitorId)
+                if (item.Selection && item.MonitorId == monitorId)
                 {
                     TradeCommandSecurity secuItem = new TradeCommandSecurity 
                     {
@@ -400,12 +403,12 @@ namespace BLL.TradeCommand
             return cmdSecuItems;
         }
 
-        private List<TradeCommandSecurity> GetSelectCommandSecurities(ClosePositionItem closePositionItem, List<ClosePositionSecurityItem> closeSecuItems)
+        private List<TradeCommandSecurity> GetSelectCommandSecurities(int instanceId, List<ClosePositionSecurityItem> closeSecuItems)
         {
             List<TradeCommandSecurity> cmdSecuItems = new List<TradeCommandSecurity>();
 
             //var tempStockItems = _tempstockdao.Get(closePositionItem.TemplateId);
-            var selectedSecuItems = closeSecuItems.Where(p => p.InstanceId.Equals(closePositionItem.InstanceId)).ToList();
+            var selectedSecuItems = closeSecuItems.Where(p => p.InstanceId.Equals(instanceId)).ToList();
             foreach (var item in selectedSecuItems)
             {
                 TradeCommandSecurity secuItem = new TradeCommandSecurity

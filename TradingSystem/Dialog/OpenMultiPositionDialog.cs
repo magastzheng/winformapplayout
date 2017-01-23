@@ -2,31 +2,42 @@
 using Controls.Entity;
 using Controls.GridView;
 using Model.Binding.BindingUtil;
-using Model.UI;
+using Model.Dialog;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
 using Util;
 
 namespace TradingSystem.Dialog
 {
-    public partial class ClosePositionDialog : Forms.BaseDialog
+    public partial class OpenMultiPositionDialog : Forms.BaseDialog
     {
-        private const string GridId = "closepositioninstance";
+        private const string GridId = "openpositioninstance";
 
         private const string msgInvalidDate = "opendialogvaliddate";
         private const string msgInvalidTime = "opendialogvalidtime";
 
+        private const string StartDate = "startdate";
+        private const string EndDate = "enddate";
+        private const string StartTime = "starttime";
+        private const string EndTime = "endtime";
+
         private GridConfig _gridConfig;
 
-        private SortableBindingList<ClosePositionInstanceItem> _dataSource = new SortableBindingList<ClosePositionInstanceItem>(new List<ClosePositionInstanceItem>());
+        private SortableBindingList<OrderConfirmItem> _dataSource = new SortableBindingList<OrderConfirmItem>(new List<OrderConfirmItem>());
 
-        public ClosePositionDialog()
+
+        public OpenMultiPositionDialog()
             :base()
         {
             InitializeComponent();
         }
 
-        public ClosePositionDialog(GridConfig gridConfig)
+        public OpenMultiPositionDialog(GridConfig gridConfig)
             : this()
         {
             _gridConfig = gridConfig;
@@ -34,8 +45,8 @@ namespace TradingSystem.Dialog
             LoadControl += new FormLoadHandler(Form_LoadControl);
             LoadData += new FormLoadHandler(Form_LoadData);
 
-            this.btnConfirm.Click += new EventHandler(Button_Confirm);
-            this.btnCancel.Click += new EventHandler(Button_Cancel);
+            this.btnConfirm.Click += new EventHandler(Button_Confirm_Click);
+            this.btnCancel.Click += new EventHandler(Button_Cancel_Click);
         }
 
         #region load control
@@ -43,10 +54,10 @@ namespace TradingSystem.Dialog
         private bool Form_LoadControl(object sender, object data)
         {
             //Load Command Trading
-            TSDataGridViewHelper.AddColumns(this.instGridView, _gridConfig.GetGid(GridId));
-            Dictionary<string, string> gridColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(ClosePositionInstanceItem));
-            TSDataGridViewHelper.SetDataBinding(this.instGridView, gridColDataMap);
-            this.instGridView.DataSource = _dataSource;
+            TSDataGridViewHelper.AddColumns(this.gridView, _gridConfig.GetGid(GridId));
+            Dictionary<string, string> gridColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(OrderConfirmItem));
+            TSDataGridViewHelper.SetDataBinding(this.gridView, gridColDataMap);
+            this.gridView.DataSource = _dataSource;
 
             return true;
         }
@@ -62,12 +73,12 @@ namespace TradingSystem.Dialog
                 return false;
             }
 
-            if (!(data is List<ClosePositionInstanceItem>))
+            if (!(data is List<OrderConfirmItem>))
             {
                 return false;
             }
 
-            var ds = data as List<ClosePositionInstanceItem>;
+            var ds = data as List<OrderConfirmItem>;
             ds.ForEach(p => _dataSource.Add(p));
 
             return true;
@@ -75,9 +86,10 @@ namespace TradingSystem.Dialog
 
         #endregion
 
+
         #region button click event handler
 
-        private void Button_Confirm(object sender, EventArgs e)
+        private void Button_Confirm_Click(object sender, EventArgs e)
         {
             if (!ValidateDate())
             {
@@ -89,7 +101,7 @@ namespace TradingSystem.Dialog
             DialogResult = System.Windows.Forms.DialogResult.OK;
         }
 
-        private void Button_Cancel(object sender, EventArgs e)
+        private void Button_Cancel_Click(object sender, EventArgs e)
         {
             DialogResult = System.Windows.Forms.DialogResult.Cancel;
         }
@@ -100,7 +112,7 @@ namespace TradingSystem.Dialog
 
         public override object GetData()
         {
-            var dataList = new List<ClosePositionInstanceItem>();
+            var dataList = new List<OrderConfirmItem>();
             foreach (var item in _dataSource)
             {
                 dataList.Add(item);

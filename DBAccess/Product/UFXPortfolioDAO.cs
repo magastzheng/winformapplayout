@@ -2,6 +2,7 @@
 using Model.EnumType;
 using Model.UI;
 using System.Collections.Generic;
+using System.Data.Common;
 
 namespace DBAccess.Product
 {
@@ -13,6 +14,7 @@ namespace DBAccess.Product
         private const string SP_ModifyName = "procUFXPortfolioUpdateName";
         private const string SP_ModifyStatus = "procUFXPortfolioUpdateStatus";
         private const string SP_Get = "procUFXPortfolioSelect";
+        private const string SP_GetById = "procUFXPortfolioSelectById";
         private const string SP_Delete = "procUFXPortfolioDelete";
 
         public UFXPortfolioDAO()
@@ -98,6 +100,28 @@ namespace DBAccess.Product
             return GetInternal(string.Empty);
         }
 
+        public Portfolio GetById(int portfolioId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetById);
+            _dbHelper.AddInParameter(dbCommand, "@PortfolioId", System.Data.DbType.Int32, portfolioId);
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+
+            Portfolio portfolio = null;
+            if (reader.HasRows && reader.Read())
+            {
+                portfolio = GetPortfolio(reader);
+            }
+            else
+            {
+                portfolio = new Portfolio();
+            }
+
+            reader.Close();
+            _dbHelper.Close(dbCommand.Connection);
+
+            return portfolio;
+        }
+
         #region private methods
 
         public List<Portfolio> GetInternal(string portfolioCode)
@@ -114,17 +138,7 @@ namespace DBAccess.Product
             {
                 while (reader.Read())
                 {
-                    Portfolio item = new Portfolio();
-                    item.PortfolioId = (int)reader["PortfolioId"];
-                    item.PortfolioNo = (string)reader["PortfolioCode"];
-                    item.PortfolioName = (string)reader["PortfolioName"];
-                    item.FundCode = (string)reader["AccountCode"];
-                    item.FundName = (string)reader["AccountName"];
-                    item.EAccountType = (FundAccountType)reader["AccountType"];
-                    item.AssetNo = (string)reader["AssetNo"];
-                    item.AssetName = (string)reader["AssetName"];
-                    item.PortfolioStatus = (PortfolioStatus)reader["PortfolioStatus"];
-
+                    Portfolio item = GetPortfolio(reader);
                     portfolios.Add(item);
                 }
             }
@@ -132,6 +146,22 @@ namespace DBAccess.Product
             _dbHelper.Close(dbCommand.Connection);
 
             return portfolios;
+        }
+
+        private Portfolio GetPortfolio(DbDataReader reader)
+        {
+            Portfolio item = new Portfolio();
+            item.PortfolioId = (int)reader["PortfolioId"];
+            item.PortfolioNo = (string)reader["PortfolioCode"];
+            item.PortfolioName = (string)reader["PortfolioName"];
+            item.FundCode = (string)reader["AccountCode"];
+            item.FundName = (string)reader["AccountName"];
+            item.EAccountType = (FundAccountType)reader["AccountType"];
+            item.AssetNo = (string)reader["AssetNo"];
+            item.AssetName = (string)reader["AssetName"];
+            item.PortfolioStatus = (PortfolioStatus)reader["PortfolioStatus"];
+
+            return item;
         }
 
         #endregion

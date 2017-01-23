@@ -25,9 +25,9 @@ namespace BLL.TradeInstance
         { 
         }
 
-        public int Create(Model.UI.TradeInstance tradeInstance, OpenPositionItem openItem, List<OpenPositionSecurityItem> secuItems)
+        public int Create(Model.UI.TradeInstance tradeInstance, List<OpenPositionSecurityItem> secuItems)
         {
-            var tradeinstSecus = GetTradingInstanceSecurities(tradeInstance, openItem, secuItems);
+            var tradeinstSecus = GetTradingInstanceSecurities(tradeInstance.InstanceId, secuItems);
             int ret = _tradeinstancedao.Create(tradeInstance, tradeinstSecus);
             if (ret > 0)
             {
@@ -43,12 +43,12 @@ namespace BLL.TradeInstance
             }
         }
 
-        public int Update(Model.UI.TradeInstance tradeInstance, OpenPositionItem openItem, List<OpenPositionSecurityItem> secuItems)
+        public int Update(Model.UI.TradeInstance tradeInstance, List<OpenPositionSecurityItem> secuItems)
         {
             int userId = LoginManager.Instance.GetUserId();
             if (_permissionManager.HasPermission(userId, tradeInstance.InstanceId, ResourceType.TradeInstance, PermissionMask.Edit))
             {
-                var tradeinstSecus = GetTradingInstanceSecurities(tradeInstance, openItem, secuItems);
+                var tradeinstSecus = GetTradingInstanceSecurities(tradeInstance.InstanceId, secuItems);
                 return _tradeinstancedao.Update(tradeInstance, tradeinstSecus);
             }
             else
@@ -57,12 +57,12 @@ namespace BLL.TradeInstance
             }
         }
 
-        public int Update(Model.UI.TradeInstance tradeInstance, ClosePositionItem closeItem, List<ClosePositionSecurityItem> secuItems)
+        public int Update(Model.UI.TradeInstance tradeInstance, List<ClosePositionSecurityItem> secuItems)
         {
             int userId = LoginManager.Instance.GetUserId();
             if (_permissionManager.HasPermission(userId, tradeInstance.InstanceId, ResourceType.TradeInstance, PermissionMask.Edit))
             {
-                var tradeinstSecus = GetTradingInstanceSecurities(tradeInstance, closeItem, secuItems);
+                var tradeinstSecus = GetTradingInstanceSecurities(tradeInstance.InstanceId, secuItems);
                 return _tradeinstancedao.Update(tradeInstance, tradeinstSecus);
             }
             else
@@ -188,14 +188,14 @@ namespace BLL.TradeInstance
 
         #region
 
-        private List<TradeInstanceSecurity> GetTradingInstanceSecurities(Model.UI.TradeInstance tradingInstance, OpenPositionItem openItem, List<OpenPositionSecurityItem> secuItems)
+        private List<TradeInstanceSecurity> GetTradingInstanceSecurities(int instanceId, List<OpenPositionSecurityItem> secuItems)
         {
             List<TradeInstanceSecurity> tradeInstanceSecuItems = new List<TradeInstanceSecurity>();
             foreach (var item in secuItems)
             {
                 TradeInstanceSecurity tiSecuItem = new TradeInstanceSecurity
                 {
-                    InstanceId = tradingInstance.InstanceId,
+                    InstanceId = instanceId,
                     SecuCode = item.SecuCode,
                     SecuType = item.SecuType
                 };
@@ -217,14 +217,14 @@ namespace BLL.TradeInstance
             return tradeInstanceSecuItems;
         }
 
-        private List<TradeInstanceSecurity> GetTradingInstanceSecurities(Model.UI.TradeInstance tradingInstance, ClosePositionItem closeItem, List<ClosePositionSecurityItem> closeSecuItems)
+        private List<TradeInstanceSecurity> GetTradingInstanceSecurities(int instanceId, List<ClosePositionSecurityItem> closeSecuItems)
         {
             List<TradeInstanceSecurity> tradeInstanceSecuItems = new List<TradeInstanceSecurity>();
             foreach (var item in closeSecuItems)
             {
                 TradeInstanceSecurity tiSecuItem = new TradeInstanceSecurity
                 {
-                    InstanceId = tradingInstance.InstanceId,
+                    InstanceId = instanceId,
                     SecuCode = item.SecuCode
                 };
 

@@ -1,14 +1,11 @@
 ﻿using BLL.Permission;
+using BLL.Product;
 using Config;
 using DBAccess;
 using Model.EnumType;
 using Model.Permission;
 using Model.UI;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Template
 {
@@ -16,6 +13,7 @@ namespace BLL.Template
     {
         private MonitorUnitDAO _monitorunitdao = new MonitorUnitDAO();
         private PermissionManager _permissionManager = new PermissionManager();
+        private ProductBLL _productBLL = new ProductBLL();
 
         public MonitorUnitBLL()
         { 
@@ -71,6 +69,14 @@ namespace BLL.Template
                         FuturesContract = monitorItem.BearContract,
                         Copies = 1,
                     };
+
+                    var portfolio = _productBLL.GetById(monitorItem.PortfolioId);
+                    if (portfolio != null)
+                    {
+                        openItem.PortfolioCode = portfolio.PortfolioNo;
+                        openItem.FundCode = portfolio.FundCode;
+                        openItem.FundName = portfolio.FundName;
+                    }
 
                     openItems.Add(openItem);
                 }

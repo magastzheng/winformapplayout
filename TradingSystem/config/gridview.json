@@ -3009,7 +3009,7 @@ readonly:
 		}
 	]
 },{
-	"grid": "closepositioninstance",
+	"grid": "openpositioninstance",
 	"background": 0,
 	"columns": [{
 		"name": "portfoliodisplay",
@@ -3030,7 +3030,7 @@ readonly:
 		},{
 		"name": "futurescontract",
 		"text": "期货合约",
-		"width": 150,
+		"width": 80,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -3059,6 +3059,139 @@ readonly:
 		"valuetype": 3,
 		"visible": 1,
 		"readonly": 1
+		},{
+		"name": "startdate",
+		"text": "开始日期",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "enddate",
+		"text": "结束日期",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "starttime",
+		"text": "开始时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "endtime",
+		"text": "结束时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "notes",
+		"text": "备注",
+		"width": 120,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "last",
+		"text": "",
+		"width": 5,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		}
+	]
+},{
+	"grid": "closepositioninstance",
+	"background": 0,
+	"columns": [{
+		"name": "portfoliodisplay",
+		"text": "套利组合",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "templatedisplay",
+		"text": "现货模板",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "futurescontract",
+		"text": "期货合约",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "copies",
+		"text": "操作份数",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "point",
+		"text": "基差",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "instancecode",
+		"text": "交易实例",
+		"width": 150,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "startdate",
+		"text": "开始日期",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "enddate",
+		"text": "结束日期",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "starttime",
+		"text": "开始时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
+		},{
+		"name": "endtime",
+		"text": "结束时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 0
 		},{
 		"name": "futubuymktval",
 		"text": "期货买市值",
@@ -3089,6 +3222,14 @@ readonly:
 		"width": 150,
 		"columntype": 0,
 		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "notes",
+		"text": "备注",
+		"width": 120,
+		"columntype": 0,
+		"valuetype": 3,
 		"visible": 1,
 		"readonly": 1
 		},{

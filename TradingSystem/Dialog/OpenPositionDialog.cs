@@ -178,7 +178,7 @@ namespace TradingSystem.Dialog
                 TemplateId = _originOpenItem.TemplateId,
                 TemplateName = _originOpenItem.TemplateName,
                 Copies = _originOpenItem.Copies,
-                FuturesContract = _originOpenItem.FuturesContract,
+                FuturesList = new List<string>() { _originOpenItem.FuturesContract },
             };
 
             DateTime startDate = DateTime.MinValue;
@@ -207,24 +207,10 @@ namespace TradingSystem.Dialog
                 endTime = dt;
             }
 
-            DateTime now = DateTime.Now;
-            if (startDate > DateTime.MinValue && startTime > DateTime.MinValue)
-            {
-                newOpenItem.StartDate = new DateTime(startDate.Year, startDate.Month, startDate.Day, startTime.Hour, startTime.Minute, startTime.Second);
-            }
-            else
-            {
-                newOpenItem.StartDate = new DateTime(now.Year, now.Month, now.Day, 9, 15, 0); ;
-            }
-
-            if (endDate > DateTime.MinValue && endTime > DateTime.MinValue)
-            {
-                newOpenItem.EndDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, endTime.Hour, endTime.Minute, endTime.Second);
-            }
-            else
-            {
-                newOpenItem.EndDate = new DateTime(now.Year, now.Month, now.Day, 15, 15, 0);
-            }
+            newOpenItem.StartDate = Convert.ToInt32(this.tbStartDate.Text.Trim());
+            newOpenItem.EndDate = Convert.ToInt32(this.tbEndDate.Text.Trim());
+            newOpenItem.StartTime = Convert.ToInt32(this.tbStartTime.Text.Trim());
+            newOpenItem.EndTime = Convert.ToInt32(this.tbEndTime.Text.Trim());
 
             if (this.ckbInstanceCode.Checked)
             {

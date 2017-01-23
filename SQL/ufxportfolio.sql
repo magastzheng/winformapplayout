@@ -209,3 +209,27 @@ begin
 			and b.TokenType = 2			--用户类型
 	end
 end
+
+
+go 
+if exists (select name from sysobjects where name='procUFXPortfolioSelectById')
+drop proc procUFXPortfolioSelectById
+
+go
+create proc procUFXPortfolioSelectById(
+	@PortfolioId int
+)
+as
+begin
+	select PortfolioId,
+		PortfolioCode,
+		PortfolioName,
+		AccountCode,
+		AccountName,
+		AccountType,
+		AssetNo,
+		AssetName,
+		PortfolioStatus
+	from ufxportfolio
+	where PortfolioId = @PortfolioId
+end

@@ -108,6 +108,12 @@ namespace BLL.Product
                 return new Portfolio();
             }
         }
+
+        public Portfolio GetById(int portfolioId)
+        {
+            return _portfoliodao.GetById(portfolioId);
+        }
+
         #region private methods
 
         private bool HasPermission(int userId, Portfolio portfolio)

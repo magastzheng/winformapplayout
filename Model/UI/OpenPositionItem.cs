@@ -58,5 +58,11 @@ namespace Model.UI
         public int StockNumbers { get; set; }
 
         public string InstanceCode { get; set; }
+
+        public string PortfolioCode { get; set; }
+
+        public string FundCode { get; set; }
+
+        public string FundName { get; set; }
     }
 }

@@ -106,6 +106,12 @@
     <Compile Include="Dialog\MonitorUnitDialog.Designer.cs">
       <DependentUpon>MonitorUnitDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialog\OpenMultiPositionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\OpenMultiPositionDialog.Designer.cs">
+      <DependentUpon>OpenMultiPositionDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialog\OpenPositionDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -258,6 +264,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialog\MonitorUnitDialog.resx">
       <DependentUpon>MonitorUnitDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialog\OpenMultiPositionDialog.resx">
+      <DependentUpon>OpenMultiPositionDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialog\OpenPositionDialog.resx">
       <DependentUpon>OpenPositionDialog.cs</DependentUpon>

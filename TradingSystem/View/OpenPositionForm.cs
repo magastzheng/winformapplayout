@@ -19,6 +19,8 @@ using BLL.TradeInstance;
 using BLL.TradeCommand;
 using BLL.FuturesContractManager;
 using BLL.Manager;
+using Util;
+using System.Text;
 
 namespace TradingSystem.View
 {
@@ -30,6 +32,10 @@ namespace TradingSystem.View
         private const string SecurityGridId = "openpositionsecurity";
         private const string BottomMenuId = "openposition";
 
+        private const string msgCommandSuccess = "commandsuccess";
+        private const string msgCommandFail = "commandfail";
+        private const string msgCommandSuccessFail = "commandsuccessfail";
+
         private GridConfig _gridConfig;
         
         private TradeInstanceBLL _tradeInstanceBLL = new TradeInstanceBLL();
@@ -38,8 +44,8 @@ namespace TradingSystem.View
         private MonitorUnitBLL _monitorUnitBLL = new MonitorUnitBLL();
         //private FuturesContractBLL _futuresContractBLL = new FuturesContractBLL();
 
-        private SortableBindingList<OpenPositionItem> _monitorDataSource;
-        private SortableBindingList<OpenPositionSecurityItem> _securityDataSource;
+        private SortableBindingList<OpenPositionItem> _monitorDataSource = new SortableBindingList<OpenPositionItem>();
+        private SortableBindingList<OpenPositionSecurityItem> _securityDataSource = new SortableBindingList<OpenPositionSecurityItem>();
 
         public OpenPositionForm()
             :base()
@@ -124,6 +130,9 @@ namespace TradingSystem.View
             //Load bottom button
             LoadBottomButton();
 
+            this.monitorGridView.DataSource = _monitorDataSource;
+            this.securityGridView.DataSource = _securityDataSource;
+
             return true;
         }
 
@@ -135,16 +144,14 @@ namespace TradingSystem.View
         #endregion
         private bool Form_LoadData(object sender, object data)
         {
+            _monitorDataSource.Clear();
+            _securityDataSource.Clear();
+
             //Load the data of open posoition
             List<OpenPositionItem> monitorList = _monitorUnitBLL.GetActive();
-            _monitorDataSource = new SortableBindingList<OpenPositionItem>(monitorList);
-            this.monitorGridView.DataSource = _monitorDataSource;
+            monitorList.ForEach(p => _monitorDataSource.Add(p));
 
             //Load the data for each template
-            List<OpenPositionSecurityItem> secuItems = new List<OpenPositionSecurityItem>();
-            _securityDataSource = new SortableBindingList<OpenPositionSecurityItem>(secuItems);
-            this.securityGridView.DataSource = _securityDataSource;
-            
             if (monitorList.Count > 0)
             {
                 var selectedItems = _monitorDataSource.Where(p => p.Selection).ToList();
@@ -329,38 +336,117 @@ namespace TradingSystem.View
 
         private void GiveOrder()
         {
+            List<OrderConfirmItem> orderItemList = new List<OrderConfirmItem>();
             var selectedItems = _monitorDataSource.Where(p => p.Selection).ToList();
-            foreach (var openItem in selectedItems)
+            if (selectedItems.Count == 1)
             {
+                var openItem = selectedItems[0];
                 var orderItem = GetSubmitItem(openItem);
                 if (orderItem == null)
                 {
                     string format = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgSubmitFail);
                     string msg = string.Format(format, openItem.MonitorName);
                     MessageDialog.Fail(this, msg);
-
-                    continue;
-                }
-
-                var newOpenItem = GetOpenPositionItem(orderItem);
-                var selectedSecuItems = _securityDataSource.Where(p => p.Selection && p.MonitorId == newOpenItem.MonitorId).ToList();
-                int ret = _tradeCommandBLL.SubmitOpenPosition(newOpenItem, selectedSecuItems, orderItem.StartDate, orderItem.EndDate);
-
-                if (ret > 0)
-                {
-
+                    return;
                 }
                 else
-                { 
-                    //TODO: fail to submit
+                {
+                    orderItemList.Add(orderItem);
                 }
+            }
+            else if(selectedItems.Count > 1)
+            {
+                DateTime startDate = DateUtil.OpenDate;
+                DateTime endDate = DateUtil.CloseDate;
+                var orderItems = new List<OrderConfirmItem>();
+                foreach (var openItem in selectedItems)
+                {
+                    OrderConfirmItem orderItem = new OrderConfirmItem 
+                    {
+                        MonitorId = openItem.MonitorId,
+                        MonitorName = openItem.MonitorName,
+                        PortfolioId = openItem.PortfolioId,
+                        PortfolioName = openItem.PortfolioName,
+                        PortfolioCode = openItem.PortfolioCode,
+                        TemplateId = openItem.TemplateId,
+                        TemplateName = openItem.TemplateName,
+                        InstanceCode = string.Format("{0}-{1}-{2}", openItem.PortfolioId, openItem.TemplateId, DateFormat.Format(DateTime.Now, ConstVariable.DateFormat1)),
+                        Copies = openItem.Copies,
+                        FuturesList = new List<string>() { openItem.FuturesContract },
+                        StartDate = DateUtil.GetIntDate(startDate),
+                        EndDate = DateUtil.GetIntDate(endDate),
+                        StartTime = DateUtil.GetIntTime(startDate),
+                        EndTime = DateUtil.GetIntTime(endDate),
+                    };
+
+                    orderItems.Add(orderItem);
+                }
+
+                OpenMultiPositionDialog dialog = new OpenMultiPositionDialog(_gridConfig);
+                dialog.Owner = this;
+                dialog.StartPosition = FormStartPosition.CenterParent;
+                dialog.OnLoadControl(dialog, null);
+                dialog.OnLoadData(dialog, orderItems);
+                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    orderItemList = (List<OrderConfirmItem>)dialog.GetData();
+                    dialog.Dispose();
+                }
+                else
+                {
+                    dialog.Dispose();
+                }
+            }
+
+            List<OrderConfirmItem> successItems = new List<OrderConfirmItem>();
+            List<OrderConfirmItem> failItems = new List<OrderConfirmItem>();
+            if (orderItemList.Count > 0)
+            {
+                foreach (var orderItem in orderItemList)
+                {
+                    var newOpenItem = GetOpenPositionItem(orderItem);
+                    var selectedSecuItems = _securityDataSource.Where(p => p.Selection && p.MonitorId == newOpenItem.MonitorId).ToList();
+                    DateTime startDate = DateUtil.GetDateTimeFromInt(orderItem.StartDate, orderItem.StartTime);
+                    DateTime endDate = DateUtil.GetDateTimeFromInt(orderItem.EndDate, orderItem.EndTime);
+                    int ret = _tradeCommandBLL.SubmitOpenPosition(newOpenItem, selectedSecuItems, startDate, endDate);
+
+                    if (ret > 0)
+                    {
+                        successItems.Add(orderItem);
+                    }
+                    else
+                    {
+                        failItems.Add(orderItem);
+                    }
+                }
+            }
+
+            if (successItems.Count == orderItemList.Count)
+            {
+                MessageDialog.Info(this, msgCommandSuccess);
+            }
+            else if (failItems.Count == orderItemList.Count)
+            {
+                MessageDialog.Fail(this, msgCommandFail);
+            }
+            else
+            {
+                StringBuilder sbSuccess = new StringBuilder();
+                StringBuilder sbFail = new StringBuilder();
+                successItems.ForEach(p => sbSuccess.AppendFormat("{0}|", p.MonitorId));
+
+                failItems.ForEach(p => sbFail.AppendFormat("{0}|", p.MonitorId));
+
+                string format = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgCommandSuccessFail);
+                string msg = string.Format(format, sbSuccess.ToString().TrimEnd('|'), sbFail.ToString().TrimEnd('|'));
+
+                MessageDialog.Warn(this, msg);
             }
         }
 
         public OrderConfirmItem GetSubmitItem(OpenPositionItem openItem)
         {
             string instanceCode = string.Format("{0}-{1}-{2}", openItem.PortfolioId, openItem.TemplateId, DateFormat.Format(DateTime.Now, ConstVariable.DateFormat1));
-
             openItem.InstanceCode = instanceCode;
 
             OrderConfirmItem orderItem = null;
