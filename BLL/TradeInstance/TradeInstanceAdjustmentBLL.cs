@@ -8,28 +8,39 @@ using System.Collections.Generic;
 
 namespace BLL.TradeInstance
 {
-    public class TradingInstanceAdjustmentBLL
+    public class TradeInstanceAdjustmentBLL
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private TradeInstanceAdjustmentDAO _tradeinstadjustmentdao = new TradeInstanceAdjustmentDAO();
         private PermissionManager _permissionManager = new PermissionManager();
 
-        public TradingInstanceAdjustmentBLL()
+        public TradeInstanceAdjustmentBLL()
         { 
         
         }
 
         #region public method
 
-        public int Create(List<TradeInstanceAdjustmentItem> items)
+        public List<int> CreateTran(List<TradeInstanceAdjustmentItem> items)
         {
-            foreach (var item in items)
+            List<int> finalIdList = new List<int>();
+            List<int> ids = _tradeinstadjustmentdao.CreateTran(items);
+            if (ids.Count == items.Count)
             {
-                Create(item);
+                int userId = LoginManager.Instance.GetUserId();
+                var perms = _permissionManager.GetOwnerPermission();
+                foreach (var id in ids)
+                {
+                    int ret = _permissionManager.GrantPermission(userId, id, ResourceType.TradeInstanceAdjustment, perms);
+                    if (ret > 0)
+                    {
+                        finalIdList.Add(id);
+                    }
+                }
             }
 
-            return 1;
+            return finalIdList;
         }
 
         //Add new record into the table and then add the permission for the user.

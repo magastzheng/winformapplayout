@@ -24,7 +24,7 @@ namespace ConfigTest
         public void Test_GetLabelText()
         {
             var config = new LabelConfig();
-            var msg = config.GetLabelText("failtitle");
+            var msg = config.GetLabelText("captionfail");
 
             Assert.AreEqual("失败", msg);
         }

@@ -12,11 +12,9 @@ namespace BLL.Manager
 
         private LoginSyncBLL _loginBLL;
         private AccountBLL _accountBLL;
-        //private LoginBLL _loginBLL;
         private SecurityBLL _securityBLL;
         private QuerySyncBLL _querySyncBLL;
         private WithdrawSyncBLL _withdrawSyncBLL;
-        private StrategyBLL _strategyBLL;
         private T2Subscriber _subscriber;
 
         public LoginSyncBLL LoginBLL
@@ -44,11 +42,6 @@ namespace BLL.Manager
             get { return _withdrawSyncBLL; }
         }
 
-        public StrategyBLL StrategyBLL
-        {
-            get { return _strategyBLL; }
-        }
-
         public T2Subscriber Subscriber
         {
             get { return _subscriber; }
@@ -65,11 +58,9 @@ namespace BLL.Manager
             {
                 _loginBLL = new LoginSyncBLL(t2SDKWrap);
                 _accountBLL = new AccountBLL(t2SDKWrap);
-                //_loginBLL = new LoginBLL(t2SDKWrap);
                 _securityBLL = new SecurityBLL(t2SDKWrap);
                 _querySyncBLL = new UFX.impl.QuerySyncBLL(t2SDKWrap);
                 _withdrawSyncBLL = new UFX.impl.WithdrawSyncBLL(t2SDKWrap);
-                _strategyBLL = new StrategyBLL(t2SDKWrap);
             }
         }
     }

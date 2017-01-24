@@ -30,6 +30,7 @@ namespace ModelTest
         }
 
         [TestMethod]
+        [ExpectedException(typeof(NotSupportedException))]
         public void TestConvertToEnum_UFXMarketCode_Exception()
         {
             string code = "10";

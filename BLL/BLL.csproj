@@ -106,7 +106,7 @@
     <Compile Include="Archive\Template\HistTemplateBLL.cs" />
     <Compile Include="Template\MonitorUnitBLL.cs" />
     <Compile Include="TradeCommand\TradeCommandSecurityBLL.cs" />
-    <Compile Include="TradeInstance\TradingInstanceAdjustmentBLL.cs" />
+    <Compile Include="TradeInstance\TradeInstanceAdjustmentBLL.cs" />
     <Compile Include="UFX\impl\AccountBLL.cs" />
     <Compile Include="UFX\impl\LoginSyncBLL.cs" />
     <Compile Include="UFX\impl\QuerySyncBLL.cs" />
@@ -114,7 +114,6 @@
     <Compile Include="Entrust\UFXQueryDealBLL.cs" />
     <Compile Include="Entrust\UFXQueryEntrustBLL.cs" />
     <Compile Include="TradeInstance\TradeInstanceSecurityBLL.cs" />
-    <Compile Include="UFX\impl\ArbitrageBLL.cs" />
     <Compile Include="Manager\UFXBLLManager.cs" />
     <Compile Include="UFX\impl\UFXBLLBase.cs" />
     <Compile Include="UFX\impl\UFXDataHandlerCallback.cs" />
@@ -125,7 +124,6 @@
     <Compile Include="UFX\impl\SecurityBLL.cs" />
     <Compile Include="SecurityInfo\SecurityInfoBLL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UFX\impl\StrategyBLL.cs" />
     <Compile Include="TradeCommand\TradeCommandBLL.cs" />
     <Compile Include="TradeInstance\TradeInstanceBLL.cs" />
     <Compile Include="UFX\T2SDKWrap.cs" />

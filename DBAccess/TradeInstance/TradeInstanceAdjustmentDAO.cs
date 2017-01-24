@@ -32,7 +32,7 @@ namespace DBAccess.TradeInstance
         }
 
         //need to handle the permission
-        public int Create(List<TradeInstanceAdjustmentItem> items)
+        public List<int> CreateTran(List<TradeInstanceAdjustmentItem> items)
         {
             var dbCommand = _dbHelper.GetCommand();
             _dbHelper.Open(_dbHelper.Connection);
@@ -41,6 +41,7 @@ namespace DBAccess.TradeInstance
             DbTransaction transaction = dbCommand.Connection.BeginTransaction();
             dbCommand.Transaction = transaction;
             dbCommand.CommandType = System.Data.CommandType.StoredProcedure;
+            List<int> idList = new List<int>();
             int ret = -1;
             try
             {
@@ -74,6 +75,10 @@ namespace DBAccess.TradeInstance
                     if (ret > 0)
                     {
                         id = (int)dbCommand.Parameters["@return"].Value;
+                        if (id > 0)
+                        {
+                            idList.Add(id);
+                        }
                     }
                 }
 
@@ -84,6 +89,8 @@ namespace DBAccess.TradeInstance
                 //TODO: add log
                 logger.Error(ex);
                 ret = -1;
+                idList.Clear();
+
                 throw;
             }
             finally
@@ -92,7 +99,7 @@ namespace DBAccess.TradeInstance
                 transaction.Dispose();
             }
 
-            return ret;
+            return idList;
         }
 
         public int Create(TradeInstanceAdjustmentItem item)

@@ -12,10 +12,10 @@ namespace BLL.TradeInstance
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private TradingInstanceSecurityDAO _tradeinstsecudao = new TradingInstanceSecurityDAO();
+        private TradeInstanceSecurityDAO _tradeinstsecudao = new TradeInstanceSecurityDAO();
         //private TradeCommandDAO _tradecmddao = new TradeCommandDAO();
         private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
-        private TradingInstanceAdjustmentBLL _tradeInstanceAdjustBLL = new TradingInstanceAdjustmentBLL();
+        private TradeInstanceAdjustmentBLL _tradeInstanceAdjustBLL = new TradeInstanceAdjustmentBLL();
 
         public TradeInstanceSecurityBLL()
         { 
@@ -197,8 +197,9 @@ namespace BLL.TradeInstance
                 adjustItems.Add(adjustItem);
             }
 
-            int result = _tradeInstanceAdjustBLL.Create(adjustItems);
-            if (result > 0)
+            int result = -1;
+            List<int> idList = _tradeInstanceAdjustBLL.CreateTran(adjustItems);
+            if (idList.Count > 0 && idList.Count == adjustItems.Count)
             {
                 //更新数据库,指向要更新变化部分即可,通过提交事务
                 result = _tradeinstsecudao.Transfer(destNewItems, srcNewItems);

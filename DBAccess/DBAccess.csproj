@@ -83,7 +83,7 @@
     <Compile Include="TradeCommand\TradeCommandSecurityDAO.cs" />
     <Compile Include="TradeInstance\TradeInstanceAdjustmentDAO.cs" />
     <Compile Include="TradeInstance\TradeInstanceDAO.cs" />
-    <Compile Include="TradeInstance\TradingInstanceSecurityDAO.cs" />
+    <Compile Include="TradeInstance\TradeInstanceSecurityDAO.cs" />
     <Compile Include="Product\UFXPortfolioDAO.cs" />
     <Compile Include="UsageTracking\UserActionTrackingDAO.cs" />
   </ItemGroup>

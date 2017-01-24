@@ -59,7 +59,6 @@
     <Compile Include="QuoteCenter2.cs" />
     <Compile Include="TDF\TDFImp.cs" />
     <Compile Include="TDF\TDFQuote.cs" />
-    <Compile Include="TDF\TDFService.cs" />
     <Compile Include="TDF\TDFSubscriptionType.cs" />
   </ItemGroup>
   <ItemGroup>

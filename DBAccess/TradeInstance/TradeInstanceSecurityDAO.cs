@@ -8,26 +8,26 @@ using System.Data.Common;
 
 namespace DBAccess.TradeInstance
 {
-    public class TradingInstanceSecurityDAO: BaseDAO
+    public class TradeInstanceSecurityDAO: BaseDAO
     {
-        private const string SP_Create = "procTradingInstanceSecurityInsert";
-        private const string SP_Transfer = "procTradingInstanceSecurityTransfer";
-        private const string SP_ModifyBuyToday = "procTradingInstanceSecurityBuyToday";
-        private const string SP_ModifySellToday = "procTradingInstanceSecuritySellToday";
-        private const string SP_ModifyPreTrade = "procTradingInstanceSecurityInstructionPreTrade";
-        private const string SP_Delete = "procTradingInstanceSecurityDelete";
-        private const string SP_Get = "procTradingInstanceSecuritySelect";
-        private const string SP_Settle = "procTradingInstanceSecuritySettle";
+        private const string SP_Create = "procTradeInstanceSecurityInsert";
+        private const string SP_Transfer = "procTradeInstanceSecurityTransfer";
+        private const string SP_ModifyBuyToday = "procTradeInstanceSecurityBuyToday";
+        private const string SP_ModifySellToday = "procTradeInstanceSecuritySellToday";
+        private const string SP_ModifyPreTrade = "procTradeInstanceSecurityInstructionPreTrade";
+        private const string SP_Delete = "procTradeInstanceSecurityDelete";
+        private const string SP_Get = "procTradeInstanceSecuritySelect";
+        private const string SP_Settle = "procTradeInstanceSecuritySettle";
 
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public TradingInstanceSecurityDAO()
+        public TradeInstanceSecurityDAO()
             : base()
         { 
             
         }
 
-        public TradingInstanceSecurityDAO(DbHelper dbHelper)
+        public TradeInstanceSecurityDAO(DbHelper dbHelper)
             : base(dbHelper)
         { 
             

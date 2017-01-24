@@ -15,9 +15,9 @@ namespace BLL.TradeInstance
 {
     public class TradeInstanceBLL
     {
-        private TradeInstanceDAO _tradinginstancedao = new TradeInstanceDAO();
-        private TradingInstanceSecurityDAO _tradeinstsecudao = new TradingInstanceSecurityDAO();
-        private TradeInstanceTransactionDAO _tradeinstancedao = new TradeInstanceTransactionDAO();
+        private TradeInstanceDAO _tradeinstancedao = new TradeInstanceDAO();
+        private TradeInstanceSecurityDAO _tradeinstsecudao = new TradeInstanceSecurityDAO();
+        private TradeInstanceTransactionDAO _tradeinstancetrandao = new TradeInstanceTransactionDAO();
         private ProductBLL _productBLL = new ProductBLL();
         private PermissionManager _permissionManager = new PermissionManager();
 
@@ -28,7 +28,7 @@ namespace BLL.TradeInstance
         public int Create(Model.UI.TradeInstance tradeInstance, List<OpenPositionSecurityItem> secuItems)
         {
             var tradeinstSecus = GetTradingInstanceSecurities(tradeInstance.InstanceId, secuItems);
-            int ret = _tradeinstancedao.Create(tradeInstance, tradeinstSecus);
+            int ret = _tradeinstancetrandao.Create(tradeInstance, tradeinstSecus);
             if (ret > 0)
             {
                 int userId = LoginManager.Instance.GetUserId();
@@ -49,7 +49,7 @@ namespace BLL.TradeInstance
             if (_permissionManager.HasPermission(userId, tradeInstance.InstanceId, ResourceType.TradeInstance, PermissionMask.Edit))
             {
                 var tradeinstSecus = GetTradingInstanceSecurities(tradeInstance.InstanceId, secuItems);
-                return _tradeinstancedao.Update(tradeInstance, tradeinstSecus);
+                return _tradeinstancetrandao.Update(tradeInstance, tradeinstSecus);
             }
             else
             {
@@ -63,7 +63,7 @@ namespace BLL.TradeInstance
             if (_permissionManager.HasPermission(userId, tradeInstance.InstanceId, ResourceType.TradeInstance, PermissionMask.Edit))
             {
                 var tradeinstSecus = GetTradingInstanceSecurities(tradeInstance.InstanceId, secuItems);
-                return _tradeinstancedao.Update(tradeInstance, tradeinstSecus);
+                return _tradeinstancetrandao.Update(tradeInstance, tradeinstSecus);
             }
             else
             {
@@ -76,7 +76,7 @@ namespace BLL.TradeInstance
             int userId = LoginManager.Instance.GetUserId();
             if (_permissionManager.HasPermission(userId, tradeInstance.InstanceId, ResourceType.TradeInstance, PermissionMask.Edit))
             {
-                return _tradeinstancedao.Update(tradeInstance, modifiedSecuItems, cancelSecuItems);
+                return _tradeinstancetrandao.Update(tradeInstance, modifiedSecuItems, cancelSecuItems);
             }
             else
             {
@@ -90,7 +90,7 @@ namespace BLL.TradeInstance
 
             if (_permissionManager.HasPermission(userId, instanceId, ResourceType.TradeInstance, PermissionMask.View))
             {
-                return _tradinginstancedao.GetCombine(instanceId);
+                return _tradeinstancedao.GetCombine(instanceId);
             }
             else
             {
@@ -101,7 +101,7 @@ namespace BLL.TradeInstance
         public Model.UI.TradeInstance GetInstance(string instanceCode)
         {
             int userId = LoginManager.Instance.GetUserId();
-            var instance = _tradinginstancedao.GetCombineByCode(instanceCode);
+            var instance = _tradeinstancedao.GetCombineByCode(instanceCode);
             if (_permissionManager.HasPermission(userId, instance.InstanceId, ResourceType.TradeInstance, PermissionMask.View))
             {
                 return instance;
@@ -115,7 +115,7 @@ namespace BLL.TradeInstance
         public List<Model.UI.TradeInstance> GetAllInstance()
         {
             int userId = LoginManager.Instance.GetUserId();
-            var allInstances = _tradinginstancedao.GetCombineAll();
+            var allInstances = _tradeinstancedao.GetCombineAll();
             var instances = new List<Model.UI.TradeInstance>();
             foreach (var instance in allInstances)
             {
@@ -178,7 +178,7 @@ namespace BLL.TradeInstance
             var userId = LoginManager.Instance.GetUserId();
             if (_permissionManager.HasPermission(userId, instanceId, ResourceType.TradeInstance, PermissionMask.Delete))
             {
-                return _tradinginstancedao.Delete(instanceId);
+                return _tradeinstancedao.Delete(instanceId);
             }
             else
             {
