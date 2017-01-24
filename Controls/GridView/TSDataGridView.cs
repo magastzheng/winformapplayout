@@ -1,5 +1,7 @@
 ﻿using Model.config;
+using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -25,7 +27,6 @@ namespace Controls.GridView
     {
         public event UpdateRelatedDataGrid UpdateRelatedDataGridHandler;
         public event ClickRowHandler MouseClickRow;
-        public event ClickRowHandler DoubleClickRow;
         public event NumericUpDownValueChanged NumericUpDownValueChanged;
         public event CellEndEditHandler CellEndEditHandler;
         public event ComboBoxSelectionChangeCommitHandler ComboBoxSelectionChangeCommitHandler; 
@@ -33,6 +34,11 @@ namespace Controls.GridView
         public KeyPressEventHandler CopiesCheckHandler = new KeyPressEventHandler(CopiesCheck);
 
         private DataGridViewComboBoxEditingControl _dgvComboBox = null;
+
+        //Use the store the multiple selected drag to check/uncheck
+        private int startRow = -1;
+        private bool isChecked = false;
+        private bool isShiftSelected = false;
 
         private static void CopiesCheck(object sender, KeyPressEventArgs e)
         {
@@ -52,26 +58,117 @@ namespace Controls.GridView
             this.AutoGenerateColumns = false;
             this.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 
-            //this.CellParsing += new DataGridViewCellParsingEventHandler(DataGridView_CellParsing);
             this.CellFormatting += new DataGridViewCellFormattingEventHandler(DataGridView_CellFormatting);
             this.CellEnter += new DataGridViewCellEventHandler(DataGridView_CellEnter);
-            //this.DataBindingComplete += new DataGridViewBindingCompleteEventHandler(DataGridView_DataBindingComplete);
-            //this.CellValidating += new DataGridViewCellValidatingEventHandler(DataGridView_CellValidating);
 
-            //this.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(DataGridView_ColumnHeaderMouseClick);
             this.CellMouseClick += new DataGridViewCellMouseEventHandler(DataGridView_CellMouseClick);
             this.EditingControlShowing += new DataGridViewEditingControlShowingEventHandler(DataGridView_EditingControlShowing);
             this.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_CellContentClick);
-            this.CellDoubleClick += new DataGridViewCellEventHandler(DataGridView_CellDoubleClick);
+            //this.CellDoubleClick += new DataGridViewCellEventHandler(DataGridView_CellDoubleClick);
             this.CellEndEdit += new DataGridViewCellEventHandler(DataGridView_CellEndEdit);
 
-            //this.CurrentCellChanged += new EventHandler(DataGridView_CurrentCellChanged);
+            this.CellMouseDown += new DataGridViewCellMouseEventHandler(DataGridView_CellMouseDown);
         }
 
-        //private void DataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-        //{
+        private void DataGridView_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            TSDataGridView dgv = sender as TSDataGridView;
+            if (dgv == null)
+                return;
+
+            int columnIndex = e.ColumnIndex;
+            int rowIndex = e.RowIndex;
+            if (columnIndex < 0 || columnIndex > dgv.Columns.Count || rowIndex < 0 || rowIndex > dgv.Rows.Count)
+                return;
+
+            //string msg = string.Format("CellMouseDown - row: {0}, column: {1}", rowIndex, columnIndex);
+            //Trace.WriteLine(msg);
+
+            int cbIndex = GetCheckBoxColumnIndex();
+            if (cbIndex < 0)
+                return;
+
+            if (e.Button == System.Windows.Forms.MouseButtons.Left && Control.ModifierKeys == Keys.Shift)
+            {
+                isShiftSelected = true;
+                if (cbIndex == columnIndex)
+                {
+                    startRow = e.RowIndex;
+                    dgv.CellMouseUp += new DataGridViewCellMouseEventHandler(DataGridView_CellMouseUp);
+                    var cell = dgv.Rows[rowIndex].Cells[columnIndex];
+                    if (Convert.ToBoolean(cell.EditedFormattedValue) == false)
+                    {
+                        isChecked = false;
+                    }
+                    else
+                    {
+                        isChecked = true;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// TODO: the last row is not check/uncheck directly. It needs to move focus to other cell.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DataGridView_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            TSDataGridView dgv = sender as TSDataGridView;
+            if (dgv == null)
+                return;
             
-        //}
+            int columnIndex = e.ColumnIndex;
+            int rowIndex = e.RowIndex;
+            if (columnIndex < 0 || columnIndex > dgv.Columns.Count || rowIndex < 0 || rowIndex > dgv.Rows.Count)
+                return;
+
+            //string msg = string.Format("CellMouseUp - row: {0}, column: {1}", rowIndex, columnIndex);
+            //Trace.WriteLine(msg);
+
+            dgv.CellMouseUp -= DataGridView_CellMouseUp;
+
+            int cbIndex = GetCheckBoxColumnIndex();
+            if (cbIndex < 0)
+                return;
+
+            if (startRow < 0 || startRow > dgv.Rows.Count)
+                return;
+
+            if (!isShiftSelected)
+                return;
+
+            bool result = isChecked ? false : true;
+            int endRow = rowIndex;
+            if (endRow < 0 || endRow > dgv.Rows.Count)
+                return;
+
+            if (startRow == endRow)
+                return;
+
+            int start, end;
+            start = startRow < endRow ? startRow : endRow;
+            end = startRow > endRow ? startRow : endRow;
+
+            for (int i = start; i <= end; i++)
+            {
+                dgv.BeginEdit(false);
+                var row = dgv.Rows[i];
+                var cell = row.Cells[cbIndex];
+                cell.Value = result;
+                //dgv.CommitEdit(DataGridViewDataErrorContexts.Commit);
+                dgv.EndEdit();
+                SwitchSelection(row, columnIndex);
+            }
+
+            isShiftSelected = false;
+
+            startRow = -1;
+
+            //dgv.EndEdit();
+            
+        }
 
         public void NotifyNumericUpDownValueChanged(decimal newValue)
         {
@@ -132,17 +229,17 @@ namespace Controls.GridView
             }
         }
 
-        private void DataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            DataGridView dgv = (DataGridView)sender;
-            if (dgv == null || e.ColumnIndex < 0 || e.RowIndex < 0)
-                return;
+        //private void DataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        //{
+        //    DataGridView dgv = (DataGridView)sender;
+        //    if (dgv == null || e.ColumnIndex < 0 || e.RowIndex < 0)
+        //        return;
 
-            if (DoubleClickRow != null)
-            {
-                DoubleClickRow(this, e.RowIndex);
-            }
-        }
+        //    //if (DoubleClickRow != null)
+        //    //{
+        //    //    DoubleClickRow(this, e.RowIndex);
+        //    //}
+        //}
 
         private void DataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -303,11 +400,6 @@ namespace Controls.GridView
                     }
                 }
             }
-            //var ds = this.DataSource;
-            //if (ds is TSGridViewData)
-            //{
-
-            //}
         }
 
         private void DataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
