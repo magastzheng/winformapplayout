@@ -19,18 +19,18 @@ namespace ControlsTest.Entity
 
     public static class CBRowItemHelper
     {
-        public static HSGrid GetGridConfig()
+        public static TSGrid GetGridConfig()
         {
-            HSGrid hsGrid = new HSGrid
+            TSGrid hsGrid = new TSGrid
             {
-                Columns = new List<HSGridColumn>()
+                Columns = new List<TSGridColumn>()
             };
 
-            HSGridColumn col1 = new HSGridColumn
+            TSGridColumn col1 = new TSGridColumn
             {
                 Name = "name",
                 Text = "Name",
-                ColumnType = HSGridColumnType.Text,
+                ColumnType = TSGridColumnType.Text,
                 ValueType = Model.Data.DataValueType.String,
                 Width = 60,
                 Visible = 1
@@ -38,22 +38,22 @@ namespace ControlsTest.Entity
             hsGrid.Columns.Add(col1);
 
 
-            HSGridColumn col2 = new HSGridColumn
+            TSGridColumn col2 = new TSGridColumn
             {
                 Name = "id",
                 Text = "Id",
-                ColumnType = HSGridColumnType.ComboBox,
+                ColumnType = TSGridColumnType.ComboBox,
                 ValueType = Model.Data.DataValueType.String,
                 Width = 120,
                 Visible = 1
             };
             hsGrid.Columns.Add(col2);
 
-            HSGridColumn col3 = new HSGridColumn
+            TSGridColumn col3 = new TSGridColumn
             {
                 Name = "id_source",
                 Text = "IdSource",
-                ColumnType = HSGridColumnType.Text,
+                ColumnType = TSGridColumnType.Text,
                 ValueType = Model.Data.DataValueType.String,
                 Width = 60,
                 Visible = 0

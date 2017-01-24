@@ -11,7 +11,7 @@ namespace Controls.GridView
 {
     public class TSDataGridViewHelper
     {
-        public static void AddColumns(TSDataGridView dgv, HSGrid hsGrid)
+        public static void AddColumns(TSDataGridView dgv, TSGrid hsGrid)
         {
             if (dgv == null)
             {
@@ -22,37 +22,37 @@ namespace Controls.GridView
                 throw new ArgumentNullException("hsGrid");
             }
 
-            List<HSGridColumn> columns = hsGrid.Columns;
+            List<TSGridColumn> columns = hsGrid.Columns;
             DataGridViewColumn[] gridColumns = new DataGridViewColumn[columns.Count];
             for (int i = 0, count = columns.Count; i < count; i++)
             {
-                HSGridColumn col = columns[i];
+                TSGridColumn col = columns[i];
 
                 DataGridViewColumn column = null;
                 switch (col.ColumnType)
                 {
-                    case HSGridColumnType.CheckBox:
+                    case TSGridColumnType.CheckBox:
                         {
                             column = new DataGridViewCheckBoxColumn();
                         }
                         break;
-                    case HSGridColumnType.Image:
+                    case TSGridColumnType.Image:
                         {
                             column = new DataGridViewImageColumn();
                             column.Tag = col.DefaultValue;
                         }
                         break;
-                    case HSGridColumnType.Text:
+                    case TSGridColumnType.Text:
                         {
                             column = new DataGridViewTextBoxColumn();
                         }
                         break;
-                    case HSGridColumnType.ComboBox:
+                    case TSGridColumnType.ComboBox:
                         {
                             column = new DataGridViewComboBoxColumn();
                         }
                         break;
-                    case HSGridColumnType.NumericUpDown:
+                    case TSGridColumnType.NumericUpDown:
                         {
                             var numericCell = new DataGridViewNumericUpDownColumn();
                             numericCell.Minimum = 0;

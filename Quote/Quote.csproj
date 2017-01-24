@@ -55,7 +55,6 @@
     <Compile Include="PublishEvent.cs" />
     <Compile Include="QueryHelper.cs" />
     <Compile Include="Quote.cs" />
-    <Compile Include="QuoteCenter.cs" />
     <Compile Include="QuoteCenter2.cs" />
     <Compile Include="TDF\TDFImp.cs" />
     <Compile Include="TDF\TDFQuote.cs" />
@@ -77,10 +76,6 @@
     <ProjectReference Include="..\Model\Model.csproj">
       <Project>{9afc3370-02ab-444b-9c43-411e49f49b16}</Project>
       <Name>Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WAPIWrapperCSharp\WAPIWrapperCSharp.csproj">
-      <Project>{7b9116b3-dcf4-4c50-953e-3457a77ea99b}</Project>
-      <Name>WAPIWrapperCSharp</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

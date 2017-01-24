@@ -25,14 +25,14 @@ namespace ControlsTest
         private void Form_Load(object sender, EventArgs e)
         {
             GridConfig gridConfig = ConfigManager.Instance.GetGridConfig();
-            HSGrid hsGrid = gridConfig.GetGid("templatestock");
+            TSGrid hsGrid = gridConfig.GetGid("templatestock");
             TSDataGridViewHelper.AddColumns(this.tsDataGridView1, hsGrid);
             var dataTable = GenerateData(hsGrid);
 
             //TSDataGridViewHelper.SetData(this.tsDataGridView1, hsGrid, dataTable);
         }
 
-        private Model.Data.DataTable GenerateData(HSGrid hsGrid)
+        private Model.Data.DataTable GenerateData(TSGrid hsGrid)
         {
             Model.Data.DataTable dataTable = new Model.Data.DataTable();
             dataTable.Rows = new List<Model.Data.DataRow>();

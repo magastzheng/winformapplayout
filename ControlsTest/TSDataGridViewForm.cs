@@ -14,7 +14,7 @@ namespace ControlsTest
     public partial class TSDataGridViewForm : Form
     {
         private Model.Data.DataTable _dataTable = null;
-        private TSGridViewData _data = null;
+        //private TSGridViewData _data = null;
         public TSDataGridViewForm()
         {
             InitializeComponent();
@@ -22,16 +22,16 @@ namespace ControlsTest
 
         private void Form_Load(object sender, System.EventArgs e)
         {
-            List<HSGridColumn> columns;
+            List<TSGridColumn> columns;
             _dataTable = LoadData(out columns);
              
-            _data = new TSGridViewData(_dataTable, columns);
+            //_data = new TSGridViewData(_dataTable, columns);
 
-            //this.dataGridView1.DataSource = _dataTable.Rows;
-            this.dataGridView1.DataSource = _data;
+            ////this.dataGridView1.DataSource = _dataTable.Rows;
+            //this.dataGridView1.DataSource = _data;
         }
 
-        private Model.Data.DataTable LoadData(out List<HSGridColumn> columns)
+        private Model.Data.DataTable LoadData(out List<TSGridColumn> columns)
         {
             Model.Data.DataTable dataTable = new Model.Data.DataTable 
             {
@@ -39,7 +39,7 @@ namespace ControlsTest
                 ColumnIndex = new Dictionary<string,int>()
             };
 
-            columns = new List<HSGridColumn>();
+            columns = new List<TSGridColumn>();
             Random ran = new Random();
 
             for (int i = 0; i < 15; i++)
@@ -63,7 +63,7 @@ namespace ControlsTest
                             dataTable.ColumnIndex.Add(name, j);
                         }
 
-                        HSGridColumn column = new HSGridColumn();
+                        TSGridColumn column = new TSGridColumn();
                         column.Name = name;
                         column.Text = name;
                         columns.Add(column);

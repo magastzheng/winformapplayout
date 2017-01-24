@@ -41,7 +41,7 @@ namespace ControlsTest
 
         private void Form_Load(object sender, EventArgs e)
         {
-            HSGrid hsGrid = GetGridConfig();
+            TSGrid hsGrid = GetGridConfig();
             TSDataGridViewHelper.AddColumns(this.tsDataGridView1, hsGrid);
 
             Dictionary<string, string> columnMap = GridViewBindingHelper.GetPropertyBinding(typeof(TSDGVCbItem));
@@ -59,18 +59,18 @@ namespace ControlsTest
             }
         }
 
-        private HSGrid GetGridConfig()
+        private TSGrid GetGridConfig()
         {
-            HSGrid hsGrid = new HSGrid
+            TSGrid hsGrid = new TSGrid
             {
-                Columns = new List<HSGridColumn>()
+                Columns = new List<TSGridColumn>()
             };
 
-            HSGridColumn col1 = new HSGridColumn 
+            TSGridColumn col1 = new TSGridColumn 
             {
                 Name = "name",
                 Text = "Name",
-                ColumnType = HSGridColumnType.Text,
+                ColumnType = TSGridColumnType.Text,
                 ValueType = Model.Data.DataValueType.String,
                 Width = 60,
                 Visible = 1
@@ -78,11 +78,11 @@ namespace ControlsTest
             hsGrid.Columns.Add(col1);
 
 
-            HSGridColumn col2 = new HSGridColumn
+            TSGridColumn col2 = new TSGridColumn
             {
                 Name = "combobox",
                 Text = "ComboBox",
-                ColumnType = HSGridColumnType.ComboBox,
+                ColumnType = TSGridColumnType.ComboBox,
                 ValueType = Model.Data.DataValueType.String,
                 Width = 60,
                 Visible = 1

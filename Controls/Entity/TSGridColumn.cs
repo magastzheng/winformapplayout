@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Controls.Entity
 {
-    public enum HSGridColumnType
+    public enum TSGridColumnType
     {
         None = -1,
         Text = 0,
@@ -13,22 +13,22 @@ namespace Controls.Entity
         NumericUpDown = 4,
     }
 
-    public class HSGridColumn
+    public class TSGridColumn
     {
         public string Name { get; set; }
         public string Text { get; set; }
         public int Width { get; set; }
-        public HSGridColumnType ColumnType { get; set; }
+        public TSGridColumnType ColumnType { get; set; }
         public DataValueType ValueType { get; set; }
         public int Visible { get; set; }
         public int ReadOnly { get; set; }
         public string DefaultValue { get; set; }
     }
 
-    public class HSGrid
+    public class TSGrid
     {
         public string Grid { get; set; }
         public int Background { get; set; }
-        public List<HSGridColumn> Columns { get; set; }
+        public List<TSGridColumn> Columns { get; set; }
     }
 }

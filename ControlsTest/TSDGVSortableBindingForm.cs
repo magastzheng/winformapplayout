@@ -27,7 +27,7 @@ namespace ControlsTest
         private void Form_Load(object sender, EventArgs e)
         {
             GridConfig gridConfig = ConfigManager.Instance.GetGridConfig();
-            HSGrid hsGrid = gridConfig.GetGid("templatestock");
+            TSGrid hsGrid = gridConfig.GetGid("templatestock");
             TSDataGridViewHelper.AddColumns(this.tsDataGridView1, hsGrid);
             Dictionary<string, string> colFieldMap = GridViewBindingHelper.GetPropertyBinding(typeof(TemplateStock));
             TSDataGridViewHelper.SetDataBinding(this.tsDataGridView1, colFieldMap);
@@ -37,7 +37,7 @@ namespace ControlsTest
             
         }
 
-        private List<TemplateStock> GenerateData(HSGrid hsGrid)
+        private List<TemplateStock> GenerateData(TSGrid hsGrid)
         {
             List<TemplateStock> tempStocks = new List<TemplateStock>();
             TemplateStock item1 = new TemplateStock 

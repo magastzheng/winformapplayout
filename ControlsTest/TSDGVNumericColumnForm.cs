@@ -36,7 +36,7 @@ namespace ControlsTest
 
         private void Form_Load(object sender, EventArgs e)
         {
-            HSGrid hsGrid = GetGridConfig();
+            TSGrid hsGrid = GetGridConfig();
             TSDataGridViewHelper.AddColumns(this.tsDataGridView1, hsGrid);
             Dictionary<string, string> columnMap = GridViewBindingHelper.GetPropertyBinding(typeof(NumericItem));
             TSDataGridViewHelper.SetDataBinding(this.tsDataGridView1, columnMap);
@@ -58,18 +58,18 @@ namespace ControlsTest
             this.tsDataGridView1.Invalidate();
         }
 
-        private HSGrid GetGridConfig()
+        private TSGrid GetGridConfig()
         {
-            HSGrid hsGrid = new HSGrid
+            TSGrid hsGrid = new TSGrid
             {
-                Columns = new List<HSGridColumn>()
+                Columns = new List<TSGridColumn>()
             };
 
-            HSGridColumn col1 = new HSGridColumn
+            TSGridColumn col1 = new TSGridColumn
             {
                 Name = "name",
                 Text = "Name",
-                ColumnType = HSGridColumnType.Text,
+                ColumnType = TSGridColumnType.Text,
                 ValueType = Model.Data.DataValueType.String,
                 Width = 60,
                 Visible = 1
@@ -77,22 +77,22 @@ namespace ControlsTest
             hsGrid.Columns.Add(col1);
 
 
-            HSGridColumn col2 = new HSGridColumn
+            TSGridColumn col2 = new TSGridColumn
             {
                 Name = "id",
                 Text = "Id",
-                ColumnType = HSGridColumnType.Text,
+                ColumnType = TSGridColumnType.Text,
                 ValueType = Model.Data.DataValueType.String,
                 Width = 60,
                 Visible = 1
             };
             hsGrid.Columns.Add(col2);
 
-            HSGridColumn col3 = new HSGridColumn
+            TSGridColumn col3 = new TSGridColumn
             {
                 Name = "age",
                 Text = "Age",
-                ColumnType = HSGridColumnType.NumericUpDown,
+                ColumnType = TSGridColumnType.NumericUpDown,
                 ValueType = Model.Data.DataValueType.Int,
                 Width = 60,
                 Visible = 1

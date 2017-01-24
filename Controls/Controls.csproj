@@ -66,21 +66,14 @@
     <Compile Include="Entity\ControlConstVariable.cs" />
     <Compile Include="Entity\PropertyComparer.cs" />
     <Compile Include="Entity\SortableBindingList.cs" />
-    <Compile Include="Entity\TSGridViewRowPropertyDescriptor.cs" />
-    <Compile Include="Entity\TSGridViewData.cs" />
-    <Compile Include="Entity\HSGridColumn.cs" />
+    <Compile Include="Entity\TSGridColumn.cs" />
     <Compile Include="Entity\TSNavNodeData.cs" />
-    <Compile Include="Entity\TSGridViewRow.cs" />
     <Compile Include="GridView\DataGridViewNumericUpDownCell.cs" />
     <Compile Include="GridView\DataGridViewNumericUpDownColumn.cs" />
     <Compile Include="GridView\DataGridViewNumericUpDownEditingControl.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="GridView\DataGridViewRowHeaderCellEx.cs" />
-    <Compile Include="GridView\HSGridView.cs" />
-    <Compile Include="GridView\HSGridView.Designer.cs">
-      <DependentUpon>HSGridView.cs</DependentUpon>
-    </Compile>
     <Compile Include="GridView\TSDataGridView.cs">
       <SubType>Component</SubType>
     </Compile>

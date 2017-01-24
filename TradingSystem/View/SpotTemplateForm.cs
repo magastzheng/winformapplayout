@@ -954,7 +954,7 @@ namespace TradingSystem.View
                 return stockList;
 
             //用于获取二维表表头名字与Excel中表头进行匹配，获取Excel DataTable中列的位置
-            HSGrid hsGrid = _gridConfig.GetGid(GridStock);
+            TSGrid hsGrid = _gridConfig.GetGid(GridStock);
             var gridColumns = hsGrid.Columns;
 
             //标签与属性名映射表
@@ -1075,7 +1075,7 @@ namespace TradingSystem.View
 
         private Model.Data.DataTable GridToExecl(List<TemplateStock> tempStocks, out List<DataHeader> cellRanges)
         {
-            HSGrid hsGrid = _gridConfig.GetGid(GridStock);
+            TSGrid hsGrid = _gridConfig.GetGid(GridStock);
             var gridColumns = hsGrid.Columns;
 
             var sheetConfig = ConfigManager.Instance.GetImportConfig().GetSheet("stocktemplate");

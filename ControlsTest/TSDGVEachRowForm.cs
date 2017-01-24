@@ -41,7 +41,7 @@ namespace ControlsTest
 
         private void Form_Load(object sender, EventArgs e)
         {
-            HSGrid hsGrid = CBRowItemHelper.GetGridConfig();
+            TSGrid hsGrid = CBRowItemHelper.GetGridConfig();
             TSDataGridViewHelper.AddColumns(this.tsDataGridView1, hsGrid);
 
             var listData = CBRowItemHelper.GetData();

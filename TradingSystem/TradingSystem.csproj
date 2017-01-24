@@ -484,10 +484,6 @@
       <Project>{723db468-9d89-40e8-be82-ddecc927e2cb}</Project>
       <Name>Util</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WAPIWrapperCSharp\WAPIWrapperCSharp.csproj">
-      <Project>{7b9116b3-dcf4-4c50-953e-3457a77ea99b}</Project>
-      <Name>WAPIWrapperCSharp</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

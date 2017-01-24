@@ -9,8 +9,8 @@ namespace Config
         private const string FileName = "gridview.json";
 
         //private static GridConfig _instance = new GridConfig();
-        private List<HSGrid> _grids;
-        public List<HSGrid> Grids { get { return _grids; } }
+        private List<TSGrid> _grids;
+        public List<TSGrid> Grids { get { return _grids; } }
         //public GridConfig Instance { get { return _instance; } }
         public GridConfig()
         {
@@ -25,12 +25,12 @@ namespace Config
         {
             string filePath = RuntimeEnv.Instance.GetConfigFile(FileName);
             string content = FileUtil.ReadFile(filePath);
-            _grids = JsonConvert.DeserializeObject<List<HSGrid>>(content);
+            _grids = JsonConvert.DeserializeObject<List<TSGrid>>(content);
         }
 
-        public HSGrid GetGid(string name)
+        public TSGrid GetGid(string name)
         {
-            HSGrid targetGrid = new HSGrid();
+            TSGrid targetGrid = new TSGrid();
             var target = _grids.Find(p => p.Grid.Equals(name));
             if (target != null)
             {
