@@ -70,6 +70,12 @@ namespace Controls.GridView
             this.CellMouseDown += new DataGridViewCellMouseEventHandler(DataGridView_CellMouseDown);
         }
 
+        /// <summary>
+        /// 按下Shift键之后，按住鼠标左键在Checkbox列上拖动多行，实现选中/选出多行功能。
+        /// 由于该事件直接响应鼠标事件，如果不先按下Shift键则不会触发后续事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DataGridView_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
             TSDataGridView dgv = sender as TSDataGridView;
@@ -109,7 +115,9 @@ namespace Controls.GridView
         }
 
         /// <summary>
-        /// TODO: the last row is not check/uncheck directly. It needs to move focus to other cell.
+        /// 该事件处理函数在DataGridView_CellMouseDown中注册，并在本事件处理函数中删除注销。
+        /// 仅当按下Shift键，并在Checkbox列按下鼠标左键，才会触发注册本事件处理函数。
+        /// 改变Cell值时调用BeginEdit/EndEdit是为了让该值及时生效，也就是EditedFormatValue更新。
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -123,9 +131,6 @@ namespace Controls.GridView
             int rowIndex = e.RowIndex;
             if (columnIndex < 0 || columnIndex > dgv.Columns.Count || rowIndex < 0 || rowIndex > dgv.Rows.Count)
                 return;
-
-            //string msg = string.Format("CellMouseUp - row: {0}, column: {1}", rowIndex, columnIndex);
-            //Trace.WriteLine(msg);
 
             dgv.CellMouseUp -= DataGridView_CellMouseUp;
 
@@ -157,7 +162,6 @@ namespace Controls.GridView
                 var row = dgv.Rows[i];
                 var cell = row.Cells[cbIndex];
                 cell.Value = result;
-                //dgv.CommitEdit(DataGridViewDataErrorContexts.Commit);
                 dgv.EndEdit();
                 SwitchSelection(row, columnIndex);
             }
@@ -165,9 +169,6 @@ namespace Controls.GridView
             isShiftSelected = false;
 
             startRow = -1;
-
-            //dgv.EndEdit();
-            
         }
 
         public void NotifyNumericUpDownValueChanged(decimal newValue)
