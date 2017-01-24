@@ -166,7 +166,7 @@ begin
 			,b.PortfolioName
 			,c.TemplateName
 		from monitorunit a
-		inner join portfolio b
+		inner join ufxportfolio b
 		on a.PortfolioId = b.PortfolioId
 		inner join stocktemplate c
 		on a.StockTemplateId = c.TemplateId
