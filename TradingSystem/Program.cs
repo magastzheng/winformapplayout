@@ -45,8 +45,9 @@ namespace TradingSystem
 
             //var setting = SettingManager.Instance.Get();
             var settingConfig = ConfigManager.Instance.GetDefaultSettingConfig();
-            var buttonConfig = ConfigManager.Instance.GetButtonConfig();
+            //var buttonConfig = ConfigManager.Instance.GetButtonConfig();
 
+            //TODO:每个交易日开始时初始化????
             //清算交易实例
             var tradeInstanceSecuBLL = new TradeInstanceSecurityBLL();
             tradeInstanceSecuBLL.SettlePosition();
@@ -63,7 +64,6 @@ namespace TradingSystem
 
             T2Subscriber t2Subscriber = new T2Subscriber(timeOut);
             conRet = t2Subscriber.Connect();
-
             if (conRet != Model.ConnectionCode.Success)
             {
                 t2SDKWrap.Close();
@@ -73,9 +73,6 @@ namespace TradingSystem
 
             UFXBLLManager.Instance.Init(t2SDKWrap);
             UFXBLLManager.Instance.Subscriber = t2Subscriber;
-
-            //启动wind行情服务
-            //WindAPIWrap.Instance.Start();
 
             //TODO: subscribe the message after getting login information
             LoginController loginController = new LoginController(new LoginForm(), t2SDKWrap);
@@ -89,7 +86,6 @@ namespace TradingSystem
             loginController.Logout();
             t2SDKWrap.Close();
             t2Subscriber.Close();
-            //WindAPIWrap.Instance.Dispose();
 
             glExitApp = true;
         }

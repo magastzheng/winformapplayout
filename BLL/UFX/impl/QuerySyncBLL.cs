@@ -1,12 +1,6 @@
 ﻿using log4net;
-using Model;
-using Model.Binding.BindingUtil;
 using Model.UFX;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.UFX.impl
 {

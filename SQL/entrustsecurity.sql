@@ -422,8 +422,8 @@ end
 --	where RequestId=@RequestId
 --end
 
-go
-if exists (select name from sysobjects where name='procEntrustSecurityUpdateCancel')
+--go
+--if exists (select name from sysobjects where name='procEntrustSecurityUpdateCancel')
 --drop proc procEntrustSecurityUpdateCancel
 
 --go
@@ -1018,7 +1018,7 @@ begin
 	--on a.CommandId=b.CommandId and a.SubmitId=b.SubmitId
 	inner join tradecommand c
 	on a.CommandId=c.CommandId
-	inner join tradinginstance d
+	inner join tradeinstance d
 	on c.InstanceId=d.InstanceId
 	inner join monitorunit e
 	on d.MonitorUnitId=e.MonitorUnitId
@@ -1072,7 +1072,7 @@ begin
 	--on a.CommandId=b.CommandId and a.SubmitId=b.SubmitId
 	inner join tradecommand c
 	on a.CommandId=c.CommandId
-	inner join tradinginstance d
+	inner join tradeinstance d
 	on c.InstanceId=d.InstanceId
 	inner join monitorunit e
 	on d.MonitorUnitId=e.MonitorUnitId

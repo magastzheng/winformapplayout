@@ -249,7 +249,13 @@ namespace DBAccess.EntrustCommand
                     _dbHelper.AddInParameter(dbCommand, "@BatchNo", System.Data.DbType.Int32, item.BatchNo);
                     _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, now);
                     _dbHelper.AddInParameter(dbCommand, "@EntrustFailCode", System.Data.DbType.Int32, item.EntrustFailCode);
-                    _dbHelper.AddInParameter(dbCommand, "@EntrustFailCause", System.Data.DbType.String, item.EntrustFailCause);
+                    string failCause = item.EntrustFailCause;
+                    if(string.IsNullOrEmpty(failCause))
+                    {
+                        failCause = string.Empty;
+                    }
+
+                    _dbHelper.AddInParameter(dbCommand, "@EntrustFailCause", System.Data.DbType.String, failCause);
 
                     ret = dbCommand.ExecuteNonQuery();
                 }

@@ -3010,7 +3010,7 @@ readonly:
 	]
 },{
 	"grid": "openpositioninstance",
-	"background": 0,
+	"background": 1,
 	"columns": [{
 		"name": "portfoliodisplay",
 		"text": "套利组合",
@@ -3098,7 +3098,7 @@ readonly:
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
-		"readonly": 1
+		"readonly": 0
 		},{
 		"name": "last",
 		"text": "",
