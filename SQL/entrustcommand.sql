@@ -16,7 +16,7 @@ create table entrustcommand(
 	,CreatedDate	datetime						--提交时间	
 	,ModifiedDate	datetime						--修改时间	
 	,EntrustFailCode	int							--委托错误码
-	,EntrustFailCause	varchar(128)				--委托失败原因
+	,EntrustFailCause	varchar(1024)				--委托失败原因
 )
 
 go

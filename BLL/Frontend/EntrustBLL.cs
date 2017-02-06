@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 
 namespace BLL.Frontend
 {
@@ -74,6 +75,21 @@ namespace BLL.Frontend
                 .ForEach(o => o.SubmitId = cmdItem.SubmitId);
 
             return _ufxBasketEntrustBLL.Submit(cmdItem, entrustItems, callback);
+        }
+
+        public BLLResponse SubmitAsync(Model.Database.EntrustCommand cmdItem, List<EntrustSecurity> entrustItems, CallerCallback callback, EventWaitHandle waitHandle)
+        {
+            int ret = SumbitToDB(cmdItem, entrustItems);
+            if (ret <= 0)
+            {
+                return new BLLResponse(ConnectionCode.DBInsertFail, "Fail to submit into database");
+            }
+
+            entrustItems.Where(p => p.CommandId == cmdItem.CommandId)
+                .ToList()
+                .ForEach(o => o.SubmitId = cmdItem.SubmitId);
+
+            return _ufxBasketEntrustBLL.SubmitAsync(cmdItem, entrustItems, callback, waitHandle);
         }
 
         #endregion

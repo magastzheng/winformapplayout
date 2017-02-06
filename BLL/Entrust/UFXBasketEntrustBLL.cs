@@ -143,6 +143,79 @@ namespace BLL.Entrust
             return bllResponse;
         }
 
+        //TODO: async to sumbit the command, it can emit the latency.
+        public BLLResponse SubmitAsync(Model.Database.EntrustCommand cmdItem, List<EntrustSecurity> entrustItems, CallerCallback callerCallback, EventWaitHandle waitHandle)
+        {
+            var cmdEntrustItems = entrustItems.Where(p => p.CommandId == cmdItem.CommandId && p.SubmitId == cmdItem.SubmitId).ToList();
+            if (cmdEntrustItems == null || cmdEntrustItems.Count == 0)
+            {
+                return new BLLResponse(ConnectionCode.EmptyEntrustItem, "Empty EntrustCommandItem or EntrustSecurityItem.");
+            }
+            var tradeCommandItem = _tradeCommandBLL.GetTradeCommand(cmdItem.CommandId);
+            var portfolio = LoginManager.Instance.GetPortfolio(tradeCommandItem.PortfolioCode);
+            //var stockholder = LoginManager.Instance.GetHolder(tradeCommandItem.
+
+            var ufxRequests = new List<UFXBasketEntrustRequest>();
+            var futuItem = cmdEntrustItems.Find(p => p.SecuType == Model.SecurityInfo.SecurityType.Futures);
+            foreach (var secuItem in cmdEntrustItems)
+            {
+                UFXBasketEntrustRequest request = new UFXBasketEntrustRequest
+                {
+                    StockCode = secuItem.SecuCode,
+                    EntrustPrice = secuItem.EntrustPrice,
+                    EntrustAmount = secuItem.EntrustAmount,
+                    PriceType = EntrustRequestHelper.GetEntrustPriceType(secuItem.EntrustPriceType),
+                    ExtSystemId = secuItem.RequestId,
+                    ThirdReff = EntrustRequestHelper.GenerateThirdReff(secuItem.CommandId, secuItem.SubmitId, secuItem.RequestId),
+                    LimitEntrustRatio = _limitEntrustRatio,
+                    FutuLimitEntrustRatio = _futuLimitEntrustRatio,
+                    OptLimitEntrustRatio = _optLimitEntrustRatio,
+                };
+
+                if (secuItem.SecuType == Model.SecurityInfo.SecurityType.Stock)
+                {
+                    request.EntrustDirection = EntrustRequestHelper.GetEntrustDirection(secuItem.EntrustDirection);
+                    request.FuturesDirection = string.Empty;
+                }
+                else if (secuItem.SecuType == Model.SecurityInfo.SecurityType.Futures)
+                {
+                    request.EntrustDirection = EntrustRequestHelper.GetEntrustDirection(secuItem.EntrustDirection);
+                    request.FuturesDirection = EntrustRequestHelper.GetFuturesDirection(secuItem.EntrustDirection);
+                }
+
+                var secuInfo = SecurityInfoManager.Instance.Get(secuItem.SecuCode, secuItem.SecuType);
+                if (secuInfo != null)
+                {
+                    request.MarketNo = EntrustRequestHelper.GetMarketNo(secuInfo.ExchangeCode);
+                }
+
+                if (tradeCommandItem != null)
+                {
+                    request.AccountCode = tradeCommandItem.AccountCode;
+                    request.CombiNo = tradeCommandItem.PortfolioCode;
+                }
+
+                ufxRequests.Add(request);
+            }
+
+            Callbacker callbacker = new Callbacker
+            {
+                Token = new CallerToken
+                {
+                    SubmitId = cmdItem.SubmitId,
+                    CommandId = cmdItem.CommandId,
+                    Caller = callerCallback,
+                    WaitEvent = waitHandle,
+                },
+
+                DataHandler = EntrustDataHandler,
+            };
+
+            var result = _securityBLL.EntrustBasket(ufxRequests, callbacker);
+
+            return new BLLResponse(result, "Finish to entrust.");
+        }
+
         private int EntrustDataHandler(CallerToken token, DataParser dataParser)
         {
             var errorResponse = T2ErrorHandler.Handle(dataParser);

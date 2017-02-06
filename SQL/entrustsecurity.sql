@@ -27,7 +27,7 @@ create table entrustsecurity(
 	,CreatedDate		datetime	 -- 委托时间	
 	,ModifiedDate		datetime	 -- 修改时间
 	,EntrustFailCode	int			 --委托失败代码
-	,EntrustFailCause	varchar(128) --委托失败原因
+	,EntrustFailCause	varchar(1024) --委托失败原因
 )
 
 --====================================

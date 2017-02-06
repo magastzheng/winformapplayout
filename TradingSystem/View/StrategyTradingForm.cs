@@ -27,6 +27,8 @@ using Calculation;
 using Model.Converter;
 using Model.Database;
 using BLL.Manager;
+using System.Threading;
+using System.Text;
 
 namespace TradingSystem.View
 {
@@ -1152,9 +1154,25 @@ namespace TradingSystem.View
 
             //submit each entrust item and each security in the entrustitem
             //TODO：choose the strategy(cancel all if failure appear)
+            //int successCount = EntrustSync(selectedEntrustItems);
+            int successCount = EntrustASync(selectedEntrustItems);
+
+            string msgFormat = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgEntrustSecuritySuccessCount);
+            string successMsg = string.Format(msgFormat, successCount);
+            MessageDialog.Info(this, successMsg);
+            //update the UI
+            GridView_Security_ResetPriceType(selectedSecuItems);
+            nudCopies.Value = 1;
+            this.cmdGridView.Invalidate();
+            this.bsGridView.Invalidate();
+            this.securityGridView.Invalidate();
+        }
+
+        private int EntrustSync(List<EntrustItem> entrustItems)
+        {
             List<int> submitIds = new List<int>();
             int successCount = 0;
-            foreach (var eiItem in selectedEntrustItems)
+            foreach (var eiItem in entrustItems)
             {
                 EntrustCommand eciItem = new EntrustCommand
                 {
@@ -1176,26 +1194,104 @@ namespace TradingSystem.View
                     UpdateEntrustedAmount(entrustSecuItems);
                 }
                 else
-                { 
+                {
                     //Fail to submit into database
                     string errFormat = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgEntrustCommandFail);
                     string msg = string.Format(errFormat, eiItem.CommandNo, bllResponse.Message);
-                    if(MessageDialog.Error(this, msg, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
+                    if (MessageDialog.Error(this, msg, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
                     {
                         break;
                     }
                 }
             }
 
-            string msgFormat = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgEntrustSecuritySuccessCount);
-            string successMsg = string.Format(msgFormat, successCount);
-            MessageDialog.Info(this, successMsg);
-            //update the UI
-            GridView_Security_ResetPriceType(selectedSecuItems);
-            nudCopies.Value = 1;
-            this.cmdGridView.Invalidate();
-            this.bsGridView.Invalidate();
-            this.securityGridView.Invalidate();
+            return successCount;
+        }
+
+        private int EntrustASync(List<EntrustItem> entrustItems)
+        {
+            //List<int> submitIds = new List<int>();
+            List<EntrustCommand> entrustCommandList = new List<EntrustCommand>();
+            int successCount = 0;
+            List<EventWaitHandle> waitHandles = new List<EventWaitHandle>();
+
+            foreach (var eiItem in entrustItems)
+            {
+                EntrustCommand eciItem = new EntrustCommand
+                {
+                    CommandId = eiItem.CommandNo,
+                    Copies = eiItem.Copies,
+                };
+
+                var entrustSecuItems = GetEntrustSecurityItems(-1, eiItem.CommandNo);
+                EventWaitHandle waitHandle = new AutoResetEvent(false);
+                waitHandles.Add(waitHandle);
+                var bllResponse = _entrustBLL.SubmitAsync(eciItem, entrustSecuItems, null, waitHandle);
+                if (BLLResponse.Success(bllResponse))
+                {
+                    //success to submit into database
+                    entrustCommandList.Add(eciItem);
+
+                    //TODO: update the targetnum in UI
+                    //successCount += entrustSecuItems.Count;
+
+                    //UpdateEntrustedAmount(entrustSecuItems);
+                }
+                else
+                {
+                    //Fail to submit into database
+                    string errFormat = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgEntrustCommandFail);
+                    string msg = string.Format(errFormat, eiItem.CommandNo, bllResponse.Message);
+                    if (MessageDialog.Error(this, msg, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            string resMsg = string.Empty;
+            StringBuilder sb = new StringBuilder();
+            bool waitRet = true;
+            foreach (var e in waitHandles)
+            {
+                if (!e.WaitOne(30000))
+                {
+                    waitRet = false;
+                }
+            }
+            //bool waitRet = WaitHandle.WaitAll(waitHandles.ToArray());
+            if (waitRet)
+            {
+                //Access the database to get the message
+                foreach (var entrustCommand in entrustCommandList)
+                {
+                    var entrustSecuItems = _entrustSecurityBLL.GetBySubmitId(entrustCommand.SubmitId);
+
+                    //Show message
+                    foreach (var entrustSecuItem in entrustSecuItems)
+                    {
+                        if (entrustSecuItem.EntrustNo <= 0 || entrustSecuItem.EntrustFailCode != 0)
+                        {
+                            sb.AppendFormat("{0}: {1}, {2}", entrustSecuItem.SecuCode, entrustSecuItem.EntrustFailCode, entrustSecuItem.EntrustFailCause);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                sb.Append("Fail to call the UFX!");
+            }
+
+            resMsg = sb.ToString();
+            if (resMsg.Length > 0)
+            {
+                if (MessageDialog.Error(this, resMsg, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
+                {
+
+                }
+            }
+
+            return successCount;
         }
 
         private void UpdateEntrustedAmount(List<EntrustSecurity> entrustedSecuItems)

@@ -19,7 +19,8 @@ namespace TradingSystem
 
         public static MainController _s_mainfrmController = null;
         /// <summary>
-        /// The main entry point for the application.
+        /// The main entry point for the application. It needs the STA to support OpenFileDialog. Don't use WaitAll which requests
+        /// not STA.
         /// </summary>
         [STAThread]
         static void Main()
