@@ -64,7 +64,7 @@ namespace DBAccess.Archive.Deal
         public int Create(List<ArchiveDealSecurity> items)
         { 
             var dbCommand = _dbHelper.GetCommand();
-            _dbHelper.Open(_dbHelper.Connection);
+            _dbHelper.Open(dbCommand);
 
             //use transaction to execute
             DbTransaction transaction = dbCommand.Connection.BeginTransaction();
@@ -125,7 +125,7 @@ namespace DBAccess.Archive.Deal
             }
             finally
             {
-                _dbHelper.Close(dbCommand.Connection);
+                _dbHelper.Close(dbCommand);
                 transaction.Dispose();
             }
 
@@ -187,7 +187,7 @@ namespace DBAccess.Archive.Deal
             }
 
             reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return items;
         }

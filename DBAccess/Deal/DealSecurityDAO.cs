@@ -139,7 +139,7 @@ namespace DBAccess.Deal
             }
 
             reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return items;
         }

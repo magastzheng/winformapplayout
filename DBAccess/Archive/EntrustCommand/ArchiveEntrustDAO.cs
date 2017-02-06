@@ -34,7 +34,7 @@ namespace DBAccess.Archive.EntrustCommand
         public int Create(Model.Database.EntrustCommand cmdItem, List<EntrustSecurity> entrustItems)
         {
             var dbCommand = _dbHelper.GetCommand();
-            _dbHelper.Open(_dbHelper.Connection);
+            _dbHelper.Open(dbCommand);
 
             //use transaction to execute
             DbTransaction transaction = dbCommand.Connection.BeginTransaction();
@@ -123,7 +123,7 @@ namespace DBAccess.Archive.EntrustCommand
             }
             finally
             {
-                _dbHelper.Close(dbCommand.Connection);
+                _dbHelper.Close(dbCommand);
                 transaction.Dispose();
             }
 
@@ -133,7 +133,7 @@ namespace DBAccess.Archive.EntrustCommand
         public int Delete(int archiveId)
         { 
             var dbCommand = _dbHelper.GetCommand();
-            _dbHelper.Open(_dbHelper.Connection);
+            _dbHelper.Open(dbCommand);
 
             //use transaction to execute
             DbTransaction transaction = dbCommand.Connection.BeginTransaction();
@@ -174,7 +174,7 @@ namespace DBAccess.Archive.EntrustCommand
             }
             finally
             {
-                _dbHelper.Close(dbCommand.Connection);
+                _dbHelper.Close(dbCommand);
                 transaction.Dispose();
             }
 

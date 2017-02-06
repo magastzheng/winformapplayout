@@ -117,7 +117,7 @@ namespace DBAccess.Product
             }
 
             reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return portfolio;
         }
@@ -143,7 +143,7 @@ namespace DBAccess.Product
                 }
             }
             reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return portfolios;
         }

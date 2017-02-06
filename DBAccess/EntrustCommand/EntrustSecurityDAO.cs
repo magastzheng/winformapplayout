@@ -143,7 +143,7 @@ namespace DBAccess.EntrustCommand
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
 
             List<EntrustSecurity> items = ExecuteEntrustSecurity(dbCommand);
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return items;
         }
@@ -154,7 +154,7 @@ namespace DBAccess.EntrustCommand
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
 
             List<EntrustSecurity> items = ExecuteEntrustSecurity(dbCommand);
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return items;
         }
@@ -165,7 +165,7 @@ namespace DBAccess.EntrustCommand
             _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
 
             List<EntrustSecurity> items = ExecuteEntrustSecurity(dbCommand);
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return items;
         }
@@ -176,7 +176,7 @@ namespace DBAccess.EntrustCommand
             _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
 
             List<EntrustSecurity> items = ExecuteEntrustSecurity(dbCommand);
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return items;
         }
@@ -187,7 +187,7 @@ namespace DBAccess.EntrustCommand
             _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
 
             List<EntrustSecurity> items = ExecuteEntrustSecurity(dbCommand);
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return items;
         }
@@ -215,7 +215,7 @@ namespace DBAccess.EntrustCommand
                 }
             }
             reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return items;
         }
@@ -233,7 +233,7 @@ namespace DBAccess.EntrustCommand
             }
 
             reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return item;
         }

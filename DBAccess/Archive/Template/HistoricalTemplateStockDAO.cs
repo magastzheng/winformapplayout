@@ -101,7 +101,7 @@ namespace DBAccess.Archive.Template
             }
             finally
             {
-                _dbHelper.Close(dbCommand.Connection);
+                _dbHelper.Close(dbCommand);
                 transaction.Dispose();
             }
 
@@ -166,7 +166,7 @@ namespace DBAccess.Archive.Template
                 }
             }
             reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return templateStocks;
         }

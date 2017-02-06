@@ -153,7 +153,7 @@ namespace DBAccess.TradeCommand
                 }
             }
             reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return item;
         }
@@ -176,7 +176,7 @@ namespace DBAccess.TradeCommand
                 }
             }
             reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return items;
         }

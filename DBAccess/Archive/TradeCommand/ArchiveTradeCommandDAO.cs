@@ -95,7 +95,7 @@ namespace DBAccess.Archive.TradeCommand
                 }
             }
             reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return item;
         }

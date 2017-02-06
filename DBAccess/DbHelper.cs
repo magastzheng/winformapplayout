@@ -15,21 +15,16 @@ namespace DBAccess
 
         private static string s_dbProviderName = ConfigurationManager.AppSettings["DbHelperProvider"];
         private static string s_dbConnectionString = ConfigurationManager.AppSettings["DbHelperConnectionString"];
-        private DbConnection connection;
-
-        public DbConnection Connection
-        {
-            get { return this.connection; }
-        }
+        private string connectionString = string.Empty;
 
         public DbHelper()
         {
-            this.connection = CreateConnection(s_dbConnectionString);
+            this.connectionString = s_dbConnectionString;
         }
 
         public DbHelper(string connectionString)
         {
-            this.connection = CreateConnection(connectionString);
+            this.connectionString = connectionString;
         }
 
         public static DbConnection CreateConnection(string dbConnectionString)
@@ -42,12 +37,13 @@ namespace DBAccess
 
         public DbCommand GetCommand()
         {
-            return this.connection.CreateCommand();
+            DbConnection conn = CreateConnection(connectionString);
+            return conn.CreateCommand();
         }
 
         public DbCommand GetStoredProcCommand(string storedProcedure)
         {
-            DbCommand dbCommand = this.connection.CreateCommand();
+            DbCommand dbCommand = GetCommand();
             dbCommand.CommandText = storedProcedure;
             dbCommand.CommandType = System.Data.CommandType.StoredProcedure;
             
@@ -56,7 +52,7 @@ namespace DBAccess
 
         public DbCommand GetSqlStringCommand(string sqlQuery)
         {
-            DbCommand dbCommand = this.connection.CreateCommand();
+            DbCommand dbCommand = GetCommand();
             dbCommand.CommandText = sqlQuery;
             dbCommand.CommandType = System.Data.CommandType.Text;
 
@@ -138,7 +134,7 @@ namespace DBAccess
             Open(cmd);
 
             int ret = cmd.ExecuteNonQuery();
-            Close(cmd.Connection);
+            Close(cmd);
 
             return ret;
         }
@@ -171,25 +167,25 @@ namespace DBAccess
 
         #region 打开和关闭
 
-        public void Open(DbConnection conn)
-        {
-            if (conn.State != ConnectionState.Open)
-            {
-                try
-                {
-                    conn.Open();
-                }
-                catch
-                {
-                    logger.Error("Cannot open database connection " + conn.ConnectionString);
-                    throw;
-                }
-                finally
-                {
-                    //logger.Info(DbHelper.GetCommandSql(conn.));
-                }
-            }
-        }
+        //public void Open(DbConnection conn)
+        //{
+        //    if (conn.State != ConnectionState.Open)
+        //    {
+        //        try
+        //        {
+        //            conn.Open();
+        //        }
+        //        catch
+        //        {
+        //            logger.Error("Cannot open database connection " + conn.ConnectionString);
+        //            throw;
+        //        }
+        //        finally
+        //        {
+        //            //logger.Info(DbHelper.GetCommandSql(conn.));
+        //        }
+        //    }
+        //}
 
         public void Open(DbCommand cmd)
         {
@@ -210,17 +206,33 @@ namespace DBAccess
             }
         }
 
-        public void Close(DbConnection conn)
+        //public void Close(DbConnection conn)
+        //{
+        //    if (conn != null && conn.State == ConnectionState.Open)
+        //    {
+        //        try
+        //        {
+        //            conn.Close();
+        //        }
+        //        catch
+        //        {
+        //            logger.Error("Fail to close the database connection: " + conn.ConnectionString);
+        //            throw;
+        //        }
+        //    }
+        //}
+
+        public void Close(DbCommand cmd)
         {
-            if (conn != null && conn.State == ConnectionState.Open)
+            if (cmd != null && cmd.Connection != null && cmd.Connection.State == ConnectionState.Open)
             {
                 try
                 {
-                    conn.Close();
+                    cmd.Connection.Close();
                 }
                 catch
                 {
-                    logger.Error("Fail to close the database connection: " + conn.ConnectionString);
+                    logger.Error("Fail to close the database connection: " + cmd.Connection.ConnectionString);
                     throw;
                 }
             }

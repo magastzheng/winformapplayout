@@ -39,7 +39,7 @@ namespace DBAccess.EntrustCommand
         public int Submit(Model.Database.EntrustCommand cmdItem, List<EntrustSecurity> entrustItems)
         {
             var dbCommand = _dbHelper.GetCommand();
-            _dbHelper.Open(_dbHelper.Connection);
+            _dbHelper.Open(dbCommand);
 
             //use transaction to execute
             DbTransaction transaction = dbCommand.Connection.BeginTransaction();
@@ -109,7 +109,7 @@ namespace DBAccess.EntrustCommand
             }
             finally
             {
-                _dbHelper.Close(dbCommand.Connection);
+                _dbHelper.Close(dbCommand);
                 transaction.Dispose();
             }
 
@@ -173,7 +173,7 @@ namespace DBAccess.EntrustCommand
             }
             finally
             {
-                _dbHelper.Close(dbCommand.Connection);
+                _dbHelper.Close(dbCommand);
                 transaction.Dispose();
             }
 
@@ -219,7 +219,7 @@ namespace DBAccess.EntrustCommand
             }
             finally
             {
-                _dbHelper.Close(dbCommand.Connection);
+                _dbHelper.Close(dbCommand);
                 transaction.Dispose();
             }
 
@@ -272,7 +272,7 @@ namespace DBAccess.EntrustCommand
             }
             finally
             {
-                _dbHelper.Close(dbCommand.Connection);
+                _dbHelper.Close(dbCommand);
                 transaction.Dispose();
             }
 
@@ -285,7 +285,7 @@ namespace DBAccess.EntrustCommand
         //    _dbHelper.Open(dbCommand);
 
         //    //use transaction to execute
-        //    DbTransaction transaction = dbCommand.Connection.BeginTransaction();
+        //    DbTransaction transaction = dbCommand.BeginTransaction();
         //    dbCommand.Transaction = transaction;
         //    dbCommand.CommandType = System.Data.CommandType.StoredProcedure;
         //    int ret = -1;
@@ -327,7 +327,7 @@ namespace DBAccess.EntrustCommand
         //    }
         //    finally
         //    {
-        //        _dbHelper.Close(dbCommand.Connection);
+        //        _dbHelper.Close(dbCommand);
         //        transaction.Dispose();
         //    }
 
@@ -375,7 +375,7 @@ namespace DBAccess.EntrustCommand
             }
             finally
             {
-                _dbHelper.Close(dbCommand.Connection);
+                _dbHelper.Close(dbCommand);
                 transaction.Dispose();
             }
 

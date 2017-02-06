@@ -99,7 +99,7 @@ namespace DBAccess.TradeInstance
             }
 
             reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return item;
         }
@@ -121,7 +121,7 @@ namespace DBAccess.TradeInstance
             }
 
             reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return items;
         }
@@ -140,7 +140,7 @@ namespace DBAccess.TradeInstance
             }
 
             reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return item;
         }

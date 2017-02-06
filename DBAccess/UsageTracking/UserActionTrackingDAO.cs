@@ -74,7 +74,7 @@ namespace DBAccess.UsageTracking
             }
 
             reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return items;
         }
@@ -105,7 +105,7 @@ namespace DBAccess.UsageTracking
             }
 
             reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return items;
         }
@@ -135,7 +135,7 @@ namespace DBAccess.UsageTracking
             }
 
             reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return items;
         }

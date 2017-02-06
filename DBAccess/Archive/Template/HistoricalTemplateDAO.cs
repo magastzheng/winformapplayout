@@ -100,7 +100,7 @@ namespace DBAccess.Archive.Template
                 }
             }
             reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return stockTemplates;
         }

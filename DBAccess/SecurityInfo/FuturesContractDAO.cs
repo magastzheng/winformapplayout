@@ -94,7 +94,7 @@ namespace DBAccess.SecurityInfo
                 }
             }
             reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return itemList;
         }

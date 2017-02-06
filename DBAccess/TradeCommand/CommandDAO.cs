@@ -38,7 +38,7 @@ namespace DBAccess.TradeCommand
         public int Create(Model.Database.TradeCommand cmdItem, List<TradeCommandSecurity> secuItems)
         {
             var dbCommand = _dbHelper.GetCommand();
-            _dbHelper.Open(_dbHelper.Connection);
+            _dbHelper.Open(dbCommand);
 
             //use transaction to execute
             DbTransaction transaction = dbCommand.Connection.BeginTransaction();
@@ -126,7 +126,7 @@ namespace DBAccess.TradeCommand
             }
             finally
             {
-                _dbHelper.Close(dbCommand.Connection);
+                _dbHelper.Close(dbCommand);
                 transaction.Dispose();
             }
 
@@ -136,7 +136,7 @@ namespace DBAccess.TradeCommand
         public int Update(Model.Database.TradeCommand cmdItem, List<TradeCommandSecurity> modifiedSecuItems, List<TradeCommandSecurity> cancelSecuItems)
         {
             var dbCommand = _dbHelper.GetCommand();
-            _dbHelper.Open(_dbHelper.Connection);
+            _dbHelper.Open(dbCommand);
 
             //use transaction to execute
             DbTransaction transaction = dbCommand.Connection.BeginTransaction();
@@ -209,7 +209,7 @@ namespace DBAccess.TradeCommand
             }
             finally
             {
-                _dbHelper.Close(dbCommand.Connection);
+                _dbHelper.Close(dbCommand);
                 transaction.Dispose();
             }
 

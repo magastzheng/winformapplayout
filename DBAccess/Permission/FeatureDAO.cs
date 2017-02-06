@@ -87,7 +87,7 @@ namespace DBAccess.Permission
             }
 
             reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return item;
         }
@@ -142,7 +142,7 @@ namespace DBAccess.Permission
             }
 
             reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return items;
         }

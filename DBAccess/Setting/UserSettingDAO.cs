@@ -87,7 +87,7 @@ namespace DBAccess.Setting
                 setting.EntrustSetting.SseEntrustPriceType = (EntrustPriceType)reader["SSEEntrustPriceType"];
             }
             reader.Close();
-            _dbHelper.Close(dbCommand.Connection);
+            _dbHelper.Close(dbCommand);
 
             return setting;
         }

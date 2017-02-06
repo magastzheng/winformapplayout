@@ -35,7 +35,7 @@ namespace DBAccess.TradeInstance
         public int Create(Model.UI.TradeInstance tradeInstance, List<TradeInstanceSecurity> tradeSecuItems)
         {
             var dbCommand = _dbHelper.GetCommand();
-            _dbHelper.Open(_dbHelper.Connection);
+            _dbHelper.Open(dbCommand);
 
             //use transaction to execute
             DbTransaction transaction = dbCommand.Connection.BeginTransaction();
@@ -105,7 +105,7 @@ namespace DBAccess.TradeInstance
             }
             finally
             {
-                _dbHelper.Close(dbCommand.Connection);
+                _dbHelper.Close(dbCommand);
                 transaction.Dispose();
             }
 
@@ -115,7 +115,7 @@ namespace DBAccess.TradeInstance
         public int Update(Model.UI.TradeInstance tradeInstance, List<TradeInstanceSecurity> tradeSecuItems)
         {
             var dbCommand = _dbHelper.GetCommand();
-            _dbHelper.Open(_dbHelper.Connection);
+            _dbHelper.Open(dbCommand);
 
             //use transaction to execute
             DbTransaction transaction = dbCommand.Connection.BeginTransaction();
@@ -181,7 +181,7 @@ namespace DBAccess.TradeInstance
             }
             finally
             {
-                _dbHelper.Close(dbCommand.Connection);
+                _dbHelper.Close(dbCommand);
                 transaction.Dispose();
             }
 
@@ -198,7 +198,7 @@ namespace DBAccess.TradeInstance
         public int Update(Model.UI.TradeInstance tradeInstance, List<TradeInstanceSecurity> modifiedSecuItems, List<TradeInstanceSecurity> cancelSecuItems)
         {
             var dbCommand = _dbHelper.GetCommand();
-            _dbHelper.Open(_dbHelper.Connection);
+            _dbHelper.Open(dbCommand);
 
             //use transaction to execute
             DbTransaction transaction = dbCommand.Connection.BeginTransaction();
@@ -284,7 +284,7 @@ namespace DBAccess.TradeInstance
             }
             finally
             {
-                _dbHelper.Close(dbCommand.Connection);
+                _dbHelper.Close(dbCommand);
                 transaction.Dispose();
             }
 

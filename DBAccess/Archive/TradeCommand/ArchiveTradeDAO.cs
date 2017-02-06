@@ -33,7 +33,7 @@ namespace DBAccess.Archive.TradeCommand
         public int Create(Model.Database.TradeCommand tradeCommand, List<TradeCommandSecurity> securities)
         { 
             var dbCommand = _dbHelper.GetCommand();
-            _dbHelper.Open(_dbHelper.Connection);
+            _dbHelper.Open(dbCommand);
 
             //use transaction to execute
             DbTransaction transaction = dbCommand.Connection.BeginTransaction();
@@ -114,7 +114,7 @@ namespace DBAccess.Archive.TradeCommand
             }
             finally
             {
-                _dbHelper.Close(dbCommand.Connection);
+                _dbHelper.Close(dbCommand);
                 transaction.Dispose();
             }
 
@@ -124,7 +124,7 @@ namespace DBAccess.Archive.TradeCommand
         public int Delete(int archiveId)
         { 
             var dbCommand = _dbHelper.GetCommand();
-            _dbHelper.Open(_dbHelper.Connection);
+            _dbHelper.Open(dbCommand);
 
             //use transaction to execute
             DbTransaction transaction = dbCommand.Connection.BeginTransaction();
@@ -164,7 +164,7 @@ namespace DBAccess.Archive.TradeCommand
             }
             finally
             {
-                _dbHelper.Close(dbCommand.Connection);
+                _dbHelper.Close(dbCommand);
                 transaction.Dispose();
             }
 
