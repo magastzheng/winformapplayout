@@ -433,7 +433,7 @@ namespace BLL.TradeCommand
             uiCommand.BearMoreThan = shortEntrustRatio;
             uiCommand.LongRatio = longDealRatio;
             uiCommand.BearRatio = shortDealRatio;
-            uiCommand.EntrustedAmount = totalEntrustAmount;
+            uiCommand.EntrustAmount = totalEntrustAmount;
             uiCommand.DealAmount = totalDealAmount;
         }
 

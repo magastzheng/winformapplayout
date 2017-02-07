@@ -137,7 +137,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "entrustedamount",
+		"name": "entrustamount",
 		"text": "已委托数量",
 		"width": 80,
 		"columntype": 0,
@@ -518,7 +518,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "entrustedamount",
+		"name": "entrustamount",
 		"text": "已委托数量",
 		"width": 80,
 		"columntype": 0,
@@ -809,7 +809,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "entrusteddate",
+		"name": "entrustdate",
 		"text": "委托下达日期",
 		"width": 80,
 		"columntype": 0,
@@ -857,7 +857,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "entrustedtime",
+		"name": "entrusttime",
 		"text": "委托时间",
 		"width": 80,
 		"columntype": 0,
@@ -4585,7 +4585,7 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
-		"name": "entrustedamount",
+		"name": "entrustamount",
 		"text": "已委托数量",
 		"width": 100,
 		"columntype": 0,
@@ -4696,6 +4696,179 @@ readonly:
 		"valuetype": 0,
 		"visible": 1,
 		"readonly": 1
+		}
+	]
+},{
+	"grid": "entrustsecurity",
+	"background": 1,
+	"columns": [
+	{
+		"name": "commandid",
+		"text": "指令序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "submitid",
+		"text": "提交号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "requestid",
+		"text": "请求号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "secucode",
+		"text": "证券代码",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "secuname",
+		"text": "证券名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "entrustdirection",
+		"text": "委托方向",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "pricetype",
+		"text": "价格类型",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "entrustprice",
+		"text": "委托价格",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 1,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "entrustamount",
+		"text": "委托数量",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "entruststatus",
+		"text": "委托状态",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "fundname",
+		"text": "基金名称",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "portfolioname",
+		"text": "组合名称",
+		"width": 160,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "entrustdate",
+		"text": "委托下达日期",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "entrusttime",
+		"text": "委托下达时间",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "instanceid",
+		"text": "实例号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "instancecode",
+		"text": "实例编号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "entrustno",
+		"text": "委托序号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "entrustbatchno",
+		"text": "委托批号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "entrustfailcode",
+		"text": "错误号",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "entrustfailcause",
+		"text": "错误信息",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 3,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "last",
+		"text": "",
+		"width": 5,
+		"columntype": -1,
+		"valuetype": 0,
+		"visible": 1
 		}
 	]
 },{

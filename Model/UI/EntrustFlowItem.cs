@@ -90,14 +90,14 @@ namespace Model.UI
         [BindingAttribute("effectdate")]
         public string EffectDate { get; set; }
 
-        [BindingAttribute("entrusteddate")]
-        public string EntrustedDate
+        [BindingAttribute("entrustdate")]
+        public string EntrustDate
         {
             get { return DateFormat.Format(DEntrustDate, ConstVariable.DateFormat1); }
         }
         
-        [BindingAttribute("entrustedtime")]
-        public string EntrustedTime
+        [BindingAttribute("entrusttime")]
+        public string EntrustTime
         {
             get { return DateFormat.Format(DEntrustDate, ConstVariable.TimeFormat1); }
         }

@@ -21,7 +21,7 @@ namespace DBAccess.EntrustCommand
         private const string SP_GetAllCombine = "procEntrustSecuritySelectAllCombine";
         private const string SP_GetByCommandId = "procEntrustSecuritySelectByCommandId";
         private const string SP_GetCancel = "procEntrustSecuritySelectCancel";
-        private const string SP_GetBySubmitId = "procEntrustSecuritySelectBySubmitId";
+        private const string SP_GetBySubmitId = "procEntrustSecuritySelectCombineBySubmitId";
         private const string SP_GetCancelBySubmitId = "procEntrustSecuritySelectCancelBySubmitId";
         private const string SP_GetCancelCompletedRedoBySubmitId = "procEntrustSecuritySelectCancelCompletedRedoBySubmitId";
         private const string SP_GetCombineByRequestId = "procEntrustSecuritySelectCombineByRequestId";
@@ -159,17 +159,6 @@ namespace DBAccess.EntrustCommand
             return items;
         }
 
-        public List<EntrustSecurity> GetBySubmitId(int submitId)
-        {
-            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetBySubmitId);
-            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
-
-            List<EntrustSecurity> items = ExecuteEntrustSecurity(dbCommand);
-            _dbHelper.Close(dbCommand);
-
-            return items;
-        }
-
         public List<EntrustSecurity> GetCancelBySumbitId(int submitId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCancelBySubmitId);
@@ -236,6 +225,26 @@ namespace DBAccess.EntrustCommand
             _dbHelper.Close(dbCommand);
 
             return item;
+        }
+
+        public List<EntrustSecurityCombine> GetBySubmitId(int submitId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetBySubmitId);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
+
+            List<EntrustSecurityCombine> items = new List<EntrustSecurityCombine>();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    EntrustSecurityCombine item = ParseData(reader);
+                }
+            }
+            reader.Close();
+            _dbHelper.Close(dbCommand);
+
+            return items;
         }
 
         #endregion

@@ -49,8 +49,8 @@ namespace Model.UI
         }
 
         //已委托数量
-        [BindingAttribute("entrustedamount")]
-        public int EntrustedAmount { get; set; }
+        [BindingAttribute("entrustamount")]
+        public int EntrustAmount { get; set; }
 
         //价格类型
         [BindingAttribute("pricetype")]

@@ -38,8 +38,8 @@ namespace Model.UI
         [BindingAttribute("origincommandamount")]
         public int OriginCommandAmount { get; set; }
 
-        [BindingAttribute("entrustedamount")]
-        public int EntrustedAmount { get; set; }
+        [BindingAttribute("entrustamount")]
+        public int EntrustAmount { get; set; }
 
         [BindingAttribute("availableamount")]
         public int AvailableAmount { get; set; }

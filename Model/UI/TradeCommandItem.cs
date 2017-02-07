@@ -72,8 +72,8 @@ namespace Model.UI
         public int CommandAmount { get; set; }
 
         //已委托数量
-        [BindingAttribute("entrustedamount")]
-        public int EntrustedAmount { get; set; }
+        [BindingAttribute("entrustamount")]
+        public int EntrustAmount { get; set; }
 
         //已成数量
         [BindingAttribute("dealamount")]

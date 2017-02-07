@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AmountRoundUtilTest.cs" />
     <Compile Include="CalcUtilTest.cs" />
     <Compile Include="FloatUtilTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

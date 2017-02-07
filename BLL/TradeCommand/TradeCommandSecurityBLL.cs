@@ -71,7 +71,7 @@ namespace BLL.TradeCommand
                     .ToList();
                 if (entrustedItems.Count > 0)
                 {
-                    csItem.EntrustedAmount = entrustedItems.Sum(p => p.EntrustAmount);
+                    csItem.EntrustAmount = entrustedItems.Sum(p => p.EntrustAmount);
                 }
 
                 var dealItems = entrustSecuItems.Where(p => p.SecuCode.Equals(secuItem.SecuCode)

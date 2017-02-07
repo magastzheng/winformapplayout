@@ -652,11 +652,11 @@ namespace TradingSystem.View
                     break;
                 case ThisEntrustAmount:
                     {
-                        if (secuItem.ThisEntrustAmount + secuItem.EntrustedAmount > secuItem.CommandAmount)
+                        if (secuItem.ThisEntrustAmount + secuItem.EntrustAmount > secuItem.CommandAmount)
                         {
                             MessageDialog.Warn(this, msgEntrustAmountBeyondTotal);
 
-                            secuItem.ThisEntrustAmount = secuItem.CommandAmount - secuItem.EntrustedAmount;
+                            secuItem.ThisEntrustAmount = secuItem.CommandAmount - secuItem.EntrustAmount;
                             this.securityGridView.InvalidateCell(columnIndex, rowIndex);
                         }
                     }
@@ -1210,9 +1210,10 @@ namespace TradingSystem.View
 
         private int EntrustASync(List<EntrustItem> entrustItems)
         {
-            //List<int> submitIds = new List<int>();
             List<EntrustCommand> entrustCommandList = new List<EntrustCommand>();
             int successCount = 0;
+
+            //CountdownEvent events = new CountdownEvent(entrustItems.Count);
             List<EventWaitHandle> waitHandles = new List<EventWaitHandle>();
 
             foreach (var eiItem in entrustItems)
@@ -1231,11 +1232,6 @@ namespace TradingSystem.View
                 {
                     //success to submit into database
                     entrustCommandList.Add(eciItem);
-
-                    //TODO: update the targetnum in UI
-                    //successCount += entrustSecuItems.Count;
-
-                    //UpdateEntrustedAmount(entrustSecuItems);
                 }
                 else
                 {
@@ -1251,6 +1247,8 @@ namespace TradingSystem.View
 
             string resMsg = string.Empty;
             StringBuilder sb = new StringBuilder();
+
+            //TODO: it is not a good idea.
             bool waitRet = true;
             foreach (var e in waitHandles)
             {
@@ -1260,20 +1258,32 @@ namespace TradingSystem.View
                 }
             }
             //bool waitRet = WaitHandle.WaitAll(waitHandles.ToArray());
+            List<EntrustSecurityItem> failSecuItems = new List<EntrustSecurityItem>();
             if (waitRet)
             {
                 //Access the database to get the message
                 foreach (var entrustCommand in entrustCommandList)
                 {
-                    var entrustSecuItems = _entrustSecurityBLL.GetBySubmitId(entrustCommand.SubmitId);
+                    var submitSecuItems = _entrustSecurityBLL.GetBySubmitId(entrustCommand.SubmitId);
 
+                    bool isSuccess = true; 
                     //Show message
-                    foreach (var entrustSecuItem in entrustSecuItems)
+                    foreach (var submitSecuItem in submitSecuItems)
                     {
-                        if (entrustSecuItem.EntrustNo <= 0 || entrustSecuItem.EntrustFailCode != 0)
+                        if (submitSecuItem.EntrustNo <= 0 || submitSecuItem.EntrustFailCode != 0)
                         {
-                            sb.AppendFormat("{0}: {1}, {2}", entrustSecuItem.SecuCode, entrustSecuItem.EntrustFailCode, entrustSecuItem.EntrustFailCause);
+                            sb.AppendFormat("{0}: {1}, {2}", submitSecuItem.SecuCode, submitSecuItem.EntrustFailCode, submitSecuItem.EntrustFailCause);
+                            EntrustSecurityItem failItem = new EntrustSecurityItem(submitSecuItem);
+                            failSecuItems.Add(failItem);
+
+                            isSuccess = false;
                         }
+                    }
+
+                    if (isSuccess)
+                    {
+                        successCount += submitSecuItems.Count;
+                        UpdateEntrustedAmount(new List<EntrustSecurity>(submitSecuItems));
                     }
                 }
             }
@@ -1285,10 +1295,20 @@ namespace TradingSystem.View
             resMsg = sb.ToString();
             if (resMsg.Length > 0)
             {
-                if (MessageDialog.Error(this, resMsg, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
-                {
+                MessageDialog.Error(this, resMsg, MessageBoxButtons.OK);
+            }
+            else
+            { 
+                //MessageDialog.Info(this, 
+            }
 
-                }
+            if (failSecuItems.Count > 0)
+            {
+                SubmitSecurityDialog dialog = new SubmitSecurityDialog(_gridConfig);
+                dialog.Owner = this;
+                dialog.OnLoadControl(dialog, null);
+                dialog.OnLoadData(dialog, failSecuItems);
+                dialog.ShowDialog();
             }
 
             return successCount;
@@ -1301,7 +1321,7 @@ namespace TradingSystem.View
                 var findItem = _secuDataSource.ToList().Find(p => p.CommandId == entrustedSecuItem.CommandId && p.SecuCode.Equals(entrustedSecuItem.SecuCode));
                 if (findItem != null)
                 {
-                    findItem.EntrustedAmount += entrustedSecuItem.EntrustAmount;
+                    findItem.EntrustAmount += entrustedSecuItem.EntrustAmount;
                 }
             }
         }
@@ -1327,7 +1347,7 @@ namespace TradingSystem.View
             }
 
             //检查委托数量
-            var noEntrustNum = selCmdItem.CommandAmount - selCmdItem.EntrustedAmount;
+            var noEntrustNum = selCmdItem.CommandAmount - selCmdItem.EntrustAmount;
             if (noEntrustNum <= 0)
             {
                 return;
@@ -1384,7 +1404,7 @@ namespace TradingSystem.View
 
             if (thisCopies == 0)
             {
-                thisEntrustAmount = targetAmount - secuItem.EntrustedAmount;
+                thisEntrustAmount = targetAmount - secuItem.EntrustAmount;
             }
             else
             {
@@ -1396,7 +1416,7 @@ namespace TradingSystem.View
                 thisEntrustAmount = 0;
             }
 
-            waitAmount = targetAmount - secuItem.EntrustedAmount;
+            waitAmount = targetAmount - secuItem.EntrustAmount;
             if (waitAmount < 0)
             {
                 waitAmount = 0;
@@ -1406,19 +1426,19 @@ namespace TradingSystem.View
             {
                 if (thisEntrustAmount % 100 != 0)
                 {
-                    thisEntrustAmount = (int)Math.Ceiling(thisEntrustAmount / 100.0) * 100;
+                    thisEntrustAmount = AmountRoundUtil.Ceiling(thisEntrustAmount);
                     targetAmount = secuItem.TargetAmount + thisEntrustAmount;
                     waitAmount = secuItem.WaitAmount + thisEntrustAmount;
                 }
             }
 
-            if (thisEntrustAmount + secuItem.EntrustedAmount <= secuItem.CommandAmount)
+            if (thisEntrustAmount + secuItem.EntrustAmount <= secuItem.CommandAmount)
             {
                 secuItem.ThisEntrustAmount = thisEntrustAmount;
             }
             else
             {
-                secuItem.ThisEntrustAmount = secuItem.CommandAmount - secuItem.EntrustedAmount;
+                secuItem.ThisEntrustAmount = secuItem.CommandAmount - secuItem.EntrustAmount;
             }
 
             if (waitAmount <= secuItem.CommandAmount)
@@ -1428,7 +1448,7 @@ namespace TradingSystem.View
             else
             {
                 secuItem.WaitAmount = secuItem.CommandAmount;
-            }
+            } 
 
             if (targetAmount <= secuItem.CommandAmount)
             {
@@ -1645,7 +1665,7 @@ namespace TradingSystem.View
 
             foreach (var entrustSecuItem in entrustSecuItems)
             {
-                if (entrustSecuItem.ThisEntrustAmount + entrustSecuItem.EntrustedAmount > entrustSecuItem.CommandAmount)
+                if (entrustSecuItem.ThisEntrustAmount + entrustSecuItem.EntrustAmount > entrustSecuItem.CommandAmount)
                 {
                     MessageDialog.Warn(this, msgEntrustAmountBeyondTotal);
 

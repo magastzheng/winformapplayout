@@ -196,12 +196,12 @@ namespace Config.ParamConverter
             return direction;
         }
 
-        public static EntrustStatus GetEntrustStatusType(string statusCode)
-        {
-            EntrustStatus status = EntrustStatus.NoExecuted;
+        //public static EntrustStatus GetEntrustStatusType(string statusCode)
+        //{
+        //    EntrustStatus status = EntrustStatus.NoExecuted;
 
-            return status;
-        }
+        //    return status;
+        //}
 
         public static bool ParseThirdReff(string thirdReff, out int commandId, out int submitId, out int requestId)
         {
