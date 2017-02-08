@@ -20,6 +20,7 @@ namespace DBAccess.EntrustCommand
         private const string SP_DeleteByCommandIdEntrustStatus = "procEntrustSecurityDeleteByCommandIdEntrustStatus";
         private const string SP_GetAllCombine = "procEntrustSecuritySelectAllCombine";
         private const string SP_GetByCommandId = "procEntrustSecuritySelectByCommandId";
+        private const string SP_GetCombineByCommandId = "procEntrustSecuritySelectCombineByCommandId";
         private const string SP_GetCancel = "procEntrustSecuritySelectCancel";
         private const string SP_GetBySubmitId = "procEntrustSecuritySelectCombineBySubmitId";
         private const string SP_GetCancelBySubmitId = "procEntrustSecuritySelectCancelBySubmitId";
@@ -232,6 +233,30 @@ namespace DBAccess.EntrustCommand
             _dbHelper.Close(dbCommand);
 
             return item;
+        }
+
+        public List<EntrustSecurityCombine> GetCombineByCommandId(int commandId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCombineByCommandId);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+
+            List<EntrustSecurityCombine> items = new List<EntrustSecurityCombine>();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    EntrustSecurityCombine item = ParseData(reader);
+                    if (item.CommandId == commandId)
+                    {
+                        items.Add(item);
+                    }
+                }
+            }
+            reader.Close();
+            _dbHelper.Close(dbCommand);
+
+            return items;
         }
 
         public List<EntrustSecurityCombine> GetCombineBySubmitId(int submitId)

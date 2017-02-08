@@ -47,14 +47,11 @@
             this.btnSecuSelect = new System.Windows.Forms.Button();
             this.cmdTopPanel = new System.Windows.Forms.Panel();
             this.tsCmdTrading = new System.Windows.Forms.ToolStrip();
-            this.tsbRefresh = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsbCancel = new System.Windows.Forms.ToolStripButton();
-            this.tsbCancelRedo = new System.Windows.Forms.ToolStripButton();
-            this.tsbCancelAdd = new System.Windows.Forms.ToolStripButton();
             this.bsSplitter = new System.Windows.Forms.SplitContainer();
             this.bsGridView = new Controls.GridView.TSDataGridView();
             this.entrustBottonPanel = new System.Windows.Forms.Panel();
+            this.cbCopies = new System.Windows.Forms.CheckBox();
             this.nudCopies = new System.Windows.Forms.NumericUpDown();
             this.btnEntrust = new System.Windows.Forms.Button();
             this.btnCalc = new System.Windows.Forms.Button();
@@ -78,15 +75,19 @@
             this.btnefSelect = new System.Windows.Forms.Button();
             this.efTopPanel = new System.Windows.Forms.Panel();
             this.tsEntrustFlow = new System.Windows.Forms.ToolStrip();
-            this.tsbefRefresh = new System.Windows.Forms.ToolStripButton();
             this.tpDealFlow = new System.Windows.Forms.TabPage();
             this.dfMainPanel = new System.Windows.Forms.Panel();
             this.dfGridView = new Controls.GridView.TSDataGridView();
             this.dfBottomPanel = new System.Windows.Forms.Panel();
             this.dfTopPanel = new System.Windows.Forms.Panel();
             this.tsDealFlow = new System.Windows.Forms.ToolStrip();
+            this.tsbRefresh = new System.Windows.Forms.ToolStripButton();
+            this.tsbCancel = new System.Windows.Forms.ToolStripButton();
+            this.tsbCancelRedo = new System.Windows.Forms.ToolStripButton();
+            this.tsbCancelAdd = new System.Windows.Forms.ToolStripButton();
+            this.tsbEntrustInfo = new System.Windows.Forms.ToolStripButton();
+            this.tsbefRefresh = new System.Windows.Forms.ToolStripButton();
             this.tsbdfRefresh = new System.Windows.Forms.ToolStripButton();
-            this.cbCopies = new System.Windows.Forms.CheckBox();
             this.tabParentMain.SuspendLayout();
             this.tpCmdTrading.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cmdMainSplitter)).BeginInit();
@@ -276,7 +277,7 @@
             this.tpCmdEntrustFlow.Location = new System.Drawing.Point(4, 22);
             this.tpCmdEntrustFlow.Name = "tpCmdEntrustFlow";
             this.tpCmdEntrustFlow.Padding = new System.Windows.Forms.Padding(3);
-            this.tpCmdEntrustFlow.Size = new System.Drawing.Size(930, 170);
+            this.tpCmdEntrustFlow.Size = new System.Drawing.Size(918, 170);
             this.tpCmdEntrustFlow.TabIndex = 1;
             this.tpCmdEntrustFlow.Text = "委托流水";
             this.tpCmdEntrustFlow.UseVisualStyleBackColor = true;
@@ -286,7 +287,7 @@
             this.tpCmdDealFlow.Location = new System.Drawing.Point(4, 22);
             this.tpCmdDealFlow.Name = "tpCmdDealFlow";
             this.tpCmdDealFlow.Padding = new System.Windows.Forms.Padding(3);
-            this.tpCmdDealFlow.Size = new System.Drawing.Size(930, 170);
+            this.tpCmdDealFlow.Size = new System.Drawing.Size(918, 170);
             this.tpCmdDealFlow.TabIndex = 2;
             this.tpCmdDealFlow.Text = "成交流水";
             this.tpCmdDealFlow.UseVisualStyleBackColor = true;
@@ -337,49 +338,18 @@
             this.toolStripSeparator1,
             this.tsbCancel,
             this.tsbCancelRedo,
-            this.tsbCancelAdd});
+            this.tsbCancelAdd,
+            this.tsbEntrustInfo});
             this.tsCmdTrading.Location = new System.Drawing.Point(0, 0);
             this.tsCmdTrading.Name = "tsCmdTrading";
             this.tsCmdTrading.Size = new System.Drawing.Size(924, 25);
             this.tsCmdTrading.TabIndex = 0;
             this.tsCmdTrading.Text = "toolStrip1";
             // 
-            // tsbRefresh
-            // 
-            this.tsbRefresh.Image = global::TradingSystem.Properties.Resources.refresh2;
-            this.tsbRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbRefresh.Name = "tsbRefresh";
-            this.tsbRefresh.Size = new System.Drawing.Size(52, 22);
-            this.tsbRefresh.Text = "刷新";
-            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
-            // 
-            // tsbCancel
-            // 
-            this.tsbCancel.Image = global::TradingSystem.Properties.Resources.undo;
-            this.tsbCancel.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbCancel.Name = "tsbCancel";
-            this.tsbCancel.Size = new System.Drawing.Size(52, 22);
-            this.tsbCancel.Text = "撤单";
-            // 
-            // tsbCancelRedo
-            // 
-            this.tsbCancelRedo.Image = global::TradingSystem.Properties.Resources.canceladd;
-            this.tsbCancelRedo.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbCancelRedo.Name = "tsbCancelRedo";
-            this.tsbCancelRedo.Size = new System.Drawing.Size(52, 22);
-            this.tsbCancelRedo.Text = "撤补";
-            // 
-            // tsbCancelAdd
-            // 
-            this.tsbCancelAdd.Image = global::TradingSystem.Properties.Resources.addnew;
-            this.tsbCancelAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbCancelAdd.Name = "tsbCancelAdd";
-            this.tsbCancelAdd.Size = new System.Drawing.Size(76, 22);
-            this.tsbCancelAdd.Text = "撤销追加";
             // 
             // bsSplitter
             // 
@@ -422,6 +392,18 @@
             this.entrustBottonPanel.Name = "entrustBottonPanel";
             this.entrustBottonPanel.Size = new System.Drawing.Size(207, 100);
             this.entrustBottonPanel.TabIndex = 1;
+            // 
+            // cbCopies
+            // 
+            this.cbCopies.AutoSize = true;
+            this.cbCopies.Checked = true;
+            this.cbCopies.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbCopies.Location = new System.Drawing.Point(5, 17);
+            this.cbCopies.Name = "cbCopies";
+            this.cbCopies.Size = new System.Drawing.Size(72, 16);
+            this.cbCopies.TabIndex = 6;
+            this.cbCopies.Text = "追加份数";
+            this.cbCopies.UseVisualStyleBackColor = true;
             // 
             // nudCopies
             // 
@@ -557,7 +539,7 @@
             this.tpEntrustFlow.Location = new System.Drawing.Point(4, 22);
             this.tpEntrustFlow.Name = "tpEntrustFlow";
             this.tpEntrustFlow.Padding = new System.Windows.Forms.Padding(3);
-            this.tpEntrustFlow.Size = new System.Drawing.Size(1117, 544);
+            this.tpEntrustFlow.Size = new System.Drawing.Size(1143, 544);
             this.tpEntrustFlow.TabIndex = 1;
             this.tpEntrustFlow.Text = "委托流水";
             this.tpEntrustFlow.UseVisualStyleBackColor = true;
@@ -568,7 +550,7 @@
             this.efMainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.efMainPanel.Location = new System.Drawing.Point(3, 34);
             this.efMainPanel.Name = "efMainPanel";
-            this.efMainPanel.Size = new System.Drawing.Size(1111, 483);
+            this.efMainPanel.Size = new System.Drawing.Size(1137, 483);
             this.efMainPanel.TabIndex = 2;
             // 
             // efGridView
@@ -580,7 +562,7 @@
             this.efGridView.Location = new System.Drawing.Point(0, 0);
             this.efGridView.Name = "efGridView";
             this.efGridView.RowTemplate.Height = 23;
-            this.efGridView.Size = new System.Drawing.Size(1111, 483);
+            this.efGridView.Size = new System.Drawing.Size(1137, 483);
             this.efGridView.TabIndex = 0;
             // 
             // efBottonPanel
@@ -593,7 +575,7 @@
             this.efBottonPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.efBottonPanel.Location = new System.Drawing.Point(3, 517);
             this.efBottonPanel.Name = "efBottonPanel";
-            this.efBottonPanel.Size = new System.Drawing.Size(1111, 24);
+            this.efBottonPanel.Size = new System.Drawing.Size(1137, 24);
             this.efBottonPanel.TabIndex = 1;
             // 
             // btnefCancelRedo
@@ -639,7 +621,7 @@
             this.efTopPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.efTopPanel.Location = new System.Drawing.Point(3, 3);
             this.efTopPanel.Name = "efTopPanel";
-            this.efTopPanel.Size = new System.Drawing.Size(1111, 31);
+            this.efTopPanel.Size = new System.Drawing.Size(1137, 31);
             this.efTopPanel.TabIndex = 0;
             // 
             // tsEntrustFlow
@@ -649,17 +631,9 @@
             this.tsbefRefresh});
             this.tsEntrustFlow.Location = new System.Drawing.Point(0, 0);
             this.tsEntrustFlow.Name = "tsEntrustFlow";
-            this.tsEntrustFlow.Size = new System.Drawing.Size(1109, 29);
+            this.tsEntrustFlow.Size = new System.Drawing.Size(1135, 29);
             this.tsEntrustFlow.TabIndex = 0;
             this.tsEntrustFlow.Text = "toolStrip1";
-            // 
-            // tsbefRefresh
-            // 
-            this.tsbefRefresh.Image = global::TradingSystem.Properties.Resources.refresh2;
-            this.tsbefRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbefRefresh.Name = "tsbefRefresh";
-            this.tsbefRefresh.Size = new System.Drawing.Size(52, 26);
-            this.tsbefRefresh.Text = "刷新";
             // 
             // tpDealFlow
             // 
@@ -669,7 +643,7 @@
             this.tpDealFlow.Location = new System.Drawing.Point(4, 22);
             this.tpDealFlow.Name = "tpDealFlow";
             this.tpDealFlow.Padding = new System.Windows.Forms.Padding(3);
-            this.tpDealFlow.Size = new System.Drawing.Size(1117, 544);
+            this.tpDealFlow.Size = new System.Drawing.Size(1143, 544);
             this.tpDealFlow.TabIndex = 2;
             this.tpDealFlow.Text = "成交流水";
             this.tpDealFlow.UseVisualStyleBackColor = true;
@@ -681,7 +655,7 @@
             this.dfMainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dfMainPanel.Location = new System.Drawing.Point(3, 32);
             this.dfMainPanel.Name = "dfMainPanel";
-            this.dfMainPanel.Size = new System.Drawing.Size(1111, 481);
+            this.dfMainPanel.Size = new System.Drawing.Size(1137, 481);
             this.dfMainPanel.TabIndex = 2;
             // 
             // dfGridView
@@ -693,7 +667,7 @@
             this.dfGridView.Location = new System.Drawing.Point(0, 0);
             this.dfGridView.Name = "dfGridView";
             this.dfGridView.RowTemplate.Height = 23;
-            this.dfGridView.Size = new System.Drawing.Size(1109, 479);
+            this.dfGridView.Size = new System.Drawing.Size(1135, 479);
             this.dfGridView.TabIndex = 0;
             // 
             // dfBottomPanel
@@ -702,7 +676,7 @@
             this.dfBottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.dfBottomPanel.Location = new System.Drawing.Point(3, 513);
             this.dfBottomPanel.Name = "dfBottomPanel";
-            this.dfBottomPanel.Size = new System.Drawing.Size(1111, 28);
+            this.dfBottomPanel.Size = new System.Drawing.Size(1137, 28);
             this.dfBottomPanel.TabIndex = 1;
             // 
             // dfTopPanel
@@ -712,7 +686,7 @@
             this.dfTopPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.dfTopPanel.Location = new System.Drawing.Point(3, 3);
             this.dfTopPanel.Name = "dfTopPanel";
-            this.dfTopPanel.Size = new System.Drawing.Size(1111, 29);
+            this.dfTopPanel.Size = new System.Drawing.Size(1137, 29);
             this.dfTopPanel.TabIndex = 0;
             // 
             // tsDealFlow
@@ -721,9 +695,57 @@
             this.tsbdfRefresh});
             this.tsDealFlow.Location = new System.Drawing.Point(0, 0);
             this.tsDealFlow.Name = "tsDealFlow";
-            this.tsDealFlow.Size = new System.Drawing.Size(1109, 25);
+            this.tsDealFlow.Size = new System.Drawing.Size(1135, 25);
             this.tsDealFlow.TabIndex = 0;
             this.tsDealFlow.Text = "toolStrip1";
+            // 
+            // tsbRefresh
+            // 
+            this.tsbRefresh.Image = global::TradingSystem.Properties.Resources.refresh2;
+            this.tsbRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbRefresh.Name = "tsbRefresh";
+            this.tsbRefresh.Size = new System.Drawing.Size(52, 22);
+            this.tsbRefresh.Text = "刷新";
+            // 
+            // tsbCancel
+            // 
+            this.tsbCancel.Image = global::TradingSystem.Properties.Resources.undo;
+            this.tsbCancel.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbCancel.Name = "tsbCancel";
+            this.tsbCancel.Size = new System.Drawing.Size(52, 22);
+            this.tsbCancel.Text = "撤单";
+            // 
+            // tsbCancelRedo
+            // 
+            this.tsbCancelRedo.Image = global::TradingSystem.Properties.Resources.canceladd;
+            this.tsbCancelRedo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbCancelRedo.Name = "tsbCancelRedo";
+            this.tsbCancelRedo.Size = new System.Drawing.Size(52, 22);
+            this.tsbCancelRedo.Text = "撤补";
+            // 
+            // tsbCancelAdd
+            // 
+            this.tsbCancelAdd.Image = global::TradingSystem.Properties.Resources.addnew;
+            this.tsbCancelAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbCancelAdd.Name = "tsbCancelAdd";
+            this.tsbCancelAdd.Size = new System.Drawing.Size(76, 22);
+            this.tsbCancelAdd.Text = "撤销追加";
+            // 
+            // tsbEntrustInfo
+            // 
+            this.tsbEntrustInfo.Image = global::TradingSystem.Properties.Resources.info;
+            this.tsbEntrustInfo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbEntrustInfo.Name = "tsbEntrustInfo";
+            this.tsbEntrustInfo.Size = new System.Drawing.Size(76, 22);
+            this.tsbEntrustInfo.Text = "委托消息";
+            // 
+            // tsbefRefresh
+            // 
+            this.tsbefRefresh.Image = global::TradingSystem.Properties.Resources.refresh2;
+            this.tsbefRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbefRefresh.Name = "tsbefRefresh";
+            this.tsbefRefresh.Size = new System.Drawing.Size(52, 26);
+            this.tsbefRefresh.Text = "刷新";
             // 
             // tsbdfRefresh
             // 
@@ -732,18 +754,6 @@
             this.tsbdfRefresh.Name = "tsbdfRefresh";
             this.tsbdfRefresh.Size = new System.Drawing.Size(52, 22);
             this.tsbdfRefresh.Text = "刷新";
-            // 
-            // cbCopies
-            // 
-            this.cbCopies.AutoSize = true;
-            this.cbCopies.Checked = true;
-            this.cbCopies.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbCopies.Location = new System.Drawing.Point(5, 17);
-            this.cbCopies.Name = "cbCopies";
-            this.cbCopies.Size = new System.Drawing.Size(72, 16);
-            this.cbCopies.TabIndex = 6;
-            this.cbCopies.Text = "追加份数";
-            this.cbCopies.UseVisualStyleBackColor = true;
             // 
             // StrategyTradingForm
             // 
@@ -861,5 +871,6 @@
         private Controls.GridView.TSDataGridView cmdGridView;
         private System.Windows.Forms.NumericUpDown nudCopies;
         private System.Windows.Forms.CheckBox cbCopies;
+        private System.Windows.Forms.ToolStripButton tsbEntrustInfo;
     }
 }

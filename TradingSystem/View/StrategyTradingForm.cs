@@ -109,6 +109,8 @@ namespace TradingSystem.View
 
             this.tsbCancelAdd.Click += new EventHandler(ToolStripButton_Command_CancelAdd);
 
+            this.tsbEntrustInfo.Click += new EventHandler(ToolStripButton_Command_EntrustInfo);
+
             //buy/sell copies
             this.cbCopies.CheckedChanged += new EventHandler(CheckBox_Copies_CheckedChanged);
 
@@ -438,6 +440,29 @@ namespace TradingSystem.View
                 MessageDialog.Warn(this, msg);
                 return -1;
             }
+        }
+
+        private void ToolStripButton_Command_EntrustInfo(object sender, EventArgs e)
+        {
+            List<EntrustSecurityItem> failSecuItems = new List<EntrustSecurityItem>();
+            var selectCmdItems = _cmdDataSource.Where(p => p.Selection);
+            if (selectCmdItems != null && selectCmdItems.Count() > 0)
+            {
+                foreach (var cmdItem in selectCmdItems)
+                {
+                    var secuItems = _entrustSecurityBLL.GetFailItemByCommandId(cmdItem.CommandId);
+                    secuItems.ForEach(p => {
+                        var failItem = new EntrustSecurityItem(p);
+                        failSecuItems.Add(failItem);
+                    });
+                }
+            }
+
+            SubmitSecurityDialog dialog = new SubmitSecurityDialog(_gridConfig);
+            dialog.Owner = this;
+            dialog.OnLoadControl(dialog, null);
+            dialog.OnLoadData(dialog, failSecuItems);
+            dialog.ShowDialog();
         }
 
         #endregion

@@ -424,6 +424,7 @@
     <Content Include="Resources\edit.png" />
     <Content Include="Resources\htsamc_logo.ico" />
     <Content Include="Resources\htsamc_logo.png" />
+    <None Include="Resources\info.png" />
     <Content Include="Resources\item.png" />
     <Content Include="Resources\right.png" />
     <None Include="Resources\cancelredo.png" />

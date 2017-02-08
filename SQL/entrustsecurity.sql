@@ -988,6 +988,60 @@ begin
 	on e.PortfolioId=f.PortfolioId
 end
 
+
+go
+if exists (select name from sysobjects where name='procEntrustSecuritySelectCombineByCommandId')
+drop proc procEntrustSecuritySelectCombineByCommandId
+
+go
+create proc procEntrustSecuritySelectCombineByCommandId(
+	@CommandId			int
+)
+as
+begin
+	select a.RequestId
+		,a.SubmitId 
+		,a.CommandId			
+		,a.SecuCode			
+		,a.SecuType			
+		,a.EntrustAmount	
+		,a.EntrustPrice		
+		,a.EntrustDirection	
+		,a.EntrustStatus
+		,a.EntrustPriceType
+		,a.PriceType
+		,a.EntrustNo
+		,a.BatchNo
+		,a.DealStatus
+		,a.TotalDealAmount
+		,a.TotalDealBalance
+		,a.TotalDealFee
+		,a.DealTimes
+		,a.EntrustDate
+		,a.CreatedDate
+		,a.ModifiedDate
+		,a.EntrustFailCode
+		,a.EntrustFailCause
+		,c.InstanceId
+		,d.InstanceCode
+		,d.MonitorUnitId
+		,e.PortfolioId
+		,f.PortfolioCode
+		,f.PortfolioName
+		,f.AccountCode
+		,f.AccountName
+	from entrustsecurity a
+	inner join tradecommand c
+	on a.CommandId=c.CommandId
+	inner join tradeinstance d
+	on c.InstanceId=d.InstanceId
+	inner join monitorunit e
+	on d.MonitorUnitId=e.MonitorUnitId
+	inner join ufxportfolio f
+	on e.PortfolioId=f.PortfolioId
+	where a.CommandId = @CommandId
+end
+
 go
 if exists (select name from sysobjects where name='procEntrustSecuritySelectCombineByRequestId')
 drop proc procEntrustSecuritySelectCombineByRequestId

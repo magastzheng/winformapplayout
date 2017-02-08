@@ -2,7 +2,10 @@
 using Model.Database;
 using Model.EnumType;
 using Model.UI;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using Util;
 
 namespace BLL.EntrustCommand
 {
@@ -81,6 +84,13 @@ namespace BLL.EntrustCommand
             return _entrustsecudao.GetByCommandId(commandId);
         }
 
+        public List<EntrustSecurityCombine> GetFailItemByCommandId(int commandId)
+        {
+            //获取今天委托不成功的证券
+            var allItems = GetCombineByCommandId(commandId);
+            return allItems.Where(p => p.EntrustDate.Subtract(DateTime.Now).Days == 0 && (p.EntrustNo <= 0 || p.EntrustFailCode > 0)).ToList();
+        }
+
         public List<EntrustSecurity> GetBySubmitId(int submitId)
         {
             var combineItems = GetCombineBySubmitId(submitId);
@@ -120,6 +130,11 @@ namespace BLL.EntrustCommand
         public List<EntrustSecurityCombine> GetCombineBySubmitId(int submitId)
         {
             return _entrustsecudao.GetCombineBySubmitId(submitId);
+        }
+
+        private List<EntrustSecurityCombine> GetCombineByCommandId(int commandId)
+        {
+            return _entrustsecudao.GetCombineByCommandId(commandId);
         }
 
         #endregion
