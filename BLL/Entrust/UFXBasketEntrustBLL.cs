@@ -35,11 +35,6 @@ namespace BLL.Entrust
         public UFXBasketEntrustBLL()
         {
             _securityBLL = UFXBLLManager.Instance.SecurityBLL;
-            var setting = SettingManager.Instance.Get();
-            _timeOut = setting.Timeout;
-            _limitEntrustRatio = setting.UFXSetting.LimitEntrustRatio;
-            _futuLimitEntrustRatio = setting.UFXSetting.FutuLimitEntrustRatio;
-            _optLimitEntrustRatio = setting.UFXSetting.OptLimitEntrustRatio;
         }
 
         public BLLResponse Submit(Model.Database.EntrustCommand cmdItem, List<EntrustSecurity> entrustItems, CallerCallback callerCallback)
@@ -49,6 +44,8 @@ namespace BLL.Entrust
             {
                 return new BLLResponse(ConnectionCode.EmptyEntrustItem, "Empty EntrustCommandItem or EntrustSecurityItem.");
             }
+
+            UpdateUFXSetting();
             var tradeCommandItem = _tradeCommandBLL.GetTradeCommand(cmdItem.CommandId);
             var portfolio = LoginManager.Instance.GetPortfolio(tradeCommandItem.PortfolioCode);
             //var stockholder = LoginManager.Instance.GetHolder(tradeCommandItem.
@@ -151,6 +148,8 @@ namespace BLL.Entrust
             {
                 return new BLLResponse(ConnectionCode.EmptyEntrustItem, "Empty EntrustCommandItem or EntrustSecurityItem.");
             }
+
+            UpdateUFXSetting();
             var tradeCommandItem = _tradeCommandBLL.GetTradeCommand(cmdItem.CommandId);
             var portfolio = LoginManager.Instance.GetPortfolio(tradeCommandItem.PortfolioCode);
             //var stockholder = LoginManager.Instance.GetHolder(tradeCommandItem.
@@ -280,5 +279,18 @@ namespace BLL.Entrust
 
             return ret;
         }
+
+        #region update the UFX setting
+
+        private void UpdateUFXSetting()
+        {
+            var setting = SettingManager.Instance.Get();
+            _timeOut = setting.Timeout;
+            _limitEntrustRatio = setting.UFXSetting.LimitEntrustRatio;
+            _futuLimitEntrustRatio = setting.UFXSetting.FutuLimitEntrustRatio;
+            _optLimitEntrustRatio = setting.UFXSetting.OptLimitEntrustRatio;
+        }
+
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using BLL.Manager;
+﻿using BLL.EntrustCommand;
+using BLL.Manager;
 using BLL.UFX.impl;
 using log4net;
 using Model.BLL;
@@ -11,8 +12,12 @@ namespace BLL.Entrust
 {
     public class UFXWithdrawSyncBLL
     {
+        private const string SuccessFlag = "1";
+        private const string FailFlag = "2";
+
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private WithdrawSyncBLL _withdrawSyncBLL = null;
+        private EntrustCombineBLL _entrustCombineBLL = new EntrustCombineBLL();
 
         public UFXWithdrawSyncBLL()
         {
@@ -34,7 +39,7 @@ namespace BLL.Entrust
 
             var responseItems = _withdrawSyncBLL.Withdraw(requests);
 
-            return GetResponse(responseItems);
+            return GetResponse(submitId, commandId, responseItems);
         }
 
         public BLLResponse WithdrawBasket(Model.Database.EntrustCommand cmdItem)
@@ -46,16 +51,53 @@ namespace BLL.Entrust
 
             var responseItems = _withdrawSyncBLL.WithdrawBasket(request);
 
-            return GetResponse(responseItems);
+            return GetResponse(cmdItem.SubmitId, cmdItem.CommandId, responseItems);
         }
 
-        private BLLResponse GetResponse(List<UFXBasketWithdrawResponse> responseItems)
+        private BLLResponse GetResponse(int submitId, int commandId, List<UFXBasketWithdrawResponse> responseItems)
         {
             BLLResponse bllResponse = null;
 
-            var successItems = responseItems.Where(p => p.SuccessFlag.Equals("1")).ToList();
-            var failItems = responseItems.Where(p => p.SuccessFlag.Equals("2")).ToList();
-            if (responseItems.Count > 0 && ((successItems.Count == responseItems.Count) || failItems.Count == 0))
+            List<EntrustSecurity> successCancelSecuItems = new List<EntrustSecurity>();
+            List<EntrustSecurity> failCancelSecuItems = new List<EntrustSecurity>();
+            int ret = -1;
+            if (submitId > 0)
+            {
+                //TODO: check the withdraw status
+                foreach (var responseItem in responseItems)
+                {
+                    var entrustItem = new EntrustSecurity
+                    {
+                        SubmitId = submitId,
+                        CommandId = commandId,
+                        SecuCode = responseItem.StockCode,
+                        EntrustNo = responseItem.EntrustNo,
+                    };
+
+                    if (FailFlag.Equals(responseItem.SuccessFlag))
+                    {
+                        failCancelSecuItems.Add(entrustItem);
+                    }
+                    else
+                    {
+                        successCancelSecuItems.Add(entrustItem);
+                    }
+                }
+
+                if (successCancelSecuItems.Count > 0)
+                {
+                    ret = _entrustCombineBLL.UpdateSecurityEntrustStatus(successCancelSecuItems, Model.EnumType.EntrustStatus.CancelSuccess);
+                }
+
+                if (failCancelSecuItems.Count > 0)
+                {
+                    ret = _entrustCombineBLL.UpdateSecurityEntrustStatus(successCancelSecuItems, Model.EnumType.EntrustStatus.CancelFail);
+                }
+            }
+
+            //var successItems = responseItems.Where(p => SuccessFlag.Equals(p.SuccessFlag)).ToList();
+            //var failItems = responseItems.Where(p => FailFlag.Equals(p.SuccessFlag)).ToList();
+            if (successCancelSecuItems.Count == responseItems.Count)
             {
                 bllResponse = new BLLResponse { Code = Model.ConnectionCode.Success, Message = "Withdraw success!" };
             }

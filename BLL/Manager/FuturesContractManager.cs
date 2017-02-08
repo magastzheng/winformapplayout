@@ -10,6 +10,12 @@ namespace BLL.FuturesContractManager
 {
     public class FuturesContractManager
     {
+        private const string ZZ500SH = "000905";
+        private const string ZZ500SZ = "399905";
+        private const string HS300SH = "000300";
+        private const string HS300SZ = "399300";
+        private const string SZ50SH = "000016";
+
         private const int MultipleIH = 300;
         private const int MultipleIF = 300;
         private const int MultipleIC = 200;
@@ -97,7 +103,7 @@ namespace BLL.FuturesContractManager
             var benchmarks = GetBenchmarks();
             if (futuresContract.StartsWith("IC"))
             {
-                var findItem = benchmarks.Find(p => p.BenchmarkId.Equals("000905") || p.BenchmarkId.Equals("399905"));
+                var findItem = benchmarks.Find(p => ZZ500SH.Equals(p.BenchmarkId) || ZZ500SZ.Equals(p.BenchmarkId));
                 if (findItem != null)
                 {
                     multiple = findItem.ContractMultiple;
@@ -109,7 +115,7 @@ namespace BLL.FuturesContractManager
             }
             else if (futuresContract.StartsWith("IF"))
             {
-                var findItem = benchmarks.Find(p => p.BenchmarkId.Equals("000300") || p.BenchmarkId.Equals("399300"));
+                var findItem = benchmarks.Find(p => HS300SH.Equals(p.BenchmarkId) || HS300SZ.Equals(p.BenchmarkId));
                 if (findItem != null)
                 {
                     multiple = findItem.ContractMultiple;
@@ -121,7 +127,7 @@ namespace BLL.FuturesContractManager
             }
             else if (futuresContract.StartsWith("IH"))
             {
-                var findItem = benchmarks.Find(p => p.BenchmarkId.Equals("000016"));
+                var findItem = benchmarks.Find(p => SZ50SH.Equals(p.BenchmarkId));
                 if (findItem != null)
                 {
                     multiple = findItem.ContractMultiple;

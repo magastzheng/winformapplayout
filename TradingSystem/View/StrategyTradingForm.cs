@@ -1252,7 +1252,7 @@ namespace TradingSystem.View
             bool waitRet = true;
             foreach (var e in waitHandles)
             {
-                if (!e.WaitOne(30000))
+                if (!e.WaitOne(-1))
                 {
                     waitRet = false;
                 }
@@ -1264,7 +1264,7 @@ namespace TradingSystem.View
                 //Access the database to get the message
                 foreach (var entrustCommand in entrustCommandList)
                 {
-                    var submitSecuItems = _entrustSecurityBLL.GetBySubmitId(entrustCommand.SubmitId);
+                    var submitSecuItems = _entrustSecurityBLL.GetCombineBySubmitId(entrustCommand.SubmitId);
 
                     bool isSuccess = true; 
                     //Show message

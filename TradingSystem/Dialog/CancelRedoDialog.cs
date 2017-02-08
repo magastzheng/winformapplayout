@@ -138,8 +138,8 @@ namespace TradingSystem.Dialog
         private void ComboBox_SHExchangePrice_SelectedIndexChanged(object sender, EventArgs e)
         {
             EntrustPriceType priceType = EntrustPriceTypeHelper.GetPriceType(this.cbSHExchangePrice);
-            _secuDataSource.Where(p => p.SecuType == SecurityType.Stock 
-                && p.ExchangeCode.Equals(Exchange.SHSE)
+            _secuDataSource.Where(p => p.SecuType == SecurityType.Stock
+                && Exchange.SHSE.Equals(p.ExchangeCode)
                 && p.EPriceSetting == PriceType.Market
                 )
                 .ToList()
@@ -153,7 +153,7 @@ namespace TradingSystem.Dialog
             EntrustPriceType priceType = EntrustPriceTypeHelper.GetPriceType(this.cbSZExchangePrice);
 
             _secuDataSource.Where(p => p.SecuType == SecurityType.Stock 
-                && p.ExchangeCode.Equals(Exchange.SZSE)
+                && Exchange.SZSE.Equals(p.ExchangeCode)
                 && p.EPriceSetting == PriceType.Market
                 )
                .ToList()
@@ -275,11 +275,11 @@ namespace TradingSystem.Dialog
             //只有选择市价时设置市价委托方式
             if (cancelRedoItem.SecuType == SecurityType.Stock && cancelRedoItem.EPriceSetting == PriceType.Market)
             {
-                if (cancelRedoItem.ExchangeCode.Equals(Exchange.SHSE))
+                if (Exchange.SHSE.Equals(cancelRedoItem.ExchangeCode))
                 {
                     cancelRedoItem.EEntrustPriceType = shPriceType;
                 }
-                else if (cancelRedoItem.ExchangeCode.Equals(Exchange.SZSE))
+                else if (Exchange.SZSE.Equals(cancelRedoItem.ExchangeCode))
                 {
                     cancelRedoItem.EEntrustPriceType = szPriceType;
                 }

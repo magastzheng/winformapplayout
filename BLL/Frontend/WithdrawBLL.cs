@@ -19,6 +19,7 @@ using Util;
 using System.Linq;
 using BLL.TradeCommand;
 using BLL.Manager;
+using Calculation;
 
 namespace BLL.Frontend
 {
@@ -203,7 +204,7 @@ namespace BLL.Frontend
             {
                 if (cancelRedoItem.LeftAmount % 100 > 0)
                 {
-                    cancelRedoItem.EntrustAmount = 100 * (int)Math.Round((double)(cancelRedoItem.LeftAmount / 100));
+                    cancelRedoItem.EntrustAmount = AmountRoundUtil.Round(cancelRedoItem.LeftAmount);
                 }
             }
 

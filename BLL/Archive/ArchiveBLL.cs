@@ -124,16 +124,13 @@ namespace BLL.Archive
         {
             int total = -1;
 
-            List<Model.Database.EntrustCommand> entrustCommands = null;
-            List<EntrustSecurity> entrustSecurities = null;
-            entrustCommands = _entrustCommandBLL.GetByCommandId(commandId);
+            var entrustCommands = _entrustCommandBLL.GetByCommandId(commandId);
             if (entrustCommands != null && entrustCommands.Count > 0)
             {
                 foreach (var entrustCommand in entrustCommands)
                 {
                     int ret = -1;
-                    var entrustSecuCombineItems = _entrustSecurityBLL.GetBySubmitId(entrustCommand.SubmitId);
-                    entrustSecurities = new List<EntrustSecurity>(entrustSecuCombineItems);
+                    var entrustSecurities = _entrustSecurityBLL.GetBySubmitId(entrustCommand.SubmitId);
                     if (entrustSecurities != null && entrustSecurities.Count > 0)
                     {
                         ret = _archiveEntrustBLL.Create(entrustCommand, entrustSecurities);

@@ -81,6 +81,13 @@ namespace BLL.EntrustCommand
             return _entrustsecudao.GetByCommandId(commandId);
         }
 
+        public List<EntrustSecurity> GetBySubmitId(int submitId)
+        {
+            var combineItems = GetCombineBySubmitId(submitId);
+
+            return new List<EntrustSecurity>(combineItems);
+        }
+
         public List<EntrustSecurity> GetCancel(int commandId)
         {
             return _entrustsecudao.GetCancel(commandId);
@@ -110,9 +117,9 @@ namespace BLL.EntrustCommand
             return _entrustsecudao.GetByRequestId(requestId);
         }
 
-        public List<EntrustSecurityCombine> GetBySubmitId(int submitId)
+        public List<EntrustSecurityCombine> GetCombineBySubmitId(int submitId)
         {
-            return _entrustsecudao.GetBySubmitId(submitId);
+            return _entrustsecudao.GetCombineBySubmitId(submitId);
         }
 
         #endregion

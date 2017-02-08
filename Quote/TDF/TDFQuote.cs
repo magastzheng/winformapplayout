@@ -415,6 +415,7 @@ namespace Quote.TDF
 
                             if (data.Match == 0)
                             {
+                                //TODO: fix the close period
                                 marketData.TradingStatus = TradingStatus.Suspend;
                                 marketData.SuspendFlag = SuspendFlag.Suspend1Day;
                             }
@@ -519,6 +520,7 @@ namespace Quote.TDF
 
                             if (data.Match == 0)
                             {
+                                //TODO: fix the close period
                                 marketData.TradingStatus = TradingStatus.Suspend;
                                 marketData.SuspendFlag = SuspendFlag.Suspend1Day;
                             }

@@ -148,6 +148,13 @@ namespace DBAccess.EntrustCommand
             return items;
         }
 
+        //public List<EntrustSecurity> GetBySubmitId(int submitId)
+        //{
+        //    var combineItems = GetCombineBySubmitId(submitId);
+
+        //    return new List<EntrustSecurity>(combineItems);
+        //}
+
         public List<EntrustSecurity> GetCancel(int commandId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetCancel);
@@ -227,7 +234,7 @@ namespace DBAccess.EntrustCommand
             return item;
         }
 
-        public List<EntrustSecurityCombine> GetBySubmitId(int submitId)
+        public List<EntrustSecurityCombine> GetCombineBySubmitId(int submitId)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetBySubmitId);
             _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
@@ -239,6 +246,10 @@ namespace DBAccess.EntrustCommand
                 while (reader.Read())
                 {
                     EntrustSecurityCombine item = ParseData(reader);
+                    if (item.SubmitId == submitId)
+                    {
+                        items.Add(item);
+                    }
                 }
             }
             reader.Close();

@@ -12,6 +12,7 @@ using Model.SecurityInfo;
 using System;
 using Model.Quote;
 using BLL.Manager;
+using Calculation;
 
 namespace TradingSystem.Dialog
 {
@@ -392,7 +393,7 @@ namespace TradingSystem.Dialog
                 if (outPriceData.CurrentPrice > 0)
                 { 
                     var temp = _originItem.AvailableAmount * inPriceData.CurrentPrice / outPriceData.CurrentPrice;
-                    inAmount = 100 * (int)Math.Round(temp / 100);
+                    inAmount = AmountRoundUtil.Round((int)temp); 
                 }
             }
 

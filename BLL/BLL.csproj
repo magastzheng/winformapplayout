@@ -134,6 +134,10 @@
     <Compile Include="UsageTracking\UserActionTrackingBLL.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Calculation\Calculation.csproj">
+      <Project>{0457500e-cf07-4842-998d-e06b16344c1c}</Project>
+      <Name>Calculation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Config\Config.csproj">
       <Project>{1538db09-6bfc-4623-9db4-34577f335cd4}</Project>
       <Name>Config</Name>

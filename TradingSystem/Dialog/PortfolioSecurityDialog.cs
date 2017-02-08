@@ -1,5 +1,6 @@
 ﻿using BLL.Manager;
 using BLL.SecurityInfo;
+using Calculation;
 using Controls.Entity;
 using Model.SecurityInfo;
 using Model.UI;
@@ -147,7 +148,7 @@ namespace TradingSystem.Dialog
                 {
                     if (temp > 0)
                     {
-                        temp = ((int)Math.Round((double)temp / 100)) * 100;
+                        temp = AmountRoundUtil.Round(temp);
                     }
                     else
                     {
