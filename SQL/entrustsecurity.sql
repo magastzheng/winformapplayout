@@ -997,7 +997,7 @@ go
 create proc procEntrustSecuritySelectCombineByCommandId(
 	@CommandId			int
 )
-as
+as 
 begin
 	select a.RequestId
 		,a.SubmitId 

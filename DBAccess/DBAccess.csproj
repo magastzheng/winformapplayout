@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Archive\Deal\ArchiveDealSecurityDAO.cs" />
+    <Compile Include="Archive\Permission\ArchiveTokenResourcePermissionDAO.cs" />
     <Compile Include="Archive\TradeCommand\ArchiveTradeDAO.cs" />
     <Compile Include="AssetUnitDAO.cs" />
     <Compile Include="BaseDAO.cs" />

@@ -121,7 +121,11 @@ namespace DBAccess
             return dataTable;
         }
 
-
+        /// <summary>
+        /// 使用该方法访问数据库，读取数据完成之后，需要自己关闭reader。
+        /// </summary>
+        /// <param name="cmd">The instance of DbCommand to be execute.</param>
+        /// <returns>An object of DbDataReader. Note: it needs to be close by caller.</returns>
         public DbDataReader ExecuteReader(DbCommand cmd)
         {
             Open(cmd);

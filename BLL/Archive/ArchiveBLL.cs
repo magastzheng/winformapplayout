@@ -1,12 +1,15 @@
 ﻿using BLL.Archive.Deal;
 using BLL.Archive.EntrustCommand;
+using BLL.Archive.Permission;
 using BLL.Archive.TradeCommand;
 using BLL.Deal;
 using BLL.EntrustCommand;
+using BLL.Permission;
 using BLL.TradeCommand;
 using log4net;
 using Model.Archive;
 using Model.Database;
+using Model.Permission;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +41,9 @@ namespace BLL.Archive
      
         private DealSecurityBLL _dealSecurityBLL = new DealSecurityBLL();
         private ArchiveDealSecurityBLL _archiveDealSecurityBLL = new ArchiveDealSecurityBLL();
+
+        private TokenResourcePermissionBLL _tokenResourcePermissionBLL = new TokenResourcePermissionBLL();
+        private ArchiveTokenResourcePermissionBLL _archiveTokenResourcePermissionBLL = new ArchiveTokenResourcePermissionBLL();
 
         public ArchiveBLL()
         { 
@@ -191,6 +197,20 @@ namespace BLL.Archive
         public int DeleteDealSecurity(int submitId)
         {
             return _archiveDealSecurityBLL.Delete(submitId);
+        }
+
+        #endregion
+
+        #region permission
+
+        public int ArchivePermission()
+        {
+            return -1;
+        }
+
+        public int DeletePermission(int resourceId, ResourceType resourceType)
+        {
+            return -1;
         }
 
         #endregion
