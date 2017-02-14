@@ -98,7 +98,7 @@ namespace BLL.Product
 
         public Portfolio Get(string portfolioCode, int userId)
         {
-            Portfolio portfolio = _portfoliodao.Get(portfolioCode);
+            Portfolio portfolio = GetByCode(portfolioCode);
             if (HasPermission(userId, portfolio))
             {
                 return portfolio;
@@ -109,17 +109,17 @@ namespace BLL.Product
             }
         }
 
-        public Portfolio Get(string portfolioCode)
-        {
-            return _portfoliodao.Get(portfolioCode);
-        }
-
         public Portfolio GetById(int portfolioId)
         {
             return _portfoliodao.GetById(portfolioId);
         }
 
         #region private methods
+
+        private Portfolio GetByCode(string portfolioCode)
+        {
+            return _portfoliodao.Get(portfolioCode);
+        }
 
         private bool HasPermission(int userId, Portfolio portfolio)
         {
@@ -149,7 +149,7 @@ namespace BLL.Product
                     else
                     {
                         //There is the portfolio in database, but the user does not have the permission.
-                        var existedPort = Get(portfolio.PortfolioNo);
+                        var existedPort = GetByCode(portfolio.PortfolioNo);
                         _permissionManager.GrantPermission(userId, existedPort.PortfolioId, ResourceType.Portfolio, PermissionMask.View);
                     }
                 }

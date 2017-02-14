@@ -30,3 +30,34 @@ where PortfolioId not in
 	from ufxportfolio t1
 	group by PortfolioCode
 )
+
+select * from ufxportfolio
+
+select 
+	PortfolioCode
+	,AccountCode
+	--,AccountType
+	,count(PortfolioCode) as Total
+from ufxportfolio
+group by PortfolioCode, AccountCode--, AccountType
+order by Total desc
+
+--PortfolioId 9
+select * from tokenresourcepermission
+where ResourceId=9
+
+select * from ufxportfolio
+where PortfolioCode='30' and AccountCode='850010'
+
+select * from tokenresourcepermission
+where ResourceId=395
+
+select * from tokenresourcepermission
+where Token=1 and TokenType=2 and ResourceType=103
+
+select * from ufxportfolio
+where PortfolioId in (
+select distinct ResourceId from tokenresourcepermission
+where Token=1 and TokenType=2 and ResourceType=103)
+
+select * from users
