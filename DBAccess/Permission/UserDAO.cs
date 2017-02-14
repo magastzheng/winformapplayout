@@ -2,6 +2,7 @@
 using Model.Permission;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -90,17 +91,9 @@ namespace DBAccess.Permission
             _dbHelper.AddInParameter(dbCommand, "@Id", System.Data.DbType.Int32, id);
             User item = new User();
             var reader = _dbHelper.ExecuteReader(dbCommand);
-            if (reader.HasRows)
+            if (reader.HasRows && reader.Read())
             {
-                while (reader.Read())
-                {
-                    item.Id = (int)reader["Id"];
-                    item.Operator = (string)reader["Operator"];
-                    item.Name = (string)reader["Name"];
-                    item.Status = (UserStatus)reader["Status"];
-
-                    break;
-                }
+                item = ParseData(reader);
             }
 
             reader.Close();
@@ -130,12 +123,7 @@ namespace DBAccess.Permission
             {
                 while (reader.Read())
                 {
-                    User item = new User();
-                    item.Id = (int)reader["Id"];
-                    item.Operator = (string)reader["Operator"];
-                    item.Name = (string)reader["Name"];
-                    item.Status = (UserStatus)reader["Status"];
-
+                    var item = ParseData(reader);
                     items.Add(item);
                 }
             }
@@ -144,6 +132,27 @@ namespace DBAccess.Permission
             _dbHelper.Close(dbCommand);
 
             return items;
+        }
+
+        private User ParseData(DbDataReader reader)
+        {
+            User item = new User();
+            item.Id = (int)reader["Id"];
+            item.Operator = (string)reader["Operator"];
+            item.Name = (string)reader["Name"];
+            item.Status = (UserStatus)reader["Status"];
+
+            if (reader["CreateDate"] != null && reader["CreateDate"] != DBNull.Value)
+            {
+                item.CreateDate = (DateTime)reader["CreateDate"];
+            }
+
+            if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+            {
+                item.ModifieDate = (DateTime)reader["ModifiedDate"];
+            }
+
+            return item;
         }
 
         #endregion

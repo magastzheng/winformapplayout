@@ -21,7 +21,7 @@ namespace DBAccess.EntrustCommand
         private const string SP_DeleteByCommandId = "procEntrustCommandDeleteByCommandId";
         private const string SP_DeleteByCommandIdStatus = "procEntrustCommandDeleteByCommandIdStatus";
         //private const string SP_Get = "procEntrustCommandSelectAll";
-        //private const string SP_GetBySubmitId = "procEntrustCommandSelectBySubmitId";
+        private const string SP_GetBySubmitId = "procEntrustCommandSelectBySubmitId";
         //private const string SP_GetByCommandId = "procEntrustCommandSelectByCommandId";
         //private const string SP_GetByCommandIdEntrustStatus = "procEntrustCommandSelectByCommandIdEntrustStatus";
         private const string SP_GetByCommandId = "procEntrustCommandSelectByCommandId";
@@ -254,61 +254,22 @@ namespace DBAccess.EntrustCommand
         //    return items;
         //}
 
-        //public EntrustCommandItem GetBySubmitId(int submitId)
-        //{
-        //    var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetBySubmitId);
-        //    _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
+        public Model.Database.EntrustCommand GetBySubmitId(int submitId)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetBySubmitId);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
 
-        //    EntrustCommandItem item = new EntrustCommandItem();
-        //    var reader = _dbHelper.ExecuteReader(dbCommand);
-        //    if (reader.HasRows)
-        //    {
-        //        while (reader.Read())
-        //        {
-                    
-        //            item.SubmitId = (int)reader["SubmitId"];
-        //            item.CommandId = (int)reader["CommandId"];
-        //            item.Copies = (int)reader["Copies"];
-        //            if (reader["EntrustNo"] != null && reader["EntrustNo"] != DBNull.Value)
-        //            {
-        //                item.EntrustNo = (int)reader["EntrustNo"];
-        //            }
+            var item = new Model.Database.EntrustCommand();
+            var reader = _dbHelper.ExecuteReader(dbCommand);
+            if (reader.HasRows && reader.Read())
+            {
+                item = ParseDataSingle(reader);
+            }
+            reader.Close();
+            _dbHelper.Close(dbCommand);
 
-        //            if (reader["BatchNo"] != null && reader["BatchNo"] != DBNull.Value)
-        //            {
-        //                item.BatchNo = (int)reader["BatchNo"];
-        //            }
-        //            item.EntrustStatus = (EntrustStatus)(int)reader["EntrustStatus"];
-        //            item.DealStatus = (DealStatus)(int)reader["DealStatus"];
-
-        //            if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
-        //            {
-        //                item.CreatedDate = (DateTime)reader["CreatedDate"];
-        //            }
-
-        //            if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
-        //            {
-        //                item.ModifiedDate = (DateTime)reader["ModifiedDate"];
-        //            }
-
-        //            if (reader["EntrustFailCode"] != null && reader["EntrustFailCode"] != DBNull.Value)
-        //            {
-        //                item.EntrustFailCode = (int)reader["EntrustFailCode"];
-        //            }
-
-        //            if (reader["EntrustFailCause"] != null && reader["EntrustFailCause"] != DBNull.Value)
-        //            {
-        //                item.EntrustFailCause = (string)reader["EntrustFailCause"];
-        //            }
-
-        //            break;
-        //        }
-        //    }
-        //    reader.Close();
-        //    _dbHelper.Close(dbCommand.Connection);
-
-        //    return item;
-        //}
+            return item;
+        }
 
         //public List<EntrustCommandItem> GetByEntrustStatus(int commandId, EntrustStatus status)
         //{
@@ -375,7 +336,11 @@ namespace DBAccess.EntrustCommand
 
             var reader = _dbHelper.ExecuteReader(dbCommand);
 
-            return ParseData(reader);
+            var items = ParseData(reader);
+            reader.Close();
+            _dbHelper.Close(dbCommand);
+
+            return items;
         }
 
         public List<Model.Database.EntrustCommand> GetByCommandId(int commandId)
@@ -383,10 +348,13 @@ namespace DBAccess.EntrustCommand
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_GetByCommandId);
             _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
 
-            List<Model.Database.EntrustCommand> items = new List<Model.Database.EntrustCommand>();
             var reader = _dbHelper.ExecuteReader(dbCommand);
 
-            return ParseData(reader);
+            var items = ParseData(reader);
+            reader.Close();
+            _dbHelper.Close(dbCommand);
+
+            return items;
         }
 
         private List<Model.Database.EntrustCommand> ParseData(DbDataReader reader)
@@ -397,48 +365,54 @@ namespace DBAccess.EntrustCommand
             {
                 while (reader.Read())
                 {
-                    var item = new Model.Database.EntrustCommand();
-                    item.SubmitId = (int)reader["SubmitId"];
-                    item.CommandId = (int)reader["CommandId"];
-                    item.Copies = (int)reader["Copies"];
-                    if (reader["EntrustNo"] != null && reader["EntrustNo"] != DBNull.Value)
-                    {
-                        item.EntrustNo = (int)reader["EntrustNo"];
-                    }
-
-                    if (reader["BatchNo"] != null && reader["BatchNo"] != DBNull.Value)
-                    {
-                        item.BatchNo = (int)reader["BatchNo"];
-                    }
-                    item.EntrustStatus = (EntrustStatus)(int)reader["EntrustStatus"];
-                    item.DealStatus = (DealStatus)(int)reader["DealStatus"];
-                    item.SubmitPerson = (int)reader["SubmitPerson"];
-
-                    if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
-                    {
-                        item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    }
-
-                    if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
-                    {
-                        item.ModifiedDate = (DateTime)reader["ModifiedDate"];
-                    }
-
-                    if (reader["EntrustFailCode"] != null && reader["EntrustFailCode"] != DBNull.Value)
-                    {
-                        item.EntrustFailCode = (int)reader["EntrustFailCode"];
-                    }
-
-                    if (reader["EntrustFailCause"] != null && reader["EntrustFailCause"] != DBNull.Value)
-                    {
-                        item.EntrustFailCause = (string)reader["EntrustFailCause"];
-                    }
-
+                    var item = ParseDataSingle(reader);
                     items.Add(item);
                 }
             }
-
+            
             return items;
+        }
+
+        private Model.Database.EntrustCommand ParseDataSingle(DbDataReader reader)
+        {
+            var item = new Model.Database.EntrustCommand();
+            item.SubmitId = (int)reader["SubmitId"];
+            item.CommandId = (int)reader["CommandId"];
+            item.Copies = (int)reader["Copies"];
+            if (reader["EntrustNo"] != null && reader["EntrustNo"] != DBNull.Value)
+            {
+                item.EntrustNo = (int)reader["EntrustNo"];
+            }
+
+            if (reader["BatchNo"] != null && reader["BatchNo"] != DBNull.Value)
+            {
+                item.BatchNo = (int)reader["BatchNo"];
+            }
+            item.EntrustStatus = (EntrustStatus)(int)reader["EntrustStatus"];
+            item.DealStatus = (DealStatus)(int)reader["DealStatus"];
+            item.SubmitPerson = (int)reader["SubmitPerson"];
+
+            if (reader["CreatedDate"] != null && reader["CreatedDate"] != DBNull.Value)
+            {
+                item.CreatedDate = (DateTime)reader["CreatedDate"];
+            }
+
+            if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+            {
+                item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+            }
+
+            if (reader["EntrustFailCode"] != null && reader["EntrustFailCode"] != DBNull.Value)
+            {
+                item.EntrustFailCode = (int)reader["EntrustFailCode"];
+            }
+
+            if (reader["EntrustFailCause"] != null && reader["EntrustFailCause"] != DBNull.Value)
+            {
+                item.EntrustFailCause = (string)reader["EntrustFailCause"];
+            }
+
+            return item;
         }
 
         //public List<EntrustCommandItem> GetCancelRedo(int commandId)

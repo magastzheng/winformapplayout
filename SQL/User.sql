@@ -4,10 +4,12 @@ if object_id('users') is not null
 drop table users
 
 create table users(
-	Id int	identity(1, 1) primary key,		-- 用户ID，首次成功登录系统会自动产生
-	Operator varchar(10) not null,			-- 用户操作代码，用于登录
-	Name	 varchar(10),					-- 用户名称
-	Status	 int							-- 用户状态：0 - inactive, 1 - active
+	Id int			identity(1, 1) primary key,		-- 用户ID，首次成功登录系统会自动产生
+	Operator		varchar(10) not null,			-- 用户操作代码，用于登录
+	Name			varchar(10),					-- 用户名称
+	Status			int,							-- 用户状态：0 - inactive, 1 - active
+	CreateDate		datetime,
+	ModifiedDate	datetime
 )
 
 go
@@ -37,11 +39,13 @@ begin
 		Operator
 		,Name
 		,Status
+		,CreateDate
 	)
 	values(
 		@Operator
 		,@Name
 		,@state
+		,getdate()
 	)
 
 	set @newid = SCOPE_IDENTITY()
@@ -62,8 +66,9 @@ as
 begin
 	update users
 	set
-		Name	= @Name
-		,Status = @Status
+		Name			= @Name
+		,Status			= @Status
+		,ModifiedDate	= getdate()
 	where Operator=@Operator
 end
 
@@ -97,6 +102,8 @@ begin
 			,Operator
 			,Name
 			,Status
+			,CreateDate
+			,ModifiedDate
 		from users
 		where Operator=@Operator
 	end
@@ -106,6 +113,8 @@ begin
 			,Operator
 			,Name
 			,Status
+			,CreateDate
+			,ModifiedDate
 		from users
 	end
 end
@@ -125,6 +134,8 @@ begin
 		,Operator
 		,Name
 		,Status
+		,CreateDate
+		,ModifiedDate
 	from users
 	where Id=@Id
 end

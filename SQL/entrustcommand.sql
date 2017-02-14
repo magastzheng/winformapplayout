@@ -62,34 +62,6 @@ begin
 	return @newid
 end
 
---go
---if exists (select name from sysobjects where name='procEntrustCommandUpdate')
---drop proc procEntrustCommandUpdate
-
---go
---create proc procEntrustCommandUpdate(
---	@SubmitId		int
---	,@EntrustNo		int
---	,@BatchNo		int
---	,@EntrustStatus	int
---	,@DealStatus	int
---	,@ModifiedDate	datetime
---	,@EntrustFailCode int
---	,@EntrustFailCause varchar(128)
---)
---as
---begin
---	update entrustcommand
---	set EntrustNo		= @EntrustNo
---		,BatchNo		= @BatchNo
---		,EntrustStatus	= @EntrustStatus
---		,DealStatus		= @DealStatus
---		,ModifiedDate	= @ModifiedDate
---		,EntrustFailCode = @EntrustFailCode
---		,EntrustFailCause = @EntrustFailCause
---	where SubmitId=@SubmitId
---end
-
 go
 if exists (select name from sysobjects where name='procEntrustCommandUpdateBatchNo')
 drop proc procEntrustCommandUpdateBatchNo
@@ -153,40 +125,6 @@ begin
 	where SubmitId=@SubmitId
 end
 
---go
---if exists (select name from sysobjects where name='procEntrustCommandUpdateCancel')
---drop proc procEntrustCommandUpdateCancel
-
---go
---create proc procEntrustCommandUpdateCancel(
---	@CommandId			int
---	,@ModifiedDate		datetime
---)
---as
---begin
---	--declare @newid int
---	update entrustcommand
---	set EntrustStatus	= 10
---		,ModifiedDate	= @ModifiedDate
---	where CommandId=@CommandId
---		and (DealStatus = 1 or DealStatus = 2)		--未成交
---		and EntrustStatus = 4	--已完成
---end
-
---go
---if exists (select name from sysobjects where name='procEntrustCommandDeleteBySubmitId')
---drop proc procEntrustCommandDeleteBySubmitId
-
---go
---create proc procEntrustCommandDeleteBySubmitId(
---	@SubmitId		int
---)
---as
---begin
---	delete from entrustcommand
---	where SubmitId=@SubmitId
---end
-
 go
 if exists (select name from sysobjects where name='procEntrustCommandDeleteByCommandId')
 drop proc procEntrustCommandDeleteByCommandId
@@ -230,106 +168,31 @@ begin
 	where CommandId=@CommandId and EntrustStatus=@EntrustStatus
 end
 
---go
---if exists (select name from sysobjects where name='procEntrustCommandSelectBySubmitId')
---drop proc procEntrustCommandSelectBySubmitId
+go
+if exists (select name from sysobjects where name='procEntrustCommandSelectBySubmitId')
+drop proc procEntrustCommandSelectBySubmitId
 
---go
---create proc procEntrustCommandSelectBySubmitId(
---	@SubmitId		int
---)
---as
---begin
---	select SubmitId
---		  ,CommandId
---		  ,Copies
---		  ,EntrustNo
---		  ,BatchNo
---		  ,EntrustStatus
---		  ,DealStatus
---		  ,CreatedDate
---		  ,ModifiedDate
---		  ,EntrustFailCode
---		  ,EntrustFailCause
---	from entrustcommand
---	where SubmitId=@SubmitId
---end
-
---go
---if exists (select name from sysobjects where name='procEntrustCommandSelectByCommandId')
---drop proc procEntrustCommandSelectByCommandId
-
---go
---create proc procEntrustCommandSelectByCommandId(
---	@CommandId		int
---)
---as
---begin
---	select SubmitId
---		  ,CommandId
---		  ,Copies
---		  ,EntrustNo
---		  ,BatchNo
---		  ,EntrustStatus
---		  ,DealStatus
---		  ,CreatedDate
---		  ,ModifiedDate
---		  ,EntrustFailCode
---		  ,EntrustFailCause
---	from entrustcommand
---	where CommandId=@CommandId
---end
-
-
---go
---if exists (select name from sysobjects where name='procEntrustCommandSelectAll')
---drop proc procEntrustCommandSelectAll
-
---go
---create proc procEntrustCommandSelectAll
---as
---begin
---	select SubmitId
---		  ,CommandId
---		  ,Copies
---		  ,EntrustNo
---		  ,BatchNo
---		  ,EntrustStatus
---		  ,DealStatus
---		  ,CreatedDate
---		  ,ModifiedDate
---		  ,EntrustFailCode
---		  ,EntrustFailCause
---	from entrustcommand
---end
-
-
---go
---if exists (select name from sysobjects where name='procEntrustCommandSelectByCommandIdEntrustStatus')
---drop proc procEntrustCommandSelectByCommandIdEntrustStatus
-
---go
---create proc procEntrustCommandSelectByCommandIdEntrustStatus(
---	@CommandId		int
---	,@EntrustStatus	int
---)
---as
---begin
---	select SubmitId
---		  ,CommandId
---		  ,Copies
---		  ,EntrustNo
---		  ,BatchNo
---		  ,EntrustStatus
---		  ,DealStatus
---		  ,CreatedDate
---		  ,ModifiedDate
---		  ,EntrustFailCode
---		  ,EntrustFailCause
---	from entrustcommand
---	where CommandId = @CommandId 
---		and EntrustStatus=@EntrustStatus
---end
+go
+create proc procEntrustCommandSelectBySubmitId(
+	@SubmitId		int
+)
+as
+begin
+	select SubmitId
+		,CommandId
+		,Copies
+		,EntrustNo
+		,BatchNo
+		,EntrustStatus
+		,DealStatus
+		,SubmitPerson
+		,CreatedDate
+		,ModifiedDate
+		,EntrustFailCode
+		,EntrustFailCause
+	from entrustcommand
+	where SubmitId=@SubmitId
+end
 
 go
 if exists (select name from sysobjects where name='procEntrustCommandSelectByCommandId')
@@ -384,31 +247,3 @@ begin
 		and (DealStatus=1 or DealStatus=2)		--未成交或部分成交
 		and EntrustStatus=4		--仅对已委托完成的撤单
 end
-
---go
---if exists (select name from sysobjects where name='procEntrustCommandSelectCancelCompletedRedo')
---drop proc procEntrustCommandSelectCancelCompletedRedo
-
---go
---create proc procEntrustCommandSelectCancelCompletedRedo(
---	@CommandId int
---)
---as
---begin
---	select SubmitId
---		  ,CommandId
---		  ,Copies
---		  ,EntrustNo
---		  ,BatchNo
---		  ,EntrustStatus
---		  ,DealStatus
---		  ,CreatedDate
---		  ,ModifiedDate
---		  ,EntrustFailCode
---		  ,EntrustFailCause
---	from entrustcommand
---	where CommandId = @CommandId 
---		and (DealStatus = 1 		--未成交
---		or DealStatus = 2)		--部分成交
---		and EntrustStatus = 12	--已完成撤销
---end

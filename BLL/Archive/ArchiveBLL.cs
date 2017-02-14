@@ -67,7 +67,6 @@ namespace BLL.Archive
                 {
                     total++;
                     _tradeCommandBLL.Delete(tradeCommand.CommandId);
-
                 }
                 else
                 { 
@@ -106,6 +105,12 @@ namespace BLL.Archive
                 if (ret > 0)
                 {
                     _entrustCommandBLL.DeleteByCommandId(commandId);
+
+                    var permItems = _tokenResourcePermissionBLL.GetByResource(commandId, ResourceType.TradeCommand);
+                    if (permItems != null && permItems.Count > 0)
+                    {
+                        ArchivePermission(commandId, ResourceType.TradeCommand, permItems);
+                    }
                 }
                 else
                 {
@@ -203,14 +208,20 @@ namespace BLL.Archive
 
         #region permission
 
-        public int ArchivePermission()
+        public int ArchivePermission(int resourceId, ResourceType resourceType, List<TokenResourcePermission> permissions)
         {
-            return -1;
+            int ret = _archiveTokenResourcePermissionBLL.Create(permissions);
+            if (ret > 0)
+            {
+                ret = DeletePermission(resourceId, resourceType);
+            }
+
+            return ret;
         }
 
         public int DeletePermission(int resourceId, ResourceType resourceType)
         {
-            return -1;
+            return _tokenResourcePermissionBLL.Delete(resourceId, resourceType);
         }
 
         #endregion

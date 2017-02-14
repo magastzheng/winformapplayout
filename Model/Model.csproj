@@ -66,6 +66,7 @@
     <Compile Include="Converter\EntrustDirectionConverter.cs" />
     <Compile Include="Converter\StringEnumConverter.cs" />
     <Compile Include="Converter\UFXTypeConverter.cs" />
+    <Compile Include="Database\DBDate.cs" />
     <Compile Include="Database\TemplateItem.cs" />
     <Compile Include="Database\TradeCommand.cs" />
     <Compile Include="Database\TradeCommandSecurity.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="config\FieldConfigItem.cs" />
     <Compile Include="EnumType\TemplateStatus.cs" />
     <Compile Include="EnumType\TradeInstanceStatus.cs" />
+    <Compile Include="Permission\UserStatus.cs" />
     <Compile Include="Setting\BuySellEntrustOrder.cs" />
     <Compile Include="Setting\OddShareMode.cs" />
     <Compile Include="UFX\UFXFieldRequireType.cs" />

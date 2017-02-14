@@ -2,6 +2,7 @@
 using Model.Permission;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -104,11 +105,8 @@ namespace DBAccess.Permission
             {
                 while (reader.Read())
                 {
-                    UserRole item = new UserRole();
-                    item.Id = (int)reader["Id"];
-                    item.UserId = (int)reader["UserId"];
-                    item.RoleId = (RoleType)reader["RoleId"];
-
+                    UserRole item = ParseData(reader);
+                    
                     items.Add(item);
                 }
             }
@@ -117,6 +115,26 @@ namespace DBAccess.Permission
             _dbHelper.Close(dbCommand);
 
             return items;
+        }
+
+        private UserRole ParseData(DbDataReader reader)
+        {
+            UserRole item = new UserRole();
+            item.Id = (int)reader["Id"];
+            item.UserId = (int)reader["UserId"];
+            item.RoleId = (RoleType)reader["RoleId"];
+
+            if (reader["CreateDate"] != null && reader["CreateDate"] != DBNull.Value)
+            {
+                item.CreateDate = (DateTime)reader["CreateDate"];
+            }
+
+            if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+            {
+                item.ModifieDate = (DateTime)reader["ModifiedDate"];
+            }
+
+            return item;
         }
 
         #endregion

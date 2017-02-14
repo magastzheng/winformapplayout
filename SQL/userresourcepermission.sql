@@ -10,7 +10,9 @@ create table tokenresourcepermission(
 	TokenType		int not null,
 	ResourceId		int not null,			--使用(ResourceId, ResourceType）唯一的定位资源，
 	ResourceType	int not null,			--不需要额外的resource表
-	Permission		int
+	Permission		int,
+	CreateDate		datetime,
+	ModifiedDate	datetime
 )
 
 go
@@ -34,6 +36,7 @@ begin
 		,ResourceId
 		,ResourceType
 		,Permission
+		,CreateDate
 	)
 	values(
 		@Token
@@ -41,6 +44,7 @@ begin
 		,@ResourceId
 		,@ResourceType
 		,@Permission
+		,getdate()
 	)
 
 	set @newid = SCOPE_IDENTITY()
@@ -62,7 +66,8 @@ create proc procTokenResourcePermissionUpdate(
 as
 begin
 	update tokenresourcepermission
-	set Permission	= @Permission
+	set Permission		= @Permission
+		,ModifiedDate	= getdate()
 	where Token=@Token
 		and TokenType=@TokenType
 		and ResourceId=@ResourceId
@@ -105,6 +110,8 @@ begin
 		,ResourceId
 		,ResourceType
 		,Permission
+		,CreateDate
+		,ModifiedDate
 	from tokenresourcepermission
 	where Token=@Token
 		and TokenType=@TokenType
@@ -130,6 +137,8 @@ begin
 		,ResourceId
 		,ResourceType
 		,Permission
+		,CreateDate
+		,ModifiedDate
 	from tokenresourcepermission
 	where Token=@Token
 		and TokenType=@TokenType
@@ -155,6 +164,8 @@ begin
 		,ResourceId
 		,ResourceType
 		,Permission
+		,CreateDate
+		,ModifiedDate
 	from tokenresourcepermission
 	where ResourceId=@ResourceId
 		and ResourceType=@ResourceType
@@ -181,6 +192,8 @@ begin
 		,ResourceId
 		,ResourceType
 		,Permission
+		,CreateDate
+		,ModifiedDate
 	from tokenresourcepermission
 	where Token=@Token
 		and TokenType=@TokenType

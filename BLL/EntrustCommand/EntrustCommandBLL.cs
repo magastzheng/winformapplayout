@@ -70,6 +70,11 @@ namespace BLL.EntrustCommand
             return _entrustcmddao.GetByCommandId(commandId);
         }
 
+        public Model.Database.EntrustCommand GetBySubmitId(int submitId)
+        {
+            return _entrustcmddao.GetBySubmitId(submitId);
+        }
+
         #endregion
 
         #region user action tracking

@@ -2,6 +2,7 @@
 using Model.Permission;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -83,18 +84,9 @@ namespace DBAccess.Permission
             var reader = _dbHelper.ExecuteReader(dbCommand);
 
             TokenResourcePermission item = new TokenResourcePermission();
-            if (reader.HasRows)
+            if (reader.HasRows && reader.Read())
             {
-                while (reader.Read())
-                {
-                    item.Id = (int)reader["Id"];
-                    item.Token = (int)reader["Token"];
-                    item.TokenType = (TokenType)reader["TokenType"];
-                    item.ResourceId = (int)reader["ResourceId"];
-                    item.ResourceType = (ResourceType)reader["ResourceType"];
-                    item.Permission = (int)reader["Permission"];
-                    break;
-                }
+                item = ParseData(reader);
             }
 
             reader.Close();
@@ -115,13 +107,7 @@ namespace DBAccess.Permission
             {
                 while (reader.Read())
                 {
-                    TokenResourcePermission item = new TokenResourcePermission();
-                    item.Id = (int)reader["Id"];
-                    item.Token = (int)reader["Token"];
-                    item.TokenType = (TokenType)reader["TokenType"];
-                    item.ResourceId = (int)reader["ResourceId"];
-                    item.ResourceType = (ResourceType)reader["ResourceType"];
-                    item.Permission = (int)reader["Permission"];
+                    TokenResourcePermission item = ParseData(reader);
 
                     items.Add(item);
                 }
@@ -146,14 +132,8 @@ namespace DBAccess.Permission
             {
                 while (reader.Read())
                 {
-                    TokenResourcePermission item = new TokenResourcePermission();
-                    item.Id = (int)reader["Id"];
-                    item.Token = (int)reader["Token"];
-                    item.TokenType = (TokenType)reader["TokenType"];
-                    item.ResourceId = (int)reader["ResourceId"];
-                    item.ResourceType = (ResourceType)reader["ResourceType"];
-                    item.Permission = (int)reader["Permission"];
-
+                    TokenResourcePermission item = ParseData(reader);
+                    
                     items.Add(item);
                 }
             }
@@ -176,13 +156,7 @@ namespace DBAccess.Permission
             {
                 while (reader.Read())
                 {
-                    TokenResourcePermission item = new TokenResourcePermission();
-                    item.Id = (int)reader["Id"];
-                    item.Token = (int)reader["Token"];
-                    item.TokenType = (TokenType)reader["TokenType"];
-                    item.ResourceId = (int)reader["ResourceId"];
-                    item.ResourceType = (ResourceType)reader["ResourceType"];
-                    item.Permission = (int)reader["Permission"];
+                    TokenResourcePermission item = ParseData(reader);
 
                     items.Add(item);
                 }
@@ -192,6 +166,29 @@ namespace DBAccess.Permission
             _dbHelper.Close(dbCommand);
 
             return items;
+        }
+
+        private TokenResourcePermission ParseData(DbDataReader reader)
+        {
+            TokenResourcePermission item = new TokenResourcePermission();
+            item.Id = (int)reader["Id"];
+            item.Token = (int)reader["Token"];
+            item.TokenType = (TokenType)reader["TokenType"];
+            item.ResourceId = (int)reader["ResourceId"];
+            item.ResourceType = (ResourceType)reader["ResourceType"];
+            item.Permission = (int)reader["Permission"];
+
+            if (reader["CreateDate"] != null && reader["CreateDate"] != DBNull.Value)
+            {
+                item.CreateDate = (DateTime)reader["CreateDate"];
+            }
+
+            if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
+            {
+                item.ModifieDate = (DateTime)reader["ModifiedDate"];
+            }
+
+            return item;
         }
     }
 }
