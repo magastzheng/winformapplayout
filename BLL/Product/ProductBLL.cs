@@ -109,6 +109,11 @@ namespace BLL.Product
             }
         }
 
+        public Portfolio Get(string portfolioCode)
+        {
+            return _portfoliodao.Get(portfolioCode);
+        }
+
         public Portfolio GetById(int portfolioId)
         {
             return _portfoliodao.GetById(portfolioId);
@@ -140,6 +145,12 @@ namespace BLL.Product
                     if (ret > 0)
                     {
                         _permissionManager.GrantPermission(userId, ret, ResourceType.Portfolio, PermissionMask.View);
+                    }
+                    else
+                    {
+                        //There is the portfolio in database, but the user does not have the permission.
+                        var existedPort = Get(portfolio.PortfolioNo);
+                        _permissionManager.GrantPermission(userId, existedPort.PortfolioId, ResourceType.Portfolio, PermissionMask.View);
                     }
                 }
             }
