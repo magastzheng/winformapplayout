@@ -30,33 +30,29 @@ namespace BLL.UFX
             }
 
             var row = dataSet.Rows[0];
-            foreach (var column in row.Columns)
+            if (row.Columns.ContainsKey("ErrorCode"))
             {
-                switch (column.Key)
-                {
-                    case "ErrorCode":
-                        {
-                            errorResponse.ErrorCode = column.Value.GetInt();
-                        }
-                        break;
-                    case "ErrorMsg":
-                        {
-                            errorResponse.ErrorMessage = column.Value.GetStr();
-                        }
-                        break;
-                    case "MsgDetail":
-                        {
-                            errorResponse.MessageDetail = column.Value.GetStr();
-                        }
-                        break;
-                    case "DataCount":
-                        {
-                            errorResponse.DataCount = column.Value.GetInt();
-                        }
-                        break;
-                }
+                errorResponse.ErrorCode = row.Columns["ErrorCode"].GetInt();
+            }
+            if (row.Columns.ContainsKey("ErrorMsg"))
+            {
+                errorResponse.ErrorMessage = row.Columns["ErrorMsg"].GetStr();
+            }
+            if (row.Columns.ContainsKey("MsgDetail"))
+            {
+                errorResponse.MessageDetail = row.Columns["MsgDetail"].GetStr();
+            }
+            if (row.Columns.ContainsKey("DataCount"))
+            {
+                errorResponse.DataCount = row.Columns["DataCount"].GetInt();
             }
 
+            //subscriber
+            if (row.Columns.ContainsKey("msgtype"))
+            {
+                errorResponse.ErrorCode = 0;
+            }
+            
             return errorResponse;
         }
 

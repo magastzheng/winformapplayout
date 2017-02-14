@@ -66,6 +66,7 @@ namespace TradingSystem.View
 
         private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
         private TradeCommandSecurityBLL _tradeCommandSecuBLL = new TradeCommandSecurityBLL();
+        private EntrustCommandBLL _entrustCommandBLL = new EntrustCommandBLL();
         private EntrustSecurityBLL _entrustSecurityBLL = new EntrustSecurityBLL();
 
         private SortableBindingList<TradeCommandItem> _cmdDataSource = new SortableBindingList<TradeCommandItem>(new List<TradeCommandItem>());
@@ -1289,26 +1290,34 @@ namespace TradingSystem.View
                 //Access the database to get the message
                 foreach (var entrustCommand in entrustCommandList)
                 {
-                    var submitSecuItems = _entrustSecurityBLL.GetCombineBySubmitId(entrustCommand.SubmitId);
-
-                    bool isSuccess = true; 
-                    //Show message
-                    foreach (var submitSecuItem in submitSecuItems)
+                    var submitEntrustCommand = _entrustCommandBLL.GetBySubmitId(entrustCommand.SubmitId);
+                    if (submitEntrustCommand.EntrustFailCode == 0)
                     {
-                        if (submitSecuItem.EntrustNo <= 0 || submitSecuItem.EntrustFailCode != 0)
-                        {
-                            sb.AppendFormat("{0}: {1}, {2}", submitSecuItem.SecuCode, submitSecuItem.EntrustFailCode, submitSecuItem.EntrustFailCause);
-                            EntrustSecurityItem failItem = new EntrustSecurityItem(submitSecuItem);
-                            failSecuItems.Add(failItem);
+                        var submitSecuItems = _entrustSecurityBLL.GetCombineBySubmitId(entrustCommand.SubmitId);
 
-                            isSuccess = false;
+                        bool isSuccess = true;
+                        //Show message
+                        foreach (var submitSecuItem in submitSecuItems)
+                        {
+                            if (submitSecuItem.EntrustNo <= 0 || submitSecuItem.EntrustFailCode != 0)
+                            {
+                                sb.AppendFormat("{0}: {1}, {2}", submitSecuItem.SecuCode, submitSecuItem.EntrustFailCode, submitSecuItem.EntrustFailCause);
+                                EntrustSecurityItem failItem = new EntrustSecurityItem(submitSecuItem);
+                                failSecuItems.Add(failItem);
+
+                                isSuccess = false;
+                            }
+                        }
+
+                        if (isSuccess)
+                        {
+                            successCount += submitSecuItems.Count;
+                            UpdateEntrustedAmount(new List<EntrustSecurity>(submitSecuItems));
                         }
                     }
-
-                    if (isSuccess)
+                    else
                     {
-                        successCount += submitSecuItems.Count;
-                        UpdateEntrustedAmount(new List<EntrustSecurity>(submitSecuItems));
+                        MessageDialog.Error(this, submitEntrustCommand.EntrustFailCause, MessageBoxButtons.OK);
                     }
                 }
             }
