@@ -61,3 +61,6 @@ from tokenresourcepermission_bak
 order by Id
 
 exec procUsersSelect @Operator='10099'
+
+select * from tokenresourcepermission
+where ResourceType=121

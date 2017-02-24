@@ -62,6 +62,8 @@
     <Compile Include="Archive\EntrustCommand\ArchiveEntrustSecurityBLL.cs" />
     <Compile Include="Archive\Permission\ArchiveTokenResourcePermissionBLL.cs" />
     <Compile Include="Archive\TradeCommand\ArchiveTradeBLL.cs" />
+    <Compile Include="Archive\TradeInstance\ArchiveTradeInstanceBLL.cs" />
+    <Compile Include="Archive\TradeInstance\ArchiveTradeInstanceSecurityBLL.cs" />
     <Compile Include="Deal\DealSecurityBLL.cs" />
     <Compile Include="EntrustCommand\EntrustCombineBLL.cs" />
     <Compile Include="EntrustCommand\EntrustCommandBLL.cs" />

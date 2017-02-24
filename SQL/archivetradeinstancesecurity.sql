@@ -97,38 +97,39 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procArchiveTradeInstanceSecurityDelete')
-drop proc procArchiveTradeInstanceSecurityDelete
+if exists (select name from sysobjects where name='procArchiveTradeInstanceSecurityDeleteByArchiveId')
+drop proc procArchiveTradeInstanceSecurityDeleteByArchiveId
 
 go
-create proc procArchiveTradeInstanceSecurityDelete(
-	@ArchiveId				int = NULL
-	,@InstanceId			int	= NULL
+create proc procArchiveTradeInstanceSecurityDeleteByArchiveId(
+	@ArchiveId	int
 )
 as
 begin
-	if @ArchiveId is not null
-	begin
-		delete from archivetradeinstancesecurity
-		where ArchiveId=@ArchiveId
-	end
-	else if @InstanceId is not null
-	begin
-		delete from archivetradeinstancesecurity
-		where InstanceId=@InstanceId
-	end
-	else
-	begin
-		raiserror('The parameter ArchiveId is NULL. It needs to pass one.', 16, -1)
-	end
+	delete from archivetradeinstancesecurity
+	where ArchiveId=@ArchiveId
 end
 
 go
-if exists (select name from sysobjects where name='procArchiveTradeInstanceSecurityDelete')
-drop proc procArchiveTradeInstanceSecurityDelete
+if exists (select name from sysobjects where name='procArchiveTradeInstanceSecurityDeleteByInstanceId')
+drop proc procArchiveTradeInstanceSecurityDeleteByInstanceId
 
 go
-create proc procArchiveTradeInstanceSecurityDelete(
+create proc procArchiveTradeInstanceSecurityDeleteByInstanceId(
+	@InstanceId			int
+)
+as
+begin
+	delete from archivetradeinstancesecurity
+	where InstanceId=@InstanceId
+end
+
+go
+if exists (select name from sysobjects where name='procArchiveTradeInstanceSecuritySelect')
+drop proc procArchiveTradeInstanceSecuritySelect
+
+go
+create proc procArchiveTradeInstanceSecuritySelect(
 	@ArchiveId				int
 )
 as

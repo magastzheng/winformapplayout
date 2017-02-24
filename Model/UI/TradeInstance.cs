@@ -5,6 +5,37 @@ namespace Model.UI
 {
     public class TradeInstance
     {
+        public TradeInstance()
+        { 
+        }
+
+        public TradeInstance(TradeInstance instance)
+        {
+            InstanceId = instance.InstanceId;
+            InstanceCode = instance.InstanceCode;
+            MonitorUnitId = instance.MonitorUnitId;
+            StockDirection = instance.StockDirection;
+            FuturesContract = instance.FuturesContract;
+            FuturesDirection = instance.FuturesDirection;
+            OperationCopies = instance.OperationCopies;
+            StockPriceType = instance.StockPriceType;
+            FuturesPriceType = instance.FuturesPriceType;
+            Status = instance.Status;
+            Owner = instance.Owner;
+            CreatedDate = instance.CreatedDate;
+            ModifiedDate = instance.ModifiedDate;
+            MonitorUnitName = instance.MonitorUnitName;
+            TemplateId = instance.TemplateId;
+            TemplateName = instance.TemplateName;
+            PortfolioId = instance.PortfolioId;
+            PortfolioCode = instance.PortfolioCode;
+            PortfolioName = instance.PortfolioName;
+            AccountCode = instance.AccountCode;
+            AccountName = instance.AccountName;
+            AssetNo = instance.AssetNo;
+            AssetName = instance.AssetName;
+        }
+
         public int InstanceId { get; set; }
 
         public string InstanceCode { get; set; }

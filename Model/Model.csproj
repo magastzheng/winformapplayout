@@ -48,6 +48,8 @@
     <Compile Include="Archive\ArchiveDealSecurity.cs" />
     <Compile Include="Archive\ArchiveTokenResourcePermission.cs" />
     <Compile Include="Archive\ArchiveTradeCommandSecurity.cs" />
+    <Compile Include="Archive\ArchiveTradeInstance.cs" />
+    <Compile Include="Archive\ArchiveTradeInstanceSecurity.cs" />
     <Compile Include="Binding\BindingAttribute.cs" />
     <Compile Include="Binding\BindingUtil\GridViewBindingHelper.cs" />
     <Compile Include="Binding\BindingUtil\UFXDataBindingHelper.cs" />

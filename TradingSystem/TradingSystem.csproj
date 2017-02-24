@@ -420,6 +420,7 @@
     <None Include="Resources\refresh.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\archive.png" />
     <Content Include="Resources\down.png" />
     <Content Include="Resources\edit.png" />
     <Content Include="Resources\htsamc_logo.ico" />

@@ -47,6 +47,9 @@
     <Compile Include="Archive\Deal\ArchiveDealSecurityDAO.cs" />
     <Compile Include="Archive\Permission\ArchiveTokenResourcePermissionDAO.cs" />
     <Compile Include="Archive\TradeCommand\ArchiveTradeDAO.cs" />
+    <Compile Include="Archive\TradeInstance\ArchiveTradeInstanceDAO.cs" />
+    <Compile Include="Archive\TradeInstance\ArchiveTradeInstanceSecurityDAO.cs" />
+    <Compile Include="Archive\TradeInstance\ArchiveTradeInstanceTransactionDAO.cs" />
     <Compile Include="AssetUnitDAO.cs" />
     <Compile Include="BaseDAO.cs" />
     <Compile Include="Archive\EntrustCommand\ArchiveEntrustCommandDAO.cs" />

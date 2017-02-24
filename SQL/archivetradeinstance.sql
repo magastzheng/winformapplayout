@@ -88,30 +88,31 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procArchiveTradeInstanceDelete')
-drop proc procArchiveTradeInstanceDelete
+if exists (select name from sysobjects where name='procArchiveTradeInstanceDeleteByArchiveId')
+drop proc procArchiveTradeInstanceDeleteByArchiveId
 
 go
-create proc procArchiveTradeInstanceDelete(
-	@ArchiveId		int = NULL
-	,@InstanceId	int = NULL
+create proc procArchiveTradeInstanceDeleteByArchiveId(
+	@ArchiveId	int
 )
 as
 begin
-	if @ArchiveId is not null
-	begin
-		delete from archivetradeinstance
-		where ArchiveId=@ArchiveId
-	end
-	else if @InstanceId is not null
-	begin
-		delete from archivetradeinstance
-		where InstanceId=@InstanceId
-	end
-	else
-	begin
-		raiserror('The parameter ArchiveId and InstanceId are not NULL. It needs to pass one.', 16, -1)
-	end
+	delete from archivetradeinstance
+	where ArchiveId=@ArchiveId
+end
+
+go
+if exists (select name from sysobjects where name='procArchiveTradeInstanceDeleteByInstanceId')
+drop proc procArchiveTradeInstanceDeleteByInstanceId
+
+go
+create proc procArchiveTradeInstanceDeleteByInstanceId(
+	@InstanceId	int
+)
+as
+begin
+	delete from archivetradeinstance
+	where InstanceId=@InstanceId
 end
 
 go
@@ -125,7 +126,8 @@ create proc procArchiveTradeInstanceSelect(
 as
 begin
 	select
-		InstanceId
+		ArchiveId
+		,InstanceId
 		,InstanceCode	
 		,PortfolioId	
 		,MonitorUnitId		

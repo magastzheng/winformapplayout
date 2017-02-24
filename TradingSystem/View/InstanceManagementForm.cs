@@ -31,8 +31,10 @@ namespace TradingSystem.View
             this.LoadControl += new FormLoadHandler(Form_LoadControl);
             this.LoadData += new FormLoadHandler(Form_LoadData);
 
-            
+            this.tsbRefresh.Click += new System.EventHandler(ToolStripButton_Refresh_Click);
         }
+
+        #region load control
 
         private bool Form_LoadControl(object sender, object data)
         {
@@ -45,7 +47,16 @@ namespace TradingSystem.View
             return true;
         }
 
+        #endregion
+
+        #region load data
+
         private bool Form_LoadData(object sender, object data)
+        {
+            return InternalLoadData();
+        }
+
+        private bool InternalLoadData()
         {
             _dataSource.Clear();
 
@@ -58,5 +69,16 @@ namespace TradingSystem.View
 
             return true;
         }
+
+        #endregion
+
+        #region tool strip button click event
+
+        private void ToolStripButton_Refresh_Click(object sender, System.EventArgs e)
+        {
+            InternalLoadData();
+        }
+
+        #endregion
     }
 }
