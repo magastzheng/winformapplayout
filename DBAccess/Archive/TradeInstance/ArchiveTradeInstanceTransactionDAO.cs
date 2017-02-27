@@ -79,6 +79,7 @@ namespace DBAccess.Archive.TradeInstance
                         dbCommand.Parameters.Clear();
                         dbCommand.CommandText = SP_CreateTradeInstanceSecurity;
 
+                        _dbHelper.AddInParameter(dbCommand, "@ArchiveId", System.Data.DbType.Int32, archiveId);
                         _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, tradeSecuItem.InstanceId);
                         _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, tradeSecuItem.SecuCode);
                         _dbHelper.AddInParameter(dbCommand, "@SecuType", System.Data.DbType.Int32, (int)tradeSecuItem.SecuType);
