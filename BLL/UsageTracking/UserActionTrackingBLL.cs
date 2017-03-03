@@ -14,7 +14,7 @@ namespace BLL.UsageTracking
         { 
         }
 
-        public int Create(int userId, ActionType action, ResourceType resourceType, int resourceId, string details)
+        public int Create(int userId, ActionType action, ResourceType resourceType, int resourceId, int num, ActionStatus actionStatus, string details)
         {
             var item = new UserActionTracking 
             {
@@ -23,6 +23,8 @@ namespace BLL.UsageTracking
                 ActionType = action,
                 ResourceType = resourceType,
                 ResourceId = resourceId,
+                Num = num,
+                ActionStatus = actionStatus,
                 Details = details,
             };
 

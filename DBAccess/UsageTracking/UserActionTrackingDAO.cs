@@ -2,6 +2,7 @@
 using Model.UsageTracking;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,6 +36,8 @@ namespace DBAccess.UsageTracking
             _dbHelper.AddInParameter(dbCommand, "@Action", System.Data.DbType.Int32, (int)item.ActionType);
             _dbHelper.AddInParameter(dbCommand, "@ResourceType", System.Data.DbType.Int32, (int)item.ResourceType);
             _dbHelper.AddInParameter(dbCommand, "@ResourceId", System.Data.DbType.Int32, item.ResourceId);
+            _dbHelper.AddInParameter(dbCommand, "@Num", System.Data.DbType.Int32, item.Num);
+            _dbHelper.AddInParameter(dbCommand, "@ActionStatus", System.Data.DbType.Int32, (int)item.ActionStatus);
             _dbHelper.AddInParameter(dbCommand, "@Details", System.Data.DbType.String, item.Details);
 
             _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
@@ -61,14 +64,7 @@ namespace DBAccess.UsageTracking
             {
                 while (reader.Read())
                 {
-                    UserActionTracking item = new UserActionTracking();
-                    item.UserId = (int)reader["UserId"];
-                    item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    item.ActionType = (ActionType)reader["Action"];
-                    item.ResourceType = (ResourceType)reader["ResourceType"];
-                    item.ResourceId = (int)reader["ResourceId"];
-                    item.Details = (string)reader["Details"];
-
+                    UserActionTracking item = ParseData(reader);
                     items.Add(item);
                 }
             }
@@ -92,13 +88,7 @@ namespace DBAccess.UsageTracking
             {
                 while (reader.Read())
                 {
-                    UserActionTracking item = new UserActionTracking();
-                    item.UserId = (int)reader["UserId"];
-                    item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    item.ActionType = (ActionType)reader["Action"];
-                    item.ResourceType = (ResourceType)reader["ResourceType"];
-                    item.ResourceId = (int)reader["ResourceId"];
-                    item.Details = (string)reader["Details"];
+                    UserActionTracking item = ParseData(reader);
 
                     items.Add(item);
                 }
@@ -122,13 +112,7 @@ namespace DBAccess.UsageTracking
             {
                 while (reader.Read())
                 {
-                    UserActionTracking item = new UserActionTracking();
-                    item.UserId = (int)reader["UserId"];
-                    item.CreatedDate = (DateTime)reader["CreatedDate"];
-                    item.ActionType = (ActionType)reader["Action"];
-                    item.ResourceType = (ResourceType)reader["ResourceType"];
-                    item.ResourceId = (int)reader["ResourceId"];
-                    item.Details = (string)reader["Details"];
+                    UserActionTracking item = ParseData(reader);
 
                     items.Add(item);
                 }
@@ -138,6 +122,21 @@ namespace DBAccess.UsageTracking
             _dbHelper.Close(dbCommand);
 
             return items;
+        }
+
+        private UserActionTracking ParseData(DbDataReader reader)
+        {
+            UserActionTracking item = new UserActionTracking();
+            item.UserId = (int)reader["UserId"];
+            item.CreatedDate = (DateTime)reader["CreatedDate"];
+            item.ActionType = (ActionType)reader["Action"];
+            item.ResourceType = (ResourceType)reader["ResourceType"];
+            item.ResourceId = (int)reader["ResourceId"];
+            item.Num = (int)reader["Num"];
+            item.ActionStatus = (ActionStatus)reader["ActionStatus"];
+            item.Details = (string)reader["Details"];
+
+            return item;
         }
     }
 }

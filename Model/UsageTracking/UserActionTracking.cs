@@ -1,9 +1,5 @@
 ﻿using Model.Permission;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Model.UsageTracking
 {
@@ -18,6 +14,10 @@ namespace Model.UsageTracking
         public ResourceType ResourceType { get; set; }
 
         public int ResourceId { get; set; }
+
+        public int Num { get; set; }
+
+        public ActionStatus ActionStatus { get; set; }
 
         public string Details { get; set; }
     }

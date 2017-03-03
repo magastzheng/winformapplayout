@@ -7,9 +7,11 @@ create table useractiontracking(
 	Id				int identity(1, 1) primary key
 	,UserId			int not null
 	,CreatedDate	datetime
-	,Action			int
-	,ResourceType	int
-	,ResourceId		int
+	,Action			int			--Model/UsageTracking/ActionType.cs
+	,ResourceType	int			--Model/Permission/ResourceType.cs
+	,ResourceId		int			
+	,Num			int
+	,ActionStatus	int			--Model/UsageTracking/ActionStatus
 	,Details		varchar(3000)
 )
 
@@ -25,6 +27,8 @@ create proc procUserActionTrackingInsert(
 	,@Action		int
 	,@ResourceType	int
 	,@ResourceId	int
+	,@Num			int
+	,@ActionStatus	int
 	,@Details		varchar(3000)
 )
 as
@@ -36,7 +40,9 @@ begin
 		,CreatedDate	
 		,Action			
 		,ResourceType	
-		,ResourceId		
+		,ResourceId	
+		,Num
+		,ActionStatus	
 		,Details		
 	)
 	values(
@@ -44,7 +50,9 @@ begin
 		,@CreatedDate	
 		,@Action			
 		,@ResourceType	
-		,@ResourceId		
+		,@ResourceId	
+		,@Num
+		,@ActionStatus	
 		,@Details		
 	)
 
@@ -68,6 +76,8 @@ begin
 		,Action
 		,ResourceType
 		,ResourceId
+		,Num
+		,ActionStatus
 		,Details
 	from useractiontracking
 	where UserId=@UserId
@@ -91,6 +101,8 @@ begin
 		,Action
 		,ResourceType
 		,ResourceId
+		,Num
+		,ActionStatus
 		,Details
 	from useractiontracking
 	where UserId=@UserId
@@ -115,6 +127,8 @@ begin
 		,Action
 		,ResourceType
 		,ResourceId
+		,Num
+		,ActionStatus
 		,Details
 	from useractiontracking
 	where ResourceId=@ResourceId

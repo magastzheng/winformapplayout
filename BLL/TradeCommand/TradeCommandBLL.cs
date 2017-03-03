@@ -454,7 +454,13 @@ namespace BLL.TradeCommand
         private int Tracking(ActionType actionType, ResourceType resourceType, int resourceId, Model.Database.TradeCommand cmdItem)
         {
             int userId = LoginManager.Instance.GetUserId();
-            return _userActionTrackingBLL.Create(userId, actionType, resourceType, resourceId, JsonUtil.SerializeObject(cmdItem));
+            int num = 1;
+            if (cmdItem == null)
+            {
+                num = -1;
+            }
+
+            return _userActionTrackingBLL.Create(userId, actionType, resourceType, resourceId, num, ActionStatus.Normal, JsonUtil.SerializeObject(cmdItem));
         }
         #endregion
     }

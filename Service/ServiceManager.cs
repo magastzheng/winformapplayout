@@ -19,6 +19,10 @@ namespace ServiceInterface
         private event Action<ServiceType, int, string> ConnectedHandler;
         private event Action<NotifyArgs> NotifyHandler;
 
+        //
+        private Dictionary<ServiceType, Action<ServiceType, int, string>> _connectedHandlerMap = new Dictionary<ServiceType, Action<ServiceType, int, string>>();
+        private Dictionary<ServiceType, Action<NotifyArgs>> _notifyHandlerMap = new Dictionary<ServiceType, Action<NotifyArgs>>();
+
         private CountdownEvent _cdEvent = null;
         //private Dictionary<ServiceType, AutoResetEvent> _eventMap;
 
@@ -78,6 +82,55 @@ namespace ServiceInterface
             }
 
             return allSuccess;
+        }
+
+        public void RegisterConnectedHandler(ServiceType serviceType, Action<ServiceType, int, string> connectedHandler)
+        {
+            if (_connectedHandlerMap == null)
+            {
+                _connectedHandlerMap = new Dictionary<ServiceType, Action<ServiceType, int, string>>();
+            }
+
+            if (_connectedHandlerMap.ContainsKey(serviceType))
+            {
+                _connectedHandlerMap[serviceType] = connectedHandler;
+            }
+            else
+            {
+                _connectedHandlerMap.Add(serviceType, connectedHandler);
+            }
+        }
+
+        public void UnRegisterConnectedHandler(ServiceType serviceType)
+        {
+            if (_connectedHandlerMap.ContainsKey(serviceType))
+            {
+                _connectedHandlerMap.Remove(serviceType);
+            }
+        }
+
+        public void RegisterNotifyHandler(ServiceType serviceType, Action<NotifyArgs> notifyHandler)
+        {
+            if (_notifyHandlerMap == null)
+            {
+                _notifyHandlerMap = new Dictionary<ServiceType, Action<NotifyArgs>>();
+            }
+            if (_notifyHandlerMap.ContainsKey(serviceType))
+            {
+                _notifyHandlerMap[serviceType] = notifyHandler;
+            }
+            else
+            {
+                _notifyHandlerMap.Add(serviceType, notifyHandler);
+            }
+        }
+
+        public void UnRegisterNotifyHandler(ServiceType serviceType)
+        {
+            if (_notifyHandlerMap.ContainsKey(serviceType))
+            {
+                _notifyHandlerMap.Remove(serviceType);
+            }
         }
 
         private void Connected(ServiceType serviceType, int code, string message)

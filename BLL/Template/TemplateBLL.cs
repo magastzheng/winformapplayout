@@ -38,7 +38,7 @@ namespace BLL.Template
                 int userId = LoginManager.Instance.GetUserId();
 
                 //Add the usage tracking information
-                _userActionTrackingBLL.Create(userId, Model.UsageTracking.ActionType.Create, ResourceType.SpotTemplate, templateId, JsonUtil.SerializeObject(template));
+                _userActionTrackingBLL.Create(userId, Model.UsageTracking.ActionType.Create, ResourceType.SpotTemplate, templateId, 1, Model.UsageTracking.ActionStatus.Success, JsonUtil.SerializeObject(template));
 
                 var perms = _permissionManager.GetOwnerPermission();
                 _permissionManager.GrantPermission(userId, templateId, ResourceType.SpotTemplate, perms);
@@ -66,7 +66,7 @@ namespace BLL.Template
                 if (tempId > 0)
                 {
                     //add the usage tracking
-                    _userActionTrackingBLL.Create(userId, Model.UsageTracking.ActionType.Edit, ResourceType.SpotTemplate, template.TemplateId, JsonUtil.SerializeObject(template));
+                    _userActionTrackingBLL.Create(userId, Model.UsageTracking.ActionType.Edit, ResourceType.SpotTemplate, template.TemplateId, 1, Model.UsageTracking.ActionStatus.Success, JsonUtil.SerializeObject(template));
 
                     //update the permission
                     foreach (var perm in template.Permissions)
@@ -101,7 +101,7 @@ namespace BLL.Template
                     //Remove the permission row in the database directly. NOT revoke!!!!!
                     _permissionManager.Delete(template.TemplateId, ResourceType.SpotTemplate);
                     //add the usage tracking
-                    _userActionTrackingBLL.Create(userId, Model.UsageTracking.ActionType.Delete, ResourceType.SpotTemplate, template.TemplateId, JsonUtil.SerializeObject(template));
+                    _userActionTrackingBLL.Create(userId, Model.UsageTracking.ActionType.Delete, ResourceType.SpotTemplate, template.TemplateId, 1, Model.UsageTracking.ActionStatus.Success, JsonUtil.SerializeObject(template));
                 }
             }
 
@@ -113,7 +113,7 @@ namespace BLL.Template
             var allTemplates = _tempdbdao.GetAll();
             int userId = LoginManager.Instance.GetUserId();
 
-            _userActionTrackingBLL.Create(userId, Model.UsageTracking.ActionType.Get, ResourceType.SpotTemplate, -1, "Get all template");
+            _userActionTrackingBLL.Create(userId, Model.UsageTracking.ActionType.Get, ResourceType.SpotTemplate, -1, -1, Model.UsageTracking.ActionStatus.Normal, "Get all template");
 
             return GetPermissionTemplates(userId, allTemplates);
         }
@@ -129,6 +129,7 @@ namespace BLL.Template
         {
             StockTemplate targetTemplate = null;
             int loginUserId = LoginManager.Instance.GetUserId();
+            
             if (_permissionManager.HasPermission(loginUserId, templateId, ResourceType.SpotTemplate, PermissionMask.View))
             {
                 var template = _tempdbdao.Get(templateId);
@@ -146,7 +147,12 @@ namespace BLL.Template
                 targetTemplate = new StockTemplate();
             }
 
-            _userActionTrackingBLL.Create(loginUserId, Model.UsageTracking.ActionType.Get, ResourceType.SpotTemplate, templateId, JsonUtil.SerializeObject(targetTemplate));
+            Model.UsageTracking.ActionStatus actionStatus = Model.UsageTracking.ActionStatus.Normal;
+            if (targetTemplate.TemplateId == templateId)
+            {
+                actionStatus = Model.UsageTracking.ActionStatus.Success;
+            }
+            _userActionTrackingBLL.Create(loginUserId, Model.UsageTracking.ActionType.Get, ResourceType.SpotTemplate, templateId, 1, actionStatus, JsonUtil.SerializeObject(targetTemplate));
 
             return targetTemplate;
         }
@@ -154,7 +160,7 @@ namespace BLL.Template
         public List<TemplateStock> GetStocks(int templateId)
         {
             int loginUserId = LoginManager.Instance.GetUserId();
-            _userActionTrackingBLL.Create(loginUserId, Model.UsageTracking.ActionType.Get, ResourceType.SpotTemplate, templateId, "stocks");
+            _userActionTrackingBLL.Create(loginUserId, Model.UsageTracking.ActionType.Get, ResourceType.SpotTemplate, templateId, 1, Model.UsageTracking.ActionStatus.Normal, "stocks");
 
             return _stockdbdao.Get(templateId);
         }
@@ -166,7 +172,7 @@ namespace BLL.Template
             if (templateIds.Count > 0)
             {
                 var templateId = templateIds[0];
-                _userActionTrackingBLL.Create(loginUserId, Model.UsageTracking.ActionType.Delete, ResourceType.SpotTemplate, templateId, "stocks");
+                _userActionTrackingBLL.Create(loginUserId, Model.UsageTracking.ActionType.Delete, ResourceType.SpotTemplate, templateId, tempStocks.Count, Model.UsageTracking.ActionStatus.Normal, JsonUtil.SerializeObject(tempStocks));
             }
 
             return _stockdbdao.Delete(tempStocks);
@@ -175,7 +181,7 @@ namespace BLL.Template
         public int Replace(int templateNo, List<TemplateStock> tempStocks)
         {
             int loginUserId = LoginManager.Instance.GetUserId();
-            _userActionTrackingBLL.Create(loginUserId, Model.UsageTracking.ActionType.Edit, ResourceType.SpotTemplate, templateNo, "Replace");
+            _userActionTrackingBLL.Create(loginUserId, Model.UsageTracking.ActionType.Edit, ResourceType.SpotTemplate, templateNo, tempStocks.Count, Model.UsageTracking.ActionStatus.Normal, JsonUtil.SerializeObject(tempStocks));
 
             return _stockdbdao.Replace(templateNo, tempStocks);
         }

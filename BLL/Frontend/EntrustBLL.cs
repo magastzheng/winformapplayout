@@ -59,35 +59,27 @@ namespace BLL.Frontend
                 }
             }
 
-            return SubmitOne(cmdItem, entrustItems, callback);
+            return SubmitSync(cmdItem, entrustItems, callback);
         }
 
-        public BLLResponse SubmitOne(Model.Database.EntrustCommand cmdItem, List<EntrustSecurity> entrustItems, CallerCallback callback)
+        public BLLResponse SubmitSync(Model.Database.EntrustCommand cmdItem, List<EntrustSecurity> entrustItems, CallerCallback callback)
         {
-            int ret = SumbitToDB(cmdItem, entrustItems);
+            int ret = LocalSubmit(cmdItem, entrustItems);
             if (ret <= 0)
             {
                 return new BLLResponse(ConnectionCode.DBInsertFail, "Fail to submit into database");
             }
-
-            entrustItems.Where(p => p.CommandId == cmdItem.CommandId)
-                .ToList()
-                .ForEach(o => o.SubmitId = cmdItem.SubmitId);
 
             return _ufxBasketEntrustBLL.Submit(cmdItem, entrustItems, callback);
         }
 
         public BLLResponse SubmitAsync(Model.Database.EntrustCommand cmdItem, List<EntrustSecurity> entrustItems, CallerCallback callback, EventWaitHandle waitHandle)
         {
-            int ret = SumbitToDB(cmdItem, entrustItems);
+            int ret = LocalSubmit(cmdItem, entrustItems);
             if (ret <= 0)
             {
                 return new BLLResponse(ConnectionCode.DBInsertFail, "Fail to submit into database");
             }
-
-            entrustItems.Where(p => p.CommandId == cmdItem.CommandId)
-                .ToList()
-                .ForEach(o => o.SubmitId = cmdItem.SubmitId);
 
             return _ufxBasketEntrustBLL.SubmitAsync(cmdItem, entrustItems, callback, waitHandle);
         }
@@ -95,6 +87,19 @@ namespace BLL.Frontend
         #endregion
 
         #region private
+
+        private int LocalSubmit(Model.Database.EntrustCommand cmdItem, List<EntrustSecurity> entrustItems)
+        {
+            int ret = SumbitToDB(cmdItem, entrustItems);
+            if (ret > 0)
+            {
+                entrustItems.Where(p => p.CommandId == cmdItem.CommandId)
+                    .ToList()
+                    .ForEach(o => o.SubmitId = cmdItem.SubmitId);
+            }
+
+            return ret;
+        }
 
         private int SumbitToDB(Model.Database.EntrustCommand cmdItem, List<EntrustSecurity> entrustItems)
         {

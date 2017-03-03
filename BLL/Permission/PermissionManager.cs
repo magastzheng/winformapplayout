@@ -54,7 +54,7 @@ namespace BLL.Permission
                 hasPerm = ValidatePermission(userId, feature.Id, ResourceType.Feature, mask);
             }
 
-            _userActionTrackingBLL.Create(userId, Model.UsageTracking.ActionType.CheckPermission, ResourceType.Feature, feature.Id, mask.ToString());
+            _userActionTrackingBLL.Create(userId, Model.UsageTracking.ActionType.CheckPermission, ResourceType.Feature, feature.Id, 1, ActionStatus.Normal, mask.ToString());
 
             return hasPerm;
         }
@@ -458,7 +458,7 @@ namespace BLL.Permission
 
         private int Tracking(int userId, ActionType action, ResourceType resourceType, int resourceId, int perm)
         {
-            return _userActionTrackingBLL.Create(userId, action, resourceType, resourceId, perm.ToString());
+            return _userActionTrackingBLL.Create(userId, action, resourceType, resourceId, 1, ActionStatus.Normal, perm.ToString());
         }
 
         #endregion

@@ -108,6 +108,51 @@ namespace DBAccess
 
         #endregion
 
+        #region 准备命令
+
+        private void PrepareCommand(DbCommand cmd, DbConnection conn, DbTransaction trans, DbParameter[] cmdParms)
+        {
+            if (conn.State != ConnectionState.Open)
+                conn.Open();
+
+            cmd.Connection = conn;
+            //cmd.CommandText = cmdText;
+            //cmd.CommandType = cmdType;
+
+            if (trans != null)
+                cmd.Transaction = trans;
+
+            if (cmdParms != null)
+            {
+                foreach (DbParameter parm in cmdParms)
+                {
+                    switch (parm.Direction)
+                    {
+                        case ParameterDirection.Input:
+                            {
+                                AddInParameter(cmd, parm.ParameterName, parm.DbType, parm.Value);
+                            }
+                            break;
+                        case ParameterDirection.Output:
+                            {
+                                AddOutParameter(cmd, parm.ParameterName, parm.DbType, parm.Size);
+                            }
+                            break;
+                        case ParameterDirection.ReturnValue:
+                            {
+                                AddReturnParameter(cmd, parm.ParameterName, parm.DbType);
+                            }
+                            break;
+                        default:
+                            cmd.Parameters.Add(parm);
+                            break;
+                    }
+                }
+            }
+        }
+
+        #endregion
+
         #region 执行
 
         public DataTable ExecuteDataTable(DbCommand cmd)
@@ -128,9 +173,20 @@ namespace DBAccess
         /// <returns>An object of DbDataReader. Note: it needs to be close by caller.</returns>
         public DbDataReader ExecuteReader(DbCommand cmd)
         {
-            Open(cmd);
-            DbDataReader reader = cmd.ExecuteReader(); //cmd.ExecuteReader(CommandBehavior.CloseConnection);
-            return reader;
+            try
+            {
+                Open(cmd);
+                DbDataReader reader = cmd.ExecuteReader(); //cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                return reader;
+            }
+            catch
+            {
+                logger.Error("Cannot open database connection " + cmd.Connection.ConnectionString);
+                logger.Error(DbHelper.GetCommandSql(cmd));
+                Close(cmd);
+
+                throw;
+            }
         }
 
         public int ExecuteNonQuery(DbCommand cmd)

@@ -1207,7 +1207,7 @@ namespace TradingSystem.View
                 };
 
                 var entrustSecuItems = GetEntrustSecurityItems(-1, eiItem.CommandNo);
-                var bllResponse = _entrustBLL.SubmitOne(eciItem, entrustSecuItems, null);
+                var bllResponse = _entrustBLL.SubmitSync(eciItem, entrustSecuItems, null);
 
                 if (BLLResponse.Success(bllResponse))
                 {

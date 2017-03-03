@@ -40,30 +40,16 @@ namespace BLL.Frontend
 
         public List<CancelRedoItem> CancelSecuItem(int submitId, int commandId, List<CancelRedoItem> cancelItems, CallerCallback callerCallback)
         {
-            Tracking(ActionType.Cancel, ResourceType.TradeCommand, -1, null);
-
             List<CancelRedoItem> cancelSecuItems = new List<CancelRedoItem>();
 
             var entrustedSecuItems = ConvertToEntrustSecuItems(cancelItems);
 
-            //set the status as EntrustStatus.CancelToDB in database
-            int ret = _entrustCombineBLL.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelToDB);
-            if (ret <= 0)
+            int ret = CancelSecurities(submitId, commandId, entrustedSecuItems);
+            if (ret > 0)
             {
-                return cancelSecuItems;
-            }
-
-            var bllResponse = _ufxWithdrawSyncBLL.Withdraw(submitId, commandId, entrustedSecuItems);
-            if (BLLResponse.Success(bllResponse))
-            {
-                ret = _entrustCombineBLL.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelSuccess);
                 cancelSecuItems.AddRange(cancelItems);
             }
-            else
-            {
-                ret = _entrustCombineBLL.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelFail);
-            }
-
+            
             return cancelSecuItems;
         }
 
@@ -77,22 +63,10 @@ namespace BLL.Frontend
                 entrustedSecuItems.Add(entrustSecuItem);
             }
 
-            //set the status as EntrustStatus.CancelToDB in database
-            int ret = _entrustCombineBLL.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelToDB);
-            if (ret <= 0)
+            int ret = CancelSecurities(submitId, commandId, entrustedSecuItems);
+            if (ret > 0)
             {
-                return cancelSecuItems;
-            }
-
-            var bllResponse = _ufxWithdrawSyncBLL.Withdraw(submitId, commandId, entrustedSecuItems);
-            if (BLLResponse.Success(bllResponse))
-            {
-                ret = _entrustCombineBLL.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelSuccess);
                 cancelSecuItems.AddRange(cancelItems);
-            }
-            else
-            {
-                ret = _entrustCombineBLL.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelFail);
             }
 
             return cancelSecuItems;
@@ -162,6 +136,30 @@ namespace BLL.Frontend
         }
 
         #endregion
+
+        private int CancelSecurities(int submitId, int commandId, List<EntrustSecurity> entrustedSecuItems)
+        {
+            //set the status as EntrustStatus.CancelToDB in database
+            int ret = _entrustCombineBLL.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelToDB);
+            if (ret <= 0)
+            {
+                return ret;
+            }
+
+            int result = 0;
+            var bllResponse = _ufxWithdrawSyncBLL.Withdraw(submitId, commandId, entrustedSecuItems);
+            if (BLLResponse.Success(bllResponse))
+            {
+                result = 1;
+                ret = _entrustCombineBLL.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelSuccess);
+            }
+            else
+            {
+                ret = _entrustCombineBLL.UpdateSecurityEntrustStatus(entrustedSecuItems, EntrustStatus.CancelFail);
+            }
+
+            return result;
+        }
 
         private List<EntrustSecurity> ConvertToEntrustSecuItems(List<CancelRedoItem> cancelItems)
         {
@@ -243,11 +241,11 @@ namespace BLL.Frontend
             return entrustItem;
         }
 
-        private int Tracking(ActionType actionType, ResourceType resourceType, int resourceId, TradeCommandItem cmdItem)
+        private int Tracking(ActionType actionType, ResourceType resourceType, int resourceId, List<CancelRedoItem> cancelItems)
         {
             int userId = LoginManager.Instance.GetUserId();
 
-            return _userActionTrackingBLL.Create(userId, actionType, resourceType, resourceId, JsonUtil.SerializeObject(cmdItem));
+            return _userActionTrackingBLL.Create(userId, actionType, resourceType, resourceId, cancelItems.Count, ActionStatus.Normal, JsonUtil.SerializeObject(cancelItems));
         }
     }
 }

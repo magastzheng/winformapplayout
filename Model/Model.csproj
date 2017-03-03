@@ -179,6 +179,7 @@
     <Compile Include="UI\TradeInstance.cs" />
     <Compile Include="Database\TradeInstanceAdjustmentItem.cs" />
     <Compile Include="Database\TradeInstanceSecurity.cs" />
+    <Compile Include="UsageTracking\ActionStatus.cs" />
     <Compile Include="UsageTracking\ActionType.cs" />
     <Compile Include="UsageTracking\UserActionTracking.cs" />
     <Compile Include="User.cs" />

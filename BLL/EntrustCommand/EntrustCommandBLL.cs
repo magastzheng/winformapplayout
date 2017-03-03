@@ -83,7 +83,7 @@ namespace BLL.EntrustCommand
         {
             int userId = LoginManager.Instance.GetUserId();
 
-            return _userActionTrackingBLL.Create(userId, action, resourceType, resourceId, details);
+            return _userActionTrackingBLL.Create(userId, action, resourceType, resourceId, 1, ActionStatus.Normal, details);
         }
 
         #endregion
