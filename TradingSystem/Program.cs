@@ -5,11 +5,12 @@ using System;
 using System.Windows.Forms;
 using TradingSystem.View;
 using log4net.Config;
-using BLL.UFX;
 using System.Configuration;
 using BLL.TradeInstance;
 using System.IO;
 using BLL.Manager;
+using UFX;
+using UFX.subscriber;
 
 namespace TradingSystem
 {

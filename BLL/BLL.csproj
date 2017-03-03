@@ -70,14 +70,12 @@
     <Compile Include="EntrustCommand\EntrustSecurityBLL.cs" />
     <Compile Include="Entrust\Security\UFXQuerySecurityDealBLL.cs" />
     <Compile Include="Entrust\Security\UFXQuerySecurityEntrustBLL.cs" />
-    <Compile Include="Entrust\subscriber\IUFXSubsriberBLLBase.cs" />
-    <Compile Include="Entrust\subscriber\UFXEntrustCommitBLL.cs" />
-    <Compile Include="Entrust\subscriber\UFXEntrustFailedBLL.cs" />
-    <Compile Include="Entrust\subscriber\UFXEntrustDealBLL.cs" />
-    <Compile Include="Entrust\subscriber\UFXFilterBLL.cs" />
-    <Compile Include="Entrust\subscriber\UFXSubscriberBLLFactory.cs" />
-    <Compile Include="Entrust\subscriber\UFXWithdrawCompletedBLL.cs" />
-    <Compile Include="Entrust\subscriber\UFXWithdrawFailedBLL.cs" />
+    <Compile Include="Entrust\subscriber\UFXEntrustCommitHandler.cs" />
+    <Compile Include="Entrust\subscriber\UFXEntrustFailedHandler.cs" />
+    <Compile Include="Entrust\subscriber\UFXEntrustDealHandler.cs" />
+    <Compile Include="Entrust\subscriber\UFXMessageHandlerFactory.cs" />
+    <Compile Include="Entrust\subscriber\UFXWithdrawCompletedHandler.cs" />
+    <Compile Include="Entrust\subscriber\UFXWithdrawFailedHandler.cs" />
     <Compile Include="Entrust\UFXBasketEntrustBLL.cs" />
     <Compile Include="Entrust\UFXBasketWithdrawBLL.cs" />
     <Compile Include="Entrust\Futures\UFXQueryFuturesDealBLL.cs" />
@@ -87,8 +85,6 @@
     <Compile Include="Manager\SettingManager.cs" />
     <Compile Include="Setting\UserSettingBLL.cs" />
     <Compile Include="TradeCommand\CommandManagemengBLL.cs" />
-    <Compile Include="UFX\impl\WithdrawSyncBLL.cs" />
-    <Compile Include="UFX\UFXDataSetHelper.cs" />
     <Compile Include="Entrust\UFXQueryHoldingBLL.cs" />
     <Compile Include="Entrust\UFXQueryMultipleHoldingBLL.cs" />
     <Compile Include="Entrust\UFXWithdrawBLL.cs" />
@@ -110,30 +106,17 @@
     <Compile Include="Template\MonitorUnitBLL.cs" />
     <Compile Include="TradeCommand\TradeCommandSecurityBLL.cs" />
     <Compile Include="TradeInstance\TradeInstanceAdjustmentBLL.cs" />
-    <Compile Include="UFX\impl\AccountBLL.cs" />
-    <Compile Include="UFX\impl\LoginSyncBLL.cs" />
-    <Compile Include="UFX\impl\QuerySyncBLL.cs" />
-    <Compile Include="UFX\T2ErrorHandler.cs" />
     <Compile Include="Entrust\UFXQueryDealBLL.cs" />
     <Compile Include="Entrust\UFXQueryEntrustBLL.cs" />
     <Compile Include="TradeInstance\TradeInstanceSecurityBLL.cs" />
     <Compile Include="Manager\UFXBLLManager.cs" />
-    <Compile Include="UFX\impl\UFXBLLBase.cs" />
-    <Compile Include="UFX\impl\UFXDataHandlerCallback.cs" />
-    <Compile Include="UFX\impl\DataParser.cs" />
     <Compile Include="Frontend\EntrustBLL.cs" />
-    <Compile Include="UFX\impl\IDataHandler.cs" />
     <Compile Include="Product\ProductBLL.cs" />
-    <Compile Include="UFX\impl\SecurityBLL.cs" />
     <Compile Include="SecurityInfo\SecurityInfoBLL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TradeCommand\TradeCommandBLL.cs" />
     <Compile Include="TradeInstance\TradeInstanceBLL.cs" />
-    <Compile Include="UFX\T2SDKWrap.cs" />
-    <Compile Include="UFX\T2SubCallback.cs" />
     <Compile Include="Template\TemplateBLL.cs" />
-    <Compile Include="UFX\T2Subscriber.cs" />
-    <Compile Include="UFX\UFXLogger.cs" />
     <Compile Include="UsageTracking\UserActionTrackingBLL.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +139,10 @@
     <ProjectReference Include="..\Quote\Quote.csproj">
       <Project>{2f5fdd7a-7491-4fa7-9349-47a4289c711a}</Project>
       <Name>Quote</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UFX\UFX.csproj">
+      <Project>{dc404af0-82a1-4781-8db9-21ee2d98518e}</Project>
+      <Name>UFX</Name>
     </ProjectReference>
     <ProjectReference Include="..\Util\Util.csproj">
       <Project>{723db468-9d89-40e8-be82-ddecc927e2cb}</Project>

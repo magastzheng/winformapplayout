@@ -2,11 +2,11 @@
 using BLL.Entrust.Security;
 using BLL.Manager;
 using BLL.Product;
-using BLL.UFX.impl;
 using log4net;
 using Model.UI;
 using System;
 using System.Collections.Generic;
+using UFX.impl;
 
 namespace BLL.Entrust
 {

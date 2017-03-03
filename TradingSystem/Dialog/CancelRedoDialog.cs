@@ -10,17 +10,15 @@ using System.Linq;
 using Model.config;
 using TradingSystem.TradeUtil;
 using Model.SecurityInfo;
-using BLL.SecurityInfo;
 using Model.EnumType;
 using Model.Binding.BindingUtil;
 using Quote;
 using System.Text;
 using Model.BLL;
 using BLL.Frontend;
-using Model.Constant;
-using BLL.UFX.impl;
 using Model.Database;
 using BLL.Manager;
+using UFX.impl;
 
 namespace TradingSystem.Dialog
 {

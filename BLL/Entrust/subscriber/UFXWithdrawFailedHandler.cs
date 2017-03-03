@@ -1,21 +1,21 @@
 ﻿using BLL.EntrustCommand;
-using BLL.UFX;
-using BLL.UFX.impl;
 using Config.ParamConverter;
 using log4net;
-using Model.Binding.BindingUtil;
 using Model.UFX;
 using System.Collections.Generic;
+using UFX;
+using UFX.impl;
+using UFX.subscriber;
 
 namespace BLL.Entrust.subscriber
 {
-    public class UFXWithdrawFailedBLL : IUFXSubsriberBLLBase
+    public class UFXWithdrawFailedHandler : IUFXMessageHandlerBase
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private EntrustSecurityBLL _entrustSecurityBLL = new EntrustSecurityBLL();
 
-        public UFXWithdrawFailedBLL()
+        public UFXWithdrawFailedHandler()
         { 
         
         }

@@ -1,44 +1,49 @@
 ﻿using Model.UFX;
+using System;
+using UFX.subscriber;
 
 namespace BLL.Entrust.subscriber
 {
-    public class UFXSubscriberBLLFactory
+    public class UFXMessageHandlerFactory : IUFXMessageHandlerFactory
     {
-        public static IUFXSubsriberBLLBase Create(UFXPushMessageType msgType)
+        public IUFXMessageHandlerBase Create(UFXPushMessageType msgType)
         {
-            IUFXSubsriberBLLBase bll = null;
+            IUFXMessageHandlerBase handler = null;
             switch (msgType)
             {
                 case UFXPushMessageType.EntrustCommit:
                     {
-                        bll = new UFXEntrustCommitBLL();
+                        handler = new UFXEntrustCommitHandler();
                     }
                     break;
                 case UFXPushMessageType.EntrustFailed:
                     {
-                        bll = new UFXEntrustFailedBLL();
+                        handler = new UFXEntrustFailedHandler();
                     }
                     break;
                 case UFXPushMessageType.EntrustWithdrawDone:
                     {
-                        bll = new UFXWithdrawCompletedBLL();
+                        handler = new UFXWithdrawCompletedHandler();
                     }
                     break;
                 case UFXPushMessageType.EntrustWithdrawFailed:
                     {
-                        bll = new UFXWithdrawFailedBLL();
+                        handler = new UFXWithdrawFailedHandler();
                     }
                     break;
                 case UFXPushMessageType.EntrustDeal:
                     {
-                        bll = new UFXEntrustDealBLL();
+                        handler = new UFXEntrustDealHandler();
                     }
                     break;
                 default:
+                    {
+                        throw new NotSupportedException(msgType.ToString());
+                    }
                     break;
             }
 
-            return bll;
+            return handler;
         }
     }
 }

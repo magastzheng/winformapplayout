@@ -2,7 +2,7 @@
 using Model.UFX;
 using System.Collections.Generic;
 
-namespace BLL.UFX.impl
+namespace UFX.impl
 {
     public class QuerySyncBLL:UFXBLLBase
     {

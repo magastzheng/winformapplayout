@@ -1,12 +1,12 @@
-﻿using BLL.UFX;
-using BLL.UFX.impl;
-using log4net;
+﻿using log4net;
 using Model.Binding.BindingUtil;
 using Model.UFX;
 using System;
 using System.Collections.Generic;
+using UFX;
+using UFX.impl;
 
-namespace BLL.Entrust.subscriber
+namespace UFX.subscriber
 {
     public class UFXFilterBLL
     {

@@ -1,11 +1,12 @@
 ﻿using BLL.Manager;
 using BLL.Permission;
 using BLL.Product;
-using BLL.UFX;
 using Config;
 using Model;
 using ServiceInterface;
 using TradingSystem.View;
+using UFX;
+using UFX.subscriber;
 
 namespace TradingSystem.Controller
 {
@@ -81,7 +82,7 @@ namespace TradingSystem.Controller
             if (retCode == ConnectionCode.Success)
             {
                 InitializeAccount(LoginManager.Instance.LoginUser);
-                retCode = Subscribe(LoginManager.Instance.LoginUser);
+                retCode = Subscribe(LoginManager.Instance.LoginUser, UFXBLLManager.Instance.UFXMessageHandlerFactory);
                 if (retCode == ConnectionCode.SuccessSubscribe)
                 {
                     retCode = InitService();
@@ -114,9 +115,9 @@ namespace TradingSystem.Controller
             _productBLL.Create(LoginManager.Instance.Accounts, LoginManager.Instance.Assets, LoginManager.Instance.Portfolios);
         }
 
-        private ConnectionCode Subscribe(LoginUser loginUser)
+        private ConnectionCode Subscribe(LoginUser loginUser, IUFXMessageHandlerFactory handlerFactory)
         {
-            return UFXBLLManager.Instance.Subscriber.Subscribe(loginUser);
+            return UFXBLLManager.Instance.Subscriber.Subscribe(loginUser, handlerFactory);
         }
 
         private ConnectionCode InitService()

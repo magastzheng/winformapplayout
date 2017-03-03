@@ -1,5 +1,4 @@
 ﻿using BLL.Product;
-using BLL.UFX.impl;
 using Config;
 using Controls.Entity;
 using Controls.GridView;
@@ -18,6 +17,7 @@ using BLL.TradeInstance;
 using Model.SecurityInfo;
 using Quote;
 using BLL.Manager;
+using UFX.impl;
 
 namespace TradingSystem.View
 {

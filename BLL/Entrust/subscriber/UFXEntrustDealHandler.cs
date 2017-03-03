@@ -1,18 +1,18 @@
 ﻿using BLL.Deal;
 using BLL.EntrustCommand;
 using BLL.TradeInstance;
-using BLL.UFX;
-using BLL.UFX.impl;
 using Config.ParamConverter;
 using log4net;
-using Model.Binding.BindingUtil;
 using Model.Database;
 using Model.UFX;
 using System.Collections.Generic;
+using UFX;
+using UFX.impl;
+using UFX.subscriber;
 
 namespace BLL.Entrust.subscriber
 {
-    public class UFXEntrustDealBLL : IUFXSubsriberBLLBase
+    public class UFXEntrustDealHandler : IUFXMessageHandlerBase
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -20,7 +20,7 @@ namespace BLL.Entrust.subscriber
         private EntrustSecurityBLL _entrustSecurityBLL = new EntrustSecurityBLL();
         private TradeInstanceSecurityBLL _tradeInstanceSecuBLL = new TradeInstanceSecurityBLL();
 
-        public UFXEntrustDealBLL()
+        public UFXEntrustDealHandler()
         { 
         }
 

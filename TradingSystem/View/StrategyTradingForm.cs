@@ -10,25 +10,23 @@ using System.Linq;
 using Model.SecurityInfo;
 using Quote;
 using Model.config;
-using BLL.SecurityInfo;
 using TradingSystem.Dialog;
 using TradingSystem.TradeUtil;
 using BLL.Entrust;
 using Model.EnumType;
 using Model.Binding.BindingUtil;
-using BLL.UFX.impl;
 using BLL.TradeCommand;
-using BLL.UFX;
 using Model.BLL;
 using BLL.Frontend;
 using BLL.EntrustCommand;
-using BLL.Product;
 using Calculation;
 using Model.Converter;
 using Model.Database;
 using BLL.Manager;
 using System.Threading;
 using System.Text;
+using UFX.impl;
+using UFX;
 
 namespace TradingSystem.View
 {

@@ -1,20 +1,18 @@
 ﻿using BLL.EntrustCommand;
 using BLL.Manager;
-using BLL.SecurityInfo;
 using BLL.TradeCommand;
-using BLL.UFX;
-using BLL.UFX.impl;
 using Config;
 using Config.ParamConverter;
 using log4net;
 using Model;
-using Model.Binding.BindingUtil;
 using Model.BLL;
 using Model.Database;
 using Model.UFX;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using UFX;
+using UFX.impl;
 
 namespace BLL.Entrust
 {

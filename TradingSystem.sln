@@ -64,6 +64,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceInterface", "IServic
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "obsolete", "obsolete", "{4C2188E8-3FC2-4BE7-9BE9-C09969AD3E3E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UFX", "UFX\UFX.csproj", "{DC404AF0-82A1-4781-8DB9-21EE2D98518E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -170,6 +172,10 @@ Global
 		{64E59930-AC8D-4779-AB39-390081060E9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64E59930-AC8D-4779-AB39-390081060E9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64E59930-AC8D-4779-AB39-390081060E9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC404AF0-82A1-4781-8DB9-21EE2D98518E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC404AF0-82A1-4781-8DB9-21EE2D98518E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC404AF0-82A1-4781-8DB9-21EE2D98518E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC404AF0-82A1-4781-8DB9-21EE2D98518E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

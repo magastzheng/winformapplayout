@@ -1,6 +1,8 @@
-﻿using BLL.UFX;
-using BLL.UFX.impl;
-
+﻿
+using BLL.Entrust.subscriber;
+using UFX;
+using UFX.impl;
+using UFX.subscriber;
 namespace BLL.Manager
 {
     public class UFXBLLManager
@@ -16,6 +18,8 @@ namespace BLL.Manager
         private QuerySyncBLL _querySyncBLL;
         private WithdrawSyncBLL _withdrawSyncBLL;
         private T2Subscriber _subscriber;
+
+        private IUFXMessageHandlerFactory _UFXMessageHandlerFactory;
 
         public LoginSyncBLL LoginBLL
         {
@@ -48,6 +52,11 @@ namespace BLL.Manager
             set { _subscriber = value; }
         }
 
+        public IUFXMessageHandlerFactory UFXMessageHandlerFactory
+        {
+            get { return _UFXMessageHandlerFactory; }
+        }
+
         private UFXBLLManager()
         {
         }
@@ -61,6 +70,8 @@ namespace BLL.Manager
                 _securityBLL = new SecurityBLL(t2SDKWrap);
                 _querySyncBLL = new UFX.impl.QuerySyncBLL(t2SDKWrap);
                 _withdrawSyncBLL = new UFX.impl.WithdrawSyncBLL(t2SDKWrap);
+
+                _UFXMessageHandlerFactory = new UFXMessageHandlerFactory();
             }
         }
     }

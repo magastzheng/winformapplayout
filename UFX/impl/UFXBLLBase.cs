@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BLL.UFX.impl
+namespace UFX.impl
 {
     public class UFXBLLBase
     {
@@ -25,7 +25,7 @@ namespace BLL.UFX.impl
             _dataHandler = HandlData;
         }
 
-        public int HandlData(UFXFunctionCode functionCode, int hSend, DataParser parser)
+        private int HandlData(UFXFunctionCode functionCode, int hSend, DataParser parser)
         {
             //FunctionCode functionCode = (FunctionCode)parser.FunctionCode;
             if (_dataHandlerMap.ContainsKey(functionCode))
@@ -61,11 +61,24 @@ namespace BLL.UFX.impl
 
         #region protect method
 
+        /// <summary>
+        /// 向UFX封装的接口T2SDKWrap注册回调，对所有的功能号注册相同的回调，回调函数触发之后，再在其中处理找到本次调用实际需要处理的
+        /// 后续方法。
+        /// 这里的回调顺序是：
+        /// 1.T2SDKWrap中回调用_dataHandler
+        /// 2._dataHandler中找到本次实际调用者注册的回调函数，调用者信息在_dataHandlerMap保存
+        /// 3.如果存在调用者注册的回调函数，则调用。
+        /// </summary>
+        /// <param name="functionCode"></param>
         protected void RegisterUFX(UFXFunctionCode functionCode)
         {
             _t2SDKWrap.Register(functionCode, _dataHandler);
         }
 
+        /// <summary>
+        /// 该函数不可被调用，目前不可以删除
+        /// </summary>
+        /// <param name="functionCode"></param>
         protected void UnRegisterUFX(UFXFunctionCode functionCode)
         {
             _t2SDKWrap.UnRegister(functionCode);
@@ -119,8 +132,17 @@ namespace BLL.UFX.impl
         #endregion
 
         #region send request
-
-        public ConnectionCode Submit<T>(UFXFunctionCode functionCode, List<T> requests, Callbacker callbacker)
+        /// <summary>
+        /// 异步调用UFX接口，完成调用之后，如果不出错，则注册回调信息
+        /// </summary>
+        /// <typeparam name="T">A generic type defines the UFX request parameters.</typeparam>
+        /// <param name="functionCode">An enum type defines the UFX interface number.</param>
+        /// <param name="requests">A generic request list. NOTE: the caller MUST control the request count if the
+        /// interface does not support many requests at a time.
+        /// </param>
+        /// <param name="callbacker">It is used to store the callback information.</param>
+        /// <returns>It is used to define the call result.</returns>
+        public ConnectionCode SubmitAsync<T>(UFXFunctionCode functionCode, List<T> requests, Callbacker callbacker)
         {
             FunctionItem functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(functionCode);
             if (functionItem == null || functionItem.RequestFields == null || functionItem.RequestFields.Count == 0)

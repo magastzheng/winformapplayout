@@ -1,6 +1,6 @@
 ﻿
 using Model.UFX;
-namespace BLL.UFX.impl
+namespace UFX.impl
 {
     public delegate int DataHandlerCallback(UFXFunctionCode functionCode, int hSend, DataParser dataParser);
 

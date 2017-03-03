@@ -1,12 +1,12 @@
 ﻿using BLL.Manager;
 using BLL.Permission;
-using BLL.UFX;
 using Config;
 using Controls.Entity;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using TradingSystem.Controller;
 using TradingSystem.Dialog;
+using UFX;
 
 namespace TradingSystem.View
 {

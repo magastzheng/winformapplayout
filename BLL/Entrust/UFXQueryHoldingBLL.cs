@@ -1,7 +1,5 @@
 ﻿using BLL.Manager;
 using BLL.Product;
-using BLL.UFX;
-using BLL.UFX.impl;
 using log4net;
 using Model;
 using Model.BLL;
@@ -9,6 +7,8 @@ using Model.UFX;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using UFX;
+using UFX.impl;
 
 namespace BLL.Entrust
 {

@@ -1,9 +1,9 @@
-﻿using BLL.UFX.impl;
+﻿using UFX.impl;
 using log4net;
 using Model;
 using Model.UFX;
 
-namespace BLL.UFX
+namespace UFX
 {
     public class UFXLogger
     {

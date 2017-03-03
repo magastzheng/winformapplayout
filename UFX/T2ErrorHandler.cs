@@ -1,4 +1,4 @@
-﻿using BLL.UFX.impl;
+﻿using UFX.impl;
 using Model.UFX;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL.UFX
+namespace UFX
 {
     public class T2ErrorHandler
     {

@@ -1,10 +1,10 @@
-﻿using BLL.UFX.impl;
+﻿using UFX.impl;
 using Model.Binding.BindingUtil;
 using Model.Data;
 using System;
 using System.Collections.Generic;
 
-namespace BLL.UFX
+namespace UFX
 {
     public static class UFXDataSetHelper
     {

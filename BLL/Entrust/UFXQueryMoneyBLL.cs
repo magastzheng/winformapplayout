@@ -1,9 +1,9 @@
 ﻿using BLL.Manager;
 using BLL.Product;
-using BLL.UFX.impl;
 using log4net;
 using Model.UFX;
 using System.Collections.Generic;
+using UFX.impl;
 
 namespace BLL.Entrust
 {

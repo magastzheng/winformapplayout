@@ -1,5 +1,4 @@
-﻿using BLL.Entrust.subscriber;
-using BLL.UFX.impl;
+﻿using UFX.impl;
 using hundsun.mcapi;
 using hundsun.t2sdk;
 using log4net;
@@ -7,18 +6,20 @@ using Model.UFX;
 using System;
 using System.Runtime.InteropServices;
 
-namespace BLL.UFX
+namespace UFX.subscriber
 {
     //订阅回调
     public unsafe class T2SubCallback : CT2SubCallbackInterface
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        private IUFXMessageHandlerFactory _handlerFactory = null;
+
         private UFXFilterBLL _filterBLL = new UFXFilterBLL();
 
-        public T2SubCallback()
-        { 
-        
+        public T2SubCallback(IUFXMessageHandlerFactory bllFactory)
+        {
+            _handlerFactory = bllFactory;
         }
 
         public override void OnReceived(CT2SubscribeInterface lpSub, int subscribeIndex, void* lpData, int nLength, tagSubscribeRecvData lpRecvData)
@@ -53,7 +54,7 @@ namespace BLL.UFX
                 messageType = _filterBLL.GetMessageType(parser);
             }
 
-            IUFXSubsriberBLLBase subscriberBLL = UFXSubscriberBLLFactory.Create(messageType);
+            IUFXMessageHandlerBase subscriberHandler = _handlerFactory.Create(messageType);
             if (nLength > 0)
             {
                 CT2UnPacker lpUnpacker1 = new CT2UnPacker((void*)lpData, (uint)nLength);
@@ -69,9 +70,9 @@ namespace BLL.UFX
                     Log("====推送*****数据部分=====结束");
                     lpUnpacker1.Dispose();
 
-                    if (subscriberBLL != null)
+                    if (subscriberHandler != null)
                     {
-                        subscriberBLL.Handle(parser);
+                        subscriberHandler.Handle(parser);
                     }
                 }
             }

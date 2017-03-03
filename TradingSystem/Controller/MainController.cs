@@ -1,5 +1,5 @@
-﻿using BLL.UFX;
-using TradingSystem.View;
+﻿using TradingSystem.View;
+using UFX;
 
 namespace TradingSystem.Controller
 {

@@ -7,7 +7,7 @@ using Model.EnumType;
 using Model.strategy;
 using Model.UFX;
 
-namespace BLL.UFX.impl
+namespace UFX.impl
 {
     public class AccountBLL
     {

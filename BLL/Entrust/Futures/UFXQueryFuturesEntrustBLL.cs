@@ -1,13 +1,7 @@
-﻿using BLL.EntrustCommand;
-using BLL.Manager;
-using BLL.Product;
-using BLL.UFX;
-using BLL.UFX.impl;
-using Config;
+﻿using BLL.Manager;
 using Config.ParamConverter;
 using log4net;
 using Model;
-using Model.Binding.BindingUtil;
 using Model.BLL;
 using Model.Converter;
 using Model.EnumType;
@@ -17,9 +11,9 @@ using Model.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using UFX;
+using UFX.impl;
 using Util;
 
 namespace BLL.Entrust.Futures

@@ -1,8 +1,6 @@
 ﻿using BLL.Entrust;
 using BLL.EntrustCommand;
-using BLL.UFX.impl;
 using Config;
-using DBAccess.EntrustCommand;
 using Model;
 using Model.BLL;
 using Model.Database;
@@ -12,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using UFX.impl;
 
 namespace BLL.Frontend
 {

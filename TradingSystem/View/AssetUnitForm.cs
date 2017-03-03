@@ -1,11 +1,11 @@
 ﻿using BLL.Manager;
-using BLL.UFX.impl;
 using Config;
 using Controls.Entity;
 using Controls.GridView;
 using Model.Binding.BindingUtil;
 using Model.UI;
 using System.Collections.Generic;
+using UFX.impl;
 
 namespace TradingSystem.View
 {

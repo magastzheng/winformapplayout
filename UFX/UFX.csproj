@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3B45D476-8EA0-4F34-BD09-E9B89C17467A}</ProjectGuid>
+    <ProjectGuid>{DC404AF0-82A1-4781-8DB9-21EE2D98518E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ServiceInterface</RootNamespace>
-    <AssemblyName>Service</AssemblyName>
+    <RootNamespace>UFX</RootNamespace>
+    <AssemblyName>UFX</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -31,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ext_t2sdkEx">
+      <HintPath>..\lib\ext_t2sdkEx.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
     </Reference>
@@ -43,35 +47,42 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="QuoteService.cs" />
+    <Compile Include="subscriber\IUFXMessageHandlerFactory.cs" />
+    <Compile Include="subscriber\IUFXMessageHandlerBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceManager.cs" />
-    <Compile Include="UFXHeartBeatService.cs" />
+    <Compile Include="impl\AccountBLL.cs" />
+    <Compile Include="impl\DataParser.cs" />
+    <Compile Include="impl\IDataHandler.cs" />
+    <Compile Include="impl\LoginSyncBLL.cs" />
+    <Compile Include="impl\QuerySyncBLL.cs" />
+    <Compile Include="impl\SecurityBLL.cs" />
+    <Compile Include="impl\UFXBLLBase.cs" />
+    <Compile Include="impl\UFXDataHandlerCallback.cs" />
+    <Compile Include="impl\WithdrawSyncBLL.cs" />
+    <Compile Include="T2ErrorHandler.cs" />
+    <Compile Include="T2SDKWrap.cs" />
+    <Compile Include="subscriber\T2SubCallback.cs" />
+    <Compile Include="subscriber\T2Subscriber.cs" />
+    <Compile Include="UFXDataSetHelper.cs" />
+    <Compile Include="subscriber\UFXFilterBLL.cs" />
+    <Compile Include="UFXLogger.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BLL\BLL.csproj">
-      <Project>{11d6ae0d-bf60-4a4f-af42-cf7710dd8afe}</Project>
-      <Name>BLL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\IService\ServiceInterface.csproj">
-      <Project>{64e59930-ac8d-4779-ab39-390081060e9d}</Project>
-      <Name>ServiceInterface</Name>
+    <ProjectReference Include="..\Config\Config.csproj">
+      <Project>{1538db09-6bfc-4623-9db4-34577f335cd4}</Project>
+      <Name>Config</Name>
     </ProjectReference>
     <ProjectReference Include="..\Model\Model.csproj">
       <Project>{9afc3370-02ab-444b-9c43-411e49f49b16}</Project>
       <Name>Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Quote\Quote.csproj">
-      <Project>{2f5fdd7a-7491-4fa7-9349-47a4289c711a}</Project>
-      <Name>Quote</Name>
+    <ProjectReference Include="..\Util\Util.csproj">
+      <Project>{723db468-9d89-40e8-be82-ddecc927e2cb}</Project>
+      <Name>Util</Name>
     </ProjectReference>
-    <ProjectReference Include="..\UFX\UFX.csproj">
-      <Project>{dc404af0-82a1-4781-8db9-21ee2d98518e}</Project>
-      <Name>UFX</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

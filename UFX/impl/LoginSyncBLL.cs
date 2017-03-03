@@ -5,7 +5,7 @@ using Model;
 using Model.config;
 using Model.UFX;
 
-namespace BLL.UFX.impl
+namespace UFX.impl
 {
     public class LoginSyncBLL
     {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BLL.UFX.impl
+namespace UFX.impl
 {
     /// <summary>
     /// Call the callback in UFX interface after receiving the data.

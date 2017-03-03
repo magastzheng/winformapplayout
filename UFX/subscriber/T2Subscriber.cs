@@ -1,4 +1,4 @@
-﻿using BLL.UFX.impl;
+﻿using UFX.impl;
 using hundsun.mcapi;
 using hundsun.t2sdk;
 using log4net;
@@ -6,7 +6,7 @@ using Model;
 using Model.UFX;
 using System;
 
-namespace BLL.UFX
+namespace UFX.subscriber
 {
     public unsafe class T2Subscriber : CT2CallbackInterface
     {
@@ -89,9 +89,9 @@ namespace BLL.UFX
             }
         }
 
-        public ConnectionCode Subscribe(LoginUser user)
+        public ConnectionCode Subscribe(LoginUser user, IUFXMessageHandlerFactory handlerFactory)
         {
-            callback = new T2SubCallback();
+            callback = new T2SubCallback(handlerFactory);
             subcribe = _conn.NewSubscriber(callback, SubscribeName, (int)_timeOut, 2000, 100);
             if (subcribe == null)
             {

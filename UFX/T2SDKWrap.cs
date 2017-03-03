@@ -1,4 +1,4 @@
-﻿using BLL.UFX.impl;
+﻿using UFX.impl;
 using hundsun.t2sdk;
 using log4net;
 using Model;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Util;
 
-namespace BLL.UFX
+namespace UFX
 {
     public delegate int ReceivedBizMsg(CT2BizMessage lpMsg);
 
