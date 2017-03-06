@@ -422,13 +422,13 @@ namespace Quote.TDF
                             else if (data.Match >= data.HighLimited)
                             {
                                 marketData.TradingStatus = TradingStatus.Normal;
-                                marketData.SuspendFlag = SuspendFlag.SuspendLimit;
+                                marketData.SuspendFlag = SuspendFlag.NoSuspension;
                                 marketData.LimitUpDownFlag = LimitUpDownFlag.LimitUp;
                             }
                             else if (data.Match <= data.LowLimited)
                             {
                                 marketData.TradingStatus = TradingStatus.Normal;
-                                marketData.SuspendFlag = SuspendFlag.SuspendLimit;
+                                marketData.SuspendFlag = SuspendFlag.NoSuspension;
                                 marketData.LimitUpDownFlag = LimitUpDownFlag.LimitDown;
                             }
 

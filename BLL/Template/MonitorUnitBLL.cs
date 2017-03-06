@@ -14,6 +14,7 @@ namespace BLL.Template
         private MonitorUnitDAO _monitorunitdao = new MonitorUnitDAO();
         private PermissionManager _permissionManager = new PermissionManager();
         private ProductBLL _productBLL = new ProductBLL();
+        private TemplateBLL _templateBLL = new TemplateBLL();
 
         public MonitorUnitBLL()
         { 
@@ -48,7 +49,7 @@ namespace BLL.Template
             return validItems;
         }
 
-        public List<OpenPositionItem> GetActive()
+        public List<OpenPositionItem> GetOpenItems()
         {
             int userId = LoginManager.Instance.GetUserId();
             var monitorItems = _monitorunitdao.GetActive();
@@ -76,6 +77,12 @@ namespace BLL.Template
                         openItem.PortfolioCode = portfolio.PortfolioNo;
                         openItem.FundCode = portfolio.FundCode;
                         openItem.FundName = portfolio.FundName;
+                    }
+
+                    var template = _templateBLL.GetTemplate(monitorItem.StockTemplateId);
+                    if (template != null)
+                    {
+                        openItem.BenchmarkId = template.Benchmark;
                     }
 
                     openItems.Add(openItem);

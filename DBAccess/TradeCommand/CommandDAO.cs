@@ -62,26 +62,10 @@ namespace DBAccess.TradeCommand
                 
                 //command time
                 DateTime now = DateTime.Now;
-                //9:15
-                DateTime startDate = new DateTime(now.Year, now.Month, now.Day, 9, 15, 0);
-                if (cmdItem.DStartDate > DateTime.MinValue)
-                {
-                    startDate = cmdItem.DStartDate;
-                }
-    
-                //15:15
-                DateTime endDate = new DateTime(now.Year, now.Month, now.Day, 15, 15, 0);
-                if (cmdItem.DEndDate > DateTime.MinValue)
-                {
-                    endDate = cmdItem.DEndDate;
-                }
-
                 _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, now);
-                _dbHelper.AddInParameter(dbCommand, "@StartDate", System.Data.DbType.DateTime, startDate);
-                _dbHelper.AddInParameter(dbCommand, "@EndDate", System.Data.DbType.DateTime, endDate);
-
-                string notes = (cmdItem.Notes != null) ? cmdItem.Notes : string.Empty;
-                _dbHelper.AddInParameter(dbCommand, "@Notes", System.Data.DbType.String, notes);
+                _dbHelper.AddInParameter(dbCommand, "@StartDate", System.Data.DbType.DateTime, cmdItem.DStartDate);
+                _dbHelper.AddInParameter(dbCommand, "@EndDate", System.Data.DbType.DateTime, cmdItem.DEndDate);
+                _dbHelper.AddInParameter(dbCommand, "@Notes", System.Data.DbType.String, cmdItem.Notes);
 
                 _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
 

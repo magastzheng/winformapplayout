@@ -1335,6 +1335,9 @@ namespace TradingSystem.View
             DateTime startDate = DateUtil.GetDateTimeFromInt(instItem.StartDate, instItem.StartTime);
             DateTime endDate = DateUtil.GetDateTimeFromInt(instItem.EndDate, instItem.EndTime);
 
+            startDate = DateUtil.GetStartDate(startDate);
+            endDate = DateUtil.GetEndDate(endDate, startDate);
+
             TradeCommand tdcmdItem = new TradeCommand
             {
                 InstanceId = instanceId,
@@ -1348,7 +1351,7 @@ namespace TradingSystem.View
                 ModifiedTimes = 1,
                 DStartDate = startDate,
                 DEndDate = endDate,
-                Notes = instItem.Notes,
+                Notes = instItem.Notes??string.Empty,
             };
 
             switch (direction)

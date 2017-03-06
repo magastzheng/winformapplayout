@@ -185,13 +185,15 @@ namespace Controls.GridView
                     var row = dgv.Rows[rowIndex];
                     var cell = row.Cells[columnIndex];
                     if (cell.Value.ToString() == "涨停")
-                    { 
-                        e.CellStyle.ForeColor = ControlConstVariable.LimitForeColor;
+                    {
+                        row.DefaultCellStyle.ForeColor = ControlConstVariable.LimitUpColor;
+                        e.CellStyle.ForeColor = ControlConstVariable.LimitStatusColumnForeColor;
                         e.CellStyle.BackColor = ControlConstVariable.LimitUpColor;
                     }
                     else if (cell.Value.ToString() == "跌停")
                     {
-                        e.CellStyle.ForeColor = ControlConstVariable.LimitForeColor;
+                        row.DefaultCellStyle.ForeColor = ControlConstVariable.LimitDownColor;
+                        e.CellStyle.ForeColor = ControlConstVariable.LimitStatusColumnForeColor;
                         e.CellStyle.BackColor = ControlConstVariable.LimitDownColor;
                     }
                 }

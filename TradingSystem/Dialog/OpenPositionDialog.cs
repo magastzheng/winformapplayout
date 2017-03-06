@@ -179,6 +179,8 @@ namespace TradingSystem.Dialog
                 TemplateName = _originOpenItem.TemplateName,
                 Copies = _originOpenItem.Copies,
                 FuturesList = new List<string>() { _originOpenItem.FuturesContract },
+                Notes = rtbComment.Text ?? string.Empty,
+                
             };
 
             DateTime startDate = DateTime.MinValue;

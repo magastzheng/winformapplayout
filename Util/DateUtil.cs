@@ -145,6 +145,30 @@ namespace Util
             return GetHMS(hms, out hour, out minute, out second);
         }
 
+        public static DateTime GetStartDate(DateTime dt)
+        {
+            if (dt >= OpenDate && dt < DateTime.MaxValue)
+            {
+                return dt;
+            }
+            else
+            {
+                return OpenDate;
+            }
+        }
+
+        public static DateTime GetEndDate(DateTime dt, DateTime startDate)
+        {
+            if (dt > startDate && dt < DateTime.MaxValue)
+            {
+                return dt;
+            }
+            else
+            {
+                return CloseDate;
+            }
+        }
+
         /// <summary>
         /// Get the year, month, day from an integer value.
         /// </summary>

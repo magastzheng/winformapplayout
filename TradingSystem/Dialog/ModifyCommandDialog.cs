@@ -208,7 +208,7 @@ namespace TradingSystem.Dialog
             this.tbEndTime.Text = DateFormat.Format(cmdMngItem.DEndDate, ConstVariable.TimeFormat1);
             this.tbAdjProportion.Text = "100";
             //TODO: operation level
-            this.tbNotes.Text = string.Empty;
+            this.tbNotes.Text = cmdMngItem.Notes;
         }
 
         private void FillGridView(CommandManagementItem cmdMngItem)

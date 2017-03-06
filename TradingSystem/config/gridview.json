@@ -235,7 +235,7 @@ readonly:
 		},{
 		"name": "instancecode",
 		"text": "实例编号",
-		"width": 160,
+		"width": 150,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -410,7 +410,7 @@ readonly:
 		},{
 		"name": "instanceno",
 		"text": "实例编号",
-		"width": 80,
+		"width": 150,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -883,7 +883,7 @@ readonly:
 		},{
 		"name": "instanceno",
 		"text": "实例编号",
-		"width": 80,
+		"width": 150,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -2159,7 +2159,7 @@ readonly:
 		},{
 		"name": "monitorunitname",
 		"text": "监控单元名称",
-		"width": 80,
+		"width": 160,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -2356,6 +2356,30 @@ readonly:
 		"visible": 1,
 		"readonly": 1
 		},{
+		"name": "suspensionnumbers",
+		"text": "停牌个数",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "limitupnumbers",
+		"text": "涨停个数",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
+		"name": "limitdownnumbers",
+		"text": "跌停个数",
+		"width": 80,
+		"columntype": 0,
+		"valuetype": 0,
+		"visible": 1,
+		"readonly": 1
+		},{
 		"name": "last",
 		"text": "",
 		"width": 5,
@@ -2531,7 +2555,7 @@ readonly:
 		},{
 		"name": "instancecode",
 		"text": "实例编号",
-		"width": 80,
+		"width": 150,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -2782,7 +2806,7 @@ readonly:
 		},{
 		"name": "instancecode",
 		"text": "实例编号",
-		"width": 80,
+		"width": 150,
 		"columntype": 0,
 		"valuetype": 3,
 		"visible": 1,
@@ -4825,7 +4849,7 @@ readonly:
 		},{
 		"name": "instancecode",
 		"text": "实例编号",
-		"width": 80,
+		"width": 150,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,

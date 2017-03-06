@@ -165,7 +165,20 @@ namespace TradingSystem.View
                 {
                     _spotDataSource.Add(stock);
                 }
+
+                SummaryTemplateStock();
             }
+        }
+
+        private void SummaryTemplateStock()
+        {
+            int number = _spotDataSource.Count;
+            double totalCap = _spotDataSource.Sum(p => p.MarketCap);
+            double totalWeight = _spotDataSource.Sum(p => p.SettingWeight);
+
+            tbNumber.Text = string.Format("{0}", number);
+            tbTotalCap.Text = string.Format("{0}", totalCap);
+            tbSettingWeight.Text = string.Format("{0}", totalWeight);
         }
 
         #endregion
@@ -681,6 +694,7 @@ namespace TradingSystem.View
             }
 
             ReCalculateAmount(template);
+            SummaryTemplateStock();
             SwitchTemplateStockSave(true);
 
             this.secuGridView.Invalidate();

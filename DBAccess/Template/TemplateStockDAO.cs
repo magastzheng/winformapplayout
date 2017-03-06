@@ -151,8 +151,6 @@ namespace DBAccess.Template
                     TemplateStock item = new TemplateStock();
                     item.TemplateNo = (int)reader["TemplateId"];
                     item.SecuCode = (string)reader["SecuCode"];
-                    item.SecuName = (string)reader["SecuName"];
-                    item.Exchange = (string)reader["ExchangeCode"];
                     item.Amount = (int)reader["Amount"];
                     item.MarketCap = (double)(decimal)reader["MarketCap"];
                     item.MarketCapWeight = (double)(decimal)reader["MarketCapOpt"];

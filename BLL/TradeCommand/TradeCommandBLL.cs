@@ -98,11 +98,12 @@ namespace BLL.TradeCommand
                     ModifiedTimes = 1,
                     DStartDate = startDate,
                     DEndDate = endDate,
+                    Notes = openItem.Notes,
                 };
 
                 var cmdSecuItems = GetSelectCommandSecurities(openItem.MonitorId, -1, secuItems);
 
-                ret = Submit(cmdItem, cmdSecuItems);
+                ret = SubmitInternal(cmdItem, cmdSecuItems);
             }
             else
             {
@@ -132,7 +133,7 @@ namespace BLL.TradeCommand
                 _tradeInstanceBLL.Update(instance, selectedSecuItems);
             }
 
-            return Submit(cmdItem, secuItems);
+            return SubmitInternal(cmdItem, secuItems);
         }
 
         #endregion
@@ -247,7 +248,7 @@ namespace BLL.TradeCommand
 
         #region private
 
-        private int Submit(Model.Database.TradeCommand cmdItem, List<TradeCommandSecurity> secuItems)
+        private int SubmitInternal(Model.Database.TradeCommand cmdItem, List<TradeCommandSecurity> secuItems)
         {
             int userId = LoginManager.Instance.GetUserId();
             cmdItem.SubmitPerson = userId;

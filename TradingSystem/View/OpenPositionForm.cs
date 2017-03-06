@@ -21,6 +21,7 @@ using BLL.FuturesContractManager;
 using BLL.Manager;
 using Util;
 using System.Text;
+using Model.Quote;
 
 namespace TradingSystem.View
 {
@@ -148,7 +149,7 @@ namespace TradingSystem.View
             _securityDataSource.Clear();
 
             //Load the data of open posoition
-            List<OpenPositionItem> monitorList = _monitorUnitBLL.GetActive();
+            List<OpenPositionItem> monitorList = _monitorUnitBLL.GetOpenItems();
             monitorList.ForEach(p => _monitorDataSource.Add(p));
 
             //Load the data for each template
@@ -290,6 +291,16 @@ namespace TradingSystem.View
                 }
             }
 
+            //Add the index
+            foreach (var openItem in _monitorDataSource)
+            {
+                var findItem = SecurityInfoManager.Instance.Get(openItem.BenchmarkId, SecurityType.Index);
+                if (findItem != null)
+                {
+                    secuList.Add(findItem);
+                }
+            }
+
             //QuoteCenter.Instance.Query(secuList);
             foreach (var secuItem in _securityDataSource)
             {
@@ -318,20 +329,67 @@ namespace TradingSystem.View
 
             var selectedOpenItems = _monitorDataSource.Where(p => p.Selection).ToList();
             foreach (var openItem in selectedOpenItems)
-            { 
+            {
+                //calc the basis
+                double benchmarkPrice = GetPrice(secuList, openItem.BenchmarkId, SecurityType.Index);
+                double futurePrice = GetPrice(secuList, openItem.FuturesContract, SecurityType.Futures);
+                openItem.Basis = futurePrice - benchmarkPrice;
+
+                //future total capital
                 var futureItem = _securityDataSource.ToList().Find(p => p.MonitorId == openItem.MonitorId && p.SecuType == SecurityType.Futures);
                 if(futureItem != null)
                 {
                     openItem.FuturesMktCap = futureItem.CommandMoney;
                 }
 
+                //spot total capital
                 var stockItems = _securityDataSource.Where(p => p.MonitorId == openItem.MonitorId && p.SecuType == SecurityType.Stock).ToList();
                 if (stockItems.Count > 0)
                 {
                     openItem.StockMktCap = stockItems.Sum(p => p.CommandMoney);
                     openItem.StockNumbers = stockItems.Count;
                 }
+
+                openItem.Risk = openItem.StockMktCap - openItem.FuturesMktCap;
+
+                var suspensionItems = stockItems.Where(p => p.ESuspendFlag == Model.Quote.SuspendFlag.Suspend1Day
+                    || p.ESuspendFlag == Model.Quote.SuspendFlag.Suspend1Hour
+                    || p.ESuspendFlag == Model.Quote.SuspendFlag.Suspend2Hour
+                    || p.ESuspendFlag == Model.Quote.SuspendFlag.SuspendAfternoon
+                    || p.ESuspendFlag == Model.Quote.SuspendFlag.SuspendHalfDay
+                    || p.ESuspendFlag == Model.Quote.SuspendFlag.SuspendHalfHour
+                    || p.ESuspendFlag == Model.Quote.SuspendFlag.SuspendTemp
+                    ).ToList();
+                if (suspensionItems != null)
+                {
+                    openItem.SuspensionNumbers = suspensionItems.Count;
+                }
+
+                var limitUpItems = stockItems.Where(p => p.ELimitUpDownFlag == Model.Quote.LimitUpDownFlag.LimitUp).ToList();
+                if (limitUpItems != null)
+                {
+                    openItem.LimitUpNumbers = limitUpItems.Count;
+                }
+
+                var limitDownItems = stockItems.Where(p => p.ELimitUpDownFlag == Model.Quote.LimitUpDownFlag.LimitDown).ToList();
+                if (limitDownItems != null)
+                {
+                    openItem.LimitDownNumbers = limitDownItems.Count;
+                }
             }
+        }
+
+        private double GetPrice(List<SecurityItem> secuList, string secuCode, SecurityType secuType)
+        {
+            double price = 0.0;
+            var targetItem = secuList.Find(p => p.SecuCode.Equals(secuCode) && p.SecuType == secuType);
+            if (targetItem != null)
+            {
+                var marketData = QuoteCenter2.Instance.GetMarketData(targetItem);
+                price = marketData.CurrentPrice;
+            }
+
+            return price;
         }
 
         private void GiveOrder()
@@ -411,6 +469,9 @@ namespace TradingSystem.View
                 var selectedSecuItems = _securityDataSource.Where(p => p.Selection && p.MonitorId == newOpenItem.MonitorId).ToList();
                 DateTime startDate = DateUtil.GetDateTimeFromInt(orderItem.StartDate, orderItem.StartTime);
                 DateTime endDate = DateUtil.GetDateTimeFromInt(orderItem.EndDate, orderItem.EndTime);
+                startDate = DateUtil.GetStartDate(startDate);
+                endDate = DateUtil.GetEndDate(endDate, startDate);
+
                 int ret = _tradeCommandBLL.SubmitOpenPosition(newOpenItem, selectedSecuItems, startDate, endDate);
 
                 if (ret > 0)
@@ -484,6 +545,7 @@ namespace TradingSystem.View
                 Copies = orderItem.Copies,
                 FuturesContract = orderItem.FuturesContract,
                 InstanceCode = orderItem.InstanceCode,
+                Notes = orderItem.Notes??string.Empty,
             };
 
             return newOpenItem;

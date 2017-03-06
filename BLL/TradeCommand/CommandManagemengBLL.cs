@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Util;
 
 namespace BLL.TradeCommand
 {
@@ -69,14 +70,17 @@ namespace BLL.TradeCommand
 
         public int Update(CommandManagementItem cmdMngItem)
         {
+            DateTime startDate = DateUtil.GetStartDate(cmdMngItem.DStartDate);
+            DateTime endDate = DateUtil.GetEndDate(cmdMngItem.DEndDate, startDate);
+
             Model.Database.TradeCommand cmdItem = new Model.Database.TradeCommand
             {
                 CommandId = cmdMngItem.CommandId,
                 ECommandStatus = Model.EnumType.CommandStatus.Canceled,
                 ModifiedDate = DateTime.Now,
-                DStartDate = cmdMngItem.DStartDate,
-                DEndDate = cmdMngItem.DEndDate,
-                Notes = cmdMngItem.Notes,
+                DStartDate = startDate,
+                DEndDate = endDate,
+                Notes = cmdMngItem.Notes??string.Empty,
                 ModifiedCause = cmdMngItem.ModifiedCause,
                 CancelCause = cmdMngItem.CancelCause,
             };

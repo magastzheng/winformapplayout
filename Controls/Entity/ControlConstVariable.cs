@@ -11,7 +11,7 @@ namespace Controls.Entity
     {
         public static Color LimitUpColor = Color.Red;
         public static Color LimitDownColor = Color.Green;
-        public static Color LimitSuspensionColor = Color.Red;
-        public static Color LimitForeColor = Color.Black;
+        public static Color LimitSuspensionColor = Color.Blue;
+        public static Color LimitStatusColumnForeColor = Color.Black;
     }
 }

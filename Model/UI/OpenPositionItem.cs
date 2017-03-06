@@ -57,6 +57,15 @@ namespace Model.UI
         [BindingAttribute("stocknumbers")]
         public int StockNumbers { get; set; }
 
+        [BindingAttribute("suspensionnumbers")]
+        public int SuspensionNumbers { get; set; }
+
+        [BindingAttribute("limitupnumbers")]
+        public int LimitUpNumbers { get; set; }
+
+        [BindingAttribute("limitdownnumbers")]
+        public int LimitDownNumbers { get; set; }
+
         public string InstanceCode { get; set; }
 
         public string PortfolioCode { get; set; }
@@ -64,5 +73,9 @@ namespace Model.UI
         public string FundCode { get; set; }
 
         public string FundName { get; set; }
+
+        public string BenchmarkId { get; set; }
+
+        public string Notes { get; set; }
     }
 }

@@ -9,6 +9,8 @@ using Model.UI;
 using System.Collections.Generic;
 using Util;
 using System.Linq;
+using BLL.Manager;
+using Model.SecurityInfo;
 
 namespace BLL.Template
 {
@@ -162,7 +164,20 @@ namespace BLL.Template
             int loginUserId = LoginManager.Instance.GetUserId();
             _userActionTrackingBLL.Create(loginUserId, Model.UsageTracking.ActionType.Get, ResourceType.SpotTemplate, templateId, 1, Model.UsageTracking.ActionStatus.Normal, "stocks");
 
-            return _stockdbdao.Get(templateId);
+            var stocks = _stockdbdao.Get(templateId);
+            if (stocks != null)
+            {
+                stocks.ForEach(p => {
+                    var secuInfo = SecurityInfoManager.Instance.Get(p.SecuCode, Model.SecurityInfo.SecurityType.Stock);
+                    if (secuInfo != null)
+                    {
+                        p.SecuName = secuInfo.SecuName;
+                        p.Exchange = SecurityItemHelper.GetExchange(secuInfo.ExchangeCode);
+                    }
+                });
+            }
+
+            return stocks;
         }
 
         public int DeleteStock(List<TemplateStock> tempStocks)
