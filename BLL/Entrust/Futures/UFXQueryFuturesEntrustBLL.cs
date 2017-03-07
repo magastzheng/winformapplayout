@@ -1,4 +1,5 @@
 ﻿using BLL.Manager;
+using BLL.TradeCommand;
 using Config.ParamConverter;
 using log4net;
 using Model;
@@ -23,7 +24,7 @@ namespace BLL.Entrust.Futures
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private SecurityBLL _securityBLL = null;
-        //private EntrustSecurityBLL _entrustSecuBLL = new EntrustSecurityBLL();
+        private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
 
         public UFXQueryFuturesEntrustBLL()
         {
@@ -220,7 +221,8 @@ namespace BLL.Entrust.Futures
                 fundCode = portfolio.FundCode;
                 fundName = portfolio.FundName;
             }
-            //var entrustSecuItems = _entrustSecuBLL.GetAllCombine();
+
+            Dictionary<int, Model.UI.TradeInstance> cmdInstMap = new Dictionary<int, Model.UI.TradeInstance>();
             foreach (var responseItem in responseItems)
             {
                 int commandId = 0;
@@ -232,6 +234,24 @@ namespace BLL.Entrust.Futures
                     commandId = temp1;
                     submitId = temp2;
                     requestId = temp3;
+                }
+
+                int instanceId = 0;
+                string instanceCode = string.Empty;
+                if (!cmdInstMap.ContainsKey(commandId))
+                {
+                    var tradeInstance = _tradeCommandBLL.GetTradeInstance(commandId);
+                    if (tradeInstance != null)
+                    {
+                        instanceId = tradeInstance.InstanceId;
+                        instanceCode = tradeInstance.InstanceCode;
+                        cmdInstMap.Add(commandId, tradeInstance);
+                    }
+                }
+                else
+                {
+                    instanceId = cmdInstMap[commandId].InstanceId;
+                    instanceCode = cmdInstMap[commandId].InstanceCode;
                 }
 
                 var entrustDirection = UFXTypeConverter.GetEntrustDirection(responseItem.EntrustDirection);
@@ -267,6 +287,8 @@ namespace BLL.Entrust.Futures
                     EMarketCode = UFXTypeConverter.GetMarketCode(responseItem.MarketNo),
                     EEntrustState = UFXTypeConverter.GetEntrustState(responseItem.EntrustState),
                     WithdrawCause = responseItem.WithdrawCause,
+                    InstanceId = instanceId,
+                    InstanceNo = instanceCode,
                 };
 
                 if (responseItem.FirstDealTime > 0)

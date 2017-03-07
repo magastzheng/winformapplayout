@@ -356,7 +356,7 @@ readonly:
 		"text": "成交金额",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 1,
 		"visible": 1,
 		"readonly": 1
 		},{
@@ -757,7 +757,7 @@ readonly:
 		"text": "成交金额",
 		"width": 80,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 1,
 		"visible": 1,
 		"readonly": 1
 		},{
@@ -4520,7 +4520,7 @@ readonly:
 		"text": "成交金额",
 		"width": 100,
 		"columntype": 0,
-		"valuetype": 0,
+		"valuetype": 1,
 		"visible": 1,
 		"readonly": 1
 		},{

@@ -1,4 +1,5 @@
 ﻿using BLL.Manager;
+using BLL.TradeCommand;
 using Config.ParamConverter;
 using log4net;
 using Model;
@@ -22,7 +23,7 @@ namespace BLL.Entrust.Futures
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private SecurityBLL _securityBLL = null;
-
+        private TradeCommandBLL _tradeCommandBLL = new TradeCommandBLL();
         public UFXQueryFuturesDealBLL()
         {
             _securityBLL = UFXBLLManager.Instance.SecurityBLL;
@@ -218,6 +219,8 @@ namespace BLL.Entrust.Futures
                 fundName = portfolio.FundName;
             }
 
+            Dictionary<int, Model.UI.TradeInstance> cmdInstMap = new Dictionary<int, Model.UI.TradeInstance>();
+
             foreach (var responseItem in responseItems)
             {
                 int commandId = 0;
@@ -229,6 +232,24 @@ namespace BLL.Entrust.Futures
                     commandId = temp1;
                     submitId = temp2;
                     requestId = temp3;
+                }
+
+                int instanceId = 0;
+                string instanceCode = string.Empty;
+                if (!cmdInstMap.ContainsKey(commandId))
+                {
+                    var tradeInstance = _tradeCommandBLL.GetTradeInstance(commandId);
+                    if (tradeInstance != null)
+                    {
+                        instanceId = tradeInstance.InstanceId;
+                        instanceCode = tradeInstance.InstanceCode;
+                        cmdInstMap.Add(commandId, tradeInstance);
+                    }
+                }
+                else
+                {
+                    instanceId = cmdInstMap[commandId].InstanceId;
+                    instanceCode = cmdInstMap[commandId].InstanceCode;
                 }
 
                 var marketCode = UFXTypeConverter.GetMarketCode(responseItem.MarketNo);
@@ -253,6 +274,8 @@ namespace BLL.Entrust.Futures
                     EntrustNo = string.Format("{0}", responseItem.EntrustNo),
                     DealNo = string.Format("{0}", responseItem.DealNo),
                     ExchangeCode = UFXTypeConverter.GetMarketCode(marketCode),
+                    InstanceId = instanceId.ToString(),
+                    InstanceNo = instanceCode,
                 };
 
                 dealFlowItems.Add(efItem);

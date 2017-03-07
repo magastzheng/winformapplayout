@@ -71,11 +71,13 @@
     <Compile Include="Entrust\Security\UFXQuerySecurityDealBLL.cs" />
     <Compile Include="Entrust\Security\UFXQuerySecurityEntrustBLL.cs" />
     <Compile Include="Entrust\subscriber\UFXEntrustCommitHandler.cs" />
+    <Compile Include="Entrust\subscriber\UFXEntrustConfirmHandler.cs" />
     <Compile Include="Entrust\subscriber\UFXEntrustFailedHandler.cs" />
     <Compile Include="Entrust\subscriber\UFXEntrustDealHandler.cs" />
     <Compile Include="Entrust\subscriber\UFXMessageHandlerFactory.cs" />
     <Compile Include="Entrust\subscriber\UFXWithdrawCompletedHandler.cs" />
     <Compile Include="Entrust\subscriber\UFXWithdrawFailedHandler.cs" />
+    <Compile Include="Entrust\subscriber\UFXWithdrawHandler.cs" />
     <Compile Include="Entrust\UFXBasketEntrustBLL.cs" />
     <Compile Include="Entrust\UFXBasketWithdrawBLL.cs" />
     <Compile Include="Entrust\Futures\UFXQueryFuturesDealBLL.cs" />

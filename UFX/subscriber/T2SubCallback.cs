@@ -54,7 +54,6 @@ namespace UFX.subscriber
                 messageType = _filterBLL.GetMessageType(parser);
             }
 
-            IUFXMessageHandlerBase subscriberHandler = _handlerFactory.Create(messageType);
             if (nLength > 0)
             {
                 CT2UnPacker lpUnpacker1 = new CT2UnPacker((void*)lpData, (uint)nLength);
@@ -70,6 +69,7 @@ namespace UFX.subscriber
                     Log("====推送*****数据部分=====结束");
                     lpUnpacker1.Dispose();
 
+                    IUFXMessageHandlerBase subscriberHandler = _handlerFactory.Create(messageType);
                     if (subscriberHandler != null)
                     {
                         subscriberHandler.Handle(parser);

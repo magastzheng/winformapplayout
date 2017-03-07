@@ -18,6 +18,7 @@ create table entrustsecurity(
 	,PriceType			int			 --价格类型：委卖一， 委买一 ....
 	,EntrustNo			int			 --委托之后，服务器返回的委托号
 	,BatchNo			int			 --委托后返回的批号ID
+	,ConfirmNo			varchar(32)	 --委托确认之后返回的确认号
 	,DealStatus			int			 --成交状态：1 - 未成交， 2 - 部分成交， 3 - 已完成
 	,TotalDealAmount	int			 --累计成交数量
 	,TotalDealBalance	numeric(20, 4) --累计成交金额
@@ -29,6 +30,9 @@ create table entrustsecurity(
 	,EntrustFailCode	int			 --委托失败代码
 	,EntrustFailCause	varchar(1024) --委托失败原因
 )
+
+--alter table entrustsecurity
+--add ConfirmNo varchar(32)
 
 --====================================
 --entrustsecurity table
@@ -69,6 +73,7 @@ begin
 		,PriceType
 		,EntrustNo
 		,BatchNo
+		,ConfirmNo
 		,DealStatus
 		,TotalDealAmount
 		,TotalDealBalance
@@ -91,6 +96,7 @@ begin
 		,@PriceType
 		,-1					--初始时没有委托序号，只有通过UFX委托完成之后，才会产生
 		,-1					--初始时没有委托批次号
+		,NULL				--初始时没有委托确认号
 		,1					--未成交
 		,0					--成交量初始为0
 		,0.0				--累计成交金额初始为0
@@ -228,6 +234,55 @@ begin
 			,EntrustFailCause	= @EntrustFailCause
 		where RequestId=@RequestId
 	end
+end
+
+
+go
+if exists (select name from sysobjects where name='procEntrustSecurityUpdateEntrustNo')
+drop proc procEntrustSecurityUpdateEntrustNo
+
+go
+create proc procEntrustSecurityUpdateEntrustNo(
+	@SubmitId			int
+	,@CommandId			int
+	,@SecuCode			varchar(10)
+	,@EntrustNo			int
+	,@BatchNo			int
+	,@EntrustStatus		int
+	,@ModifiedDate		datetime
+)
+as
+begin
+	update entrustsecurity
+	set EntrustNo			= @EntrustNo
+		,BatchNo			= @BatchNo
+		,EntrustStatus		= @EntrustStatus
+		,ModifiedDate		= @ModifiedDate
+	where SubmitId=@SubmitId
+		and CommandId=@CommandId 
+		and SecuCode=@SecuCode
+end
+
+go
+if exists (select name from sysobjects where name='procEntrustSecurityUpdateConfirmNo')
+drop proc procEntrustSecurityUpdateConfirmNo
+
+go
+create proc procEntrustSecurityUpdateConfirmNo(
+	@SubmitId			int
+	,@CommandId			int
+	,@SecuCode			varchar(10)
+	,@ConfirmNo			varchar(32)
+	,@ModifiedDate		datetime
+)
+as
+begin
+	update entrustsecurity
+	set ConfirmNo			= @ConfirmNo
+		,ModifiedDate		= @ModifiedDate
+	where SubmitId=@SubmitId
+		and CommandId=@CommandId 
+		and SecuCode=@SecuCode
 end
 
 go
@@ -564,6 +619,7 @@ begin
 		,PriceType
 		,EntrustNo
 		,BatchNo
+		,ConfirmNo
 		,DealStatus
 		,TotalDealAmount
 		,TotalDealBalance
@@ -676,6 +732,7 @@ begin
 		,PriceType
 		,EntrustNo
 		,BatchNo
+		,ConfirmNo
 		,DealStatus
 		,TotalDealAmount
 		,TotalDealBalance
@@ -714,6 +771,7 @@ begin
 		,PriceType
 		,EntrustNo
 		,BatchNo
+		,ConfirmNo
 		,DealStatus
 		,TotalDealAmount
 		,TotalDealBalance
@@ -754,6 +812,7 @@ begin
 		,PriceType
 		,EntrustNo
 		,BatchNo
+		,ConfirmNo
 		,DealStatus
 		,TotalDealAmount
 		,TotalDealBalance
@@ -840,6 +899,7 @@ begin
 		,PriceType
 		,EntrustNo
 		,BatchNo
+		,ConfirmNo
 		,DealStatus
 		,TotalDealAmount
 		,TotalDealBalance
@@ -879,6 +939,7 @@ begin
 		,PriceType
 		,EntrustNo
 		,BatchNo
+		,ConfirmNo
 		,DealStatus
 		,TotalDealAmount
 		,TotalDealBalance
@@ -921,6 +982,7 @@ begin
 		,PriceType
 		,EntrustNo
 		,BatchNo
+		,ConfirmNo
 		,DealStatus
 		,TotalDealAmount
 		,TotalDealBalance
@@ -957,6 +1019,7 @@ begin
 		,a.PriceType
 		,a.EntrustNo
 		,a.BatchNo
+		,a.ConfirmNo
 		,a.DealStatus
 		,a.TotalDealAmount
 		,a.TotalDealBalance
@@ -1012,6 +1075,7 @@ begin
 		,a.PriceType
 		,a.EntrustNo
 		,a.BatchNo
+		,a.ConfirmNo
 		,a.DealStatus
 		,a.TotalDealAmount
 		,a.TotalDealBalance
@@ -1065,6 +1129,7 @@ begin
 		,a.PriceType
 		,a.EntrustNo
 		,a.BatchNo
+		,a.ConfirmNo
 		,a.DealStatus
 		,a.TotalDealAmount
 		,a.TotalDealBalance
@@ -1121,6 +1186,7 @@ begin
 		,a.PriceType
 		,a.EntrustNo
 		,a.BatchNo
+		,a.ConfirmNo
 		,a.DealStatus
 		,a.TotalDealAmount
 		,a.TotalDealBalance

@@ -206,6 +206,12 @@ namespace BLL.TradeCommand
                             entrustItem.DealPercent = entrustItem.TodayDealAmount / entrustItem.EntrustAmount;
                         }
 
+                        var secuItem = SecurityInfoManager.Instance.Get(entrustItem.SecuCode, entrustItem.SecuType);
+                        if (secuItem != null)
+                        {
+                            entrustItem.SecuName = secuItem.SecuName;
+                        }
+
                         entrustItems.Add(entrustItem);
                     }
                 }
@@ -229,10 +235,25 @@ namespace BLL.TradeCommand
                             SecuCode = validItem.SecuCode,
                             SecuType = validItem.SecuType,
                             EDirection = validItem.EntrustDirection,
+                            DealAmount = validItem.TotalDealAmount,
+                            DealMoney = validItem.TotalDealBalance,
+                            //PriceType = validItem.EntrustPriceType,
+
                             FundName = cmdMngItem.FundName,
                             PortfolioName = cmdMngItem.PortfolioName,
                             CommandId = cmdMngItem.CommandId,
                         };
+
+                        if (dealItem.DealAmount > 0)
+                        {
+                            dealItem.DealPrice = dealItem.DealMoney / dealItem.DealAmount;
+                        }
+
+                        var secuItem = SecurityInfoManager.Instance.Get(dealItem.SecuCode, dealItem.SecuType);
+                        if (secuItem != null)
+                        {
+                            dealItem.SecuName = secuItem.SecuName;
+                        }
 
                         dealItems.Add(dealItem);
                     }

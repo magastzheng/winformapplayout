@@ -33,3 +33,7 @@ on a.SecuCode = b.SecuCode and b.SecuType=2
 where a.TemplateId=1
 
 select * from stocktemplate
+
+select * from benchmark
+
+select * from monitorunit

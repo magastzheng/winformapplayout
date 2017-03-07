@@ -2,33 +2,32 @@
 using Config.ParamConverter;
 using log4net;
 using Model.Binding.BindingUtil;
-using Model.Database;
 using Model.UFX;
+using System;
 using System.Collections.Generic;
 using UFX;
-using UFX.impl;
 using UFX.subscriber;
 
 namespace BLL.Entrust.subscriber
 {
-    public class UFXEntrustCommitHandler : IUFXMessageHandlerBase
+    public class UFXEntrustConfirmHandler : IUFXMessageHandlerBase
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private EntrustSecurityBLL _entrustSecurityBLL = new EntrustSecurityBLL();
 
-        public UFXEntrustCommitHandler()
+        public UFXEntrustConfirmHandler()
         { 
         }
 
-        public int Handle(DataParser dataParser)
+        public int Handle(UFX.impl.DataParser dataParser)
         {
-            List<UFXEntrustCompletedResponse> responseItems = new List<UFXEntrustCompletedResponse>();
-            var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXEntrustCompletedResponse>();
+            List<UFXEntrustConfirmResponse> responseItems = new List<UFXEntrustConfirmResponse>();
+            var dataFieldMap = UFXDataBindingHelper.GetProperty<UFXEntrustConfirmResponse>();
             var errorResponse = T2ErrorHandler.Handle(dataParser);
             if (T2ErrorHandler.Success(errorResponse.ErrorCode))
             {
-                responseItems = UFXDataSetHelper.ParseSubscribeData<UFXEntrustCompletedResponse>(dataParser);
+                responseItems = UFXDataSetHelper.ParseSubscribeData<UFXEntrustConfirmResponse>(dataParser);
             }
 
             //update the database
@@ -44,7 +43,7 @@ namespace BLL.Entrust.subscriber
                     if (EntrustRequestHelper.ParseThirdReff(responseItem.ThirdReff, out commandId, out submitId, out requestId))
                     {
                         //_entrustSecurityBLL.UpdateEntrustStatus(submitId, commandId, responseItem.StockCode, Model.EnumType.EntrustStatus.Completed);
-                        _entrustSecurityBLL.UpdateEntrustNo(submitId, commandId, responseItem.StockCode, responseItem.EntrustNo, responseItem.BatchNo, Model.EnumType.EntrustStatus.Completed);
+                        _entrustSecurityBLL.UpdateConfirmNo(submitId, commandId, responseItem.StockCode, responseItem.ConfirmNo);
                     }
                     else
                     {
@@ -55,19 +54,6 @@ namespace BLL.Entrust.subscriber
             }
 
             return responseItems.Count;
-        }
-
-        private EntrustSecurity Convert(UFXEntrustCompletedResponse responseItem)
-        {
-            var entrustItem = new EntrustSecurity 
-            {
-                RequestId = responseItem.ExtSystemId,
-                SecuCode = responseItem.StockCode,
-                EntrustNo = responseItem.EntrustNo,
-                BatchNo = responseItem.BatchNo,
-            };
-
-            return entrustItem;
         }
     }
 }

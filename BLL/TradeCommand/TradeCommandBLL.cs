@@ -213,7 +213,13 @@ namespace BLL.TradeCommand
         public Model.Database.TradeCommand GetTradeCommand(int commandId)
         {
             Tracking(ActionType.Get, ResourceType.TradeCommand, commandId, null);
-            return _tradecommandao.Get(commandId);
+            return GetTradeCommandInternal(commandId);
+        }
+
+        public Model.UI.TradeInstance GetTradeInstance(int commandId)
+        {
+            var tradeCommand = GetTradeCommandInternal(commandId);
+            return _tradeInstanceBLL.GetInstance(tradeCommand.InstanceId);
         }
 
         #endregion
@@ -263,6 +269,11 @@ namespace BLL.TradeCommand
             }
 
             return commandId;
+        }
+
+        private Model.Database.TradeCommand GetTradeCommandInternal(int commandId)
+        {
+            return _tradecommandao.Get(commandId);
         }
 
         private bool IsValidCommand(Model.Database.TradeCommand tradeCommand)

@@ -34,9 +34,19 @@ namespace BLL.EntrustCommand
             return _entrustsecudao.UpdateEntrustStatusByEntrustNo(entrustNo, entrustStatus);
         }
 
-        public int UpdateEntrustStatusByRequestId(int requestId, int entrustNo, int batchNo, int entrustFailCode, string entrustFailCause)
+        //public int UpdateEntrustStatusByRequestId(int requestId, int entrustNo, int batchNo, int entrustFailCode, string entrustFailCause)
+        //{
+        //    return _entrustsecudao.UpdateEntrustStatusByRequestId(requestId, entrustNo, batchNo, entrustFailCode, entrustFailCause);
+        //}
+
+        public int UpdateEntrustNo(int submitId, int commandId, string secuCode, int entrustNo, int batchNo, EntrustStatus entrustStatus)
         {
-            return _entrustsecudao.UpdateEntrustStatusByRequestId(requestId, entrustNo, batchNo, entrustFailCode, entrustFailCause);
+            return _entrustsecudao.UpdateEntrustNo(submitId, commandId, secuCode, entrustNo, batchNo, entrustStatus);
+        }
+
+        public int UpdateConfirmNo(int submitId, int commandId, string secuCode, string confirmNo)
+        {
+            return _entrustsecudao.UpdateConfirmNo(submitId, commandId, secuCode, confirmNo);
         }
 
         #endregion

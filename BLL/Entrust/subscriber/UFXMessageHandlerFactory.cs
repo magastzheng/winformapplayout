@@ -1,4 +1,5 @@
-﻿using Model.UFX;
+﻿using log4net;
+using Model.UFX;
 using System;
 using UFX.subscriber;
 
@@ -6,6 +7,8 @@ namespace BLL.Entrust.subscriber
 {
     public class UFXMessageHandlerFactory : IUFXMessageHandlerFactory
     {
+        private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public IUFXMessageHandlerBase Create(UFXPushMessageType msgType)
         {
             IUFXMessageHandlerBase handler = null;
@@ -16,9 +19,19 @@ namespace BLL.Entrust.subscriber
                         handler = new UFXEntrustCommitHandler();
                     }
                     break;
+                case UFXPushMessageType.EntrustConfirm:
+                    {
+                        handler = new UFXEntrustConfirmHandler();
+                    }
+                    break;
                 case UFXPushMessageType.EntrustFailed:
                     {
                         handler = new UFXEntrustFailedHandler();
+                    }
+                    break;
+                case UFXPushMessageType.EntrustWithdraw:
+                    {
+                        handler = new UFXWithdrawHandler();
                     }
                     break;
                 case UFXPushMessageType.EntrustWithdrawDone:
@@ -38,9 +51,11 @@ namespace BLL.Entrust.subscriber
                     break;
                 default:
                     {
-                        throw new NotSupportedException(msgType.ToString());
+                        string msg = string.Format("Not supported the message type: {0}", msgType);
+                        logger.Error(msg);
+
+                        throw new NotSupportedException(msg);
                     }
-                    break;
             }
 
             return handler;

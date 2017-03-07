@@ -94,7 +94,7 @@ namespace Model.UFX
     /// 委托确认后推送本条委托信息
     /// msgtype="b"
     /// </summary>
-    public class UFXEntrustCommitConfirmResponse
+    public class UFXEntrustConfirmResponse
     {
         [UFXDataAttribute("business_date", Data.DataValueType.Int)]
         public int BusinessDate { get; set; }
@@ -215,7 +215,7 @@ namespace Model.UFX
     /// msgtype="d"
     /// 撤单也是一次委托，也会产生新的委托编号
     /// </summary>
-    public class UFXEntrustCancelResponsed
+    public class UFXWithdrawResponse
     {
         [UFXDataAttribute("business_date", Data.DataValueType.Int)]
         public int BusinessDate { get; set; }

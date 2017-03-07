@@ -13,6 +13,8 @@ namespace DBAccess.EntrustCommand
         private const string SP_ModifyEntrustStatus = "procEntrustSecurityUpdateEntrustStatus";
         private const string SP_ModifyEntrustStatusByEntrustNo = "procEntrustSecurityUpdateEntrustStatusByEntrustNo";
         private const string SP_ModifyEntrustStatusByRequestId = "procEntrustSecurityUpdateResponseByRequestId";
+        private const string SP_UpdateEntrustNo = "procEntrustSecurityUpdateEntrustNo";
+        private const string SP_UpdateConfirmNo = "procEntrustSecurityUpdateConfirmNo";
 
         private const string SP_Delete = "procEntrustSecurityDelete";
         private const string SP_DeleteBySubmitId = "procEntrustSecurityDeleteBySubmitId";
@@ -89,6 +91,32 @@ namespace DBAccess.EntrustCommand
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
             _dbHelper.AddInParameter(dbCommand, "@EntrustFailCode", System.Data.DbType.Int32, entrustFailCode);
             _dbHelper.AddInParameter(dbCommand, "@EntrustFailCause", System.Data.DbType.String, entrustFailCause);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int UpdateEntrustNo(int submitId, int commandId, string secuCode, int entrustNo, int batchNo, EntrustStatus entrustStatus)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_UpdateEntrustNo);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+            _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, secuCode);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustNo", System.Data.DbType.Int32, entrustNo);
+            _dbHelper.AddInParameter(dbCommand, "@BatchNo", System.Data.DbType.Int32, batchNo);
+            _dbHelper.AddInParameter(dbCommand, "@EntrustStatus", System.Data.DbType.Int32, (int)entrustStatus);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
+        }
+
+        public int UpdateConfirmNo(int submitId, int commandId, string secuCode, string confirmNo)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_UpdateConfirmNo);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+            _dbHelper.AddInParameter(dbCommand, "@SecuCode", System.Data.DbType.String, secuCode);
+            _dbHelper.AddInParameter(dbCommand, "@ConfirmNo", System.Data.DbType.String, confirmNo);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
