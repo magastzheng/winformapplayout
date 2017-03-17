@@ -41,7 +41,7 @@ namespace BLL.Entrust.subscriber
                     //TODO: add log
                     if (EntrustRequestHelper.ParseThirdReff(responseItem.ThirdReff, out commandId, out submitId, out requestId))
                     {
-                        _entrustSecurityBLL.UpdateEntrustStatusByRequestId(requestId, responseItem.EntrustNo, responseItem.BatchNo, 0, string.Empty);
+                        _entrustSecurityBLL.UpdateEntrustNo(submitId, commandId, responseItem.StockCode, responseItem.EntrustNo, responseItem.BatchNo, Model.EnumType.EntrustStatus.CancelSuccess);
                     }
                     else
                     {
