@@ -728,7 +728,7 @@ namespace TradingSystem.View
             List<SecurityItem> secuList = GetSecurityItems(template);
 
             var benchmarkItem = _securityInfoList.Find(p => p.SecuCode.Equals(template.Benchmark) && p.SecuType == SecurityType.Index);
-            var benchmarkData = QuoteCenter2.Instance.GetMarketData(benchmarkItem);
+            var benchmarkData = QuoteCenter.Instance.GetMarketData(benchmarkItem);
             var benchmark = _benchmarkList.Find(p => p.BenchmarkId.Equals(benchmarkItem.SecuCode));
             double bmkPrice = 0f;
             double totalValue = 0f;
@@ -834,7 +834,7 @@ namespace TradingSystem.View
                 var secuItem = secuList.Find(p => p.SecuCode.Equals(stock.SecuCode) && p.SecuType == SecurityType.Stock);
                 if (secuItem != null)
                 {
-                    var secuData = QuoteCenter2.Instance.GetMarketData(secuItem);
+                    var secuData = QuoteCenter.Instance.GetMarketData(secuItem);
 
                     if (!FloatUtil.IsZero(secuData.CurrentPrice))
                     {

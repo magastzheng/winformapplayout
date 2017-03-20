@@ -136,7 +136,7 @@ namespace TradingSystem.View
 
             if (targetItem != null)
             {
-                var marketData = QuoteCenter2.Instance.GetMarketData(targetItem);
+                var marketData = QuoteCenter.Instance.GetMarketData(targetItem);
                 if (marketData != null)
                 {
                     selectedItem.TransferedPrice = marketData.CurrentPrice;

@@ -519,7 +519,7 @@ namespace TradingSystem.Dialog
 
         private void SetItemPrice(CancelRedoItem item, SecurityItem secuItem, PriceType priceType)
         {
-            var marketData = QuoteCenter2.Instance.GetMarketData(secuItem);
+            var marketData = QuoteCenter.Instance.GetMarketData(secuItem);
             item.EntrustPrice = QuotePriceHelper.GetPrice(priceType, marketData);
             item.LastPrice = marketData.CurrentPrice;
             item.LimitDownPrice = marketData.LowLimitPrice;

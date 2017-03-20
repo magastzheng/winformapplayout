@@ -32,19 +32,19 @@ namespace UFX.impl
                 lpUnPack.SetCurrentDatasetByIndex(i);
 
                 Dictionary<int, string> columnDic = new Dictionary<int, string>();
-                //打印字段
+                //数据包中字段
                 for (int j = 0, hLen = lpUnPack.GetColCount(); j < hLen; j++)
                 {
                     columnDic.Add(j, lpUnPack.GetColName(j));
                 }
 
-                //打印所有记录
+                //所有记录
                 for (int k = 0, rLen = (int)lpUnPack.GetRowCount(); k < rLen; k++)
                 {
                     RawDataRow row = new RawDataRow();
                     row.Columns = new Dictionary<string,DataValue>();
 
-                    //打印每条记录
+                    //每条记录
                     for (int t = 0, cLen = lpUnPack.GetColCount(); t < cLen; t++)
                     {
                         string colName = columnDic[t];

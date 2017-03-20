@@ -14,7 +14,7 @@ namespace BLL.Manager
 
         private SecurityInfoManager()
         {
-            _quote = QuoteCenter2.Instance.Quote;
+            _quote = QuoteCenter.Instance.Quote;
             _securityInfoBLL = new SecurityInfoBLL();
         }
 

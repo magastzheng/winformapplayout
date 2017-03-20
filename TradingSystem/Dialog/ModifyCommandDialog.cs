@@ -263,7 +263,7 @@ namespace TradingSystem.Dialog
             foreach (var secuItem in _dataSource)
             {
                 var targetItem = secuList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
-                var marketData = QuoteCenter2.Instance.GetMarketData(targetItem);
+                var marketData = QuoteCenter.Instance.GetMarketData(targetItem);
                 //secuItem.EntrustPrice = QuotePriceHelper.GetPrice(priceType, marketData);
                 secuItem.LastPrice = marketData.CurrentPrice;
                 secuItem.OriginCommandMoney = secuItem.OriginCommandAmount * marketData.CurrentPrice;

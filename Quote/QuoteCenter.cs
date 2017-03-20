@@ -4,21 +4,21 @@ using System.Collections.Generic;
 
 namespace Quote
 {
-    public class QuoteCenter2
+    public class QuoteCenter
     {
-        private readonly static QuoteCenter2 _instance = new QuoteCenter2();
+        private readonly static QuoteCenter _instance = new QuoteCenter();
         private IQuote _quote = new Quote();
         public IQuote Quote
         {
             get { return _quote; }
         }
 
-        private QuoteCenter2()
+        private QuoteCenter()
         {
 
         }
 
-        public static QuoteCenter2 Instance { get { return _instance; } }
+        public static QuoteCenter Instance { get { return _instance; } }
 
         public MarketData GetMarketData(SecurityItem secuItem)
         {

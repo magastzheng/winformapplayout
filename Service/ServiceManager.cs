@@ -43,7 +43,7 @@ namespace ServiceInterface
 
             //add other service
             //TODO: Init the QuoteCenter before using.
-            var quote = QuoteCenter2.Instance.Quote;
+            var quote = QuoteCenter.Instance.Quote;
             var quoteService = new QuoteService(quote, Connected, Notify);
             _services.Add(quoteService);
         }

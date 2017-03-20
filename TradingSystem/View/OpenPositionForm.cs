@@ -305,7 +305,7 @@ namespace TradingSystem.View
             foreach (var secuItem in _securityDataSource)
             {
                 var targetItem = secuList.Find(p => p.SecuCode.Equals(secuItem.SecuCode) && (p.SecuType == SecurityType.Stock || p.SecuType == SecurityType.Futures));
-                var marketData = QuoteCenter2.Instance.GetMarketData(targetItem);
+                var marketData = QuoteCenter.Instance.GetMarketData(targetItem);
                 secuItem.LastPrice = marketData.CurrentPrice;
                 secuItem.BuyAmount = marketData.BuyAmount;
                 secuItem.SellAmount = marketData.SellAmount;
@@ -385,7 +385,7 @@ namespace TradingSystem.View
             var targetItem = secuList.Find(p => p.SecuCode.Equals(secuCode) && p.SecuType == secuType);
             if (targetItem != null)
             {
-                var marketData = QuoteCenter2.Instance.GetMarketData(targetItem);
+                var marketData = QuoteCenter.Instance.GetMarketData(targetItem);
                 price = marketData.CurrentPrice;
             }
 

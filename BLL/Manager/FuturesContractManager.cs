@@ -30,7 +30,7 @@ namespace BLL.FuturesContractManager
 
         private FuturesContractManager()
         {
-            _quote = QuoteCenter2.Instance.Quote;
+            _quote = QuoteCenter.Instance.Quote;
             _benchmarkBLL = new BenchmarkBLL();
             _futurescontractdao = new FuturesContractDAO();
             _futuresItems = new List<SecurityItem>();

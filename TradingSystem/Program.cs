@@ -97,11 +97,13 @@ namespace TradingSystem
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             logger.Info("CurrentDomain_UnhandledException: " + e.ExceptionObject.ToString());
+            logger.Fatal(e.ExceptionObject);
         }
 
         private static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
             logger.Info("Application_ThreadException: " + e.Exception.Message);
+            logger.Fatal(e.Exception);
         }
 
     }
