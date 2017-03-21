@@ -8,6 +8,7 @@ create table tradeinstance(
 	,InstanceCode		varchar(20)						--交易实例代码
 	,PortfolioId		int								--组合ID,唯一确定交易实例和组合之间的关系
 	,MonitorUnitId		int								--监控单元ID，监控单元可以改变
+	,TemplateId			int			--现货模板ID
 	,StockDirection		int			--股票委托方向：1 - 买入， 2 - 卖出， 3 - 调整到[买卖]， 4 - 调整到[只买]， 5 - 调整到[只卖], 10 -- 买入现货，11--卖出现货，12-卖出开仓，13 -买入平仓
 	,FuturesContract	varchar(10)	--股指期货合约代码
 	,FuturesDirection	int			--股指期货委托方向：12-卖出开仓，13 -买入平仓
@@ -18,10 +19,13 @@ create table tradeinstance(
 	,Owner				int			--所有者
 	,CreatedDate		datetime	--交易实例创建时间
 	,ModifiedDate		datetime	--交易实例修改时间
-	--,StartDate			datetime -- 指令开始时间
-	--,EndDate			datetime -- 指令结束时间
-	--,EntrustedAmount	int		 -- 已委托数量	
+	,Notes				varchar(100)--备注
 )
+
+--alter table tradeinstance
+--add TemplateId int
+--alter table tradeinstance
+--add Notes varchar(100)
 
 go
 if exists (select name from sysobjects where name='procTradeInstanceInsert')
@@ -32,6 +36,7 @@ create proc procTradeInstanceInsert(
 	@InstanceCode		varchar(20)
 	,@PortfolioId		int
 	,@MonitorUnitId		int
+	,@TemplateId		int
 	,@StockDirection	int
 	,@FuturesContract	varchar(10)
 	,@FuturesDirection	int
@@ -41,6 +46,7 @@ create proc procTradeInstanceInsert(
 	,@Status			int
 	,@Owner				int
 	,@CreatedDate		datetime
+	,@Notes				varchar(100)
 )
 as
 begin
@@ -48,7 +54,8 @@ begin
 	insert into tradeinstance(
 		InstanceCode	
 		,PortfolioId	
-		,MonitorUnitId		
+		,MonitorUnitId	
+		,TemplateId	
 		,StockDirection		
 		,FuturesContract	
 		,FuturesDirection	
@@ -57,12 +64,14 @@ begin
 		,FuturesPriceType
 		,Status	
 		,Owner				
-		,CreatedDate			
+		,CreatedDate
+		,Notes			
 	)
 	values(
 		@InstanceCode	
 		,@PortfolioId	
 		,@MonitorUnitId		
+		,@TemplateId
 		,@StockDirection	
 		,@FuturesContract	
 		,@FuturesDirection	
@@ -71,7 +80,8 @@ begin
 		,@FuturesPriceType
 		,@Status	
 		,@Owner				
-		,@CreatedDate		
+		,@CreatedDate
+		,@Notes		
 	)
 
 	set @newid = SCOPE_IDENTITY()
@@ -87,6 +97,7 @@ create proc procTradeInstanceUpdate(
 	@InstanceId			int
 	,@InstanceCode		varchar(20)
 	,@MonitorUnitId		int
+	,@TemplateId		int
 	,@StockDirection	int
 	,@FuturesContract	varchar(10)
 	,@FuturesDirection	int
@@ -96,19 +107,24 @@ create proc procTradeInstanceUpdate(
 	,@Status			int
 	,@Owner				int
 	,@ModifiedDate		datetime
+	,@Notes				varchar(100)
 )
 as
 begin
 	declare @OldMonitorUnitId int
+	declare @OldTemplateId int
 	declare @OldStockDirection int
 	declare @OldFuturesDirection int
 	declare @OldOperationCopies int
+	declare @OldNotes varchar
 	--declare @OldStockPriceType int
 
 	select @OldMonitorUnitId = MonitorUnitId
+		,@OldTemplateId = TemplateId
 		,@OldStockDirection = StockDirection
 		,@OldFuturesDirection = FuturesDirection
 		,@OldOperationCopies = OperationCopies
+		,@OldNotes = Notes
 		--,@OldStockPriceType = StockPriceType
 	from tradeinstance
 	where InstanceId=@InstanceId 
@@ -116,6 +132,11 @@ begin
 	if @MonitorUnitId = 0 or @MonitorUnitId < 0
 	begin
 		set @MonitorUnitId = @OldMonitorUnitId
+	end
+
+	if @TemplateId = 0 or @TemplateId < 0
+	begin
+		set @TemplateId = @OldTemplateId
 	end
 
 	if @OperationCopies = 0 or @OperationCopies < 0
@@ -133,11 +154,17 @@ begin
 		set @FuturesDirection = @OldFuturesDirection
 	end
 
+	if @Notes is null or len(@Notes) = 0
+	begin
+		set @Notes = @OldNotes
+	end
+
 	--不可修改PortfolioId
 	update tradeinstance
 	set			
 		InstanceCode		= @InstanceCode
 		,MonitorUnitId		= @MonitorUnitId
+		,TemplateId			= @TemplateId
 		,StockDirection		= @StockDirection	
 		,FuturesContract	= @FuturesContract	
 		,FuturesDirection	= @FuturesDirection
@@ -147,6 +174,7 @@ begin
 		,Status				= @Status
 		,Owner				= @Owner	
 		,ModifiedDate		= @ModifiedDate	
+		,Notes				= @Notes
 	where InstanceId=@InstanceId
 end
 
@@ -196,7 +224,8 @@ begin
 			a.InstanceId			
 			,a.InstanceCode	
 			,a.PortfolioId	
-			,a.MonitorUnitId		
+			,a.MonitorUnitId
+			,a.TemplateId		
 			,a.StockDirection		
 			,a.FuturesContract	
 			,a.FuturesDirection	
@@ -207,6 +236,7 @@ begin
 			,a.Owner				
 			,a.CreatedDate		
 			,a.ModifiedDate	
+			,a.Notes
 			,b.PortfolioCode
 			,b.PortfolioName
 			,b.AccountCode
@@ -214,15 +244,14 @@ begin
 			,b.AssetNo
 			,b.AssetName
 			,c.MonitorUnitName	
-			,d.TemplateId
 			,d.TemplateName
 		from tradeinstance a
 		inner join ufxportfolio b
 		on a.PortfolioId=b.PortfolioId
 		inner join monitorunit c
 		on a.MonitorUnitId = c.MonitorUnitId
-		inner join stocktemplate d
-		on c.StockTemplateId = d.TemplateId
+		left join stocktemplate d
+		on a.TemplateId = d.TemplateId
 		where a.InstanceId=@InstanceId
 	end
 	else
@@ -231,7 +260,8 @@ begin
 			a.InstanceId			
 			,a.InstanceCode	
 			,a.PortfolioId	
-			,a.MonitorUnitId		
+			,a.MonitorUnitId
+			,a.TemplateId		
 			,a.StockDirection		
 			,a.FuturesContract	
 			,a.FuturesDirection	
@@ -242,6 +272,7 @@ begin
 			,a.Owner				
 			,a.CreatedDate		
 			,a.ModifiedDate	
+			,a.Notes
 			,b.PortfolioCode
 			,b.PortfolioName
 			,b.AccountCode
@@ -249,15 +280,14 @@ begin
 			,b.AssetNo
 			,b.AssetName
 			,c.MonitorUnitName	
-			,d.TemplateId
 			,d.TemplateName
 		from tradeinstance a
 		inner join ufxportfolio b
 		on a.PortfolioId=b.PortfolioId
 		inner join monitorunit c
 		on a.MonitorUnitId = c.MonitorUnitId
-		inner join stocktemplate d
-		on c.StockTemplateId = d.TemplateId
+		left join stocktemplate d
+		on a.TemplateId = d.TemplateId
 	end
 end
 
@@ -275,7 +305,8 @@ begin
 		a.InstanceId			
 		,a.InstanceCode	
 		,a.PortfolioId	
-		,a.MonitorUnitId		
+		,a.MonitorUnitId	
+		,a.TemplateId	
 		,a.StockDirection		
 		,a.FuturesContract	
 		,a.FuturesDirection	
@@ -286,6 +317,7 @@ begin
 		,a.Owner				
 		,a.CreatedDate		
 		,a.ModifiedDate	
+		,a.Notes
 		,b.PortfolioCode
 		,b.PortfolioName
 		,b.AccountCode
@@ -293,14 +325,13 @@ begin
 		,b.AssetNo
 		,b.AssetName
 		,c.MonitorUnitName	
-		,d.TemplateId
 		,d.TemplateName
 	from tradeinstance a
 	inner join ufxportfolio b
 	on a.PortfolioId=b.PortfolioId
 	inner join monitorunit c
 	on a.MonitorUnitId = c.MonitorUnitId
-	inner join stocktemplate d
-	on c.StockTemplateId = d.TemplateId
+	left join stocktemplate d
+	on a.TemplateId = d.TemplateId
 	where a.InstanceCode=@InstanceCode
 end

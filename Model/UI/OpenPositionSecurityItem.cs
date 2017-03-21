@@ -55,8 +55,8 @@ namespace Model.UI
         [BindingAttribute("sellamount")]
         public long SellAmount { get; set; }
 
-        [BindingAttribute("suspensionflag")]
-        public string SuspensionFlag
+        [BindingAttribute("suspendflag")]
+        public string SuspendFlag
         {
             get { return EnumQuoteHelper.GetSuspendFlag(ESuspendFlag); }
         }

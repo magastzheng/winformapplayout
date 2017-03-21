@@ -50,6 +50,7 @@ namespace DBAccess.TradeInstance
                 _dbHelper.AddInParameter(dbCommand, "@InstanceCode", System.Data.DbType.String, tradeInstance.InstanceCode);
                 _dbHelper.AddInParameter(dbCommand, "@PortfolioId", System.Data.DbType.String, tradeInstance.PortfolioId);
                 _dbHelper.AddInParameter(dbCommand, "@MonitorUnitId", System.Data.DbType.Int32, tradeInstance.MonitorUnitId);
+                _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, tradeInstance.TemplateId);
                 _dbHelper.AddInParameter(dbCommand, "@StockDirection", System.Data.DbType.Int32, (int)tradeInstance.StockDirection);
                 _dbHelper.AddInParameter(dbCommand, "@FuturesContract", System.Data.DbType.String, tradeInstance.FuturesContract);
                 _dbHelper.AddInParameter(dbCommand, "@FuturesDirection", System.Data.DbType.Int32, (int)tradeInstance.FuturesDirection);
@@ -59,6 +60,9 @@ namespace DBAccess.TradeInstance
                 _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)TradeInstanceStatus.Active);
                 _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.Int32, (int)tradeInstance.Owner);
                 _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, DateTime.Now);
+
+                string notes = tradeInstance.Notes ?? string.Empty;
+                _dbHelper.AddInParameter(dbCommand, "@Notes", System.Data.DbType.String, notes);
 
                 _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
 
@@ -131,6 +135,7 @@ namespace DBAccess.TradeInstance
                 _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.String, tradeInstance.InstanceId);
                 _dbHelper.AddInParameter(dbCommand, "@InstanceCode", System.Data.DbType.String, tradeInstance.InstanceCode);
                 _dbHelper.AddInParameter(dbCommand, "@MonitorUnitId", System.Data.DbType.Int32, tradeInstance.MonitorUnitId);
+                _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, tradeInstance.TemplateId);
                 _dbHelper.AddInParameter(dbCommand, "@StockDirection", System.Data.DbType.Int32, (int)tradeInstance.StockDirection);
                 _dbHelper.AddInParameter(dbCommand, "@FuturesContract", System.Data.DbType.String, tradeInstance.FuturesContract);
                 _dbHelper.AddInParameter(dbCommand, "@FuturesDirection", System.Data.DbType.Int32, (int)tradeInstance.FuturesDirection);
@@ -140,6 +145,9 @@ namespace DBAccess.TradeInstance
                 _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)TradeInstanceStatus.Active);
                 _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.Int32, tradeInstance.Owner);
                 _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+                
+                string notes = tradeInstance.Notes ?? string.Empty;
+                _dbHelper.AddInParameter(dbCommand, "@Notes", System.Data.DbType.String, notes);
 
                 ret = dbCommand.ExecuteNonQuery();
                 if (ret > 0)
@@ -213,6 +221,7 @@ namespace DBAccess.TradeInstance
                 _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.String, tradeInstance.InstanceId);
                 _dbHelper.AddInParameter(dbCommand, "@InstanceCode", System.Data.DbType.String, tradeInstance.InstanceCode);
                 _dbHelper.AddInParameter(dbCommand, "@MonitorUnitId", System.Data.DbType.Int32, tradeInstance.MonitorUnitId);
+                _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, tradeInstance.TemplateId);
                 _dbHelper.AddInParameter(dbCommand, "@StockDirection", System.Data.DbType.Int32, (int)tradeInstance.StockDirection);
                 _dbHelper.AddInParameter(dbCommand, "@FuturesContract", System.Data.DbType.String, tradeInstance.FuturesContract);
                 _dbHelper.AddInParameter(dbCommand, "@FuturesDirection", System.Data.DbType.Int32, (int)tradeInstance.FuturesDirection);
@@ -222,6 +231,9 @@ namespace DBAccess.TradeInstance
                 _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)TradeInstanceStatus.Active);
                 _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.Int32, tradeInstance.Owner);
                 _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+
+                string notes = tradeInstance.Notes ?? string.Empty;
+                _dbHelper.AddInParameter(dbCommand, "@Notes", System.Data.DbType.String, notes);
 
                 ret = dbCommand.ExecuteNonQuery();
                 if (ret > 0)

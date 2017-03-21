@@ -68,6 +68,7 @@ namespace BLL.TradeCommand
                     InstanceCode = instanceCode,
                     PortfolioId = openItem.PortfolioId,
                     MonitorUnitId = openItem.MonitorId,
+                    TemplateId = openItem.TemplateId,
                     StockDirection = EntrustDirection.BuySpot,
                     FuturesContract = openItem.FuturesContract,
                     FuturesDirection = EntrustDirection.SellOpen,

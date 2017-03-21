@@ -197,7 +197,7 @@ namespace Controls.GridView
                         e.CellStyle.BackColor = ControlConstVariable.LimitDownColor;
                     }
                 }
-                else if (dgv.Columns["suspensionflag"] != null && columnIndex == dgv.Columns["suspensionflag"].Index)
+                else if (dgv.Columns["suspendflag"] != null && columnIndex == dgv.Columns["suspendflag"].Index)
                 { 
                     var row = dgv.Rows[rowIndex];
                     var cell = row.Cells[columnIndex];

@@ -5,6 +5,9 @@ using Controls.GridView;
 using Model.Binding.BindingUtil;
 using Model.UI;
 using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+using TradingSystem.Dialog;
 
 namespace TradingSystem.View
 {
@@ -31,7 +34,9 @@ namespace TradingSystem.View
             this.LoadControl += new FormLoadHandler(Form_LoadControl);
             this.LoadData += new FormLoadHandler(Form_LoadData);
 
+            this.tsbModify.Click += new System.EventHandler(ToolStripButton_Modify_Click);
             this.tsbRefresh.Click += new System.EventHandler(ToolStripButton_Refresh_Click);
+            this.tsbArchive.Click += new System.EventHandler(ToolStripButton_Archive_Click);
         }
 
         #region load control
@@ -74,9 +79,42 @@ namespace TradingSystem.View
 
         #region tool strip button click event
 
+        private void ToolStripButton_Modify_Click(object sender, System.EventArgs e)
+        {
+            int currentRowIndex = this.gridView.GetCurrentRowIndex();
+            if (currentRowIndex < 0 || currentRowIndex > _dataSource.Count - 1)
+            {
+                return;
+            }
+
+            var tradeInstance = _dataSource[currentRowIndex];
+            TradeInstanceModifyDialog dialog = new TradeInstanceModifyDialog();
+            dialog.Owner = this;
+            dialog.StartPosition = FormStartPosition.CenterParent;
+            //dialog.OnLoadFormActived(json);
+            //dialog.Visible = true;
+            dialog.OnLoadControl(dialog, null);
+            dialog.OnLoadData(dialog, tradeInstance);
+            dialog.ShowDialog();
+            if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+                var newTradeInstance = (TradeInstance)dialog.GetData();
+                dialog.Dispose();
+            }
+            else
+            {
+                dialog.Dispose();
+            }
+        }
+
         private void ToolStripButton_Refresh_Click(object sender, System.EventArgs e)
         {
             InternalLoadData();
+        }
+
+        private void ToolStripButton_Archive_Click(object sender, System.EventArgs e)
+        {
+
         }
 
         #endregion

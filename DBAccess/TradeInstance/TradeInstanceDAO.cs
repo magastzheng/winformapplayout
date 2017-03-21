@@ -33,6 +33,7 @@ namespace DBAccess.TradeInstance
             _dbHelper.AddInParameter(dbCommand, "@InstanceCode", System.Data.DbType.String, securityItem.InstanceCode);
             _dbHelper.AddInParameter(dbCommand, "@PortfolioId", System.Data.DbType.Int32, securityItem.PortfolioId);
             _dbHelper.AddInParameter(dbCommand, "@MonitorUnitId", System.Data.DbType.Int32, securityItem.MonitorUnitId);
+            _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, securityItem.TemplateId);
             _dbHelper.AddInParameter(dbCommand, "@StockDirection", System.Data.DbType.Int32, (int)securityItem.StockDirection);
             _dbHelper.AddInParameter(dbCommand, "@FuturesContract", System.Data.DbType.String, securityItem.FuturesContract);
             _dbHelper.AddInParameter(dbCommand, "@FuturesDirection", System.Data.DbType.Int32, (int)securityItem.FuturesDirection);
@@ -42,6 +43,9 @@ namespace DBAccess.TradeInstance
             _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)TradeInstanceStatus.Active);
             _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.Int32, (int)securityItem.Owner);
             _dbHelper.AddInParameter(dbCommand, "@CreatedDate", System.Data.DbType.DateTime, DateTime.Now);
+
+            string notes = securityItem.Notes ?? string.Empty;
+            _dbHelper.AddInParameter(dbCommand, "@Notes", System.Data.DbType.String, notes);
 
             _dbHelper.AddReturnParameter(dbCommand, "@return", System.Data.DbType.Int32);
 
@@ -62,6 +66,7 @@ namespace DBAccess.TradeInstance
             _dbHelper.AddInParameter(dbCommand, "@InstanceId", System.Data.DbType.Int32, securityItem.InstanceId);
             _dbHelper.AddInParameter(dbCommand, "@InstanceCode", System.Data.DbType.String, securityItem.InstanceCode);
             _dbHelper.AddInParameter(dbCommand, "@MonitorUnitId", System.Data.DbType.Int32, securityItem.MonitorUnitId);
+            _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, securityItem.TemplateId);
             _dbHelper.AddInParameter(dbCommand, "@StockDirection", System.Data.DbType.Int32, (int)securityItem.StockDirection);
             _dbHelper.AddInParameter(dbCommand, "@FuturesContract", System.Data.DbType.String, securityItem.FuturesContract);
             _dbHelper.AddInParameter(dbCommand, "@FuturesDirection", System.Data.DbType.Int32, (int)securityItem.FuturesDirection);
@@ -71,6 +76,9 @@ namespace DBAccess.TradeInstance
             _dbHelper.AddInParameter(dbCommand, "@Status", System.Data.DbType.Int32, (int)securityItem.Status);
             _dbHelper.AddInParameter(dbCommand, "@Owner", System.Data.DbType.Int32, (int)securityItem.Owner);
             _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+            
+            string notes = securityItem.Notes ?? string.Empty;
+            _dbHelper.AddInParameter(dbCommand, "@Notes", System.Data.DbType.String, notes);
 
             int ret = _dbHelper.ExecuteNonQuery(dbCommand);
             return ret;
@@ -199,6 +207,11 @@ namespace DBAccess.TradeInstance
             if (reader["ModifiedDate"] != null && reader["ModifiedDate"] != DBNull.Value)
             {
                 item.ModifiedDate = (DateTime)reader["ModifiedDate"];
+            }
+
+            if (reader["Notes"] != null && reader["Notes"] != DBNull.Value)
+            {
+                item.Notes = (string)reader["Notes"];
             }
 
             return item;

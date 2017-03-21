@@ -136,22 +136,24 @@ namespace Util
                 {
                     DataValue dataValue = dataRow.Columns[colIndex];
                     ICell cell = row.CreateCell(colIndex);
-                    switch (dataValue.Type)
+                    if (dataValue != null)
                     {
-                        case DataValueType.Int:
-                            cell.SetCellValue(dataValue.GetInt());
-                            break;
-                        case DataValueType.Float:
-                            cell.SetCellValue(dataValue.GetDouble());
-                            break;
-                        case DataValueType.String:
-                            cell.SetCellValue(dataValue.GetStr());
-                            break;
-                        default:
-                            cell.SetCellValue(dataValue.GetStr());
-                            break;
+                        switch (dataValue.Type)
+                        {
+                            case DataValueType.Int:
+                                cell.SetCellValue(dataValue.GetInt());
+                                break;
+                            case DataValueType.Float:
+                                cell.SetCellValue(dataValue.GetDouble());
+                                break;
+                            case DataValueType.String:
+                                cell.SetCellValue(dataValue.GetStr());
+                                break;
+                            default:
+                                cell.SetCellValue(dataValue.GetStr());
+                                break;
+                        }
                     }
-
                 }
             }
 

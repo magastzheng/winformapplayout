@@ -57,7 +57,7 @@ namespace TradingSystem.View
         private const string GridBuySellId = "buysell";
         private const string EntrustPrice = "entrustprice";
         private const string ThisEntrustAmount = "thisentrustamount";
-        private const string SuspensionFlag = "suspensionflag";
+        private const string SuspendFlag = "suspendflag";
 
         private EntrustBLL _entrustBLL = new EntrustBLL();
         private WithdrawBLL _withdrawBLL = new WithdrawBLL();
@@ -1719,7 +1719,7 @@ namespace TradingSystem.View
                         && p.CommandId == entrustSecuItem.CommandId);
                     if (findIndex >= 0)
                     {
-                        securityGridView.SetFocus(findIndex, SuspensionFlag);
+                        securityGridView.SetFocus(findIndex, SuspendFlag);
                     }
 
                     return false;

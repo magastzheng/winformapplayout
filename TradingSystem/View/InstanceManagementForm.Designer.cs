@@ -23,6 +23,7 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tsbRefresh = new System.Windows.Forms.ToolStripButton();
             this.tsbArchive = new System.Windows.Forms.ToolStripButton();
+            this.tsbModify = new System.Windows.Forms.ToolStripButton();
             this.panelTop.SuspendLayout();
             this.panelMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridView)).BeginInit();
@@ -53,6 +54,7 @@
             // 
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsbModify,
             this.tsbRefresh,
             this.tsbArchive});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -77,6 +79,14 @@
             this.tsbArchive.Size = new System.Drawing.Size(52, 29);
             this.tsbArchive.Text = "归档";
             // 
+            // tsbModify
+            // 
+            this.tsbModify.Image = global::TradingSystem.Properties.Resources.edit;
+            this.tsbModify.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbModify.Name = "tsbModify";
+            this.tsbModify.Size = new System.Drawing.Size(52, 29);
+            this.tsbModify.Text = "修改";
+            // 
             // InstanceManagementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -98,5 +108,6 @@
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton tsbRefresh;
         private System.Windows.Forms.ToolStripButton tsbArchive;
+        private System.Windows.Forms.ToolStripButton tsbModify;
     }
 }

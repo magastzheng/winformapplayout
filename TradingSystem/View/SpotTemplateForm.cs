@@ -835,6 +835,8 @@ namespace TradingSystem.View
                 if (secuItem != null)
                 {
                     var secuData = QuoteCenter.Instance.GetMarketData(secuItem);
+                    stock.ELimitUpDownFlag = secuData.LimitUpDownFlag;
+                    stock.ESuspendFlag = secuData.SuspendFlag;
 
                     if (!FloatUtil.IsZero(secuData.CurrentPrice))
                     {
@@ -1002,7 +1004,7 @@ namespace TradingSystem.View
                     int valIndex = fieldNameColumnIndexMap[kv.Key];
 
                     var field = stock.GetType().GetProperty(fieldName);
-                    if (field == null)
+                    if (field == null || !field.CanWrite)
                         continue;
 
                     DataValueType valType = DataValueType.String;
@@ -1146,7 +1148,7 @@ namespace TradingSystem.View
             {
                 Model.Data.DataRow dataRow = new Model.Data.DataRow 
                 {
-                    Columns = new List<DataValue>(table.ColumnIndex.Count)
+                    Columns = new List<DataValue>(new DataValue[table.ColumnIndex.Count])
                 };
 
                 foreach (var kv in attFieldMap)
@@ -1169,8 +1171,11 @@ namespace TradingSystem.View
 
                     dataValue.Value = field.GetValue(tempStock, null);
 
-                    //dataRow.Columns[valIndex] = dataValue;
-                    dataRow.Columns.Insert(valIndex, dataValue);
+                    dataRow.Columns[valIndex] = dataValue;
+                    if (valIndex >= 0 && valIndex < dataRow.Columns.Count)
+                    {
+                        dataRow.Columns[valIndex] = dataValue;
+                    }
                 }
 
                 table.Rows.Add(dataRow);

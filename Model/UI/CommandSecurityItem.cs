@@ -80,8 +80,8 @@ namespace Model.UI
         public int WaitAmount { get; set; }
 
         //停牌标志
-        [BindingAttribute("suspensionflag")]
-        public string SuspensionFlag
+        [BindingAttribute("suspendflag")]
+        public string SuspendFlag
         {
             get { return EnumQuoteHelper.GetSuspendFlag(ESuspendFlag); }
         }

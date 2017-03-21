@@ -14,6 +14,7 @@ namespace Model.UI
             InstanceId = instance.InstanceId;
             InstanceCode = instance.InstanceCode;
             MonitorUnitId = instance.MonitorUnitId;
+            TemplateId = instance.TemplateId;
             StockDirection = instance.StockDirection;
             FuturesContract = instance.FuturesContract;
             FuturesDirection = instance.FuturesDirection;
@@ -24,8 +25,8 @@ namespace Model.UI
             Owner = instance.Owner;
             CreatedDate = instance.CreatedDate;
             ModifiedDate = instance.ModifiedDate;
+            Notes = instance.Notes;
             MonitorUnitName = instance.MonitorUnitName;
-            TemplateId = instance.TemplateId;
             TemplateName = instance.TemplateName;
             PortfolioId = instance.PortfolioId;
             PortfolioCode = instance.PortfolioCode;
@@ -61,6 +62,8 @@ namespace Model.UI
         public DateTime CreatedDate { get; set; }
 
         public DateTime ModifiedDate { get; set; }
+
+        public string Notes { get; set; }
 
         public string MonitorUnitName { get; set; }
 

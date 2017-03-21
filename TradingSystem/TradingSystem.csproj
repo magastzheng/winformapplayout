@@ -124,6 +124,12 @@
     <Compile Include="Dialog\SubmitSecurityDialog.Designer.cs">
       <DependentUpon>SubmitSecurityDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialog\TradeInstanceModifyDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\TradeInstanceModifyDialog.Designer.cs">
+      <DependentUpon>TradeInstanceModifyDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="TradeUtil\EntrustPriceTypeHelper.cs" />
     <Compile Include="TradeUtil\ComboBoxHelper.cs" />
     <Compile Include="TradeUtil\PriceTypeHelper.cs" />
@@ -282,6 +288,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialog\SubmitSecurityDialog.resx">
       <DependentUpon>SubmitSecurityDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialog\TradeInstanceModifyDialog.resx">
+      <DependentUpon>TradeInstanceModifyDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\AssetUnitForm.resx">
       <DependentUpon>AssetUnitForm.cs</DependentUpon>

@@ -1,4 +1,5 @@
 ﻿using Model.Binding;
+using Model.Quote;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,5 +32,21 @@ namespace Model.UI
 
         [BindingAttribute("setweight")]
         public double SettingWeight { get; set; }
+
+        [BindingAttribute("suspendflag")]
+        public string SuspendFlag
+        {
+            get { return EnumQuoteHelper.GetSuspendFlag(ESuspendFlag); }
+        }
+
+        [BindingAttribute("limitupdown")]
+        public string LimitUpOrDown
+        {
+            get { return EnumQuoteHelper.GetLimitUpDownFlag(ELimitUpDownFlag); }
+        }
+
+        public SuspendFlag ESuspendFlag { get; set; }
+
+        public LimitUpDownFlag ELimitUpDownFlag { get; set; }
     }
 }
