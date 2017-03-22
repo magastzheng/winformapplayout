@@ -805,9 +805,10 @@ namespace TradingSystem.View
                 return;
             }
 
+            string notes = this.rtbNotes.Text;
             if (srcTradingInstance != null && destTradingInstance != null)
             {
-                int ret = _tradeInstanceSecuBLL.Transfer(destTradingInstance, srcTradingInstance, selectedItems);
+                int ret = _tradeInstanceSecuBLL.Transfer(destTradingInstance, srcTradingInstance, selectedItems, notes);
                 if (ret > 0)
                 {
                     MessageDialog.Info(this, msgSuccess);

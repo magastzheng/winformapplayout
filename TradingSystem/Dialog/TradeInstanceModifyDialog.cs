@@ -1,5 +1,6 @@
 ﻿using BLL.Product;
 using BLL.Template;
+using Config;
 using Forms;
 using Model.config;
 using Model.UI;
@@ -25,6 +26,9 @@ namespace TradingSystem.Dialog
 
             LoadControl += new FormLoadHandler(Form_LoadControl);
             LoadData += new FormLoadHandler(Form_LoadData);
+
+            this.btnConfirm.Click += new EventHandler(Button_Confirm_Click);
+            this.btnCancel.Click += new EventHandler(Button_Cancel_Click);
         }
 
         private bool Form_LoadControl(object sender, object data)
@@ -113,18 +117,95 @@ namespace TradingSystem.Dialog
         }
 
         private void LoadFund(string fundCode)
-        { 
-            
+        {
+            var accounts = LoginManager.Instance.Accounts;
+            ComboOption comboOption = new ComboOption
+            {
+                Items = new List<ComboOptionItem>()
+            };
+
+            if (accounts != null && accounts.Count > 0)
+            {
+                foreach (var account in accounts)
+                {
+                    ComboOptionItem item = new ComboOptionItem
+                    {
+                        Id = string.Format("{0}", account.AccountCode),
+                        Name = account.AccountName
+                    };
+
+                    comboOption.Items.Add(item);
+                }
+            }
+
+            ComboBoxUtil.SetComboBox(this.cbFundCode, comboOption);
+            ComboBoxUtil.SetComboBoxSelect(this.cbFundCode, fundCode);
         }
 
         private void LoadAssetUnit(string assetCode)
-        { 
-        
+        {
+            var assetUnits = LoginManager.Instance.Assets;
+            ComboOption comboOption = new ComboOption
+            {
+                Items = new List<ComboOptionItem>()
+            };
+
+            if (assetUnits != null && assetUnits.Count > 0)
+            {
+                foreach (var assetUnit in assetUnits)
+                {
+                    ComboOptionItem item = new ComboOptionItem
+                    {
+                        Id = string.Format("{0}", assetUnit.AssetNo),
+                        Name = assetUnit.AssetName
+                    };
+
+                    comboOption.Items.Add(item);
+                }
+            }
+
+            ComboBoxUtil.SetComboBox(this.cbAssetUnit, comboOption);
+            ComboBoxUtil.SetComboBoxSelect(this.cbAssetUnit, assetCode);
         }
 
         private void LoadPortfolio(string portfolioCode)
-        { 
-            
+        {
+            var portfolios = LoginManager.Instance.Portfolios;
+            ComboOption comboOption = new ComboOption
+            {
+                Items = new List<ComboOptionItem>()
+            };
+
+            if (portfolios != null && portfolios.Count > 0)
+            {
+                foreach (var portfolio in portfolios)
+                {
+                    ComboOptionItem item = new ComboOptionItem
+                    {
+                        Id = string.Format("{0}", portfolio.CombiNo),
+                        Name = portfolio.CombiName
+                    };
+
+                    comboOption.Items.Add(item);
+                }
+            }
+
+            ComboBoxUtil.SetComboBox(this.cbPortfolio, comboOption);
+            ComboBoxUtil.SetComboBoxSelect(this.cbPortfolio, portfolioCode);
         }
+
+        #region button click event handler
+
+        private void Button_Confirm_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Button_Cancel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        #endregion 
     }
 }

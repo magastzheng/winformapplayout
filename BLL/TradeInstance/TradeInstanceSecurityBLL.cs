@@ -1,4 +1,5 @@
 ﻿using BLL.TradeCommand;
+using Config;
 using DBAccess.TradeCommand;
 using DBAccess.TradeInstance;
 using log4net;
@@ -105,7 +106,7 @@ namespace BLL.TradeInstance
 
         #region transfer
 
-        public int Transfer(Model.UI.TradeInstance dest, Model.UI.TradeInstance src, List<SourceHoldingItem> transferItems)
+        public int Transfer(Model.UI.TradeInstance dest, Model.UI.TradeInstance src, List<SourceHoldingItem> transferItems, string notes)
         {
             List<TradeInstanceSecurity> srcNewItems = new List<TradeInstanceSecurity>();
             List<TradeInstanceSecurity> destNewItems = new List<TradeInstanceSecurity>();
@@ -129,6 +130,7 @@ namespace BLL.TradeInstance
                     InstanceId = src.InstanceId,
                 };
 
+                //TODO: Fix the BuyToday and SellToday
                 var srcOldItem = srcItems.Find(p => p.SecuCode.Equals(transferItem.SecuCode) && p.SecuType == transferItem.SecuType);
                 if (srcOldItem != null)
                 {
@@ -136,6 +138,8 @@ namespace BLL.TradeInstance
                     srcOutItem.PositionType = srcOldItem.PositionType;
                     srcOutItem.SellToday = srcOldItem.SellToday;
                     srcOutItem.SellBalance = srcOldItem.SellBalance;
+                    srcOutItem.BuyToday = srcOldItem.BuyToday;
+                    srcOutItem.BuyBalance = srcOldItem.BuyBalance;
                     srcOutItem.DealFee = srcOldItem.DealFee;
                 }
                 else
@@ -183,8 +187,10 @@ namespace BLL.TradeInstance
                 TradeInstanceAdjustmentItem adjustItem = new TradeInstanceAdjustmentItem 
                 {
                     SourceInstanceId = src.InstanceId,
+                    SourceFundCode = src.AccountCode,
                     SourcePortfolioCode = src.PortfolioCode,
                     DestinationInstanceId = dest.InstanceId,
+                    DestinationFundCode = dest.AccountCode,
                     DestinationPortfolioCode = dest.PortfolioCode,
                     SecuCode = transferItem.SecuCode,
                     SecuType = transferItem.SecuType,
@@ -192,6 +198,10 @@ namespace BLL.TradeInstance
                     Price = transferItem.TransferedPrice,
                     Amount = transferItem.TransferedAmount,
                     AdjustType = AdjustmentType.Transfer,
+                    Operator = LoginManager.Instance.LoginUser.Operator,
+                    StockHolderId = string.Empty,
+                    SeatNo = string.Empty,
+                    Notes = notes,
                 };
 
                 adjustItems.Add(adjustItem);
