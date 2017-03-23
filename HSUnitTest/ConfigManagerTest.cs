@@ -11,7 +11,7 @@ namespace HSUnitTest
         [TestMethod]
         public void TestConfigManager()
         {
-            var functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(UFXFunctionCode.QueryDealInstance);
+            var functionItem = ConfigManager.Instance.GetFunctionConfig().GetFunctionItem(UFXFunctionCode.HeartBeat);
             Console.WriteLine(functionItem.Code);
         }
     }
