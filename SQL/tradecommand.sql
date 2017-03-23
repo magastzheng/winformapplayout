@@ -240,7 +240,7 @@ begin
 		inner join ufxportfolio d
 		on c.PortfolioId=d.PortfolioId
 		inner join stocktemplate e
-		on c.StockTemplateId = e.TemplateId
+		on b.TemplateId = e.TemplateId
 		where CommandId=@CommandId
 	end
 	else
@@ -285,6 +285,6 @@ begin
 		inner join ufxportfolio d
 		on c.PortfolioId=d.PortfolioId
 		inner join stocktemplate e
-		on c.StockTemplateId = e.TemplateId
+		on b.TemplateId = e.TemplateId
 	end
 end
