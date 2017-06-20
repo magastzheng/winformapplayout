@@ -57,6 +57,8 @@ namespace Model.UI
 
         public int Owner { get; set; }
 
+        public int MonitorUnitId { get; set; }
+
         public int TemplateId { get; set; }
 
         public int PortfolioId { get; set; }

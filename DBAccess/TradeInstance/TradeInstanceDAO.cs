@@ -179,7 +179,6 @@ namespace DBAccess.TradeInstance
 
             item.InstanceId = (int)reader["InstanceId"];
             item.InstanceCode = (string)reader["InstanceCode"];
-            item.MonitorUnitId = (int)reader["MonitorUnitId"];
             item.StockDirection = (EntrustDirection)(int)reader["StockDirection"];
             item.FuturesContract = (string)reader["FuturesContract"];
             item.FuturesDirection = (EntrustDirection)(int)reader["FuturesDirection"];
@@ -188,6 +187,7 @@ namespace DBAccess.TradeInstance
             item.FuturesPriceType = (FuturesPriceType)reader["FuturesPriceType"];
             item.Status = (TradeInstanceStatus)reader["Status"];
             item.Owner = (int)reader["Owner"];
+            item.MonitorUnitId = (int)reader["MonitorUnitId"];
             item.MonitorUnitName = (string)reader["MonitorUnitName"];
             item.TemplateId = (int)reader["TemplateId"];
             item.TemplateName = (string)reader["TemplateName"];

@@ -84,6 +84,19 @@ namespace BLL.TradeInstance
             }
         }
 
+        public int UpdateTradeInstance(Model.UI.TradeInstance tradeInstance)
+        {
+            int userId = LoginManager.Instance.GetUserId();
+            if (_permissionManager.HasPermission(userId, tradeInstance.InstanceId, ResourceType.TradeInstance, PermissionMask.Edit))
+            {
+                return _tradeinstancedao.Update(tradeInstance);
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
         public Model.UI.TradeInstance GetInstance(int instanceId)
         {
             int userId = LoginManager.Instance.GetUserId();
@@ -153,6 +166,7 @@ namespace BLL.TradeInstance
                     PortfolioName = instance.PortfolioName,
                     TemplateId = instance.TemplateId,
                     TemplateName = instance.TemplateName,
+                    MonitorUnitId = instance.MonitorUnitId,
                     MonitorUnitName = instance.MonitorUnitName,
                     DCreatedDate = instance.CreatedDate,
                     Owner = instance.Owner

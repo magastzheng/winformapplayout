@@ -99,6 +99,23 @@ namespace TradingSystem.View
             if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
             {
                 var newTradeInstance = (TradeInstance)dialog.GetData();
+                if (newTradeInstance != null)
+                {
+                    int result = _tradeInstanceBLL.UpdateTradeInstance(newTradeInstance);
+                    if (result > 0)
+                    {
+                        //Success
+                        tradeInstance.InstanceCode = newTradeInstance.InstanceCode;
+                        tradeInstance.MonitorUnitId = newTradeInstance.MonitorUnitId;
+                        tradeInstance.MonitorUnitName = newTradeInstance.MonitorUnitName;
+                        tradeInstance.TemplateId = newTradeInstance.TemplateId;
+                        tradeInstance.TemplateName = newTradeInstance.TemplateName;
+                    }
+                    else
+                    { 
+                        //Failure
+                    }
+                }
                 dialog.Dispose();
             }
             else

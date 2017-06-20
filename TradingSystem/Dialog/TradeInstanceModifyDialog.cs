@@ -16,9 +16,13 @@ namespace TradingSystem.Dialog
 {
     public partial class TradeInstanceModifyDialog : Forms.BaseDialog
     {
+        private const string msgInvalidSetting = "invalidsetting";
+
         private MonitorUnitBLL _monitorUnitBLL = new MonitorUnitBLL();
         private TemplateBLL _templateBLL = new TemplateBLL();
         private ProductBLL _productBLL = new ProductBLL();
+
+        private TradeInstance _originTradeInstance = null;
 
         public TradeInstanceModifyDialog()
         {
@@ -29,7 +33,11 @@ namespace TradingSystem.Dialog
 
             this.btnConfirm.Click += new EventHandler(Button_Confirm_Click);
             this.btnCancel.Click += new EventHandler(Button_Cancel_Click);
+
+            //this.cbMonitorUnit.SelectedIndexChanged
         }
+
+        #region LoadControl
 
         private bool Form_LoadControl(object sender, object data)
         {
@@ -41,22 +49,39 @@ namespace TradingSystem.Dialog
             return true;
         }
 
+        #endregion
+
+        #region LoadData
+
         private bool Form_LoadData(object sender, object data)
         {
             if (data == null || !(data is TradeInstance))
                 return false;
 
-            TradeInstance tradeInstance = (TradeInstance)data;
+            _originTradeInstance = (TradeInstance)data;
 
-            LoadTextBox(tradeInstance);
-            LoadMonitorUnits(tradeInstance.MonitorUnitId);
-            LoadTemplates(tradeInstance.TemplateId);
-            LoadFund(tradeInstance.AccountCode);
-            LoadAssetUnit(tradeInstance.AssetNo);
-            LoadPortfolio(tradeInstance.PortfolioCode);
+            LoadTextBox(_originTradeInstance);
+            LoadMonitorUnits(_originTradeInstance.MonitorUnitId);
+            LoadTemplates(_originTradeInstance.TemplateId);
+            LoadFund(_originTradeInstance.AccountCode);
+            LoadAssetUnit(_originTradeInstance.AssetNo);
+            LoadPortfolio(_originTradeInstance.PortfolioCode);
 
             return true;
         }
+
+        #endregion
+
+        #region GetData
+
+        public override object GetData()
+        {
+            var newItem = GetItem();
+
+            return newItem;
+        }
+
+        #endregion
 
         private void LoadTextBox(TradeInstance tradeInstance)
         {
@@ -198,14 +223,97 @@ namespace TradingSystem.Dialog
 
         private void Button_Confirm_Click(object sender, EventArgs e)
         {
+            if (!Validate())
+            {
+                MessageDialog.Error(this, msgInvalidSetting);
+                return;
+            }
 
+            DialogResult = System.Windows.Forms.DialogResult.OK;
         }
 
         private void Button_Cancel_Click(object sender, EventArgs e)
         {
-
+            DialogResult = System.Windows.Forms.DialogResult.Cancel;
         }
 
         #endregion 
+
+        private bool Validate()
+        {
+            if (string.IsNullOrEmpty(this.tbInstanceCode.Text))
+            {
+                return false;
+            }
+
+            var newItem = GetItem();
+            if (newItem.MonitorUnitId <= 0)
+            {
+                return false;
+            }
+
+            if (newItem.TemplateId <= 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private TradeInstance GetItem()
+        {
+            TradeInstance tradeInstance = new TradeInstance
+            {
+                InstanceId = _originTradeInstance.InstanceId,
+                AccountCode = _originTradeInstance.AccountCode,
+                AccountName = _originTradeInstance.AccountName,
+                AssetNo = _originTradeInstance.AssetNo,
+                AssetName = _originTradeInstance.AssetName,
+                PortfolioId = _originTradeInstance.PortfolioId,
+                PortfolioCode = _originTradeInstance.PortfolioCode,
+                PortfolioName = _originTradeInstance.PortfolioName,
+                Status = _originTradeInstance.Status,
+            };
+
+            //var selectItem = (ComboOptionItem)this.cbFundCode.SelectedItem;
+            //if (selectItem != null)
+            //{ 
+            //    tradeInstance.AccountCode = selectItem.Id;
+            //    tradeInstance.AccountName = selectItem.Name;
+            //}
+
+            //selectItem = (ComboOptionItem)this.cbAssetUnit.SelectedItem;
+            //if (selectItem != null)
+            //{
+            //    tradeInstance.AssetNo = selectItem.Id;
+            //    tradeInstance.AssetName = selectItem.Name;
+            //}
+
+            //selectItem = (ComboOptionItem)this.cbPortfolio.SelectedItem;
+            //if (selectItem != null)
+            //{
+            //    tradeInstance.PortfolioCode = selectItem.Id;
+            //    tradeInstance.PortfolioName = selectItem.Name;
+            //}
+
+            tradeInstance.InstanceCode = this.tbInstanceCode.Text.Trim();
+
+            int temp = -1;
+            var selectItem = (ComboOptionItem)this.cbTemplate.SelectedItem;
+            if (selectItem != null)
+            {
+                tradeInstance.TemplateId = int.TryParse(selectItem.Id, out temp) ? temp : temp;
+                tradeInstance.TemplateName = selectItem.Name;
+            }
+
+            selectItem = (ComboOptionItem)this.cbMonitorUnit.SelectedItem;
+            if (selectItem != null)
+            {
+                tradeInstance.MonitorUnitId = int.TryParse(selectItem.Id, out temp) ? temp : temp;
+                tradeInstance.MonitorUnitName = selectItem.Name;
+            }
+
+            return tradeInstance;
+        }
     }
 }

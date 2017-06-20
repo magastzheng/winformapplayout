@@ -269,6 +269,9 @@
 		},{
 			"id": "tradecommandmodifyfailure",
 			"text": "指令修改失败！"
+		},{
+			"id": "invalidsetting",
+			"text": "设置无效参数！"
 		}
 	]
 }
