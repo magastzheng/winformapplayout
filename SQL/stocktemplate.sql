@@ -1,22 +1,5 @@
 use tradingsystem
 
-if object_id('stocktemplate') is not null
-drop table stocktemplate
-
-create table stocktemplate(
-	TemplateId int identity(1, 1) primary key,		--模板ID
-	TemplateName varchar(50),						--模板名称
-	Status int,										-- 1 - normal, 2 - inactive
-	WeightType int,									-- 1 - 数量权重，2 - 比例权重
-	ReplaceType int,								-- 0 - 个股替代，1 - 模板替代
-	FuturesCopies int,								-- 期货份数
-	MarketCapOpt numeric(5, 2),						-- 市值比例(%)
-	BenchmarkId varchar(10),						-- 标的指数
-	CreatedDate datetime,						
-	ModifiedDate datetime,
-	CreatedUserId int
-)
-
 ---=========================stocktemplate begin======================
 go
 if exists (select name from sysobjects where name='procTemplateInsert')

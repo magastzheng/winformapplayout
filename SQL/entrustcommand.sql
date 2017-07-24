@@ -1,23 +1,5 @@
 use tradingsystem
 
---==通过交易系统委托之后，将委托指令添加到本表，由于可以分多次进行委托
-if object_id('entrustcommand') is not null
-drop table entrustcommand
-
-create table entrustcommand(
-	SubmitId		int identity(1, 1) primary key	-- 指令提交ID,每次通过界面委托都会产生唯一的一个ID
-	,CommandId		int not null					-- 指令ID
-	,Copies			int								--指令份数
-	,EntrustNo		int								--委托之后，服务器返回的委托号
-	,BatchNo		int								--委托之后，服务器返回的批号
-	,EntrustStatus	int								--委托状态	 4-已完成
-	,DealStatus		int								--成交状态   1-未成交，2-部分成交，3-已完成
-	,SubmitPerson	int								--提交人
-	,CreatedDate	datetime						--提交时间	
-	,ModifiedDate	datetime						--修改时间	
-	,EntrustFailCode	int							--委托错误码
-	,EntrustFailCause	varchar(1024)				--委托失败原因
-)
 
 go
 if exists (select name from sysobjects where name='procEntrustCommandInsert')

@@ -1,16 +1,5 @@
 use tradingsystem
 
-if object_id('userrole') is not null
-drop table userrole
-
-create table userrole(
-	Id				int identity(1, 1) primary key
-	,UserId			int not null	--用户Id
-	,RoleId			int	not null	--角色Id	
-	,CreateDate		datetime		--创建时间
-	,ModifiedDate	datetime		--修改时间
-)
-
 go
 if exists (select name from sysobjects where name='procUserRoleInsert')
 drop proc procUserRoleInsert

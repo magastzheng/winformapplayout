@@ -1,38 +1,5 @@
 use tradingsystem
 
-if object_id('archivedealsecurity') is not null
-drop table archivedealsecurity
-
---ArchiveId从何而来
- create table archivedealsecurity(
-	ArchiveId			int not null	--归档Id从通过交易指令查询
-	,RequestId			int not null
-	,SubmitId			int not null
-	,CommandId			int not null
-	,SecuCode			varchar(10) not null
-	,DealNo				varchar(64)	not null
-	,BatchNo			int not null
-	,EntrustNo			int not null
-	,ExchangeCode		varchar(10)
-	,AccountCode		varchar(32)
-	,PortfolioCode		varchar(20)
-	,StockHolderId		varchar(20)
-	,ReportSeat			varchar(10)
-	,DealDate			int
-	,DealTime			int
-	,EntrustDirection	int
-	,EntrustAmount		int
-	,EntrustState		int
-	,DealAmount			int
-	,DealPrice			numeric(20, 4)
-	,DealBalance		numeric(20, 4)
-	,DealFee			numeric(20, 4)
-	,TotalDealAmount	int
-	,TotalDealBalance	numeric(20, 4)
-	,CancelAmount		int
-	,ArchiveDate		datetime
- )
-
 go
 
 

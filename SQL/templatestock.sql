@@ -1,19 +1,5 @@
 use tradingsystem
 
-if object_id('templatestock') is not null
-drop table templatestock
-
-create table templatestock(
-	TemplateId int not null,		--模板ID
-	SecuCode varchar(10) not null,	--证券代码
-	Amount int,						--证券数量
-	MarketCap numeric(20, 4),		--证券市值
-	MarketCapOpt numeric(5, 2),		--证券市值比例(%)
-	SettingWeight numeric(5, 2),	--证券设置权重(%)
-
-	constraint pk_templatestock_Id primary key(TemplateId,SecuCode)
-)
-
 ---=========================templatestock begin======================
 go
 if exists (select name from sysobjects where name='procTemplateStockInsert')

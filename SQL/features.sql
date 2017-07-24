@@ -1,14 +1,5 @@
 use tradingsystem
 
-if object_id('features') is not null
-drop table features
-
-create table features(
-	Id			int not null primary key,	--软件系统功能Id
-	Code		varchar(30) not null,		--软件系统功能代码
-	Name		varchar(30) not null,		--软件系统功能名称
-	Description	varchar(100),				--软件系统功能描述
-)
 
 go
 if exists (select name from sysobjects where name='procFeaturesInsert')

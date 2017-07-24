@@ -1,21 +1,5 @@
 use tradingsystem
 
-if object_id('useractiontracking') is not null
-drop table useractiontracking
-
-create table useractiontracking(
-	Id				int identity(1, 1) primary key
-	,UserId			int not null
-	,CreatedDate	datetime
-	,Action			int			--Model/UsageTracking/ActionType.cs
-	,ResourceType	int			--Model/Permission/ResourceType.cs
-	,ResourceId		int			
-	,Num			int
-	,ActionStatus	int			--Model/UsageTracking/ActionStatus
-	,Details		varchar(3000)
-)
-
-
 go
 if exists (select name from sysobjects where name='procUserActionTrackingInsert')
 drop proc procUserActionTrackingInsert

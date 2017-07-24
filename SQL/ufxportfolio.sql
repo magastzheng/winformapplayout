@@ -1,24 +1,6 @@
 use tradingsystem
 
 
-if object_id('ufxportfolio') is not null
-drop table ufxportfolio
-
-create table ufxportfolio
-(
-	PortfolioId int identity(1, 1) primary key,	-- 组合ID
-	PortfolioCode varchar(20) not null,			-- 组合代码
-	PortfolioName varchar(250) not null,		-- 组合名称
-	AccountCode varchar(32),					-- 基金代码
-	AccountName varchar(250),					-- 基金名称
-	AccountType int,			--基金类型：1 - 封闭式基金， 2 - 开放式基金, 3 - 社保基金, 5 - 年金产品, 6 - 专户产品, 
-								--8 - 年金, 9 - 专户理财, 10 - 保险, 11 - 一对多专户, 12 - 定向理财, 13 - 集合理财,
-								--14 - 自营, 15 - 信托, 16 - 私募, 17 - 委托资产
-	AssetNo varchar(20),		--资产单元代码
-	AssetName varchar(250),		--资产单元名称
-	PortfolioStatus	int			--组合状态 1 active， 2 - inactive, -1 - none
-)
-
 go 
 if exists (select name from sysobjects where name='procUFXPortfolioInsert')
 drop proc procUFXPortfolioInsert

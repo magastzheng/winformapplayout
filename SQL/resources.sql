@@ -1,15 +1,5 @@
 use tradingsystem
 
-if object_id('resources') is not null
-drop table resources
-
-create table resources(
-	Id		int identity(1, 1) primary key,
-	RefId	int not null,	--资源的实际Id
-	Type	int not null,	--资源类型: (RefId, Type)可以定义唯一的资源
-	Name	varchar(30),
-)
-
 go
 if exists (select name from sysobjects where name='procResourcesInsert')
 drop proc procResourcesInsert

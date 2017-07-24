@@ -1,35 +1,5 @@
 use tradingsystem
 
-if object_id('dealsecurity') is not null
-drop table dealsecurity
-
-create table dealsecurity(
-	RequestId			int not null
-	,SubmitId			int not null
-	,CommandId			int not null
-	,SecuCode			varchar(10) not null
-	,DealNo				varchar(64)	not null
-	,BatchNo			int not null
-	,EntrustNo			int not null
-	,ExchangeCode		varchar(10)
-	,AccountCode		varchar(32)
-	,PortfolioCode		varchar(20)
-	,StockHolderId		varchar(20)
-	,ReportSeat			varchar(10)
-	,DealDate			int
-	,DealTime			int
-	,EntrustDirection	int
-	,EntrustAmount		int
-	,EntrustState		int
-	,DealAmount			int
-	,DealPrice			numeric(20, 4)
-	,DealBalance		numeric(20, 4)
-	,DealFee			numeric(20, 4)
-	,TotalDealAmount	int
-	,TotalDealBalance	numeric(20, 4)
-	,CancelAmount		int
-)
-
 go
 if exists (select name from sysobjects where name='procDealSecurityInsert')
 drop proc procDealSecurityInsert

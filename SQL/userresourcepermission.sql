@@ -1,21 +1,6 @@
 use tradingsystem
 
 go
-if object_id('tokenresourcepermission') is not null
-drop table tokenresourcepermission
-
-create table tokenresourcepermission(
-	Id				int identity(1, 1) primary key,
-	Token			int not null,
-	TokenType		int not null,
-	ResourceId		int not null,			--使用(ResourceId, ResourceType）唯一的定位资源，
-	ResourceType	int not null,			--不需要额外的resource表
-	Permission		int,
-	CreateDate		datetime,
-	ModifiedDate	datetime
-)
-
-go
 if exists (select name from sysobjects where name='procTokenResourcePermissionInsert')
 drop proc procTokenResourcePermissionInsert
 
