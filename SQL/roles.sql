@@ -1,14 +1,5 @@
 use tradingsystem
 
-if object_id('roles') is not null
-drop table roles
-
-create table roles(
-	Id	int	not null primary key,	--1 admin, 2 - systemmanager, 5 - fundmanager, 6 - dealer
-	Name	varchar(20) not null,
-	Status	int,	--0 inactive, 1 - normal
-)
-
 go
 if exists (select name from sysobjects where name='procRolesInsert')
 drop proc procRolesInsert
