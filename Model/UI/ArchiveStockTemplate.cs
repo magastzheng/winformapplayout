@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace Model.UI
 {
-    public class HistStockTemplate : StockTemplate
+    public class ArchiveStockTemplate : StockTemplate
     {
-        public HistStockTemplate()
+        public ArchiveStockTemplate()
             : base()
         {
         }
 
-        public HistStockTemplate(StockTemplate temp)
+        public ArchiveStockTemplate(StockTemplate temp)
             : base(temp)
         { 
         }
 
-        public HistStockTemplate(HistStockTemplate temp)
+        public ArchiveStockTemplate(ArchiveStockTemplate temp)
             : base(temp)
         {
             ArchiveId = temp.ArchiveId;

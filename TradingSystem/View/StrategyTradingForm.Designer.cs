@@ -47,7 +47,12 @@
             this.btnSecuSelect = new System.Windows.Forms.Button();
             this.cmdTopPanel = new System.Windows.Forms.Panel();
             this.tsCmdTrading = new System.Windows.Forms.ToolStrip();
+            this.tsbRefresh = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbCancel = new System.Windows.Forms.ToolStripButton();
+            this.tsbCancelRedo = new System.Windows.Forms.ToolStripButton();
+            this.tsbCancelAdd = new System.Windows.Forms.ToolStripButton();
+            this.tsbEntrustInfo = new System.Windows.Forms.ToolStripButton();
             this.bsSplitter = new System.Windows.Forms.SplitContainer();
             this.bsGridView = new Controls.GridView.TSDataGridView();
             this.entrustBottonPanel = new System.Windows.Forms.Panel();
@@ -75,18 +80,13 @@
             this.btnefSelect = new System.Windows.Forms.Button();
             this.efTopPanel = new System.Windows.Forms.Panel();
             this.tsEntrustFlow = new System.Windows.Forms.ToolStrip();
+            this.tsbefRefresh = new System.Windows.Forms.ToolStripButton();
             this.tpDealFlow = new System.Windows.Forms.TabPage();
             this.dfMainPanel = new System.Windows.Forms.Panel();
             this.dfGridView = new Controls.GridView.TSDataGridView();
             this.dfBottomPanel = new System.Windows.Forms.Panel();
             this.dfTopPanel = new System.Windows.Forms.Panel();
             this.tsDealFlow = new System.Windows.Forms.ToolStrip();
-            this.tsbRefresh = new System.Windows.Forms.ToolStripButton();
-            this.tsbCancel = new System.Windows.Forms.ToolStripButton();
-            this.tsbCancelRedo = new System.Windows.Forms.ToolStripButton();
-            this.tsbCancelAdd = new System.Windows.Forms.ToolStripButton();
-            this.tsbEntrustInfo = new System.Windows.Forms.ToolStripButton();
-            this.tsbefRefresh = new System.Windows.Forms.ToolStripButton();
             this.tsbdfRefresh = new System.Windows.Forms.ToolStripButton();
             this.tabParentMain.SuspendLayout();
             this.tpCmdTrading.SuspendLayout();
@@ -346,10 +346,50 @@
             this.tsCmdTrading.TabIndex = 0;
             this.tsCmdTrading.Text = "toolStrip1";
             // 
+            // tsbRefresh
+            // 
+            this.tsbRefresh.Image = global::TradingSystem.Properties.Resources.refresh2;
+            this.tsbRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbRefresh.Name = "tsbRefresh";
+            this.tsbRefresh.Size = new System.Drawing.Size(52, 22);
+            this.tsbRefresh.Text = "刷新";
+            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tsbCancel
+            // 
+            this.tsbCancel.Image = global::TradingSystem.Properties.Resources.undo;
+            this.tsbCancel.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbCancel.Name = "tsbCancel";
+            this.tsbCancel.Size = new System.Drawing.Size(52, 22);
+            this.tsbCancel.Text = "撤单";
+            // 
+            // tsbCancelRedo
+            // 
+            this.tsbCancelRedo.Image = global::TradingSystem.Properties.Resources.canceladd;
+            this.tsbCancelRedo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbCancelRedo.Name = "tsbCancelRedo";
+            this.tsbCancelRedo.Size = new System.Drawing.Size(52, 22);
+            this.tsbCancelRedo.Text = "撤补";
+            // 
+            // tsbCancelAdd
+            // 
+            this.tsbCancelAdd.Image = global::TradingSystem.Properties.Resources.addnew;
+            this.tsbCancelAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbCancelAdd.Name = "tsbCancelAdd";
+            this.tsbCancelAdd.Size = new System.Drawing.Size(76, 22);
+            this.tsbCancelAdd.Text = "撤销追加";
+            // 
+            // tsbEntrustInfo
+            // 
+            this.tsbEntrustInfo.Image = global::TradingSystem.Properties.Resources.info;
+            this.tsbEntrustInfo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbEntrustInfo.Name = "tsbEntrustInfo";
+            this.tsbEntrustInfo.Size = new System.Drawing.Size(76, 22);
+            this.tsbEntrustInfo.Text = "委托消息";
             // 
             // bsSplitter
             // 
@@ -635,6 +675,14 @@
             this.tsEntrustFlow.TabIndex = 0;
             this.tsEntrustFlow.Text = "toolStrip1";
             // 
+            // tsbefRefresh
+            // 
+            this.tsbefRefresh.Image = global::TradingSystem.Properties.Resources.refresh2;
+            this.tsbefRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbefRefresh.Name = "tsbefRefresh";
+            this.tsbefRefresh.Size = new System.Drawing.Size(52, 26);
+            this.tsbefRefresh.Text = "刷新";
+            // 
             // tpDealFlow
             // 
             this.tpDealFlow.Controls.Add(this.dfMainPanel);
@@ -698,54 +746,6 @@
             this.tsDealFlow.Size = new System.Drawing.Size(1135, 25);
             this.tsDealFlow.TabIndex = 0;
             this.tsDealFlow.Text = "toolStrip1";
-            // 
-            // tsbRefresh
-            // 
-            this.tsbRefresh.Image = global::TradingSystem.Properties.Resources.refresh2;
-            this.tsbRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbRefresh.Name = "tsbRefresh";
-            this.tsbRefresh.Size = new System.Drawing.Size(52, 22);
-            this.tsbRefresh.Text = "刷新";
-            // 
-            // tsbCancel
-            // 
-            this.tsbCancel.Image = global::TradingSystem.Properties.Resources.undo;
-            this.tsbCancel.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbCancel.Name = "tsbCancel";
-            this.tsbCancel.Size = new System.Drawing.Size(52, 22);
-            this.tsbCancel.Text = "撤单";
-            // 
-            // tsbCancelRedo
-            // 
-            this.tsbCancelRedo.Image = global::TradingSystem.Properties.Resources.canceladd;
-            this.tsbCancelRedo.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbCancelRedo.Name = "tsbCancelRedo";
-            this.tsbCancelRedo.Size = new System.Drawing.Size(52, 22);
-            this.tsbCancelRedo.Text = "撤补";
-            // 
-            // tsbCancelAdd
-            // 
-            this.tsbCancelAdd.Image = global::TradingSystem.Properties.Resources.addnew;
-            this.tsbCancelAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbCancelAdd.Name = "tsbCancelAdd";
-            this.tsbCancelAdd.Size = new System.Drawing.Size(76, 22);
-            this.tsbCancelAdd.Text = "撤销追加";
-            // 
-            // tsbEntrustInfo
-            // 
-            this.tsbEntrustInfo.Image = global::TradingSystem.Properties.Resources.info;
-            this.tsbEntrustInfo.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbEntrustInfo.Name = "tsbEntrustInfo";
-            this.tsbEntrustInfo.Size = new System.Drawing.Size(76, 22);
-            this.tsbEntrustInfo.Text = "委托消息";
-            // 
-            // tsbefRefresh
-            // 
-            this.tsbefRefresh.Image = global::TradingSystem.Properties.Resources.refresh2;
-            this.tsbefRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbefRefresh.Name = "tsbefRefresh";
-            this.tsbefRefresh.Size = new System.Drawing.Size(52, 26);
-            this.tsbefRefresh.Text = "刷新";
             // 
             // tsbdfRefresh
             // 

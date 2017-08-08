@@ -6,28 +6,28 @@ using System.Data.Common;
 
 namespace DBAccess.Archive.Template
 {
-    public class HistoricalTemplateStockDAO : BaseDAO
+    public class ArchiveTemplateStockDAO : BaseDAO
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private const string SP_Create = "procHistTemplateStockInsert";
-        private const string SP_Delete = "procHistTemplateStockDelete";
-        private const string SP_DeleteAll = "procHistTemplateStockDeleteAll";
-        private const string SP_Get = "procHistTemplateStockSelect";
+        private const string SP_Create = "procArchiveTemplateStockInsert";
+        private const string SP_Delete = "procArchiveTemplateStockDelete";
+        private const string SP_DeleteAll = "procArchiveTemplateStockDeleteAll";
+        private const string SP_Get = "procArchiveTemplateStockSelect";
 
-        public HistoricalTemplateStockDAO()
+        public ArchiveTemplateStockDAO()
             : base()
         { 
         
         }
 
-        public HistoricalTemplateStockDAO(DbHelper dbHelper)
+        public ArchiveTemplateStockDAO(DbHelper dbHelper)
             : base(dbHelper)
         { 
         
         }
 
-        public string Create(HistTemplateStock stock)
+        public string Create(ArchiveTemplateStock stock)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
             _dbHelper.AddInParameter(dbCommand, "@ArchiveId", System.Data.DbType.Int32, stock.ArchiveId);
@@ -135,9 +135,9 @@ namespace DBAccess.Archive.Template
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public List<HistTemplateStock> Get(int archiveId)
+        public List<ArchiveTemplateStock> Get(int archiveId)
         {
-            List<HistTemplateStock> templateStocks = new List<HistTemplateStock>();
+            List<ArchiveTemplateStock> templateStocks = new List<ArchiveTemplateStock>();
             if (archiveId < 1)
             {
                 return templateStocks;
@@ -151,7 +151,7 @@ namespace DBAccess.Archive.Template
             {
                 while (reader.Read())
                 {
-                    HistTemplateStock item = new HistTemplateStock();
+                    ArchiveTemplateStock item = new ArchiveTemplateStock();
                     item.ArchiveId = (int)reader["ArchiveId"];
                     item.TemplateNo = (int)reader["TemplateId"];
                     item.SecuCode = (string)reader["SecuCode"];

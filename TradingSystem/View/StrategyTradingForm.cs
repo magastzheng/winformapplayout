@@ -221,7 +221,7 @@ namespace TradingSystem.View
             dialog.Owner = this;
             dialog.OnLoadControl(dialog, null);
             dialog.OnLoadData(dialog, cancelRedoItems);
-            dialog.SaveData += new FormLoadHandler(Dialog_CancelRedoDialog_SaveData);
+            dialog.SaveData += new FormSaveHandler(Dialog_CancelRedoDialog_SaveData);
             dialog.ShowDialog();
         }
 
@@ -379,7 +379,7 @@ namespace TradingSystem.View
             dialog.Owner = this;
             dialog.OnLoadControl(dialog, null);
             dialog.OnLoadData(dialog, cancelRedoItems);
-            dialog.SaveData += new FormLoadHandler(Dialog_CancelRedoDialog_SaveData);
+            dialog.SaveData += new FormSaveHandler(Dialog_CancelRedoDialog_SaveData);
             dialog.ShowDialog();
         }
 

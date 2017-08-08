@@ -14,6 +14,7 @@ namespace Controls
         private Image _nodeImage;
         private Size _nodeImageSize;
         private int _nodeOffset;
+        private TreeNode _prevNode;
 
         public event TreeViewItemClick LeafItemClick;
 
@@ -63,6 +64,18 @@ namespace Controls
         {
             get { return _nodeOffset; }
             set { _nodeOffset = value; }
+        }
+
+        public TreeNode PrevNode
+        {
+            get { return _prevNode; }
+            set 
+            {
+                if (_prevNode != value)
+                {
+                    _prevNode = value;
+                }
+            }
         }
 
         public TSTreeView()
@@ -124,6 +137,10 @@ namespace Controls
 
         private void TreeView_MouseDown(object sender, MouseEventArgs e)
         {
+            //保存上次点击的节点
+            StorePrevNode();
+
+            //获得本次几点的节点
             TreeNode node = GetNodeAt(e.X, e.Y);
             if (node != null && NodeBounds(node).Contains(e.X, e.Y))
             {
@@ -221,6 +238,14 @@ namespace Controls
             bounds.Width = this.Width;
 
             return bounds;
+        }
+
+        private void StorePrevNode()
+        {
+            if (_prevNode != this.SelectedNode)
+            {
+                _prevNode = this.SelectedNode;
+            }
         }
     }
 }

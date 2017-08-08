@@ -430,6 +430,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\archive.png" />
+    <Content Include="img\add256.png" />
+    <Content Include="img\copy256.png" />
+    <Content Include="img\delete256.png" />
+    <None Include="img\settings256.png" />
+    <Content Include="img\settings2561.png" />
     <Content Include="Resources\down.png" />
     <Content Include="Resources\edit.png" />
     <Content Include="Resources\htsamc_logo.ico" />

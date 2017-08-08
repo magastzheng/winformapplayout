@@ -6,25 +6,25 @@ using System.Collections.Generic;
 
 namespace DBAccess.Archive.Template
 {
-    public class HistoricalTemplateDAO: BaseDAO
+    public class ArchiveTemplateDAO: BaseDAO
     {
         private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private const string SP_Get = "procHistTemplateSelect";
-        private const string SP_Create = "procHistTemplateInsert";
-        private const string SP_Delete = "procHistTemplateDelete";
+        private const string SP_Get = "procArchiveTemplateSelect";
+        private const string SP_Create = "procArchiveTemplateInsert";
+        private const string SP_Delete = "procArchiveTemplateDelete";
 
-        public HistoricalTemplateDAO()
+        public ArchiveTemplateDAO()
             : base()
         {
         }
 
-        public HistoricalTemplateDAO(DbHelper dbHelper)
+        public ArchiveTemplateDAO(DbHelper dbHelper)
             : base(dbHelper)
         { 
         }
 
-        public int Create(HistStockTemplate template)
+        public int Create(ArchiveStockTemplate template)
         {
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Create);
             _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, template.TemplateId);
@@ -60,16 +60,16 @@ namespace DBAccess.Archive.Template
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
-        public List<HistStockTemplate> Get()
+        public List<ArchiveStockTemplate> Get()
         {
-            List<HistStockTemplate> stockTemplates = new List<HistStockTemplate>();
+            List<ArchiveStockTemplate> stockTemplates = new List<ArchiveStockTemplate>();
             var dbCommand = _dbHelper.GetStoredProcCommand(SP_Get);
             var reader = _dbHelper.ExecuteReader(dbCommand);
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    HistStockTemplate item = new HistStockTemplate();
+                    ArchiveStockTemplate item = new ArchiveStockTemplate();
                     item.ArchiveId = (int)reader["ArchiveId"];
                     item.TemplateId = (int)reader["TemplateId"];
                     item.TemplateName = (string)reader["TemplateName"];

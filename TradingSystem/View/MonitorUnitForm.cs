@@ -126,7 +126,7 @@ namespace TradingSystem.View
                         //dialog.Visible = true;
                         dialog.OnLoadControl(dialog, null);
                         dialog.OnLoadData(dialog, null);
-                        dialog.SaveData += new FormLoadHandler(Dialog_SaveData);
+                        dialog.SaveData += new FormSaveHandler(Dialog_SaveData);
                         dialog.ShowDialog();
 
                         if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
@@ -193,7 +193,7 @@ namespace TradingSystem.View
                         //dialog.Visible = true;
                         dialog.OnLoadControl(dialog, null);
                         dialog.OnLoadData(dialog, monitorUnit);
-                        dialog.SaveData += new FormLoadHandler(Dialog_SaveData);
+                        dialog.SaveData += new FormSaveHandler(Dialog_SaveData);
                         dialog.ShowDialog();
 
                         if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)

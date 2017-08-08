@@ -1,6 +1,7 @@
 ﻿using BLL.Manager;
 using BLL.Permission;
 using Config;
+using Controls;
 using Controls.Entity;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -88,6 +89,20 @@ namespace TradingSystem.View
             if (e == null || e.TreeNodeEvent == null || e.TreeNodeEvent.Name == null)
             {
                 return;
+            }
+
+            TSTreeView tsTreeView = (TSTreeView)sender;
+            if (tsTreeView != null)
+            {
+                if (tsTreeView.PrevNode != null && tsTreeView.PrevNode.Name != e.TreeNodeEvent.Name)
+                {
+                    //如果切换到不同页面，需要保存。保存失败则切换不成功
+                    bool success = FormManager.Instance.LeaveForm(this, tsTreeView.PrevNode.Name);
+                    if (!success)
+                    {
+                        return;
+                    }
+                }
             }
 
             Forms.BaseForm form = FormManager.Instance.ActiveForm(this, _panelMain, e.TreeNodeEvent.Name, _gridConfig, UFXBLLManager.Instance);

@@ -10,8 +10,8 @@ namespace BLL.Archive.Template
 {
     public class HistTemplateBLL
     {
-        private HistoricalTemplateDAO _templatedao = new HistoricalTemplateDAO();
-        private HistoricalTemplateStockDAO _tempstockdao = new HistoricalTemplateStockDAO();
+        private ArchiveTemplateDAO _templatedao = new ArchiveTemplateDAO();
+        private ArchiveTemplateStockDAO _tempstockdao = new ArchiveTemplateStockDAO();
 
         private PermissionManager _permissionManager = new PermissionManager();
         public HistTemplateBLL()
@@ -22,7 +22,7 @@ namespace BLL.Archive.Template
 
         public int CreateTemplate(StockTemplate template)
         {
-            HistStockTemplate hst = new HistStockTemplate(template);
+            ArchiveStockTemplate hst = new ArchiveStockTemplate(template);
             hst.DArchiveDate = DateTime.Now;
 
             int archiveId = _templatedao.Create(hst);
@@ -53,11 +53,11 @@ namespace BLL.Archive.Template
             return ret;
         }
 
-        public List<HistStockTemplate> GetTemplates()
+        public List<ArchiveStockTemplate> GetTemplates()
         {
             int userId = LoginManager.Instance.GetUserId();
             var allTemplates = _templatedao.Get();
-            var templates = new List<HistStockTemplate>();
+            var templates = new List<ArchiveStockTemplate>();
             foreach (var template in allTemplates)
             {
                 if (_permissionManager.HasPermission(userId, template.ArchiveId, Model.Permission.ResourceType.HistoricalSpotTemplate, Model.Permission.PermissionMask.View))
@@ -83,7 +83,7 @@ namespace BLL.Archive.Template
             return _tempstockdao.DeleteOneArchive(archiveId);
         }
 
-        public List<HistTemplateStock> GetStocks(int archiveId)
+        public List<ArchiveTemplateStock> GetStocks(int archiveId)
         {
             return _tempstockdao.Get(archiveId);
         }

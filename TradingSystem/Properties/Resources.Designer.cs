@@ -63,6 +63,16 @@ namespace TradingSystem.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap add256 {
+            get {
+                object obj = ResourceManager.GetObject("add256", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap addnew {
             get {
                 object obj = ResourceManager.GetObject("addnew", resourceCulture);
@@ -106,6 +116,26 @@ namespace TradingSystem.Properties {
         internal static System.Drawing.Bitmap cancelredo {
             get {
                 object obj = ResourceManager.GetObject("cancelredo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap copy256 {
+            get {
+                object obj = ResourceManager.GetObject("copy256", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap delete256 {
+            get {
+                object obj = ResourceManager.GetObject("delete256", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -176,6 +206,16 @@ namespace TradingSystem.Properties {
         internal static System.Drawing.Bitmap save {
             get {
                 object obj = ResourceManager.GetObject("save", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap settings256 {
+            get {
+                object obj = ResourceManager.GetObject("settings256", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

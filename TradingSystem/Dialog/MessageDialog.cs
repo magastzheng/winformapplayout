@@ -59,7 +59,14 @@ namespace TradingSystem.Dialog
                 text = msgId;
             }
 
-            return MessageBox.Show(form, text, caption, msgBoxButtons, msgBoxIcon); 
+            if (form != null)
+            {
+                return MessageBox.Show(form, text, caption, msgBoxButtons, msgBoxIcon);
+            }
+            else 
+            {
+                return MessageBox.Show(text, caption, msgBoxButtons, msgBoxIcon);
+            }
         }
     }
 }

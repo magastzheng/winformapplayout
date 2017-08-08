@@ -31,9 +31,14 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SpotTemplateForm));
             this.mainSplitter = new System.Windows.Forms.SplitContainer();
             this.tempGridView = new Controls.GridView.TSDataGridView();
-            this.spotSecuBottomPanel = new System.Windows.Forms.Panel();
-            this.spotSecuPanel = new System.Windows.Forms.Panel();
             this.secuGridView = new Controls.GridView.TSDataGridView();
+            this.spotSecuBottomPanel = new System.Windows.Forms.Panel();
+            this.tbSettingWeight = new System.Windows.Forms.TextBox();
+            this.lblSettingWeight = new System.Windows.Forms.Label();
+            this.tbTotalCap = new System.Windows.Forms.TextBox();
+            this.lblTotalCap = new System.Windows.Forms.Label();
+            this.tbNumber = new System.Windows.Forms.TextBox();
+            this.lblNumber = new System.Windows.Forms.Label();
             this.spotSecuTopPanel = new System.Windows.Forms.Panel();
             this.lblSpotSecu = new System.Windows.Forms.Label();
             this.tsChildTop = new System.Windows.Forms.ToolStrip();
@@ -55,12 +60,6 @@
             this.tsbSave = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbExport = new System.Windows.Forms.ToolStripButton();
-            this.lblNumber = new System.Windows.Forms.Label();
-            this.tbNumber = new System.Windows.Forms.TextBox();
-            this.tbTotalCap = new System.Windows.Forms.TextBox();
-            this.lblTotalCap = new System.Windows.Forms.Label();
-            this.tbSettingWeight = new System.Windows.Forms.TextBox();
-            this.lblSettingWeight = new System.Windows.Forms.Label();
             this.panelTop.SuspendLayout();
             this.panelBottom.SuspendLayout();
             this.panelMain.SuspendLayout();
@@ -69,9 +68,8 @@
             this.mainSplitter.Panel2.SuspendLayout();
             this.mainSplitter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tempGridView)).BeginInit();
-            this.spotSecuBottomPanel.SuspendLayout();
-            this.spotSecuPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.secuGridView)).BeginInit();
+            this.spotSecuBottomPanel.SuspendLayout();
             this.spotSecuTopPanel.SuspendLayout();
             this.tsChildTop.SuspendLayout();
             this.tsChildBottom.SuspendLayout();
@@ -102,8 +100,8 @@
             // 
             // mainSplitter.Panel2
             // 
+            this.mainSplitter.Panel2.Controls.Add(this.secuGridView);
             this.mainSplitter.Panel2.Controls.Add(this.spotSecuBottomPanel);
-            this.mainSplitter.Panel2.Controls.Add(this.spotSecuPanel);
             this.mainSplitter.Panel2.Controls.Add(this.spotSecuTopPanel);
             this.mainSplitter.Size = new System.Drawing.Size(1125, 506);
             this.mainSplitter.SplitterDistance = 189;
@@ -121,6 +119,18 @@
             this.tempGridView.Size = new System.Drawing.Size(1125, 189);
             this.tempGridView.TabIndex = 0;
             // 
+            // secuGridView
+            // 
+            this.secuGridView.AllowUserToAddRows = false;
+            this.secuGridView.AllowUserToDeleteRows = false;
+            this.secuGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.secuGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.secuGridView.Location = new System.Drawing.Point(0, 23);
+            this.secuGridView.Name = "secuGridView";
+            this.secuGridView.RowTemplate.Height = 23;
+            this.secuGridView.Size = new System.Drawing.Size(1125, 265);
+            this.secuGridView.TabIndex = 0;
+            // 
             // spotSecuBottomPanel
             // 
             this.spotSecuBottomPanel.Controls.Add(this.tbSettingWeight);
@@ -130,31 +140,70 @@
             this.spotSecuBottomPanel.Controls.Add(this.tbNumber);
             this.spotSecuBottomPanel.Controls.Add(this.lblNumber);
             this.spotSecuBottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.spotSecuBottomPanel.Location = new System.Drawing.Point(0, 283);
+            this.spotSecuBottomPanel.Location = new System.Drawing.Point(0, 288);
             this.spotSecuBottomPanel.Name = "spotSecuBottomPanel";
-            this.spotSecuBottomPanel.Size = new System.Drawing.Size(1125, 30);
+            this.spotSecuBottomPanel.Size = new System.Drawing.Size(1125, 25);
             this.spotSecuBottomPanel.TabIndex = 2;
             // 
-            // spotSecuPanel
+            // tbSettingWeight
             // 
-            this.spotSecuPanel.Controls.Add(this.secuGridView);
-            this.spotSecuPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.spotSecuPanel.Location = new System.Drawing.Point(0, 23);
-            this.spotSecuPanel.Name = "spotSecuPanel";
-            this.spotSecuPanel.Size = new System.Drawing.Size(1125, 290);
-            this.spotSecuPanel.TabIndex = 1;
+            this.tbSettingWeight.Enabled = false;
+            this.tbSettingWeight.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.tbSettingWeight.Location = new System.Drawing.Point(486, 4);
+            this.tbSettingWeight.Name = "tbSettingWeight";
+            this.tbSettingWeight.Size = new System.Drawing.Size(65, 21);
+            this.tbSettingWeight.TabIndex = 5;
+            this.tbSettingWeight.Text = "0";
             // 
-            // secuGridView
+            // lblSettingWeight
             // 
-            this.secuGridView.AllowUserToAddRows = false;
-            this.secuGridView.AllowUserToDeleteRows = false;
-            this.secuGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.secuGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.secuGridView.Location = new System.Drawing.Point(0, 0);
-            this.secuGridView.Name = "secuGridView";
-            this.secuGridView.RowTemplate.Height = 23;
-            this.secuGridView.Size = new System.Drawing.Size(1125, 290);
-            this.secuGridView.TabIndex = 0;
+            this.lblSettingWeight.AutoSize = true;
+            this.lblSettingWeight.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblSettingWeight.Location = new System.Drawing.Point(418, 7);
+            this.lblSettingWeight.Name = "lblSettingWeight";
+            this.lblSettingWeight.Size = new System.Drawing.Size(70, 12);
+            this.lblSettingWeight.TabIndex = 4;
+            this.lblSettingWeight.Text = "设置比例：";
+            // 
+            // tbTotalCap
+            // 
+            this.tbTotalCap.Enabled = false;
+            this.tbTotalCap.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.tbTotalCap.Location = new System.Drawing.Point(238, 4);
+            this.tbTotalCap.Name = "tbTotalCap";
+            this.tbTotalCap.Size = new System.Drawing.Size(142, 21);
+            this.tbTotalCap.TabIndex = 3;
+            this.tbTotalCap.Text = "0";
+            // 
+            // lblTotalCap
+            // 
+            this.lblTotalCap.AutoSize = true;
+            this.lblTotalCap.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblTotalCap.Location = new System.Drawing.Point(180, 8);
+            this.lblTotalCap.Name = "lblTotalCap";
+            this.lblTotalCap.Size = new System.Drawing.Size(57, 12);
+            this.lblTotalCap.TabIndex = 2;
+            this.lblTotalCap.Text = "总市值：";
+            // 
+            // tbNumber
+            // 
+            this.tbNumber.Enabled = false;
+            this.tbNumber.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.tbNumber.Location = new System.Drawing.Point(71, 4);
+            this.tbNumber.Name = "tbNumber";
+            this.tbNumber.Size = new System.Drawing.Size(65, 21);
+            this.tbNumber.TabIndex = 1;
+            this.tbNumber.Text = "0";
+            // 
+            // lblNumber
+            // 
+            this.lblNumber.AutoSize = true;
+            this.lblNumber.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblNumber.Location = new System.Drawing.Point(27, 7);
+            this.lblNumber.Name = "lblNumber";
+            this.lblNumber.Size = new System.Drawing.Size(44, 12);
+            this.lblNumber.TabIndex = 0;
+            this.lblNumber.Text = "个数：";
             // 
             // spotSecuTopPanel
             // 
@@ -191,7 +240,7 @@
             // 
             // tsbAdd
             // 
-            this.tsbAdd.Image = ((System.Drawing.Image)(resources.GetObject("tsbAdd.Image")));
+            this.tsbAdd.Image = global::TradingSystem.Properties.Resources.add256;
             this.tsbAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbAdd.Name = "tsbAdd";
             this.tsbAdd.Size = new System.Drawing.Size(52, 29);
@@ -199,7 +248,7 @@
             // 
             // tsbModify
             // 
-            this.tsbModify.Image = ((System.Drawing.Image)(resources.GetObject("tsbModify.Image")));
+            this.tsbModify.Image = global::TradingSystem.Properties.Resources.edit;
             this.tsbModify.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbModify.Name = "tsbModify";
             this.tsbModify.Size = new System.Drawing.Size(52, 29);
@@ -207,7 +256,7 @@
             // 
             // tsbCopy
             // 
-            this.tsbCopy.Image = ((System.Drawing.Image)(resources.GetObject("tsbCopy.Image")));
+            this.tsbCopy.Image = global::TradingSystem.Properties.Resources.copy256;
             this.tsbCopy.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbCopy.Name = "tsbCopy";
             this.tsbCopy.Size = new System.Drawing.Size(52, 29);
@@ -215,7 +264,7 @@
             // 
             // tsbDelete
             // 
-            this.tsbDelete.Image = ((System.Drawing.Image)(resources.GetObject("tsbDelete.Image")));
+            this.tsbDelete.Image = global::TradingSystem.Properties.Resources.delete256;
             this.tsbDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbDelete.Name = "tsbDelete";
             this.tsbDelete.Size = new System.Drawing.Size(52, 29);
@@ -337,66 +386,6 @@
             this.tsbExport.Size = new System.Drawing.Size(36, 29);
             this.tsbExport.Text = "导出";
             // 
-            // lblNumber
-            // 
-            this.lblNumber.AutoSize = true;
-            this.lblNumber.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lblNumber.Location = new System.Drawing.Point(27, 7);
-            this.lblNumber.Name = "lblNumber";
-            this.lblNumber.Size = new System.Drawing.Size(44, 12);
-            this.lblNumber.TabIndex = 0;
-            this.lblNumber.Text = "个数：";
-            // 
-            // tbNumber
-            // 
-            this.tbNumber.Enabled = false;
-            this.tbNumber.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tbNumber.Location = new System.Drawing.Point(71, 4);
-            this.tbNumber.Name = "tbNumber";
-            this.tbNumber.Size = new System.Drawing.Size(65, 21);
-            this.tbNumber.TabIndex = 1;
-            this.tbNumber.Text = "0";
-            // 
-            // tbTotalCap
-            // 
-            this.tbTotalCap.Enabled = false;
-            this.tbTotalCap.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tbTotalCap.Location = new System.Drawing.Point(238, 4);
-            this.tbTotalCap.Name = "tbTotalCap";
-            this.tbTotalCap.Size = new System.Drawing.Size(142, 21);
-            this.tbTotalCap.TabIndex = 3;
-            this.tbTotalCap.Text = "0";
-            // 
-            // lblTotalCap
-            // 
-            this.lblTotalCap.AutoSize = true;
-            this.lblTotalCap.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lblTotalCap.Location = new System.Drawing.Point(180, 8);
-            this.lblTotalCap.Name = "lblTotalCap";
-            this.lblTotalCap.Size = new System.Drawing.Size(57, 12);
-            this.lblTotalCap.TabIndex = 2;
-            this.lblTotalCap.Text = "总市值：";
-            // 
-            // tbSettingWeight
-            // 
-            this.tbSettingWeight.Enabled = false;
-            this.tbSettingWeight.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tbSettingWeight.Location = new System.Drawing.Point(486, 4);
-            this.tbSettingWeight.Name = "tbSettingWeight";
-            this.tbSettingWeight.Size = new System.Drawing.Size(65, 21);
-            this.tbSettingWeight.TabIndex = 5;
-            this.tbSettingWeight.Text = "0";
-            // 
-            // lblSettingWeight
-            // 
-            this.lblSettingWeight.AutoSize = true;
-            this.lblSettingWeight.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lblSettingWeight.Location = new System.Drawing.Point(418, 7);
-            this.lblSettingWeight.Name = "lblSettingWeight";
-            this.lblSettingWeight.Size = new System.Drawing.Size(70, 12);
-            this.lblSettingWeight.TabIndex = 4;
-            this.lblSettingWeight.Text = "设置比例：";
-            // 
             // SpotTemplateForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -412,10 +401,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitter)).EndInit();
             this.mainSplitter.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.tempGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.secuGridView)).EndInit();
             this.spotSecuBottomPanel.ResumeLayout(false);
             this.spotSecuBottomPanel.PerformLayout();
-            this.spotSecuPanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.secuGridView)).EndInit();
             this.spotSecuTopPanel.ResumeLayout(false);
             this.spotSecuTopPanel.PerformLayout();
             this.tsChildTop.ResumeLayout(false);
@@ -451,8 +439,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripButton tsbExport;
         private Controls.GridView.TSDataGridView tempGridView;
-        private System.Windows.Forms.Panel spotSecuPanel;
-        private Controls.GridView.TSDataGridView secuGridView;
         private System.Windows.Forms.Panel spotSecuBottomPanel;
         private System.Windows.Forms.TextBox tbSettingWeight;
         private System.Windows.Forms.Label lblSettingWeight;
@@ -460,5 +446,6 @@
         private System.Windows.Forms.Label lblTotalCap;
         private System.Windows.Forms.TextBox tbNumber;
         private System.Windows.Forms.Label lblNumber;
+        private Controls.GridView.TSDataGridView secuGridView;
     }
 }

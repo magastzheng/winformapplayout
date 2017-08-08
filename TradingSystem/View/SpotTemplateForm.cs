@@ -240,7 +240,7 @@ namespace TradingSystem.View
         private void ToolStripButton_AddTemplate_Click(object sender, System.EventArgs e)
         {
             TemplateDialog dialog = new TemplateDialog();
-            dialog.SaveData += new FormLoadHandler(Dialog_NewTemplate);
+            dialog.SaveData += new FormSaveHandler(Dialog_NewTemplate);
             dialog.Owner = this;
             dialog.StartPosition = FormStartPosition.CenterParent;
             dialog.OnLoadControl(dialog, null);
@@ -264,7 +264,7 @@ namespace TradingSystem.View
                 return;
 
             TemplateDialog dialog = new TemplateDialog();
-            dialog.SaveData += new FormLoadHandler(Dialog_ModifyTemplate);
+            dialog.SaveData += new FormSaveHandler(Dialog_ModifyTemplate);
             dialog.Owner = this;
             dialog.StartPosition = FormStartPosition.CenterParent;
             dialog.OnLoadControl(dialog, null);
@@ -549,7 +549,7 @@ namespace TradingSystem.View
             PortfolioSecurityDialog psDialog = new PortfolioSecurityDialog();
             psDialog.OnLoadControl(psDialog, DialogType.New);
             psDialog.OnLoadData(psDialog, stock);
-            psDialog.SaveData += new FormLoadHandler(Dialog_SpotSecu_SaveData);
+            psDialog.SaveData += new FormSaveHandler(Dialog_SpotSecu_SaveData);
             psDialog.ShowDialog();
             if (psDialog.DialogResult == System.Windows.Forms.DialogResult.OK)
             {
@@ -590,7 +590,7 @@ namespace TradingSystem.View
             PortfolioSecurityDialog psDialog = new PortfolioSecurityDialog();
             psDialog.OnLoadControl(psDialog, DialogType.Modify);
             psDialog.OnLoadData(psDialog, stock);
-            psDialog.SaveData += new FormLoadHandler(Dialog_SpotSecu_SaveData);
+            psDialog.SaveData += new FormSaveHandler(Dialog_SpotSecu_SaveData);
             psDialog.ShowDialog();
             if (psDialog.DialogResult == System.Windows.Forms.DialogResult.OK)
             {

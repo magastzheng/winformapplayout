@@ -186,7 +186,18 @@ namespace TradingSystem.Controller
             return form;
         }
 
-        public BaseForm LoadForm(Form mainForm, Type formType, object[] constructorArgs, string json)
+        public bool LeaveForm(Form parentForm, string formKey)
+        {
+            if (_childFormMap.ContainsKey(formKey))
+            {
+                var form = _childFormMap[formKey];
+                return form.OnFormLeave(form, null);
+            }
+
+            return true;
+        }
+
+        private BaseForm LoadForm(Form mainForm, Type formType, object[] constructorArgs, string json)
         {
             bool isFound = false;
             BaseForm childForm = null;

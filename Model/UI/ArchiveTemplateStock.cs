@@ -1,7 +1,7 @@
 ﻿
 namespace Model.UI
 {
-    public class HistTemplateStock : TemplateStock
+    public class ArchiveTemplateStock : TemplateStock
     {        
         public int ArchiveId { get; set; }
     }

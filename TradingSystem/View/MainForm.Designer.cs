@@ -103,7 +103,7 @@
             // 
             // _tbSave
             // 
-            this._tbSave.Image = global::TradingSystem.Properties.Resources.save;
+            this._tbSave.Image = global::TradingSystem.Properties.Resources.settings256;
             this._tbSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._tbSave.Name = "_tbSave";
             this._tbSave.Size = new System.Drawing.Size(52, 22);

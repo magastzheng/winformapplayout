@@ -61,6 +61,7 @@
       <DependentUpon>DefaultForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ComboBoxUtil.cs" />
+    <Compile Include="IFormLeave.cs" />
     <Compile Include="ILoadControl.cs" />
     <Compile Include="ILoadData.cs" />
     <Compile Include="IFormActived.cs" />

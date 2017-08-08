@@ -11,6 +11,7 @@ using System.IO;
 using BLL.Manager;
 using UFX;
 using UFX.subscriber;
+using TradingSystem.Dialog;
 
 namespace TradingSystem
 {
@@ -61,6 +62,8 @@ namespace TradingSystem
             if (conRet != Model.ConnectionCode.Success)
             {
                 glExitApp = true;
+
+                MessageDialog.Fail(null, "一般业务连接UFX失败！");
                 return;
             }
 
@@ -70,6 +73,7 @@ namespace TradingSystem
             {
                 t2SDKWrap.Close();
                 glExitApp = true;
+                MessageDialog.Fail(null, "主推业务连接UFX失败！");
                 return;
             }
 

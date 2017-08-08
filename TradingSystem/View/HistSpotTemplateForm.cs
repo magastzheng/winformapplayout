@@ -16,8 +16,8 @@ namespace TradingSystem.View
 
         private HistTemplateBLL _templateBLL = new HistTemplateBLL();
 
-        private SortableBindingList<HistStockTemplate> _tempDataSource = new SortableBindingList<HistStockTemplate>(new List<HistStockTemplate>());
-        private SortableBindingList<HistTemplateStock> _secuDataSource = new SortableBindingList<HistTemplateStock>(new List<HistTemplateStock>());
+        private SortableBindingList<ArchiveStockTemplate> _tempDataSource = new SortableBindingList<ArchiveStockTemplate>(new List<ArchiveStockTemplate>());
+        private SortableBindingList<ArchiveTemplateStock> _secuDataSource = new SortableBindingList<ArchiveTemplateStock>(new List<ArchiveTemplateStock>());
 
         public HistSpotTemplateForm()
             :base()
@@ -42,12 +42,12 @@ namespace TradingSystem.View
         {
             //set the tempGridView
             TSDataGridViewHelper.AddColumns(this.tempGridView, _gridConfig.GetGid(GridTemplate));
-            Dictionary<string, string> tempColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(HistStockTemplate));
+            Dictionary<string, string> tempColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(ArchiveStockTemplate));
             TSDataGridViewHelper.SetDataBinding(this.tempGridView, tempColDataMap);
 
             //set the secuGridView
             TSDataGridViewHelper.AddColumns(this.secuGridView, _gridConfig.GetGid(GridStock));
-            Dictionary<string, string> securityColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(HistTemplateStock));
+            Dictionary<string, string> securityColDataMap = GridViewBindingHelper.GetPropertyBinding(typeof(ArchiveTemplateStock));
             TSDataGridViewHelper.SetDataBinding(this.secuGridView, securityColDataMap);
 
             this.tempGridView.DataSource = _tempDataSource;

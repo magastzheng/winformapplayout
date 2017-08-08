@@ -56,8 +56,8 @@
     <Compile Include="Archive\EntrustCommand\ArchiveEntrustDAO.cs" />
     <Compile Include="Archive\EntrustCommand\ArchiveEntrustSecurityDAO.cs" />
     <Compile Include="SecurityInfo\BenchmarkDAO.cs" />
-    <Compile Include="Archive\Template\HistoricalTemplateDAO.cs" />
-    <Compile Include="Archive\Template\HistoricalTemplateStockDAO.cs" />
+    <Compile Include="Archive\Template\ArchiveTemplateDAO.cs" />
+    <Compile Include="Archive\Template\ArchiveTemplateStockDAO.cs" />
     <Compile Include="Archive\TradeCommand\ArchiveTradeCommandDAO.cs" />
     <Compile Include="Archive\TradeCommand\ArchiveTradeCommandSecurityDAO.cs" />
     <Compile Include="Setting\UserSettingDAO.cs" />
