@@ -462,6 +462,40 @@ go
 --==usage tracking end=======
 
 --==archive begin======
+if object_id('archivetemplate') is not null
+drop table archivetemplate
+
+create table archivetemplate(
+	ArchiveId	int identity(1, 1) primary key,
+	TemplateId	int,				--模板ID
+	TemplateName varchar(50),		--模板名称
+	Status int,						-- 1 - normal, 2 - inactive
+	WeightType int,					-- 1 - 数量权重，2 - 比例权重
+	ReplaceType int,				-- 0 - 个股替代，1 - 模板替代
+	FuturesCopies int,				-- 期货份数
+	MarketCapOpt numeric(5, 2),		-- 市值比例(%)
+	BenchmarkId varchar(10),		-- 标的指数
+	ArchiveDate	datetime,			-- 归档日期
+	CreatedDate datetime,			--创建时间			
+	ModifiedDate datetime,			--修改时间
+	CreatedUserId int				--创建用户ID
+)
+
+if object_id('archivetemplatestock') is not null
+drop table archivetemplatestock
+
+create table archivetemplatestock(
+	ArchiveId	int not null,		--归档ID
+	TemplateId int not null,		--模板ID
+	SecuCode varchar(10) not null,	--证券代码
+	Amount int,						--证券数量
+	MarketCap numeric(20, 4),		--证券市值
+	MarketCapOpt numeric(5, 2),		--证券市值比例(%)
+	SettingWeight numeric(5, 2),	--证券设置权重(%)
+
+	constraint pk_archivetemplatestock_Id primary key(ArchiveId, TemplateId, SecuCode)
+)
+
 go
 if object_id('archivetradeinstance') is not null
 drop table archivetradeinstance

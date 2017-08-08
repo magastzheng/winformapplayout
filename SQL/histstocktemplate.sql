@@ -1,9 +1,9 @@
 use tradingsystem
 
-if object_id('histtemplate') is not null
-drop table histtemplate
+if object_id('archivetemplate') is not null
+drop table archivetemplate
 
-create table histtemplate(
+create table archivetemplate(
 	ArchiveId	int identity(1, 1) primary key,
 	TemplateId	int,				--模板ID
 	TemplateName varchar(50),		--模板名称
@@ -19,10 +19,10 @@ create table histtemplate(
 	CreatedUserId int				--创建用户ID
 )
 
-if object_id('histtemplatestock') is not null
-drop table histtemplatestock
+if object_id('archivetemplatestock') is not null
+drop table archivetemplatestock
 
-create table histtemplatestock(
+create table archivetemplatestock(
 	ArchiveId	int not null,		--归档ID
 	TemplateId int not null,		--模板ID
 	SecuCode varchar(10) not null,	--证券代码
@@ -31,17 +31,17 @@ create table histtemplatestock(
 	MarketCapOpt numeric(5, 2),		--证券市值比例(%)
 	SettingWeight numeric(5, 2),	--证券设置权重(%)
 
-	constraint pk_histtemplatestock_Id primary key(ArchiveId, TemplateId, SecuCode)
+	constraint pk_archivetemplatestock_Id primary key(ArchiveId, TemplateId, SecuCode)
 )
 
----=========================histstocktemplate begin======================
+---=========================archivestocktemplate begin======================
 go
-if exists (select name from sysobjects where name='procHistTemplateInsert')
-drop proc procHistTemplateInsert
+if exists (select name from sysobjects where name='procArchiveTemplateInsert')
+drop proc procArchiveTemplateInsert
 
 go
 
-create proc procHistTemplateInsert(
+create proc procArchiveTemplateInsert(
 	@TemplateId	int,
 	@TemplateName varchar(50),
 	@Status int,
@@ -58,7 +58,7 @@ create proc procHistTemplateInsert(
 as
 begin
 	declare @newid int
-	insert into histtemplate(
+	insert into archivetemplate(
 		TemplateId,
 		TemplateName,
 		Status,
@@ -92,12 +92,12 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procHistTemplateSelect')
-drop proc procHistTemplateSelect
+if exists (select name from sysobjects where name='procArchiveTemplateSelect')
+drop proc procArchiveTemplateSelect
 
 go
 
-create proc procHistTemplateSelect(
+create proc procArchiveTemplateSelect(
 	@UserId int = NULL
 )
 as
@@ -116,26 +116,26 @@ begin
 		CreatedDate,
 		ModifiedDate,
 		CreatedUserId
-	from histtemplate
+	from archivetemplate
 	where @UserId is null or CreatedUserId=@UserId
 end
 
 go
-if exists (select name from sysobjects where name='procHistTemplateDelete')
-drop proc procHistTemplateDelete
+if exists (select name from sysobjects where name='procArchiveTemplateDelete')
+drop proc procArchiveTemplateDelete
 
 go
 
-create proc procHistTemplateDelete(
+create proc procArchiveTemplateDelete(
 	@ArchiveId int
 )
 as
 begin
 	--如果该历史模板，并删除相应模板中的股票
-	delete from histtemplate
+	delete from archivetemplate
 	where ArchiveId=@ArchiveId
 
-	delete from histtemplatestock
+	delete from archivetemplatestock
 	where ArchiveId=@ArchiveId
 end
 
@@ -143,12 +143,12 @@ end
 
 ---=========================templatestock begin======================
 go
-if exists (select name from sysobjects where name='procHistTemplateStockInsert')
-drop proc procHistTemplateStockInsert
+if exists (select name from sysobjects where name='procArchiveTemplateStockInsert')
+drop proc procArchiveTemplateStockInsert
 
 go
 
-create proc procHistTemplateStockInsert(
+create proc procArchiveTemplateStockInsert(
 	@ArchiveId int,
 	@TemplateId int,
 	@SecuCode varchar(10),
@@ -160,7 +160,7 @@ create proc procHistTemplateStockInsert(
 )
 as
 begin
-	insert into histtemplatestock(
+	insert into archivetemplatestock(
 		ArchiveId,
 		TemplateId,
 		SecuCode,
@@ -183,12 +183,12 @@ begin
 end
 
 go
-if exists (select name from sysobjects where name='procHistTemplateStockDelete')
-drop proc procHistTemplateStockDelete
+if exists (select name from sysobjects where name='procArchiveTemplateStockDelete')
+drop proc procArchiveTemplateStockDelete
 
 go
 
-create proc procHistTemplateStockDelete(
+create proc procArchiveTemplateStockDelete(
 	@ArchiveId int,
 	@TemplateId int,
 	@SecuCode varchar(10),
@@ -196,35 +196,35 @@ create proc procHistTemplateStockDelete(
 )
 as
 begin
-	delete from histtemplatestock
+	delete from archivetemplatestock
 	where ArchiveId = @ArchiveId and TemplateId = @TemplateId and SecuCode = @SecuCode
 
 	set @ReturnValue=@SecuCode+';'+convert(varchar, @TemplateId)+';'+convert(varchar, @ArchiveId)
 end
 
 go
-if exists (select name from sysobjects where name='procHistTemplateStockDeleteAll')
-drop proc procHistTemplateStockDeleteAll
+if exists (select name from sysobjects where name='procArchiveTemplateStockDeleteAll')
+drop proc procArchiveTemplateStockDeleteAll
 
 go
 
-create proc procHistTemplateStockDeleteAll(
+create proc procArchiveTemplateStockDeleteAll(
 	@ArchiveId int
 )
 as
 begin
-	delete from histtemplatestock
+	delete from archivetemplatestock
 	where ArchiveId = @ArchiveId
 end
 
 
 go
-if exists (select name from sysobjects where name='procHistTemplateStockSelect')
-drop proc procHistTemplateStockSelect
+if exists (select name from sysobjects where name='procArchiveTemplateStockSelect')
+drop proc procArchiveTemplateStockSelect
 
 go
 
-create proc procHistTemplateStockSelect(
+create proc procArchiveTemplateStockSelect(
 	@ArchiveId int
 )
 as
@@ -239,7 +239,7 @@ begin
 		a.SettingWeight,
 		b.SecuName,
 		b.ExchangeCode
-	from histtemplatestock a
+	from archivetemplatestock a
 	join securityinfo b
 	on a.SecuCode = b.SecuCode and b.SecuType=2
 	where a.ArchiveId = @ArchiveId
