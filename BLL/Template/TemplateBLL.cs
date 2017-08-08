@@ -18,6 +18,7 @@ namespace BLL.Template
     {
         private StockTemplateDAO _tempdbdao = new StockTemplateDAO();
         private TemplateStockDAO _stockdbdao = new TemplateStockDAO();
+        private TemplateDao _templatedao = new TemplateDao();
         private SecurityInfoDAO _secudbdao = new SecurityInfoDAO();
 
         private UserActionTrackingBLL _userActionTrackingBLL = new UserActionTrackingBLL();
@@ -42,17 +43,7 @@ namespace BLL.Template
                 //Add the usage tracking information
                 _userActionTrackingBLL.Create(userId, Model.UsageTracking.ActionType.Create, ResourceType.SpotTemplate, templateId, 1, Model.UsageTracking.ActionStatus.Success, JsonUtil.SerializeObject(template));
 
-                var perms = _permissionManager.GetOwnerPermission();
-                _permissionManager.GrantPermission(userId, templateId, ResourceType.SpotTemplate, perms);
-
-                foreach (var perm in template.Permissions)
-                {
-                    if (perm.Token != userId)
-                    {
-                        bool isUpdated = (perm.Id > 0) ? true : false;
-                        _permissionManager.ChangePermission(perm.Token, template.TemplateId, ResourceType.SpotTemplate, perm.Permission, isUpdated);
-                    }
-                }
+                GrantPermission(userId, templateId, template);
             }
 
             return template;
@@ -201,6 +192,22 @@ namespace BLL.Template
             return _stockdbdao.Replace(templateNo, tempStocks);
         }
 
+        public int Copy(int oldTemplateId, StockTemplate template)
+        {
+            var dbItem = ConvertToDBItem(template);
+            int templateId = _templatedao.Copy(oldTemplateId, dbItem);
+            if (templateId > 0)
+            {
+                template.TemplateId = templateId;
+
+                int userId = LoginManager.Instance.GetUserId();
+                _userActionTrackingBLL.Create(userId, Model.UsageTracking.ActionType.Edit, ResourceType.SpotTemplate, templateId, template.TemplateId, Model.UsageTracking.ActionStatus.Normal, "Copy template stock");
+                GrantPermission(userId, templateId, template);
+            }
+
+            return templateId;
+        }
+
         #region handle the permission
 
         private List<StockTemplate> GetPermissionTemplates(int userId, List<TemplateItem> allTemplates)
@@ -313,6 +320,20 @@ namespace BLL.Template
             return uiItem;
         }
 
+        private void GrantPermission(int userId, int templateId, StockTemplate template)
+        {
+            var perms = _permissionManager.GetOwnerPermission();
+            _permissionManager.GrantPermission(userId, templateId, ResourceType.SpotTemplate, perms);
+
+            foreach (var perm in template.Permissions)
+            {
+                if (perm.Token != userId)
+                {
+                    bool isUpdated = (perm.Id > 0) ? true : false;
+                    _permissionManager.ChangePermission(perm.Token, template.TemplateId, ResourceType.SpotTemplate, perm.Permission, isUpdated);
+                }
+            }
+        }
         #endregion
     }
 }

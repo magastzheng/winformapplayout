@@ -78,6 +78,12 @@
 			"id": "tempmodifyfail",
 			"text": "修改模板失败，没有权限或者数据库连接失败"
 		},{
+			"id": "tempcopyfail",
+			"text": "复制模板失败，没有权限或者数据库连接失败"
+		},{
+			"id": "tempsecuritycopyfail",
+			"text": "复制模板证券失败，原模板没有证券，没有权限或者数据库连接失败"
+		},{
 			"id": "tempdeletesecurityselect",
 			"text": "请选择要删除的证券"
 		},{

@@ -155,4 +155,35 @@ begin
 	where TemplateId=@TemplateId
 end
 
+
+go
+if exists (select name from sysobjects where name='procTemplateStockCopy')
+drop proc procTemplateStockCopy
+
+go
+
+create proc procTemplateStockCopy(
+	@TemplateId int
+	,@OldTemplateId int
+)
+as
+begin
+	insert into templatestock(
+		TemplateId,
+		SecuCode,
+		Amount,
+		MarketCap,
+		MarketCapOpt,
+		SettingWeight
+	)
+	select 
+		@TemplateId,
+		SecuCode,
+		Amount,
+		MarketCap,
+		MarketCapOpt,
+		SettingWeight
+	from templatestock
+	where TemplateId=@OldTemplateId
+end
 ---=========================templatestock end======================

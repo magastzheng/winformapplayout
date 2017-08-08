@@ -15,6 +15,7 @@ namespace DBAccess.Template
         private const string SP_Modify = "procTemplateStockInsertOrUpdate";
         private const string SP_Delete = "procTemplateStockDelete";
         private const string SP_DeleteAll = "procTemplateStockDeleteAll";
+        private const string SP_Copy = "procTemplateStockCopy";
 
         public TemplateStockDAO()
             : base()
@@ -218,6 +219,15 @@ namespace DBAccess.Template
             }
 
             return ret;
+        }
+
+        public int Copy(int templateNo, int oldTemplateNo)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Copy);
+            _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, templateNo);
+            _dbHelper.AddInParameter(dbCommand, "@OldTemplateId", System.Data.DbType.Int32, oldTemplateNo);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
         }
     }
 }

@@ -36,6 +36,8 @@ namespace TradingSystem.View
         private const string msgDeleteTempSuccess = "tempdeletesuccess";
         private const string msgModifySuccess = "tempmodifysuccess";
         private const string msgModifyFail = "tempmodifyfail";
+        private const string msgCopyFail = "tempcopyfail";
+        private const string msgSecurityCopyFail = "tempsecuritycopyfail";
         private const string msgDeleteSecuritySelect = "tempdeletesecurityselect";
         private const string msgAddTempSelect = "tempaddselect";
         private const string msgInvalidSelect = "tempinvalidselect";
@@ -297,7 +299,7 @@ namespace TradingSystem.View
                 EReplaceType = template.EReplaceType,
                 EWeightType = template.EWeightType,
                 Benchmark = template.Benchmark,
-                CreatedUserId = template.CreatedUserId,
+                CreatedUserId = LoginManager.Instance.GetUserId(),
                 EStatus = template.EStatus,
                 DCreatedDate = DateTime.Now,
                 CanEditUsers = template.CanEditUsers,
@@ -305,10 +307,16 @@ namespace TradingSystem.View
                 Permissions = template.Permissions,
             };
 
-            StockTemplate newtemp = _templateBLL.CreateTemplate(temp);
-            if (newtemp.TemplateId > 0)
+            int newTemplateId = _templateBLL.Copy(template.TemplateId, temp);
+            if (newTemplateId > 0)
             {
-                _tempDataSource.Add(newtemp);
+                temp.TemplateId = newTemplateId;
+                _tempDataSource.Add(temp);
+                //如果需要切换到新的模板，可以在此处理
+            }
+            else
+            {
+                MessageDialog.Fail(this, msgCopyFail);
             }
 
             this.tempGridView.Invalidate();
@@ -508,22 +516,24 @@ namespace TradingSystem.View
                 }
             }
 
-            int success = _templateBLL.DeleteStock(deleteItems);
-            if (success > 0)
+            foreach (var deleteItem in deleteItems)
             {
-                foreach (var deleteItem in deleteItems)
-                {
-                    _spotDataSource.Remove(deleteItem);
-                }
-
-                MessageDialog.Info(this, msgSecurityDeleteSuccess);
-            }
-            else
-            {
-                MessageDialog.Info(this, msgSecurityDeleteFail);
+                _spotDataSource.Remove(deleteItem);
             }
 
-            SwitchTemplateStockSave(false);
+            //int success = _templateBLL.DeleteStock(deleteItems);
+            //if (success > 0)
+            //{
+
+
+            //    MessageDialog.Info(this, msgSecurityDeleteSuccess);
+            //}
+            //else
+            //{
+            //    MessageDialog.Info(this, msgSecurityDeleteFail);
+            //}
+
+            SwitchTemplateStockSave(true);
         }
 
         private void ToolStripButton_AddStock_Click(object sender, EventArgs e)
@@ -707,7 +717,7 @@ namespace TradingSystem.View
             double minusResult = 1.0 - totalWeight;
 
             //如果不为100%，则根据数量调整比例;这种调整方式是否可以改进, 通过市值调整？
-            if ( minusResult > 0.001 )
+            if ( Math.Abs(minusResult) > 0.001 )
             {
                 int[] origAmounts = new int[_spotDataSource.Count];
                 for (int i = 0, count = _spotDataSource.Count; i < count; i++)
@@ -807,7 +817,7 @@ namespace TradingSystem.View
         private List<SecurityItem> GetSecurityItems(StockTemplate template)
         {
             List<SecurityItem> secuList = new List<SecurityItem>();
-            var benchmarkItem = _securityInfoList.Find(p => p.SecuCode.Equals(template.Benchmark) && p.SecuType == SecurityType.Index);
+            var benchmarkItem = SecurityInfoManager.Instance.Get(template.Benchmark, SecurityType.Index);
             if (benchmarkItem != null)
             {
                 secuList.Add(benchmarkItem);
@@ -815,11 +825,8 @@ namespace TradingSystem.View
 
             foreach (var stock in _spotDataSource)
             {
-                var findItem = _securityInfoList.Find(p => p.SecuCode.Equals(stock.SecuCode) && p.SecuType == SecurityType.Stock);
-                if (findItem != null)
-                {
-                    secuList.Add(findItem);
-                }
+                var secuItem = SecurityInfoManager.Instance.Get(stock.SecuCode, SecurityType.Stock);
+                secuList.Add(secuItem);
             }
 
             return secuList;
