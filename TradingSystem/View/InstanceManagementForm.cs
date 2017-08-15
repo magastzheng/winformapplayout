@@ -37,7 +37,21 @@ namespace TradingSystem.View
             this.tsbModify.Click += new System.EventHandler(ToolStripButton_Modify_Click);
             this.tsbRefresh.Click += new System.EventHandler(ToolStripButton_Refresh_Click);
             this.tsbArchive.Click += new System.EventHandler(ToolStripButton_Archive_Click);
+
+            this.gridView.MouseDoubleClick += new MouseDoubleClickHandler(GridView_MouseDoubleClick);
         }
+
+        #region gridview event handler
+
+        private void GridView_MouseDoubleClick(object sender, int rowIndex, int columnIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= _dataSource.Count)
+                return;
+
+            ModifyInstance(rowIndex);
+        }
+
+        #endregion
 
         #region load control
 
@@ -87,6 +101,25 @@ namespace TradingSystem.View
                 return;
             }
 
+            ModifyInstance(currentRowIndex);
+        }
+
+        private void ToolStripButton_Refresh_Click(object sender, System.EventArgs e)
+        {
+            InternalLoadData();
+        }
+
+        private void ToolStripButton_Archive_Click(object sender, System.EventArgs e)
+        {
+
+        }
+
+        #endregion
+
+        #region private method
+
+        private void ModifyInstance(int currentRowIndex)
+        {
             var tradeInstance = _dataSource[currentRowIndex];
             TradeInstanceModifyDialog dialog = new TradeInstanceModifyDialog();
             dialog.Owner = this;
@@ -113,7 +146,7 @@ namespace TradingSystem.View
                         tradeInstance.Notes = newTradeInstance.Notes;
                     }
                     else
-                    { 
+                    {
                         //Failure
                     }
                 }
@@ -123,16 +156,6 @@ namespace TradingSystem.View
             {
                 dialog.Dispose();
             }
-        }
-
-        private void ToolStripButton_Refresh_Click(object sender, System.EventArgs e)
-        {
-            InternalLoadData();
-        }
-
-        private void ToolStripButton_Archive_Click(object sender, System.EventArgs e)
-        {
-
         }
 
         #endregion

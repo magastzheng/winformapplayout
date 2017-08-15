@@ -19,6 +19,7 @@ namespace BLL.TradeInstance
         private TradeInstanceSecurityDAO _tradeinstsecudao = new TradeInstanceSecurityDAO();
         private TradeInstanceTransactionDAO _tradeinstancetrandao = new TradeInstanceTransactionDAO();
         private ProductBLL _productBLL = new ProductBLL();
+        private UserBLL _userBll = new UserBLL();
         private PermissionManager _permissionManager = new PermissionManager();
 
         public TradeInstanceBLL()
@@ -154,6 +155,7 @@ namespace BLL.TradeInstance
             var allInstances = GetAllInstance();
             var portolios = _productBLL.GetAll();
             var instItems = new List<InstanceItem>();
+            var currentUser = LoginManager.Instance.GetUser();
 
             foreach (var instance in allInstances)
             {
@@ -169,8 +171,11 @@ namespace BLL.TradeInstance
                     MonitorUnitId = instance.MonitorUnitId,
                     MonitorUnitName = instance.MonitorUnitName,
                     DCreatedDate = instance.CreatedDate,
-                    Owner = instance.Owner
+                    Owner = instance.Owner,
+                    Notes = instance.Notes,
                 };
+
+                instItem.Creator = GetUserName(instItem.Owner, currentUser);
 
                 var portfolio = portolios.Find(p => p.PortfolioId == instItem.PortfolioId);
                 if (portfolio != null)
@@ -298,6 +303,25 @@ namespace BLL.TradeInstance
                 default:
                     break;
             }
+        }
+
+        private string GetUserName(int userId, User currentUser)
+        {
+            string name = string.Empty;
+            if (currentUser.Id == userId)
+            {
+                name = currentUser.Name;
+            }
+            else
+            {
+                var user = _userBll.GetById(userId);
+                if (user != null)
+                {
+                    name = user.Name;
+                }
+            }
+
+            return name;
         }
         #endregion
     }

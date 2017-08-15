@@ -225,7 +225,7 @@ namespace TradingSystem.Dialog
 
         private void Button_Confirm_Click(object sender, EventArgs e)
         {
-            if (!Validate())
+            if (!ValidateInput())
             {
                 MessageDialog.Error(this, msgInvalidSetting);
                 return;
@@ -241,7 +241,7 @@ namespace TradingSystem.Dialog
 
         #endregion 
 
-        private bool Validate()
+        private bool ValidateInput()
         {
             if (string.IsNullOrEmpty(this.tbInstanceCode.Text))
             {

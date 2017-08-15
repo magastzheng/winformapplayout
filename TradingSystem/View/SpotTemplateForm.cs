@@ -92,6 +92,7 @@ namespace TradingSystem.View
             this.tsbExport.Click += new EventHandler(ToolStripButton_Export_Click);
 
             tempGridView.MouseClickRow += new ClickRowHandler(GridView_Template_MouseClickRow);
+            tempGridView.MouseDoubleClick += new MouseDoubleClickHandler(GridView_Template_MouseDoubleClick);
 
             this.LoadControl += new FormLoadHandler(Form_LoadControl);
             this.LoadData += new FormLoadHandler(Form_LoadData);
@@ -202,7 +203,7 @@ namespace TradingSystem.View
 
         #endregion
 
-        #region
+        #region GridView event handler
 
         private void GridView_Template_MouseClickRow(object sender, int rowIndex)
         {
@@ -234,6 +235,15 @@ namespace TradingSystem.View
             SetCurrentTemplate();
         }
 
+        private void GridView_Template_MouseDoubleClick(object sender, int rowIndex, int columnIndex)
+        {
+            //检查点击事件是否触发在有效的表各项中
+            if (rowIndex < 0 || rowIndex >= _tempDataSource.Count)
+                return;
+
+            StockTemplate template = _tempDataSource[rowIndex];
+            ModifyTemplate(template);
+        }
 
         #endregion
 
@@ -265,23 +275,7 @@ namespace TradingSystem.View
             if (stockTemplate == null)
                 return;
 
-            TemplateDialog dialog = new TemplateDialog();
-            dialog.SaveData += new FormSaveHandler(Dialog_ModifyTemplate);
-            dialog.Owner = this;
-            dialog.StartPosition = FormStartPosition.CenterParent;
-            dialog.OnLoadControl(dialog, null);
-            dialog.OnLoadData(dialog, stockTemplate);
-            dialog.ShowDialog();
-            if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
-            {
-                MessageDialog.Info(this, msgModifySuccess);
-                dialog.Dispose();
-            }
-            else
-            {
-                dialog.Close();
-                dialog.Dispose();
-            }
+            ModifyTemplate(stockTemplate);
         }
 
         private void ToolStripButton_CopyTemplate_Click(object sender, EventArgs e)
@@ -342,6 +336,27 @@ namespace TradingSystem.View
         #endregion
 
         #region Template change method
+
+        private void ModifyTemplate(StockTemplate template)
+        {
+            TemplateDialog dialog = new TemplateDialog();
+            dialog.SaveData += new FormSaveHandler(Dialog_ModifyTemplate);
+            dialog.Owner = this;
+            dialog.StartPosition = FormStartPosition.CenterParent;
+            dialog.OnLoadControl(dialog, null);
+            dialog.OnLoadData(dialog, template);
+            dialog.ShowDialog();
+            if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+                MessageDialog.Info(this, msgModifySuccess);
+                dialog.Dispose();
+            }
+            else
+            {
+                dialog.Close();
+                dialog.Dispose();
+            }
+        }
 
         private void SetCurrentTemplate()
         { 

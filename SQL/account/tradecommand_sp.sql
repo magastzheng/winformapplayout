@@ -490,88 +490,18 @@ create proc procTradeInstanceUpdate(
 	,@InstanceCode		varchar(20)
 	,@MonitorUnitId		int
 	,@TemplateId		int
-	,@StockDirection	int
-	,@FuturesContract	varchar(10)
-	,@FuturesDirection	int
-	,@OperationCopies	int
-	,@StockPriceType	int
-	,@FuturesPriceType	int
-	,@Status			int
-	,@Owner				int
 	,@ModifiedDate		datetime
 	,@Notes				varchar(100)
 )
 as
 begin
-	declare @OldMonitorUnitId int
-	declare @OldTemplateId int
-	declare @OldStockDirection int
-	declare @OldFuturesDirection int
-	declare @OldOperationCopies int
-	declare @OldFuturesContract varchar
-	declare @OldNotes varchar
-	--declare @OldStockPriceType int
-
-	select @OldMonitorUnitId = MonitorUnitId
-		,@OldTemplateId = TemplateId
-		,@OldStockDirection = StockDirection
-		,@OldFuturesDirection = FuturesDirection
-		,@OldOperationCopies = OperationCopies
-		,@OldFuturesContract = FuturesContract
-		,@OldNotes = Notes
-		--,@OldStockPriceType = StockPriceType
-	from tradeinstance
-	where InstanceId=@InstanceId 
-
-	if @MonitorUnitId = 0 or @MonitorUnitId < 0
-	begin
-		set @MonitorUnitId = @OldMonitorUnitId
-	end
-
-	if @TemplateId = 0 or @TemplateId < 0
-	begin
-		set @TemplateId = @OldTemplateId
-	end
-
-	if @OperationCopies = 0 or @OperationCopies < 0
-	begin
-		set @OperationCopies = @OldOperationCopies
-	end
-
-	if @StockDirection = 0 or @StockDirection < 0
-	begin
-		set @StockDirection = @OldStockDirection
-	end
-
-	if @FuturesDirection = 0 or @FuturesDirection < 0
-	begin
-		set @FuturesDirection = @OldFuturesDirection
-	end
-
-	if @FuturesContract is null or len(@FuturesContract) = 0
-	begin
-		set @FuturesContract = @OldFuturesContract
-	end
-
-	if @Notes is null or len(@Notes) = 0
-	begin
-		set @Notes = @OldNotes
-	end
-
+	
 	--不可修改PortfolioId
 	update tradeinstance
 	set			
 		InstanceCode		= @InstanceCode
 		,MonitorUnitId		= @MonitorUnitId
-		,TemplateId			= @TemplateId
-		,StockDirection		= @StockDirection	
-		,FuturesContract	= @FuturesContract	
-		,FuturesDirection	= @FuturesDirection
-		,OperationCopies	= @OperationCopies
-		,StockPriceType		= @StockPriceType
-		,FuturesPriceType	= @FuturesPriceType
-		,Status				= @Status
-		,Owner				= @Owner	
+		,TemplateId			= @TemplateId	
 		,ModifiedDate		= @ModifiedDate	
 		,Notes				= @Notes
 	where InstanceId=@InstanceId

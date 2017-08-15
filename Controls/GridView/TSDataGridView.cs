@@ -19,6 +19,7 @@ namespace Controls.GridView
 
     public delegate void UpdateRelatedDataGrid(UpdateDirection direction, int rowIndex, int columnIndex);
     public delegate void ClickRowHandler(object sender, int rowIndex);
+    public delegate void MouseDoubleClickHandler(object sender, int rowIndex, int columnIndex);
     public delegate void NumericUpDownValueChanged(int newValue, int rowIndex, int columnIndex);
     public delegate void CellEndEditHandler(int rowIndex, int columnIndex, string columnName); 
     public delegate void ComboBoxSelectionChangeCommitHandler(ComboBox comboBox, object selectedItem, int rowIndex, int columnIndex);
@@ -27,6 +28,7 @@ namespace Controls.GridView
     {
         public event UpdateRelatedDataGrid UpdateRelatedDataGridHandler;
         public event ClickRowHandler MouseClickRow;
+        public event MouseDoubleClickHandler MouseDoubleClick;
         public event NumericUpDownValueChanged NumericUpDownValueChanged;
         public event CellEndEditHandler CellEndEditHandler;
         public event ComboBoxSelectionChangeCommitHandler ComboBoxSelectionChangeCommitHandler; 
@@ -66,8 +68,31 @@ namespace Controls.GridView
             this.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_CellContentClick);
             //this.CellDoubleClick += new DataGridViewCellEventHandler(DataGridView_CellDoubleClick);
             this.CellEndEdit += new DataGridViewCellEventHandler(DataGridView_CellEndEdit);
+            this.CellMouseDoubleClick += new DataGridViewCellMouseEventHandler(DataGridView_CellMouseDoubleClick);
 
             this.CellMouseDown += new DataGridViewCellMouseEventHandler(DataGridView_CellMouseDown);
+        }
+
+        /// <summary>
+        /// 双击单元格时发生该事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DataGridView_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (sender == null || e.ColumnIndex < 0 || e.RowIndex < 0)
+                return;
+
+            TSDataGridView dgv = sender as TSDataGridView;
+            if (dgv == null)
+                return;
+
+            //Trace.WriteLine("DataGridView_CellMouseDoubleClick");
+
+            if (MouseDoubleClick != null)
+            {
+                MouseDoubleClick(this, e.RowIndex, e.ColumnIndex);
+            }
         }
 
         /// <summary>
@@ -126,7 +151,9 @@ namespace Controls.GridView
             TSDataGridView dgv = sender as TSDataGridView;
             if (dgv == null)
                 return;
-            
+
+            //Trace.WriteLine("DataGridView_CellMouseUp");
+
             int columnIndex = e.ColumnIndex;
             int rowIndex = e.RowIndex;
             if (columnIndex < 0 || columnIndex > dgv.Columns.Count || rowIndex < 0 || rowIndex > dgv.Rows.Count)
@@ -248,6 +275,8 @@ namespace Controls.GridView
             if (dgv == null || e.ColumnIndex < 0 || e.RowIndex < 0)
                 return;
 
+            //Trace.WriteLine("DataGridView_CellContentClick");
+
             int cbColIndex = GetCheckBoxColumnIndex();
             if (cbColIndex < 0)
                 return;
@@ -305,7 +334,9 @@ namespace Controls.GridView
             TSDataGridView dgv = sender as TSDataGridView;
             if (dgv == null)
                 return;
-            
+
+            //Trace.WriteLine("DataGridView_CellMouseClick");
+
             if (MouseClickRow != null)
             {
                 MouseClickRow(this, e.RowIndex);

@@ -16,7 +16,7 @@ namespace ControlsTest
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            //Application.Run(new Form1());
             //Application.Run(new AutoCompleteForm());
             //Application.Run(new TSDataGridViewForm());
             //Application.Run(new TSDataGridVieweFormWithoutBinding());
@@ -27,7 +27,7 @@ namespace ControlsTest
             //Application.Run(new TSDGVComboBox());
             //Application.Run(new TSDGVComboBoxVarRowForm());
 
-            //Application.Run(new TSDGVEachRowForm());
+            Application.Run(new TSDGVEachRowForm());
 
             //Application.Run(new TSDGVNumericColumnForm());
 
