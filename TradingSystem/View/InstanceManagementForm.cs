@@ -110,6 +110,7 @@ namespace TradingSystem.View
                         tradeInstance.MonitorUnitName = newTradeInstance.MonitorUnitName;
                         tradeInstance.TemplateId = newTradeInstance.TemplateId;
                         tradeInstance.TemplateName = newTradeInstance.TemplateName;
+                        tradeInstance.Notes = newTradeInstance.Notes;
                     }
                     else
                     { 

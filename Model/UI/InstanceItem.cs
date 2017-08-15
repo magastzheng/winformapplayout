@@ -55,6 +55,13 @@ namespace Model.UI
             get { return DateFormat.Format(DCreatedDate, ConstVariable.TimeFormat); }
         }
 
+        [BindingAttribute("notes")]
+        public string Notes
+        {
+            get;
+            set;
+        }
+
         public int Owner { get; set; }
 
         public int MonitorUnitId { get; set; }

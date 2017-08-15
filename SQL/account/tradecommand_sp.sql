@@ -508,6 +508,7 @@ begin
 	declare @OldStockDirection int
 	declare @OldFuturesDirection int
 	declare @OldOperationCopies int
+	declare @OldFuturesContract varchar
 	declare @OldNotes varchar
 	--declare @OldStockPriceType int
 
@@ -516,6 +517,7 @@ begin
 		,@OldStockDirection = StockDirection
 		,@OldFuturesDirection = FuturesDirection
 		,@OldOperationCopies = OperationCopies
+		,@OldFuturesContract = FuturesContract
 		,@OldNotes = Notes
 		--,@OldStockPriceType = StockPriceType
 	from tradeinstance
@@ -544,6 +546,11 @@ begin
 	if @FuturesDirection = 0 or @FuturesDirection < 0
 	begin
 		set @FuturesDirection = @OldFuturesDirection
+	end
+
+	if @FuturesContract is null or len(@FuturesContract) = 0
+	begin
+		set @FuturesContract = @OldFuturesContract
 	end
 
 	if @Notes is null or len(@Notes) = 0

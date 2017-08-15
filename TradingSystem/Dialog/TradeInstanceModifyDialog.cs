@@ -22,7 +22,7 @@ namespace TradingSystem.Dialog
         private TemplateBLL _templateBLL = new TemplateBLL();
         private ProductBLL _productBLL = new ProductBLL();
 
-        private TradeInstance _originTradeInstance = null;
+        private InstanceItem _originTradeInstance = null;
 
         public TradeInstanceModifyDialog()
         {
@@ -55,16 +55,16 @@ namespace TradingSystem.Dialog
 
         private bool Form_LoadData(object sender, object data)
         {
-            if (data == null || !(data is TradeInstance))
+            if (data == null || !(data is InstanceItem))
                 return false;
 
-            _originTradeInstance = (TradeInstance)data;
+            _originTradeInstance = (InstanceItem)data;
 
             LoadTextBox(_originTradeInstance);
             LoadMonitorUnits(_originTradeInstance.MonitorUnitId);
             LoadTemplates(_originTradeInstance.TemplateId);
-            LoadFund(_originTradeInstance.AccountCode);
-            LoadAssetUnit(_originTradeInstance.AssetNo);
+            LoadFund(_originTradeInstance.FundCode);
+            LoadAssetUnit(_originTradeInstance.AssetUnitCode);
             LoadPortfolio(_originTradeInstance.PortfolioCode);
 
             return true;
@@ -83,10 +83,12 @@ namespace TradingSystem.Dialog
 
         #endregion
 
-        private void LoadTextBox(TradeInstance tradeInstance)
+        private void LoadTextBox(InstanceItem tradeInstance)
         {
             this.tbInstanceId.Text = string.Format("{0}", tradeInstance.InstanceId);
             this.tbInstanceCode.Text = tradeInstance.InstanceCode;
+
+            this.tbNotes.Text = tradeInstance.Notes ?? string.Empty;
         }
 
         private void LoadMonitorUnits(int monitorUnitId)
@@ -265,14 +267,14 @@ namespace TradingSystem.Dialog
             TradeInstance tradeInstance = new TradeInstance
             {
                 InstanceId = _originTradeInstance.InstanceId,
-                AccountCode = _originTradeInstance.AccountCode,
-                AccountName = _originTradeInstance.AccountName,
-                AssetNo = _originTradeInstance.AssetNo,
-                AssetName = _originTradeInstance.AssetName,
+                AccountCode = _originTradeInstance.FundCode,
+                AccountName = _originTradeInstance.FundName,
+                AssetNo = _originTradeInstance.AssetUnitCode,
+                AssetName = _originTradeInstance.AssetUnitName,
                 PortfolioId = _originTradeInstance.PortfolioId,
                 PortfolioCode = _originTradeInstance.PortfolioCode,
                 PortfolioName = _originTradeInstance.PortfolioName,
-                Status = _originTradeInstance.Status,
+                //Status = _originTradeInstance.Status,
             };
 
             //var selectItem = (ComboOptionItem)this.cbFundCode.SelectedItem;
@@ -297,6 +299,8 @@ namespace TradingSystem.Dialog
             //}
 
             tradeInstance.InstanceCode = this.tbInstanceCode.Text.Trim();
+
+            tradeInstance.Notes = this.tbNotes.Text.Trim();
 
             int temp = -1;
             var selectItem = (ComboOptionItem)this.cbTemplate.SelectedItem;
