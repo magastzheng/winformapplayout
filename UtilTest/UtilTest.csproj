@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DateUtilTest.cs" />
+    <Compile Include="DigitTest.cs" />
     <Compile Include="EntrustPriceTypeTest.cs" />
     <Compile Include="EnumHelperTest.cs" />
     <Compile Include="ExcelUtilTest.cs" />

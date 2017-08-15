@@ -210,7 +210,7 @@ namespace DBAccess.Template
                 //TODO: add log
                 logger.Error(ex);
                 ret = -1;
-                throw;
+                //throw;
             }
             finally
             {

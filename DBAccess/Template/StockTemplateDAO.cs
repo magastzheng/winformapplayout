@@ -11,6 +11,7 @@ namespace DBAccess.Template
     {
         private const string SP_Create = "procTemplateInsert";
         private const string SP_Modify = "procTemplateUpdate";
+        private const string SP_ModifyModifiedDate = "procTemplateUpdateModifiedDate";
         private const string SP_Delete = "procTemplateDelete";
         private const string SP_Get = "procTemplateSelectById";
         private const string SP_GetByUser = "procTemplateSelect";
@@ -125,6 +126,15 @@ namespace DBAccess.Template
                 templateId = (int)dbCommand.Parameters["@return"].Value;
             }
             return templateId;
+        }
+
+        public int UpdateModifiedDate(int templateNo)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_ModifyModifiedDate);
+            _dbHelper.AddInParameter(dbCommand, "@TemplateId", System.Data.DbType.Int32, templateNo);
+            _dbHelper.AddInParameter(dbCommand, "@ModifiedDate", System.Data.DbType.DateTime, DateTime.Now);
+
+            return _dbHelper.ExecuteNonQuery(dbCommand);
         }
 
         public int Delete(int templateNo)

@@ -87,6 +87,24 @@ begin
 end
 
 go
+if exists (select name from sysobjects where name='procTemplateUpdateModifiedDate')
+drop proc procTemplateUpdateModifiedDate
+
+go
+
+create proc procTemplateUpdateModifiedDate(
+	@TemplateId int,
+	@ModifiedDate datetime
+)
+as
+begin
+	update stocktemplate
+	set
+		ModifiedDate = @ModifiedDate
+	where TemplateId = @TemplateId
+end
+
+go
 if exists (select name from sysobjects where name='procTemplateSelectById')
 drop proc procTemplateSelectById
 

@@ -483,6 +483,11 @@ namespace TradingSystem.View
             if (ret > 0)
             {
                 SwitchTemplateStockSave(false);
+
+                //更新时间
+                template.DModifiedDate = DateTime.Now;
+
+                this.tempGridView.Invalidate();
             }
         }
 

@@ -147,6 +147,12 @@
 			"id": "securitydialogcodenoempty",
 			"text": "证券代码不能为空!"
 		},{
+			"id": "securitydialoginputinvalid",
+			"text": "输入非法字符!"
+		},{
+			"id": "securitydialogweighterror",
+			"text": "权重设置范围[0,100]!"
+		},{
 			"id": "closecopiesinput",
 			"text": "请输入有效的操作份数！"
 		},{

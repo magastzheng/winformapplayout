@@ -189,7 +189,14 @@ namespace BLL.Template
             int loginUserId = LoginManager.Instance.GetUserId();
             _userActionTrackingBLL.Create(loginUserId, Model.UsageTracking.ActionType.Edit, ResourceType.SpotTemplate, templateNo, tempStocks.Count, Model.UsageTracking.ActionStatus.Normal, JsonUtil.SerializeObject(tempStocks));
 
-            return _stockdbdao.Replace(templateNo, tempStocks);
+            int ret = _stockdbdao.Replace(templateNo, tempStocks);
+            if (ret > 0)
+            {
+                //如果更新模板组合成功，则更新模板修改时间
+                return _tempdbdao.UpdateModifiedDate(templateNo);
+            }
+
+            return ret;
         }
 
         public int Copy(int oldTemplateId, StockTemplate template)
