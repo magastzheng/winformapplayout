@@ -492,10 +492,29 @@ create proc procTradeInstanceUpdate(
 	,@TemplateId		int
 	,@ModifiedDate		datetime
 	,@Notes				varchar(100)
+	,@FuturesContract	varchar(10) = NULL
+	,@FuturesDirection	int	= NULL
 )
 as
 begin
-	
+	declare @OldFuturesContract varchar
+	declare @OldFuturesDirection int
+
+	select @OldFuturesContract = FuturesContract
+		,@OldFuturesDirection = FuturesDirection
+	from tradeinstance
+	where InstanceId=@InstanceId 
+
+	if @FuturesContract is null or len(@FuturesContract) = 0
+	begin
+		set @FuturesContract = @OldFuturesContract
+	end
+
+	if @FuturesDirection = 0 or @FuturesDirection < 0
+	begin
+		set @FuturesDirection = @OldFuturesDirection
+	end
+
 	--不可修改PortfolioId
 	update tradeinstance
 	set			
