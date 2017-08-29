@@ -172,18 +172,18 @@ namespace BLL.Entrust.Futures
 
             try
             {
+                var dealFlowItems = GetDealItems(token, responseItems);
+
+                if (token.OutArgs != null
+                    && token.OutArgs is List<DealFlowItem>
+                    && dealFlowItems != null
+                    && dealFlowItems.Count > 0)
+                {
+                    ((List<DealFlowItem>)token.OutArgs).AddRange(dealFlowItems);
+                }
+
                 if (token.Caller != null)
                 {
-                    var dealFlowItems = GetDealItems(token, responseItems);
-                    
-                    if (token.OutArgs != null
-                        && token.OutArgs is List<DealFlowItem>
-                        && dealFlowItems != null
-                        && dealFlowItems.Count > 0)
-                    {
-                        ((List<DealFlowItem>)token.OutArgs).AddRange(dealFlowItems);
-                    }
-
                     token.Caller(token, dealFlowItems, errorResponse);
                 }
             }
