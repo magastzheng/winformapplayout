@@ -11,6 +11,7 @@ using Util;
 using System.Linq;
 using BLL.Manager;
 using Model.SecurityInfo;
+using System;
 
 namespace BLL.Template
 {
@@ -38,6 +39,7 @@ namespace BLL.Template
             if (templateId > 0)
             {
                 template.TemplateId = templateId;
+                template.DCreatedDate = DateTime.Now;
                 int userId = LoginManager.Instance.GetUserId();
 
                 //Add the usage tracking information

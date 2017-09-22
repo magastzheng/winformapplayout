@@ -130,13 +130,20 @@ namespace TradingSystem.View
 
         private bool Form_LoadData(object sender, object data)
         {
+            LoadAllData();
+
+            return true;
+        }
+
+        private void LoadAllData()
+        {
             _tempDataSource.Clear();
             _spotDataSource.Clear();
 
             var items = _templateBLL.GetTemplates();
             if (items != null)
-            { 
-                foreach(var item in items)
+            {
+                foreach (var item in items)
                 {
                     _tempDataSource.Add(item);
                 }
@@ -151,8 +158,6 @@ namespace TradingSystem.View
             _benchmarkList = _benchmarkBLL.GetAll();
 
             SetCurrentTemplate();
-
-            return true;
         }
 
         private void LoadTemplateStock(int templateNo)
@@ -325,6 +330,9 @@ namespace TradingSystem.View
             int ret = _templateBLL.DeleteTemplate(template);
             if (ret == 1)
             {
+                _tempDataSource.Remove(template);
+                tempGridView.Invalidate();
+
                 MessageDialog.Info(this, msgDeleteTempSuccess);
             }
             else

@@ -182,7 +182,10 @@ namespace DBAccess.TradeInstance
             item.MonitorUnitId = (int)reader["MonitorUnitId"];
             item.MonitorUnitName = (string)reader["MonitorUnitName"];
             item.TemplateId = (int)reader["TemplateId"];
-            item.TemplateName = (string)reader["TemplateName"];
+            if (reader["TemplateName"] != null && reader["TemplateName"] != DBNull.Value)
+            {
+                item.TemplateName = (string)reader["TemplateName"];
+            }
             item.PortfolioId = (int)reader["PortfolioId"];
             item.PortfolioCode = (string)reader["PortfolioCode"];
             item.PortfolioName = (string)reader["PortfolioName"];

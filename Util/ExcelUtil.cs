@@ -212,12 +212,15 @@ namespace Util
             FileStream fs = null;
             try
             {
-                fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+                //设置文件共享为读写，否则无法对取另外一个进程在使用的文件
+                fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             }
             catch (IOException e)
             {
                 string msg = string.Format("Fail to read the file: {0}, message: {1}", fileName, e.Message);
                 logger.Error(msg);
+
+                return null;
             }
 
             try

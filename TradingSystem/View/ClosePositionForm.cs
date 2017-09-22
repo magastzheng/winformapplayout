@@ -321,7 +321,7 @@ namespace TradingSystem.View
             }
         }
 
-        private void LoadTemplateOption()
+        private void LoadTemplateOption(List<TradeInstance> tradeInstances)
         {
             //binding the template
             var templates = _templateBLL.GetTemplates();
@@ -343,6 +343,20 @@ namespace TradingSystem.View
                     tempOption.Items.Add(option);
                 }
 
+                var excludedTemplates = from p in tradeInstances
+                                        where templates.Find(o => o.TemplateId == p.TemplateId) == null
+                                        select p;
+                foreach(var tradeInstance in tradeInstances)
+                {
+                    ComboOptionItem option = new ComboOptionItem
+                    {
+                        Id = tradeInstance.TemplateId.ToString(),
+                        Name = string.Format("{0} {1}", tradeInstance.TemplateId, tradeInstance.TemplateName)
+                    };
+
+                    tempOption.Items.Add(option);
+                }
+
                 TSDataGridViewHelper.SetDataBinding(this.cmdGridView, "spottemplate", tempOption);
             }
         }
@@ -357,8 +371,6 @@ namespace TradingSystem.View
             _secuDataSource.Clear();
             _cmdDataSource.Clear();
             _instanceFuturesMap.Clear();
-
-            LoadTemplateOption();
 
             var tradeInstances = _tradeInstanceBLL.GetAllInstance();
             if (tradeInstances == null || tradeInstances.Count == 0)
@@ -387,6 +399,7 @@ namespace TradingSystem.View
                 _instDataSource.Add(closeItem);
             }
 
+            LoadTemplateOption(tradeInstances);
             //LoadHolding();
 
             return true;
