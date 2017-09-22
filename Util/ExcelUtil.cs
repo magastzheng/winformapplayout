@@ -185,7 +185,15 @@ namespace Util
             var sheet = GetSheet(wb, sheetName);
             if (sheet == null)
                 return table;
-            table = ReadSheet(sheet, colHeadMap);
+            try
+            {
+                table = ReadSheet(sheet, colHeadMap);
+            }
+            catch (Exception e)
+            {
+                string msg = string.Format("Fail to read the file: {0}, message: {1}", fileName, e.Message);
+                logger.Error(msg);            
+            }
             return table;
         }
 
@@ -198,7 +206,15 @@ namespace Util
             var sheet = GetSheet(wb, sheetIndex);
             if (sheet == null)
                 return table;
-            table = ReadSheet(sheet, colHeadMap);
+            try
+            {
+                table = ReadSheet(sheet, colHeadMap);
+            }
+            catch (Exception e)
+            { 
+                string msg = string.Format("Fail to read the file: {0}, message: {1}", fileName, e.Message);
+                logger.Error(msg);  
+            }
             return table;
         }
 
@@ -306,12 +322,18 @@ namespace Util
 
             //第一行为行头
             IRow row = sheet.GetRow(startRow);
+            while (row == null && startRow <= sheet.LastRowNum)
+            { 
+                startRow++;
+                row = sheet.GetRow(startRow);
+            }
+
             short minCol = row.FirstCellNum;
             short maxCol = row.LastCellNum;
             for (int colIndex = minCol; colIndex < maxCol; colIndex++)
             {
                 ICell cell = row.GetCell(colIndex);
-                if (cell != null)
+                if (cell != null && cell.CellType != CellType.Formula)
                 {
                     string name = cell.StringCellValue;
                     if (!table.ColumnIndex.ContainsKey(name))
@@ -332,17 +354,18 @@ namespace Util
                 if (row == null)
                     break;
 
-                DataRow dataRow = new DataRow 
-                {
-                    Columns = new List<DataValue>()
-                };
-
                 minCol = row.FirstCellNum;
                 maxCol = row.LastCellNum;
+
+                DataRow dataRow = new DataRow 
+                {
+                    Columns = new List<DataValue>(new DataValue[maxCol+1])
+                };
+
                 for (int colIndex = minCol; colIndex < maxCol; colIndex++)
                 {
                     ICell cell = row.GetCell(colIndex);
-                    if (cell != null)
+                    if (cell != null && cell.CellType != CellType.Formula)
                     { 
                         string colName = string.Empty;
                         DataColumnHeader colHeader = null;
@@ -435,7 +458,7 @@ namespace Util
                                 break;
                         }
 
-                        dataRow.Columns.Add(dataValue);
+                        dataRow.Columns[colIndex]=dataValue;
                     }
                 }//end of columns
                 table.Rows.Add(dataRow);

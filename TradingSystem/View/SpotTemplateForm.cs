@@ -19,11 +19,14 @@ using BLL.SecurityInfo;
 using TradingSystem.Dialog;
 using BLL.Permission;
 using BLL.Manager;
+using log4net;
 
 namespace TradingSystem.View
 {
     public partial class SpotTemplateForm : Forms.DefaultForm
     {
+        private static ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public enum TempChangeType
         {
             New = 0,
@@ -481,6 +484,10 @@ namespace TradingSystem.View
                 {
                     SwitchTemplateStockSave(true);
                 }
+                else
+                { 
+                    //Fail to import
+                }
             }
             else
             {
@@ -715,7 +722,8 @@ namespace TradingSystem.View
                 return;
             }
 
-            var invalidSecuItem = _spotDataSource.Where(p => FloatUtil.IsZero(p.SettingWeight) || p.Amount == 0).ToList();
+            //var invalidSecuItem = _spotDataSource.Where(p => FloatUtil.IsZero(p.SettingWeight) || p.Amount == 0).ToList();
+            var invalidSecuItem = _spotDataSource.Where(p => FloatUtil.IsZero(p.SettingWeight)).ToList();
             if (invalidSecuItem != null && invalidSecuItem.Count() > 0)
             {
                 if (MessageDialog.Warn(this, msgSecurityZeroWeight, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
@@ -952,9 +960,20 @@ namespace TradingSystem.View
                     return false;
                 }
 
-                var stockList = ExcelToGrid(table);
+                List<TemplateStock> stockList = null;
+
+                try
+                {
+                    stockList = ExcelToGrid(table);
+                }
+                catch (Exception e)
+                {
+                    string msg = string.Format("Fail to convert excel data to table, message: {0}", e.Message);
+                    logger.Error(msg);  
+                }
                 if (stockList == null || stockList.Count == 0)
                 {
+                    MessageDialog.Error(this, msgImportLoadFail);
                     return false;
                 }
 
@@ -1016,11 +1035,25 @@ namespace TradingSystem.View
             for (int i = 0, count = gridColumns.Count; i < count; i++)
             {
                 var column = gridColumns[i];
-                if (excelData.ColumnIndex.ContainsKey(column.Text))
+                string origtext = column.Text;
+                string text = origtext;
+                if (text.Contains("(%)"))
+                {
+                    text = text.Replace("(%)", string.Empty);
+                }
+
+                if (excelData.ColumnIndex.ContainsKey(origtext))
                 {
                     if (!fieldNameColumnIndexMap.ContainsKey(column.Name))
                     {
-                        fieldNameColumnIndexMap.Add(column.Name, excelData.ColumnIndex[column.Text]);
+                        fieldNameColumnIndexMap.Add(column.Name, excelData.ColumnIndex[origtext]);
+                    }
+                }
+                else if (excelData.ColumnIndex.ContainsKey(text))
+                {
+                    if (!fieldNameColumnIndexMap.ContainsKey(column.Name))
+                    {
+                        fieldNameColumnIndexMap.Add(column.Name, excelData.ColumnIndex[text]);
                     }
                 }
             }
@@ -1050,30 +1083,37 @@ namespace TradingSystem.View
                     }
 
                     var val = row.Columns[valIndex];
-                    switch(val.Type)
+                    if (val != null)
                     {
-                        case DataValueType.Int:
-                            field.SetValue(stock, val.GetInt());
-                            break;
-                        case DataValueType.Float:
-                            field.SetValue(stock, val.GetDouble());
-                            break;
-                        case DataValueType.String:
-                            if (valType == DataValueType.Int)
-                            {
+                        switch (val.Type)
+                        {
+                            case DataValueType.Int:
                                 field.SetValue(stock, val.GetInt());
-                            }
-                            else if (valType == DataValueType.Float)
-                            {
+                                break;
+                            case DataValueType.Float:
                                 field.SetValue(stock, val.GetDouble());
-                            }
-                            else
-                            {
-                                field.SetValue(stock, val.GetStr());
-                            }
-                            break;
-                        default:
-                            break;
+                                break;
+                            case DataValueType.String:
+                                if (valType == DataValueType.Int)
+                                {
+                                    field.SetValue(stock, val.GetInt());
+                                }
+                                else if (valType == DataValueType.Float)
+                                {
+                                    field.SetValue(stock, val.GetDouble());
+                                }
+                                else
+                                {
+                                    field.SetValue(stock, val.GetStr());
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else
+                    { 
+                        
                     }
                 }
 

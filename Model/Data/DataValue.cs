@@ -69,15 +69,15 @@ namespace Model.Data
             }
             else if (Type == DataValueType.String)
             {
-                double temp = 0.0f;
+                double temp = 0.0;
                 if (double.TryParse(Value.ToString(), out temp))
                 {
                     return temp;
                 }
 
-                return 0.0f;
+                return 0.0;
             }
-            return 0.0f;
+            return 0.0;
         }
     }
 
