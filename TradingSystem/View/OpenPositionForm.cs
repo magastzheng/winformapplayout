@@ -21,7 +21,6 @@ using BLL.FuturesContractManager;
 using BLL.Manager;
 using Util;
 using System.Text;
-using Model.Quote;
 
 namespace TradingSystem.View
 {
