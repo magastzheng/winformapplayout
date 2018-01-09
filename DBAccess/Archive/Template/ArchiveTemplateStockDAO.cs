@@ -155,8 +155,8 @@ namespace DBAccess.Archive.Template
                     item.ArchiveId = (int)reader["ArchiveId"];
                     item.TemplateNo = (int)reader["TemplateId"];
                     item.SecuCode = (string)reader["SecuCode"];
-                    item.SecuName = (string)reader["SecuName"];
-                    item.Exchange = (string)reader["ExchangeCode"];
+                    //item.SecuName = (string)reader["SecuName"];
+                    //item.Exchange = (string)reader["ExchangeCode"];
                     item.Amount = (int)reader["Amount"];
                     item.MarketCap = (double)(decimal)reader["MarketCap"];
                     item.MarketCapWeight = (double)(decimal)reader["MarketCapOpt"];

@@ -1,8 +1,10 @@
 ﻿using BLL.Archive.Template;
+using BLL.Manager;
 using Config;
 using Controls.Entity;
 using Controls.GridView;
 using Model.Binding.BindingUtil;
+using Model.SecurityInfo;
 using Model.UI;
 using System.Collections.Generic;
 
@@ -93,6 +95,13 @@ namespace TradingSystem.View
             {
                 foreach (var stock in stocks)
                 {
+                    var secuInfo = SecurityInfoManager.Instance.Get(stock.SecuCode, Model.SecurityInfo.SecurityType.Stock);
+                    if (secuInfo != null)
+                    {
+                        stock.SecuName = secuInfo.SecuName;
+                        stock.Exchange = SecurityItemHelper.GetExchange(secuInfo.ExchangeCode);
+                    }
+
                     _secuDataSource.Add(stock);
                 }
             }

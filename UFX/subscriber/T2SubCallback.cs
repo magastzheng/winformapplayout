@@ -5,6 +5,8 @@ using log4net;
 using Model.UFX;
 using System;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using Util;
 
 namespace UFX.subscriber
 {
@@ -16,6 +18,8 @@ namespace UFX.subscriber
         private IUFXMessageHandlerFactory _handlerFactory = null;
 
         private UFXFilterBLL _filterBLL = new UFXFilterBLL();
+
+        private TaskScheduler _taskScheduler = new LimitedConcurrencyLevelTaskScheduler(2);
 
         public T2SubCallback(IUFXMessageHandlerFactory bllFactory)
         {
@@ -72,7 +76,8 @@ namespace UFX.subscriber
                     IUFXMessageHandlerBase subscriberHandler = _handlerFactory.Create(messageType);
                     if (subscriberHandler != null)
                     {
-                        subscriberHandler.Handle(parser);
+                        TaskFactory taskFactory = new TaskFactory(_taskScheduler);
+                        taskFactory.StartNew(() => subscriberHandler.Handle(parser));
                     }
                 }
             }

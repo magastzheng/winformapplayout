@@ -197,19 +197,15 @@ create proc procArchiveTemplateStockSelect(
 as
 begin
 	select 
-		a.ArchiveId,
-		a.TemplateId,
-		a.SecuCode,
-		a.Amount,
-		a.MarketCap,
-		a.MarketCapOpt,
-		a.SettingWeight,
-		b.SecuName,
-		b.ExchangeCode
-	from archivetemplatestock a
-	join securityinfo b
-	on a.SecuCode = b.SecuCode and b.SecuType=2
-	where a.ArchiveId = @ArchiveId
+		ArchiveId,
+		TemplateId,
+		SecuCode,
+		Amount,
+		MarketCap,
+		MarketCapOpt,
+		SettingWeight
+	from archivetemplatestock
+	where ArchiveId = @ArchiveId
 end
 --++archivetemplatestock end++++
 

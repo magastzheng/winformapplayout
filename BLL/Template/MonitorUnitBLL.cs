@@ -110,7 +110,7 @@ namespace BLL.Template
             int userId = LoginManager.Instance.GetUserId();
             if (_permissionManager.HasPermission(userId, monitorUnitId, ResourceType.MonitorUnit, PermissionMask.Edit))
             {
-                ret = _monitorunitdao.Active(monitorUnitId, MonitorUnitStatus.Active);
+                ret = _monitorunitdao.Active(monitorUnitId, status);
             }
 
             return ret;
