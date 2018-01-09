@@ -499,9 +499,13 @@ as
 begin
 	declare @OldFuturesContract varchar
 	declare @OldFuturesDirection int
+	declare @OldMonitorUnitId int
+	declare @OldTemplateId int
 
 	select @OldFuturesContract = FuturesContract
 		,@OldFuturesDirection = FuturesDirection
+		,@OldMonitorUnitId = MonitorUnitId
+		,@OldTemplateId = TemplateId
 	from tradeinstance
 	where InstanceId=@InstanceId 
 
@@ -513,6 +517,16 @@ begin
 	if @FuturesDirection = 0 or @FuturesDirection < 0
 	begin
 		set @FuturesDirection = @OldFuturesDirection
+	end
+
+	if @MonitorUnitId = 0 or @MonitorUnitId < 0
+	begin
+		set @MonitorUnitId = @OldMonitorUnitId
+	end
+
+	if @TemplateId = 0 or @TemplateId < 0
+	begin
+		set @TemplateId = @OldTemplateId
 	end
 
 	--不可修改PortfolioId
