@@ -10,6 +10,7 @@ namespace BLL.Archive.Template
 {
     public class HistTemplateBLL
     {
+        private TemplateStockDAO _stockdbdao = new TemplateStockDAO();
         private ArchiveTemplateDAO _templatedao = new ArchiveTemplateDAO();
         private ArchiveTemplateStockDAO _tempstockdao = new ArchiveTemplateStockDAO();
 
@@ -20,23 +21,29 @@ namespace BLL.Archive.Template
 
         #region historical template
 
-        public int CreateTemplate(StockTemplate template)
+        public int ArchiveTemplate(StockTemplate template)
         {
             ArchiveStockTemplate hst = new ArchiveStockTemplate(template);
             hst.DArchiveDate = DateTime.Now;
 
-            int archiveId = _templatedao.Create(hst);
-            if (archiveId > 0)
+            int archiveId = -1;
+            var stocks = _stockdbdao.Get(template.TemplateId);
+            if (stocks != null)
             {
-                //add permission
-                foreach (var perm in hst.Permissions)
+
+                archiveId = _templatedao.Archive(hst, stocks);
+                if (archiveId > 0)
                 {
-                    _permissionManager.ChangePermission(perm.Token, archiveId, Model.Permission.ResourceType.HistoricalSpotTemplate, perm.Permission, false);
+                    //add permission
+                    foreach (var perm in hst.Permissions)
+                    {
+                        _permissionManager.ChangePermission(perm.Token, archiveId, Model.Permission.ResourceType.HistoricalSpotTemplate, perm.Permission, false);
+                    }
                 }
-            }
-            else
-            {
-                archiveId = -1;
+                else
+                {
+                    archiveId = -1;
+                }
             }
 
             return archiveId;

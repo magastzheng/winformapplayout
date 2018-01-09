@@ -20,6 +20,7 @@ using TradingSystem.Dialog;
 using BLL.Permission;
 using BLL.Manager;
 using log4net;
+using BLL.Archive.Template;
 
 namespace TradingSystem.View
 {
@@ -58,6 +59,7 @@ namespace TradingSystem.View
         private const string GridStock = "templatestock";
 
         private TemplateBLL _templateBLL = new TemplateBLL();
+        private HistTemplateBLL _histTemplateBLL = new HistTemplateBLL();
         private BenchmarkBLL _benchmarkBLL = new BenchmarkBLL();
         private PermissionManager _permissionManager = new PermissionManager();
         
@@ -330,6 +332,10 @@ namespace TradingSystem.View
             if (template == null)
                 return;
 
+            //archive before deleting
+            ArchiveTemplate(template);
+
+            //delete
             int ret = _templateBLL.DeleteTemplate(template);
             if (ret == 1)
             {
@@ -457,6 +463,9 @@ namespace TradingSystem.View
                 int targetIndex = _tempDataSource.ToList().FindIndex(p => p.TemplateId == stockTemplate.TemplateId);
                 if (targetIndex >= 0 && targetIndex < _tempDataSource.Count)
                 {
+                    //archive the old template
+                    ArchiveTemplate(_tempDataSource[targetIndex]);
+
                     _tempDataSource[targetIndex] = stockTemplate;
                 }
             }
@@ -550,6 +559,9 @@ namespace TradingSystem.View
                     deleteItems.Add(_spotDataSource[rowIndex]);
                 }
             }
+
+            //archive template
+            ArchiveTemplate(template);
 
             foreach (var deleteItem in deleteItems)
             {
@@ -919,6 +931,16 @@ namespace TradingSystem.View
             }
 
             return mktCaps;
+        }
+
+        #endregion
+
+        #region archive
+
+        private void ArchiveTemplate(StockTemplate template)
+        {
+            //archive before deleting
+            _histTemplateBLL.ArchiveTemplate(template);
         }
 
         #endregion
