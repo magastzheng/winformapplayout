@@ -60,6 +60,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="CheckComboBox\CheckComboBox.Designer.cs" />
+    <Compile Include="ContextMenu\ContextMenu.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ContextMenu\ContextMenu.Designer.cs">
+      <DependentUpon>ContextMenu.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entity\AutoItem.cs" />
     <Compile Include="Entity\ButtonItem.cs" />
     <Compile Include="Entity\CheckComboBoxItem.cs" />
