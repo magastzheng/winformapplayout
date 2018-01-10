@@ -23,6 +23,21 @@ namespace ControlsTest
             Load += new EventHandler(Form_Load);
             this.tsDataGridView1.DataError += new DataGridViewDataErrorEventHandler(GridView_DataError);
             this.tsDataGridView1.ComboBoxSelectionChangeCommitHandler += new ComboBoxSelectionChangeCommitHandler(GridView_ComboBoxSelectionChangeCommit);
+            //this.tsDataGridView1.MouseClick += new MouseEventHandler(GridView_MouseClick);
+            this.gridviewContextMenu.Click += new EventHandler(ContextMenuItemClick);
+        }
+
+        //private void GridView_MouseClick(object sender, MouseEventArgs e)
+        //{
+        //    if (e.Button == System.Windows.Forms.MouseButtons.Right)
+        //    {
+        //        this.gridviewContextMenu.Show(this.tsDataGridView1, e.Location);
+        //    }
+        //}
+
+        private void ContextMenuItemClick(object sender, EventArgs e)
+        {
+            MessageBox.Show(this, e.ToString());
         }
 
         private void GridView_ComboBoxSelectionChangeCommit(ComboBox comboBox, object selectedItem, int rowIndex, int columnIndex)

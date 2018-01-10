@@ -5,6 +5,7 @@ using Model.Binding.BindingUtil;
 using Model.config;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace ControlsTest
@@ -19,6 +20,49 @@ namespace ControlsTest
             this.Load += new EventHandler(Form_Load);
             this.tsDataGridView1.DataError += new DataGridViewDataErrorEventHandler(GridView_DataError);
             this.tsDataGridView1.ComboBoxSelectionChangeCommitHandler += new ComboBoxSelectionChangeCommitHandler(GridView_ComboBoxSelectionChangeCommit);
+            this.tsDataGridView1.MouseClick += new MouseEventHandler(GridView_MouseClick);
+            this.contextMenu.ItemClicked += new ToolStripItemClickedEventHandler(ContextMenu_ItemClicked);
+        }
+
+        private void ContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("Clicked: " + e.ClickedItem.Name);
+
+            switch (e.ClickedItem.Name)
+            { 
+                case "item1ToolStripMenuItem":
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void GridView_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                //int width = this.contextMenu.Width;
+                //int height = this.contextMenu.Height;
+                //int right = this.tsDataGridView1.Right;
+                //int bottom = this.tsDataGridView1.Bottom;
+
+                //int x = e.Location.X;
+                //int y = e.Location.Y;
+
+                //if (x + width > right)
+                //{
+                //    x = right - width;
+                //}
+
+                //if (y + height > bottom)
+                //{
+                //    y = bottom - height;
+                //}
+
+                //Point p = new Point(x, y);
+                //this.contextMenu.Show(this.tsDataGridView1, p);
+                this.contextMenu.ShowMenu(this.tsDataGridView1, e.Location);
+            }
         }
 
         private void GridView_ComboBoxSelectionChangeCommit(ComboBox comboBox, object selectedItem, int columnIndex, int rowIndex)

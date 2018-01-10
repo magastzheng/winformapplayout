@@ -29,12 +29,16 @@
         private void InitializeComponent()
         {
             this.panelBottom = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
             this.panelTop = new System.Windows.Forms.Panel();
             this.tsDataGridView1 = new Controls.GridView.TSDataGridView();
-            this.button1 = new System.Windows.Forms.Button();
+            this.contextMenu = new Controls.ContextMenu.ContextMenu();
+            this.item1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.item2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelBottom.SuspendLayout();
             this.panelTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tsDataGridView1)).BeginInit();
+            this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelBottom
@@ -45,6 +49,16 @@
             this.panelBottom.Name = "panelBottom";
             this.panelBottom.Size = new System.Drawing.Size(459, 60);
             this.panelBottom.TabIndex = 1;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(181, 20);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // panelTop
             // 
@@ -67,15 +81,25 @@
             this.tsDataGridView1.Size = new System.Drawing.Size(459, 264);
             this.tsDataGridView1.TabIndex = 0;
             // 
-            // button1
+            // contextMenu
             // 
-            this.button1.Location = new System.Drawing.Point(181, 20);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.item1ToolStripMenuItem,
+            this.item2ToolStripMenuItem});
+            this.contextMenu.Name = "contextMenu";
+            this.contextMenu.Size = new System.Drawing.Size(153, 70);
+            // 
+            // item1ToolStripMenuItem
+            // 
+            this.item1ToolStripMenuItem.Name = "item1ToolStripMenuItem";
+            this.item1ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.item1ToolStripMenuItem.Text = "菜单1";
+            // 
+            // item2ToolStripMenuItem
+            // 
+            this.item2ToolStripMenuItem.Name = "item2ToolStripMenuItem";
+            this.item2ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.item2ToolStripMenuItem.Text = "菜单2";
             // 
             // TSDGVComboBox
             // 
@@ -89,6 +113,7 @@
             this.panelBottom.ResumeLayout(false);
             this.panelTop.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.tsDataGridView1)).EndInit();
+            this.contextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -99,5 +124,8 @@
         private System.Windows.Forms.Panel panelBottom;
         private System.Windows.Forms.Panel panelTop;
         private System.Windows.Forms.Button button1;
+        private Controls.ContextMenu.ContextMenu contextMenu;
+        private System.Windows.Forms.ToolStripMenuItem item1ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem item2ToolStripMenuItem;
     }
 }
