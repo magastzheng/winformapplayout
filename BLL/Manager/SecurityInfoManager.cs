@@ -67,8 +67,17 @@ namespace BLL.Manager
 
         public List<SecurityItem> Get()
         {
-            var allSecuItems = _quote.GetSecurities();
+            var allSecuItems = new List<SecurityItem>();
+            var quoteSecuItems = _quote.GetSecurities();
             var dbSecuItems = _securityInfoBLL.GetAllItems();
+
+            if (quoteSecuItems != null)
+            {
+                foreach (var p in quoteSecuItems)
+                {
+                    allSecuItems.Add(p);
+                }
+            }
 
             //Use the stock name from database to fill those without name from quote service.
             var noNameItems = allSecuItems.Where(p => string.IsNullOrEmpty(p.SecuName)).ToList();

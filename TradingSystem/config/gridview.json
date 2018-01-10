@@ -448,7 +448,7 @@ readonly:
 	{
 		"name": "selection",
 		"text": "选择",
-		"width": 60,
+		"width": 40,
 		"columntype": 1,
 		"valuetype": 0,
 		"visible": 1,
@@ -472,7 +472,7 @@ readonly:
 		},{
 		"name": "commandid",
 		"text": "指令序号",
-		"width": 80,
+		"width": 40,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -520,7 +520,7 @@ readonly:
 		},{
 		"name": "entrustamount",
 		"text": "已委托数量",
-		"width": 80,
+		"width": 60,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -544,7 +544,7 @@ readonly:
 		},{
 		"name": "thisentrustamount",
 		"text": "本次委托数量",
-		"width": 80,
+		"width": 60,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -552,7 +552,7 @@ readonly:
 		},{
 		"name": "dealamount",
 		"text": "已成交数量",
-		"width": 80,
+		"width": 60,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,
@@ -568,7 +568,7 @@ readonly:
 		},{
 		"name": "waitamount",
 		"text": "待补足数量",
-		"width": 80,
+		"width": 60,
 		"columntype": 0,
 		"valuetype": 0,
 		"visible": 1,

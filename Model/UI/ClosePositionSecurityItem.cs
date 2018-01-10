@@ -91,6 +91,8 @@ namespace Model.UI
 
         public EntrustDirection EDirection { get; set; }
 
+        public SuspendFlag ESuspendFlag { get; set; }
+
         public LimitUpDownFlag ELimitUpDownFlag { get; set; }
     }
 }

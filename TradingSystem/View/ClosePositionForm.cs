@@ -22,6 +22,7 @@ using BLL.TradeInstance;
 using BLL.TradeCommand;
 using BLL.Manager;
 using BLL.FuturesContractManager;
+using Model.Quote;
 
 namespace TradingSystem.View
 {
@@ -78,6 +79,9 @@ namespace TradingSystem.View
 
             this.closeGridView.UpdateRelatedDataGridHandler += new UpdateRelatedDataGrid(GridView_Close_UpdateRelatedDataGridHandler);
             this.cmdGridView.ComboBoxSelectionChangeCommitHandler += new ComboBoxSelectionChangeCommitHandler(GridView_Command_ComboBoxSelectionChangeCommit);
+            this.securityGridView.MouseClick += new MouseEventHandler(SecurityGridView_MouseClick);
+
+            secuContextMenu.ItemClicked += new ToolStripItemClickedEventHandler(SecurityContextMenu_ItemClicked);
 
             this.cbCopies.CheckedChanged += new EventHandler(ComboBox_Copies_CheckedChanged);
             this.btnCalc.Click += new EventHandler(Button_Calc_Click);
@@ -258,6 +262,60 @@ namespace TradingSystem.View
             //}
 
             _cmdDataSource.Add(cmdItem);
+        }
+
+        #endregion
+
+        #region SecurityGridView
+
+        private void SecurityGridView_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                this.secuContextMenu.Show(this.securityGridView, e.Location);
+            }
+        }
+
+        //click the popup menu item
+        private void SecurityContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            switch (e.ClickedItem.Name)
+            {
+                case "selectAllToolStripMenuItem":
+                    {
+                        _secuDataSource.ToList().ForEach(p => p.Selection = true);
+                    }
+                    break;
+                case "unSelectToolStripMenuItem":
+                    {
+                        _secuDataSource.ToList().ForEach(p => p.Selection = false);
+                    }
+                    break;
+                case "cancelSelectToolStripMenuItem":
+                    {
+                        _secuDataSource.Where(p => p.Selection).ToList().ForEach(p => p.Selection = false);
+                    }
+                    break;
+                case "cancelStopToolStripMenuItem":
+                    {
+                        _secuDataSource.Where(p => p.ESuspendFlag != SuspendFlag.NoSuspension).ToList().ForEach(p => p.Selection = false);
+                    }
+                    break;
+                case "cancelLimitUpToolStripMenuItem":
+                    {
+                        _secuDataSource.Where(p => p.ELimitUpDownFlag == LimitUpDownFlag.LimitUp).ToList().ForEach(p => p.Selection = false);
+                    }
+                    break;
+                case "cancelLimitDownToolStripMenuItem":
+                    {
+                        _secuDataSource.Where(p => p.ELimitUpDownFlag == LimitUpDownFlag.LimitDown).ToList().ForEach(p => p.Selection = false);
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            this.securityGridView.Invalidate();
         }
 
         #endregion
@@ -571,7 +629,7 @@ namespace TradingSystem.View
                 var marketData = QuoteCenter.Instance.GetMarketData(targetItem);
                 secuItem.LastPrice = marketData.CurrentPrice;
                
-                //secuItem.ESuspendFlag = marketData.SuspendFlag;
+                secuItem.ESuspendFlag = marketData.SuspendFlag;
                 secuItem.ELimitUpDownFlag = marketData.LimitUpDownFlag;
 
                 if (secuItem.SecuType == SecurityType.Stock)

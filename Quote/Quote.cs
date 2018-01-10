@@ -1,5 +1,6 @@
 ﻿using Model.Quote;
 using Model.SecurityInfo;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,21 +9,21 @@ namespace Quote
     public class Quote : IQuote
     {
         private readonly object locker = new object();
-        private Dictionary<string, MarketData> _marketDatas = new Dictionary<string, MarketData>();
-        private Dictionary<string, SecurityItem> _securityDatas = new Dictionary<string, SecurityItem>();
+        private IDictionary<string, MarketData> _marketDatas = new ConcurrentDictionary<string, MarketData>();// Dictionary<string, MarketData>();
+        private IDictionary<string, SecurityItem> _securityDatas = new ConcurrentDictionary<string, SecurityItem>();
 
-        public Dictionary<string, MarketData> MarketDatas { get { return _marketDatas; } }
+        public IDictionary<string, MarketData> MarketDatas { get { return _marketDatas; } }
 
         #region interface
 
-        public List<SecurityItem> GetSecurities()
+        public IList<SecurityItem> GetSecurities()
         {
             return _securityDatas.Values.ToList();
         }
 
-        public Dictionary<string, MarketData> GetMarketData(List<string> instrumentIDs)
+        public IDictionary<string, MarketData> GetMarketData(List<string> instrumentIDs)
         {
-            Dictionary<string, MarketData> dataMap = new Dictionary<string, MarketData>();
+            IDictionary<string, MarketData> dataMap = new Dictionary<string, MarketData>();
             foreach (string instrumentID in instrumentIDs)
             {
                 if (_marketDatas.ContainsKey(instrumentID))
@@ -36,16 +37,13 @@ namespace Quote
 
         public void Add(string instrumentID, MarketData marketData)
         {
-            lock (locker)
+            if (!_marketDatas.ContainsKey(instrumentID))
             {
-                if (!_marketDatas.ContainsKey(instrumentID))
-                {
-                    _marketDatas.Add(instrumentID, marketData);
-                }
-                else
-                {
-                    _marketDatas[instrumentID] = marketData;
-                }
+                _marketDatas.Add(instrumentID, marketData);
+            }
+            else
+            {
+                _marketDatas[instrumentID] = marketData;
             }
         }
 
@@ -102,16 +100,16 @@ namespace Quote
             return _securityDatas[investmentID];
         }
 
-        public List<SecurityItem> GetFuturesContract()
+        public IList<SecurityItem> GetFuturesContract()
         {
-            List<SecurityItem> futuresItems = new List<SecurityItem>();
+            IList<SecurityItem> futuresItems = new List<SecurityItem>();
 
             var futures = _securityDatas.Values.Where(p => p.SecuType == SecurityType.Futures).ToList();
             if (futures != null)
             {
-                futuresItems.AddRange(futures);
+                futures.ForEach(p => futuresItems.Add(p));
             }
-
+            
             return futuresItems;
         }
         #endregion

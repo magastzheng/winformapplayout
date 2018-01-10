@@ -73,6 +73,8 @@ namespace TradingSystem.View
         private SortableBindingList<EntrustItem> _eiDataSource = new SortableBindingList<EntrustItem>(new List<EntrustItem>());
         private SortableBindingList<CommandSecurityItem> _secuDataSource = new SortableBindingList<CommandSecurityItem>(new List<CommandSecurityItem>());
 
+        private object _locker = new object();
+
         GridConfig _gridConfig;
         public StrategyTradingForm()
             :base()
@@ -895,7 +897,7 @@ namespace TradingSystem.View
             _efDataSource.Clear();
 
             UFXQueryEntrustBLL queryBll = new UFXQueryEntrustBLL();
-            var test = queryBll.QueryToday(new CallerCallback(LoadDataEntrustFlow2));
+            var result = queryBll.QueryToday(new CallerCallback(LoadDataEntrustFlowCallback));
 
             return true;
         }
@@ -905,12 +907,12 @@ namespace TradingSystem.View
             _dfDataSource.Clear();
 
             UFXQueryDealBLL queryDealBll = new UFXQueryDealBLL();
-            var test = queryDealBll.QueryToday(new CallerCallback(LoadDataDealFlow2));
+            var result = queryDealBll.QueryToday(new CallerCallback(LoadDataDealFlowCallback));
 
             return true;
         }
 
-        private int LoadDataDealFlow2(CallerToken token, object data, UFXErrorResponse errorResponse)
+        private int LoadDataDealFlowCallback(CallerToken token, object data, UFXErrorResponse errorResponse)
         {
             if (data == null || !(data is List<DealFlowItem>))
                 return -1;
@@ -918,7 +920,8 @@ namespace TradingSystem.View
 
             this.BeginInvoke(new Action(() =>
             {
-                dfItems.ForEach(p => {
+                dfItems.ForEach(p =>
+                {
                     var secuInfo = SecurityInfoManager.Instance.Get(p.SecuCode, p.ExchangeCode);
                     if (secuInfo != null)
                     {
@@ -936,16 +939,19 @@ namespace TradingSystem.View
                     {
                         p.PortfolioName = findPort.CombiName;
                     }
-
-                    _dfDataSource.Add(p); 
+                    lock (_locker)
+                    {
+                        _dfDataSource.Add(p);
+                    }
                 });
 
                 this.efGridView.Invalidate();
             }), null);
+
             return 1;
         }
 
-        private int LoadDataEntrustFlow2(CallerToken token, object data, UFXErrorResponse errorResponse)
+        private int LoadDataEntrustFlowCallback(CallerToken token, object data, UFXErrorResponse errorResponse)
         {
             if (data == null || !(data is List<EntrustFlowItem>))
                 return -1;
@@ -982,11 +988,15 @@ namespace TradingSystem.View
                         
                     }
 
-                    _efDataSource.Add(p); 
+                    lock (_locker)
+                    {
+                        _efDataSource.Add(p);
+                    }
                 });
 
                 this.efGridView.Invalidate();
             }), null);
+
             return 1;
         }
 

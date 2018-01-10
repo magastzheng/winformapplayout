@@ -32,7 +32,7 @@ namespace TDFServiceTest
         }
 
 
-        private string GetDataStr(Dictionary<string, MarketData> datas)
+        private string GetDataStr(IDictionary<string, MarketData> datas)
         {
             StringBuilder sb = new StringBuilder();
 

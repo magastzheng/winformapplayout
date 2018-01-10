@@ -33,7 +33,7 @@ namespace Quote
             return _quote.Get(windCode);
         }
 
-        public List<SecurityItem> GetSecurities()
+        public IList<SecurityItem> GetSecurities()
         {
             return _quote.GetSecurities();
         }

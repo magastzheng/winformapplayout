@@ -38,13 +38,20 @@
             this.btnSelectAll = new System.Windows.Forms.Button();
             this.securityGridView = new Controls.GridView.TSDataGridView();
             this.panelCmdBotton = new System.Windows.Forms.Panel();
+            this.cbCopies = new System.Windows.Forms.CheckBox();
             this.nudCopies = new System.Windows.Forms.NumericUpDown();
             this.btnSubmit = new System.Windows.Forms.Button();
             this.btnChgPosition = new System.Windows.Forms.Button();
             this.btnCloseAll = new System.Windows.Forms.Button();
             this.btnCalc = new System.Windows.Forms.Button();
             this.cmdGridView = new Controls.GridView.TSDataGridView();
-            this.cbCopies = new System.Windows.Forms.CheckBox();
+            this.secuContextMenu = new Controls.ContextMenu.ContextMenu();
+            this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unSelectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cancelSelectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cancelStopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cancelLimitUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cancelLimitDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelTop.SuspendLayout();
             this.panelBottom.SuspendLayout();
             this.panelMain.SuspendLayout();
@@ -59,6 +66,7 @@
             this.panelCmdBotton.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCopies)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmdGridView)).BeginInit();
+            this.secuContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelTop
@@ -187,6 +195,18 @@
             this.panelCmdBotton.Size = new System.Drawing.Size(1125, 36);
             this.panelCmdBotton.TabIndex = 0;
             // 
+            // cbCopies
+            // 
+            this.cbCopies.AutoSize = true;
+            this.cbCopies.Checked = true;
+            this.cbCopies.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbCopies.Location = new System.Drawing.Point(6, 10);
+            this.cbCopies.Name = "cbCopies";
+            this.cbCopies.Size = new System.Drawing.Size(72, 16);
+            this.cbCopies.TabIndex = 7;
+            this.cbCopies.Text = "操作份数";
+            this.cbCopies.UseVisualStyleBackColor = true;
+            // 
             // nudCopies
             // 
             this.nudCopies.Location = new System.Drawing.Point(90, 8);
@@ -252,23 +272,62 @@
             this.cmdGridView.Size = new System.Drawing.Size(1125, 156);
             this.cmdGridView.TabIndex = 1;
             // 
-            // cbCopies
+            // secuContextMenu
             // 
-            this.cbCopies.AutoSize = true;
-            this.cbCopies.Checked = true;
-            this.cbCopies.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbCopies.Location = new System.Drawing.Point(6, 10);
-            this.cbCopies.Name = "cbCopies";
-            this.cbCopies.Size = new System.Drawing.Size(72, 16);
-            this.cbCopies.TabIndex = 7;
-            this.cbCopies.Text = "操作份数";
-            this.cbCopies.UseVisualStyleBackColor = true;
+            this.secuContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.selectAllToolStripMenuItem,
+            this.unSelectToolStripMenuItem,
+            this.cancelSelectToolStripMenuItem,
+            this.cancelStopToolStripMenuItem,
+            this.cancelLimitUpToolStripMenuItem,
+            this.cancelLimitDownToolStripMenuItem});
+            this.secuContextMenu.Name = "secuContextMenu";
+            this.secuContextMenu.Size = new System.Drawing.Size(153, 158);
+            // 
+            // selectAllToolStripMenuItem
+            // 
+            this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.selectAllToolStripMenuItem.Text = "全选";
+            // 
+            // unSelectToolStripMenuItem
+            // 
+            this.unSelectToolStripMenuItem.Name = "unSelectToolStripMenuItem";
+            this.unSelectToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.unSelectToolStripMenuItem.Text = "反选";
+            // 
+            // cancelSelectToolStripMenuItem
+            // 
+            this.cancelSelectToolStripMenuItem.Name = "cancelSelectToolStripMenuItem";
+            this.cancelSelectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.cancelSelectToolStripMenuItem.Text = "取消所有选中";
+            // 
+            // cancelStopToolStripMenuItem
+            // 
+            this.cancelStopToolStripMenuItem.Name = "cancelStopToolStripMenuItem";
+            this.cancelStopToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.cancelStopToolStripMenuItem.Text = "取消停牌股";
+            // 
+            // cancelLimitUpToolStripMenuItem
+            // 
+            this.cancelLimitUpToolStripMenuItem.Name = "cancelLimitUpToolStripMenuItem";
+            this.cancelLimitUpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.cancelLimitUpToolStripMenuItem.Text = "取消涨停股";
+            // 
+            // cancelLimitDownToolStripMenuItem
+            // 
+            this.cancelLimitDownToolStripMenuItem.Name = "cancelLimitDownToolStripMenuItem";
+            this.cancelLimitDownToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.cancelLimitDownToolStripMenuItem.Text = "取消跌停股";
             // 
             // ClosePositionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.ClientSize = new System.Drawing.Size(1125, 570);
             this.Name = "ClosePositionForm";
+            this.Controls.SetChildIndex(this.panelTop, 0);
+            this.Controls.SetChildIndex(this.panelBottom, 0);
+            this.Controls.SetChildIndex(this.panelMain, 0);
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
             this.panelBottom.ResumeLayout(false);
@@ -286,6 +345,7 @@
             this.panelCmdBotton.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCopies)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmdGridView)).EndInit();
+            this.secuContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -309,5 +369,12 @@
         private System.Windows.Forms.Button btnUnSelectAll;
         private System.Windows.Forms.Button btnSelectAll;
         private System.Windows.Forms.CheckBox cbCopies;
+        private Controls.ContextMenu.ContextMenu secuContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem unSelectToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cancelSelectToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cancelStopToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cancelLimitUpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cancelLimitDownToolStripMenuItem;
     }
 }
