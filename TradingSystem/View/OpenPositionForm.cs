@@ -22,6 +22,7 @@ using BLL.Manager;
 using Util;
 using System.Text;
 using Model.Quote;
+using Forms;
 
 namespace TradingSystem.View
 {
@@ -47,6 +48,8 @@ namespace TradingSystem.View
 
         private SortableBindingList<OpenPositionItem> _monitorDataSource = new SortableBindingList<OpenPositionItem>();
         private SortableBindingList<OpenPositionSecurityItem> _securityDataSource = new SortableBindingList<OpenPositionSecurityItem>();
+
+        private WaitDialogWnd waitDialog = new WaitDialogWnd();
 
         public OpenPositionForm()
             :base()
@@ -364,6 +367,7 @@ namespace TradingSystem.View
                 }
             }
 
+            waitDialog.Show(this);
             //QuoteCenter.Instance.Query(secuList);
             foreach (var secuItem in _securityDataSource)
             {
@@ -440,6 +444,8 @@ namespace TradingSystem.View
                     openItem.LimitDownNumbers = limitDownItems.Count;
                 }
             }
+
+            waitDialog.Close();
         }
 
         private double GetPrice(List<SecurityItem> secuList, string secuCode, SecurityType secuType)

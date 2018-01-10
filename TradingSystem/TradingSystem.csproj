@@ -429,6 +429,7 @@
     <None Include="Resources\refresh.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\waiting.gif" />
     <None Include="Resources\archive.png" />
     <Content Include="img\add256.png" />
     <Content Include="img\copy256.png" />
