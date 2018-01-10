@@ -21,6 +21,7 @@ using BLL.FuturesContractManager;
 using BLL.Manager;
 using Util;
 using System.Text;
+using Model.Quote;
 
 namespace TradingSystem.View
 {
@@ -63,8 +64,14 @@ namespace TradingSystem.View
             monitorGridView.UpdateRelatedDataGridHandler += new UpdateRelatedDataGrid(MonitorGridView_UpdateRelatedDataGrid);
             monitorGridView.NumericUpDownValueChanged += new NumericUpDownValueChanged(MonitorGridView_NumericUpDownValueChanged);
 
+            securityGridView.MouseClick += new MouseEventHandler(SecurityGridView_MouseClick);
+
             btnBottomContainer.ButtonClick += new EventHandler(ButtonContainer_ButtonClick);
+
+            secuContextMenu.ItemClicked += new ToolStripItemClickedEventHandler(SecurityContextMenu_ItemClicked);
         }
+
+        #region monitor gridview
 
         private void MonitorGridView_NumericUpDownValueChanged(int newValue, int rowIndex, int columnIndex)
         {
@@ -113,6 +120,63 @@ namespace TradingSystem.View
                     break;
             }
         }
+
+        #endregion
+
+        #region security gridview
+
+        //right-click popup menu
+        private void SecurityGridView_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                this.secuContextMenu.Show(this.securityGridView, e.Location);
+            }
+        }
+
+        //click the popup menu item
+        private void SecurityContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            switch (e.ClickedItem.Name)
+            {
+                case "selectAllToolStripMenuItem":
+                    {
+                        _securityDataSource.ToList().ForEach(p => p.Selection = true);
+                    }
+                    break;
+                case "unSelectToolStripMenuItem":
+                    {
+                        _securityDataSource.ToList().ForEach(p => p.Selection = false);
+                    }
+                    break;
+                case "cancelSelectToolStripMenuItem":
+                    {
+                        _securityDataSource.Where(p => p.Selection).ToList().ForEach(p => p.Selection = false);
+                    }
+                    break;
+                case "cancelStopToolStripMenuItem":
+                    {
+                        _securityDataSource.Where(p => p.ESuspendFlag != SuspendFlag.NoSuspension).ToList().ForEach(p => p.Selection = false);
+                    }
+                    break;
+                case "cancelLimitUpToolStripMenuItem":
+                    {
+                        _securityDataSource.Where(p => p.ELimitUpDownFlag == LimitUpDownFlag.LimitUp).ToList().ForEach(p => p.Selection = false);
+                    }
+                    break;
+                case "cancelLimitDownToolStripMenuItem":
+                    {
+                        _securityDataSource.Where(p => p.ELimitUpDownFlag == LimitUpDownFlag.LimitDown).ToList().ForEach(p => p.Selection = false);
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            this.securityGridView.Invalidate();
+        }
+
+        #endregion
 
         #region load control
         private bool Form_LoadControl(object sender, object data)
