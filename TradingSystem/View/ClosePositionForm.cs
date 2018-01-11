@@ -23,6 +23,7 @@ using BLL.TradeCommand;
 using BLL.Manager;
 using BLL.FuturesContractManager;
 using Model.Quote;
+using Forms;
 
 namespace TradingSystem.View
 {
@@ -62,6 +63,8 @@ namespace TradingSystem.View
         private Dictionary<int, string> _instanceFuturesMap = new Dictionary<int, string>();
 
         private CloseDialogType _dialogType = CloseDialogType.CloseAll;
+
+        private WaitDialogWnd waitDialog = new WaitDialogWnd();
 
         public ClosePositionForm()
             :base()
@@ -610,6 +613,8 @@ namespace TradingSystem.View
 
         private void QueryQuote()
         {
+            waitDialog.Show(this);
+
             var uniqueSecuItems = _secuDataSource.GroupBy(p => p.SecuCode).Select(p => p.First());
 
             List<SecurityItem> secuList = new List<SecurityItem>();
@@ -695,6 +700,8 @@ namespace TradingSystem.View
                     instItem.StockMktCap = secuItems.Sum(p => p.HoldingAmount * p.LastPrice);
                 }
             }
+
+            waitDialog.Close();
         }
 
         /// <summary>

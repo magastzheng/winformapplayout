@@ -27,6 +27,7 @@ using System.Threading;
 using System.Text;
 using UFX.impl;
 using UFX;
+using Model.Quote;
 
 namespace TradingSystem.View
 {
@@ -76,6 +77,9 @@ namespace TradingSystem.View
         private object _locker = new object();
 
         GridConfig _gridConfig;
+
+        private WaitDialogWnd waitDialog = new WaitDialogWnd();
+
         public StrategyTradingForm()
             :base()
         {
@@ -97,6 +101,10 @@ namespace TradingSystem.View
             this.cmdGridView.UpdateRelatedDataGridHandler += new UpdateRelatedDataGrid(GridView_Command_UpdateRelatedDataGridHandler);
             this.bsGridView.UpdateRelatedDataGridHandler += new UpdateRelatedDataGrid(GridView_BuySell_UpdateRelatedDataGridHandler);
             this.securityGridView.CellEndEditHandler += new CellEndEditHandler(GridView_Security_CellEndEditHandler);
+            this.securityGridView.MouseClick += new MouseEventHandler(SecurityGridView_MouseClick);
+
+            //right-click popup menu item click
+            this.secuContextMenu.ItemClicked += new ToolStripItemClickedEventHandler(SecurityContextMenu_ItemClicked);
 
             //Refresh
             this.tsbRefresh.Click += new EventHandler(ToolStripButton_Command_Refresh);
@@ -454,6 +462,11 @@ namespace TradingSystem.View
                     var secuItems = _entrustSecurityBLL.GetFailItemByCommandId(cmdItem.CommandId);
                     secuItems.ForEach(p => {
                         var failItem = new EntrustSecurityItem(p);
+                        var findItem = SecurityInfoManager.Instance.Get(p.SecuCode, p.SecuType);
+                        if (findItem != null)
+                        {
+                            failItem.SecuName = findItem.SecuName;
+                        }
                         failSecuItems.Add(failItem);
                     });
                 }
@@ -714,6 +727,61 @@ namespace TradingSystem.View
                     .ToList()
                     .ForEach(o => o.EPriceType = futuBuyPrice);
             }
+        }
+
+        //right-click popup menu
+        private void SecurityGridView_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                this.secuContextMenu.Show(this.securityGridView, e.Location);
+            }
+        }
+
+        #endregion
+
+        #region security gridview menu item clicked
+
+        //click the popup menu item
+        private void SecurityContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            switch (e.ClickedItem.Name)
+            {
+                case "selectAllToolStripMenuItem":
+                    {
+                        _secuDataSource.ToList().ForEach(p => p.Selection = true);
+                    }
+                    break;
+                case "unSelectToolStripMenuItem":
+                    {
+                        _secuDataSource.ToList().ForEach(p => p.Selection = false);
+                    }
+                    break;
+                case "cancelSelectToolStripMenuItem":
+                    {
+                        _secuDataSource.Where(p => p.Selection).ToList().ForEach(p => p.Selection = false);
+                    }
+                    break;
+                case "cancelStopToolStripMenuItem":
+                    {
+                        _secuDataSource.Where(p => p.ESuspendFlag != Model.Quote.SuspendFlag.NoSuspension).ToList().ForEach(p => p.Selection = false);
+                    }
+                    break;
+                case "cancelLimitUpToolStripMenuItem":
+                    {
+                        _secuDataSource.Where(p => p.ELimitUpDownFlag == LimitUpDownFlag.LimitUp).ToList().ForEach(p => p.Selection = false);
+                    }
+                    break;
+                case "cancelLimitDownToolStripMenuItem":
+                    {
+                        _secuDataSource.Where(p => p.ELimitUpDownFlag == LimitUpDownFlag.LimitDown).ToList().ForEach(p => p.Selection = false);
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            this.securityGridView.Invalidate();
         }
 
         #endregion
@@ -1204,6 +1272,8 @@ namespace TradingSystem.View
 
         private int EntrustSync(List<EntrustItem> entrustItems)
         {
+            waitDialog.Show(this);
+
             List<int> submitIds = new List<int>();
             int successCount = 0;
             foreach (var eiItem in entrustItems)
@@ -1239,6 +1309,8 @@ namespace TradingSystem.View
                 }
             }
 
+            waitDialog.Close();
+
             return successCount;
         }
 
@@ -1250,6 +1322,7 @@ namespace TradingSystem.View
             //CountdownEvent events = new CountdownEvent(entrustItems.Count);
             List<EventWaitHandle> waitHandles = new List<EventWaitHandle>();
 
+            waitDialog.Show(this);
             foreach (var eiItem in entrustItems)
             {
                 EntrustCommand eciItem = new EntrustCommand
@@ -1291,6 +1364,9 @@ namespace TradingSystem.View
                     waitRet = false;
                 }
             }
+
+            waitDialog.Close();
+
             //bool waitRet = WaitHandle.WaitAll(waitHandles.ToArray());
             List<EntrustSecurityItem> failSecuItems = new List<EntrustSecurityItem>();
             if (waitRet)
@@ -1545,6 +1621,8 @@ namespace TradingSystem.View
 
         private void QueryQuote(PriceType spotBuyPrice, PriceType spotSellPrice, PriceType futureBuyPrice, PriceType futureSellPrice)
         {
+            waitDialog.Show(this);
+
             //query the price and set it
             List<SecurityItem> secuList = new List<SecurityItem>();
             var uniqueSecuItems = _secuDataSource.GroupBy(p => p.SecuCode).Select(p => p.First());
@@ -1601,6 +1679,8 @@ namespace TradingSystem.View
                     }
                 }
             }
+
+            waitDialog.Close();
         }
 
         private List<EntrustSecurity> GetEntrustSecurityItems(int submitId, int commandId)

@@ -118,42 +118,42 @@
             this.cancelLimitUpToolStripMenuItem,
             this.cancelLimitDownToolStripMenuItem});
             this.secuContextMenu.Name = "secuContextMenu";
-            this.secuContextMenu.Size = new System.Drawing.Size(149, 136);
+            this.secuContextMenu.Size = new System.Drawing.Size(153, 158);
             // 
             // selectAllToolStripMenuItem
             // 
             this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.selectAllToolStripMenuItem.Text = "全选";
             // 
             // unSelectToolStripMenuItem
             // 
             this.unSelectToolStripMenuItem.Name = "unSelectToolStripMenuItem";
-            this.unSelectToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.unSelectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.unSelectToolStripMenuItem.Text = "反选";
             // 
             // cancelSelectToolStripMenuItem
             // 
             this.cancelSelectToolStripMenuItem.Name = "cancelSelectToolStripMenuItem";
-            this.cancelSelectToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.cancelSelectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.cancelSelectToolStripMenuItem.Text = "取消所有选中";
             // 
             // cancelStopToolStripMenuItem
             // 
             this.cancelStopToolStripMenuItem.Name = "cancelStopToolStripMenuItem";
-            this.cancelStopToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.cancelStopToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.cancelStopToolStripMenuItem.Text = "取消停牌股";
             // 
             // cancelLimitUpToolStripMenuItem
             // 
             this.cancelLimitUpToolStripMenuItem.Name = "cancelLimitUpToolStripMenuItem";
-            this.cancelLimitUpToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.cancelLimitUpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.cancelLimitUpToolStripMenuItem.Text = "取消涨停股";
             // 
             // cancelLimitDownToolStripMenuItem
             // 
             this.cancelLimitDownToolStripMenuItem.Name = "cancelLimitDownToolStripMenuItem";
-            this.cancelLimitDownToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.cancelLimitDownToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.cancelLimitDownToolStripMenuItem.Text = "取消跌停股";
             // 
             // OpenPositionForm

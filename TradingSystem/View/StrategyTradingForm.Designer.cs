@@ -88,6 +88,13 @@
             this.dfTopPanel = new System.Windows.Forms.Panel();
             this.tsDealFlow = new System.Windows.Forms.ToolStrip();
             this.tsbdfRefresh = new System.Windows.Forms.ToolStripButton();
+            this.secuContextMenu = new Controls.ContextMenu.ContextMenu();
+            this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unSelectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cancelSelectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cancelStopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cancelLimitUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cancelLimitDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabParentMain.SuspendLayout();
             this.tpCmdTrading.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cmdMainSplitter)).BeginInit();
@@ -125,6 +132,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dfGridView)).BeginInit();
             this.dfTopPanel.SuspendLayout();
             this.tsDealFlow.SuspendLayout();
+            this.secuContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabParentMain
@@ -755,6 +763,54 @@
             this.tsbdfRefresh.Size = new System.Drawing.Size(52, 22);
             this.tsbdfRefresh.Text = "刷新";
             // 
+            // secuContextMenu
+            // 
+            this.secuContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.selectAllToolStripMenuItem,
+            this.unSelectToolStripMenuItem,
+            this.cancelSelectToolStripMenuItem,
+            this.cancelStopToolStripMenuItem,
+            this.cancelLimitUpToolStripMenuItem,
+            this.cancelLimitDownToolStripMenuItem});
+            this.secuContextMenu.Name = "secuContextMenu";
+            this.secuContextMenu.Size = new System.Drawing.Size(153, 158);
+            // 
+            // selectAllToolStripMenuItem
+            // 
+            this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.selectAllToolStripMenuItem.Text = "全选";
+            // 
+            // unSelectToolStripMenuItem
+            // 
+            this.unSelectToolStripMenuItem.Name = "unSelectToolStripMenuItem";
+            this.unSelectToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.unSelectToolStripMenuItem.Text = "反选";
+            // 
+            // cancelSelectToolStripMenuItem
+            // 
+            this.cancelSelectToolStripMenuItem.Name = "cancelSelectToolStripMenuItem";
+            this.cancelSelectToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.cancelSelectToolStripMenuItem.Text = "取消所有选中";
+            // 
+            // cancelStopToolStripMenuItem
+            // 
+            this.cancelStopToolStripMenuItem.Name = "cancelStopToolStripMenuItem";
+            this.cancelStopToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.cancelStopToolStripMenuItem.Text = "取消停牌股";
+            // 
+            // cancelLimitUpToolStripMenuItem
+            // 
+            this.cancelLimitUpToolStripMenuItem.Name = "cancelLimitUpToolStripMenuItem";
+            this.cancelLimitUpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.cancelLimitUpToolStripMenuItem.Text = "取消涨停股";
+            // 
+            // cancelLimitDownToolStripMenuItem
+            // 
+            this.cancelLimitDownToolStripMenuItem.Name = "cancelLimitDownToolStripMenuItem";
+            this.cancelLimitDownToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.cancelLimitDownToolStripMenuItem.Text = "取消跌停股";
+            // 
             // StrategyTradingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -806,6 +862,7 @@
             this.dfTopPanel.PerformLayout();
             this.tsDealFlow.ResumeLayout(false);
             this.tsDealFlow.PerformLayout();
+            this.secuContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -872,5 +929,12 @@
         private System.Windows.Forms.NumericUpDown nudCopies;
         private System.Windows.Forms.CheckBox cbCopies;
         private System.Windows.Forms.ToolStripButton tsbEntrustInfo;
+        private Controls.ContextMenu.ContextMenu secuContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem unSelectToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cancelSelectToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cancelStopToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cancelLimitUpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cancelLimitDownToolStripMenuItem;
     }
 }

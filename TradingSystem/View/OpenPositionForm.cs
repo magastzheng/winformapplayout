@@ -328,8 +328,19 @@ namespace TradingSystem.View
             {
                 case "Refresh":
                     {
-                        QueryQuote();
-
+                        try
+                        {
+                            waitDialog.Show(this);
+                            QueryQuote();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageDialog.Error(this, ex.Message);
+                        }
+                        finally
+                        {
+                            waitDialog.Close();
+                        }
                         this.monitorGridView.Invalidate();
                         this.securityGridView.Invalidate();    
                     }
@@ -367,7 +378,6 @@ namespace TradingSystem.View
                 }
             }
 
-            waitDialog.Show(this);
             //QuoteCenter.Instance.Query(secuList);
             foreach (var secuItem in _securityDataSource)
             {
@@ -444,8 +454,6 @@ namespace TradingSystem.View
                     openItem.LimitDownNumbers = limitDownItems.Count;
                 }
             }
-
-            waitDialog.Close();
         }
 
         private double GetPrice(List<SecurityItem> secuList, string secuCode, SecurityType secuType)
