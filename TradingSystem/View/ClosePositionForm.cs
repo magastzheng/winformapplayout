@@ -894,6 +894,13 @@ namespace TradingSystem.View
                 return;
             }
 
+            //模板中合约份数
+            int bmkCopies = template.FutureCopies;
+            if (bmkCopies <= 0)
+            {
+                bmkCopies = 1;
+            }
+
             var secuItems = _secuDataSource.Where(p => p.InstanceId == cmdItem.InstanceId).ToList();
             if (secuItems == null)
             {
@@ -956,7 +963,7 @@ namespace TradingSystem.View
 
             //TODO: How to handle the futures
             var excludedList = secuItems.Except(includedList).ToList();
-
+            int actualCopies = bmkCopies * copies;
             switch (direction)
             {
                 case EntrustDirection.Buy:
@@ -973,7 +980,7 @@ namespace TradingSystem.View
                             if (p.SecuType == SecurityType.Stock)
                             {
                                 p.EDirection = EntrustDirection.BuySpot;
-                                p.EntrustAmount = weightAmount * copies;
+                                p.EntrustAmount = actualCopies * weightAmount;
                             }
                             else if (p.SecuType == SecurityType.Futures)
                             {
@@ -1017,9 +1024,10 @@ namespace TradingSystem.View
                             {
                                 p.EDirection = EntrustDirection.SellSpot;
 
-                                if (p.AvailableAmount >= weightAmount * copies)
+                                int tempAmount = actualCopies * weightAmount;
+                                if (p.AvailableAmount >= tempAmount)
                                 {
-                                    p.EntrustAmount = weightAmount * copies;
+                                    p.EntrustAmount = tempAmount;
                                 }
                                 else
                                 {
@@ -1029,9 +1037,10 @@ namespace TradingSystem.View
                             else if (p.SecuType == SecurityType.Futures)
                             {
                                 p.EDirection = EntrustDirection.BuyClose;
-                                if (p.AvailableAmount >= template.FutureCopies * copies)
+                                int tempAmount = template.FutureCopies * copies;
+                                if (p.AvailableAmount >= tempAmount)
                                 {
-                                    p.EntrustAmount = template.FutureCopies * copies;
+                                    p.EntrustAmount = tempAmount;
                                 }
                                 else
                                 {
@@ -1064,7 +1073,7 @@ namespace TradingSystem.View
 
                             if (p.SecuType == SecurityType.Stock)
                             {
-                                int rest = p.HoldingAmount - weightAmount * copies;
+                                int rest = p.HoldingAmount - actualCopies * weightAmount;
                                 if (rest > 0)
                                 {
                                     p.EDirection = EntrustDirection.SellSpot;

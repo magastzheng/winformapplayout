@@ -678,11 +678,19 @@ namespace TradingSystem.View
                 return;
             }
 
+            int bmkCopies = template.FutureCopies;
+            if (bmkCopies <= 0)
+            {
+                bmkCopies = 1;
+            }
+
             int copies = (int)this.nudCopies.Value;
             if (copies <= 0)
             {
                 return;
             }
+
+            int actualCopies = bmkCopies * copies;
 
             var stocks = _templateBLl.GetStocks(template.TemplateId);
             foreach (var srcItem in _srcDataSource)
@@ -693,7 +701,7 @@ namespace TradingSystem.View
                     srcItem.Seletion = true;
                     srcItem.PriceType = "lastprice";
 
-                    int amount = copies * findItem.Amount;
+                    int amount = actualCopies * findItem.Amount;
                     srcItem.CalcAmount = amount;
 
                     if (srcItem.AvailableTransferedAmount > amount)

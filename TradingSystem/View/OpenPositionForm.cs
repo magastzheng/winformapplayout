@@ -82,6 +82,7 @@ namespace TradingSystem.View
                 return;
             //该事件触发时，绑定数据还没有被同步
             OpenPositionItem monitorItem = _monitorDataSource[rowIndex];
+
             CalcEntrustAmount(monitorItem, newValue);
 
             securityGridView.Invalidate();
@@ -241,30 +242,11 @@ namespace TradingSystem.View
 
         public void LoadSecurityData(OpenPositionItem monitorItem)
         {
-            List<TemplateStock> stocks = _templateBLL.GetStocks(monitorItem.TemplateId);
-            List<OpenPositionSecurityItem> secuItems = new List<OpenPositionSecurityItem>();
-
-            foreach (var stock in stocks)
-            {
-                OpenPositionSecurityItem secuItem = new OpenPositionSecurityItem
-                {
-                    Selection = true,
-                    MonitorId = monitorItem.MonitorId,
-                    MonitorName = monitorItem.MonitorName,
-                    SecuCode = stock.SecuCode,
-                    SecuName = stock.SecuName,
-                    WeightAmount = stock.Amount,
-                    EntrustAmount = monitorItem.Copies * stock.Amount,
-                    EDirection = EntrustDirection.BuySpot,
-                    SecuType = SecurityType.Stock
-                };
-
-                _securityDataSource.Add(secuItem);
-            }
-
+            int bmkCopies = 1;
             var templateItem = _templateBLL.GetTemplate(monitorItem.TemplateId);
             if (templateItem != null)
             {
+                bmkCopies = templateItem.FutureCopies;
                 //Load the future
                 OpenPositionSecurityItem futureItem = new OpenPositionSecurityItem
                 {
@@ -279,27 +261,66 @@ namespace TradingSystem.View
                     SecuType = SecurityType.Futures
                 };
 
-                int pos = _securityDataSource.Count - stocks.Count;
-                _securityDataSource.Insert(pos, futureItem);
+                _securityDataSource.Add(futureItem);
+            }
+
+            List<TemplateStock> stocks = _templateBLL.GetStocks(monitorItem.TemplateId);
+            List<OpenPositionSecurityItem> secuItems = new List<OpenPositionSecurityItem>();
+
+            int actualCopies = bmkCopies * monitorItem.Copies;
+            foreach (var stock in stocks)
+            {
+                OpenPositionSecurityItem secuItem = new OpenPositionSecurityItem
+                {
+                    Selection = true,
+                    MonitorId = monitorItem.MonitorId,
+                    MonitorName = monitorItem.MonitorName,
+                    SecuCode = stock.SecuCode,
+                    SecuName = stock.SecuName,
+                    WeightAmount = stock.Amount,
+                    EntrustAmount = actualCopies * stock.Amount,
+                    EDirection = EntrustDirection.BuySpot,
+                    SecuType = SecurityType.Stock
+                };
+
+                _securityDataSource.Add(secuItem);
             }
         }
 
-        private void CalcEntrustAmount(OpenPositionItem monitorItem, int copies)
+        private void CalcEntrustAmount(OpenPositionItem monitorItem, int opCopies)
         {
+            //获得模板中设置的基准份数
+            var templateItem = _templateBLL.GetTemplate(monitorItem.TemplateId);
+            int bmkCopies = 0;
+            if (templateItem != null)
+            {
+                bmkCopies = templateItem.FutureCopies;
+            }
+            else
+            {
+                bmkCopies = 1;
+            }
+
+            //真正的份数有模板设置份数和操作份数相乘得到
+            int actualCopies = bmkCopies * opCopies;
+
             var secuItems = _securityDataSource.Where(p => p.MonitorId == monitorItem.MonitorId);
             foreach (var secuItem in secuItems)
             {
-                secuItem.EntrustAmount = copies * secuItem.WeightAmount;
+                if (secuItem.SecuType == SecurityType.Stock)
+                {
+                    secuItem.EntrustAmount = actualCopies * secuItem.WeightAmount;
+                }
+                else if(secuItem.SecuType == SecurityType.Futures)
+                {
+                    secuItem.EntrustAmount = opCopies * secuItem.WeightAmount;
+                }
             }
         }
 
         private void CalcEntrustAmount(OpenPositionItem monitorItem)
         {
-            var secuItems = _securityDataSource.Where(p => p.MonitorId == monitorItem.MonitorId);
-            foreach (var secuItem in secuItems)
-            {
-                secuItem.EntrustAmount = monitorItem.Copies * secuItem.WeightAmount;
-            }
+            CalcEntrustAmount(monitorItem, monitorItem.Copies);
         }
 
         public void RemoveSecurityData(OpenPositionItem monitorItem)
