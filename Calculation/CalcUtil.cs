@@ -5,6 +5,8 @@ namespace Calculation
 {
     public class CalcUtil
     {
+        #region 计算基差
+
         /// <summary>
         /// 计算基差
         /// 基差=期货最新价-指数最新价
@@ -22,6 +24,9 @@ namespace Calculation
             return futurePrice - indexPrice;
         }
 
+        #endregion
+
+        #region 计算市值
 
         /// <summary>
         /// 计算现货组合市值
@@ -49,10 +54,34 @@ namespace Calculation
             return totalMarketValue;
         }
 
+        #endregion
+
+        #region 计算权重
+
+        /// <summary>
+        /// 通过数量计算权重
+        /// </summary>
+        /// <param name="amounts">组合个股数量</param>
+        /// <returns>返回现货个股浮点型权重，不进行百分比处理</returns>
+        public static double[] CalcStockWeightByAmount(int[] amounts)
+        {
+            double[] weights = new double[amounts.Length];
+            double total = (double)amounts.Sum();
+            for (int i = 0, count = amounts.Length; i < count; i++)
+            {
+                weights[i] = amounts[i] / total;
+            }
+
+            return weights;
+        }
+
+        #endregion
+
+        #region 计算数量
 
         /// <summary>
         /// 计算每份个股数量
-        /// 每份个股数量=每份总金额*个股权重/个股最价格
+        /// 每份个股数量=每份总金额*个股权重/个股价格
         /// 直接向上取整，获取100股整数倍
         /// </summary>
         /// <param name="totalMoney">组合允许的总市值</param>
@@ -85,10 +114,9 @@ namespace Calculation
             return amounts;
         }
 
-
         /// <summary>
         /// 计算每份个股数量，个股数量向下取整
-        /// 每份个股数量=每份总金额*个股权重/个股最价格
+        /// 每份个股数量=每份总金额*个股权重/个股价格
         /// 直接向下取整，获取100股整数倍
         /// </summary>
         /// <param name="totalMoney">组合允许的总市值</param>
@@ -123,14 +151,15 @@ namespace Calculation
 
         /// <summary>
         /// 计算每份个股数量，个股数量直接四舍五入
-        /// 每份个股数量=每份总金额*个股权重/个股最价格
+        /// 每份个股数量=每份总金额*个股权重/个股价格
         /// 直接四舍五入
         /// </summary>
         /// <param name="totalMoney">组合允许的总市值</param>
         /// <param name="weights">组合中个股的权重</param>
         /// <param name="prices">组合中个股的价格</param>
+        /// <param name="minUnit">设置最小股数单位，在舍入为零的时候，如果设置大于零，使用该值替代。</param>
         /// <returns>组合中个股数量</returns>
-        public static int[] CalcStockAmountPerCopyRound(double totalMoney, double[] weights, double[] prices)
+        public static int[] CalcStockAmountPerCopyRound(double totalMoney, double[] weights, double[] prices, int minUnit)
         {
             if (double.IsNaN(totalMoney))
             {
@@ -150,11 +179,11 @@ namespace Calculation
             {
                 double dValue = totalMoney * weights[i] / prices[i];
                 int unit = (int)Math.Round(dValue / 100);
-                
-                //数量最少必须为100股
-                if(unit == 0)
+
+                //使用最小单位替代
+                if (unit == 0 && minUnit > 0)
                 {
-                    unit = 1;
+                    unit = minUnit;
                 }
 
                 int iValue = unit*100;
@@ -170,12 +199,14 @@ namespace Calculation
         /// 每份个股数量=每份总金额*个股权重/个股最价格
         /// 每次获取100股倍数之后，使用剩余部分重算余下股票数量
         /// 价格按从高到低排序后，计算后权重偏差较小
+        /// 数量小于100股时，不可以强制设置，否则会导致后面市值不够
         /// </summary>
         /// <param name="totalMoney">组合允许的总市值</param>
         /// <param name="weights">组合中个股的权重</param>
         /// <param name="prices">组合中个股的价格</param>
+        /// <param name="minUnit">设置最小单位</param>
         /// <returns>组合中个股数量</returns>
-        public static int[] CalcStockAmountPerCopyAdjust(double totalMoney, double[] weights, double[] prices)
+        public static int[] CalcStockAmountPerCopyAdjust(double totalMoney, double[] weights, double[] prices, int minUnit)
         {
             if (double.IsNaN(totalMoney))
             {
@@ -193,33 +224,77 @@ namespace Calculation
             double restMoney = totalMoney;
             double restWeight = 1.0;
             int[] amounts = new int[weights.Length];
-            for (int i = 0, count = weights.Length; i < count && restWeight > 0.000001; i++)
+            int i = 0;
+            for (int count = weights.Length; i < count && restWeight > 0.000001 && restMoney > 0.0; i++)
             {
                 double dValue = restMoney * weights[i] / (prices[i] * restWeight);
-                int iValue = (int)Math.Round(dValue / 100) * 100;
+                int unit = (int)Math.Round(dValue / 100);
+
+                //使用最小单位替代
+                if (unit == 0 && minUnit > 0)
+                {
+                    unit = minUnit;
+                }
+
+                int iValue = unit * 100;
                 amounts[i] = iValue;
                 restMoney = restMoney - iValue * prices[i];
                 restWeight = restWeight - weights[i];
+            }
+
+            //根据上面算法，市值不足部分，需要额外处理
+            for (int count = weights.Length; i < count; i++)
+            {
+                amounts[i] = minUnit * 100;
             }
 
             return amounts;
         }
 
         /// <summary>
-        /// 通过数量计算权重
+        /// 使用中国式的四舍五入方法。
+        /// 每份个股数量=每份总金额*个股权重/个股价格
+        /// 每次获取100股倍数
         /// </summary>
-        /// <param name="amounts">组合个股数量</param>
-        /// <returns>返回现货个股浮点型权重，不进行百分比处理</returns>
-        public static double[] CalcStockWeightByAmount(int[] amounts)
+        /// <param name="totalMoney"></param>
+        /// <param name="weights"></param>
+        /// <param name="prices"></param>
+        /// <param name="minUnit"></param>
+        /// <returns></returns>
+        public static int[] CalcStockAmountByChinaRound(double totalMoney, double[] weights, double[] prices, int minUnit)
         {
-            double[] weights = new double[amounts.Length];
-            double total = (double)amounts.Sum();
-            for (int i = 0, count = amounts.Length; i < count; i++)
+            if (double.IsNaN(totalMoney))
             {
-                weights[i] = amounts[i] / total;
+                throw new ArgumentException("The totalMoney is invalid!");
+            }
+            if (weights == null || prices == null)
+            {
+                throw new ArgumentException("Invalid input stock weights or stock prices.");
+            }
+            if (weights.Length != prices.Length)
+            {
+                throw new ArgumentException("Invalid input stock weights or stock prices length.");
             }
 
-            return weights;
+            int[] amounts = new int[weights.Length];
+            for (int i = 0, count = weights.Length; i < count; i++)
+            {
+                double dValue = totalMoney * weights[i] / prices[i];
+                int unit = (int)Math.Round(dValue / 100, MidpointRounding.AwayFromZero);
+
+                //数量最少必须为100股
+                if (unit == 0 && minUnit > 0)
+                {
+                    unit = minUnit;
+                }
+
+                int iValue = unit * 100;
+                amounts[i] = iValue;
+            }
+
+            return amounts;
         }
+
+        #endregion
     }
 }

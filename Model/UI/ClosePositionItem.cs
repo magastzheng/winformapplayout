@@ -42,6 +42,21 @@ namespace Model.UI
         [BindingAttribute("risk")]
         public double Risk { get; set; }
 
+        [BindingAttribute("totalprofitloss")]
+        public double TotalProfitLoss { get; set; }
+
+        [BindingAttribute("spotfloatprofitloss")]
+        public double SpotFloatProfitLoss { get; set; }
+
+        [BindingAttribute("futurefloatprofitloss")]
+        public double FutureFloatProfitLoss { get; set; }
+
+        [BindingAttribute("spotrealizeprofitloss")]
+        public double SpotRealizeProfitLoss { get; set; }
+
+        [BindingAttribute("futurerealizeprofitloss")]
+        public double FutureRealizeProfitLoss { get; set; }
+
         [BindingAttribute("monitorid")]
         public int MonitorId { get; set; }
 

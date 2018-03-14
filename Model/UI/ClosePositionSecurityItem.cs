@@ -56,6 +56,12 @@ namespace Model.UI
         [BindingAttribute("commandmoney")]
         public double CommandMoney { get; set; }
 
+        [BindingAttribute("suspendflag")]
+        public string SuspendFlag
+        {
+            get { return EnumQuoteHelper.GetSuspendFlag(ESuspendFlag); }
+        }
+
         [BindingAttribute("limitupdown")]
         public string LimitUpOrDown
         {
@@ -79,6 +85,15 @@ namespace Model.UI
 
         [BindingAttribute("commandprice")]
         public double CommandPrice { get; set; }
+
+        [BindingAttribute("totalprofitloss")]
+        public double TotalProfitLoss { get; set; }
+
+        [BindingAttribute("floatprofitloss")]
+        public double FloatProfitLoss { get; set; }
+
+        [BindingAttribute("realizeprofitloss")]
+        public double RealizeProfitLoss { get; set; }
 
         [BindingAttribute("lastprice")]
         public double LastPrice { get; set; }

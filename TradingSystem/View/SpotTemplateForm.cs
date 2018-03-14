@@ -764,23 +764,18 @@ namespace TradingSystem.View
             double totalWeight = weights.Sum();
             double minusResult = 1.0 - totalWeight;
 
-            //如果不为100%，则根据数量调整比例;这种调整方式是否可以改进, 通过市值调整？
-            if ( Math.Abs(minusResult) > 0.001 )
+            double[] mweights = _spotDataSource.Select(p => p.MarketCapWeight / 100).ToArray();
+            double mtotal = mweights.Sum();
+            double mDiff = 1.0 - mtotal;
+
+            //如果不为100%，则需要调整比例; 依据市值调整
+            if (Math.Abs(minusResult) > 0.001 && mDiff > 0.001)
             {
-                int[] origAmounts = new int[_spotDataSource.Count];
                 for (int i = 0, count = _spotDataSource.Count; i < count; i++)
                 {
                     var stock = _spotDataSource[i];
-                    origAmounts[i] = stock.Amount;
-                }
-
-                weights = CalcUtil.CalcStockWeightByAmount(origAmounts);
-                for (int i = 0, count = weights.Length; i < count; i++)
-                {
-                    double weight = weights[i];
-                    var stock = _spotDataSource[i];
-                    stock.SettingWeight = 100 * weight;
-                }
+                    weights[i] = stock.MarketCapWeight / mtotal;
+                 }
             }
 
             List<SecurityItem> secuList = GetSecurityItems(template);
@@ -805,7 +800,7 @@ namespace TradingSystem.View
             totalValue = totalValue * template.MarketCapOpt / 100;
 
             var prices = GetPrices(secuList);
-            var amounts = CalcUtil.CalcStockAmountPerCopyRound(totalValue, weights, prices);
+            var amounts = CalcUtil.CalcStockAmountPerCopyRound(totalValue, weights, prices, 0);
             var mktCaps = GetMarketCap(prices, amounts);
             switch (template.EWeightType)
             {
