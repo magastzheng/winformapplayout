@@ -830,6 +830,13 @@ namespace TradingSystem.View
 
         private void LoadEntrustControl()
         {
+            //情况原来选项
+            this.cbSpotBuyPrice.Items.Clear();
+            this.cbSpotSellPrice.Items.Clear();
+            this.cbFuturesBuyPrice.Items.Clear();
+            this.cbFuturesSellPrice.Items.Clear();
+
+            //重新添加选项
             var setting = SettingManager.Instance.Get();
             var spotPrices = ConfigManager.Instance.GetComboConfig().GetComboOption("spotprice");
             ComboBoxUtil.SetComboBox(this.cbSpotBuyPrice, spotPrices, setting.EntrustSetting.BuySpotPrice.ToString());
