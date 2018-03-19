@@ -101,7 +101,62 @@ namespace TradingSystem.View
 
             this.LoadControl += new FormLoadHandler(Form_LoadControl);
             this.LoadData += new FormLoadHandler(Form_LoadData);
+
+            //添加右键点击事件
+            secuGridView.MouseClick += new MouseEventHandler(SecurityGridView_MouseClick);
+
+            secuContextMenu.ItemClicked += new ToolStripItemClickedEventHandler(SecurityContextMenu_ItemClicked);
         }
+
+        #region 右键菜单处理
+
+        //right-click popup menu
+        private void SecurityGridView_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                this.secuContextMenu.Show(this.secuGridView, e.Location);
+            }
+        }
+
+        private void SecurityContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            switch (e.ClickedItem.Name)
+            {
+                case "selectAllToolStripMenuItem":
+                    {
+                        _spotDataSource.ToList().ForEach(p => p.Selection = true);
+                    }
+                    break;
+                case "unSelectToolStripMenuItem":
+                    {
+                        _spotDataSource.ToList().ForEach(p => p.Selection = false);
+                    }
+                    break;
+                case "cancelSelectToolStripMenuItem":
+                    {
+                        _spotDataSource.Where(p => p.Selection).ToList().ForEach(p => p.Selection = false);
+                    }
+                    break;
+                case "removeZeroToolStripMenuItem":
+                    {
+                        var selectedStocks = _spotDataSource.Where(p => p.Amount == 0).ToList();
+                        foreach (var stock in selectedStocks)
+                        {
+                            _spotDataSource.Remove(stock);
+                        }
+
+                        this._isTempStockChanged = true;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            this.secuGridView.Invalidate();
+        }
+
+        #endregion
 
         private void SwitchTemplateStockSave(bool isEnable)
         {
@@ -536,29 +591,31 @@ namespace TradingSystem.View
             if(template == null)
                 return;
 
-            List<int> selectIndex = TSDataGridViewHelper.GetSelectRowIndex(this.secuGridView);
-            if (selectIndex.Count == 0)
+            var deleteItems = _spotDataSource.Where(p => p.Selection).ToList();
+
+            //List<int> selectIndex = TSDataGridViewHelper.GetSelectRowIndex(this.secuGridView);
+            if (deleteItems == null || deleteItems.Count == 0)
             {
                 MessageDialog.Warn(this, msgDeleteSecuritySelect);
                 return;
             }
 
             string format = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgDeleteSecurity);
-            string msg = string.Format(format, template.TemplateId, template.TemplateName, selectIndex.Count);
+            string msg = string.Format(format, template.TemplateId, template.TemplateName, deleteItems.Count);
             if(MessageDialog.Warn(this, msg, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
             {
                 return;
             }
 
-            List<TemplateStock> deleteItems = new List<TemplateStock>();
-            for (int i = 0, count = selectIndex.Count; i < count; i++)
-            {
-                int rowIndex = selectIndex[i];
-                if (rowIndex >= 0 && rowIndex < _spotDataSource.Count)
-                {
-                    deleteItems.Add(_spotDataSource[rowIndex]);
-                }
-            }
+            //List<TemplateStock> deleteItems = new List<TemplateStock>();
+            //for (int i = 0, count = selectIndex.Count; i < count; i++)
+            //{
+            //    int rowIndex = selectIndex[i];
+            //    if (rowIndex >= 0 && rowIndex < _spotDataSource.Count)
+            //    {
+            //        deleteItems.Add(_spotDataSource[rowIndex]);
+            //    }
+            //}
 
             //archive template
             ArchiveTemplate(template);
@@ -622,27 +679,21 @@ namespace TradingSystem.View
 
         private void ToolStripButton_ModifyStock_Click(object sender, EventArgs e)
         {
-            List<int> selectIndex = TSDataGridViewHelper.GetSelectRowIndex(secuGridView);
-            if (selectIndex.Count == 0)
+            var selectedStocks = _spotDataSource.Where(p => p.Selection).ToList();
+            //List<int> selectIndex = TSDataGridViewHelper.GetSelectRowIndex(secuGridView);
+            if (selectedStocks == null || selectedStocks.Count == 0)
             {
                 MessageDialog.Warn(this, msgSecurityModifySelect);
                 return;
             }
 
-            if (selectIndex.Count > 1)
+            if (selectedStocks.Count > 1)
             {
                 MessageDialog.Warn(this, msgSecurityModifyOnlyOnce);
                 return;
             }
 
-            int rowIndex = selectIndex[0];
-            if (rowIndex < 0 || rowIndex > _spotDataSource.Count)
-            {
-                MessageDialog.Warn(this, msgInvalidSelect);
-                return;
-            }
-
-            TemplateStock stock = _spotDataSource[rowIndex];
+            TemplateStock stock = selectedStocks[0];
 
             PortfolioSecurityDialog psDialog = new PortfolioSecurityDialog();
             psDialog.OnLoadControl(psDialog, DialogType.Modify);

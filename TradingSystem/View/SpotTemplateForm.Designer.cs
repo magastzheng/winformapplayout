@@ -60,6 +60,11 @@
             this.tsbSave = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbExport = new System.Windows.Forms.ToolStripButton();
+            this.secuContextMenu = new Controls.ContextMenu.ContextMenu();
+            this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unSelectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cancelSelectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeZeroToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelTop.SuspendLayout();
             this.panelBottom.SuspendLayout();
             this.panelMain.SuspendLayout();
@@ -73,6 +78,7 @@
             this.spotSecuTopPanel.SuspendLayout();
             this.tsChildTop.SuspendLayout();
             this.tsChildBottom.SuspendLayout();
+            this.secuContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelTop
@@ -386,11 +392,48 @@
             this.tsbExport.Size = new System.Drawing.Size(36, 29);
             this.tsbExport.Text = "导出";
             // 
+            // secuContextMenu
+            // 
+            this.secuContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.selectAllToolStripMenuItem,
+            this.unSelectToolStripMenuItem,
+            this.cancelSelectToolStripMenuItem,
+            this.removeZeroToolStripMenuItem});
+            this.secuContextMenu.Name = "secuContextMenu";
+            this.secuContextMenu.Size = new System.Drawing.Size(173, 92);
+            // 
+            // selectAllToolStripMenuItem
+            // 
+            this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.selectAllToolStripMenuItem.Text = "全选";
+            // 
+            // unSelectToolStripMenuItem
+            // 
+            this.unSelectToolStripMenuItem.Name = "unSelectToolStripMenuItem";
+            this.unSelectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.unSelectToolStripMenuItem.Text = "反选";
+            // 
+            // cancelSelectToolStripMenuItem
+            // 
+            this.cancelSelectToolStripMenuItem.Name = "cancelSelectToolStripMenuItem";
+            this.cancelSelectToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.cancelSelectToolStripMenuItem.Text = "取消所有选中";
+            // 
+            // removeZeroToolStripMenuItem
+            // 
+            this.removeZeroToolStripMenuItem.Name = "removeZeroToolStripMenuItem";
+            this.removeZeroToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.removeZeroToolStripMenuItem.Text = "删除数量为零证券";
+            // 
             // SpotTemplateForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.ClientSize = new System.Drawing.Size(1125, 570);
             this.Name = "SpotTemplateForm";
+            this.Controls.SetChildIndex(this.panelTop, 0);
+            this.Controls.SetChildIndex(this.panelBottom, 0);
+            this.Controls.SetChildIndex(this.panelMain, 0);
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
             this.panelBottom.ResumeLayout(false);
@@ -410,6 +453,7 @@
             this.tsChildTop.PerformLayout();
             this.tsChildBottom.ResumeLayout(false);
             this.tsChildBottom.PerformLayout();
+            this.secuContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -447,5 +491,10 @@
         private System.Windows.Forms.TextBox tbNumber;
         private System.Windows.Forms.Label lblNumber;
         private Controls.GridView.TSDataGridView secuGridView;
+        private Controls.ContextMenu.ContextMenu secuContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem unSelectToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cancelSelectToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeZeroToolStripMenuItem;
     }
 }

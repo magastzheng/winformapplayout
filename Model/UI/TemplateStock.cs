@@ -12,6 +12,9 @@ namespace Model.UI
     {
         public int TemplateNo { get; set; }
 
+        [BindingAttribute("selection")]
+        public bool Selection { get; set; }
+
         [BindingAttribute("secucode")]
         public string SecuCode { get; set; }
 
