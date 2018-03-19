@@ -105,16 +105,20 @@ namespace Controls
             //回车
             else if (e.KeyCode == Keys.Enter)
             {
-                AutoItem item = listBox.SelectedItem as AutoItem;
-                textBox.Text = item.Id;
-                this.tbName.Text = item.Name;
-                listBox.Visible = false;
+                if (listBox.SelectedItem != null)
+                {
+                    AutoItem item = listBox.SelectedItem as AutoItem;
+                    textBox.Text = item.Id;
+                    this.tbName.Text = item.Name;
+                    listBox.Visible = false;
+                }
             }
             else
             {
                 if (!string.IsNullOrEmpty(textBox.Text))
                 {
-                    IList<AutoItem> dataSource = _dataManager.GetMatch(textBox.Text.Trim());
+                    string text = textBox.Text.Trim().ToUpper();
+                    IList<AutoItem> dataSource = _dataManager.GetMatch(text);
                     if (dataSource.Count > 0)
                     {
                         listBox.DataSource = dataSource;
