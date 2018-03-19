@@ -18,6 +18,7 @@ namespace Model.Database
             this.SecuName = security.SecuName;
             this.CommandId = security.CommandId;
             this.CommandPrice = security.CommandPrice;
+            this.CurrentPrice = security.CurrentPrice;
             this.CommandAmount = security.CommandAmount;
             this.EDirection = security.EDirection;
             this.SecuType = security.SecuType;
@@ -35,6 +36,9 @@ namespace Model.Database
 
         //指令价格
         public double CommandPrice { get; set; }
+
+        //最新价格
+        public double CurrentPrice { get; set; }
 
         //指令数量
         public int CommandAmount { get; set; }

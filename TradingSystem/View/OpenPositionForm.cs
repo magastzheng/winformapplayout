@@ -433,19 +433,28 @@ namespace TradingSystem.View
                 double futurePrice = GetPrice(secuList, openItem.FuturesContract, SecurityType.Futures);
                 openItem.Basis = futurePrice - benchmarkPrice;
 
-                //future total capital
-                var futureItem = _securityDataSource.ToList().Find(p => p.MonitorId == openItem.MonitorId && p.SecuType == SecurityType.Futures);
-                if(futureItem != null)
+                //future total capital only selected future
+                var futureItem = _securityDataSource.ToList().Find(p => p.MonitorId == openItem.MonitorId && p.Selection && p.SecuType == SecurityType.Futures);
+                if (futureItem != null)
                 {
                     openItem.FuturesMktCap = futureItem.CommandMoney;
                 }
+                else
+                {
+                    openItem.FuturesMktCap = 0;
+                }
 
-                //spot total capital
-                var stockItems = _securityDataSource.Where(p => p.MonitorId == openItem.MonitorId && p.SecuType == SecurityType.Stock).ToList();
+                //spot total capital only selected stocks
+                var stockItems = _securityDataSource.Where(p => p.MonitorId == openItem.MonitorId && p.Selection && p.SecuType == SecurityType.Stock).ToList();
                 if (stockItems.Count > 0)
                 {
                     openItem.StockMktCap = stockItems.Sum(p => p.CommandMoney);
                     openItem.StockNumbers = stockItems.Count;
+                }
+                else
+                {
+                    openItem.StockMktCap = 0;
+                    openItem.StockNumbers = 0;
                 }
 
                 openItem.Risk = openItem.StockMktCap - openItem.FuturesMktCap;
@@ -462,17 +471,29 @@ namespace TradingSystem.View
                 {
                     openItem.SuspensionNumbers = suspensionItems.Count;
                 }
+                else
+                {
+                    openItem.SuspensionNumbers = 0;
+                }
 
                 var limitUpItems = stockItems.Where(p => p.ELimitUpDownFlag == Model.Quote.LimitUpDownFlag.LimitUp).ToList();
                 if (limitUpItems != null)
                 {
                     openItem.LimitUpNumbers = limitUpItems.Count;
                 }
+                else
+                {
+                    openItem.LimitUpNumbers = 0;
+                }
 
                 var limitDownItems = stockItems.Where(p => p.ELimitUpDownFlag == Model.Quote.LimitUpDownFlag.LimitDown).ToList();
                 if (limitDownItems != null)
                 {
                     openItem.LimitDownNumbers = limitDownItems.Count;
+                }
+                else
+                {
+                    openItem.LimitDownNumbers = 0;
                 }
             }
         }
@@ -663,6 +684,7 @@ namespace TradingSystem.View
                         SecuType = item.SecuType,
                         CommandAmount = item.EntrustAmount,
                         CommandPrice = item.CommandPrice,
+                        CurrentPrice = item.LastPrice,
                         EntrustStatus = EntrustStatus.NoExecuted
                     };
 

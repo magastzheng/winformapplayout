@@ -92,6 +92,7 @@ namespace DBAccess.TradeCommand
                         _dbHelper.AddInParameter(dbCommand, "@CommandAmount", System.Data.DbType.Int32, secuItem.CommandAmount);
                         _dbHelper.AddInParameter(dbCommand, "@CommandDirection", System.Data.DbType.Int32, (int)secuItem.EDirection);
                         _dbHelper.AddInParameter(dbCommand, "@CommandPrice", System.Data.DbType.Double, secuItem.CommandPrice);
+                        _dbHelper.AddInParameter(dbCommand, "@CurrentPrice", System.Data.DbType.Double, secuItem.CurrentPrice);
 
                         //string newid = string.Empty;
                         ret = dbCommand.ExecuteNonQuery();
@@ -161,6 +162,7 @@ namespace DBAccess.TradeCommand
                         _dbHelper.AddInParameter(dbCommand, "@CommandAmount", System.Data.DbType.Int32, secuItem.CommandAmount);
                         _dbHelper.AddInParameter(dbCommand, "@CommandDirection", System.Data.DbType.Int32, (int)secuItem.EDirection);
                         _dbHelper.AddInParameter(dbCommand, "@CommandPrice", System.Data.DbType.Double, secuItem.CommandPrice);
+                        _dbHelper.AddInParameter(dbCommand, "@CurrentPrice", System.Data.DbType.Double, secuItem.CurrentPrice);
 
                         //string newid = string.Empty;
                         ret = dbCommand.ExecuteNonQuery();

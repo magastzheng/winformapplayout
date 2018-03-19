@@ -325,6 +325,7 @@ namespace TradingSystem.Dialog
                     EDirection = secuItem.EDirection,
                     CommandAmount = secuItem.NewCommandAmount,
                     CommandPrice = secuItem.NewCommandPrice,
+                    CurrentPrice = secuItem.LastPrice,
                 };
 
                 if (secuItem.Selection)

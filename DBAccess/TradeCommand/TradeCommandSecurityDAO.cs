@@ -35,6 +35,7 @@ namespace DBAccess.TradeCommand
             _dbHelper.AddInParameter(dbCommand, "@CommandAmount", System.Data.DbType.Int32, secItem.CommandAmount);
             _dbHelper.AddInParameter(dbCommand, "@CommandDirection", System.Data.DbType.Int32, (int)secItem.EDirection);
             _dbHelper.AddInParameter(dbCommand, "@CommandPrice", System.Data.DbType.Double, secItem.CommandPrice);
+            _dbHelper.AddInParameter(dbCommand, "@CurrentPrice", System.Data.DbType.Double, secItem.CurrentPrice);
      
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
@@ -48,6 +49,7 @@ namespace DBAccess.TradeCommand
             _dbHelper.AddInParameter(dbCommand, "@CommandAmount", System.Data.DbType.Int32, secItem.CommandAmount);
             _dbHelper.AddInParameter(dbCommand, "@CommandDirection", System.Data.DbType.Int32, (int)secItem.EDirection);
             _dbHelper.AddInParameter(dbCommand, "@CommandPrice", System.Data.DbType.Double, secItem.CommandPrice);
+            _dbHelper.AddInParameter(dbCommand, "@CurrentPrice", System.Data.DbType.Double, secItem.CurrentPrice);
 
             return _dbHelper.ExecuteNonQuery(dbCommand);
         }
@@ -90,6 +92,7 @@ namespace DBAccess.TradeCommand
                     item.CommandAmount = (int)reader["CommandAmount"];
                     item.EDirection = (EntrustDirection)reader["CommandDirection"];
                     item.CommandPrice = (double)(decimal)reader["CommandPrice"];
+                    item.CurrentPrice = (double)(decimal)reader["CurrentPrice"];
                     item.EntrustStatus = (EntrustStatus)reader["EntrustStatus"];
 
                     items.Add(item);

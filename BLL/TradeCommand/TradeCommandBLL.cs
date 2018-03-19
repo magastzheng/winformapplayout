@@ -322,6 +322,7 @@ namespace BLL.TradeCommand
                         SecuType = item.SecuType,
                         CommandAmount = item.EntrustAmount,
                         CommandPrice = item.CommandPrice,
+                        CurrentPrice = item.LastPrice,
                         EntrustStatus = EntrustStatus.NoExecuted
                     };
 
@@ -355,6 +356,7 @@ namespace BLL.TradeCommand
                     SecuType = item.SecuType,
                     CommandAmount = item.EntrustAmount,
                     CommandPrice = item.CommandPrice,
+                    CurrentPrice = item.LastPrice,
                     EDirection = item.EDirection,
                     EntrustStatus = EntrustStatus.NoExecuted
                 };
@@ -409,7 +411,71 @@ namespace BLL.TradeCommand
             var cmdSecuItems = rawCmdSecuItems.Where(p => p.CommandId == commandId).ToList();
             var cmdEntrustSecuItems = entrustSecuItems.Where(p => p.CommandId == commandId).ToList();
 
+            var calcItems = new List<TradeCommandCalcItem>();
+            foreach (var cmdSecuItem in cmdSecuItems)
+            {
+                int amount = cmdSecuItem.CommandAmount;
+                double price = cmdSecuItem.CurrentPrice > 0 ? cmdSecuItem.CurrentPrice : 1;
+                //基于下达指令时价格算出的市值
+                double mktCapOrigin = amount * price;
+                //基于委托时价格算出的市值
+                double mktCapEntrusted = mktCapOrigin;
+                //实际委托时的市值
+                double entrustedMktCap = 0;
+                //已成交的市值
+                double dealMktCap = 0;
+                var targetCmdEntrustedSecuItems = cmdEntrustSecuItems.Where(p => p.CommandId == cmdSecuItem.CommandId
+                    && p.SecuCode == cmdSecuItem.SecuCode
+                    && p.SecuType == cmdSecuItem.SecuType);
+                if (targetCmdEntrustedSecuItems != null && targetCmdEntrustedSecuItems.Count() > 0)
+                {
+                    double tempMktCap = targetCmdEntrustedSecuItems.Sum(p => p.EntrustAmount * p.EntrustPrice);
+                    int entrustedAmount = targetCmdEntrustedSecuItems.Sum(p => p.EntrustAmount);
+                    
+                    //加总委托部分的市值，使用委托处价格算出
+                    if (amount > entrustedAmount)
+                    {
+                        mktCapEntrusted = tempMktCap + (amount - entrustedAmount) * price;
+                    }
+                    else
+                    {
+                        mktCapEntrusted = tempMktCap;
+                    }
+                }
 
+                var cmdCompletedEntrustedSecuItems = cmdEntrustSecuItems.Where(p => p.CommandId == cmdSecuItem.CommandId
+                    && p.SecuCode == cmdSecuItem.SecuCode
+                    && p.SecuType == cmdSecuItem.SecuType
+                    && p.EntrustStatus == EntrustStatus.Completed);
+                if (cmdCompletedEntrustedSecuItems != null && cmdCompletedEntrustedSecuItems.Count() > 0)
+                {
+                    entrustedMktCap = cmdCompletedEntrustedSecuItems.Sum(p => p.EntrustAmount * p.EntrustPrice);
+                }
+
+                var cmdDealSecuItems = cmdEntrustSecuItems.Where(p => p.CommandId == cmdSecuItem.CommandId
+                    && p.SecuCode == cmdSecuItem.SecuCode
+                    && p.SecuType == cmdSecuItem.SecuType
+                    && (p.DealStatus == DealStatus.Completed || p.DealStatus == DealStatus.PartDeal));
+                if (cmdDealSecuItems != null && cmdDealSecuItems.Count() > 0)
+                {
+                    dealMktCap = cmdDealSecuItems.Sum(p => p.EntrustAmount * p.EntrustPrice);
+                }
+
+                var calcItem = new TradeCommandCalcItem 
+                {
+                    CommandId = cmdSecuItem.CommandId,
+                    SecuCode = cmdSecuItem.SecuCode,
+                    SecuType = cmdSecuItem.SecuType,
+                    MktCapOrigin = mktCapOrigin,
+                    MktCapEntrusted = mktCapEntrusted,
+                    EntrustedMktCap = entrustedMktCap,
+                    DealMktCap = dealMktCap,
+                };
+
+                calcItems.Add(calcItem);
+            }
+
+            //计算数量
             var totalLongCmdAmount = cmdSecuItems.Where(p => p.SecuType == SecurityType.Stock)
                                     .ToList()
                                     .Sum(o => o.CommandAmount);
@@ -429,16 +495,39 @@ namespace BLL.TradeCommand
                                         .ToList()
                                         .Sum(o => o.TotalDealAmount);
 
+            //计算市值
+            var totalLongCmdMktCap = calcItems.Where(p => p.SecuType == SecurityType.Stock)
+                                    .ToList()
+                                    .Sum(o => o.MktCapEntrusted);
+            var totalLongEntrustMktCap = calcItems.Where(p => p.SecuType == SecurityType.Stock)
+                                        .ToList()
+                                        .Sum(o => o.EntrustedMktCap);
+            var totalLongDealMktCap = calcItems.Where(p => p.SecuType == SecurityType.Stock)
+                                    .ToList()
+                                    .Sum(o => o.DealMktCap);
+            var totalShortCmdMktCap = calcItems.Where(p => p.SecuType == SecurityType.Futures)
+                                        .ToList()
+                                        .Sum(o => o.MktCapEntrusted);
+            var totalShortEntrustMktCap = calcItems.Where(p => p.SecuType == SecurityType.Futures)
+                                            .ToList()
+                                            .Sum(o => o.EntrustedMktCap);
+            var totalShortDealMktCap = calcItems.Where(p => p.SecuType == SecurityType.Futures)
+                                        .ToList()
+                                        .Sum(o => o.DealMktCap);
+
             var totalCmdAmount = totalLongCmdAmount + totalShortCmdAmount;
             var eachCopyAmount = totalCmdAmount / uiCommand.CommandNum;
             var totalEntrustAmount = totalLongEntrustAmount + totalShortEntrustAmount;
             var totalDealAmount = totalLongDealAmount + totalShortDealAmount;
 
+            //基于数量计算出的比例
             double entrustRatio = GetRatio(totalEntrustAmount, eachCopyAmount);
-            double longEntrustRatio = GetRatio(totalLongEntrustAmount, totalLongCmdAmount);
-            double longDealRatio = GetRatio(totalLongDealAmount, totalLongCmdAmount);
-            double shortEntrustRatio = GetRatio(totalShortEntrustAmount, totalShortCmdAmount);
-            double shortDealRatio = GetRatio(totalShortDealAmount, totalShortCmdAmount);
+
+            //基于市值计算出的比例
+            double longEntrustRatio = GetRatio(totalLongEntrustMktCap, totalLongCmdMktCap);
+            double longDealRatio = GetRatio(totalLongDealMktCap, totalLongCmdMktCap);
+            double shortEntrustRatio = GetRatio(totalShortEntrustMktCap, totalShortCmdMktCap);
+            double shortDealRatio = GetRatio(totalShortDealMktCap, totalShortCmdMktCap);
 
             uiCommand.CommandAmount = totalCmdAmount;
             uiCommand.TargetNum = (int)Math.Ceiling(entrustRatio);
@@ -450,7 +539,7 @@ namespace BLL.TradeCommand
             uiCommand.DealAmount = totalDealAmount;
         }
 
-        private double GetRatio(int eachOne, int total)
+        private double GetRatio(double eachOne, double total)
         {
             if (total > 0)
             {
@@ -476,5 +565,25 @@ namespace BLL.TradeCommand
             return _userActionTrackingBLL.Create(userId, actionType, resourceType, resourceId, num, ActionStatus.Normal, JsonUtil.SerializeObject(cmdItem));
         }
         #endregion
+
+        //用于计算委托比例和成交比例
+        class TradeCommandCalcItem
+        {
+            public int CommandId { get; set; }
+            public string SecuCode { get; set; }
+            public SecurityType SecuType { get; set; }
+
+            //指令下达时价格处市值
+            public double MktCapOrigin { get; set; }
+
+            //委托时价格处市值
+            public double MktCapEntrusted { get; set; }
+
+            //已委托的市值
+            public double EntrustedMktCap { get; set; }
+
+            //已成交的市值
+            public double DealMktCap { get; set; }
+        }
     }
 }

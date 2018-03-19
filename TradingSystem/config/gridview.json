@@ -2627,7 +2627,7 @@ readonly:
 		},{
 		"name": "totalprofitloss",
 		"text": "总盈亏",
-		"width": 60,
+		"width": 70,
 		"columntype": 0,
 		"valuetype": 1,
 		"visible": 1,

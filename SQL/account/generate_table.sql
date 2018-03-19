@@ -270,6 +270,7 @@ create table tradecommandsecurity(
 	,CommandDirection	int						--指令方向：10 - 买入股票， 11 - 卖出股票， 12 - 卖出开仓股指期货， 13 - 买入平仓股指期货
 	,CommandPrice		numeric(20, 4)			--如果不限价，则价格设置为0
 	,EntrustStatus		int						--委托状态：0 - 提交到数据库， 1 - 提交到UFX，2 - 未执行，3 - 部分执行，4 - 已完成， 10 - 撤单， 11 - 撤单到UFX, 12 - 撤单成功， -4 - 委托失败，-12 - 撤单失败
+	,CurrentPrice		numeric(20, 4)			--下达指令时的最新价格
 )
 
 go

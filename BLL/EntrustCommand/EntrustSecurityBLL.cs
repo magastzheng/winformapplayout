@@ -76,14 +76,22 @@ namespace BLL.EntrustCommand
 
         #region fetch/get
 
+        //获得已经委托完成的证券
         public List<EntrustSecurity> GetEntrustSecurities(List<int> commandIds)
         {
             var entrustSecuItems = new List<EntrustSecurity>();
 
             foreach (var commandId in commandIds)
             {
-                var secuItem = GetByCommandId(commandId);
-                entrustSecuItems.AddRange(secuItem);
+                var secuItems = GetByCommandId(commandId);
+
+                foreach (var secuItem in secuItems)
+                {
+                    if (secuItem.EntrustStatus == EntrustStatus.Completed)
+                    {
+                        entrustSecuItems.Add(secuItem);
+                    }
+                }
             }
 
             return entrustSecuItems;

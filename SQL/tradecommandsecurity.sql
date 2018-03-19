@@ -15,6 +15,7 @@ create proc procTradeCommandSecurityInsert(
 	,@CommandAmount		int
 	,@CommandDirection	int
 	,@CommandPrice		numeric(20, 4) --如果不限价，则价格设置为0
+	,@CurrentPrice		numeric(20, 4) --最新价
 )
 as
 begin
@@ -25,7 +26,8 @@ begin
 		,CommandAmount	
 		,CommandDirection	
 		,CommandPrice		
-		,EntrustStatus		
+		,EntrustStatus	
+		,CurrentPrice	
 	)values(
 		@CommandId			
 		,@SecuCode			
@@ -34,6 +36,7 @@ begin
 		,@CommandDirection
 		,@CommandPrice		
 		,1		
+		,@CurrentPrice
 	)
 end
 
@@ -49,6 +52,7 @@ create proc procTradeCommandSecurityInsertOrUpdate(
 	,@CommandAmount		int
 	,@CommandDirection	int
 	,@CommandPrice		numeric(20, 4) --如果不限价，则价格设置为0
+	,@CurrentPrice		numeric(20, 4) --最新价格
 )
 as
 begin
@@ -70,7 +74,8 @@ begin
 			,CommandAmount	
 			,CommandDirection	
 			,CommandPrice		
-			,EntrustStatus		
+			,EntrustStatus
+			,CurrentPrice		
 		)values(
 			@CommandId			
 			,@SecuCode			
@@ -78,7 +83,8 @@ begin
 			,@CommandAmount	
 			,@CommandDirection
 			,@CommandPrice		
-			,1		
+			,1	
+			,@CurrentPrice	
 		)
 	end
 	else
@@ -87,6 +93,7 @@ begin
 		set CommandAmount = @CommandAmount
 			,CommandDirection = @CommandDirection
 			,CommandPrice = @CommandPrice
+			,CurrentPrice = @CurrentPrice
 		where CommandId = @CommandId
 			and SecuCode = @SecuCode
 			and SecuType = @SecuType
@@ -149,7 +156,8 @@ begin
 		,CommandAmount
 		,CommandDirection		
 		,CommandPrice	
-		,EntrustStatus	
+		,EntrustStatus
+		,CurrentPrice	
 	from tradecommandsecurity 
 	where CommandId=@CommandId
 end
