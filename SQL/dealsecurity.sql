@@ -231,3 +231,28 @@ begin
 		,CancelAmount
 	from dealsecurity 
 end
+
+go
+if exists (select name from sysobjects where name='procDealSecurityCount')
+drop proc procDealSecurityCount
+
+go
+--检查是否已存在成交记录
+create proc procDealSecurityCount(
+	@CommandId int
+	,@SubmitId	int
+	,@RequestId int
+	,@DealNo	varchar(64)
+)
+as
+begin
+	declare @total int
+	set @total = (select count(DealNo)	
+					from dealsecurity
+					where CommandId = @CommandId
+					and SubmitId = @SubmitId
+					and RequestId = @RequestId
+					and DealNo = @DealNo
+					)
+	return @total
+end

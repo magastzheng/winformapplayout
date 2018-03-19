@@ -16,6 +16,7 @@ namespace DBAccess.Deal
         private const string SP_SelectAll = "procDealSecuritySelectAll";
         private const string SP_SelectByCommandId = "procDealSecuritySelectByCommandId";
         private const string SP_SelectBySubmitId = "procDealSecuritySelectBySubmitId";
+        private const string SP_Count = "procDealSecurityCount";
 
         public DealSecurityDAO()
             : base()
@@ -98,6 +99,27 @@ namespace DBAccess.Deal
             _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
 
             return Execute(dbCommand);
+        }
+
+        public int Count(int commandId, int submitId, int requestId, string dealNo)
+        {
+            var dbCommand = _dbHelper.GetStoredProcCommand(SP_Count);
+            _dbHelper.AddInParameter(dbCommand, "@CommandId", System.Data.DbType.Int32, commandId);
+            _dbHelper.AddInParameter(dbCommand, "@SubmitId", System.Data.DbType.Int32, submitId);
+            _dbHelper.AddInParameter(dbCommand, "@RequestId", System.Data.DbType.Int32, requestId);
+            _dbHelper.AddInParameter(dbCommand, "@DealNo", System.Data.DbType.String, dealNo);
+
+            _dbHelper.AddReturnParameter(dbCommand, "@total", System.Data.DbType.Int32);
+
+            int ret = _dbHelper.ExecuteNonQuery(dbCommand);
+
+            int count = -1;
+            if (ret > 0)
+            {
+                count = (int)dbCommand.Parameters["@total"].Value;
+            }
+
+            return count;
         }
 
         private List<DealSecurity> Execute(DbCommand dbCommand)

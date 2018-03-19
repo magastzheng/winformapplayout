@@ -47,14 +47,26 @@ namespace BLL.Entrust.subscriber
                     //TODO: add log
                     if (EntrustRequestHelper.ParseThirdReff(responseItem.ThirdReff, out commandId, out submitId, out requestId))
                     {
-                        _entrustSecurityBLL.UpdateDeal(submitId, commandId, responseItem.StockCode, responseItem.DealAmount, responseItem.DealBalance, responseItem.DealFee);
-
-                        //TODO: save into database
                         var dealItem = Convert(responseItem);
-                        _dealSecurityBLL.Create(dealItem);
 
-                        //Update the TradingInstanceSecurity
-                        _tradeInstanceSecuBLL.UpdateToday(dealItem.EntrustDirection, commandId, dealItem.SecuCode, dealItem.DealAmount, dealItem.DealBalance, dealItem.DealFee);
+                        //If it was stored in the database, then ignore
+                        //TODO: save into database
+                        if(_dealSecurityBLL.IsExist(commandId, submitId, requestId, dealItem.DealNo))
+                        {
+                            string msg = string.Format("Duplicate to parse the third_reff: {0}, DealNo:{1}", responseItem.ThirdReff, dealItem.DealNo);
+                            logger.Error(msg);
+                        }
+                        else
+                        {
+                            //save the deal record in dealsecurity table
+                            _dealSecurityBLL.Create(dealItem);
+
+                            //update the entrustsecurity table
+                            _entrustSecurityBLL.UpdateDeal(submitId, commandId, responseItem.StockCode, responseItem.DealAmount, responseItem.DealBalance, responseItem.DealFee);
+                        
+                            //Update the TradingInstanceSecurity
+                            _tradeInstanceSecuBLL.UpdateToday(dealItem.EntrustDirection, commandId, dealItem.SecuCode, dealItem.DealAmount, dealItem.DealBalance, dealItem.DealFee);
+                        }
                     }
                     else
                     {

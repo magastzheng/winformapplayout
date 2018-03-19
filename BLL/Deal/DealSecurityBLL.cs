@@ -45,5 +45,11 @@ namespace BLL.Deal
         {
             return _dealsecudao.GetBySubmitId(submitId);
         }
+
+        public bool IsExist(int commandId, int submitId, int requestId, string dealNo)
+        {
+            int count = _dealsecudao.Count(commandId, submitId, requestId, dealNo);
+            return count > 0;
+        }
     }
 }
