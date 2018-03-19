@@ -481,11 +481,12 @@ namespace TradingSystem.Dialog
             string msg = string.Empty;
             var response = _entrustBLL.SubmitOne(cmdItem, cancelRedoItems, callback);
             if (!BLLResponse.Success(response))
-            { 
-                int submitId = cancelRedoItems.Select(p => p.SubmitId).Distinct().Single();
+            {
+                var submitIds = cancelRedoItems.Select(p => p.SubmitId).Distinct().ToList();
+                var submitIdStr = string.Join(",", submitIds.ConvertAll(p => p.ToString()));
 
                 string format = ConfigManager.Instance.GetLabelConfig().GetLabelText(msgEntrustCancelResubmitFail);
-                msg = string.Format(format, submitId, response.Message);
+                msg = string.Format(format, submitIdStr, response.Message);
             }
 
             return msg;
